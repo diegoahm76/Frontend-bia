@@ -18,6 +18,26 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/dot-notation": "error"
+    "@typescript-eslint/dot-notation": "error",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      // {
+      //   "selector": "variable",
+      //   "format": ["snake_case"],
+      //   "leadingUnderscore": "allow"
+      // },
+      // {
+      //   "selector": "typeLike",
+      //   "format": ["PascalCase"]
+      // },
+      {
+        "selector": "variable",
+        "format": ["PascalCase"],
+        "filter": {
+          "regex": "^React\\.FC<.*>$",
+          "match": true
+        }
+      }
+    ]
   }
 }

@@ -44,7 +44,7 @@ const Copyright: React.FC = (props: any) => {
   );
 };
 
-const drawerWidth: number = 240;
+const drawer_width: number = 240;
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -59,8 +59,8 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...((open ?? false) && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawer_width,
+    width: `calc(100% - ${drawer_width}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -74,7 +74,7 @@ const Drawer = styled(MuiDrawer, {
   '& .MuiDrawer-paper': {
     position: 'relative',
     whiteSpace: 'nowrap',
-    width: drawerWidth,
+    width: drawer_width,
     transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -94,16 +94,16 @@ const Drawer = styled(MuiDrawer, {
   },
 }));
 
-const mdTheme = createTheme();
+const md_theme = createTheme();
 
 const DashboardContent: React.FC = () => {
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = (): void => {
-    setOpen(!open);
+  const [open, set_open] = React.useState(true);
+  const toggle_drawer = (): void => {
+    set_open(!open);
   };
 
   return (
-    <ThemeProvider theme={mdTheme}>
+    <ThemeProvider theme={md_theme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
@@ -116,7 +116,7 @@ const DashboardContent: React.FC = () => {
               edge="start"
               color="inherit"
               aria-label="open drawer"
-              onClick={toggleDrawer}
+              onClick={toggle_drawer}
               sx={{
                 marginRight: '36px',
                 ...(open && { display: 'none' }),
@@ -149,7 +149,7 @@ const DashboardContent: React.FC = () => {
               px: [1],
             }}
           >
-            <IconButton onClick={toggleDrawer}>
+            <IconButton onClick={toggle_drawer}>
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
