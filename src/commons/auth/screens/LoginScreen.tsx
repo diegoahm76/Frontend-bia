@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import TabPanel from '@mui/lab/TabPanel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
@@ -122,6 +123,8 @@ export const LoginScreen: React.FC = () => {
               </Grid>
             </Grid>
           </form>
+          <TabPanel value="2">Item Two</TabPanel>
+          <TabPanel value="3">Item Three</TabPanel>
         </Grid>
       </Grid>
     </Grid>
