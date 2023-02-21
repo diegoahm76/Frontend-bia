@@ -1,6 +1,6 @@
 import { useState } from 'react';
 // import Swal from 'sweetalert2';
-import cliente_axios from '../../../api/axios';
+import { api } from '../../../api/axios';
 // import { useSelector } from 'react-redux';
 import {
   type AuthHook,
@@ -21,7 +21,7 @@ export const use_rol = (): AuthHook => {
   const get_permissions_by_rol = async (id_rol: number): Promise<void> => {
     set_is_loading(true);
     try {
-      const { data } = await cliente_axios.get(
+      const { data } = await api.get(
         `/permisos/permisos-rol/get-by-rol/${id_rol}/`
       );
       // console.log(data.data);

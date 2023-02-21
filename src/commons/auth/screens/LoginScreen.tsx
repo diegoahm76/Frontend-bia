@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -38,6 +39,15 @@ export const LoginScreen: React.FC = () => {
     }
   }, [is_captcha_valid]);
 
+  const [value, set_tab] = useState('1');
+
+  const handle_change = (
+    event: React.SyntheticEvent | null,
+    newValue: string
+  ): void => {
+    set_tab(newValue);
+  };
+
   return (
     <Grid
       container
@@ -64,67 +74,87 @@ export const LoginScreen: React.FC = () => {
             borderRadius: 5,
           }}
         >
-          {/* <img src="../../../assets/logos/logoBia.svg" alt="logo bia" /> */}
-          <Typography variant="h5" textAlign={'center'} sx={{ mb: 1 }}>
-            Login
-          </Typography>
-          <form>
-            <Grid container direction={'column'} spacing={3}>
-              <Grid item>
-                <TextField fullWidth label="Usuario o Email" type="text" />
-              </Grid>
-              <Grid item>
-                <FormControl fullWidth variant="outlined">
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Contraseña
-                  </InputLabel>
-                  <OutlinedInput
-                    id="outlined-adornment-password"
-                    type={show_password ? 'text' : 'password'}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handle_click_show_password}
-                          edge="end"
-                        >
-                          {show_password ? <VisibilityOff /> : <Visibility />}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                    label="Contraseña"
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item container justifyContent={'center'}>
-                <ReCaptcha
-                  sitekey={process.env.REACT_APP_SITE_KEY ?? ''}
-                  hl="es"
-                  onChange={() => {
-                    set_value(true);
-                  }}
-                  onExpired={() => {
-                    set_value(false);
-                  }}
-                  onError={() => {
-                    set_value(false);
-                  }}
-                />
-              </Grid>
-              <Grid item justifyContent="center" container>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  color="success"
-                  disabled={disable}
-                >
-                  Iniciar Sesión
-                </Button>
-              </Grid>
-            </Grid>
-          </form>
-          <TabPanel value="2">Item Two</TabPanel>
-          <TabPanel value="3">Item Three</TabPanel>
+          <TabContext value={value}>
+            <TabPanel value="1">
+              {/* <img src="../../../assets/logos/logoBia.svg" alt="logo bia" /> */}
+              <Typography variant="h5" textAlign={'center'} sx={{ mb: 1 }}>
+                Login
+              </Typography>
+              <form>
+                <Grid container direction={'column'} spacing={3}>
+                  <Grid item>
+                    <TextField fullWidth label="Usuario o Email" type="text" />
+                  </Grid>
+                  <Grid item>
+                    <FormControl fullWidth variant="outlined">
+                      <InputLabel htmlFor="outlined-adornment-password">
+                        Contraseña
+                      </InputLabel>
+                      <OutlinedInput
+                        id="outlined-adornment-password"
+                        type={show_password ? 'text' : 'password'}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handle_click_show_password}
+                              edge="end"
+                            >
+                              {show_password ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                        label="Contraseña"
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item container justifyContent={'center'}>
+                    <ReCaptcha
+                      sitekey={process.env.REACT_APP_SITE_KEY ?? ''}
+                      hl="es"
+                      onChange={() => {
+                        set_value(true);
+                      }}
+                      onExpired={() => {
+                        set_value(false);
+                      }}
+                      onError={() => {
+                        set_value(false);
+                      }}
+                    />
+                  </Grid>
+                  <Grid item justifyContent="center" container>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      color="success"
+                      disabled={disable}
+                      onClick={() => {
+                        handle_change(null, '2');
+                      }}
+                    >
+                      Iniciar Sesión
+                    </Button>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      color="success"
+                      onClick={() => {
+                        handle_change(null, '1');
+                      }}
+                    >
+                      Test
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
+            </TabPanel>
+            <TabPanel value="2">Item Two</TabPanel>
+          </TabContext>
         </Grid>
       </Grid>
     </Grid>
