@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 // Generate Order Data
-const createData: any = (
+const create_data: any = (
   id: number,
   date: string,
   name: string,
@@ -19,7 +19,7 @@ const createData: any = (
 };
 
 const rows = [
-  createData(
+  create_data(
     0,
     '16 Mar, 2019',
     'Elvis Presley',
@@ -27,7 +27,7 @@ const rows = [
     'VISA ⠀•••• 3719',
     312.44
   ),
-  createData(
+  create_data(
     1,
     '16 Mar, 2019',
     'Paul McCartney',
@@ -35,7 +35,7 @@ const rows = [
     'VISA ⠀•••• 2574',
     866.99
   ),
-  createData(
+  create_data(
     2,
     '16 Mar, 2019',
     'Tom Scholz',
@@ -43,7 +43,7 @@ const rows = [
     'MC ⠀•••• 1253',
     100.81
   ),
-  createData(
+  create_data(
     3,
     '16 Mar, 2019',
     'Michael Jackson',
@@ -51,7 +51,7 @@ const rows = [
     'AMEX ⠀•••• 2000',
     654.39
   ),
-  createData(
+  create_data(
     4,
     '15 Mar, 2019',
     'Bruce Springsteen',
@@ -61,6 +61,7 @@ const rows = [
   ),
 ];
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const Orders: React.FC = () => {
   return (
     <React.Fragment>

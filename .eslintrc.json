@@ -18,6 +18,15 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "@typescript-eslint/dot-notation": "error"
+    "@typescript-eslint/strict-boolean-expressions": "allowAny",
+    "@typescript-eslint/dot-notation": "error",
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "variable",
+        "format": ["snake_case"],
+        "leadingUnderscore": "allow"
+      }
+    ]
   }
 }

@@ -1,6 +1,7 @@
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const Deposits: React.FC = () => {
   return (
     <>

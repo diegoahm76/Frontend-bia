@@ -1,3 +1,3 @@
-export const crearAlmacenHooks = () => {
+export const crearAlmacenHooks: React.FC = () => {
   return <div>crearAlmacenHooks</div>;
 };

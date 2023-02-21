@@ -1,8 +1,14 @@
 import './css/App.css';
-import MainLayout from './layouts/MainLayout';
+import { AppRouter } from './router/AppRouter';
+import { AppTheme } from './theme';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const App: React.FC = () => {
-  return <MainLayout />;
+  return (
+    <AppTheme>
+      <AppRouter />
+    </AppTheme>
+  );
 };
 
 export default App;
