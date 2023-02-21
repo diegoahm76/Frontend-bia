@@ -46,27 +46,27 @@ interface Props {
   window?: () => Window;
 }
 
-const drawerWidth = 300;
+const drawer_width = 300;
 
-const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+const color_mode_context = React.createContext({ toggleColorMode: () => {} });
 
 function MainLayout(props: Props): JSX.Element {
   const { window } = props;
   const theme = useTheme();
-  const colorMode = React.useContext(ColorModeContext);
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [desktopOpen, setDesktopOpen] = React.useState(true);
-  const [open, setOpen] = React.useState(true);
+  const color_mode = React.useContext(color_mode_context);
+  const [mobile_open, set_mobile_open] = React.useState(false);
+  const [desktop_open, set_desktop_open] = React.useState(true);
+  const [open, set_open] = React.useState(true);
 
-  const handleDrawerToggle = (): void => {
-    setMobileOpen(!mobileOpen);
+  const handle_drawer_toggle = (): void => {
+    set_mobile_open(!mobile_open);
   };
-  const handleDrawerToggleDesktop = (): void => {
-    setDesktopOpen(!desktopOpen);
+  const handle_drawer_toggle_desktop = (): void => {
+    set_desktop_open(!desktop_open);
   };
 
-  const handleClick = (): void => {
-    setOpen(!open);
+  const handle_click = (): void => {
+    set_open(!open);
   };
 
   const drawer = (
@@ -90,8 +90,8 @@ function MainLayout(props: Props): JSX.Element {
             background: '#041926 !important',
           }}
         >
-          {mobileOpen && (
-            <IconButton onClick={handleDrawerToggle}>
+          {mobile_open && (
+            <IconButton onClick={handle_drawer_toggle}>
               {theme.direction === 'ltr' ? (
                 <ChevronLeftIcon />
               ) : (
@@ -107,7 +107,7 @@ function MainLayout(props: Props): JSX.Element {
         </Toolbar>
         <Divider className="divider" />
         <List sx={{ margin: '0 20px', color: 'secondary.main' }}>
-          <ListItemButton onClick={handleClick} sx={{ borderRadius: '10px' }}>
+          <ListItemButton onClick={handle_click} sx={{ borderRadius: '10px' }}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -148,7 +148,7 @@ function MainLayout(props: Props): JSX.Element {
         </List>
         <Divider className="divider" />
         <List sx={{ margin: '0 20px' }}>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -168,7 +168,7 @@ function MainLayout(props: Props): JSX.Element {
         </List>
         <Divider className="divider" />
         <List sx={{ margin: '0 20px' }}>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -185,7 +185,7 @@ function MainLayout(props: Props): JSX.Element {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -202,7 +202,7 @@ function MainLayout(props: Props): JSX.Element {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -219,7 +219,7 @@ function MainLayout(props: Props): JSX.Element {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -236,7 +236,7 @@ function MainLayout(props: Props): JSX.Element {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -253,7 +253,7 @@ function MainLayout(props: Props): JSX.Element {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -270,7 +270,7 @@ function MainLayout(props: Props): JSX.Element {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -287,7 +287,7 @@ function MainLayout(props: Props): JSX.Element {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -304,7 +304,7 @@ function MainLayout(props: Props): JSX.Element {
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClick}>
+          <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -334,10 +334,10 @@ function MainLayout(props: Props): JSX.Element {
       <AppBar
         elevation={0}
         sx={{
-          width: desktopOpen
-            ? { sm: `calc(100% - ${drawerWidth}px)` }
+          width: desktop_open
+            ? { sm: `calc(100% - ${drawer_width}px)` }
             : { md: `100%` },
-          ml: { sm: `${drawerWidth}px` },
+          ml: { sm: `${drawer_width}px` },
           transition: 'width 0.15s',
           bgcolor: 'secondary.main',
           background: 'transparent',
@@ -350,7 +350,7 @@ function MainLayout(props: Props): JSX.Element {
               color="inherit"
               aria-label="open drawer"
               edge="start"
-              onClick={handleDrawerToggle}
+              onClick={handle_drawer_toggle}
               sx={{
                 mr: 2,
                 display: { sm: 'none' },
@@ -363,7 +363,7 @@ function MainLayout(props: Props): JSX.Element {
               color="inherit"
               aria-label="open drawer"
               edge="start"
-              onClick={handleDrawerToggleDesktop}
+              onClick={handle_drawer_toggle_desktop}
               sx={{
                 display: { xs: 'none', sm: 'grid' },
                 background: '#042F4A',
@@ -380,7 +380,7 @@ function MainLayout(props: Props): JSX.Element {
             </IconButton>
           </Stack>
           <Stack spacing={2} direction="row">
-            <IconButton onClick={colorMode.toggleColorMode}>
+            <IconButton onClick={color_mode.toggleColorMode}>
               {theme.palette.mode === 'dark' ? (
                 <Brightness7Icon />
               ) : (
@@ -402,8 +402,8 @@ function MainLayout(props: Props): JSX.Element {
         <Drawer
           container={container}
           variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
+          open={mobile_open}
+          onClose={handle_drawer_toggle}
           ModalProps={{
             keepMounted: true, // Better open performance on mobile.
           }}
@@ -411,7 +411,7 @@ function MainLayout(props: Props): JSX.Element {
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
-              width: drawerWidth,
+              width: drawer_width,
               borderRight: 'none',
             },
             bgcolor: 'background.default',
@@ -421,13 +421,13 @@ function MainLayout(props: Props): JSX.Element {
         </Drawer>
         <Drawer
           variant="persistent"
-          open={desktopOpen}
-          onClose={handleDrawerToggleDesktop}
+          open={desktop_open}
+          onClose={handle_drawer_toggle_desktop}
           sx={{
             display: { xs: 'none', sm: 'block' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
-              width: drawerWidth,
+              width: drawer_width,
               bgcolor: 'background.default',
               borderRight: 'none',
             },
@@ -440,7 +440,7 @@ function MainLayout(props: Props): JSX.Element {
         sx={{
           padding: '0px 20px 0 20px',
           mt: 8,
-          ml: desktopOpen ? { sm: `${drawerWidth}px` } : `0px`,
+          ml: desktop_open ? { sm: `${drawer_width}px` } : `0px`,
           // background: "red",
         }}
       >
@@ -508,11 +508,11 @@ function MainLayout(props: Props): JSX.Element {
 
 // Dark Mode
 export default function ToggleColorMode(): JSX.Element {
-  const [mode, setMode] = React.useState<'dark' | 'light'>('dark');
-  const colorMode = React.useMemo(
+  const [mode, set_mode] = React.useState<'dark' | 'light'>('dark');
+  const color_mode = React.useMemo(
     () => ({
       toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'dark' ? 'light' : 'dark'));
+        set_mode((prevMode) => (prevMode === 'dark' ? 'light' : 'dark'));
       },
     }),
     []
@@ -595,10 +595,10 @@ export default function ToggleColorMode(): JSX.Element {
   );
 
   return (
-    <ColorModeContext.Provider value={colorMode}>
+    <color_mode_context.Provider value={color_mode}>
       <ThemeProvider theme={theme}>
         <MainLayout />
       </ThemeProvider>
-    </ColorModeContext.Provider>
+    </color_mode_context.Provider>
   );
 }
