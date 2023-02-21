@@ -16,7 +16,7 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["react", "@typescript-eslint", "babel"],
   "rules": {
     "@typescript-eslint/strict-boolean-expressions": "warn",
     "@typescript-eslint/dot-notation": "error",
@@ -26,6 +26,13 @@
         "selector": "variable",
         "format": ["snake_case"],
         "leadingUnderscore": "allow"
+      }
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ExportDefaultDeclaration",
+        "message": "Avoid using `export default` in ReactJS, use named exports instead."
       }
     ]
   }

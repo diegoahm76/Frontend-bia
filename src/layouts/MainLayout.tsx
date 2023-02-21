@@ -61,6 +61,7 @@ function MainLayout(props: Props): JSX.Element {
   const handle_drawer_toggle = (): void => {
     set_mobile_open(!mobile_open);
   };
+
   const handle_drawer_toggle_desktop = (): void => {
     set_desktop_open(!desktop_open);
   };
@@ -507,7 +508,8 @@ function MainLayout(props: Props): JSX.Element {
 }
 
 // Dark Mode
-export default function ToggleColorMode(): JSX.Element {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const ToggleColorMode: React.FC = () => {
   const [mode, set_mode] = React.useState<'dark' | 'light'>('dark');
   const color_mode = React.useMemo(
     () => ({
@@ -601,4 +603,4 @@ export default function ToggleColorMode(): JSX.Element {
       </ThemeProvider>
     </color_mode_context.Provider>
   );
-}
+};
