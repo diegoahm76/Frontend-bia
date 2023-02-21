@@ -1,23 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { type IUserInfo } from '../../../interfaces/authModels';
+// import clienteAxios from '../../../api/axios';
+import { type IUserInfo } from '../interfaces/authModels';
+
 
 const initial_state: IUserInfo = {
-  userinfo: {
-    email: 'cris',
+  user_info: {
+    email: '',
     id_usuario: 0,
-    nombre_usuario: '',
+    nombre_de_usuario: '',
     tokens: {
       access: '',
       refresh: '',
     },
   },
-  userSesion: '',
+  user_sesion: '',
   permisos: [],
   representante_legal: [],
   reintentos: false,
 };
 
-export const template_slice = createSlice({
+
+export const auth_slice = createSlice({
   name: 'counter',
   initialState: initial_state,
   reducers: {
@@ -33,4 +36,6 @@ export const template_slice = createSlice({
   },
 });
 
-export const { login, logout, checking_credentials } = template_slice.actions;
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const { login, logout, checking_credentials } = auth_slice.actions;
+

@@ -26,6 +26,7 @@ import { Chart } from '../commons/almacen/components/Chart';
 import { Deposits } from '../commons/almacen/components/Deposits';
 import { Orders } from '../commons/almacen/components/Orders';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const Copyright: React.FC = (props: any) => {
   return (
     <Typography
@@ -50,6 +51,7 @@ interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
@@ -68,6 +70,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
@@ -96,6 +99,7 @@ const Drawer = styled(MuiDrawer, {
 
 const md_theme = createTheme();
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const DashboardContent: React.FC = () => {
   const [open, set_open] = React.useState(true);
   const toggle_drawer = (): void => {
@@ -216,6 +220,7 @@ const DashboardContent: React.FC = () => {
   );
 };
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const MainLayout: React.FC = () => {
   return <DashboardContent />;
 };

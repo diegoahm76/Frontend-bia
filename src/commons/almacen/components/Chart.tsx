@@ -10,22 +10,23 @@ import {
 } from 'recharts';
 
 // Generate Sales Data
-const createData: any = (time: string, amount?: number) => {
+const create_data: any = (time: string, amount?: number) => {
   return { time, amount };
 };
 
 const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-  createData('24:00', undefined),
+  create_data('00:00', 0),
+  create_data('03:00', 300),
+  create_data('06:00', 600),
+  create_data('09:00', 800),
+  create_data('12:00', 1500),
+  create_data('15:00', 2000),
+  create_data('18:00', 2400),
+  create_data('21:00', 2400),
+  create_data('24:00', undefined),
 ];
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const Chart: React.FC = () => {
   const theme = useTheme();
 
