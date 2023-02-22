@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   FormControl,
@@ -6,22 +7,35 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  Link,
   TextField,
   Typography,
 } from '@mui/material';
+
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import ReCaptcha from 'react-google-recaptcha';
+
 import { use_rol } from '../hooks/LoginHooks';
+import { use_form } from '../../../hooks/useForm';
+import { checking_authentication } from '../store';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LoginScreen: React.FC = () => {
+  const dispatch = useDispatch();
+  const is_authenticated = useMemo(() => status === 'checking', [status]);
+
   const { set_is_captcha_valid, is_captcha_valid } = use_rol();
   const [show_password, set_show_password] = useState(false);
   const [disable, set_disale] = useState(true);
+  const [value, set_tab] = useState('1');
+  const { email, password, on_input_change } = use_form({
+    email: '',
+    password: '',
+  });
 
   const handle_click_show_password = (): void => {
     set_show_password((show) => !show);
@@ -31,6 +45,11 @@ export const LoginScreen: React.FC = () => {
     set_is_captcha_valid(value);
   };
 
+  const on_submit = (event: any): void => {
+    event.preventDefault();
+    dispatch(checking_authentication(email, password));
+  };
+
   useEffect(() => {
     if (is_captcha_valid) {
       set_disale(false);
@@ -38,15 +57,6 @@ export const LoginScreen: React.FC = () => {
       set_disale(true);
     }
   }, [is_captcha_valid]);
-
-  const [value, set_tab] = useState('1');
-
-  const handle_change = (
-    event: React.SyntheticEvent | null,
-    newValue: string
-  ): void => {
-    set_tab(newValue);
-  };
 
   return (
     <Grid
@@ -80,19 +90,28 @@ export const LoginScreen: React.FC = () => {
               <Typography variant="h5" textAlign={'center'} sx={{ mb: 1 }}>
                 Login
               </Typography>
-              <form>
+              <form onSubmit={on_submit}>
                 <Grid container direction={'column'} spacing={3}>
                   <Grid item>
-                    <TextField fullWidth label="Usuario o Email" type="text" />
+                    <TextField
+                      fullWidth
+                      label="Usuario o Email"
+                      value={email}
+                      name="email"
+                      onChange={on_input_change}
+                    />
                   </Grid>
                   <Grid item>
-                    <FormControl fullWidth variant="outlined">
+                    <FormControl fullWidth>
                       <InputLabel htmlFor="outlined-adornment-password">
                         Contraseña
                       </InputLabel>
                       <OutlinedInput
                         id="outlined-adornment-password"
                         type={show_password ? 'text' : 'password'}
+                        value={password}
+                        name="password"
+                        onChange={on_input_change}
                         endAdornment={
                           <InputAdornment position="end">
                             <IconButton
@@ -111,6 +130,11 @@ export const LoginScreen: React.FC = () => {
                         label="Contraseña"
                       />
                     </FormControl>
+                  </Grid>
+                  <Grid item>
+                    <Link sx={{ textDecoration: 'none' }} href="#">
+                      <Typography>¿Olvidó su contraseña?</Typography>
+                    </Link>
                   </Grid>
                   <Grid item container justifyContent={'center'}>
                     <ReCaptcha
@@ -132,28 +156,33 @@ export const LoginScreen: React.FC = () => {
                       variant="contained"
                       fullWidth
                       color="success"
-                      disabled={disable}
-                      onClick={() => {
-                        handle_change(null, '2');
-                      }}
+                      disabled={disable || is_authenticated}
+                      type="submit"
                     >
                       Iniciar Sesión
                     </Button>
+                  </Grid>
+                  <Grid item>
                     <Button
-                      variant="contained"
                       fullWidth
-                      color="success"
+                      sx={{ textTransform: 'none', textAlign: 'center' }}
+                      disabled={is_authenticated}
                       onClick={() => {
-                        handle_change(null, '1');
+                        set_tab('2');
                       }}
                     >
-                      Test
+                      <Typography sx={{ color: 'black' }}>
+                        No tienes cuenta? <b>Registrese</b>
+                      </Typography>
                     </Button>
                   </Grid>
                 </Grid>
               </form>
             </TabPanel>
-            <TabPanel value="2">Item Two</TabPanel>
+            <TabPanel value="2">
+              {/* Tab para el registro de usuario */}
+              Item Two
+            </TabPanel>
           </TabContext>
         </Grid>
       </Grid>

@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { NavBar, SidebarFernando } from '../global/components/';
+import { NavBar, SideBar } from '../components';
 
 const drawer_width = 300;
 
@@ -10,7 +10,7 @@ export const HomeLayout: any = ({ children }: any) => {
       {/* Navbar */}
       <NavBar drawer_width={drawer_width} />
       {/* Sidebar */}
-      <SidebarFernando drawer_width={drawer_width} />
+      <SideBar drawer_width={drawer_width} />
 
       <Box component={'main'} sx={{ flexGrow: 1, p: 3 }}>
         {children}

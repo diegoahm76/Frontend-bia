@@ -1,0 +1,20 @@
+import { type Dispatch } from "react"
+import { login_post } from "../request/authRequest"
+import { checking_credentials, login, logout } from "./authSlice"
+
+export const checking_authentication: any = (email: string, password: string) =>{
+  return async (dispatch: Dispatch<any>) => {
+    dispatch(checking_credentials())
+
+    const resp = await login_post({email, password})
+    // podemos enviar mensaje de error al dispatch
+    // dispatch(logout(resp.error_message))
+    if(resp.ok === false) { 
+    
+      dispatch(logout());
+       
+    }
+    
+    dispatch(login(resp.userinfo));
+  }
+}
