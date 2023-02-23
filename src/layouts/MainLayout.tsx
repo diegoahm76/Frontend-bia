@@ -1,21 +1,17 @@
 import * as React from 'react';
+import { Outlet } from 'react-router-dom';
 import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
 import {
-  Grid,
   AppBar,
   Box,
   Divider,
   Drawer,
   IconButton,
   List,
-  // ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Toolbar,
-  // Avatar,
-  Paper,
-  // Container,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -27,10 +23,6 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
-
-import { Chart } from '../commons/almacen/components/Chart';
-import { Deposits } from '../commons/almacen/components/Deposits';
-import { Orders } from '../commons/almacen/components/Orders';
 
 import Collapse from '@mui/material/Collapse';
 import { grey } from '@mui/material/colors';
@@ -50,7 +42,7 @@ const drawer_width = 300;
 
 const color_mode_context = React.createContext({ toggleColorMode: () => {} });
 
-function MainLayout(props: Props): JSX.Element {
+export function MainLayout(props: Props): JSX.Element {
   const { window } = props;
   const theme = useTheme();
   const color_mode = React.useContext(color_mode_context);
@@ -169,125 +161,6 @@ function MainLayout(props: Props): JSX.Element {
         </List>
         <Divider className="divider" />
         <List sx={{ margin: '0 20px' }}>
-          <ListItemButton onClick={handle_click}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary="Starred" />
-              </ListItemButton>
-            </List>
-          </Collapse>
-          <ListItemButton onClick={handle_click}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary="Starred" />
-              </ListItemButton>
-            </List>
-          </Collapse>
-          <ListItemButton onClick={handle_click}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary="Starred" />
-              </ListItemButton>
-            </List>
-          </Collapse>
-          <ListItemButton onClick={handle_click}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary="Starred" />
-              </ListItemButton>
-            </List>
-          </Collapse>
-          <ListItemButton onClick={handle_click}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary="Starred" />
-              </ListItemButton>
-            </List>
-          </Collapse>
-          <ListItemButton onClick={handle_click}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary="Starred" />
-              </ListItemButton>
-            </List>
-          </Collapse>
-          <ListItemButton onClick={handle_click}>
-            <ListItemIcon>
-              <InboxIcon />
-            </ListItemIcon>
-            <ListItemText primary="Inbox" />
-            {open ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding>
-              <ListItemButton sx={{ pl: 4 }}>
-                <ListItemIcon>
-                  <StarBorder />
-                </ListItemIcon>
-                <ListItemText primary="Starred" />
-              </ListItemButton>
-            </List>
-          </Collapse>
           <ListItemButton onClick={handle_click}>
             <ListItemIcon>
               <InboxIcon />
@@ -442,72 +315,16 @@ function MainLayout(props: Props): JSX.Element {
           padding: '0px 20px 0 20px',
           mt: 8,
           ml: desktop_open ? { sm: `${drawer_width}px` } : `0px`,
+          width: '100vw',
           // background: "red",
         }}
       >
-        <Grid
-          container
-          sx={{
-            position: 'relative',
-            zIndex: '1000000',
-            background: '#FAFAFA',
-            borderRadius: '15px 15px 0 0',
-            p: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-        >
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                    borderRadius: '15px',
-                  }}
-                >
-                  <Chart />
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                    borderRadius: '15px',
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderRadius: '15px',
-                  }}
-                >
-                  <Orders />
-                </Paper>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
+        <Outlet />
       </Box>
     </Box>
   );
 }
 
-// Dark Mode
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ToggleColorMode: React.FC = () => {
   const [mode, set_mode] = React.useState<'dark' | 'light'>('dark');
