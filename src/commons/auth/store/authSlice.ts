@@ -17,6 +17,7 @@ const initial_state: IUserInfo = {
   permisos: [],
   representante_legal: [],
   reintentos: false,
+  tab: '1',
   status: 'not-authenticated'
 };
 
@@ -40,9 +41,12 @@ export const auth_slice = createSlice({
     checking_credentials: (state) => {
       state.status = 'checking'
     },
+    change_tab: (state, {payload}) => {
+      state.tab = payload
+    }
   },
 });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const { login, logout, checking_credentials } = auth_slice.actions;
+export const { login, logout, checking_credentials, change_tab } = auth_slice.actions;
 

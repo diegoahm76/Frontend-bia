@@ -28,6 +28,7 @@ export interface IUserInfo {
   };
   user_sesion: string;
   reintentos: boolean;
+  tab?: '1' | '2',
   status: 'checking' | 'not-authenticated' | 'authenticated'
 }
 
