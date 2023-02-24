@@ -1,10 +1,5 @@
-import { useEffect, useState } from 'react';
-
-import OutlinedInput from '@mui/material/OutlinedInput';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Visibility from '@mui/icons-material/Visibility';
-import ReCaptcha from 'react-google-recaptcha';
-import { use_rol } from '../hooks/LoginHooks';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   FormControl,
@@ -12,15 +7,48 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
+  Link,
   TextField,
+  Typography,
 } from '@mui/material';
+
+import OutlinedInput from '@mui/material/OutlinedInput';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
+import ReCaptcha from 'react-google-recaptcha';
+
+import { use_rol } from '../hooks/LoginHooks';
+import { use_form } from '../../../hooks/useForm';
+import { checking_authentication } from '../store';
+import { LoadingButton } from '@mui/lab';
+
+// import logo_bia from '.../../../assets/logos/logo_bia.png';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LoginForm: React.FC = () => {
   const { set_is_captcha_valid, is_captcha_valid } = use_rol();
+  const dispatch = useDispatch();
+  const { status } = useSelector((state: any) => state.auth);
+  const is_authenticating = useMemo(() => status === 'checking', [status]);
   const [show_password, set_show_password] = useState(false);
   const [disable, set_disale] = useState(true);
-  const [value, set_tab] = useState('1');
+  const { email, password, on_input_change } = use_form({
+    email: '',
+    password: '',
+  });
+
+  const handle_click_show_password = (): void => {
+    set_show_password((show) => !show);
+  };
+
+  const set_value = (value: boolean): void => {
+    set_is_captcha_valid(value);
+  };
+
+  const on_submit = (event: any): void => {
+    event.preventDefault();
+    dispatch(checking_authentication(email, password));
+  };
 
   useEffect(() => {
     if (is_captcha_valid) {
@@ -28,38 +56,31 @@ export const LoginForm: React.FC = () => {
     } else {
       set_disale(true);
     }
-    console.log(value);
   }, [is_captcha_valid]);
 
-  const handle_click_show_password = (): void => {
-    set_show_password((show: boolean) => !show);
-  };
-
-  const set_value = (value: boolean): void => {
-    set_is_captcha_valid(value);
-  };
-
-  const handle_change = (
-    event: React.SyntheticEvent | null,
-    newValue: string
-  ): void => {
-    set_tab(newValue);
-  };
-
   return (
-    <form>
+    <form onSubmit={on_submit}>
       <Grid container direction={'column'} spacing={3}>
         <Grid item>
-          <TextField fullWidth label="Usuario o Email" type="text" />
+          <TextField
+            fullWidth
+            label="Usuario o Email"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
         </Grid>
         <Grid item>
-          <FormControl fullWidth variant="outlined">
+          <FormControl fullWidth>
             <InputLabel htmlFor="outlined-adornment-password">
               Contraseña
             </InputLabel>
             <OutlinedInput
               id="outlined-adornment-password"
               type={show_password ? 'text' : 'password'}
+              value={password}
+              name="password"
+              onChange={on_input_change}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -74,6 +95,11 @@ export const LoginForm: React.FC = () => {
               label="Contraseña"
             />
           </FormControl>
+        </Grid>
+        <Grid item>
+          <Link sx={{ textDecoration: 'none' }} href="#">
+            <Typography>¿Olvidó su contraseña?</Typography>
+          </Link>
         </Grid>
         <Grid item container justifyContent={'center'}>
           <ReCaptcha
@@ -91,26 +117,27 @@ export const LoginForm: React.FC = () => {
           />
         </Grid>
         <Grid item justifyContent="center" container>
-          <Button
+          <LoadingButton
+            type="submit"
             variant="contained"
             fullWidth
             color="success"
+            loading={is_authenticating}
             disabled={disable}
-            onClick={() => {
-              handle_change(null, '2');
-            }}
+            style={{ fontSize: '.9rem' }}
           >
             Iniciar Sesión
-          </Button>
+          </LoadingButton>
+        </Grid>
+        <Grid item>
           <Button
-            variant="contained"
             fullWidth
-            color="success"
-            onClick={() => {
-              handle_change(null, '1');
-            }}
+            sx={{ textTransform: 'none', textAlign: 'center' }}
+            href="/auth/register"
           >
-            Test
+            <Typography sx={{ color: 'black' }}>
+              No tienes cuenta? <b>Registrese</b>
+            </Typography>
           </Button>
         </Grid>
       </Grid>
