@@ -11,16 +11,17 @@ import {
   type SelectChangeEvent,
   TextField,
   Typography,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 
 import { use_form } from '../../../hooks/useForm';
-import { checking_authentication, change_tab } from '../store';
+import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-// import logo_bia from '.../../../assets/logos/logo_bia.png';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegisterForm: React.FC = () => {
@@ -48,15 +49,22 @@ export const RegisterForm: React.FC = () => {
       <Typography variant="h6" textAlign="center" pb={2}>
         Formulario registro
       </Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} mt={0.1}>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" fontWeight="bold">
+            Datos personales
+          </Typography>
+        </Grid>
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
+            <InputLabel id="demo-simple-select-helper-label">
+              Tipo de persona
+            </InputLabel>
             <Select
               labelId="demo-simple-select-helper-label"
               id="demo-simple-select-helper"
               value={age}
-              label="Age"
+              label="Tipo de persona"
               fullWidth
               onChange={handle_change}
             >
@@ -70,9 +78,65 @@ export const RegisterForm: React.FC = () => {
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6}>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-helper-label">
+              Tipo de documento
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-helper-label"
+              id="demo-simple-select-helper"
+              value={age}
+              label="Tipo de documento"
+              fullWidth
+              onChange={handle_change}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          container
+          justifyContent="center
+        "
+        >
+          <Grid item>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox defaultChecked />}
+                label="¿Requiere nombre comercial?"
+              />
+            </FormGroup>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
             label="Número de documento"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Dígito de verificación"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Nombre comercial"
             value={email}
             name="email"
             onChange={on_input_change}
@@ -126,8 +190,81 @@ export const RegisterForm: React.FC = () => {
             />
           </LocalizationProvider>
         </Grid>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" fontWeight="bold">
+            Datos de notificación
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="E-mail"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Confirme su e-mail"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Celular"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Confirme su celular"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" fontWeight="bold">
+            Datos de la cuenta
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Nombre de usuario"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Contraseña"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            fullWidth
+            label="Repita la contraseña"
+            value={email}
+            name="email"
+            onChange={on_input_change}
+          />
+        </Grid>
         <Grid item justifyContent="center" container>
-          <Grid xs={12} sm={8} md={4}>
+          <Grid item xs={12} sm={8} md={4}>
             <LoadingButton
               type="submit"
               variant="contained"
@@ -144,9 +281,7 @@ export const RegisterForm: React.FC = () => {
           <Button
             fullWidth
             sx={{ textTransform: 'none', textAlign: 'center' }}
-            onClick={() => {
-              dispatch(change_tab('1'));
-            }}
+            href="/auth/login"
           >
             <Typography sx={{ color: 'black' }}>Iniciar sesión</Typography>
           </Button>

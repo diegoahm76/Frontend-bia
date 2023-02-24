@@ -19,7 +19,7 @@ import ReCaptcha from 'react-google-recaptcha';
 
 import { use_rol } from '../hooks/LoginHooks';
 import { use_form } from '../../../hooks/useForm';
-import { checking_authentication, change_tab } from '../store';
+import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
 
 // import logo_bia from '.../../../assets/logos/logo_bia.png';
@@ -133,9 +133,7 @@ export const LoginForm: React.FC = () => {
           <Button
             fullWidth
             sx={{ textTransform: 'none', textAlign: 'center' }}
-            onClick={() => {
-              dispatch(change_tab('2'));
-            }}
+            href="/auth/register"
           >
             <Typography sx={{ color: 'black' }}>
               No tienes cuenta? <b>Registrese</b>
