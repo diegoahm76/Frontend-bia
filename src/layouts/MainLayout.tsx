@@ -10,7 +10,7 @@ import { useMemo, useState } from 'react';
 const color_mode_context = React.createContext({ toggleColorMode: () => {} });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ToggleColorMode: React.FC = () => {
+export const MainLayout: React.FC = () => {
   const [mode, set_mode] = useState<'dark' | 'light'>('dark');
   const color_mode = useMemo(
     () => ({
