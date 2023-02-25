@@ -1,6 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Box, Stack, Button, Snackbar, IconButton } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Stack,
+  Button,
+  Snackbar,
+  IconButton,
+  Typography,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -9,209 +17,112 @@ import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
-import { DataGrid } from '@mui/x-data-grid';
-import { type GridColDef } from '@mui/x-data-grid';
+// import { DataGrid } from '@mui/x-data-grid';
+// import { type GridColDef } from '@mui/x-data-grid';
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 20 },
-  {
-    field: 'item',
-    headerName: 'Item',
-    width: 20,
-    editable: true,
-  },
-  {
-    field: 'nombre',
-    headerName: 'Nombre',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'descripcion',
-    headerName: 'Descripción',
-    type: 'number',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'version',
-    headerName: 'Versión',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 100,
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-  {
-    field: 'fechaTerminado',
-    headerName: 'Fecha terminado',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 150,
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-  {
-    field: 'fechaPublicacion',
-    headerName: 'Fecha publicación',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 150,
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-  {
-    field: 'fechaRetiro',
-    headerName: 'Fecha retiro',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 150,
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-  {
-    field: 'justificacion',
-    headerName: 'Justificacion nueva versión',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 150,
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-  {
-    field: 'actual',
-    headerName: 'Actual',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 100,
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-  {
-    field: 'acciones',
-    headerName: 'Acciones',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 100,
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-];
+import {
+  // useAppSelector,
 
-const rows = [
-  {
-    id: 1,
-    item: 1,
-    nombre: 'Snow',
-    descripcion: 'Jon',
-    version: 35,
-    fechaTerminado: '',
-    fechaPublicacion: '',
-    fechaRetiro: '',
-    justificacion: '',
-    actual: '',
-  },
-  {
-    id: 2,
-    item: 2,
-    nombre: 'Lannister',
-    descripcion: 'Cersei',
-    version: 42,
-    fechaTerminado: '',
-    fechaPublicacion: '',
-    fechaRetiro: '',
-    justificacion: '',
-    actual: '',
-  },
-  {
-    id: 3,
-    item: 3,
-    nombre: 'Lannister',
-    descripcion: 'Jaime',
-    version: 45,
-    fechaTerminado: '',
-    fechaPublicacion: '',
-    fechaRetiro: '',
-    justificacion: '',
-    actual: '',
-  },
-  {
-    id: 4,
-    item: 4,
-    nombre: 'Stark',
-    descripcion: 'Arya',
-    version: 16,
-    fechaTerminado: '',
-    fechaPublicacion: '',
-    fechaRetiro: '',
-    justificacion: '',
-    actual: '',
-  },
-  {
-    id: 5,
-    item: 5,
-    nombre: 'Targaryen',
-    descripcion: 'Daenerys',
-    version: null,
-    fechaTerminado: '',
-    fechaPublicacion: '',
-    fechaRetiro: '',
-    justificacion: '',
-    actual: '',
-  },
-  {
-    id: 6,
-    item: 6,
-    nombre: 'Melisandre',
-    descripcion: null,
-    version: 150,
-    fechaTerminado: '',
-    fechaPublicacion: '',
-    fechaRetiro: '',
-    justificacion: '',
-    actual: '',
-  },
-  {
-    id: 7,
-    item: 7,
-    nombre: 'Clifford',
-    descripcion: 'Ferrara',
-    version: 44,
-    fechaTerminado: '',
-    fechaPublicacion: '',
-    fechaRetiro: '',
-    justificacion: '',
-    actual: '',
-  },
-  {
-    id: 8,
-    item: 8,
-    nombre: 'Frances',
-    descripcion: 'Rossini',
-    version: 36,
-    fechaTerminado: '',
-    fechaPublicacion: '',
-    fechaRetiro: '',
-    justificacion: '',
-    actual: '',
-  },
-  {
-    id: 9,
-    item: 9,
-    nombre: 'Roxie',
-    descripcion: 'Harvey',
-    version: 65,
-    fechaTerminado: '',
-    fechaPublicacion: '',
-    fechaRetiro: '',
-    justificacion: '',
-    actual: '',
-  },
-];
+  useAppDispatch,
+} from '../store/hooks/hooks';
+// Thunks
+import { get_organigrams_service } from '../store/thunks/organigramThunks';
+
+// const columns: GridColDef[] = [
+//   { field: 'id', headerName: 'ID', width: 20 },
+//   {
+//     field: 'item',
+//     headerName: 'Item',
+//     width: 20,
+//     editable: true,
+//   },
+//   {
+//     field: 'nombre',
+//     headerName: 'Nombre',
+//     width: 150,
+//     editable: true,
+//   },
+//   {
+//     field: 'descripcion',
+//     headerName: 'Descripción',
+//     type: 'number',
+//     width: 150,
+//     editable: true,
+//   },
+//   {
+//     field: 'version',
+//     headerName: 'Versión',
+//     description: 'This column has a value getter and is not sortable.',
+//     sortable: false,
+//     width: 100,
+//     // valueGetter: (params: GridValueGetterParams) =>
+//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+//   },
+//   {
+//     field: 'fechaTerminado',
+//     headerName: 'Fecha terminado',
+//     description: 'This column has a value getter and is not sortable.',
+//     sortable: false,
+//     width: 150,
+//     // valueGetter: (params: GridValueGetterParams) =>
+//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+//   },
+//   {
+//     field: 'fechaPublicacion',
+//     headerName: 'Fecha publicación',
+//     description: 'This column has a value getter and is not sortable.',
+//     sortable: false,
+//     width: 150,
+//     // valueGetter: (params: GridValueGetterParams) =>
+//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+//   },
+//   {
+//     field: 'fechaRetiro',
+//     headerName: 'Fecha retiro',
+//     description: 'This column has a value getter and is not sortable.',
+//     sortable: false,
+//     width: 150,
+//     // valueGetter: (params: GridValueGetterParams) =>
+//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+//   },
+//   {
+//     field: 'justificacion',
+//     headerName: 'Justificacion nueva versión',
+//     description: 'This column has a value getter and is not sortable.',
+//     sortable: false,
+//     width: 150,
+//     // valueGetter: (params: GridValueGetterParams) =>
+//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+//   },
+//   {
+//     field: 'actual',
+//     headerName: 'Actual',
+//     description: 'This column has a value getter and is not sortable.',
+//     sortable: false,
+//     width: 100,
+//     // valueGetter: (params: GridValueGetterParams) =>
+//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+//   },
+//   {
+//     field: 'acciones',
+//     headerName: 'Acciones',
+//     description: 'This column has a value getter and is not sortable.',
+//     sortable: false,
+//     width: 100,
+//     // valueGetter: (params: GridValueGetterParams) =>
+//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+//   },
+// ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearOrganigramaScreen: React.FC = () => {
+export function CrearOrganigramaScreen(): JSX.Element {
   const navigate = useNavigate();
+  // const dispatch = use_app_dispatch();
+  // The `state` arg is correctly typed as `RootState` already
+  // const { organigram } = useAppSelector((state) => state.organigram);
+  const dispatch = useAppDispatch();
+
+  // console.log(organigram, 'Hola');
   const [open, set_open] = React.useState(false);
   const [open_snack, set_open_snack] = React.useState(false);
 
@@ -255,6 +166,12 @@ export const CrearOrganigramaScreen: React.FC = () => {
     </React.Fragment>
   );
 
+  // UseEffect para obtener organigramas
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+    void dispatch(get_organigrams_service());
+  }, []);
+
   return (
     <Grid
       container
@@ -276,7 +193,7 @@ export const CrearOrganigramaScreen: React.FC = () => {
               'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
             width: '100%',
             height: '40px',
-            color: 'white',
+
             borderRadius: '10px',
             pl: '20px',
             fontSize: '17px',
@@ -284,7 +201,7 @@ export const CrearOrganigramaScreen: React.FC = () => {
             alignContent: 'center',
           }}
         >
-          ORGANIGRAMAS
+          <Typography sx={{ color: 'white' }}>ORGANIGRAMAS</Typography>
         </Grid>
         <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
           <Button
@@ -297,14 +214,14 @@ export const CrearOrganigramaScreen: React.FC = () => {
         </Stack>
         <Grid item>
           <Box sx={{ height: 400, width: '100%' }}>
-            <DataGrid
+            {/* <DataGrid
               autoHeight
-              rows={rows}
+              rows={organigram}
               columns={columns}
               pageSize={5}
               rowsPerPageOptions={[5]}
               experimentalFeatures={{ newEditingApi: true }}
-            />
+            /> */}
           </Box>
         </Grid>
         {/* Dialogo - Crear organigrama */}
@@ -378,4 +295,4 @@ export const CrearOrganigramaScreen: React.FC = () => {
       </Grid>
     </Grid>
   );
-};
+}

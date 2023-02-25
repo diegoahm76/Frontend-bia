@@ -2,6 +2,7 @@
 
 body {
   margin: 0;
+  background: transparent;
 }
 
 body::-webkit-scrollbar {
@@ -23,14 +24,29 @@ body::-webkit-scrollbar-thumb {
 }
 
 .divider {
-  height: 1px;
+  height: 1.5px;
   border: none !important;
   border-style: none;
   background: transparent;
-  background-image: linear-gradient(90deg,
-      hsla(0deg, 0%, 100%, 0),
-      #fff,
-      hsla(0deg, 0%, 100%, 0)) !important;
+  background-image: linear-gradient(
+    90deg,
+    hsla(0deg, 0%, 100%, 0),
+    #fff,
+    hsla(0deg, 0%, 100%, 0)
+  ) !important;
+}
+
+.divider2 {
+  height: 1.5px;
+  border: none !important;
+  border-style: none;
+  background: transparent;
+  background-image: linear-gradient(
+    90deg,
+    hsl(0, 0%, 100%),
+    #042f4a,
+    hsla(0, 0%, 100%)
+  ) !important;
 }
 
 .box-shadow {

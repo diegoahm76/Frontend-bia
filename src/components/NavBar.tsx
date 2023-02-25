@@ -1,29 +1,48 @@
-import { createContext, useContext, useState } from 'react';
-import { AppBar, IconButton, Stack, Toolbar, useTheme } from '@mui/material';
+// import { createContext, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppBar, IconButton, Stack, Toolbar } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import {
+  open_drawer_desktop,
+  open_drawer_mobile,
+  handle_mod_dark,
+} from '../store/layoutSlice';
 
 interface Props {
   drawer_width: number;
 }
 
-const color_mode_context = createContext({ toggleColorMode: () => {} });
+// const color_mode_context = createContext({ toggleColorMode: () => {} });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
-  const color_mode = useContext(color_mode_context);
-  const [desktop_open, set_desktop_open] = useState(true);
-  const [mobile_open, set_mobile_open] = useState(false);
-  const theme = useTheme();
+  const dispatch = useDispatch();
+  // const color_mode = useContext(color_mode_context);
+  // const theme = useTheme();
+
+  const { mobile_open, desktop_open, mod_dark } = useSelector(
+    (state: {
+      sidebar: {
+        mobile_open: boolean;
+        desktop_open: boolean;
+        mod_dark: boolean;
+      };
+    }) => state.sidebar
+  );
 
   const handle_drawer_toggle = (): void => {
-    set_mobile_open(!mobile_open);
+    dispatch(open_drawer_mobile(!mobile_open));
   };
 
   const handle_drawer_toggle_desktop = (): void => {
-    set_desktop_open(!desktop_open);
+    dispatch(open_drawer_desktop(!desktop_open));
+  };
+
+  const handle_button_mod_dark = (): void => {
+    dispatch(handle_mod_dark(!mod_dark));
   };
 
   return (
@@ -36,8 +55,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             : { md: `100%` },
           ml: { sm: `${drawer_width}px` },
           transition: 'width 0.15s',
-          bgcolor: 'secondary.main',
-          background: 'transparent',
+          bgcolor: 'background.default',
           position: 'absolute',
         }}
       >
@@ -77,15 +95,17 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             </IconButton>
           </Stack>
           <Stack spacing={2} direction="row">
-            <IconButton onClick={color_mode.toggleColorMode}>
-              {theme.palette.mode === 'dark' ? (
-                <Brightness7Icon />
+            <IconButton onClick={handle_button_mod_dark}>
+              {mod_dark ? (
+                <Brightness7Icon sx={{ color: '#FAFAFA' }} />
               ) : (
-                <Brightness4Icon />
+                <Brightness4Icon sx={{ color: '#707070' }} />
               )}
             </IconButton>
             <IconButton>
-              <NotificationsIcon />
+              <NotificationsIcon
+                sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
+              />
             </IconButton>
           </Stack>
         </Toolbar>

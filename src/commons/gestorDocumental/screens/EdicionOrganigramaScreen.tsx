@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import PreviewIcon from '@mui/icons-material/Preview';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Title } from '../../../components';
 import { DataGrid } from '@mui/x-data-grid';
 import { type GridColDef } from '@mui/x-data-grid';
 
@@ -106,24 +107,7 @@ export const EdicionOrganigramaScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Box
-            className={`border px-4 text-white fs-5 p-1`}
-            sx={{
-              display: 'grid',
-              background:
-                'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-              width: '100%',
-              height: '40px',
-              color: 'white',
-              borderRadius: '10px',
-              pl: '20px',
-              fontSize: '17px',
-              fontWeight: 'bold',
-              alignContent: 'center',
-            }}
-          >
-            EDICION ORGANIGRAMA
-          </Box>
+          <Title title="EDICION ORGANIGRAMA" />
           <Box
             component="form"
             sx={{ mt: '20px' }}
@@ -185,24 +169,7 @@ export const EdicionOrganigramaScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Box
-            className={`border px-4 text-white fs-5 p-1`}
-            sx={{
-              display: 'grid',
-              background:
-                'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-              width: '100%',
-              height: '40px',
-              color: 'white',
-              borderRadius: '10px',
-              pl: '20px',
-              fontSize: '17px',
-              fontWeight: 'bold',
-              alignContent: 'center',
-            }}
-          >
-            NIVELES ORGANIZACIONALES
-          </Box>
+          <Title title="NIVELES ORGANIZACIONALES" />
           <Box sx={{ mt: '20px' }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
@@ -258,24 +225,7 @@ export const EdicionOrganigramaScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Box
-            className={`border px-4 text-white fs-5 p-1`}
-            sx={{
-              display: 'grid',
-              background:
-                'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-              width: '100%',
-              height: '40px',
-              color: 'white',
-              borderRadius: '10px',
-              pl: '20px',
-              fontSize: '17px',
-              fontWeight: 'bold',
-              alignContent: 'center',
-            }}
-          >
-            UNIDADES ORGANIZACIONALES
-          </Box>
+          <Title title="UNIDADES ORGANIZACIONALES" />
           <Box
             component="form"
             sx={{ mt: '20px' }}

@@ -1,3 +1,3 @@
 export * from './NavBar'
 export * from './SideBar'
-export * from './SidebarFernando'
+export * from './Title'

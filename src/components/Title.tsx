@@ -13,11 +13,11 @@ export const Title: React.FC<Props> = ({ title }: Props) => {
           'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
         width: '100%',
         height: '40px',
-        color: 'white',
+        color: '#fff',
         borderRadius: '10px',
         pl: '20px',
         fontSize: '17px',
-        fontWeight: 'bold',
+        fontWeight: '900',
         alignContent: 'center',
       }}
     >
