@@ -7,12 +7,11 @@ export const checking_authentication: any = (email: string, password: string) =>
     dispatch(checking_credentials())
 
     const resp = await login_post({email, password})
+
     // podemos enviar mensaje de error al dispatch
-    // dispatch(logout(resp.error_message))
     if(resp.ok === false) { 
-    
-      dispatch(logout());
-       
+      dispatch(logout({error_message: resp.error_message}))
+      return
     }
     
     dispatch(login(resp.userinfo));
