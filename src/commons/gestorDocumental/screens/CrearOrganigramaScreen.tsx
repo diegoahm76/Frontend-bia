@@ -7,124 +7,144 @@ import {
   Button,
   Snackbar,
   IconButton,
-  Typography,
+  Avatar,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Chip,
 } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
-// import { DataGrid } from '@mui/x-data-grid';
-// import { type GridColDef } from '@mui/x-data-grid';
-
 import {
-  // useAppSelector,
+  DataGrid,
+  // type GridValueGetterParams,
+  type GridColDef,
+} from '@mui/x-data-grid';
+import { useAppDispatch, useAppSelector } from '../store/hooks/hooks';
 
-  useAppDispatch,
-} from '../store/hooks/hooks';
-// Thunks
 import { get_organigrams_service } from '../store/thunks/organigramThunks';
+import { Title } from '../../../components/Title';
 
-// const columns: GridColDef[] = [
-//   { field: 'id', headerName: 'ID', width: 20 },
-//   {
-//     field: 'item',
-//     headerName: 'Item',
-//     width: 20,
-//     editable: true,
-//   },
-//   {
-//     field: 'nombre',
-//     headerName: 'Nombre',
-//     width: 150,
-//     editable: true,
-//   },
-//   {
-//     field: 'descripcion',
-//     headerName: 'Descripción',
-//     type: 'number',
-//     width: 150,
-//     editable: true,
-//   },
-//   {
-//     field: 'version',
-//     headerName: 'Versión',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 100,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'fechaTerminado',
-//     headerName: 'Fecha terminado',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 150,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'fechaPublicacion',
-//     headerName: 'Fecha publicación',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 150,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'fechaRetiro',
-//     headerName: 'Fecha retiro',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 150,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'justificacion',
-//     headerName: 'Justificacion nueva versión',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 150,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'actual',
-//     headerName: 'Actual',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 100,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'acciones',
-//     headerName: 'Acciones',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 100,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-// ];
+const columns: GridColDef[] = [
+  { field: 'id_organigrama', headerName: 'ID', width: 20 },
+  {
+    field: 'nombre',
+    headerName: 'Nombre',
+    width: 200,
+    editable: true,
+  },
+  {
+    field: 'descripcion',
+    headerName: 'Descripción',
+    type: 'number',
+    width: 150,
+    editable: true,
+  },
+  {
+    field: 'version',
+    headerName: 'Versión',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 100,
+    // valueGetter: (params: GridValueGetterParams) =>
+    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+  },
+  {
+    field: 'fecha_terminado',
+    headerName: 'Fecha terminado',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 150,
+    // valueGetter: (params: GridValueGetterParams) =>
+    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+  },
+  {
+    field: 'fecha_puesta_produccion',
+    headerName: 'Fecha publicación',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 150,
+    // valueGetter: (params: GridValueGetterParams) =>
+    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+  },
+  {
+    field: 'fecha_retiro_produccion',
+    headerName: 'Fecha retiro',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 150,
+    // valueGetter: (params: GridValueGetterParams) =>
+    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+  },
+  {
+    field: 'justificacion_nueva_version',
+    headerName: 'Justificacion nueva versión',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 150,
+    // valueGetter: (params: GridValueGetterParams) =>
+    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+  },
+  {
+    field: 'actual',
+    headerName: 'Actual',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 100,
+    // valueGetter: (params) => {
+    //   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    //   return params.row.actual ? 'Sí' : 'No';
+    // },
+    renderCell: (params) => {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      return params.row.actual ? (
+        <Chip size="small" label="Sí" color="success" variant="outlined" />
+      ) : (
+        <Chip size="small" label="No" color="error" variant="outlined" />
+      );
+    },
+  },
+  {
+    field: 'acciones',
+    headerName: 'Acciones',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 100,
+    renderCell: (params) => (
+      <>
+        <IconButton
+        // onClick={() => handleEditar(params.row.id)}
+        >
+          <Avatar
+            sx={{
+              width: 24,
+              height: 24,
+              background: '#fff',
+              border: '2px solid',
+            }}
+            variant="rounded"
+          >
+            <EditIcon
+              sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+            />
+          </Avatar>
+        </IconButton>
+      </>
+    ),
+  },
+];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearOrganigramaScreen(): JSX.Element {
   const navigate = useNavigate();
-  // const dispatch = use_app_dispatch();
-  // The `state` arg is correctly typed as `RootState` already
-  // const { organigram } = useAppSelector((state) => state.organigram);
   const dispatch = useAppDispatch();
-
-  // console.log(organigram, 'Hola');
   const [open, set_open] = React.useState(false);
   const [open_snack, set_open_snack] = React.useState(false);
+  const { organigram } = useAppSelector((state) => state.organigram);
 
   const handle_click_open = (): void => {
     set_open(true);
@@ -135,7 +155,6 @@ export function CrearOrganigramaScreen(): JSX.Element {
   };
 
   const handle_click_snack = (): void => {
-    // set_open_snack(true);
     navigate('/dashboard/gestor-documental/organigrama/editar-organigrama');
   };
 
@@ -184,25 +203,7 @@ export function CrearOrganigramaScreen(): JSX.Element {
       }}
     >
       <Grid item xs={12}>
-        <Grid
-          item
-          className={`border px-4 text-white fs-5 p-1`}
-          sx={{
-            display: 'grid',
-            background:
-              'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-            width: '100%',
-            height: '40px',
-
-            borderRadius: '10px',
-            pl: '20px',
-            fontSize: '17px',
-            fontWeight: 'bold',
-            alignContent: 'center',
-          }}
-        >
-          <Typography sx={{ color: 'white' }}>ORGANIGRAMAS</Typography>
-        </Grid>
+        <Title title="ORGANIGRAMAS"></Title>
         <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
           <Button
             variant="outlined"
@@ -213,15 +214,17 @@ export function CrearOrganigramaScreen(): JSX.Element {
           </Button>
         </Stack>
         <Grid item>
-          <Box sx={{ height: 400, width: '100%' }}>
-            {/* <DataGrid
+          <Box sx={{ height: 400, width: '100%', mb: '20px' }}>
+            <DataGrid
+              density="compact"
               autoHeight
               rows={organigram}
               columns={columns}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
               experimentalFeatures={{ newEditingApi: true }}
-            /> */}
+              getRowId={(row) => row.id_organigrama}
+            />
           </Box>
         </Grid>
         {/* Dialogo - Crear organigrama */}
@@ -237,7 +240,7 @@ export function CrearOrganigramaScreen(): JSX.Element {
               type="text"
               fullWidth
               helperText="Ingrese nombre"
-              variant="standard"
+              size="small"
             />
             <TextField
               autoFocus
@@ -248,7 +251,7 @@ export function CrearOrganigramaScreen(): JSX.Element {
               type="text"
               fullWidth
               helperText="Ingrese versión"
-              variant="standard"
+              size="small"
             />
             <TextField
               error
@@ -260,7 +263,7 @@ export function CrearOrganigramaScreen(): JSX.Element {
               type="text"
               fullWidth
               helperText="Ingrese descripción"
-              variant="standard"
+              size="small"
             />
           </DialogContent>
           <DialogActions>

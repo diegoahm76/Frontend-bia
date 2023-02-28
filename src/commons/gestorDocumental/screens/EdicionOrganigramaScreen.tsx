@@ -1,6 +1,5 @@
 import type React from 'react';
-import { Grid, Box, Stack, Button, MenuItem } from '@mui/material';
-import TextField from '@mui/material/TextField';
+import { Grid, Box, Stack, Button, MenuItem, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import PreviewIcon from '@mui/icons-material/Preview';
 import SaveIcon from '@mui/icons-material/Save';
@@ -117,7 +116,6 @@ export const EdicionOrganigramaScreen: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <TextField
-                  error
                   required
                   id="outlined-error-helper-text"
                   label="Nombre"
@@ -175,7 +173,6 @@ export const EdicionOrganigramaScreen: React.FC = () => {
               <Grid item xs={12} sm={4}>
                 <Box component="form" noValidate autoComplete="off">
                   <TextField
-                    error
                     required
                     id="outlined-error-helper-text"
                     label="Nombre"

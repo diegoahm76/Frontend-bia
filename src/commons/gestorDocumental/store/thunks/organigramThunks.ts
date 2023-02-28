@@ -43,7 +43,6 @@ export const get_organigrams_service = () => {
         try {
             const { data } = await api.get("almacen/organigrama/get/");
             dispatch(get_organigrams(data.Organigramas));
-            console.log(data);
             return data;
         } catch (error: any) {
             void notification_error(error.response.data.detail);
