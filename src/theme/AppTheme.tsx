@@ -1,47 +1,13 @@
-import { useMemo } from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { light_theme } from '../theme/LightTheme';
-import { dark_theme } from '../theme/DarkTheme';
-import { useSelector } from 'react-redux';
+import { use_theme } from './ConfigTheme';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AppTheme: any = ({ children }: any) => {
-  const { mod_dark } = useSelector(
-    (state: {
-      sidebar: {
-        mod_dark: boolean;
-      };
-    }) => state.sidebar
-  );
-
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: mod_dark ? 'dark' : 'light',
-          ...(mod_dark ? dark_theme : light_theme),
-        },
-        typography: {
-          fontFamily: 'Roboto',
-        },
-        components: {
-          MuiButton: {
-            defaultProps: {
-              style: {
-                textTransform: 'none' as const,
-                borderRadius: '0.5em',
-              },
-            },
-          },
-        },
-      }),
-    [mod_dark]
-  );
-
+  const { custom_theme } = use_theme();
   return (
     <>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={custom_theme}>
         <CssBaseline />
         {children}
       </ThemeProvider>
