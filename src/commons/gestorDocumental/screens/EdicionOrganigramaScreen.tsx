@@ -1,4 +1,5 @@
 import type React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Grid, Box, Stack, Button, MenuItem, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import PreviewIcon from '@mui/icons-material/Preview';
@@ -7,6 +8,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Title } from '../../../components';
 import { DataGrid } from '@mui/x-data-grid';
 import { type GridColDef } from '@mui/x-data-grid';
+// import { useAppSelector } from '../store/hooks/hooks';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Nivel', width: 150 },
@@ -92,6 +94,17 @@ const tipos_unidades = [
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EdicionOrganigramaScreen: React.FC = () => {
+  const navigate = useNavigate();
+  // const {
+  //   // organigram_current,
+  //   // levelsOrganigram,
+  //   // unityOrganigram,
+  //   // moldOrganigram
+  // } = useAppSelector((state) => state.organigram);
+  const handle_to_go_back = (): void => {
+    navigate('/dashboard/gestor-documental/organigrama/crear-organigrama');
+  };
+
   return (
     <>
       <Grid
@@ -372,6 +385,7 @@ export const EdicionOrganigramaScreen: React.FC = () => {
               color="primary"
               variant="outlined"
               startIcon={<ArrowBackIcon />}
+              onClick={handle_to_go_back}
             >
               VOLVER
             </Button>
