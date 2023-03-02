@@ -28,8 +28,8 @@ export interface IUserInfo {
   };
   user_sesion: string;
   reintentos: boolean;
-  tab?: '1' | '2',
-  status: 'checking' | 'not-authenticated' | 'authenticated'
+  status: 'checking' | 'not-authenticated' | 'authenticated';
+  error_message: string;
 }
 
 export interface AuthHook {
@@ -42,4 +42,10 @@ export interface AuthHook {
   roles: UserRol[],
   open: boolean,
   reintentos?: number,
+}
+
+export interface SimpleDialogProps {
+  open: boolean;
+  selected_value: string;
+  on_close: (value: string) => void;
 }
