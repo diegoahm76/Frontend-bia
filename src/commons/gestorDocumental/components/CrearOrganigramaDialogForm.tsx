@@ -61,80 +61,73 @@ const CrearItemOrganigramaModal = ({
   };
 
   return (
-    <>
-      <Dialog
-        maxWidth="xs"
-        open={is_modal_active}
-        onClose={handle_close_crear_organigrama}
-      >
-        <Box component="form" onSubmit={handle_submit}>
-          <DialogTitle>Crear organigrama</DialogTitle>
-          <Divider />
-          <DialogContent sx={{ mb: '0px' }}>
-            <TextField
-              required
-              autoFocus
-              fullWidth
-              type="text"
-              name="nombre"
-              margin="dense"
-              size="small"
-              label="Nombre"
-              helperText="Ingrese nombre"
-              onChange={handle_data_organigram}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              name="version"
-              label="Versión"
-              required
-              type="text"
-              fullWidth
-              helperText="Ingrese versión"
-              size="small"
-              onChange={handle_data_organigram}
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              name="descripcion"
-              label="Descripción"
-              required
-              type="text"
-              fullWidth
-              size="small"
-              helperText="Ingrese descripción"
-              onChange={handle_data_organigram}
-            />
-          </DialogContent>
-          <Divider />
-          <DialogActions>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+    <Dialog
+      maxWidth="xs"
+      open={is_modal_active}
+      onClose={handle_close_crear_organigrama}
+    >
+      <Box component="form" onSubmit={handle_submit}>
+        <DialogTitle>Crear organigrama</DialogTitle>
+        <Divider />
+        <DialogContent sx={{ mb: '0px' }}>
+          <TextField
+            required
+            autoFocus
+            fullWidth
+            type="text"
+            name="nombre"
+            margin="dense"
+            size="small"
+            label="Nombre"
+            helperText="Ingrese nombre"
+            onChange={handle_data_organigram}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            name="version"
+            label="Versión"
+            required
+            type="text"
+            fullWidth
+            helperText="Ingrese versión"
+            size="small"
+            onChange={handle_data_organigram}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            name="descripcion"
+            label="Descripción"
+            required
+            type="text"
+            fullWidth
+            size="small"
+            helperText="Ingrese descripción"
+            onChange={handle_data_organigram}
+          />
+        </DialogContent>
+        <Divider />
+        <DialogActions>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+          >
+            <Button
+              variant="outlined"
+              onClick={handle_close_crear_organigrama}
+              startIcon={<CloseIcon />}
             >
-              <Button
-                variant="outlined"
-                onClick={handle_close_crear_organigrama}
-                startIcon={<CloseIcon />}
-              >
-                CERRAR
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                startIcon={<SaveIcon />}
-              >
-                GUARDAR
-              </Button>
-            </Stack>
-          </DialogActions>
-        </Box>
-      </Dialog>
-      {/* <ToastContainer /> */}
-    </>
+              CERRAR
+            </Button>
+            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+              GUARDAR
+            </Button>
+          </Stack>
+        </DialogActions>
+      </Box>
+    </Dialog>
   );
 };
 

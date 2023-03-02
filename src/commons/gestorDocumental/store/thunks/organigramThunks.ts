@@ -29,10 +29,11 @@ const notification_error = async (message = 'Algo pasó, intente de nuevo'): Pro
 
 // Obtener Organigrama
 export const get_mold_organigrams_service = (id: string | number | null) => {
-    return async (dispatch: (arg0: { payload: any; type: `${string}/${string}`; }) => void): Promise<AxiosResponse | AxiosError> => {
+    return async (dispatch: Dispatch<any>) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`almacen/organigrama/unidades/get-jerarquia/${id}/`);
+            console.log(data);
             dispatch(get_mold_organigrams(data.data));
             return data;
         } catch (error: any) {
@@ -59,34 +60,13 @@ export const get_organigrams_service = () => {
 export const add_organigrams_service = (organigrama: any, navigate: NavigateFunction) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(organigrama);
             const { data } = await api.post("almacen/organigrama/create/", organigrama);
             dispatch(get_organigrams_service());
             dispatch(current_organigram(data.detail));
-            // toast.success('🦄 El organigrama se agrego correctamente', {
-            //     position: "bottom-right",
-            //     autoClose: 2000,
-            //     hideProgressBar: true,
-            //     closeOnClick: true,
-            //     pauseOnHover: true,
-            //     draggable: true,
-            //     progress: undefined,
-            //     theme: "light",
-            //     });
             void Swal.fire("Correcto", "El organigrama se agrego correctamente", "success");
             navigate('/dashboard/gestor-documental/organigrama/editar-organigrama')
             return data;
         } catch (error: any) {
-            // toast.error(error.response.data.detail, {
-            //     position: "bottom-right",
-            //     autoClose: 2000,
-            //     hideProgressBar: true,
-            //     closeOnClick: true,
-            //     pauseOnHover: true,
-            //     draggable: true,
-            //     progress: undefined,
-            //     theme: "colored",
-            //     });
             void notification_error(error.response.data.detail);
             navigate('/dashboard/gestor-documental/organigrama/crear-organigrama')
             return error as AxiosError;

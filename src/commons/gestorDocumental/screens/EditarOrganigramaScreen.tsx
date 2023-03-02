@@ -1,12 +1,18 @@
 import type React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+// Componentes de Material UI
 import { Grid, Box, Stack, Button, MenuItem, TextField } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+// Icons de Material UI
 import AddIcon from '@mui/icons-material/Add';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+// Componentes personalizados
 import { Title } from '../../../components';
-import { DataGrid } from '@mui/x-data-grid';
+import { OrganigramDialog } from '../components/OrganigramDialog';
+// Hooks
 import useEditarOrganigrama from '../hooks/useEditarOrganigrama';
 import { useAppSelector } from '../store/hooks/hooks';
 
@@ -36,12 +42,15 @@ export const EditarOrganigramaScreen: React.FC = () => {
     navigate('/dashboard/gestor-documental/organigrama/crear-organigrama');
   };
   // Estado global
+
   const {
     // organigram_current,
     levels_organigram,
     unity_organigram,
-    // mold_organigram
+    mold_organigram,
   } = useAppSelector((state) => state.organigram);
+  const [view_organigram, set_view_organigram] = useState(false);
+
   // Hooks
   const {
     columns_nivel,
@@ -356,9 +365,13 @@ export const EditarOrganigramaScreen: React.FC = () => {
               VOLVER
             </Button>
             <Button
+              disabled={mold_organigram.length === 0}
               color="primary"
               variant="contained"
               startIcon={<VisibilityIcon />}
+              onClick={() => {
+                set_view_organigram(true);
+              }}
             >
               VISUALIZAR
             </Button>
@@ -370,6 +383,10 @@ export const EditarOrganigramaScreen: React.FC = () => {
               FINALIZAR ORGANIGRAMA
             </Button>
           </Stack>
+          <OrganigramDialog
+            is_modal_active={view_organigram}
+            set_is_modal_active={set_view_organigram}
+          />
         </Grid>
       </Grid>
     </>

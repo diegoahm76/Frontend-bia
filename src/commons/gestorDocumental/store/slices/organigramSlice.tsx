@@ -33,7 +33,7 @@ const organigrama_slice = createSlice({
   initialState: initial_state,
   reducers: {
     get_mold_organigrams: (state: any, action: PayloadAction<any[]>) => {
-      state.moldOrganigram = action.payload;
+      state.mold_organigram = action.payload;
     },
     get_organigrams: (
       state: IOrganigram,

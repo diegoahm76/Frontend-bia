@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks/hooks';
 import {
   get_levels_service,
   get_unitys_service,
+  get_mold_organigrams_service,
 } from '../store/thunks/organigramThunks';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -17,7 +18,7 @@ const use_editar_organigrama = () => {
   const {
     organigram_current,
     // levels_organigram,
-    // unity_organigram
+    unity_organigram,
   } = useAppSelector((state) => state.organigram);
 
   const columns_nivel: GridColDef[] = [
@@ -233,6 +234,13 @@ const use_editar_organigrama = () => {
     if (organigram_current.id_organigrama != null)
       void dispatch(get_unitys_service(organigram_current.id_organigrama));
   }, [organigram_current]);
+
+  // useEffect para obtener el MoldOrganigram (jerarquia de niveles & unidades)
+  useEffect(() => {
+    void dispatch(
+      get_mold_organigrams_service(organigram_current.id_organigrama)
+    );
+  }, [unity_organigram]);
 
   // useEffect(() => {
   //   set_orden_nivel(levels_organigram.length + 1);
