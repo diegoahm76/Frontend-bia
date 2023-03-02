@@ -2,85 +2,22 @@ import type React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Box, Stack, Button, MenuItem, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import PreviewIcon from '@mui/icons-material/Preview';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Title } from '../../../components';
 import { DataGrid } from '@mui/x-data-grid';
-import { type GridColDef } from '@mui/x-data-grid';
-// import { useAppSelector } from '../store/hooks/hooks';
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'Nivel', width: 150 },
-  {
-    field: 'nombre',
-    headerName: 'Nombre',
-    width: 300,
-    editable: true,
-  },
-  {
-    field: 'acciones',
-    headerName: 'Acciones',
-    editable: true,
-  },
-];
-
-const rows = [
-  {
-    id: 1,
-    nombre: 'Snow',
-    acciones: 1,
-  },
-  {
-    id: 2,
-    nombre: 'Lannister',
-    acciones: 2,
-  },
-  {
-    id: 3,
-    nombre: 'Lannister',
-    acciones: 3,
-  },
-  {
-    id: 4,
-    nombre: 'Stark',
-    acciones: 4,
-  },
-  {
-    id: 5,
-    nombre: 'Targaryen',
-    acciones: 5,
-  },
-  {
-    id: 6,
-    nombre: 'Melisandre',
-    acciones: 6,
-  },
-  {
-    id: 7,
-    nombre: 'Clifford',
-    acciones: 7,
-  },
-  {
-    id: 8,
-    nombre: 'Frances',
-    acciones: 8,
-  },
-  {
-    id: 9,
-    nombre: 'Roxie',
-    acciones: 9,
-  },
-];
+import useEditarOrganigrama from '../hooks/useEditarOrganigrama';
+import { useAppSelector } from '../store/hooks/hooks';
 
 const tipos_unidades = [
   {
-    value: 'USD',
-    label: '$',
+    value: '1',
+    label: 'Test',
   },
   {
     value: 'EUR',
-    label: '€',
+    label: 'Test',
   },
   {
     value: 'BTC',
@@ -93,17 +30,48 @@ const tipos_unidades = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EdicionOrganigramaScreen: React.FC = () => {
+export const EditarOrganigramaScreen: React.FC = () => {
   const navigate = useNavigate();
-  // const {
-  //   // organigram_current,
-  //   // levelsOrganigram,
-  //   // unityOrganigram,
-  //   // moldOrganigram
-  // } = useAppSelector((state) => state.organigram);
   const handle_to_go_back = (): void => {
     navigate('/dashboard/gestor-documental/organigrama/crear-organigrama');
   };
+  // Estado global
+  const {
+    // organigram_current,
+    levels_organigram,
+    unity_organigram,
+    // mold_organigram
+  } = useAppSelector((state) => state.organigram);
+  // Hooks
+  const {
+    columns_nivel,
+    columns_unidades,
+    // controlUnidades,
+    // defaultColDefOrganigrama,
+    // errorsNivel,
+    // errorsOrganigrama,
+    // errorsUnidades,
+    // optionNivel,
+    // optionRaiz,
+    // optionsAgrupacionD,
+    // optionsTipoUnidad,
+    // optionUnidadPadre,
+    // orden_nivel,
+    // title_nivel,
+    // // Edita States
+    // // Functions
+    // handleSubmitOrganigrama,
+    // onSubmitEditOrganigrama,
+    // registerOrganigrama,
+    // handleSubmitNivel,
+    // registerNivel,
+    // submitNivel,
+    // handleSubmitUnidades,
+    // registerUnidades,
+    // setValueUnidades,
+    // submitUnidades,
+    // onGridReady,
+  } = useEditarOrganigrama();
 
   return (
     <>
@@ -130,31 +98,29 @@ export const EdicionOrganigramaScreen: React.FC = () => {
               <Grid item xs={12} sm={4}>
                 <TextField
                   required
-                  id="outlined-error-helper-text"
+                  name="nombre"
                   label="Nombre"
-                  helperText="Nombre"
+                  helperText="Ingrese nombre"
                   size="small"
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <TextField
-                  error
                   required
-                  id="outlined-error-helper-text"
+                  name="version"
                   label="Versión"
-                  helperText="Versión"
+                  helperText="Ingrese versión"
                   size="small"
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <TextField
-                  error
                   required
-                  id="filled-error"
-                  label="Des"
-                  helperText="Ingrese Des"
+                  name="descripcion"
+                  label="Descripcion"
+                  helperText="Ingrese una descripción"
                   size="small"
                   fullWidth
                 />
@@ -188,8 +154,8 @@ export const EdicionOrganigramaScreen: React.FC = () => {
                   <TextField
                     required
                     id="outlined-error-helper-text"
-                    label="Nombre"
-                    helperText="Nombre"
+                    label="Nombre de nivel"
+                    helperText="Ingrese nombre de nivel"
                     size="small"
                     fullWidth
                   />
@@ -208,13 +174,14 @@ export const EdicionOrganigramaScreen: React.FC = () => {
                 <Grid item>
                   <Box sx={{ width: '100%' }}>
                     <DataGrid
-                      autoHeight
                       density="compact"
-                      rows={rows}
-                      columns={columns}
-                      pageSize={5}
+                      autoHeight
+                      rows={levels_organigram}
+                      columns={columns_nivel}
+                      pageSize={10}
                       rowsPerPageOptions={[5]}
                       experimentalFeatures={{ newEditingApi: true }}
+                      getRowId={(row) => row.id_nivel_organigrama}
                     />
                   </Box>
                 </Grid>
@@ -245,33 +212,31 @@ export const EdicionOrganigramaScreen: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  error
                   required
-                  id="outlined-error-helper-text"
+                  name="codigo"
+                  label="Código"
+                  helperText="Escribe el código"
+                  size="small"
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  required
+                  name="nombre"
                   label="Nombre"
-                  helperText="Nombre"
+                  helperText="Escribe el nombre"
                   size="small"
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  error
-                  required
-                  id="outlined-error-helper-text"
-                  label="Versión"
-                  helperText="Versión"
-                  size="small"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  id="outlined-select-currency"
+                  name="tipoUnidad"
                   select
                   label="Select"
-                  defaultValue="EUR"
-                  helperText="Please select your currency"
+                  defaultValue="1"
+                  helperText="Seleccione tipo de unidad"
                   size="small"
                   fullWidth
                 >
@@ -284,11 +249,11 @@ export const EdicionOrganigramaScreen: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-select-currency"
+                  name="nivelUnidad"
                   select
-                  label="Select"
-                  defaultValue="EUR"
-                  helperText="Please select your currency"
+                  label="Nivel de unidad"
+                  defaultValue="1"
+                  helperText="Selecciones nivel de unidad"
                   size="small"
                   fullWidth
                 >
@@ -301,11 +266,11 @@ export const EdicionOrganigramaScreen: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-select-currency"
+                  name="unidadRaiz"
                   select
-                  label="Select"
-                  defaultValue="EUR"
-                  helperText="Please select your currency"
+                  label="Unidad raiz"
+                  defaultValue="1"
+                  helperText="Seleccione unidad raiz"
                   size="small"
                   fullWidth
                 >
@@ -318,11 +283,11 @@ export const EdicionOrganigramaScreen: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-select-currency"
+                  name="agrupacionDocumental"
                   select
-                  label="Select"
-                  defaultValue="EUR"
-                  helperText="Please select your currency"
+                  label="Agrupacion documental"
+                  defaultValue="1"
+                  helperText="Seleccione agrupacion documental"
                   size="small"
                   fullWidth
                 >
@@ -335,11 +300,11 @@ export const EdicionOrganigramaScreen: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-select-currency"
+                  name="nivelPadre"
                   select
-                  label="Select"
-                  defaultValue="EUR"
-                  helperText="Please select your currency"
+                  label="Nivel padre"
+                  defaultValue="1"
+                  helperText="Seleccione nivel padre"
                   size="small"
                   fullWidth
                 >
@@ -367,11 +332,12 @@ export const EdicionOrganigramaScreen: React.FC = () => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={rows}
-                columns={columns}
-                pageSize={5}
+                rows={unity_organigram}
+                columns={columns_unidades}
+                pageSize={10}
                 rowsPerPageOptions={[5]}
                 experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => row.id_unidad_organizacional}
               />
             </Box>
           </Grid>
@@ -379,7 +345,7 @@ export const EdicionOrganigramaScreen: React.FC = () => {
             direction="row"
             justifyContent="flex-end"
             spacing={2}
-            sx={{ m: '20px 0' }}
+            sx={{ mt: '20px' }}
           >
             <Button
               color="primary"
@@ -392,7 +358,7 @@ export const EdicionOrganigramaScreen: React.FC = () => {
             <Button
               color="primary"
               variant="contained"
-              startIcon={<PreviewIcon />}
+              startIcon={<VisibilityIcon />}
             >
               VISUALIZAR
             </Button>

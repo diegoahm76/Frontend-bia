@@ -1,4 +1,5 @@
 import React, { type Dispatch, type SetStateAction } from 'react';
+// import { ToastContainer } from "react-toastify";
 import {
   TextField,
   Dialog,
@@ -79,6 +80,7 @@ const CrearItemOrganigramaModal = ({
               margin="dense"
               size="small"
               label="Nombre"
+              helperText="Ingrese nombre"
               onChange={handle_data_organigram}
             />
             <TextField
@@ -89,6 +91,7 @@ const CrearItemOrganigramaModal = ({
               required
               type="text"
               fullWidth
+              helperText="Ingrese versión"
               size="small"
               onChange={handle_data_organigram}
             />
@@ -101,6 +104,7 @@ const CrearItemOrganigramaModal = ({
               type="text"
               fullWidth
               size="small"
+              helperText="Ingrese descripción"
               onChange={handle_data_organigram}
             />
           </DialogContent>
@@ -129,6 +133,7 @@ const CrearItemOrganigramaModal = ({
           </DialogActions>
         </Box>
       </Dialog>
+      {/* <ToastContainer /> */}
     </>
   );
 };

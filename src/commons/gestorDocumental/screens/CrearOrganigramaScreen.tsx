@@ -12,6 +12,7 @@ import {
   Chip,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -100,7 +101,8 @@ export function CrearOrganigramaScreen(): JSX.Element {
       headerName: 'Fecha terminado',
       width: 150,
       valueFormatter: (params) => {
-        if (!params.value) {
+        // eslint-disable-next-line no-extra-boolean-cast
+        if (!Boolean(params.value)) {
           return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
         }
         const date = new Date(params.value);
@@ -112,7 +114,8 @@ export function CrearOrganigramaScreen(): JSX.Element {
       headerName: 'Fecha publicación',
       width: 150,
       valueFormatter: (params) => {
-        if (!params.value) {
+        // eslint-disable-next-line no-extra-boolean-cast
+        if (!Boolean(params.value)) {
           return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
         }
         const date = new Date(params.value);
@@ -161,6 +164,28 @@ export function CrearOrganigramaScreen(): JSX.Element {
               variant="rounded"
             >
               <EditIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton
+          // onClick={() => {
+          //   dispatch(current_organigram(params.row));
+          //   navigate(
+          //     '/dashboard/gestor-documental/organigrama/editar-organigrama'
+          //   );
+          // }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <VisibilityIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>

@@ -1,8 +1,8 @@
 import { type Dispatch } from 'react';
 import { type NavigateFunction } from 'react-router-dom';
 import Swal, { type SweetAlertResult } from 'sweetalert2'
-// import { toast, ToastContainer } from 'react-toastify';
-//   import "react-toastify/dist/ReactToastify.css";
+// import { toast } from 'react-toastify';
+// import "react-toastify/dist/ReactToastify.css";
 import { api } from '../../../../api/axios';
 import { type AxiosError, type AxiosResponse } from "axios";
 // Slices
@@ -63,10 +63,30 @@ export const add_organigrams_service = (organigrama: any, navigate: NavigateFunc
             const { data } = await api.post("almacen/organigrama/create/", organigrama);
             dispatch(get_organigrams_service());
             dispatch(current_organigram(data.detail));
+            // toast.success('🦄 El organigrama se agrego correctamente', {
+            //     position: "bottom-right",
+            //     autoClose: 2000,
+            //     hideProgressBar: true,
+            //     closeOnClick: true,
+            //     pauseOnHover: true,
+            //     draggable: true,
+            //     progress: undefined,
+            //     theme: "light",
+            //     });
             void Swal.fire("Correcto", "El organigrama se agrego correctamente", "success");
             navigate('/dashboard/gestor-documental/organigrama/editar-organigrama')
             return data;
         } catch (error: any) {
+            // toast.error(error.response.data.detail, {
+            //     position: "bottom-right",
+            //     autoClose: 2000,
+            //     hideProgressBar: true,
+            //     closeOnClick: true,
+            //     pauseOnHover: true,
+            //     draggable: true,
+            //     progress: undefined,
+            //     theme: "colored",
+            //     });
             void notification_error(error.response.data.detail);
             navigate('/dashboard/gestor-documental/organigrama/crear-organigrama')
             return error as AxiosError;
