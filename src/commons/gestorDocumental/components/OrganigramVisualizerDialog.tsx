@@ -31,7 +31,7 @@ const transition = React.forwardRef(function Transition(
 });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-export const OrganigramDialog = ({
+export const OrganigramVisualizerDialog = ({
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {

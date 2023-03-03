@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/Add';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+// import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 // Componentes personalizados
@@ -141,7 +141,7 @@ export function CrearOrganigramaScreen(): JSX.Element {
               />
             </Avatar>
           </IconButton>
-          <IconButton
+          {/* <IconButton
           // onClick={() => {
           //   dispatch(current_organigram(params.row));
           //   navigate(
@@ -162,13 +162,12 @@ export function CrearOrganigramaScreen(): JSX.Element {
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
-          </IconButton>
+          </IconButton> */}
         </>
       ),
     },
   ];
 
-  // Obtener organigramas
   useEffect(() => {
     void dispatch(get_organigrams_service());
   }, []);

@@ -24,7 +24,7 @@ import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
 
 // import logo_bia from '.../../../assets/logos/logo_bia.png';
-import { DialogEntorno } from './DialogEntorno';
+// import { DialogEntorno } from './DialogEntorno';
 import { type IUserInfo } from '../interfaces/authModels';
 
 interface AuthSlice {
@@ -171,9 +171,7 @@ export const LoginForm: React.FC = () => {
             </Typography>
           </Button>
         </Grid>
-        <Grid item>
-          <DialogEntorno />
-        </Grid>
+        <Grid item>{/* <DialogEntorno /> */}</Grid>
       </Grid>
     </form>
   );

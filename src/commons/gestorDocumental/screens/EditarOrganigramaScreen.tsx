@@ -11,7 +11,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 // Componentes personalizados
 import { Title } from '../../../components';
-import { OrganigramDialog } from '../components/OrganigramDialog';
+import { OrganigramVisualizerDialog } from '../components/OrganigramVisualizerDialog';
 // Hooks
 import useEditarOrganigrama from '../hooks/useEditarOrganigrama';
 import { useAppSelector } from '../store/hooks/hooks';
@@ -373,17 +373,18 @@ export const EditarOrganigramaScreen: React.FC = () => {
                 set_view_organigram(true);
               }}
             >
-              VISUALIZAR
+              VER
             </Button>
             <Button
               color="success"
               variant="contained"
               startIcon={<SaveIcon />}
             >
-              FINALIZAR ORGANIGRAMA
+              FINALIZAR
             </Button>
           </Stack>
-          <OrganigramDialog
+
+          <OrganigramVisualizerDialog
             is_modal_active={view_organigram}
             set_is_modal_active={set_view_organigram}
           />

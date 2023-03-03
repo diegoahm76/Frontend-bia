@@ -33,7 +33,6 @@ export const get_mold_organigrams_service = (id: string | number | null) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`almacen/organigrama/unidades/get-jerarquia/${id}/`);
-            console.log(data);
             dispatch(get_mold_organigrams(data.data));
             return data;
         } catch (error: any) {
