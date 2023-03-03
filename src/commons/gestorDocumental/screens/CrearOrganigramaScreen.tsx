@@ -1,298 +1,223 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+// Componentes de Material UI
 import {
   Grid,
   Box,
   Stack,
   Button,
-  Snackbar,
   IconButton,
-  Typography,
+  Avatar,
+  Chip,
 } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
+// Icons de Material UI
 import AddIcon from '@mui/icons-material/Add';
-import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
-// import { DataGrid } from '@mui/x-data-grid';
-// import { type GridColDef } from '@mui/x-data-grid';
-
-import {
-  // useAppSelector,
-
-  useAppDispatch,
-} from '../store/hooks/hooks';
+// import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+// Componentes personalizados
+import { Title } from '../../../components/Title';
+// Hooks
+import { useAppDispatch, useAppSelector } from '../store/hooks/hooks';
 // Thunks
 import { get_organigrams_service } from '../store/thunks/organigramThunks';
-
-// const columns: GridColDef[] = [
-//   { field: 'id', headerName: 'ID', width: 20 },
-//   {
-//     field: 'item',
-//     headerName: 'Item',
-//     width: 20,
-//     editable: true,
-//   },
-//   {
-//     field: 'nombre',
-//     headerName: 'Nombre',
-//     width: 150,
-//     editable: true,
-//   },
-//   {
-//     field: 'descripcion',
-//     headerName: 'Descripción',
-//     type: 'number',
-//     width: 150,
-//     editable: true,
-//   },
-//   {
-//     field: 'version',
-//     headerName: 'Versión',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 100,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'fechaTerminado',
-//     headerName: 'Fecha terminado',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 150,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'fechaPublicacion',
-//     headerName: 'Fecha publicación',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 150,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'fechaRetiro',
-//     headerName: 'Fecha retiro',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 150,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'justificacion',
-//     headerName: 'Justificacion nueva versión',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 150,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'actual',
-//     headerName: 'Actual',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 100,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-//   {
-//     field: 'acciones',
-//     headerName: 'Acciones',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 100,
-//     // valueGetter: (params: GridValueGetterParams) =>
-//     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-//   },
-// ];
+import CrearOrganigramaDialogForm from '../components/CrearOrganigramaDialogForm';
+// Slices
+import { current_organigram } from '../store/slices/organigramSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearOrganigramaScreen(): JSX.Element {
   const navigate = useNavigate();
-  // const dispatch = use_app_dispatch();
-  // The `state` arg is correctly typed as `RootState` already
-  // const { organigram } = useAppSelector((state) => state.organigram);
   const dispatch = useAppDispatch();
+  const { organigram } = useAppSelector((state) => state.organigram);
+  const [crear_organigrama_is_active, set_crear_organigrama_is_active] =
+    useState<boolean>(false);
 
-  // console.log(organigram, 'Hola');
-  const [open, set_open] = React.useState(false);
-  const [open_snack, set_open_snack] = React.useState(false);
+  const columns: GridColDef[] = [
+    { field: 'id_organigrama', headerName: 'ID', width: 20 },
+    {
+      field: 'nombre',
+      headerName: 'Nombre',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'descripcion',
+      headerName: 'Descripción',
+      type: 'number',
+      width: 200,
+    },
+    {
+      field: 'version',
+      headerName: 'Versión',
+      width: 100,
+    },
+    {
+      field: 'actual',
+      headerName: 'Actual',
+      width: 100,
+      renderCell: (params) => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        return params.row.actual ? (
+          <Chip size="small" label="Sí" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
+    },
+    {
+      field: 'fecha_terminado',
+      headerName: 'Fecha terminado',
+      width: 150,
+      valueFormatter: (params) => {
+        // eslint-disable-next-line no-extra-boolean-cast
+        if (!Boolean(params.value)) {
+          return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
+        }
+        const date = new Date(params.value);
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      },
+    },
+    {
+      field: 'fecha_puesta_produccion',
+      headerName: 'Fecha publicación',
+      width: 150,
+      valueFormatter: (params) => {
+        // eslint-disable-next-line no-extra-boolean-cast
+        if (!Boolean(params.value)) {
+          return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
+        }
+        const date = new Date(params.value);
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      },
+    },
+    {
+      field: 'fecha_retiro_produccion',
+      headerName: 'Fecha retiro',
+      width: 150,
+      valueFormatter: (params) => {
+        if (!params.value) {
+          return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
+        }
+        const date = new Date(params.value);
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+      },
+    },
+    {
+      field: 'justificacion_nueva_version',
+      headerName: 'Justificacion nueva versión',
+      width: 150,
+    },
 
-  const handle_click_open = (): void => {
-    set_open(true);
-  };
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 100,
+      renderCell: (params) => (
+        <>
+          <IconButton
+            onClick={() => {
+              dispatch(current_organigram(params.row));
+              navigate(
+                '/dashboard/gestor-documental/organigrama/editar-organigrama'
+              );
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <EditIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+          {/* <IconButton
+          // onClick={() => {
+          //   dispatch(current_organigram(params.row));
+          //   navigate(
+          //     '/dashboard/gestor-documental/organigrama/editar-organigrama'
+          //   );
+          // }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <VisibilityIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton> */}
+        </>
+      ),
+    },
+  ];
 
-  const handle_close = (): void => {
-    set_open(false);
-  };
-
-  const handle_click_snack = (): void => {
-    // set_open_snack(true);
-    navigate('/dashboard/gestor-documental/organigrama/editar-organigrama');
-  };
-
-  const handle_close_snack = (
-    event: React.SyntheticEvent | Event,
-    reason?: string
-  ): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    set_open_snack(false);
-  };
-
-  const action = (
-    <React.Fragment>
-      <Button color="success" size="small" onClick={handle_close_snack}>
-        UNDO
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handle_close_snack}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
-
-  // UseEffect para obtener organigramas
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     void dispatch(get_organigrams_service());
   }, []);
 
   return (
-    <Grid
-      container
-      sx={{
-        position: 'relative',
-        background: '#FAFAFA',
-        borderRadius: '15px',
-        p: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
-      }}
-    >
-      <Grid item xs={12}>
-        <Grid
-          item
-          className={`border px-4 text-white fs-5 p-1`}
-          sx={{
-            display: 'grid',
-            background:
-              'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-            width: '100%',
-            height: '40px',
-
-            borderRadius: '10px',
-            pl: '20px',
-            fontSize: '17px',
-            fontWeight: 'bold',
-            alignContent: 'center',
-          }}
-        >
-          <Typography sx={{ color: 'white' }}>ORGANIGRAMAS</Typography>
+    <>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+          <Title title="ORGANIGRAMAS"></Title>
+          <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={() => {
+                set_crear_organigrama_is_active(true);
+              }}
+            >
+              CREAR ORGANIGRAMA
+            </Button>
+          </Stack>
+          <Grid item>
+            <Box sx={{ width: '100%' }}>
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={organigram}
+                columns={columns}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => row.id_organigrama}
+              />
+            </Box>
+          </Grid>
+          <CrearOrganigramaDialogForm
+            is_modal_active={crear_organigrama_is_active}
+            set_is_modal_active={set_crear_organigrama_is_active}
+          />
         </Grid>
-        <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={handle_click_open}
-          >
-            CREAR ORGANIGRAMA
-          </Button>
-        </Stack>
-        <Grid item>
-          <Box sx={{ height: 400, width: '100%' }}>
-            {/* <DataGrid
-              autoHeight
-              rows={organigram}
-              columns={columns}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-              experimentalFeatures={{ newEditingApi: true }}
-            /> */}
-          </Box>
-        </Grid>
-        {/* Dialogo - Crear organigrama */}
-        <Dialog maxWidth="xs" open={open} onClose={handle_close}>
-          <DialogTitle>Crear organigrama</DialogTitle>
-          <DialogContent sx={{ mb: '0px' }}>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Nombre"
-              required
-              type="text"
-              fullWidth
-              helperText="Ingrese nombre"
-              variant="standard"
-            />
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Versión"
-              required
-              type="text"
-              fullWidth
-              helperText="Ingrese versión"
-              variant="standard"
-            />
-            <TextField
-              error
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Descripción"
-              required
-              type="text"
-              fullWidth
-              helperText="Ingrese descripción"
-              variant="standard"
-            />
-          </DialogContent>
-          <DialogActions>
-            <Stack direction="row" spacing={2} sx={{ mr: '15px', mb: '20px' }}>
-              <Button
-                variant="outlined"
-                onClick={handle_close}
-                startIcon={<CloseIcon />}
-              >
-                CERRAR
-              </Button>
-              <Button
-                variant="contained"
-                onClick={handle_click_snack}
-                startIcon={<SaveIcon />}
-              >
-                GUARDAR
-              </Button>
-            </Stack>
-          </DialogActions>
-          {/* Success */}
-        </Dialog>
-        <Snackbar
-          open={open_snack}
-          autoHideDuration={6000}
-          onClose={handle_close_snack}
-          message="ORGANIGRAMA CREADO"
-          key={'bottom' + 'center'}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          action={action}
-        />
       </Grid>
-    </Grid>
+    </>
   );
 }

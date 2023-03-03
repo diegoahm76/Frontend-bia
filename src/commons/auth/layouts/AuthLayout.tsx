@@ -18,7 +18,7 @@ export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
       padding={2}
       sx={{
         minHeight: '100vh',
-        backgroundColor: 'primary.main',
+        backgroundColor: 'primary.secondary',
       }}
     >
       <Grid container justifyContent={'center'}>
@@ -28,6 +28,11 @@ export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
           sm={mode === 2 ? 9 : 6}
           md={mode === 2 ? 8 : 5}
           lg={mode === 2 ? 4 : 3}
+          sx={{
+            backgroundColor: '#ffff',
+            padding: 2,
+            borderRadius: 5,
+          }}
         >
           <Card sx={{ borderRadius: 5 }}>
             <CardContent>

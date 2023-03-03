@@ -3,7 +3,7 @@ import grey from "@mui/material/colors/grey";
 export const dark_theme = {
   // palette values for dark mode
   primary: {
-    main: '#6AB131',
+    main: '#042F4A',
   },
   secondary: {
     main: '#FAFAFA',
@@ -13,6 +13,9 @@ export const dark_theme = {
   },
   white: {
     main: '#FAFAFA',
+  },
+  success: {
+    main: "#6AB131"
   },
   background: {
     default: '#042F4A',

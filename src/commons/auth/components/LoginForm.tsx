@@ -29,7 +29,11 @@ import { LoadingButton } from '@mui/lab';
 
 // import logo_bia from '.../../../assets/logos/logo_bia.png';
 import { DialogEntorno } from './DialogEntorno';
-import { type AuthSlice } from '../interfaces/authModels';
+import { type IUserInfo } from '../interfaces/authModels';
+
+interface AuthSlice {
+  auth: IUserInfo;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LoginForm: React.FC = () => {

@@ -28,10 +28,7 @@ export const use_theme = (): {
         components: {
           MuiButton: {
             defaultProps: {
-              style: {
-                textTransform: 'none' as const,
-                borderRadius: '0.5em',
-              },
+              style: {},
             },
           },
         },

@@ -21,11 +21,11 @@ const initial_state_organigram_current = {
 };
 
 const initial_state: IOrganigram = {
-  moldOrganigram: [],
+  mold_organigram: [],
   organigram: [],
-  organigramCurrent: initial_state_organigram_current,
-  levelsOrganigram: [],
-  unityOrganigram: [],
+  organigram_current: initial_state_organigram_current,
+  levels_organigram: [],
+  unity_organigram: [],
 };
 
 const organigrama_slice = createSlice({
@@ -33,7 +33,7 @@ const organigrama_slice = createSlice({
   initialState: initial_state,
   reducers: {
     get_mold_organigrams: (state: any, action: PayloadAction<any[]>) => {
-      state.moldOrganigram = action.payload;
+      state.mold_organigram = action.payload;
     },
     get_organigrams: (
       state: IOrganigram,
@@ -45,13 +45,13 @@ const organigrama_slice = createSlice({
       state: IOrganigram,
       action: PayloadAction<IObjOrganigram>
     ) => {
-      state.organigramCurrent = action.payload;
+      state.organigram_current = action.payload;
     },
     get_levels: (state: IOrganigram, action: PayloadAction<IObjLevels[]>) => {
-      state.levelsOrganigram = action.payload;
+      state.levels_organigram = action.payload;
     },
     get_unitys: (state: IOrganigram, action: PayloadAction<IObjUnitys[]>) => {
-      state.unityOrganigram = action.payload;
+      state.unity_organigram = action.payload;
     },
   },
 });
