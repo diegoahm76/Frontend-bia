@@ -14,6 +14,9 @@ export const light_theme = {
   white: {
     main: '#FAFAFA',
   },
+  success: {
+    main: "#6AB131"
+  },
   background: {
     default: '#F0F1F7',
     paper: '#FAFAFA',

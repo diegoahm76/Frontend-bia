@@ -1,7 +1,9 @@
 // Components Material UI
 import { Grid, Box, TextField, MenuItem, Stack, Button } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import SendIcon from '@mui/icons-material/Send';
+import SaveIcon from '@mui/icons-material/Save';
+import SearchIcon from '@mui/icons-material/Search';
+import { Title } from '../../../components/Title';
+
 import type {
   GridColDef,
   // GridValueGetterParams
@@ -41,6 +43,25 @@ const columns: GridColDef[] = [
   },
 ];
 
+const tipos_unidades = [
+  {
+    value: '1',
+    label: 'Test',
+  },
+  {
+    value: 'EUR',
+    label: 'Test',
+  },
+  {
+    value: 'BTC',
+    label: '฿',
+  },
+  {
+    value: 'JPY',
+    label: '¥',
+  },
+];
+
 const rows = [
   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
@@ -53,118 +74,140 @@ const rows = [
   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
 
-const currencies = [
-  {
-    value: 'CCD1',
-    label: 'CCD1',
-  },
-  {
-    value: 'CCD2',
-    label: 'CCD2',
-  },
-  {
-    value: 'CCD3',
-    label: 'CCD3',
-  },
-  {
-    value: 'CCD4',
-    label: 'CCD4',
-  },
-];
+// const currencies = [
+//   {
+//     value: 'CCD1',
+//     label: 'CCD1',
+//   },
+//   {
+//     value: 'CCD2',
+//     label: 'CCD2',
+//   },
+//   {
+//     value: 'CCD3',
+//     label: 'CCD3',
+//   },
+//   {
+//     value: 'CCD4',
+//     label: 'CCD4',
+//   },
+// ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TrdScreen: React.FC = () => {
   return (
     <>
-      <Grid container spacing={2}>
-        {/* Chart */}
-
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
         <Grid item xs={12}>
-          <Grid
-            item
-            className={`border px-4 text-white fs-5 p-1`}
-            sx={{
-              display: 'grid',
-              background:
-                'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-              width: '100%',
-              height: '40px',
-              color: 'white',
-              borderRadius: '10px',
-              pl: '20px',
-              alignContent: 'center',
-            }}
+          <Title title="Tabla de retención documental" />
+          <Box
+            component="form"
+            sx={{ mt: '20px' }}
+            noValidate
+            autoComplete="off"
           >
-            Tabla de retención documental
-          </Grid>
-          <Grid item>
-            <Box
-              component="form"
-              sx={{
-                '& .MuiTextField-root': { m: 1, width: '25ch' },
-              }}
-              noValidate
-              autoComplete="off"
-            >
-              <div>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={4}>
                 <TextField
-                  error
-                  required
-                  id="outlined-select-currency"
+                  name="tipoUnidad"
                   select
                   label="CCD"
+                  defaultValue="Seleccione"
                   helperText="Seleccione CCD"
-                  variant="filled"
+                  size="small"
+                  fullWidth
                 >
-                  {currencies.map((option) => (
+                  {tipos_unidades.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.label}
                     </MenuItem>
                   ))}
                 </TextField>
+              </Grid>
+              <Grid item xs={12} sm={4}>
                 <TextField
-                  error
                   required
-                  id="outlined-error-helper-text"
-                  label="Nombre del TRD"
+                  name="nombre"
+                  label="Nombre"
                   helperText="Nombre del TRD"
-                  variant="filled"
+                  size="small"
+                  fullWidth
                 />
+              </Grid>
+              <Grid item xs={12} sm={4}>
                 <TextField
-                  error
                   required
-                  id="filled-error"
+                  name="version"
                   label="Versión"
                   helperText="Ingrese versión"
-                  variant="filled"
+                  size="small"
+                  fullWidth
                 />
-              </div>
-            </Box>
-            <Box sx={{ height: 400, width: '100%' }}>
+              </Grid>
+            </Grid>
+          </Box>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            spacing={2}
+            sx={{ mb: '20px' }}
+          >
+            <Button color="primary" variant="outlined" startIcon={<SaveIcon />}>
+              EDITAR
+            </Button>
+          </Stack>
+          <Grid item>
+            <Box sx={{ width: '100%' }}>
               <DataGrid
+                density="compact"
+                autoHeight
                 rows={rows}
                 columns={columns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-                checkboxSelection
-                disableSelectionOnClick
                 experimentalFeatures={{ newEditingApi: true }}
               />
             </Box>
-            <Stack
-              direction="row"
-              justifyContent="flex-end"
-              spacing={2}
-              sx={{ mt: '20px' }}
-            >
-              <Button variant="outlined" startIcon={<DeleteIcon />}>
-                Delete
-              </Button>
-              <Button variant="contained" endIcon={<SendIcon />}>
-                Send
-              </Button>
-            </Stack>
           </Grid>
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+            spacing={2}
+            sx={{ m: '20px 0' }}
+          >
+            {/* <Button
+              color="primary"
+              variant="outlined"
+              startIcon={<ArrowBackIcon />}
+              // onClick={handle_to_go_back}
+            >
+              VOLVER
+            </Button> */}
+            <Button
+              color="primary"
+              variant="contained"
+              startIcon={<SearchIcon />}
+            >
+              BUSCAR
+            </Button>
+            <Button
+              color="success"
+              variant="contained"
+              startIcon={<SaveIcon />}
+            >
+              LIMPIAR
+            </Button>
+          </Stack>
         </Grid>
       </Grid>
     </>

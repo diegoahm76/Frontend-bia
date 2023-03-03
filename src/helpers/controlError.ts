@@ -1,3 +1,15 @@
+import { toast } from 'react-toastify';
 export const control_error = (error: any | unknown): void => {
-  console.log(error)
-}
+  console.log(error);
+
+  toast(error, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
+};

@@ -6,7 +6,7 @@ export const sidebar_slice = createSlice({
   initialState: {
     mobile_open: false,
     desktop_open: true,
-    mod_dark: true
+    mod_dark: false
   },
   reducers: {
     open_drawer_mobile: (state, {payload}) => {

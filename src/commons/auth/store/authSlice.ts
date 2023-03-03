@@ -17,8 +17,8 @@ const initial_state: IUserInfo = {
   permisos: [],
   representante_legal: [],
   reintentos: false,
-  tab: '1',
-  status: 'not-authenticated'
+  status: 'not-authenticated',
+  error_message: ''
 };
 
 
@@ -34,19 +34,22 @@ export const auth_slice = createSlice({
       state.reintentos = false
       state.status = 'authenticated'
     },
-    logout: (state) => {
-      state = {...initial_state }
+    logout: (state, { payload }) => {
+      state.user_sesion = ''
+      state.userinfo = initial_state.userinfo
+      state.permisos = []
+      state.representante_legal = []
+      state.reintentos =false
       state.status = 'not-authenticated'
+      state.error_message = payload.error_message
+      console.log(state)
     },
     checking_credentials: (state) => {
       state.status = 'checking'
     },
-    change_tab: (state, {payload}) => {
-      state.tab = payload
-    }
   },
 });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const { login, logout, checking_credentials, change_tab } = auth_slice.actions;
+export const { login, logout, checking_credentials } = auth_slice.actions;
 

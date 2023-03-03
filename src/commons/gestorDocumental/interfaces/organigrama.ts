@@ -1,9 +1,9 @@
 export interface IOrganigram {
-    moldOrganigram: IDatum[];
+    mold_organigram: IDatum[];
     organigram: IObjOrganigram[];
-    organigramCurrent: IObjOrganigram;
-    levelsOrganigram: IObjLevels[];
-    unityOrganigram: IObjUnitys[];
+    organigram_current: IObjOrganigram;
+    levels_organigram: IObjLevels[];
+    unity_organigram: IObjUnitys[];
 }
 
 export interface IObjOrganigram {
@@ -44,16 +44,16 @@ export interface IObjUnitys {
     cod_unidad_org_padre: null | string | number;
 }
 
-// export type FormValuesUnitys = {
-//     unidadRaiz?: IUnityRoot;
-//     codigo: string;
-//     nombre: string;
-//     tipoUnidad?: ITypeUnity;
-//     nivelUnidad?: ILevelUnity;
-//     agrupacionDocumental?: IDocumentaryGroup;
-//     nivelPadre?: ILevelFather;
-//     [x: string]: any;
-// };
+export interface FormValuesUnitys {
+    unidadRaiz?: IUnityRoot;
+    codigo: string;
+    nombre: string;
+    tipoUnidad?: ITypeUnity;
+    nivelUnidad?: ILevelUnity;
+    agrupacionDocumental?: IDocumentaryGroup;
+    nivelPadre?: ILevelFather;
+    [x: string]: any;
+}
 
 export interface IUnityRoot {
     label: string;

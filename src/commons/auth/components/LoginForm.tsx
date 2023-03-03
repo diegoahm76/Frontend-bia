@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect, useMemo } from 'react';
 import {
+  Alert,
   Button,
   FormControl,
   Grid,
@@ -23,15 +24,24 @@ import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
 
 // import logo_bia from '.../../../assets/logos/logo_bia.png';
+// import { DialogEntorno } from './DialogEntorno';
+import { type IUserInfo } from '../interfaces/authModels';
+
+interface AuthSlice {
+  auth: IUserInfo;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LoginForm: React.FC = () => {
   const { set_is_captcha_valid, is_captcha_valid } = use_rol();
   const dispatch = useDispatch();
-  const { status } = useSelector((state: any) => state.auth);
+  const { status, error_message } = useSelector(
+    (state: AuthSlice) => state.auth
+  );
   const is_authenticating = useMemo(() => status === 'checking', [status]);
   const [show_password, set_show_password] = useState(false);
   const [disable, set_disale] = useState(true);
+  const [is_error, set_is_error] = useState(true);
   const { email, password, on_input_change } = use_form({
     email: '',
     password: '',
@@ -58,11 +68,16 @@ export const LoginForm: React.FC = () => {
     }
   }, [is_captcha_valid]);
 
+  useEffect(() => {
+    set_is_error(!is_error);
+  }, [error_message]);
+
   return (
     <form onSubmit={on_submit}>
       <Grid container direction={'column'} spacing={3}>
         <Grid item>
           <TextField
+            required
             fullWidth
             label="Usuario o Email"
             value={email}
@@ -76,6 +91,7 @@ export const LoginForm: React.FC = () => {
               Contraseña
             </InputLabel>
             <OutlinedInput
+              required
               id="outlined-adornment-password"
               type={show_password ? 'text' : 'password'}
               value={password}
@@ -96,6 +112,21 @@ export const LoginForm: React.FC = () => {
             />
           </FormControl>
         </Grid>
+        {is_error ? (
+          <Grid item>
+            <Alert
+              severity="error"
+              onClose={() => {
+                set_is_error(false);
+              }}
+            >
+              {error_message}
+            </Alert>
+          </Grid>
+        ) : (
+          ''
+        )}
+
         <Grid item>
           <Link sx={{ textDecoration: 'none' }} href="#">
             <Typography>¿Olvidó su contraseña?</Typography>
@@ -140,6 +171,7 @@ export const LoginForm: React.FC = () => {
             </Typography>
           </Button>
         </Grid>
+        <Grid item>{/* <DialogEntorno /> */}</Grid>
       </Grid>
     </form>
   );
