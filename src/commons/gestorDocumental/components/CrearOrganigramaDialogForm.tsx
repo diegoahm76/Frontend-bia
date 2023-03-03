@@ -1,5 +1,5 @@
-import React, { type Dispatch, type SetStateAction } from 'react';
-// import { ToastContainer } from "react-toastify";
+import { type Dispatch, type SetStateAction } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import {
   TextField,
   Dialog,
@@ -35,30 +35,24 @@ const CrearItemOrganigramaModal = ({
 }: IProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [organigrama_data, set_organigrama_data] = React.useState<FormValues>({
-    nombre: '',
-    version: '',
-    descripcion: '',
-  });
 
-  const handle_data_organigram = (e: {
-    target: { name: any; value: any };
-  }): void => {
-    set_organigrama_data({
-      ...organigrama_data,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handle_submit = (e: { preventDefault: () => void }): void => {
-    e.preventDefault();
-    void dispatch(add_organigrams_service(organigrama_data, navigate));
-    console.log(organigrama_data);
-  };
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { control: control_organigrama, handleSubmit: handle_submit } =
+    useForm<FormValues>();
 
   const handle_close_crear_organigrama = (): void => {
     set_is_modal_active(false);
   };
+
+  const on_submit = (data: FormValues): void => {
+    void dispatch(add_organigrams_service(data, navigate));
+    handle_close_crear_organigrama();
+  };
+
+  // const on_submit = async (data: FormValues): Promise<void> => {
+  //   await dispatch(add_organigrams_service(data, navigate));
+  //   handle_close_crear_organigrama();
+  // };
 
   return (
     <Dialog
@@ -66,45 +60,78 @@ const CrearItemOrganigramaModal = ({
       open={is_modal_active}
       onClose={handle_close_crear_organigrama}
     >
-      <Box component="form" onSubmit={handle_submit}>
+      <Box component="form" onSubmit={handle_submit(on_submit)}>
         <DialogTitle>Crear organigrama</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <TextField
-            required
-            autoFocus
-            fullWidth
-            type="text"
+          <Controller
             name="nombre"
-            margin="dense"
-            size="small"
-            label="Nombre"
-            helperText="Ingrese nombre"
-            onChange={handle_data_organigram}
+            control={control_organigrama}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                margin="dense"
+                fullWidth
+                size="small"
+                label="Nombre"
+                variant="outlined"
+                value={value}
+                onChange={onChange}
+                error={!(error == null)}
+                helperText={
+                  error != null
+                    ? 'Es obligatorio ingresar un nombre'
+                    : 'Ingrese nombre'
+                }
+              />
+            )}
           />
-          <TextField
-            autoFocus
-            margin="dense"
+          <Controller
             name="version"
-            label="Versión"
-            required
-            type="text"
-            fullWidth
-            helperText="Ingrese versión"
-            size="small"
-            onChange={handle_data_organigram}
+            control={control_organigrama}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                margin="dense"
+                fullWidth
+                size="small"
+                label="Versión"
+                variant="outlined"
+                value={value}
+                onChange={onChange}
+                error={!(error == null)}
+                helperText={
+                  error != null
+                    ? 'Es obligatorio ingresar una versión'
+                    : 'Ingrese versión'
+                }
+              />
+            )}
           />
-          <TextField
-            autoFocus
-            margin="dense"
+          <Controller
             name="descripcion"
-            label="Descripción"
-            required
-            type="text"
-            fullWidth
-            size="small"
-            helperText="Ingrese descripción"
-            onChange={handle_data_organigram}
+            control={control_organigrama}
+            defaultValue=""
+            rules={{ required: true }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                margin="dense"
+                fullWidth
+                size="small"
+                label="Descripción"
+                variant="outlined"
+                value={value}
+                onChange={onChange}
+                error={!(error == null)}
+                helperText={
+                  error != null
+                    ? 'Es obligatorio ingresar una descripción'
+                    : 'Ingrese descripción'
+                }
+              />
+            )}
           />
         </DialogContent>
         <Divider />

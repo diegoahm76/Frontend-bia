@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Controller } from 'react-hook-form';
 // Componentes de Material UI
 import { Grid, Box, Stack, Button, MenuItem, TextField } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
@@ -69,9 +70,9 @@ export const EditarOrganigramaScreen: React.FC = () => {
     // title_nivel,
     // // Edita States
     // // Functions
-    // handleSubmitOrganigrama,
-    // onSubmitEditOrganigrama,
-    // registerOrganigrama,
+    handle_submit_organigrama,
+    onsubmit_edit_organigrama,
+    control_organigrama,
     // handleSubmitNivel,
     // registerNivel,
     // submitNivel,
@@ -100,47 +101,105 @@ export const EditarOrganigramaScreen: React.FC = () => {
           <Box
             component="form"
             sx={{ mt: '20px' }}
-            noValidate
-            autoComplete="off"
+            onSubmit={handle_submit_organigrama(onsubmit_edit_organigrama)}
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
-                <TextField
-                  required
+                <Controller
                   name="nombre"
-                  label="Nombre"
-                  helperText="Ingrese nombre"
-                  size="small"
-                  fullWidth
+                  control={control_organigrama}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Nombre"
+                      variant="outlined"
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio ingresar un nombre'
+                          : 'Ingrese nombre'
+                      }
+                    />
+                  )}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <TextField
-                  required
+                <Controller
                   name="version"
-                  label="Versión"
-                  helperText="Ingrese versión"
-                  size="small"
-                  fullWidth
+                  control={control_organigrama}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Versión"
+                      variant="outlined"
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio ingresar una versión'
+                          : 'Ingrese versión'
+                      }
+                    />
+                  )}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
-                <TextField
-                  required
+                <Controller
                   name="descripcion"
-                  label="Descripcion"
-                  helperText="Ingrese una descripción"
-                  size="small"
-                  fullWidth
+                  control={control_organigrama}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Descripcion"
+                      variant="outlined"
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio ingresar una descripción'
+                          : 'Ingrese descripción'
+                      }
+                    />
+                  )}
                 />
               </Grid>
             </Grid>
+            <Stack direction="row" justifyContent="flex-end" spacing={2}>
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                startIcon={<SaveIcon />}
+              >
+                EDITAR
+              </Button>
+            </Stack>
           </Box>
-          <Stack direction="row" justifyContent="flex-end" spacing={2}>
-            <Button color="primary" variant="outlined" startIcon={<SaveIcon />}>
-              EDITAR
-            </Button>
-          </Stack>
         </Grid>
       </Grid>
       <Grid

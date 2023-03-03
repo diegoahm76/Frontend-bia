@@ -74,10 +74,9 @@ export const add_organigrams_service = (organigrama: any, navigate: NavigateFunc
 };
 // Editar Organigrama
 export const edit_organigrams_service = (organigrama: IObjCreateOrganigram, id: string) => {
-    return async (dispatch: (arg0: (dispatch: (arg0: { payload: IObjOrganigram[]; type: "organigram/get_organigrams"; }) => void) => Promise<AxiosResponse<any, any> | AxiosError<unknown, any
-        // Types
-        >>) => void): Promise<AxiosResponse | AxiosError> => {
+    return async (dispatch: Dispatch<any>): Promise<AxiosResponse | AxiosError> => {
         try {
+            console.log("Testing dentro de edit_organigrams_service")
             const { data } = await api.patch(`almacen/organigrama/update/${id}/`, organigrama);
             dispatch(get_organigrams_service());
             void Swal.fire("Correcto", "El organigrama se editó correctamente", "success");
