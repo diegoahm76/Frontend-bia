@@ -20,22 +20,22 @@ import ReCaptcha from 'react-google-recaptcha';
 
 import { use_rol } from '../hooks/LoginHooks';
 import { use_form } from '../../../hooks/useForm';
-import { checking_authentication } from '../store';
+import {
+  checking_authentication,
+  get_persmisions_user,
+  open_dialog_entorno,
+} from '../store';
 import { LoadingButton } from '@mui/lab';
 
 // import logo_bia from '.../../../assets/logos/logo_bia.png';
 import { DialogEntorno } from './DialogEntorno';
-import { type IUserInfo } from '../interfaces/authModels';
-
-interface AuthSlice {
-  auth: IUserInfo;
-}
+import { type AuthSlice } from '../interfaces/authModels';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LoginForm: React.FC = () => {
   const { set_is_captcha_valid, is_captcha_valid } = use_rol();
   const dispatch = useDispatch();
-  const { status, error_message } = useSelector(
+  const { status, error_message, userinfo } = useSelector(
     (state: AuthSlice) => state.auth
   );
   const is_authenticating = useMemo(() => status === 'checking', [status]);
@@ -67,6 +67,23 @@ export const LoginForm: React.FC = () => {
       set_disale(true);
     }
   }, [is_captcha_valid]);
+
+  useEffect(() => {
+    if (userinfo.id_persona !== 0) {
+      if (
+        userinfo.tipo_persona === 'J' ||
+        (userinfo.tipo_persona === 'N' && userinfo.tipo_usuario === 'E')
+      ) {
+        dispatch(get_persmisions_user(userinfo.id_usuario, 'C'));
+      } else if (
+        userinfo.tipo_persona === 'N' &&
+        userinfo.tipo_usuario === 'I'
+      ) {
+        // para este caso mostramos el dialog
+        dispatch(open_dialog_entorno());
+      }
+    }
+  }, [userinfo]);
 
   useEffect(() => {
     set_is_error(!is_error);
