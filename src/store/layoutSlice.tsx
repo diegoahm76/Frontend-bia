@@ -16,7 +16,6 @@ export const sidebar_slice = createSlice({
       state.desktop_open = payload;
     },
     handle_mod_dark: (state, {payload}) => {
-      console.log(payload)
       state.mod_dark = payload;
   },
 
