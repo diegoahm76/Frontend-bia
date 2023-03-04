@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { AuthRoutes } from '../commons/auth/routes/AuthRoutes';
-import { GestorDocumentalRoutes } from '../commons/gestorDocumental/routes/GestorDocumentalRoutes';
+import { GestorDocumentalRoutes } from '../commons/gestorDocumental/organigrama/routes/GestorDocumentalRoutes';
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { MainLayout } from '../layouts/MainLayout';
 

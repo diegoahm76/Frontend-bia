@@ -28,7 +28,7 @@ const initial_state: IOrganigram = {
   unity_organigram: [],
 };
 
-const organigrama_slice = createSlice({
+export const organigrama_slice = createSlice({
   name: 'organigram',
   initialState: initial_state,
   reducers: {
@@ -63,5 +63,3 @@ export const {
   get_levels,
   get_unitys,
 } = organigrama_slice.actions;
-// eslint-disable-next-line no-restricted-syntax
-export default organigrama_slice.reducer;

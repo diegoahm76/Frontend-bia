@@ -2,7 +2,7 @@
 import { Grid, Box, TextField, MenuItem, Stack, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
-import { Title } from '../../../components/Title';
+import { Title } from '../../../../components/Title';
 
 import type {
   GridColDef,

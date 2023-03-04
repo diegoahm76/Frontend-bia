@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 import { useEffect, useState } from 'react';
-import { api } from '../../../api/axios';
+import { api } from '../../../../api/axios';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 // Componentes de material UI
 import { Chip, Avatar, IconButton } from '@mui/material';

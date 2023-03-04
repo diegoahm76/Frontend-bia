@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select, { type SingleValue } from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import { Controller } from 'react-hook-form';
@@ -10,8 +10,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Title } from '../../../components';
-import { OrganigramVisualizerDialog } from '../components/OrganigramVisualizerDialog';
+import { Title } from '../../../../components';
+import { OrganigramVisualizerDialog } from '../componentes/OrganigramVisualizerDialog';
 import {
   type IDocumentaryGroup,
   type ILevelFather,
@@ -88,6 +88,12 @@ export const EditarOrganigramaScreen: React.FC = () => {
   const handle_to_go_back = (): void => {
     navigate('/dashboard/gestor-documental/organigrama/crear-organigrama');
   };
+
+  useEffect(() => {
+    if (organigram_current.id_organigrama === null) {
+      navigate('/dashboard/gestor-documental/organigrama/crear-organigrama');
+    }
+  }, []);
 
   return (
     <>
@@ -517,9 +523,7 @@ export const EditarOrganigramaScreen: React.FC = () => {
               variant="outlined"
               startIcon={<ArrowBackIcon />}
               onClick={handle_to_go_back}
-            >
-              VOLVER
-            </Button>
+            ></Button>
             <Button
               disabled={mold_organigram.length === 0}
               color="primary"

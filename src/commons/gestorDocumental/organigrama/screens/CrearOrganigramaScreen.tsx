@@ -16,12 +16,12 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 // Componentes personalizados
-import { Title } from '../../../components/Title';
+import { Title } from '../../../../components/Title';
 // Hooks
 import { useAppDispatch, useAppSelector } from '../store/hooks/hooks';
 // Thunks
 import { get_organigrams_service } from '../store/thunks/organigramThunks';
-import CrearOrganigramaDialogForm from '../components/CrearOrganigramaDialogForm';
+import CrearOrganigramaDialogForm from '../componentes/CrearOrganigramaDialogForm';
 // Slices
 import { current_organigram } from '../store/slices/organigramSlice';
 

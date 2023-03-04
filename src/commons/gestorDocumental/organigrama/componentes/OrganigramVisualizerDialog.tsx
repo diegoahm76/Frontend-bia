@@ -13,7 +13,7 @@ import {
 import { type TransitionProps } from '@mui/material/transitions';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppSelector } from '../store/hooks/hooks';
-import { Subtitle } from '../../../components/Subtitle';
+import { Subtitle } from '../../../../components/Subtitle';
 import OrganigramVisual from './OrganigramVisual';
 
 interface IProps {

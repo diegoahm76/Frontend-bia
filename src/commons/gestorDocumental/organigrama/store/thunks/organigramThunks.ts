@@ -1,9 +1,9 @@
 import { type Dispatch } from 'react';
 import { type NavigateFunction } from 'react-router-dom';
 import Swal, { type SweetAlertResult } from 'sweetalert2'
-// import { toast } from 'react-toastify';
-// import "react-toastify/dist/ReactToastify.css";
-import { api } from '../../../../api/axios';
+import { api } from '../../../../../api/axios';
+// import { control_error } from '../../../helpers/controlError';
+
 import { type AxiosError, type AxiosResponse } from "axios";
 // Slices
 import { get_mold_organigrams, get_organigrams, 
@@ -59,7 +59,7 @@ export const get_organigrams_service = () => {
 export const add_organigrams_service = (organigrama: any, navigate: NavigateFunction) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.post("almacen/organigrama/create/", organigrama);
+            const { data } = await api.post("/create/", organigrama);
             dispatch(get_organigrams_service());
             dispatch(current_organigram(data.detail));
             void Swal.fire("Correcto", "El organigrama se agrego correctamente", "success");
@@ -74,9 +74,8 @@ export const add_organigrams_service = (organigrama: any, navigate: NavigateFunc
 };
 // Editar Organigrama
 export const edit_organigrams_service = (organigrama: IObjCreateOrganigram, id: string) => {
-    return async (dispatch: Dispatch<any>): Promise<AxiosResponse | AxiosError> => {
+    return async (dispatch: Dispatch<any>) => {
         try {
-            console.log("Testing dentro de edit_organigrams_service")
             const { data } = await api.patch(`almacen/organigrama/update/${id}/`, organigrama);
             dispatch(get_organigrams_service());
             void Swal.fire("Correcto", "El organigrama se editó correctamente", "success");

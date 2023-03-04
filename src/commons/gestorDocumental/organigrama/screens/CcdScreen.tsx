@@ -11,7 +11,7 @@ import {
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { Title } from '../../../components/Title';
+import { Title } from '../../../../components/Title';
 
 import type {
   GridColDef,
@@ -19,7 +19,7 @@ import type {
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
-import CrearSeriesCcdDialog from '../components/CrearSeriesCcdDialog';
+import CrearSeriesCcdDialog from '../componentes/CrearSeriesCcdDialog';
 // Graficas
 
 const columns: GridColDef[] = [

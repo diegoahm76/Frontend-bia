@@ -54,7 +54,6 @@ const CrearSeriesCcdDialog = ({
   // const handle_submit = (e: { preventDefault: () => void }): void => {
   //   e.preventDefault();
   //   void dispatch(add_organigrams_service(organigrama_data, navigate));
-  //   console.log(organigrama_data);
   // };
 
   const handle_close_crear_organigrama = (): void => {

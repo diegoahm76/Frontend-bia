@@ -1,13 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import organigramReducer from './slices/organigramSlice';
+import { organigrama_slice } from './slices/organigramSlice';
 // import CCDReducer from "./slices/CCD/indexCCD";
 // import seriesReducer from "./slices/series/indexSeries";
 // import subSeriesReducer from "./slices/subSeries/indexSubSeries";
 
 const store = configureStore({
   reducer: {
-    organigram: organigramReducer,
+    organigram: organigrama_slice.reducer,
     // CCD: CCDReducer,
     // series: seriesReducer,
     // subSeries: subSeriesReducer,
