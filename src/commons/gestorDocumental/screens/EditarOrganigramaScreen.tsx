@@ -101,6 +101,7 @@ export const EditarOrganigramaScreen: React.FC = () => {
           <Box
             component="form"
             sx={{ mt: '20px' }}
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit={handle_submit_organigrama(onsubmit_edit_organigrama)}
           >
             <Grid container spacing={2}>

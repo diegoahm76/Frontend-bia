@@ -4,6 +4,7 @@ import { GestorDocumentalRoutes } from '../commons/gestorDocumental/routes/Gesto
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { MainLayout } from '../layouts/MainLayout';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
+import { RecursoHidricoRoutes } from '../commons/recursoHdrico/routers/RecursoHidricoRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AppRouter: React.FC = () => {
@@ -15,13 +16,15 @@ export const AppRouter: React.FC = () => {
       <Route path="/*" element={<HomeRoutes />} />
 
       {/* Seguridad */}
-      <Route path="/seguridad" element={<SeguridadRoutes />} />
+      <Route path="/seguridad" element={<SeguridadRoutes />} />      
 
       <Route path="dashboard/" element={<MainLayout />}>
-        <Route
-          path="gestor-documental/*"
-          element={<GestorDocumentalRoutes />}
-        />
+        {/* Gestor Documental */}
+        <Route path="gestor-documental/*" element={<GestorDocumentalRoutes />} />
+
+        {/* Recurso Hidrico */}
+        <Route path="recurso-hidrico/*" element={<RecursoHidricoRoutes />} />
+        
       </Route>
     </Routes>
   );
