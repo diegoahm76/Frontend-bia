@@ -1,87 +1,93 @@
 import type React from 'react';
 import { useState } from 'react';
+import Select, { type SingleValue } from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import { Controller } from 'react-hook-form';
-// Componentes de Material UI
-import { Grid, Box, Stack, Button, MenuItem, TextField } from '@mui/material';
+import { Grid, Box, Stack, Button, TextField, Typography } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-// Icons de Material UI
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-// Componentes personalizados
 import { Title } from '../../../components';
 import { OrganigramVisualizerDialog } from '../components/OrganigramVisualizerDialog';
-// Hooks
+import {
+  type IDocumentaryGroup,
+  type ILevelFather,
+  type ILevelUnity,
+  type ITypeUnity,
+} from '../interfaces/organigrama';
 import useEditarOrganigrama from '../hooks/useEditarOrganigrama';
-import { useAppSelector } from '../store/hooks/hooks';
-
-const tipos_unidades = [
-  {
-    value: '1',
-    label: 'Test',
-  },
-  {
-    value: 'EUR',
-    label: 'Test',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
-];
+import { useAppDispatch, useAppSelector } from '../store/hooks/hooks';
+import { to_finalize_organigram_service } from '../store/thunks/organigramThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarOrganigramaScreen: React.FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const handle_to_go_back = (): void => {
-    navigate('/dashboard/gestor-documental/organigrama/crear-organigrama');
-  };
-  // Estado global
 
+  // Estado global
+  const [view_organigram, set_view_organigram] = useState(false);
   const {
-    // organigram_current,
+    organigram_current,
     levels_organigram,
     unity_organigram,
     mold_organigram,
   } = useAppSelector((state) => state.organigram);
-  const [view_organigram, set_view_organigram] = useState(false);
 
   // Hooks
   const {
-    columns_nivel,
-    columns_unidades,
-    // controlUnidades,
-    // defaultColDefOrganigrama,
-    // errorsNivel,
-    // errorsOrganigrama,
-    // errorsUnidades,
-    // optionNivel,
-    // optionRaiz,
-    // optionsAgrupacionD,
-    // optionsTipoUnidad,
-    // optionUnidadPadre,
-    // orden_nivel,
-    // title_nivel,
-    // // Edita States
-    // // Functions
+    control_organigrama,
     handle_submit_organigrama,
     onsubmit_edit_organigrama,
-    control_organigrama,
-    // handleSubmitNivel,
-    // registerNivel,
-    // submitNivel,
-    // handleSubmitUnidades,
-    // registerUnidades,
-    // setValueUnidades,
-    // submitUnidades,
+    // default_col_def_organigrama,
+    // errors_organigrama,
+
+    columns_nivel,
+    orden_nivel,
+    title_nivel,
+    control_nivel,
+    handle_submit_nivel,
+    submit_nivel,
+    // errors_nivel,
+
+    columns_unidades,
+    option_nivel,
+    control_unidades,
+    option_raiz,
+    options_agrupacion_d,
+    options_tipo_unidad,
+    option_unidad_padre,
+    submit_unidades,
+    handle_submit_unidades,
+    set_value_unidades,
+    // errors_unidades,
+
     // onGridReady,
   } = useEditarOrganigrama();
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const set_unity_root = (option: SingleValue<ILevelUnity>) => {
+    set_value_unidades(
+      'unidadRaiz',
+      option?.orden === 1
+        ? {
+            label: 'Si',
+            value: true,
+          }
+        : {
+            label: 'No',
+            value: false,
+          }
+    );
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    set_value_unidades('nivelUnidad', option!);
+  };
+
+  const handle_to_go_back = (): void => {
+    navigate('/dashboard/gestor-documental/organigrama/crear-organigrama');
+  };
 
   return (
     <>
@@ -101,6 +107,7 @@ export const EditarOrganigramaScreen: React.FC = () => {
           <Box
             component="form"
             sx={{ mt: '20px' }}
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit={handle_submit_organigrama(onsubmit_edit_organigrama)}
           >
             <Grid container spacing={2}>
@@ -218,22 +225,48 @@ export const EditarOrganigramaScreen: React.FC = () => {
           <Box sx={{ mt: '20px' }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
-                <Box component="form" noValidate autoComplete="off">
-                  <TextField
-                    required
-                    id="outlined-error-helper-text"
-                    label="Nombre de nivel"
-                    helperText="Ingrese nombre de nivel"
-                    size="small"
-                    fullWidth
+                <Box
+                  component="form"
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onSubmit={handle_submit_nivel(submit_nivel)}
+                >
+                  <Typography>Nivel {orden_nivel}</Typography>
+                  <Controller
+                    name="nombre"
+                    control={control_nivel}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        label="Nombre de nivel"
+                        variant="outlined"
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar un nombre'
+                            : 'Ingrese nombre del nivel'
+                        }
+                      />
+                    )}
                   />
                   <Stack direction="row" justifyContent="flex-end" spacing={2}>
                     <Button
+                      type="submit"
                       color="primary"
                       variant="outlined"
-                      startIcon={<AddIcon />}
+                      startIcon={
+                        title_nivel === 'Agregar' ? <AddIcon /> : <EditIcon />
+                      }
                     >
-                      AGREGAR
+                      {title_nivel === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
                     </Button>
                   </Stack>
                 </Box>
@@ -274,32 +307,68 @@ export const EditarOrganigramaScreen: React.FC = () => {
           <Box
             component="form"
             sx={{ mt: '20px' }}
-            noValidate
-            autoComplete="off"
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            onSubmit={handle_submit_unidades(submit_unidades)}
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
-                <TextField
-                  required
+                <Controller
                   name="codigo"
-                  label="Código"
-                  helperText="Escribe el código"
-                  size="small"
-                  fullWidth
+                  control={control_unidades}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Código"
+                      variant="outlined"
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio ingresar un código'
+                          : 'Ingrese código'
+                      }
+                    />
+                  )}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
-                  required
+                <Controller
                   name="nombre"
-                  label="Nombre"
-                  helperText="Escribe el nombre"
-                  size="small"
-                  fullWidth
+                  control={control_unidades}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Nombre"
+                      variant="outlined"
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio ingresar un nombre'
+                          : 'Ingrese un nombre'
+                      }
+                    />
+                  )}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
+                {/* <TextField
                   name="tipoUnidad"
                   select
                   label="Select"
@@ -313,88 +382,116 @@ export const EditarOrganigramaScreen: React.FC = () => {
                       {option.label}
                     </MenuItem>
                   ))}
-                </TextField>
+                </TextField> */}
+                <Controller
+                  name="tipoUnidad"
+                  control={control_unidades}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      value={field.value}
+                      onChange={(option: SingleValue<ITypeUnity>) => {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        set_value_unidades('tipoUnidad', option!);
+                      }}
+                      options={options_tipo_unidad.map((item) =>
+                        item.value !== 'LI' && unity_organigram.length === 0
+                          ? { ...item, isDisabled: true }
+                          : { ...item, isDisabled: false }
+                      )}
+                      placeholder="Seleccionar"
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
+                <Controller
                   name="nivelUnidad"
-                  select
-                  label="Nivel de unidad"
-                  defaultValue="1"
-                  helperText="Selecciones nivel de unidad"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  control={control_unidades}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      value={field.value}
+                      onChange={(option: SingleValue<ILevelUnity>) => {
+                        set_unity_root(option);
+                      }}
+                      options={option_nivel}
+                      placeholder="Seleccionar"
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
-                  name="unidadRaiz"
-                  select
-                  label="Unidad raiz"
-                  defaultValue="1"
-                  helperText="Seleccione unidad raiz"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                <Controller
+                  name="unidad_raiz"
+                  control={control_unidades}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      isDisabled={true}
+                      value={field.value}
+                      options={option_raiz}
+                      placeholder="Seleccionar unidad raiz"
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
+                <Controller
                   name="agrupacionDocumental"
-                  select
-                  label="Agrupacion documental"
-                  defaultValue="1"
-                  helperText="Seleccione agrupacion documental"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  control={control_unidades}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      value={field.value}
+                      onChange={(option: SingleValue<IDocumentaryGroup>) => {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        set_value_unidades('agrupacionDocumental', option!);
+                      }}
+                      options={options_agrupacion_d}
+                      placeholder="Seleccionar"
+                    />
+                  )}
+                />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
+                <Controller
                   name="nivelPadre"
-                  select
-                  label="Nivel padre"
-                  defaultValue="1"
-                  helperText="Seleccione nivel padre"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                  control={control_unidades}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      value={field.value}
+                      onChange={(option: SingleValue<ILevelFather>) => {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        set_value_unidades('nivelPadre', option!);
+                      }}
+                      options={option_unidad_padre}
+                      placeholder="Seleccionar"
+                    />
+                  )}
+                />
               </Grid>
             </Grid>
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                type="submit"
+                color="primary"
+                variant="outlined"
+                startIcon={<AddIcon />}
+              >
+                AGREGAR UNIDAD
+              </Button>
+            </Stack>
           </Box>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mb: '20px' }}
-          >
-            <Button color="primary" variant="outlined" startIcon={<AddIcon />}>
-              AGREGAR UNIDAD
-            </Button>
-          </Stack>
           <Grid item>
             <Box sx={{ width: '100%' }}>
               <DataGrid
@@ -438,6 +535,15 @@ export const EditarOrganigramaScreen: React.FC = () => {
               color="success"
               variant="contained"
               startIcon={<SaveIcon />}
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onClick={async () =>
+                await dispatch(
+                  to_finalize_organigram_service(
+                    String(organigram_current.id_organigrama),
+                    navigate
+                  )
+                )
+              }
             >
               FINALIZAR
             </Button>

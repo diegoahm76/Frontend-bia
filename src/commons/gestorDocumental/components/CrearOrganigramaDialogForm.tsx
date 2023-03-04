@@ -60,7 +60,11 @@ const CrearItemOrganigramaModal = ({
       open={is_modal_active}
       onClose={handle_close_crear_organigrama}
     >
-      <Box component="form" onSubmit={handle_submit(on_submit)}>
+      <Box
+        component="form"
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={handle_submit(on_submit)}
+      >
         <DialogTitle>Crear organigrama</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
