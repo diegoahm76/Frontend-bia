@@ -3,7 +3,15 @@ import { useState, useEffect } from 'react';
 import Select, { type SingleValue } from 'react-select';
 import { useNavigate } from 'react-router-dom';
 import { Controller } from 'react-hook-form';
-import { Grid, Box, Stack, Button, TextField, Typography } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Stack,
+  Button,
+  TextField,
+  Typography,
+  // MenuItem,
+} from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -410,6 +418,43 @@ export const EditarOrganigramaScreen: React.FC = () => {
                     />
                   )}
                 />
+
+                {/* <Controller
+                  name="typeUnity"
+                  control={control_unidades}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      select
+                      size="small"
+                      label="Tipo de unidad"
+                      variant="outlined"
+                      fullWidth
+                      // error={!!errors_}
+                      // helperText={errors.tipoUnidad ? errors_unidades : ''}
+                      onChange={(e) => {
+                        field.onChange(e.target.value as ITypeUnity); // update the value of the field
+                        set_value_unidades(
+                          'tipoUnidad',
+                          e.target.value as ITypeUnity
+                        );
+                      }}
+                    >
+                      {options_tipo_unidad.map((item) => (
+                        <MenuItem
+                          key={item.value}
+                          value={item}
+                          disabled={
+                            item.value !== 'LI' && unity_organigram.length === 0
+                          }
+                        >
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                /> */}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
