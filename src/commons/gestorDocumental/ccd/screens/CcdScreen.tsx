@@ -19,7 +19,7 @@ import type {
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
-import CrearSeriesCcdDialog from '../componentes/CrearSeriesCcdDialog';
+import CrearSeriesCcdDialog from '../../organigrama/componentes/CrearSeriesCcdDialog';
 // Graficas
 
 const columns: GridColDef[] = [
