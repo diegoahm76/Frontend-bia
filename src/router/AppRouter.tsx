@@ -1,9 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import { AuthRoutes } from '../commons/auth/routes/AuthRoutes';
-import { GestorDocumentalRoutes } from '../commons/gestorDocumental/routes/GestorDocumentalRoutes';
-import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
-import { MainLayout } from '../layouts/MainLayout';
-import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
+import { Page404 } from '../screens/404';
+import { PrivateRoutes } from './PrivateRoutes';
+import { ProtectedRoutes } from './ProtectedRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AppRouter: React.FC = () => {
@@ -11,18 +10,16 @@ export const AppRouter: React.FC = () => {
     <Routes>
       {/* Login */}
       <Route path="auth/*" element={<AuthRoutes />} />
-      {/* Dashboard */}
-      <Route path="/*" element={<HomeRoutes />} />
+      <Route
+        path="app/*"
+        element={
+          <PrivateRoutes>
+            <ProtectedRoutes />
+          </PrivateRoutes>
+        }
+      />
 
-      {/* Seguridad */}
-      <Route path="/seguridad" element={<SeguridadRoutes />} />
-
-      <Route path="dashboard/" element={<MainLayout />}>
-        <Route
-          path="gestor-documental/*"
-          element={<GestorDocumentalRoutes />}
-        />
-      </Route>
+      <Route path="/*" element={<Page404 />} />
     </Routes>
   );
 };
