@@ -7,6 +7,7 @@ export const RecursoHidricoRoutes: React.FC = () => {
     <Routes>
       <Route path="/" element={<IndexEstacionesScreen />} />
       <Route path="geolocalizacion" element={<GeolocalizacionScreen />} />
+      {/* <Route path="geolocalizacion" element={<UsuariosScreen/>} /> */}
 
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
