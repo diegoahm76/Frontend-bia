@@ -19,7 +19,7 @@ const initial_state: IUserInfo = {
   user_sesion: '',
   permisos: [],
   representante_legal: [],
-  status: 'not-authenticated',
+  status: 'checking',
   error_message: '',
   open_dialog: false,
   entorno: 'C'
