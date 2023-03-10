@@ -13,6 +13,8 @@ import {
   Typography,
 } from '@mui/material';
 
+import { type IUserInfo } from '../interfaces/authModels';
+
 import OutlinedInput from '@mui/material/OutlinedInput';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
@@ -22,10 +24,6 @@ import { use_rol } from '../hooks/LoginHooks';
 import { use_form } from '../../../hooks/useForm';
 import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
-
-// import logo_bia from '.../../../assets/logos/logo_bia.png';
-import { DialogEntorno } from './DialogEntorno';
-import { type IUserInfo } from '../interfaces/authModels';
 
 interface AuthSlice {
   auth: IUserInfo;
@@ -170,9 +168,6 @@ export const LoginForm: React.FC = () => {
               No tienes cuenta? <b>Registrese</b>
             </Typography>
           </Button>
-        </Grid>
-        <Grid item>
-          <DialogEntorno />
         </Grid>
       </Grid>
     </form>

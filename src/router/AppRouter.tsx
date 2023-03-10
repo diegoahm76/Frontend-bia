@@ -6,12 +6,16 @@ import { PrivateRoutes } from './PrivateRoutes';
 import { ProtectedRoutes } from './ProtectedRoutes';
 import { PublicRoutes } from './PublicRoutes';
 import { CheckingAuth } from '../commons/auth/components/CheckingAuth';
+import { DialogEntorno } from '../commons/auth/components/DialogEntorno';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AppRouter: React.FC = () => {
-  const { status } = useSelector((state: AuthSlice) => state.auth);
+  const { status, open_dialog } = useSelector((state: AuthSlice) => state.auth);
 
   if (status === 'checking') {
+    if (open_dialog) {
+      return <DialogEntorno />;
+    }
     return <CheckingAuth />;
   }
 
