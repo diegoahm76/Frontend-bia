@@ -7,6 +7,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import {ParametrosReferencia} from '../componentes/ParametrosReferencia';
 import {ConfiguracionAlarma} from '../componentes/ConfiguracionAlarma';
 import { Grid } from '@mui/material';
+import  { Title }  from '../../../../components/Title';
 
 // import VisibilityIcon from '@mui/icons-material/Visibility';
 // import { api } from '../../../../api/axios';
@@ -29,7 +30,8 @@ export const AlertasScreen: React.FC = () => {
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
       }}>
-        <Box sx={{ width: '90%', typography: 'body1'}}>
+       <Title title="INFORMCACIÓN GENERAL"></Title>
+        <Box sx={{ width: '100%', typography: 'body1'}}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handle_change} aria-label="lab API tabs example">
