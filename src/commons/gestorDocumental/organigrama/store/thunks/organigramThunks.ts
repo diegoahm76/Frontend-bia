@@ -93,13 +93,13 @@ export const add_organigrams_service = (organigrama: any, navigate: NavigateFunc
             dispatch(get_organigrams_service());
             dispatch(current_organigram(data.detail));
             control_success("El organigrama se agrego correctamente");
-            navigate('/dashboard/gestor-documental/organigrama/editar-organigrama')
+            navigate('/gestor_documental/organigrama/editar_organigrama')
             return data;
         } catch (error: any) {
             console.log("add_organigrams_service");
             control_error(error.response.data.detail);
             console.log(error.response.data); 
-            navigate('/dashboard/gestor-documental/organigrama/crear-organigrama')
+            navigate('/gestor_documental/organigrama/crear_organigrama')
             return error as AxiosError;
         }
     };
@@ -130,7 +130,7 @@ export const to_finalize_organigram_service = (id: string, navigate: NavigateFun
             void Swal.fire({
                 position: "center", icon: "info", title: "Atención", text: data.detail,
             });
-            navigate('/dashboard/gestordocumental/organigrama/crearorganigrama');
+            navigate('/gestor_documental/organigrama/crear_organigrama');
             return data;
         } catch (error: any) {
             console.log("to_finalize_organigram_service");

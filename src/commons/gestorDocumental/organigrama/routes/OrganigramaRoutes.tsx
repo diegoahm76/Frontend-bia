@@ -6,8 +6,8 @@ import { EditarOrganigramaScreen } from '../screens/EditarOrganigramaScreen';
 export const OrganigramaRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="crear-organigrama" element={<CrearOrganigramaScreen />} />
-      <Route path="editar-organigrama" element={<EditarOrganigramaScreen />} />
+      <Route path="crear_organigrama" element={<CrearOrganigramaScreen />} />
+      <Route path="editar_organigrama" element={<EditarOrganigramaScreen />} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );
