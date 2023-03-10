@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 // eslint-disable-next-line camelcase
-export const sidebar_slice = createSlice({
+export const layout_slice = createSlice({
   name: 'layout',
   initialState: {
     mobile_open: false,
@@ -23,4 +23,4 @@ export const sidebar_slice = createSlice({
 });
 
 // eslint-disable-next-line camelcase
-export const { open_drawer_mobile, open_drawer_desktop, handle_mod_dark } = sidebar_slice.actions;
+export const { open_drawer_mobile, open_drawer_desktop, handle_mod_dark } = layout_slice.actions;

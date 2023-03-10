@@ -1,11 +1,11 @@
 import { Route, Routes } from 'react-router-dom';
+import { MainLayout } from '../layouts/MainLayout';
+import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { AuthRoutes } from '../commons/auth/routes/AuthRoutes';
 import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
 import { CcdRoutes } from '../commons/gestorDocumental/ccd/routes/CcdRoutes';
 import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes';
 import { TcaRoutes } from '../commons/gestorDocumental/tca/routes/TcaRoutes';
-import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
-import { MainLayout } from '../layouts/MainLayout';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AppRouter: React.FC = () => {

@@ -12,7 +12,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../components/Title';
-
+// Hooks
+// import use_ccd from '../hooks/useCCD';
 import type {
   GridColDef,
   // GridValueGetterParams
@@ -20,6 +21,7 @@ import type {
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
 import CrearSeriesCcdDialog from '../../organigrama/componentes/CrearSeriesCcdDialog';
+// import { Controller } from 'react-hook-form';
 // Graficas
 
 const columns: GridColDef[] = [
@@ -85,28 +87,40 @@ const rows = [
   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
 
-// const currencies = [
-//   {
-//     value: 'CCD1',
-//     label: 'CCD1',
-//   },
-//   {
-//     value: 'CCD2',
-//     label: 'CCD2',
-//   },
-//   {
-//     value: 'CCD3',
-//     label: 'CCD3',
-//   },
-//   {
-//     value: 'CCD4',
-//     label: 'CCD4',
-//   },
-// ];
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
   const [create_is_active, set_create_is_active] = useState<boolean>(false);
+  // Hooks
+  // const {
+  // States
+  // list_unitys,
+  // list_organigrams,
+  // list_sries,
+  // list_subsries,
+  // title,
+  // title_button_asing,
+  // create_is_active,
+  // consulta_ccd_is_active,
+  // columns_asignacion,
+  // control,
+  // control_create_ccd,
+  // default_col_def,
+  // errors,
+  // errors_create_ccd,
+  // save_ccd,
+  // Edita States
+  // set_title,
+  // set_create_is_active,
+  // set_consulta_ccd_is_active,
+  // // Functions
+  // get_row_class,
+  // on_submit_create_ccd,
+  // on_submit,
+  // register_create_ccd,
+  // handle_submit,
+  // handle_submit_create_ccd,
+  // clean_ccd,
+  // } = use_ccd();
 
   return (
     <>
@@ -146,6 +160,29 @@ export const CcdScreen: React.FC = () => {
                     </MenuItem>
                   ))}
                 </TextField>
+                {/* <Controller
+                  name="organigrama"
+                  control={control_create_ccd}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      select
+                      size="small"
+                      label="Tipo de unidad"
+                      variant="outlined"
+                      fullWidth
+                      // error={!!errors_}
+                      // helperText={errors.tipoUnidad ? errors_unidades : ''}
+                    >
+                      {list_organigrams.map((item) => (
+                        <MenuItem key={item.value} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  )}
+                /> */}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField

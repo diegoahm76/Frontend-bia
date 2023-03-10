@@ -18,7 +18,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 // Componentes personalizados
 import { Title } from '../../../../components/Title';
 // Hooks
-import { useAppDispatch, useAppSelector } from '../store/hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // Thunks
 import { get_organigrams_service } from '../store/thunks/organigramThunks';
 import CrearOrganigramaDialogForm from '../componentes/CrearOrganigramaDialogForm';
@@ -141,28 +141,6 @@ export function CrearOrganigramaScreen(): JSX.Element {
               />
             </Avatar>
           </IconButton>
-          {/* <IconButton
-          // onClick={() => {
-          //   dispatch(current_organigram(params.row));
-          //   navigate(
-          //     '/dashboard/gestor-documental/organigrama/editar-organigrama'
-          //   );
-          // }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton> */}
         </>
       ),
     },

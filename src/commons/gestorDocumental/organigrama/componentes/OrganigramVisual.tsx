@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { Tree, TreeNode } from 'react-organizational-chart';
 import { type ISon } from '../interfaces/organigrama';
-import { useAppSelector } from '../store/hooks/hooks';
+import { useAppSelector } from '../../../../hooks';
 
 // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/explicit-function-return-type
 export default function OrganigramVisual() {

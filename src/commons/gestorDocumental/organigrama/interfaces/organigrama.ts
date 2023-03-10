@@ -45,13 +45,13 @@ export interface IObjUnitys {
 }
 
 export interface FormValuesUnitys {
-    unidadRaiz?: IUnityRoot;
+    unidad_raiz?: IUnityRoot;
     codigo: string;
     nombre: string;
-    tipoUnidad?: ITypeUnity;
-    nivelUnidad?: ILevelUnity;
-    agrupacionDocumental?: IDocumentaryGroup;
-    nivelPadre?: ILevelFather;
+    tipo_unidad?: ITypeUnity;
+    nivel_unidad?: ILevelUnity;
+    agrupacion_documental?: IDocumentaryGroup;
+    nivel_padre?: ILevelFather;
     [x: string]: any;
 }
 

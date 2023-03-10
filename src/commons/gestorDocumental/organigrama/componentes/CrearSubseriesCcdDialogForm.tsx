@@ -15,7 +15,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import { add_organigrams_service } from '../store/thunks/organigramThunks';
 import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../store/hooks/hooks';
+import { useAppDispatch } from '../../../../hooks';
 
 interface IProps {
   is_modal_active: boolean;
