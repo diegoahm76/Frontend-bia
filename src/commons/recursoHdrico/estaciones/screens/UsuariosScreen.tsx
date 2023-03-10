@@ -113,7 +113,6 @@ export const UsuariosScreen: React.FC = () => {
   }
 
   const {
-
     handleSubmit: handle_submit_filtrar,
     control: control_filtrar,
     formState: { errors: errors_filtrar },
@@ -139,8 +138,6 @@ export const UsuariosScreen: React.FC = () => {
   useEffect(() => {
     void get_data_initial();
   }, []);
-
-
 
   const on_submit_filtrar: SubmitHandler<FieldValues> = async (data) => {
     try {
@@ -194,142 +191,142 @@ export const UsuariosScreen: React.FC = () => {
   // };
   return (
     <>
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Grid
-            item
-            className={`border px-4 text-white fs-5 p-1`}
-            sx={{
-              display: 'grid',
-              background:
-                'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-              width: '100%',
-              height: '40px',
+    <Grid
+      container
+      sx={{
+        position: 'relative',
+        background: '#FAFAFA',
+        borderRadius: '15px',
+        p: '20px',
+        mb: '20px',
+        boxShadow: '0px 3px 6px #042F4A26',
+      }}
+    >
+      <Grid item xs={12}>
+        <Grid
+          item
+          className={`border px-4 text-white fs-5 p-1`}
+          sx={{
+            display: 'grid',
+            background:
+              'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
+            width: '100%',
+            height: '40px',
 
-              borderRadius: '10px',
-              pl: '20px',
-              fontSize: '17px',
-              fontWeight: 'bold',
-              alignContent: 'center',
-            }}
-          >
-            <Typography sx={{ color: 'white' }}>Partes Interesadas</Typography>
-          </Grid>
-          <form className="row" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
-            {/* <form className='row'> */}
-            <Grid item xs={12} sm={4}>
-              <Stack sx={{ m: '20px 0' }} direction="row" spacing={2}>
-                <FormControl fullWidth>
-                  <InputLabel>
-                    <span style={{ color: "red" }}></span>
-                  </InputLabel>
-                  <Controller
-                    name="estacion"
-                    control={control_filtrar}
-                    rules={{
-                      required: true,
-                    }}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={estaciones_options}
-                        placeholder="Seleccionar"
-                      />
-                    )}
-                  />
-                  {(errors_filtrar.estacion != null) && (
-                    <FormHelperText error>
-                      Seleccione una estación para continuar
-
-                    </FormHelperText>
-                  )}
-                </FormControl>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  disabled={loading}
-                  className="text-capitalize rounded-pill  "
-                  startIcon={
-                    loading ? (
-                      <CircularProgress size={20} />
-                    ) : (
-                      <SearchIcon />
-                    )
-                  }
-                >
-                  {loading ? "Cargando..." : ""}
-                </Button>
-              </Stack>
-            </Grid>
-          </form>
-          {data_reportes && (
-            <>
-              <Grid
-                item
-
-                className={`border px-4 text-white fs-5 p-1`}
-                sx={{
-                  display: 'grid',
-                  background:
-                    'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-                  width: '100%',
-                  height: '40px',
-
-                  borderRadius: '10px',
-                  pl: '20px',
-                  fontSize: '17px',
-                  fontWeight: 'bold',
-                  alignContent: 'center',
-                }}
-              >
-                <Typography sx={{ color: 'white' }}>Información genereal</Typography>
-              </Grid>
-              <Button
-                variant="outlined"
-                sx={{ m: '20px 0' }}
-                onClick={() => { set_is_modal_active(!is_modal_active); }}
-                startIcon={<AddIcon />}
-              >
-                Agregar
-              </Button>
-              <Grid item>
-                <Box>
-                  <DataGrid
-                    density="compact"
-                    autoHeight
-                    rows={data_reportes}
-                    columns={columnDefs}
-                    getRowId={(row) => row.id_persona}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    disableSelectionOnClick
-                    experimentalFeatures={{ newEditingApi: true }}
-                  />
-                </Box>
-              </Grid>
-
-            </>
-          )}
+            borderRadius: '10px',
+            pl: '20px',
+            fontSize: '17px',
+            fontWeight: 'bold',
+            alignContent: 'center',
+          }}
+        >
+          <Typography sx={{ color: 'white' }}>Partes Interesadas</Typography>
         </Grid>
+        <form className="row" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
+          {/* <form className='row'> */}
+          <Grid item xs={12} sm={4}>
+            <Stack sx={{ m: '20px 0' }} direction="row" spacing={2}>
+              <FormControl fullWidth>
+                <InputLabel>
+                  <span style={{ color: "red" }}></span>
+                </InputLabel>
+                <Controller
+                  name="estacion"
+                  control={control_filtrar}
+                  rules={{
+                    required: true,
+                  }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={estaciones_options}
+                      placeholder="Seleccionar"
+                    />
+                  )}
+                />
+                {(errors_filtrar.estacion != null) && (
+                  <FormHelperText error>
+                    Seleccione una estación para continuar
+
+                  </FormHelperText>
+                )}
+              </FormControl>
+              <Button
+                variant="contained"
+                type="submit"
+                disabled={loading}
+                className="text-capitalize rounded-pill  "
+                startIcon={
+                  loading ? (
+                    <CircularProgress size={20} />
+                  ) : (
+                    <SearchIcon />
+                  )
+                }
+              >
+                {loading ? "Cargando..." : ""}
+              </Button>
+            </Stack>
+          </Grid>
+        </form>
+        {data_reportes && (
+          <>
+            <Grid
+              item
+
+              className={`border px-4 text-white fs-5 p-1`}
+              sx={{
+                display: 'grid',
+                background:
+                  'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
+                width: '100%',
+                height: '40px',
+
+                borderRadius: '10px',
+                pl: '20px',
+                fontSize: '17px',
+                fontWeight: 'bold',
+                alignContent: 'center',
+              }}
+            >
+              <Typography sx={{ color: 'white' }}>Información genereal</Typography>
+            </Grid>
+            <Button
+              variant="outlined"
+              sx={{ m: '20px 0' }}
+              onClick={() => { set_is_modal_active(!is_modal_active); }}
+              startIcon={<AddIcon />}
+            >
+              Agregar
+            </Button>
+            <Grid item>
+              <Box>
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={data_reportes}
+                  columns={columnDefs}
+                  getRowId={(row) => row.id_persona}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  disableSelectionOnClick
+                  experimentalFeatures={{ newEditingApi: true }}
+                />
+              </Box>
+            </Grid>
+
+          </>
+        )}
       </Grid>
-      {/* <NuevoUsuarioModal
-        set_is_modal_active={set_is_modal_active}
-        is_modal_active={is_modal_active}
-      />
-      {<EditarUsuarioModal
-        set_is_modal_active={set_is_modal_editar_active}
-        is_modal_active={is_modal_editar_active}
-      />} */}
-    </>
+    </Grid>
+    {/* <NuevoUsuarioModal
+      set_is_modal_active={set_is_modal_active}
+      is_modal_active={is_modal_active}
+    />
+    {<EditarUsuarioModal
+      set_is_modal_active={set_is_modal_editar_active}
+      is_modal_active={is_modal_editar_active}
+    />} */}
+  </>
   )
 };
