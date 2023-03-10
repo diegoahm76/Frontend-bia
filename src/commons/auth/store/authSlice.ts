@@ -8,21 +8,21 @@ const initial_state: IUserInfo = {
     nombre_de_usuario: '',
     tokens: {
       refresh: '',
-      access: '',
+      access: ''
     },
     is_superuser: false,
     id_usuario: 0,
     tipo_usuario: '',
     id_persona: 0,
-    tipo_persona: '',
+    tipo_persona: ''
   },
   user_sesion: '',
   permisos: [],
   representante_legal: [],
   status: 'not-authenticated',
   error_message: '',
-  open_dialog: true,
-  entorno: 'C',
+  open_dialog: false,
+  entorno: 'C'
 };
 
 export const auth_slice = createSlice({
@@ -34,7 +34,6 @@ export const auth_slice = createSlice({
       state.user_sesion = payload.user_sesion;
       state.permisos = payload.permisos;
       state.representante_legal = payload.representante_legal;
-      state.status = 'authenticated';
     },
     logout: (state, { payload }) => {
       state.user_sesion = '';
@@ -52,6 +51,24 @@ export const auth_slice = createSlice({
     },
     close_dialog_entorno: (state) => {
       state.open_dialog = false;
+      state.user_sesion = '';
+      state.userinfo = initial_state.userinfo;
+      state.permisos = [];
+      state.representante_legal = [];
+      state.status = 'not-authenticated';
+      state.error_message = '';
+    },
+    open_dialog_representado: (state) => {
+      state.open_dialog = true;
+    },
+    close_dialog_representado: (state) => {
+      state.open_dialog = false;
+      state.user_sesion = '';
+      state.userinfo = initial_state.userinfo;
+      state.permisos = [];
+      state.representante_legal = [];
+      state.status = 'not-authenticated';
+      state.error_message = '';
     },
     change_entorno: (state, { payload }) => {
       state.entorno = payload;
@@ -59,7 +76,10 @@ export const auth_slice = createSlice({
     set_permissions: (state, { payload }) => {
       state.permisos = payload;
     },
-  },
+    set_authenticated: (state) => {
+      state.status = 'authenticated';
+    }
+  }
 });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -71,4 +91,5 @@ export const {
   close_dialog_entorno,
   change_entorno,
   set_permissions,
+  set_authenticated
 } = auth_slice.actions;

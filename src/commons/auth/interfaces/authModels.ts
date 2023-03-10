@@ -10,7 +10,7 @@ export interface UserRol {
 }
 
 export interface LoginUser {
-  email: string;
+  nombre_de_usuario: string;
   password: string;
 }
 

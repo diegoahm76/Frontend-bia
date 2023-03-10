@@ -4,21 +4,44 @@ import {
   checking_credentials,
   login,
   logout,
-  set_permissions,
+  open_dialog_entorno,
+  set_authenticated,
+  set_permissions
 } from './authSlice';
 
 export const checking_authentication: (
-  email: string,
+  nombre_de_usuario: string,
   password: string
-) => any = (email: string, password: string) => {
+) => any = (nombre_de_usuario: string, password: string) => {
   return async (dispatch: Dispatch<any>) => {
+    
     dispatch(checking_credentials());
 
-    const { ok, data, error_message } = await login_post({ email, password });
+    const { ok, data, error_message } = await login_post({
+      nombre_de_usuario,
+      password
+    });
     if (!ok) {
       dispatch(logout({ error_message }));
       return;
     }
+
+    if (
+      data?.userinfo.tipo_persona === 'J' ||
+      (data?.userinfo.tipo_persona === 'N' &&
+        data?.userinfo.tipo_usuario === 'E')
+    ) {
+      dispatch(get_persmisions_user(data?.userinfo.id_usuario, 'C'));
+      dispatch(set_authenticated());
+    } else if (
+      data?.userinfo.tipo_persona === 'N' &&
+      data?.userinfo.tipo_usuario === 'I'
+    ) {
+      // para este caso mostramos el dialog
+      dispatch(open_dialog_entorno());
+    }
+
+    // if(data)
 
     dispatch(login(data));
   };
