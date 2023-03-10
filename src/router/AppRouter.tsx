@@ -1,28 +1,43 @@
-import { Route, Routes } from 'react-router-dom';
-import { MainLayout } from '../layouts/MainLayout';
-import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
+import { useSelector } from 'react-redux';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { type AuthSlice } from '../commons/auth/interfaces';
 import { AuthRoutes } from '../commons/auth/routes/AuthRoutes';
-import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
-import { CcdRoutes } from '../commons/gestorDocumental/ccd/routes/CcdRoutes';
-import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes';
-import { TcaRoutes } from '../commons/gestorDocumental/tca/routes/TcaRoutes';
+import { PrivateRoutes } from './PrivateRoutes';
+import { ProtectedRoutes } from './ProtectedRoutes';
+import { PublicRoutes } from './PublicRoutes';
+import { CheckingAuth } from '../commons/auth/components/CheckingAuth';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AppRouter: React.FC = () => {
+  const { status } = useSelector((state: AuthSlice) => state.auth);
+
+  if (status === 'checking') {
+    return <CheckingAuth />;
+  }
+
   return (
     <Routes>
       {/* Login */}
-      <Route path="auth/*" element={<AuthRoutes />} />
-      {/* Dashboard */}
-      <Route path="dashboard/" element={<MainLayout />}>
-        <Route path="gestor-documental/*">
-          <Route path="organigrama/*" element={<OrganigramaRoutes />}></Route>
-          <Route path="ccd/*" element={<CcdRoutes />}></Route>
-          <Route path="trd/*" element={<TrdRoutes />}></Route>
-          <Route path="tca/*" element={<TcaRoutes />}></Route>
-        </Route>
-      </Route>
-      <Route path="/*" element={<HomeRoutes />} />
+      <Route
+        path="auth/*"
+        element={
+          <PublicRoutes>
+            <AuthRoutes />
+          </PublicRoutes>
+        }
+      />
+
+      {/* Rutas protegidas */}
+      <Route
+        path="app/*"
+        element={
+          <PrivateRoutes>
+            <ProtectedRoutes />
+          </PrivateRoutes>
+        }
+      />
+
+      <Route path="/*" element={<Navigate to="auth/login" />} />
     </Routes>
   );
 };

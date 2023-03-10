@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { type Dayjs } from 'dayjs';
 import {
   Button,
@@ -22,12 +22,17 @@ import { LoadingButton } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { use_register } from '../hooks/registerHooks';
+import { type IList } from '../interfaces/authModels';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegisterForm: React.FC = () => {
   const dispatch = useDispatch();
   const { status } = useSelector((state: any) => state.auth);
   const is_authenticating = useMemo(() => status === 'checking', [status]);
+  const { get_selects_options, tipo_documento_options, tipo_persona_options } =
+    use_register();
+
   const { email, password, on_input_change } = use_form({
     email: '',
     password: '',
@@ -43,6 +48,10 @@ export const RegisterForm: React.FC = () => {
     event.preventDefault();
     dispatch(checking_authentication(email, password));
   };
+
+  useEffect(() => {
+    void get_selects_options();
+  }, []);
 
   return (
     <form onSubmit={on_submit}>
@@ -71,9 +80,13 @@ export const RegisterForm: React.FC = () => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {tipo_persona_options.map((e: IList, k: number) => {
+                return (
+                  <MenuItem value={e.value} key={k}>
+                    {e.label}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
         </Grid>
@@ -93,9 +106,13 @@ export const RegisterForm: React.FC = () => {
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
+              {tipo_documento_options.map((e: IList, k: number) => {
+                return (
+                  <MenuItem value={e.value} key={k}>
+                    {e.label}
+                  </MenuItem>
+                );
+              })}
             </Select>
           </FormControl>
         </Grid>

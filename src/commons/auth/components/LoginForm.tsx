@@ -24,7 +24,7 @@ import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
 
 // import logo_bia from '.../../../assets/logos/logo_bia.png';
-// import { DialogEntorno } from './DialogEntorno';
+import { DialogEntorno } from './DialogEntorno';
 import { type IUserInfo } from '../interfaces/authModels';
 
 interface AuthSlice {
@@ -42,8 +42,8 @@ export const LoginForm: React.FC = () => {
   const [show_password, set_show_password] = useState(false);
   const [disable, set_disale] = useState(true);
   const [is_error, set_is_error] = useState(true);
-  const { email, password, on_input_change } = use_form({
-    email: '',
+  const { nombre_de_usuario, password, on_input_change } = use_form({
+    nombre_de_usuario: '',
     password: '',
   });
 
@@ -57,7 +57,7 @@ export const LoginForm: React.FC = () => {
 
   const on_submit = (event: any): void => {
     event.preventDefault();
-    dispatch(checking_authentication(email, password));
+    dispatch(checking_authentication(nombre_de_usuario, password));
   };
 
   useEffect(() => {
@@ -79,9 +79,9 @@ export const LoginForm: React.FC = () => {
           <TextField
             required
             fullWidth
-            label="Usuario o Email"
-            value={email}
-            name="email"
+            label="Usuario"
+            name="nombre_de_usuario"
+            value={nombre_de_usuario}
             onChange={on_input_change}
           />
         </Grid>
@@ -171,7 +171,9 @@ export const LoginForm: React.FC = () => {
             </Typography>
           </Button>
         </Grid>
-        <Grid item>{/* <DialogEntorno /> */}</Grid>
+        <Grid item>
+          <DialogEntorno />
+        </Grid>
       </Grid>
     </form>
   );
