@@ -1,6 +1,5 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { AuthRoutes } from '../commons/auth/routes/AuthRoutes';
-import { Page404 } from '../screens/404';
 import { PrivateRoutes } from './PrivateRoutes';
 import { ProtectedRoutes } from './ProtectedRoutes';
 import { PublicRoutes } from './PublicRoutes';
@@ -29,7 +28,7 @@ export const AppRouter: React.FC = () => {
         }
       />
 
-      <Route path="/*" element={<Page404 />} />
+      <Route path="/*" element={<Navigate to="auth/login" />} />
     </Routes>
   );
 };
