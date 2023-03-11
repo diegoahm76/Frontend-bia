@@ -4,8 +4,8 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import {ParametrosReferencia} from '../componentes/ParametrosReferencia';
-import {ConfiguracionAlarma} from '../componentes/ConfiguracionAlarma';
+import {ParametrosReferencia} from '../components/ParametrosReferencia';
+import {ConfiguracionAlarma} from '../components/ConfiguracionAlarma';
 import { Grid } from '@mui/material';
 import  { Title }  from '../../../../components/Title';
 
