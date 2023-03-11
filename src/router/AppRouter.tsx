@@ -5,6 +5,8 @@ import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { MainLayout } from '../layouts/MainLayout';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { RecursoHidricoRoutes } from '../commons/recursoHdrico/routers/RecursoHidricoRoutes';
+import { LiquidacionTUAScreen } from '../commons/liquidacionTUA/screens/LiquidacionTUAScreen';
+import { RecaudoScreen } from '../commons/recaudo/screens/RecaudoScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AppRouter: React.FC = () => {
@@ -24,6 +26,11 @@ export const AppRouter: React.FC = () => {
 
         {/* Recurso Hidrico */}
         <Route path="recurso-hidrico/*" element={<RecursoHidricoRoutes />} />
+
+        {/* Liquidacion TUA */}
+        <Route path='liquidacion-tua/*' element={<LiquidacionTUAScreen />}/>
+
+        <Route path='recaudo/*' element={<RecaudoScreen />}/>
         
       </Route>
     </Routes>
