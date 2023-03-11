@@ -22,6 +22,7 @@ const initial_state: IUserInfo = {
   status: 'not-authenticated',
   error_message: '',
   open_dialog: false,
+  dialog_representante: false,
   entorno: 'C'
 };
 
@@ -41,7 +42,7 @@ export const auth_slice = createSlice({
       state.permisos = [];
       state.representante_legal = [];
       state.status = 'not-authenticated';
-      state.error_message = payload.error_message;
+      state.error_message = payload.error_message ?? '';
     },
     checking_credentials: (state) => {
       state.status = 'checking';
@@ -59,10 +60,10 @@ export const auth_slice = createSlice({
       state.error_message = '';
     },
     open_dialog_representado: (state) => {
-      state.open_dialog = true;
+      state.dialog_representante = true;
     },
     close_dialog_representado: (state) => {
-      state.open_dialog = false;
+      state.dialog_representante = false;
       state.user_sesion = '';
       state.userinfo = initial_state.userinfo;
       state.permisos = [];
@@ -78,6 +79,9 @@ export const auth_slice = createSlice({
     },
     set_authenticated: (state) => {
       state.status = 'authenticated';
+    },
+    set_representado: (state, { payload }) => {
+      state.representante_legal = [...payload];
     }
   }
 });
@@ -91,5 +95,8 @@ export const {
   close_dialog_entorno,
   change_entorno,
   set_permissions,
-  set_authenticated
+  set_authenticated,
+  open_dialog_representado,
+  close_dialog_representado,
+  set_representado
 } = auth_slice.actions;

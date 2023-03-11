@@ -14,7 +14,6 @@ export const checking_authentication: (
   password: string
 ) => any = (nombre_de_usuario: string, password: string) => {
   return async (dispatch: Dispatch<any>) => {
-    
     dispatch(checking_credentials());
 
     const { ok, data, error_message } = await login_post({
@@ -40,8 +39,6 @@ export const checking_authentication: (
       // para este caso mostramos el dialog
       dispatch(open_dialog_entorno());
     }
-
-    // if(data)
 
     dispatch(login(data));
   };

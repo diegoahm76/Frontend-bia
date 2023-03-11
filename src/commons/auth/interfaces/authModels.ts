@@ -27,6 +27,7 @@ export interface IUserInfo {
   error_message: string;
   open_dialog: boolean;
   entorno: 'C' | 'L';
+  dialog_representante: boolean;
 }
 
 export interface Permiso {

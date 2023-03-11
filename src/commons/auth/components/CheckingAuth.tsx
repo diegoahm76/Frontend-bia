@@ -17,6 +17,7 @@ export const CheckingAuth: React.FC = () => {
     >
       <Grid item xs={12} sm={6}>
         <CircularProgress
+          size={64}
           sx={{
             color: '#FFFF',
           }}
@@ -26,6 +27,7 @@ export const CheckingAuth: React.FC = () => {
         <Typography
           sx={{
             color: '#FFFF',
+            fontSize: 18,
           }}
         >
           Validando, por favor espere...
