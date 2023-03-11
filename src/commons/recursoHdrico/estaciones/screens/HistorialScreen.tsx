@@ -4,8 +4,8 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { HistorialDatos } from '../componentes/HistorialDatos';
-import { HistoricoAlarmas } from '../componentes/HistoricoAlarmas';
+import { HistorialDatos } from '../components/HistorialDatos';
+import { HistoricoAlarmas } from '../components/HistoricoAlarmas';
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 // eslint-disable-next-line @typescript-eslint/naming-convention
