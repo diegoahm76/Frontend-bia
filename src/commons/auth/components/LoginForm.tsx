@@ -24,6 +24,7 @@ import { use_rol } from '../hooks/LoginHooks';
 import { use_form } from '../../../hooks/useForm';
 import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
+import { DialogEntorno } from './DialogEntorno';
 
 interface AuthSlice {
   auth: IUserInfo;
@@ -170,6 +171,8 @@ export const LoginForm: React.FC = () => {
           </Button>
         </Grid>
       </Grid>
+      {/* Dialog para seleccionar entorno  */}
+      <DialogEntorno />
     </form>
   );
 };

@@ -38,7 +38,7 @@ export const DialogEntorno: React.FC = () => {
     dispatch(change_entorno(value));
     dispatch(get_persmisions_user(userinfo.id_usuario, value));
 
-    if (value === 'L') {
+    if (value === 'C') {
       dispatch(open_dialog_representado());
     }
   };
