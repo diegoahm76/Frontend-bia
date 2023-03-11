@@ -14,7 +14,7 @@ import {
   // InputLabel,
   // FormControl,
 } from '@mui/material';
-// import SelectM from '@mui/material/Select';
+
 import { DataGrid } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,12 +23,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Title } from '../../../../components';
 import { OrganigramVisualizerDialog } from '../componentes/OrganigramVisualizerDialog';
-import {
-  type IDocumentaryGroup,
-  type ILevelFather,
-  type ILevelUnity,
-  type ITypeUnity,
-} from '../interfaces/organigrama';
+import { type ILevelUnity } from '../interfaces/organigrama';
 import useEditarOrganigrama from '../hooks/useEditarOrganigrama';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { to_finalize_organigram_service } from '../store/thunks/organigramThunks';
@@ -77,7 +72,7 @@ export const EditarOrganigramaScreen: React.FC = () => {
   } = useEditarOrganigrama();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const set_unity_root = (option: SingleValue<ILevelUnity>) => {
+  const set_unity_root = (option: SingleValue<any>) => {
     set_value_unidades(
       'unidad_raiz',
       option?.orden === 1
@@ -90,8 +85,7 @@ export const EditarOrganigramaScreen: React.FC = () => {
             value: false,
           }
     );
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    set_value_unidades('nivel_unidad', option!);
+    set_value_unidades('nivel_unidad', option);
   };
 
   const handle_to_go_back = (): void => {
@@ -391,9 +385,8 @@ export const EditarOrganigramaScreen: React.FC = () => {
                     <Select
                       {...field}
                       value={field.value}
-                      onChange={(option: SingleValue<ITypeUnity>) => {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        set_value_unidades('tipo_unidad', option!);
+                      onChange={(option: SingleValue<any>) => {
+                        set_value_unidades('tipo_unidad', option);
                       }}
                       options={options_tipo_unidad.map((item) =>
                         item.value !== 'LI' && unity_organigram.length === 0
@@ -404,42 +397,6 @@ export const EditarOrganigramaScreen: React.FC = () => {
                     />
                   )}
                 />
-                {/* <Controller
-                  name="tipo_unidad"
-                  control={control_unidades}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      select
-                      size="small"
-                      label="Tipo de unidad"
-                      variant="outlined"
-                      fullWidth
-                      // error={!!errors_}
-                      // helperText={errors.tipoUnidad ? errors_unidades : ''}
-                      onChange={(e) => {
-                        field.onChange(e.target.value as ITypeUnity); // update the value of the field
-                        set_value_unidades(
-                          'tipo_unidad',
-                          e.target.value as ITypeUnity
-                        );
-                      }}
-                    >
-                      {options_tipo_unidad.map((item) => (
-                        <MenuItem
-                          key={item.value}
-                          value={item.value}
-                          disabled={
-                            item.value !== 'LI' && unity_organigram.length === 0
-                          }
-                        >
-                          {item.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                /> */}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
@@ -459,32 +416,6 @@ export const EditarOrganigramaScreen: React.FC = () => {
                     />
                   )}
                 />
-                {/* <Controller
-                  name="nivel_unidad"
-                  control={control_unidades}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Nivel unidad
-                      </InputLabel>
-                      <SelectM
-                        {...field}
-                        label="Nivel"
-                        size="small"
-                        fullWidth
-                        variant="outlined"
-                        defaultValue={field.value}
-                      >
-                        {option_nivel.map((item) => (
-                          <MenuItem key={item.value} value={item.value}>
-                            {item.label}
-                          </MenuItem>
-                        ))}
-                      </SelectM>
-                    </FormControl>
-                  )}
-                /> */}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
@@ -501,26 +432,6 @@ export const EditarOrganigramaScreen: React.FC = () => {
                     />
                   )}
                 />
-                {/* <Controller
-                  name="unidad_raiz"
-                  control={control_unidades}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      select
-                      value={field.value}
-                      size="small"
-                      label="Unidad Raiz"
-                      variant="outlined"
-                      fullWidth
-                    >
-                      {option_raiz.map((item) => (
-                        <MenuItem key={item.value}>{item.label}</MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                /> */}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
@@ -530,52 +441,14 @@ export const EditarOrganigramaScreen: React.FC = () => {
                     <Select
                       {...field}
                       value={field.value}
-                      onChange={(option: SingleValue<IDocumentaryGroup>) => {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        set_value_unidades('agrupacion_documental', option!);
+                      onChange={(option: SingleValue<any>) => {
+                        set_value_unidades('agrupacion_documental', option);
                       }}
                       options={options_agrupacion_d}
                       placeholder="Seleccionar"
                     />
                   )}
                 />
-                {/* <Controller
-                  name="agrupacion_documental"
-                  control={control_unidades}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      select
-                      size="small"
-                      label="Agrupacion documental"
-                      value={field.value}
-                      variant="outlined"
-                      fullWidth
-                      // error={!!errors_}
-                      // helperText={errors.tipoUnidad ? errors_unidades : ''}
-                      onChange={(e) => {
-                        field.onChange(e.target.value as ITypeUnity); // update the value of the field
-                        set_value_unidades(
-                          'agrupacion_documental',
-                          e.target.value as ITypeUnity
-                        );
-                      }}
-                    >
-                      {options_agrupacion_d.map((item) => (
-                        <MenuItem
-                          key={item.value}
-                          value={item.value}
-                          disabled={
-                            item.value !== 'LI' && unity_organigram.length === 0
-                          }
-                        >
-                          {item.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                /> */}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
@@ -585,52 +458,14 @@ export const EditarOrganigramaScreen: React.FC = () => {
                     <Select
                       {...field}
                       value={field.value}
-                      onChange={(option: SingleValue<ILevelFather>) => {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        set_value_unidades('nivel_padre', option!);
+                      onChange={(option: SingleValue<any>) => {
+                        set_value_unidades('nivel_padre', option);
                       }}
                       options={option_unidad_padre}
                       placeholder="Seleccionar"
                     />
                   )}
                 />
-                {/* <Controller
-                  name="nivel_padre"
-                  control={control_unidades}
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      {...field}
-                      select
-                      size="small"
-                      label="Nivel padre"
-                      // value={field.value}
-                      variant="outlined"
-                      fullWidth
-                      // error={!!errors_}
-                      // helperText={errors.tipoUnidad ? errors_unidades : ''}
-                      onChange={(e) => {
-                        field.onChange(e.target.value as ITypeUnity); // update the value of the field
-                        set_value_unidades(
-                          'nivel_padre',
-                          e.target.value as ITypeUnity
-                        );
-                      }}
-                    >
-                      {options_tipo_unidad.map((item) => (
-                        <MenuItem
-                          key={item.value}
-                          value={item.value}
-                          disabled={
-                            item.value !== 'LI' && unity_organigram.length === 0
-                          }
-                        >
-                          {item.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                /> */}
               </Grid>
             </Grid>
             <Stack
@@ -692,15 +527,14 @@ export const EditarOrganigramaScreen: React.FC = () => {
               color="success"
               variant="contained"
               startIcon={<SaveIcon />}
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onClick={async () =>
-                await dispatch(
+              onClick={() => {
+                void dispatch(
                   to_finalize_organigram_service(
                     String(organigram_current.id_organigrama),
                     navigate
                   )
-                )
-              }
+                );
+              }}
             >
               FINALIZAR
             </Button>
