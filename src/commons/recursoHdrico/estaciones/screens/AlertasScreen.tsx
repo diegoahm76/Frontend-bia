@@ -36,7 +36,7 @@ export const AlertasScreen: React.FC = () => {
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handle_change} aria-label="lab API tabs example">
                 <Tab label="Parametros de Referencia" value="1" />
-                <Tab label="Configiracion Allerta Persona" value="2" />
+                <Tab label="Configiracion Alarma Persona" value="2" />
               </TabList>
             </Box>
             <TabPanel value="1">

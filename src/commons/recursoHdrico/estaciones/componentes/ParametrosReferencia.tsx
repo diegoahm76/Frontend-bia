@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import EditIcon from '@mui/icons-material/Edit';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Avatar, Grid, IconButton, Typography } from '@mui/material';
+import { Avatar, CircularProgress, Grid, IconButton, Typography } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { api } from '../../../../api/axios';
+import { consultar_parametros_referencia } from '../../requets/getRequest';
+import { type Parametros } from '../interfaces/interfaces';
 
 const columns: GridColDef[] = [
     { field: 'id_estacion', headerName: 'ESTACIÓN', width: 140 },
@@ -61,39 +60,15 @@ const columns: GridColDef[] = [
         ),
     },
 ];
-interface Parametros {
-
-    id_estacion: number,
-    frecuencia_solicitud_datos: number,
-    temperatura_ambiente_max: number,
-    temperatura_ambiente_min: number,
-    humedad_ambiente_max: number,
-    humedad_ambiente_min: number,
-    presion_barometrica_max: number,
-    presion_barometrica_min: number,
-    velocidad_viento_max: number,
-    velocidad_viento_min: number,
-    direccion_viento_max: number,
-    direccion_viento_min: number,
-    precipitacion_max: number,
-    precipitacion_min: number,
-    luminosidad_max: number,
-    luminosidad_min: number,
-    nivel_agua_max: number,
-    nivel_agua_min: number,
-    velocidad_agua_max: number,
-    velocidad_agua_min: number,
-}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ParametrosReferencia: React.FC = () => {
-    const [parametro_referencia, set_data_parametro] = useState(null);
+    const [parametro_referencia, set_data_parametro] = useState<Parametros[]>([]);
 
-    const parametros = async () => {
+    const parametros = async (): Promise<void> => {
         try {
-            const url = `estaciones/parametros/consultar-parametro/`
-            const response = await api.get(url);
-            const parametros = response.data.data.map((parametro: Parametros) => ({
+            const response = await consultar_parametros_referencia();
+            const parametros = response.map((parametro: Parametros) => ({
 
                 id_estacion: parametro.id_estacion,
                 frecuencia_solicitud_datos: parametro.frecuencia_solicitud_datos,
@@ -116,7 +91,7 @@ export const ParametrosReferencia: React.FC = () => {
                 velocidad_agua_max: parametro.velocidad_agua_max,
                 velocidad_agua_min: parametro.velocidad_agua_min,
             }))
-            
+
             set_data_parametro(parametros);
         } catch (err) {
             console.log(err);
@@ -129,9 +104,8 @@ export const ParametrosReferencia: React.FC = () => {
     return (
         <>
             <Grid container>
-                <Grid item xs={12}>
-
-                    {parametro_referencia ? (
+                <Grid item xs={12} container justifyContent='center'>
+                    {parametro_referencia.length > 0 ? (
                         <DataGrid
                             autoHeight
                             rows={parametro_referencia}
@@ -141,7 +115,7 @@ export const ParametrosReferencia: React.FC = () => {
                             rowsPerPageOptions={[5]}
                         />
                     ) : (
-                        <Typography>Cargando...</Typography>
+                        <CircularProgress color="secondary" />
                     )}
                 </Grid>
             </Grid>
