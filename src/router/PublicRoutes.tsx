@@ -10,7 +10,7 @@ interface Props {
 export const PublicRoutes: React.FC<Props> = ({ children }: Props) => {
   const { status } = useSelector((state: AuthSlice) => state.auth);
 
-  return status === 'not-authenticated' ? (
+  return status === 'not-authenticated' || status === 'checking' ? (
     children
   ) : (
     <Navigate to={'/app/home'} />

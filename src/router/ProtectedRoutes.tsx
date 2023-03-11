@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { GestorDocumentalRoutes } from '../commons/gestorDocumental/routes/GestorDocumentalRoutes';
+import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { MainLayout } from '../layouts/MainLayout';
@@ -14,10 +14,9 @@ export const ProtectedRoutes: React.FC = () => {
         {/* Seguridad */}
         <Route path="seguridad/*" element={<SeguridadRoutes />} />
         {/* Gestor documental */}
-        <Route
-          path="gestor_documental/*"
-          element={<GestorDocumentalRoutes />}
-        />
+        <Route path="gestor_documental/*">
+          <Route path="organigrama/*" element={<OrganigramaRoutes />} />
+        </Route>
       </Route>
     </Routes>
   );
