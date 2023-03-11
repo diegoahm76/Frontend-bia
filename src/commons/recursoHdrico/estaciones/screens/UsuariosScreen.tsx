@@ -29,7 +29,7 @@ import Swal from "sweetalert2";
 // import EditarUsuarioModal from "../../../components/EditarUsuarioModal";
 import { api } from '../../../../api/axios';
 import { type Estaciones, type Persona } from '../interfaces/interfaces';
-import { consultar_estaciones } from '../../requets/getRequest';
+import { consultar_estaciones, consultar_estaciones_id } from '../../requets/getRequest';
 import { control_error } from '../../../../helpers/controlError';
 import { Title } from '../../../../components/Title';
 
@@ -39,6 +39,7 @@ export const UsuariosScreen: React.FC = () => {
   const [is_modal_editar_active, set_is_modal_editar_active] = useState(false);
   const [estaciones_options, set_estaciones_options] = useState([]);
   const [loading, set_loading] = useState(false);
+  const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<Persona[]>([]);
   const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -67,6 +68,7 @@ export const UsuariosScreen: React.FC = () => {
     { headerName: "Cargo", field: "cargo", minWidth: 140 },
     { headerName: "Email", field: "email_notificacion", minWidth: 140 },
     { headerName: "Celular", field: "nro_celular_notificacion", minWidth: 140 },
+    { headerName: "Observacion", field: "observacion", minWidth: 140 },
     {
       headerName: "Acciones",
       field: "acciones",
@@ -126,33 +128,35 @@ export const UsuariosScreen: React.FC = () => {
   const on_submit_filtrar: SubmitHandler<FieldValues> = async (data) => {
     try {
       set_loading(true);
-      const { data: reportes_data } = await api.get(
-        `/estaciones/consultar-estaciones-id/${data.estacion?.value}`
-      );
-      const personas = reportes_data.data.personas.map((persona: Persona) => ({
-        id_estacion: reportes_data.data.id_estacion,
-        nombre_estacion: reportes_data.data.nombre_estacion,
+      const estacion_id = data.estacion?.value;
+      const estacion = await consultar_estaciones_id(estacion_id);
+      const personas = estacion.personas.map((persona) => ({
+        id_estacion: estacion.id_estacion,
+        nombre_estacion: estacion.nombre_estacion,
         id_persona: persona.id_persona,
         cod_tipo_documento_id: persona.cod_tipo_documento_id,
         numero_documento_id: persona.numero_documento_id,
         primer_nombre: persona.primer_nombre,
+        segundo_nombre: persona.segundo_nombre,
         primer_apellido: persona.primer_apellido,
+        segundo_apellido: persona.segundo_apellido,
         entidad: persona.entidad,
         cargo: persona.cargo,
         email_notificacion: persona.email_notificacion,
-        nro_celular_notificacion: persona.nro_celular_notificacion
+        nro_celular_notificacion: persona.nro_celular_notificacion,
+        observacion: persona.observacion,
       }));
-      console.log(data)
-      console.log("Personas del sistema")
-      console.log(personas)
-      set_data_reportes(personas);
+      console.log(data);
+      console.log("Personas del sistema");
+      console.log(personas);
+      set_estaciones_meteologicas(personas);
       set_loading(false);
     } catch (err) {
       console.log(err);
       set_loading(false);
     }
   };
-
+  
   const {
     formState: { errors },
   } = useForm();
@@ -251,7 +255,7 @@ export const UsuariosScreen: React.FC = () => {
             </Stack>
           </Grid>
         </form>
-        {data_reportes.length > 0 && (
+        {estaciones_meteologicas.length > 0 && (
           <>
             <Grid
               item
@@ -286,7 +290,7 @@ export const UsuariosScreen: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={data_reportes}
+                  rows={estaciones_meteologicas}
                   columns={columnDefs}
                   getRowId={(row) => row.id_persona}
                   pageSize={5}

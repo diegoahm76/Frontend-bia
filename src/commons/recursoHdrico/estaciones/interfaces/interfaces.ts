@@ -9,21 +9,26 @@ export interface Estaciones {
     fecha_modificacion_coordenadas: null | string,
     id_persona_modifica: null | number
 }
-
-export interface Persona {
-    id_persona: number;
-    cod_tipo_documento_id: string;
-    numero_documento_id: string;
-    primer_nombre: string;
-    segundo_nombre: string;
-    primer_apellido: string;
-    segundo_apellido: string;
-    entidad: string;
-    cargo: string;
-    email_notificacion: string;
-    nro_celular_notificacion: string;
-    observacion: string;
+export interface EstacionesDetalle {
+    id_estacion: number | string,
+    nombre_estacion: string,
+    personas: Persona[],
 }
+export interface Persona {
+
+    id_persona: number | string;
+    cod_tipo_documento_id: string;
+    numero_documento_id: string | number;
+    primer_nombre: string;
+    segundo_nombre: string | null;
+    primer_apellido: string;
+    segundo_apellido: string | null;
+    entidad: string | null;
+    cargo: string | null;
+    email_notificacion: string;
+    nro_celular_notificacion: string | number;
+    observacion: string;
+  }
 export interface Datos {
     id_data: number,
     fecha_registro: number,
