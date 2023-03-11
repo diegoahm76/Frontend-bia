@@ -1,5 +1,5 @@
 export interface Estaciones {
-    id_estacion: number,
+    id_estacion: number | string,
     fecha_modificacion: null | string,
     nombre_estacion: string,
     cod_tipo_estacion: string,

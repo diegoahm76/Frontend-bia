@@ -112,7 +112,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
                     CREAR ESTACIÓN
                 </Button>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} container justifyContent='center'>
 
                 {list_estaciones.length > 0 ? (
                     <DataGrid

@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Grid, Box, Stack, Button, Typography, FormControl, InputLabel, FormHelperText } from '@mui/material';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Grid, Box, Stack, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,13 +12,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Select from "react-select";
 import type {
   GridColDef,
-  // GridValueGetterParams
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import type React from "react";
 import { useEffect, useState } from "react";
-// import { useAppDispatch, useAppSelector } from "../../../store/hooks/hooks";
-
 import { Controller, useForm , type FieldValues, type SubmitHandler } from "react-hook-form";
 import Swal from "sweetalert2";
 // import {
@@ -32,6 +28,10 @@ import Swal from "sweetalert2";
 // } from "../../../store/slices/usuarioEstaciones/indexUsuarioEstaciones";
 // import EditarUsuarioModal from "../../../components/EditarUsuarioModal";
 import { api } from '../../../../api/axios';
+import { type Estaciones, type Persona } from '../interfaces/interfaces';
+import { consultar_estaciones } from '../../requets/getRequest';
+import { control_error } from '../../../../helpers/controlError';
+import { Title } from '../../../../components/Title';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UsuariosScreen: React.FC = () => {
@@ -39,12 +39,7 @@ export const UsuariosScreen: React.FC = () => {
   const [is_modal_editar_active, set_is_modal_editar_active] = useState(false);
   const [estaciones_options, set_estaciones_options] = useState([]);
   const [loading, set_loading] = useState(false);
-  const [data_reportes, set_data_reportes] = useState(null);
-
-  // const dispatch = useAppDispatch();
-  // useEffect(()=>{
-  //   obtenerTodosUsuarios(dispatch);
-  // },[])
+  const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const columnDefs: GridColDef[] = [
@@ -100,18 +95,7 @@ export const UsuariosScreen: React.FC = () => {
     },
   ];
 
-  interface Persona {
-    id_persona: number;
-    cod_tipo_documento_id: string;
-    numero_documento_id: string;
-    primer_nombre: string;
-    primer_apellido: string;
-    entidad: string;
-    cargo: string;
-    email_notificacion: string;
-    nro_celular_notificacion: string;
-  }
-
+  
   const {
     handleSubmit: handle_submit_filtrar,
     control: control_filtrar,
@@ -191,17 +175,15 @@ export const UsuariosScreen: React.FC = () => {
   // };
   return (
     <>
-    <Grid
-      container
-      sx={{
-        position: 'relative',
-        background: '#FAFAFA',
-        borderRadius: '15px',
-        p: '20px',
-        mb: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
-      }}
-    >
+    <Grid container spacing={2}
+            sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+            }}>
       <Grid item xs={12}>
         <Grid
           item
@@ -220,7 +202,7 @@ export const UsuariosScreen: React.FC = () => {
             alignContent: 'center',
           }}
         >
-          <Typography sx={{ color: 'white' }}>Partes Interesadas</Typography>
+          <Title title="PARTES INTERESADAS"></Title>
         </Grid>
         <form className="row" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
           {/* <form className='row'> */}
@@ -269,7 +251,7 @@ export const UsuariosScreen: React.FC = () => {
             </Stack>
           </Grid>
         </form>
-        {data_reportes && (
+        {data_reportes.length > 0 && (
           <>
             <Grid
               item
@@ -289,7 +271,7 @@ export const UsuariosScreen: React.FC = () => {
                 alignContent: 'center',
               }}
             >
-              <Typography sx={{ color: 'white' }}>Información genereal</Typography>
+              <Title title="INFORMACIÓN GENERAL"></Title>
             </Grid>
             <Button
               variant="outlined"
@@ -314,7 +296,6 @@ export const UsuariosScreen: React.FC = () => {
                 />
               </Box>
             </Grid>
-
           </>
         )}
       </Grid>
