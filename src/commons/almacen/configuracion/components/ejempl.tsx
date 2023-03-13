@@ -1,336 +1,150 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import {
-  Grid,
-  Box,
-  Stack,
-  Button,
-  Typography,
-  FormControl,
-  InputLabel,
-  FormHelperText,
-  Select,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
-import SearchIcon from '@mui/icons-material/Search';
-import CircularProgress from '@mui/material/CircularProgress';
-import type {
-  GridColDef,
-  // GridValueGetterParams
-} from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
-import type React from 'react';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Avatar, Grid, IconButton, Typography } from '@mui/material';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-// import { useAppDispatch, useAppSelector } from "../../../store/hooks/hooks";
-
-import {
-  Controller,
-  useForm,
-  type FieldValues,
-  type SubmitHandler,
-} from 'react-hook-form';
-import Swal from 'sweetalert2';
 import { api } from '../../../../api/axios';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const UsuariosScreen: React.FC = () => {
-  const [is_modal_active, set_is_modal_active] = useState(false);
-  const [is_modal_editar_active, set_is_modal_editar_active] = useState(false);
-  const [estaciones_options, set_estaciones_options] = useState([]);
-  const [loading, set_loading] = useState(false);
-  const [data_reportes, set_data_reportes] = useState(null);
+const columns: GridColDef[] = [
+    { field: 'id_estacion', headerName: 'ESTACIÓN', width: 140 },
+    { field: 'fecha_modificacion', headerName: 'FECHA MODIFICACIÓN', width: 140 },
+    { field: 'frecuencia_solicitud_datos', headerName: 'FRECUENCIA', width: 140 },
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const columnDefs: GridColDef[] = [
+    { field: 'temperatura_ambiente_max', headerName: 'TEMPERATURA MAX', width: 140 },
+    { field: 'temperatura_ambiente_min', headerName: 'TEMPERATURA MIN', width: 140 },
+    { field: 'humedad_ambiente_max', headerName: 'HUMEDAD MAX', width: 140 },
+    { field: 'humedad_ambiente_min', headerName: 'HUMEDAD MIN', width: 140 },
+
+    { field: 'presion_barometrica_max', headerName: 'PRESIÓN MAX', width: 140 },
+    { field: 'presion_barometrica_min', headerName: 'PRESIÓN MIN', width: 140 },
+    { field: 'velocidad_viento_max', headerName: 'VEL. VIENTO MAX', width: 140 },
+    { field: 'velocidad_viento_min', headerName: 'VEL. VIENTO MIN', width: 140 },
+
+    { field: 'direccion_viento_max', headerName: 'DIR. VIENTO MAX', width: 140 },
+    { field: 'direccion_viento_min', headerName: 'DIR. VIENTO MIN', width: 140 },
+    { field: 'precipitacion_max', headerName: 'PRECIPITACIÓN MAX', width: 140 },
+    { field: 'precipitacion_min', headerName: 'PRECIPITACIÓN MIN', width: 140 },
+
+    { field: 'luminosidad_max', headerName: 'LUMINOSIDAD MAX', width: 140 },
+    { field: 'luminosidad_min', headerName: 'LUMINOSIDAD MIN', width: 140 },
+    { field: 'nivel_agua_max', headerName: 'NIV. AGUA MAX', width: 140 },
+    { field: 'nivel_agua_min', headerName: 'NIV. AGUA MIN', width: 140 },
+
+    { field: 'velocidad_agua_max', headerName: 'VEL. AGUA MAX', width: 140 },
+    { field: 'velocidad_agua_min', headerName: 'VEL. AGUA MIN', width: 140 },
+
     {
-      headerName: 'Estacion',
-      field: 'nombre_estacion',
-      minWidth: 140,
-      editable: true,
-    },
-    {
-      headerName: 'Tipo de documento',
-      field: 'cod_tipo_documento_id',
-      minWidth: 140,
-      editable: true,
-    },
-    {
-      headerName: 'Identificacion',
-      field: 'numero_documento_id',
-      minWidth: 140,
-      editable: true,
-    },
-    { headerName: 'Primer Nombre', field: 'primer_nombre', minWidth: 140 },
-    { headerName: 'Primer Apellido', field: 'primer_apellido', minWidth: 140 },
-    { headerName: 'Entidad', field: 'entidad', minWidth: 140 },
-    { headerName: 'Cargo', field: 'cargo', minWidth: 140 },
-    { headerName: 'Email', field: 'email_notificacion', minWidth: 140 },
-    { headerName: 'Celular', field: 'nro_celular_notificacion', minWidth: 140 },
-    {
-      headerName: 'Acciones',
-      field: 'acciones',
-      minWidth: 140,
-      renderCell: (params) => (
-        <div className="d-flex gap-1">
-          <IconButton
-            size="small"
-            className="btn-tablas"
-            onClick={() => {
-              // dispatch(obtenerUsuarioEditarAction(params.row.data));
-              set_is_modal_editar_active(!is_modal_editar_active);
-            }}
-          >
-            <EditIcon fontSize="small" />
-          </IconButton>
-          <IconButton
-            size="small"
-            className="btn-tablas"
-            // onClick={() => confirmarEliminarUsuario(params.row.id_persona)}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton>
-        </div>
-      ),
-    },
-  ];
-
-  interface Persona {
-    id_persona: number;
-    cod_tipo_documento_id: string;
-    numero_documento_id: string;
-    primer_nombre: string;
-    primer_apellido: string;
-    entidad: string;
-    cargo: string;
-    email_notificacion: string;
-    nro_celular_notificacion: string;
-  }
-
-  const {
-    handleSubmit: handle_submit_filtrar,
-    control: control_filtrar,
-    formState: { errors: errors_filtrar },
-  } = useForm();
-
-  const get_data_initial = async () => {
-    try {
-      set_loading(true);
-      const { data } = await api.get('/estaciones/consultar-estaciones/');
-      const estaciones_maped = data.data.map(
-        (estacion: {
-          nombre_estacion: string;
-          id_estacion: number | string;
-        }) => ({
-          label: estacion.nombre_estacion,
-          value: estacion.id_estacion,
-        })
-      );
-      set_estaciones_options(estaciones_maped);
-      set_loading(false);
-    } catch (err) {
-      console.log(err);
-      set_loading(false);
-    }
-  };
-
-  useEffect(() => {
-    void get_data_initial();
-  }, []);
-
-  const on_submit_filtrar: SubmitHandler<FieldValues> = async (data) => {
-    try {
-      set_loading(true);
-      const { data: reportes_data } = await api.get(
-        `/estaciones/consultar-estaciones-id/${data.estacion?.value}`
-      );
-      const personas = reportes_data.data.personas.map((persona: Persona) => ({
-        id_estacion: reportes_data.data.id_estacion,
-        nombre_estacion: reportes_data.data.nombre_estacion,
-        id_persona: persona.id_persona,
-        cod_tipo_documento_id: persona.cod_tipo_documento_id,
-        numero_documento_id: persona.numero_documento_id,
-        primer_nombre: persona.primer_nombre,
-        primer_apellido: persona.primer_apellido,
-        entidad: persona.entidad,
-        cargo: persona.cargo,
-        email_notificacion: persona.email_notificacion,
-        nro_celular_notificacion: persona.nro_celular_notificacion,
-      }));
-      console.log(data);
-      console.log('Personas del sistema');
-      console.log(personas);
-      set_data_reportes(personas);
-      set_loading(false);
-    } catch (err) {
-      console.log(err);
-      set_loading(false);
-    }
-  };
-
-  const {
-    formState: { errors },
-  } = useForm();
-
-  // const confirmarEliminarUsuario = (idPersona) => {
-  //   Swal.fire({
-  //     title: "Estas seguro?",
-  //     text: "Va a eliminar un usuario",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonColor: "#3085d6",
-  //     cancelButtonColor: "#d33",
-  //     confirmButtonText: "Si, elminar!",
-  //     cancelButtonText: "Cancelar",
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       eliminarUsuario(idPersona);
-  //     }
-  //   });
-  // };
-  return (
-    <>
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Grid
-            item
-            className={`border px-4 text-white fs-5 p-1`}
-            sx={{
-              display: 'grid',
-              background:
-                'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-              width: '100%',
-              height: '40px',
-
-              borderRadius: '10px',
-              pl: '20px',
-              fontSize: '17px',
-              fontWeight: 'bold',
-              alignContent: 'center',
-            }}
-          >
-            <Typography sx={{ color: 'white' }}>Partes Interesadas</Typography>
-          </Grid>
-          <form
-            className="row"
-            onSubmit={handle_submit_filtrar(on_submit_filtrar)}
-          >
-            {/* <form className='row'> */}
-            <Grid item xs={12} sm={4}>
-              <Stack sx={{ m: '20px 0' }} direction="row" spacing={2}>
-                <FormControl fullWidth>
-                  <InputLabel>
-                    <span style={{ color: 'red' }}></span>
-                  </InputLabel>
-                  <Controller
-                    name="estacion"
-                    control={control_filtrar}
-                    rules={{
-                      required: true,
-                    }}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={estaciones_options}
-                        placeholder="Seleccionar"
-                      />
-                    )}
-                  />
-                  {errors_filtrar.estacion != null && (
-                    <FormHelperText error>
-                      Seleccione una estación para continuar
-                    </FormHelperText>
-                  )}
-                </FormControl>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  disabled={loading}
-                  className="text-capitalize rounded-pill  "
-                  startIcon={
-                    loading ? <CircularProgress size={20} /> : <SearchIcon />
-                  }
-                >
-                  {loading ? 'Cargando...' : ''}
-                </Button>
-              </Stack>
-            </Grid>
-          </form>
-          {data_reportes && (
+        field: 'acciones',
+        headerName: 'Aciones',
+        width: 200,
+        renderCell: (params) => (
             <>
-              <Grid
-                item
-                className={`border px-4 text-white fs-5 p-1`}
-                sx={{
-                  display: 'grid',
-                  background:
-                    'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-                  width: '100%',
-                  height: '40px',
+                <IconButton>
+                    <Avatar
+                        sx={{
+                            width: 24,
+                            height: 24,
+                            background: '#fff',
+                            border: '2px solid',
+                        }}
+                        variant="rounded"
+                    >
+                        <EditIcon
+                            sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                        />
+                    </Avatar>
+                </IconButton>
 
-                  borderRadius: '10px',
-                  pl: '20px',
-                  fontSize: '17px',
-                  fontWeight: 'bold',
-                  alignContent: 'center',
-                }}
-              >
-                <Typography sx={{ color: 'white' }}>
-                  Información genereal
-                </Typography>
-              </Grid>
-              <Button
-                variant="outlined"
-                sx={{ m: '20px 0' }}
-                onClick={() => {
-                  set_is_modal_active(!is_modal_active);
-                }}
-                startIcon={<AddIcon />}
-              >
-                Agregar
-              </Button>
-              <Grid item>
-                <Box>
-                  <DataGrid
-                    density="compact"
-                    autoHeight
-                    rows={data_reportes}
-                    columns={columnDefs}
-                    getRowId={(row) => row.id_persona}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    disableSelectionOnClick
-                    experimentalFeatures={{ newEditingApi: true }}
-                  />
-                </Box>
-              </Grid>
             </>
-          )}
-        </Grid>
-      </Grid>
-      {/* <NuevoUsuarioModal
-      set_is_modal_active={set_is_modal_active}
-      is_modal_active={is_modal_active}
-    />
-    {<EditarUsuarioModal
-      set_is_modal_active={set_is_modal_editar_active}
-      is_modal_active={is_modal_editar_active}
-    />} */}
-    </>
-  );
+        ),
+    },
+];
+interface Parametros {
+
+    id_estacion: number,
+    frecuencia_solicitud_datos: number,
+    temperatura_ambiente_max: number,
+    temperatura_ambiente_min: number,
+    humedad_ambiente_max: number,
+    humedad_ambiente_min: number,
+    presion_barometrica_max: number,
+    presion_barometrica_min: number,
+    velocidad_viento_max: number,
+    velocidad_viento_min: number,
+    direccion_viento_max: number,
+    direccion_viento_min: number,
+    precipitacion_max: number,
+    precipitacion_min: number,
+    luminosidad_max: number,
+    luminosidad_min: number,
+    nivel_agua_max: number,
+    nivel_agua_min: number,
+    velocidad_agua_max: number,
+    velocidad_agua_min: number,
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const ParametrosReferencia: React.FC = () => {
+    const [parametro_referencia, set_data_parametro] = useState(null);
+
+    const parametros = async () => {
+        try {
+            const url = `estaciones/parametros/consultar-parametro/`
+            const response = await api.get(url);
+            const parametros = response.data.data.map((parametro: Parametros) => ({
+
+                id_estacion: parametro.id_estacion,
+                frecuencia_solicitud_datos: parametro.frecuencia_solicitud_datos,
+                temperatura_ambiente_max: parametro.temperatura_ambiente_max,
+                temperatura_ambiente_min: parametro.temperatura_ambiente_min,
+                humedad_ambiente_max: parametro.humedad_ambiente_max,
+                humedad_ambiente_min: parametro.humedad_ambiente_min,
+                presion_barometrica_max: parametro.presion_barometrica_max,
+                presion_barometrica_min: parametro.presion_barometrica_min,
+                velocidad_viento_max: parametro.velocidad_viento_max,
+                velocidad_viento_min: parametro.velocidad_viento_min,
+                direccion_viento_max: parametro.direccion_viento_max,
+                direccion_viento_min: parametro.direccion_viento_min,
+                precipitacion_max: parametro.precipitacion_max,
+                precipitacion_min: parametro.precipitacion_min,
+                luminosidad_max: parametro.luminosidad_max,
+                luminosidad_min: parametro.luminosidad_min,
+                nivel_agua_max: parametro.nivel_agua_max,
+                nivel_agua_min: parametro.nivel_agua_min,
+                velocidad_agua_max: parametro.velocidad_agua_max,
+                velocidad_agua_min: parametro.velocidad_agua_min,
+            }))
+            
+            set_data_parametro(parametros);
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    useEffect(() => {
+        void parametros()
+    }, []);
+    return (
+        <>
+            <Grid container>
+                <Grid item xs={12}>
+
+                    {parametro_referencia ? (
+                        <DataGrid
+                            autoHeight
+                            rows={parametro_referencia}
+                            columns={columns}
+                            getRowId={(row) => row.id_estacion}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                        />
+                    ) : (
+                        <Typography>Cargando...</Typography>
+                    )}
+                </Grid>
+            </Grid>
+        </>
+    );
 };

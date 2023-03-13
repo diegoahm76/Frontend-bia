@@ -11,65 +11,7 @@ import { CrearMarcaForm } from '../components/CrearMarcaForm';
 import {CrearMedidaForm} from '../components/CrearMedidaForm';
 import {CrearPorcentajeForm} from '../components/CrearPorcentajeForm';
 import { Grid } from '@mui/material';
-
-// import VisibilityIcon from '@mui/icons-material/Visibility';
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-// const tipos_marcas = [
-//   {
-//     value: '1',
-//     label: 'Hp',
-//   },
-//   {
-//     value: 'EUR',
-//     label: 'Acer',
-//   },
-//   {
-//     value: 'BTC',
-//     label: 'Lenovo',
-//   },
-//   {
-//     value: 'JPY',
-//     label: 'Toshiba',
-//   },
-// ];
-// const tipos_unidades = [
-//   {
-//     value: '1',
-//     label: 'Kg',
-//   },
-//   {
-//     value: 'EUR',
-//     label: 'Lt',
-//   },
-//   {
-//     value: 'BTC',
-//     label: 'Km',
-//   },
-//   {
-//     value: 'JPY',
-//     label: 'Cm',
-//   },
-// ];
-// const tipos_porcentaje = [
-//   {
-//     value: '1',
-//     label: '16%',
-//   },
-//   {
-//     value: 'EUR',
-//     label: '19%',
-//   },
-//   {
-//     value: 'BTC',
-//     label: '25%',
-//   },
-//   {
-//     value: 'JPY',
-//     label: '4%',
-//   },
-// ];
+import { Title } from '../../../../components/Title';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
 export const CrearMarcaPorcentajeMedidaScreen: React.FC = () => {
@@ -89,13 +31,14 @@ export const CrearMarcaPorcentajeMedidaScreen: React.FC = () => {
       mb: '20px',
       boxShadow: '0px 3px 6px #042F4A26',
     }}>
-      <Box sx={{ width: '90%', typography: 'body1'}}>
+      <Title title='INFORMACIÓN GENERAL'/>
+      <Box sx={{ width: '100%', typography: 'body1'}}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handle_change} aria-label="lab API tabs example">
-              <Tab label="Marca" value="1" />
-              <Tab label="Medida" value="2" />
-              <Tab label="Porcentaje" value="3" />
+              <Tab label="Marcas" value="1" />
+              <Tab label="Unidad de Medida" value="2" />
+              <Tab label="Porcentajes" value="3" />
             </TabList>
           </Box>
           <TabPanel value="1">

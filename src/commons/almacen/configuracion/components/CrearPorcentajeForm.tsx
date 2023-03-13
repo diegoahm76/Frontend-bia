@@ -8,50 +8,23 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
-import { Divider, Grid } from '@mui/material';
+import { Divider, Grid, Typography } from '@mui/material';
 import { api } from '../../../../api/axios';
-import {
-  DataGrid,
-  type GridValidRowModel,
-  type GridColDef,
-  type GridValueGetterParams,
-} from '@mui/x-data-grid';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { control_error } from '../../../../helpers/controlError';
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'firstName', headerName: 'First name', width: 130 },
-  { field: 'lastName', headerName: 'Last name', width: 130 },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 90,
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160,
-    valueGetter: (params: GridValueGetterParams<GridValidRowModel>) => {
-      const data = params.row as Marca;
-      return `${data.firstName ?? ''} ${data.lastName ?? ''}`;
-    },
-  },
+  { field: 'id_porcentaje_iva', headerName: 'ID Porcentaje de Iva', width: 200 },
+  { field: 'porcentaje', headerName: 'Porcentaje', width: 200 },
+  { field: 'observacion', headerName: 'Observación', width: 450 },
+
+    
 ];
-interface Marca {
-  id: number;
-  lastName: string;
-  firstName: null | string;
-  age: null | number;
+interface Porcentaje {
+  id_porcentaje_iva: number;
+  porcentaje: number;
+  observacion: string;
 }
-const rows: Marca[] = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPorcentajeForm: React.FC = () => {
@@ -63,25 +36,33 @@ export const CrearPorcentajeForm: React.FC = () => {
   const handle_close = (): void => {
     set_open(false);
   };
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type
-  const porcentaj = async () => {
+  const [porcentaj, set_data_porcentaj] = useState(null);
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const porcentaje = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type
     try {
       const url = 'almacen/porcentajes/get-list/';
-      const response = await api.get(url);
-      console.log('porcentaje', response);
-    } catch (error) {
-      console.log(error);
+      const response = await api.get(url);      
+      const porcentaje = response.data.map((porcentajes: Porcentaje) => ({
+        id_porcentaje_iva: porcentajes.id_porcentaje_iva,
+        porcentaje: porcentajes.porcentaje,
+        observacion: porcentajes.observacion,
+      }));
+      set_data_porcentaj(porcentaje);
+    } catch (e) {
+      console.log(e);
+      control_error(e);
     }
   };
+
   useEffect(() => {
-    void porcentaj();
+    void porcentaje();
   }, []);
 
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Button
+     <Button
           sx={{ mb: '20px' }}
           variant="outlined"
           onClick={handle_click_open}
@@ -115,7 +96,6 @@ export const CrearPorcentajeForm: React.FC = () => {
               variant="contained"
               color="primary"
               startIcon={<SaveIcon />}
-              onClick={handle_close}
             >
               Guardar
             </Button>
@@ -123,14 +103,22 @@ export const CrearPorcentajeForm: React.FC = () => {
         </Dialog>
       </Grid>
       <Grid item xs={12}>
-        <DataGrid
-          autoHeight
-          rows={rows}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-        />
+      {porcentaj ? (
+          <DataGrid
+            autoHeight
+            rows={porcentaj}
+            columns={columns}
+            getRowId={(row) => row.id_porcentaje_iva}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+          />
+        ) : (
+          <Typography>Cargando...</Typography>
+        )}
+
       </Grid>
+     
+     
     </Grid>
   );
 };

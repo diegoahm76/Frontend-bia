@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -9,64 +9,34 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Avatar, Divider, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { api } from '../../../../api/axios';
+import { Divider, Grid } from '@mui/material';
 
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'Id Marca', width: 170 },
-  { field: 'marca', headerName: 'Marca', width: 200 },
-  {
-    field: 'acciones',
-    headerName: 'Aciones',
-    width: 200,
-    renderCell: (params) => (
-      <>
-        <IconButton>
-          <Avatar
-            sx={{
-              width: 24,
-              height: 24,
-              background: '#fff',
-              border: '2px solid',
-            }}
-            variant="rounded"
-          >
-            <EditIcon
-              sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-            />
-          </Avatar>
-        </IconButton>
-        <IconButton>
-          <Avatar
-            sx={{
-              width: 24,
-              height: 24,
-              background: '#fff',
-              border: '2px solid',
-            }}
-            variant="rounded"
-          >
-            <DeleteIcon
-              sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-            />
-          </Avatar>
-        </IconButton>
-      </>
-    ),
-  },
+  { field: 'id_unidad_medida', headerName: 'Id Unidad de Medida', width: 200 },
+  { field: 'nombre', headerName: 'Nombre', width: 200 },
+  { field: 'abreviatura', headerName: 'Abreviatura', width: 200 },
+  { field: 'id_magnitud', headerName: 'Id Magnitud', width: 200 },
+  { field: 'precargado', headerName: 'Precargado', width: 200 },
+  { field: 'activo', headerName: 'Activo', width: 200 },
+  { field: 'itemYaUsado', headerName: 'Item ya Usado, width', width: 200 },
+  
 ];
-interface Marca {
-  id: number;
-  acciones: string;
-  marca: null | string;
+interface Medida {
+
+  id_unidad_medida: number,
+  nombre: string,
+  abreviatura: string,
+  id_magnitud: number,
+  precargado: boolean,
+  activo: boolean, 
+  itemYaUsado: boolean,
+
 }
-const rows: Marca[] = [
-  { id: 1, marca: 'Snow', acciones: 'Jon' },
-  { id: 2, marca: 'Lannister', acciones: 'Cersei' },
-  { id: 3, marca: 'Lannister', acciones: 'Jaime' },
+const rows: Medida[] = [
+  
 ];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearMedidaForm: React.FC = () => {
@@ -78,6 +48,20 @@ export const CrearMedidaForm: React.FC = () => {
   const handle_close = (): void => {
     set_open(false);
   };
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const medid = async () => {
+    try {
+      const url = 'almacen/unidades-medida/get-list/';
+      const response = await api.get(url);
+      console.log('medida', response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    void medid();
+  }, []);
  
   
   return (
