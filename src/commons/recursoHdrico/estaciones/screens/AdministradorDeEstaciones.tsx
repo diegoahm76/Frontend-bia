@@ -9,61 +9,74 @@ import { Title } from '../../../../components/Title';
 import { type Estaciones } from '../interfaces/interfaces';
 import { consultar_estaciones } from '../../requets/getRequest';
 import { control_error } from '../../../../helpers/controlError';
+import { CrearEstacionDialog } from '../components/CrearEstacionDialog';
+import { EditarEstacionDialog } from '../components/EditarEstacionDialog';
 
-const columns: GridColDef[] = [
-    { field: 'id_estacion', headerName: 'NÚMERO', width: 140 },
-    { field: 'fecha_modificacion', headerName: 'FECHA MOD.', width: 170 },
-    { field: 'nombre_estacion', headerName: 'NOMBRE', width: 170 },
-    { field: 'cod_tipo_estacion', headerName: 'COD. ETSACIÓN', width: 170 },
-    { field: 'latitud', headerName: 'LATITUD', width: 170 },
-    { field: 'longitud', headerName: 'LONGITUD', width: 170 },
-    { field: 'indicaciones_ubicacion', headerName: 'INDICACIONES', width: 170 },
-    { field: 'fecha_modificacion_coordenadas', headerName: 'FECHA MOD. COORDENADAS', width: 170 },
-    {
-        field: 'ACCIONES',
-        headerName: 'Aciones',
-        width: 200,
-        renderCell: (params) => (
-            <>
-                <IconButton>
-                    <Avatar
-                        sx={{
-                            width: 24,
-                            height: 24,
-                            background: '#fff',
-                            border: '2px solid',
-                        }}
-                        variant="rounded"
-                    >
-                        <EditIcon
-                            sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                        />
-                    </Avatar>
-                </IconButton>
-                <IconButton>
-                    <Avatar
-                        sx={{
-                            width: 24,
-                            height: 24,
-                            background: '#fff',
-                            border: '2px solid',
-                        }}
-                        variant="rounded"
-                    >
-                        <DeleteIcon
-                            sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                        />
-                    </Avatar>
-                </IconButton>
-            </>
-        ),
-    },
-];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministradorDeEstaciones: React.FC = () => {
     const [list_estaciones, set_estaciones] = useState<Estaciones[]>([]);
+    const [crear_estacion_is_active, set_crear_estacion_is_active] = useState<boolean>(false);
+    const [editar_estacion_is_active, set_editar_estacion_is_active] = useState<boolean>(false);
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const handle_open_crear_estacion = () => {
+        set_crear_estacion_is_active(true);
+    }
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const handle_open_editar_estacion = () => {
+        set_editar_estacion_is_active(true);
+    }
 
+    const columns: GridColDef[] = [
+        { field: 'id_estacion', headerName: 'NÚMERO', width: 140 },
+        { field: 'fecha_modificacion', headerName: 'FECHA MOD.', width: 170 },
+        { field: 'nombre_estacion', headerName: 'NOMBRE', width: 170 },
+        { field: 'cod_tipo_estacion', headerName: 'COD. ETSACIÓN', width: 170 },
+        { field: 'latitud', headerName: 'LATITUD', width: 170 },
+        { field: 'longitud', headerName: 'LONGITUD', width: 170 },
+        { field: 'indicaciones_ubicacion', headerName: 'INDICACIONES', width: 170 },
+        { field: 'fecha_modificacion_coordenadas', headerName: 'FECHA MOD. COORDENADAS', width: 170 },
+        {
+            field: 'ACCIONES',
+            headerName: 'Aciones',
+            width: 200,
+            renderCell: (params) => (
+                <>
+                    <IconButton>
+                        <Avatar
+                            sx={{
+                                width: 24,
+                                height: 24,
+                                background: '#fff',
+                                border: '2px solid',
+                            }}
+                            variant="rounded"
+                        >
+                            <EditIcon
+                                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                onClick={handle_open_editar_estacion}
+                            />
+                        </Avatar>
+                    </IconButton>
+                    <IconButton>
+                        <Avatar
+                            sx={{
+                                width: 24,
+                                height: 24,
+                                background: '#fff',
+                                border: '2px solid',
+                            }}
+                            variant="rounded"
+                        >
+                            <DeleteIcon
+                                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                            />
+                        </Avatar>
+                    </IconButton>
+                </>
+            ),
+        },
+    ];
     const estacion = async (): Promise<void> => {
         try {
             const response = await consultar_estaciones();
@@ -106,13 +119,13 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 <Button
                     sx={{ mb: '20px' }}
                     variant="outlined"
-                    // onClick={handle_click_open}
+                    onClick={handle_open_crear_estacion}
                     startIcon={<AddIcon />}
                 >
                     CREAR ESTACIÓN
                 </Button>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} container justifyContent='center'>
 
                 {list_estaciones.length > 0 ? (
                     <DataGrid
@@ -127,6 +140,14 @@ export const AdministradorDeEstaciones: React.FC = () => {
                     <CircularProgress color="secondary" />
                 )}
             </Grid>
+            <CrearEstacionDialog
+                is_modal_active={crear_estacion_is_active}
+                set_is_modal_active={set_crear_estacion_is_active}
+            />
+            <EditarEstacionDialog
+                is_modal_active={editar_estacion_is_active}
+                set_is_modal_active={set_editar_estacion_is_active}
+            />
         </Grid>
     );
 };

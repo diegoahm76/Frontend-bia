@@ -1,5 +1,5 @@
 export interface Estaciones {
-    id_estacion: number,
+    id_estacion: number | string,
     fecha_modificacion: null | string,
     nombre_estacion: string,
     cod_tipo_estacion: string,
@@ -9,19 +9,24 @@ export interface Estaciones {
     fecha_modificacion_coordenadas: null | string,
     id_persona_modifica: null | number
 }
-
+export interface EstacionesDetalle {
+    id_estacion: number | string,
+    nombre_estacion: string,
+    personas: Persona[],
+}
 export interface Persona {
-    id_persona: number;
+
+    id_persona: number | string;
     cod_tipo_documento_id: string;
-    numero_documento_id: string;
+    numero_documento_id: string | number;
     primer_nombre: string;
-    segundo_nombre: string;
+    segundo_nombre: string | null;
     primer_apellido: string;
-    segundo_apellido: string;
-    entidad: string;
-    cargo: string;
+    segundo_apellido: string | null;
+    entidad: string | null;
+    cargo: string | null;
     email_notificacion: string;
-    nro_celular_notificacion: string;
+    nro_celular_notificacion: string | number;
     observacion: string;
 }
 export interface Datos {
@@ -68,4 +73,18 @@ export interface Parametros {
     nivel_agua_min: number,
     velocidad_agua_max: number,
     velocidad_agua_min: number,
+}
+export interface Estacion {
+    nombre_estacion: string;
+    cod_tipo_estacion: string;
+    latitud: string;
+    longitud: string;
+    cod_municipio: string;
+    indicaciones_ubicacion: string;
+}
+
+export interface DialogProps {
+    open: boolean;
+    onClose: () => void;
+    onSave: (estacion: Estacion) => void;
 }

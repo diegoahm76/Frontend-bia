@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Grid, Box, Stack, Button, Typography, FormControl, InputLabel, FormHelperText } from '@mui/material';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Grid, Box, Stack, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,13 +12,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Select from "react-select";
 import type {
   GridColDef,
-  // GridValueGetterParams
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import type React from "react";
 import { useEffect, useState } from "react";
-// import { useAppDispatch, useAppSelector } from "../../../store/hooks/hooks";
-
 import { Controller, useForm , type FieldValues, type SubmitHandler } from "react-hook-form";
 import Swal from "sweetalert2";
 // import {
@@ -32,6 +28,10 @@ import Swal from "sweetalert2";
 // } from "../../../store/slices/usuarioEstaciones/indexUsuarioEstaciones";
 // import EditarUsuarioModal from "../../../components/EditarUsuarioModal";
 import { api } from '../../../../api/axios';
+import { type Estaciones, type Persona } from '../interfaces/interfaces';
+import { consultar_estaciones, consultar_estaciones_id } from '../../requets/getRequest';
+import { control_error } from '../../../../helpers/controlError';
+import { Title } from '../../../../components/Title';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UsuariosScreen: React.FC = () => {
@@ -39,12 +39,8 @@ export const UsuariosScreen: React.FC = () => {
   const [is_modal_editar_active, set_is_modal_editar_active] = useState(false);
   const [estaciones_options, set_estaciones_options] = useState([]);
   const [loading, set_loading] = useState(false);
-  const [data_reportes, set_data_reportes] = useState(null);
-
-  // const dispatch = useAppDispatch();
-  // useEffect(()=>{
-  //   obtenerTodosUsuarios(dispatch);
-  // },[])
+  const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<Persona[]>([]);
+  const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const columnDefs: GridColDef[] = [
@@ -72,6 +68,7 @@ export const UsuariosScreen: React.FC = () => {
     { headerName: "Cargo", field: "cargo", minWidth: 140 },
     { headerName: "Email", field: "email_notificacion", minWidth: 140 },
     { headerName: "Celular", field: "nro_celular_notificacion", minWidth: 140 },
+    { headerName: "Observacion", field: "observacion", minWidth: 140 },
     {
       headerName: "Acciones",
       field: "acciones",
@@ -100,18 +97,7 @@ export const UsuariosScreen: React.FC = () => {
     },
   ];
 
-  interface Persona {
-    id_persona: number;
-    cod_tipo_documento_id: string;
-    numero_documento_id: string;
-    primer_nombre: string;
-    primer_apellido: string;
-    entidad: string;
-    cargo: string;
-    email_notificacion: string;
-    nro_celular_notificacion: string;
-  }
-
+  
   const {
     handleSubmit: handle_submit_filtrar,
     control: control_filtrar,
@@ -142,33 +128,35 @@ export const UsuariosScreen: React.FC = () => {
   const on_submit_filtrar: SubmitHandler<FieldValues> = async (data) => {
     try {
       set_loading(true);
-      const { data: reportes_data } = await api.get(
-        `/estaciones/consultar-estaciones-id/${data.estacion?.value}`
-      );
-      const personas = reportes_data.data.personas.map((persona: Persona) => ({
-        id_estacion: reportes_data.data.id_estacion,
-        nombre_estacion: reportes_data.data.nombre_estacion,
+      const estacion_id = data.estacion?.value;
+      const estacion = await consultar_estaciones_id(estacion_id);
+      const personas = estacion.personas.map((persona) => ({
+        id_estacion: estacion.id_estacion,
+        nombre_estacion: estacion.nombre_estacion,
         id_persona: persona.id_persona,
         cod_tipo_documento_id: persona.cod_tipo_documento_id,
         numero_documento_id: persona.numero_documento_id,
         primer_nombre: persona.primer_nombre,
+        segundo_nombre: persona.segundo_nombre,
         primer_apellido: persona.primer_apellido,
+        segundo_apellido: persona.segundo_apellido,
         entidad: persona.entidad,
         cargo: persona.cargo,
         email_notificacion: persona.email_notificacion,
-        nro_celular_notificacion: persona.nro_celular_notificacion
+        nro_celular_notificacion: persona.nro_celular_notificacion,
+        observacion: persona.observacion,
       }));
-      console.log(data)
-      console.log("Personas del sistema")
-      console.log(personas)
-      set_data_reportes(personas);
+      console.log(data);
+      console.log("Personas del sistema");
+      console.log(personas);
+      set_estaciones_meteologicas(personas);
       set_loading(false);
     } catch (err) {
       console.log(err);
       set_loading(false);
     }
   };
-
+  
   const {
     formState: { errors },
   } = useForm();
@@ -191,17 +179,15 @@ export const UsuariosScreen: React.FC = () => {
   // };
   return (
     <>
-    <Grid
-      container
-      sx={{
-        position: 'relative',
-        background: '#FAFAFA',
-        borderRadius: '15px',
-        p: '20px',
-        mb: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
-      }}
-    >
+    <Grid container spacing={2}
+            sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+            }}>
       <Grid item xs={12}>
         <Grid
           item
@@ -220,7 +206,7 @@ export const UsuariosScreen: React.FC = () => {
             alignContent: 'center',
           }}
         >
-          <Typography sx={{ color: 'white' }}>Partes Interesadas</Typography>
+          <Title title="PARTES INTERESADAS"></Title>
         </Grid>
         <form className="row" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
           {/* <form className='row'> */}
@@ -269,7 +255,7 @@ export const UsuariosScreen: React.FC = () => {
             </Stack>
           </Grid>
         </form>
-        {data_reportes && (
+        {estaciones_meteologicas.length > 0 && (
           <>
             <Grid
               item
@@ -289,7 +275,7 @@ export const UsuariosScreen: React.FC = () => {
                 alignContent: 'center',
               }}
             >
-              <Typography sx={{ color: 'white' }}>Información genereal</Typography>
+              <Title title="INFORMACIÓN GENERAL"></Title>
             </Grid>
             <Button
               variant="outlined"
@@ -304,7 +290,7 @@ export const UsuariosScreen: React.FC = () => {
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={data_reportes}
+                  rows={estaciones_meteologicas}
                   columns={columnDefs}
                   getRowId={(row) => row.id_persona}
                   pageSize={5}
@@ -314,7 +300,6 @@ export const UsuariosScreen: React.FC = () => {
                 />
               </Box>
             </Grid>
-
           </>
         )}
       </Grid>
