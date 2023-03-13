@@ -16,7 +16,8 @@ import { control_error } from '../../../../helpers/controlError';
 const columns: GridColDef[] = [
   { field: 'id_porcentaje_iva', headerName: 'ID Porcentaje de Iva', width: 200 },
   { field: 'porcentaje', headerName: 'Porcentaje', width: 200 },
-  { field: 'observacion', headerName: 'Observación', width: 450 },
+  { field: 'observacion', headerName: 'Observación', width: 200 },
+  { field: 'acciones', headerName: 'Acciones', width: 200 },
 
     
 ];
@@ -24,6 +25,7 @@ interface Porcentaje {
   id_porcentaje_iva: number;
   porcentaje: number;
   observacion: string;
+  acciones: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -47,6 +49,7 @@ export const CrearPorcentajeForm: React.FC = () => {
         id_porcentaje_iva: porcentajes.id_porcentaje_iva,
         porcentaje: porcentajes.porcentaje,
         observacion: porcentajes.observacion,
+        acciones: porcentajes.acciones,
       }));
       set_data_porcentaj(porcentaje);
     } catch (e) {

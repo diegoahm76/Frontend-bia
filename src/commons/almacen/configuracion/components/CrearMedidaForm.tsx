@@ -19,9 +19,7 @@ const columns: GridColDef[] = [
   { field: 'nombre', headerName: 'Nombre', width: 200 },
   { field: 'abreviatura', headerName: 'Abreviatura', width: 200 },
   { field: 'id_magnitud', headerName: 'Id Magnitud', width: 200 },
-  { field: 'precargado', headerName: 'Precargado', width: 200 },
-  { field: 'activo', headerName: 'Activo', width: 200 },
-  { field: 'itemYaUsado', headerName: 'Item ya Usado, width', width: 200 },
+
   
 ];
 interface Medida {

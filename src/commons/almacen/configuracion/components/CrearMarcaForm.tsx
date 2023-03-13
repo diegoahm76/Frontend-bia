@@ -56,16 +56,16 @@ export const CrearMarcaForm: React.FC = () => {
       console.log(err);
     }
   };
-  interface FromDataType {
-    nombre: string;
-    activo: boolean;
-    item_ya_usado: boolean;
-  }
-  const response_body: FromDataType = {
-    nombre: '',
-    activo: true,
-    item_ya_usado: true,
-  };
+  // interface FromDataType {
+  //   nombre: string;
+  //   activo: boolean;
+  //   item_ya_usado: boolean;
+  // }
+  // const response_body: FromDataType = {
+  //   nombre: '',
+  //   activo: true,
+  //   item_ya_usado: true,
+  // };
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   // const on_submit_handler = (event: React.FormEvent<HTMLFormElement>) => {
   //   event.preventDefault();
