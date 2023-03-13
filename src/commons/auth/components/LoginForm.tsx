@@ -13,6 +13,8 @@ import {
   Typography,
 } from '@mui/material';
 
+import { type IUserInfo } from '../interfaces/authModels';
+
 import OutlinedInput from '@mui/material/OutlinedInput';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
@@ -20,16 +22,9 @@ import ReCaptcha from 'react-google-recaptcha';
 
 import { use_rol } from '../hooks/LoginHooks';
 import { use_form } from '../../../hooks/useForm';
-import {
-  checking_authentication,
-  get_persmisions_user,
-  open_dialog_entorno,
-} from '../store';
+import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
-
-// import logo_bia from '.../../../assets/logos/logo_bia.png';
 import { DialogEntorno } from './DialogEntorno';
-import { type IUserInfo } from '../interfaces/authModels';
 
 interface AuthSlice {
   auth: IUserInfo;
@@ -39,15 +34,15 @@ interface AuthSlice {
 export const LoginForm: React.FC = () => {
   const { set_is_captcha_valid, is_captcha_valid } = use_rol();
   const dispatch = useDispatch();
-  const { status, error_message, userinfo } = useSelector(
+  const { status, error_message } = useSelector(
     (state: AuthSlice) => state.auth
   );
   const is_authenticating = useMemo(() => status === 'checking', [status]);
   const [show_password, set_show_password] = useState(false);
   const [disable, set_disale] = useState(true);
   const [is_error, set_is_error] = useState(true);
-  const { email, password, on_input_change } = use_form({
-    email: '',
+  const { nombre_de_usuario, password, on_input_change } = use_form({
+    nombre_de_usuario: '',
     password: '',
   });
 
@@ -61,7 +56,7 @@ export const LoginForm: React.FC = () => {
 
   const on_submit = (event: any): void => {
     event.preventDefault();
-    dispatch(checking_authentication(email, password));
+    dispatch(checking_authentication(nombre_de_usuario, password));
   };
 
   useEffect(() => {
@@ -71,23 +66,6 @@ export const LoginForm: React.FC = () => {
       set_disale(true);
     }
   }, [is_captcha_valid]);
-
-  useEffect(() => {
-    if (userinfo.id_persona !== 0) {
-      if (
-        userinfo.tipo_persona === 'J' ||
-        (userinfo.tipo_persona === 'N' && userinfo.tipo_usuario === 'E')
-      ) {
-        dispatch(get_persmisions_user(userinfo.id_usuario, 'C'));
-      } else if (
-        userinfo.tipo_persona === 'N' &&
-        userinfo.tipo_usuario === 'I'
-      ) {
-        // para este caso mostramos el dialog
-        dispatch(open_dialog_entorno());
-      }
-    }
-  }, [userinfo]);
 
   useEffect(() => {
     set_is_error(!is_error);
@@ -100,9 +78,9 @@ export const LoginForm: React.FC = () => {
           <TextField
             required
             fullWidth
-            label="Usuario o Email"
-            value={email}
-            name="email"
+            label="Usuario"
+            name="nombre_de_usuario"
+            value={nombre_de_usuario}
             onChange={on_input_change}
           />
         </Grid>
@@ -192,10 +170,9 @@ export const LoginForm: React.FC = () => {
             </Typography>
           </Button>
         </Grid>
-        <Grid item>
-          <DialogEntorno />
-        </Grid>
       </Grid>
+      {/* Dialog para seleccionar entorno  */}
+      <DialogEntorno />
     </form>
   );
 };

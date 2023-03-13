@@ -41,7 +41,6 @@ export const RegisterForm: React.FC = () => {
   const [value, set_date] = useState<Dayjs | null>(null);
 
   const handle_change = (event: SelectChangeEvent): void => {
-    console.log(event.target.value);
     set_age(event.target.value);
   };
 
