@@ -31,5 +31,11 @@ export const consultar_parametros_referencia = async (): Promise<Parametros[]> =
 export const consultar_estaciones_id = async (id: number | string): Promise<EstacionesDetalle> => {
     const { data } = await api.get<ResponseServer<EstacionesDetalle>>(`estaciones/consultar-estaciones-id/${id}/`);
     return data.data;
-  }
+}
+
+// crear estacion
+
+
+
+
   
