@@ -2,11 +2,10 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
-import { Controller, useForm } from "react-hook-form";
+import { Controller, type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { crearPersona } from '../../requets/getRequest';
 import Select from "react-select";
 import { api } from '../../../../api/axios';
-import { type PersonasEstacion } from '../interfaces/interfaces';
 
 interface IProps {
   is_modal_active: boolean;
@@ -44,7 +43,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
     void get_data_initial();
   }, []);
 
-  const on_sumbit_persona = (data: PersonasEstacion): void => {
+  const on_sumbit_persona: SubmitHandler<FieldValues>= (data): void => {
     const nueva_persona = {
 
       cod_tipo_documento_id: data.cod_tipo_documento_id,

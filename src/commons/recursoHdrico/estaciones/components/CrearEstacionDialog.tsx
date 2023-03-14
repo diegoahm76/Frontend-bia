@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
-import { useForm } from "react-hook-form";
+import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { crearEstacion } from '../../requets/getRequest';
 
 interface IProps {
@@ -13,16 +14,17 @@ interface IProps {
 export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
 
     
-    const handleClose = () => {
+    const handle_close = (): void => {
         set_is_modal_active(false);
     }
     const {
         register,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         handleSubmit,
         formState: { errors },
     } = useForm();
 
-    const on_sumbit_estacion = async (data) => {
+    const on_sumbit_estacion: SubmitHandler<FieldValues> = (data): void => {
 
         const nueva_estacion = {
 
@@ -51,7 +53,7 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
 
     return (
         <Dialog open={is_modal_active}
-            onClose={handleClose}>
+            onClose={handle_close}>
             <Box component="form"
                 onSubmit={handleSubmit(on_sumbit_estacion)}>
                 <DialogTitle>Crear Estación</DialogTitle>
@@ -124,7 +126,7 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button onClick={handle_close}>Cancelar</Button>
                     <Button variant="contained" color="primary" onClick={handleSubmit(on_sumbit_estacion)}>Guardar</Button>
                 </DialogActions>
             </Box>
