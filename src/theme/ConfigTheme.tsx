@@ -9,10 +9,10 @@ export const use_theme = (): {
 } => {
   const { mod_dark } = useSelector(
     (state: {
-      sidebar: {
+      layout: {
         mod_dark: boolean;
       };
-    }) => state.sidebar
+    }) => state.layout
   );
 
   const custom_theme = useMemo(

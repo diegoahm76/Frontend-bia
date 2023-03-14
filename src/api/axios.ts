@@ -11,7 +11,7 @@ api.interceptors.request.use(
     try {
       const { userinfo: { tokens } } = JSON.parse(localStorage.getItem('userInfo') ?? '') as IUserInfo;
       if (tokens.access != null) {
-        request.headers.Authorization = `Bearer ${tokens.access}`;
+        request.headers.Authorization = `Bearer ${tokens.access}`; 
       }
     } catch (e) { }
 

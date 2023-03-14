@@ -5,18 +5,25 @@ import { ToastContainer } from 'react-toastify';
 import { store } from './store';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
+import { persistStore } from 'redux-persist';
+import 'react-toastify/dist/ReactToastify.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
+const persistor = persistStore(store);
+
 root.render(
-  <Provider store={store}>
-    <React.StrictMode>
-      <HashRouter>
-        <ToastContainer />
-        <App />
-      </HashRouter>
-    </React.StrictMode>
-  </Provider>
+  <PersistGate persistor={persistor}>
+    <Provider store={store}>
+      <React.StrictMode>
+        <HashRouter>
+          <ToastContainer />
+          <App />
+        </HashRouter>
+      </React.StrictMode>
+    </Provider>
+  </PersistGate>
 );
