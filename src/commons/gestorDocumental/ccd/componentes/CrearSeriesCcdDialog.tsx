@@ -287,7 +287,23 @@ const CrearSeriesCcdDialog = ({
       }}
     >
       <Box component="form">
-        <DialogTitle>{title}</DialogTitle>
+        <DialogTitle>
+          {title}
+          <IconButton
+            aria-label="close"
+            onClick={() => {
+              set_is_modal_active(false);
+            }}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Box
@@ -319,9 +335,13 @@ const CrearSeriesCcdDialog = ({
                   variant="outlined"
                 />
                 {errors.codigo !== null && <p>{errors.codigo?.message}</p>}
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <Stack direction="row" justifyContent="flex-end" spacing={2}>
+
+                <Stack
+                  direction="row"
+                  justifyContent="flex-end"
+                  spacing={2}
+                  sx={{ mt: '0' }}
+                >
                   <Button
                     type="submit"
                     color="primary"
@@ -342,6 +362,7 @@ const CrearSeriesCcdDialog = ({
                   </Button>
                 </Stack>
               </Grid>
+
               <Grid item xs={12}>
                 <DataGrid
                   density="compact"

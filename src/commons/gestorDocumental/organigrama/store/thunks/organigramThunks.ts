@@ -1,9 +1,6 @@
 import { type SetStateAction, type Dispatch } from 'react';
-import { toast , type ToastContent} from 'react-toastify';
-import Swal
-// , { type SweetAlertResult } 
-from 'sweetalert2'
-import { api } from '../../../../../api/axios';
+import { toast, type ToastContent } from 'react-toastify';
+import Swal from 'sweetalert2'; // , { type SweetAlertResult }
 import {
   type AxiosError
   // type AxiosResponse
@@ -24,6 +21,7 @@ import {
   //  type IObjLevels,
   //  type IObjUnitys
 } from '../../interfaces/organigrama';
+import { api } from '../../../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -84,7 +82,7 @@ export const get_organigrams_service = (): any => {
 };
 
 // Agregar Organigrama
-export const add_organigrams_service = (organigrama: any, set_position_tab_organigrama: Dispatch<SetStateAction<string>>) => {
+export const add_organigrams_service:any = (organigrama: any, set_position_tab_organigrama: Dispatch<SetStateAction<string>>) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             console.log(organigrama);   
@@ -112,6 +110,7 @@ export const edit_organigrams_service: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      console.log(api.defaults)
       const { data } = await api.patch(
         `almacen/organigrama/update/${id}/`,
         organigrama
@@ -128,7 +127,7 @@ export const edit_organigrams_service: any = (
 };
 
 // Finalizar Organigrama
-export const to_finalize_organigram_service = (id: string, set_position_tab_organigrama:  Dispatch<SetStateAction<string>>) => {
+export const to_finalize_organigram_service:any = (id: string, set_position_tab_organigrama:  Dispatch<SetStateAction<string>>) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.put(`almacen/organigrama/finalizar/${id}/`);
