@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -14,23 +13,17 @@ import { api } from '../../../../api/axios';
 import { Divider, Grid, Typography } from '@mui/material';
 import { control_error } from '../../../../helpers/controlError';
 
-
 const columns: GridColDef[] = [
   { field: 'id_unidad_medida', headerName: 'Id Unidad de Medida', width: 200 },
   { field: 'nombre', headerName: 'Nombre', width: 200 },
   { field: 'abreviatura', headerName: 'Abreviatura', width: 200 },
   { field: 'id_magnitud', headerName: 'Id Magnitud', width: 200 },
-
-  
 ];
 interface Medida {
-
-  id_unidad_medida: number,
-  nombre: string,
-  abreviatura: string,
-  id_magnitud: number,
-  
-
+  id_unidad_medida: number;
+  nombre: string;
+  abreviatura: string;
+  id_magnitud: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -43,32 +36,28 @@ export const CrearMedidaForm: React.FC = () => {
   const handle_close = (): void => {
     set_open(false);
   };
-  const [medi, set_data_medi] = useState(null);
+  const [medi, set_data_medi] = useState([]);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const medida = async () => {
+  const medida = async (): Promise<void> => {
     try {
       const url = 'almacen/unidades-medida/get-list/';
       const response = await api.get(url);
-      const medida = response.data.map((medidas:Medida )=> ({
+      const medida = response.data.map((medidas: Medida) => ({
         id_unidad_medida: medidas.id_unidad_medida,
         nombre: medidas.id_unidad_medida,
-        abreviatura:medidas.abreviatura,
+        abreviatura: medidas.abreviatura,
         id_magnitud: medidas.id_magnitud,
-
       }));
       set_data_medi(medida);
-    } 
-      catch (e) {
-        console.log(e);
-        control_error(e);
+    } catch (e) {
+      console.log(e);
+      control_error(e);
     }
   };
   useEffect(() => {
     void medida();
   }, []);
- 
-  
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -113,9 +102,8 @@ export const CrearMedidaForm: React.FC = () => {
           </DialogActions>
         </Dialog>
       </Grid>
-      <Grid item xs={12}>   
-      
-      {medi ? (
+      <Grid item xs={12}>
+        {medi.length > 0 ? (
           <DataGrid
             autoHeight
             rows={medi}
@@ -127,7 +115,6 @@ export const CrearMedidaForm: React.FC = () => {
         ) : (
           <Typography>Cargando...</Typography>
         )}
-
       </Grid>
     </Grid>
   );

@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom';
-import { ConfiguracionRoutes } from '../commons/almacen/configuracion/routes/ConfiguracionRoutes';
 import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
 import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
@@ -20,7 +19,7 @@ export const ProtectedRoutes: React.FC = () => {
           <Route path="organigrama/*" element={<OrganigramaRoutes />} />
         </Route>
         {/* Almacen */}
-        <Route path='almacen/*' element={<AlmacenRoutes />} />
+        <Route path="almacen/*" element={<AlmacenRoutes />} />
       </Route>
     </Routes>
   );
