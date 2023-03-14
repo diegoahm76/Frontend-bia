@@ -1,4 +1,5 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
+import { Page404 } from '../../../../screens/404';
 import { CatalogodeBienesScreen} from '../screen/CatalogodeBienesScreen';
 
 
@@ -10,7 +11,7 @@ export const EntradaysalidArticulosRoutes: React.FC= () =>{
         path="catalogo-bienes"
         element={<CatalogodeBienesScreen />}
       />
-      <Route path="/*" element={<Navigate to={'/'} />} />
-    </Routes>
+        <Route path="/*" element={<Page404 />} />
+      </Routes>
     )
 }

@@ -11,6 +11,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Divider, Grid, Typography } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { api } from '../../../../api/axios';
+import { control_error } from '../../../../helpers/controlError';
 
 
 const columns: GridColDef[] = [
@@ -52,8 +53,9 @@ export const CrearMarcaForm: React.FC = () => {
         activo: marcas.activo,
       }));
       set_data_marca(marca);
-    } catch (err) {
-      console.log(err);
+    } catch (e) {
+      console.log(e);
+      control_error(e);
     }
   };
   // interface FromDataType {

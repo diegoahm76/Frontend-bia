@@ -11,7 +11,8 @@ import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { api } from '../../../../api/axios';
-import { Divider, Grid } from '@mui/material';
+import { Divider, Grid, Typography } from '@mui/material';
+import { control_error } from '../../../../helpers/controlError';
 
 
 const columns: GridColDef[] = [
@@ -28,14 +29,10 @@ interface Medida {
   nombre: string,
   abreviatura: string,
   id_magnitud: number,
-  precargado: boolean,
-  activo: boolean, 
-  itemYaUsado: boolean,
+  
 
 }
-const rows: Medida[] = [
-  
-];
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearMedidaForm: React.FC = () => {
   const [open, set_open] = useState(false);
@@ -46,19 +43,29 @@ export const CrearMedidaForm: React.FC = () => {
   const handle_close = (): void => {
     set_open(false);
   };
+  const [medi, set_data_medi] = useState(null);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const medid = async () => {
+  const medida = async () => {
     try {
       const url = 'almacen/unidades-medida/get-list/';
       const response = await api.get(url);
-      console.log('medida', response);
-    } catch (error) {
-      console.log(error);
+      const medida = response.data.map((medidas:Medida )=> ({
+        id_unidad_medida: medidas.id_unidad_medida,
+        nombre: medidas.id_unidad_medida,
+        abreviatura:medidas.abreviatura,
+        id_magnitud: medidas.id_magnitud,
+
+      }));
+      set_data_medi(medida);
+    } 
+      catch (e) {
+        console.log(e);
+        control_error(e);
     }
   };
   useEffect(() => {
-    void medid();
+    void medida();
   }, []);
  
   
@@ -106,14 +113,21 @@ export const CrearMedidaForm: React.FC = () => {
           </DialogActions>
         </Dialog>
       </Grid>
-      <Grid item xs={12}>
-        <DataGrid
-          autoHeight
-          rows={rows}
-          columns={columns}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
-        />
+      <Grid item xs={12}>   
+      
+      {medi ? (
+          <DataGrid
+            autoHeight
+            rows={medi}
+            columns={columns}
+            getRowId={(row) => row.id_unidad_medida}
+            pageSize={5}
+            rowsPerPageOptions={[5]}
+          />
+        ) : (
+          <Typography>Cargando...</Typography>
+        )}
+
       </Grid>
     </Grid>
   );

@@ -1,10 +1,13 @@
 import { Grid } from "@mui/material"
+import { Title } from '../../../../components/Title';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CatalogodeBienesScreen: React.FC = () => {
     return (
-        <Grid
+      <>
+      <Title title='INFORMACIÓN GENERAL' />
+      <Grid
         container
         spacing={2}
         sx={{
@@ -15,7 +18,8 @@ export const CatalogodeBienesScreen: React.FC = () => {
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
-        ></Grid>
+      ></Grid></>
+
         
    
     )
