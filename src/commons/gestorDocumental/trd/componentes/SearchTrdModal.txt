@@ -1,0 +1,155 @@
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import Modal from 'react-modal';
+import { Title } from '../../../../components/Title';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
+import { AgGridReact } from 'ag-grid-react';
+import { get_classification_ccds_service } from '../../ccd/store/thunks/ccdThunks';
+import { get_tdr_current } from '../store/slices/tdrSlice';
+
+Modal.setAppElement('#root');
+
+interface IProps {
+  is_modal_active: boolean;
+  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  title: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
+export const SearchTrdModal = ({
+  is_modal_active,
+  set_is_modal_active,
+  title,
+}: IProps) => {
+  const { tdrs } = useAppSelector((state) => state.tdr);
+
+  // Dispatch instance
+  const dispatch = useAppDispatch();
+
+  const [world_search, set_world_search] = useState<string>('');
+  const [filter_tdrs, set_filter_tdrs] = useState<any>([]);
+
+  useEffect(() => {
+    const filter = tdrs.filter((item) => {
+      return (
+        item.nombre.toLowerCase().includes(world_search.toLowerCase()) ||
+        item.version.toLowerCase().includes(world_search.toLowerCase())
+      );
+    });
+    console.log(world_search !== '');
+    if (world_search !== '') {
+      set_filter_tdrs(filter);
+    } else {
+      set_filter_tdrs(tdrs);
+    }
+  }, [world_search, tdrs]);
+
+  // useEffect para cargar los datos de la tabla
+  useEffect(() => {
+    dispatch(get_classification_ccds_service());
+  }, []);
+
+  const columTDRS = [
+    {
+      headerName: 'Nombre',
+      field: 'nombre',
+      minWidth: 150,
+      maxWidth: 200,
+    },
+    {
+      headerName: 'Versión',
+      field: 'version',
+      minWidth: 150,
+      maxWidth: 200,
+    },
+    {
+      headerName: 'Estado',
+      field: 'accion',
+      cellRendererFramework: (params) => (
+        <div>
+          <span>
+            {params.data.fecha_terminado ? 'Terminado' : 'En Proceso'}
+          </span>
+        </div>
+      ),
+    },
+    {
+      headerName: 'Acciones',
+      field: 'accion',
+      cellRendererFramework: (params) => (
+        <div>
+          <button
+            className="btn text-capitalize "
+            type="button"
+            title="Seleccionar"
+            onClick={() => {
+              dispatch(get_tdr_current(params.data));
+              set_is_modal_active(false);
+            }}
+          >
+            <i className="fa-regular fa-pen-to-square fs-4"></i>
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <Modal
+      isOpen={is_modal_active}
+      onRequestClose={() => set_is_modal_active(false)}
+      className="modal"
+      id="modal-article-id"
+      overlayClassName="modal-fondo"
+      closeTimeoutMS={300}
+    >
+      <div className="row min-vh-100 ">
+        <div className="col-12 mx-auto">
+          <Title title={title} />
+          <form
+            className="multisteps-form__panel border-radius-xl bg-white js-active p-4 position-relative"
+            data-animation="FadeIn"
+          >
+            <div className="row">
+              <div className="col-12 col-sm-6 mt-2">
+                <div>
+                  <label className="ms-3 text-terciary">
+                    Buscador de cuadro de clasificación documental
+                  </label>
+                  <input
+                    className="form-control border border-terciary rounded-pill px-3"
+                    type="text"
+                    placeholder="Buscar..."
+                    value={world_search}
+                    onChange={(e) => {
+                      set_world_search(e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="row d-flex align-items-center mt-2 mx-2">
+              <div className="col-12 mb-3">
+                <div
+                  className="ag-theme-alpine mt-auto mb-3 px-auto"
+                  style={{ height: '275px' }}
+                >
+                  <AgGridReact columnDefs={columTDRS} rowData={filter_tdrs} />
+                </div>
+              </div>
+            </div>
+            <div className="col-12 col-sm-12 d-flex justify-content-end ">
+              <button
+                className="btn me-md-2  text-capitalize  px-3 mt-2 "
+                type="submit"
+                title="Cerrar"
+                onClick={() => set_is_modal_active(false)}
+              >
+                <i className="fa-solid fa-x fs-3"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </Modal>
+  );
+};
