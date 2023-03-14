@@ -1,6 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
+import { EstacionesRoutes } from '../commons/recursoHdrico/estaciones/routers/EstacionesRoutes';
+import { RecursoHidricoRoutes } from '../commons/recursoHdrico/routers/RecursoHidricoRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { MainLayout } from '../layouts/MainLayout';
 
@@ -16,6 +18,10 @@ export const ProtectedRoutes: React.FC = () => {
         {/* Gestor documental */}
         <Route path="gestor_documental/*">
           <Route path="organigrama/*" element={<OrganigramaRoutes />} />
+        </Route>
+        {/* Recurso Hidrico */}
+        <Route path="recurso_hidrico/*" element={<RecursoHidricoRoutes />} >
+          <Route path="estaciones/*" element={<EstacionesRoutes />} />
         </Route>
       </Route>
     </Routes>
