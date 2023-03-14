@@ -28,7 +28,7 @@ export interface Persona {
     email_notificacion: string;
     nro_celular_notificacion: string | number;
     observacion: string;
-  }
+}
 export interface Datos {
     id_data: number,
     fecha_registro: number,
@@ -73,4 +73,18 @@ export interface Parametros {
     nivel_agua_min: number,
     velocidad_agua_max: number,
     velocidad_agua_min: number,
+}
+export interface Estacion {
+    nombre_estacion: string;
+    cod_tipo_estacion: string;
+    latitud: string;
+    longitud: string;
+    cod_municipio: string;
+    indicaciones_ubicacion: string;
+}
+
+export interface DialogProps {
+    open: boolean;
+    onClose: () => void;
+    onSave: (estacion: Estacion) => void;
 }
