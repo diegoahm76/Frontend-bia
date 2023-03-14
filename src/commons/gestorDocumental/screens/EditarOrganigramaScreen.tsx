@@ -49,7 +49,7 @@ export const EditarOrganigramaScreen: React.FC = () => {
     levels_organigram,
     unity_organigram,
     mold_organigram,
-  } = useAppSelector((state) => state.organigram);
+  } = useAppSelector((state: any) => state.organigram);
   const [view_organigram, set_view_organigram] = useState(false);
 
   // Hooks
