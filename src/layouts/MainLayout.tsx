@@ -12,9 +12,7 @@ export const MainLayout: React.FC<any> = ({ children }: any) => {
       {/* Sidebar */}
       <SideBar drawer_width={drawer_width} />
       {/* Container */}
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        {children}
-      </Box>
+      {children}
     </Box>
   );
 };
