@@ -1,20 +1,21 @@
-import axios from "axios";
-import { type IUserInfo } from "../commons/auth/interfaces/authModels";
+import axios from 'axios';
+import { type IUserInfo } from '../commons/auth/interfaces/authModels';
 
 export const api = axios.create({
- // baseURL: process.env.REACT_APP_BACKEND_URL,
-   baseURL: 'https://backend-bia-beta-production.up.railway.app/api/',
+  // baseURL: process.env.REACT_APP_BACKEND_URL,
+  baseURL: 'https://backend-bia-beta-production.up.railway.app/api/'
 });
 
 api.interceptors.request.use(
   async (request) => {
     try {
-     const { userinfo: { tokens } } = JSON.parse(localStorage.getItem('userInfo') ?? '') as IUserInfo;
-      if (tokens.access) {
-        
+      const {
+        userinfo: { tokens }
+      } = JSON.parse(localStorage.getItem('userInfo') ?? '') as IUserInfo;
+      if (tokens.access != null) {
         request.headers.Authorization = `Bearer ${tokens.access}`;
       }
-    } catch (e) { }
+    } catch (e) {}
 
     return request;
   },
@@ -22,4 +23,3 @@ api.interceptors.request.use(
     return await Promise.reject(error);
   }
 );
-
