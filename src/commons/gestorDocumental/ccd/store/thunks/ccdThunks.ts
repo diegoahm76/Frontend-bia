@@ -170,22 +170,21 @@ export const to_finished_ccds_service = (
 };
 
 // Crear Cuadro de Clasificación Documental (CCD)
-export const create_ccds_service: any = (
-  ccd: any,
-  set_save_ccd: (arg0: boolean) => void
-) => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.post('gestor/ccd/create/', ccd);
-      dispatch(get_ccd_current(data.data));
-      control_success(data.detail);
-      set_save_ccd(true);
-      return data;
-    } catch (error: any) {
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
+export const create_ccds_service = (ccd: any, set_save_ccd: (arg0: boolean) => void) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.post("gestor/ccd/create/", ccd);
+            dispatch(get_ccd_current(data.data));
+            control_success(data.detail);
+            console.log(data.detail, "success")
+            set_save_ccd(true);
+            return data;
+        } catch (error: any) {
+            console.log(error.response.data, "error")
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
 };
 // Update Cuadro de Clasificación Documental
 export const update_ccds_service: any = (ccd: {

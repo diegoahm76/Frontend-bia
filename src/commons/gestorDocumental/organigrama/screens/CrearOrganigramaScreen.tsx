@@ -122,9 +122,7 @@ export function CrearOrganigramaScreen(): JSX.Element {
           <IconButton
             onClick={() => {
               dispatch(current_organigram(params.row));
-              navigate(
-                '/dashboard/gestor-documental/organigrama/editar-organigrama'
-              );
+              navigate('/app/gestor_documental/organigrama/editar_organigrama');
             }}
           >
             <Avatar
