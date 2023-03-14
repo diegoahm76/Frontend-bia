@@ -64,7 +64,7 @@ export const get_finished_ccd_service = () => {
   };
 };
 // Obtener Cuadro de Clasificación Documental
-export const get_classification_ccds_service:any = () => {
+export const get_classification_ccds_service: any = () => {
   console.log('get_classification_ccds_service');
   return async (
     dispatch: Dispatch<any>
@@ -83,7 +83,7 @@ export const get_classification_ccds_service:any = () => {
 };
 
 // Reanudar Cuadro de Clasificación Documental
-export const to_resume_ccds_service:any = (
+export const to_resume_ccds_service: any = (
   set_flag_btn_finish: (arg0: boolean) => void
 ) => {
   return async (
@@ -105,7 +105,7 @@ export const to_resume_ccds_service:any = (
   };
 };
 // Finalizar Cuadro de Clasificación Documental
-export const to_finished_ccds_service:any = (
+export const to_finished_ccds_service: any = (
   set_flag_btn_finish: (arg0: boolean) => void
 ) => {
   return async (
@@ -169,23 +169,6 @@ export const to_finished_ccds_service:any = (
 };
 
 // Crear Cuadro de Clasificación Documental (CCD)
-<<<<<<< HEAD
-export const create_ccds_service = (ccd: any, set_save_ccd: (arg0: boolean) => void) => {
-    return async (dispatch: Dispatch<any>) => {
-        try {
-            const { data } = await api.post("gestor/ccd/create/", ccd);
-            dispatch(get_ccd_current(data.data));
-            control_success(data.detail);
-            console.log(data.detail, "success")
-            set_save_ccd(true);
-            return data;
-        } catch (error: any) {
-            console.log(error.response.data, "error")
-            control_error(error.response.data.detail);
-            return error as AxiosError;
-        }
-    };
-=======
 export const create_ccds_service: any = (
   ccd: any,
   set_save_ccd: (arg0: boolean) => void
@@ -202,7 +185,6 @@ export const create_ccds_service: any = (
       return error as AxiosError;
     }
   };
->>>>>>> caa278d44df31805668482d49056b968743bb3a5
 };
 // Update Cuadro de Clasificación Documental
 export const update_ccds_service: any = (ccd: {
