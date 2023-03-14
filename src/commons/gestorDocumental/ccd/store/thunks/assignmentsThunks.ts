@@ -42,7 +42,7 @@ const control_success = (message:ToastContent) => (
 // Obtiene ccd tabla intermedia
 export const get_assignments_service = () => {
     return async (dispatch: Dispatch<any>, getState:any ): Promise<AxiosResponse | AxiosError> => {
-        const { ccd_current } = getState().CCD;
+        const { ccd_current } = getState().ccd;
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`gestor/ccd/asignar/get/${ccd_current.id_ccd}/`);
@@ -62,7 +62,7 @@ export const get_assignments_service = () => {
 export const create_assignments_service = (new_item: any, clean: () => void) => {
     return async (dispatch: Dispatch<any>, getState:any ): Promise<AxiosResponse | AxiosError> => {
         console.log(new_item, 'new_item')
-        const { ccd_current } = getState().CCD;
+        const { ccd_current } = getState().ccd;
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.put(`gestor/ccd/asignar/create/${ccd_current.id_ccd}/`, new_item);

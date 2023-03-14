@@ -249,7 +249,6 @@ export const CcdScreen: React.FC = () => {
             >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={2}>
-                  <label className="text-terciary">Ver series</label>
                   <Controller
                     name="sries"
                     control={control}
@@ -278,12 +277,11 @@ export const CcdScreen: React.FC = () => {
                     >
                       CREAR
                     </Button>
-                    <Button>CLONAR</Button>
-                    <Button>PREVISUALIZAR</Button>
+                    <Button disabled>CLONAR</Button>
+                    <Button disabled>PREVISUALIZAR</Button>
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  <label className="text-terciary">Ver subseries</label>
                   <Controller
                     name="subserie"
                     control={control}
@@ -315,8 +313,8 @@ export const CcdScreen: React.FC = () => {
                     >
                       CREAR
                     </Button>
-                    <Button>CLONAR</Button>
-                    <Button>PREVISUALIZAR</Button>
+                    <Button disabled>CLONAR</Button>
+                    <Button disabled>PREVISUALIZAR</Button>
                   </ButtonGroup>
                 </Grid>
               </Grid>

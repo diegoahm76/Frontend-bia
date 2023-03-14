@@ -83,7 +83,7 @@ export const get_classification_ccds_service = () => {
 // Reanudar Cuadro de Clasificación Documental
 export const to_resume_ccds_service = (set_flag_btn_finish: (arg0: boolean) => void) => {
     return async (dispatch: Dispatch<any>, getState:any ): Promise<AxiosResponse | AxiosError> => {
-        const { ccd_current } = getState().CCD;
+        const { ccd_current } = getState().ccd;
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.put(`gestor/ccd/resume/${ccd_current.id_ccd}/`);
