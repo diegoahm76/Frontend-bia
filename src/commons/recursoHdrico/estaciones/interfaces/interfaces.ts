@@ -74,17 +74,40 @@ export interface Parametros {
     velocidad_agua_max: number,
     velocidad_agua_min: number,
 }
-export interface Estacion {
-    nombre_estacion: string;
-    cod_tipo_estacion: string;
-    latitud: string;
-    longitud: string;
-    cod_municipio: string;
-    indicaciones_ubicacion: string;
+export interface IEstacionEstaciones {
+    nombre_estacion: string,
+    cod_tipo_estacion: string,
+    latitud: number,
+    longitud: number,
+    cod_municipio: string | number,
+    indicaciones_ubicacion: string,
 }
+export interface PersonaEstacion {
 
-export interface DialogProps {
-    open: boolean;
-    onClose: () => void;
-    onSave: (estacion: Estacion) => void;
+    cod_tipo_documento_id: string;
+    numero_documento_id: string | number;
+    primer_nombre: string;
+    segundo_nombre: string | null;
+    primer_apellido: string;
+    segundo_apellido: string | null;
+    entidad: string | null;
+    cargo: string | null;
+    email_notificacion: string;
+    nro_celular_notificacion: string | number;
+    observacion: string;
+}
+export interface PersonasEstacion {
+
+    cod_tipo_documento_id: string;
+    numero_documento_id: string | number;
+    primer_nombre: string;
+    segundo_nombre: string | null;
+    primer_apellido: string;
+    segundo_apellido: string | null;
+    entidad: string | null;
+    cargo: string | null;
+    email_notificacion: string;
+    nro_celular_notificacion: string | number;
+    observacion: string;
+    estacion: any
 }

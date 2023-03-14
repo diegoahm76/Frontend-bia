@@ -10,7 +10,7 @@ export interface UserRol {
 }
 
 export interface LoginUser {
-  email: string;
+  nombre_de_usuario: string;
   password: string;
 }
 
@@ -27,6 +27,7 @@ export interface IUserInfo {
   error_message: string;
   open_dialog: boolean;
   entorno: 'C' | 'L';
+  dialog_representante: boolean;
 }
 
 export interface Permiso {
