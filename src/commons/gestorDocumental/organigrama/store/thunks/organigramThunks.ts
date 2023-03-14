@@ -1,7 +1,6 @@
 import { type SetStateAction, type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 import Swal from 'sweetalert2'; // , { type SweetAlertResult }
-import { api } from '../../../../../api/axios';
 import {
   type AxiosError
   // type AxiosResponse
@@ -22,6 +21,7 @@ import {
   //  type IObjLevels,
   //  type IObjUnitys
 } from '../../interfaces/organigrama';
+import { api } from '../../../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -110,6 +110,7 @@ export const edit_organigrams_service: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      console.log(api.defaults)
       const { data } = await api.patch(
         `almacen/organigrama/update/${id}/`,
         organigrama
