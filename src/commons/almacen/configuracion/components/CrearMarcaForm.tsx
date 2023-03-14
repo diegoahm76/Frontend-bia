@@ -80,13 +80,13 @@ export const CrearMarcaForm: React.FC = () => {
   // };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const input_change_handler = (
-    setFunction: React.Dispatch<React.SetStateAction<string>>,
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFunction(event.target.value);
-    console.log(event.target.value);
-  };
+  // const input_change_handler = (
+  //   setFunction: React.Dispatch<React.SetStateAction<string>>,
+  //   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   setFunction(event.target.value);
+  //   console.log(event.target.value);
+  // };
 
   useEffect(() => {
     void marca();
@@ -111,7 +111,7 @@ export const CrearMarcaForm: React.FC = () => {
               <DialogContentText>
                 Ingrese la marca que desea Crear
               </DialogContentText>
-              <TextField
+              {/* <TextField
                 autoFocus
                 onChange={(e) => {
                   input_change_handler(set_nombre, e);
@@ -122,7 +122,7 @@ export const CrearMarcaForm: React.FC = () => {
                 type="Any"
                 fullWidth
                 variant="standard"
-              />
+              /> */}
             </DialogContent>
             <Divider />
             <DialogActions>
