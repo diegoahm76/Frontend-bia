@@ -89,12 +89,12 @@ export const EditarOrganigramaScreen: React.FC = () => {
   };
 
   const handle_to_go_back = (): void => {
-    navigate('/gestor_documental/organigrama/crear_organigrama');
+    navigate('/app/gestor_documental/organigrama/crear_organigrama');
   };
 
   useEffect(() => {
     if (organigram_current.id_organigrama === null) {
-      navigate('/gestor_documental/organigrama/crear_organigrama');
+      navigate('/app/gestor_documental/organigrama/crear_organigrama');
     }
   }, []);
 
