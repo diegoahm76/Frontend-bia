@@ -135,7 +135,23 @@ const SearchCcdModal = ({
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
       >
-        <DialogTitle>Consultar CCD</DialogTitle>
+        <DialogTitle>
+          Consultar CCD
+          <IconButton
+            aria-label="close"
+            onClick={() => {
+              set_is_modal_active(false);
+            }}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <TextField

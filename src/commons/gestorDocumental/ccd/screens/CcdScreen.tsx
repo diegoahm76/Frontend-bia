@@ -4,57 +4,32 @@ import {
   Grid,
   Box,
   TextField,
-  MenuItem,
   Stack,
   ButtonGroup,
   Button,
 } from '@mui/material';
+import Select from 'react-select';
+import { DataGrid } from '@mui/x-data-grid';
 import SaveIcon from '@mui/icons-material/Save';
 import SyncIcon from '@mui/icons-material/Sync';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../components/Title';
-// Hooks
-// import use_ccd from '../hooks/useCCD';
-import { DataGrid } from '@mui/x-data-grid';
-import CrearSeriesCcdDialog from '../../organigrama/componentes/CrearSeriesCcdDialog';
 import use_ccd from '../hooks/useCCD';
 import { Controller } from 'react-hook-form';
-import Select from 'react-select';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import SearchCcdModal from '../componentes/SearchCcdModal';
+import CrearSeriesCcdDialog from '../componentes/CrearSeriesCcdDialog';
+import SearchCcdsDialog from '../componentes/SearchCcdsDialog';
 import {
   to_resume_ccds_service,
   to_finished_ccds_service,
 } from '../store/thunks/ccdThunks';
-// Graficas
-
-const tipos_unidades = [
-  {
-    value: '1',
-    label: 'Test',
-  },
-  {
-    value: 'EUR',
-    label: 'Test',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
-];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-
   const { ccd_current } = useAppSelector((state) => state.ccd);
   const { assignments_ccd } = useAppSelector((state) => state.assignments);
-
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
   useEffect(() => {
@@ -65,23 +40,21 @@ export const CcdScreen: React.FC = () => {
     }
   }, [ccd_current]);
 
-  // const [create_is_active, set_create_is_active] = useState<boolean>(false);
   // Hooks
   const {
     // States
     list_unitys,
     list_organigrams,
-    // list_sries,
-    // list_subsries,
+    list_sries,
+    list_subsries,
     title,
     title_button_asing,
     create_is_active,
     consulta_ccd_is_active,
     columns_asignacion,
-    // control,
+    control,
     control_create_ccd,
-    // default_col_def,
-    // errors,
+    errors,
     errors_create_ccd,
     // save_ccd,
     // Edita States
@@ -91,9 +64,9 @@ export const CcdScreen: React.FC = () => {
     // // Functions
     // get_row_class,
     on_submit_create_ccd,
-    // on_submit,
+    on_submit,
     // register_create_ccd,
-    // handle_submit,
+    handle_submit,
     handle_submit_create_ccd,
     clean_ccd,
   } = use_ccd();
@@ -270,26 +243,26 @@ export const CcdScreen: React.FC = () => {
             <Box
               component="form"
               sx={{ mt: '20px' }}
-              noValidate
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onSubmit={handle_submit(on_submit)}
               autoComplete="off"
             >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={2}>
-                  <TextField
-                    name="tipoUnidad"
-                    select
-                    label="Series"
-                    defaultValue="Seleccione"
-                    helperText="Seleccione series"
-                    size="small"
-                    fullWidth
-                  >
-                    {tipos_unidades.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                  <Controller
+                    name="sries"
+                    control={control}
+                    render={() => (
+                      <Select options={list_sries} placeholder="Seleccionar" />
+                    )}
+                  />
+                  {errors.sries !== null && (
+                    <div className="col-12">
+                      <small className="text-center text-danger">
+                        Este campo es obligatorio
+                      </small>
+                    </div>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <ButtonGroup
@@ -304,35 +277,44 @@ export const CcdScreen: React.FC = () => {
                     >
                       CREAR
                     </Button>
-                    <Button>CLONAR</Button>
-                    <Button>PREVISUALIZAR</Button>
+                    <Button disabled>CLONAR</Button>
+                    <Button disabled>PREVISUALIZAR</Button>
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  <TextField
-                    name="tipoUnidad"
-                    select
-                    label="Subseries"
-                    defaultValue="Seleccione"
-                    helperText="Seleccione subserie"
-                    size="small"
-                    fullWidth
-                  >
-                    {tipos_unidades.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                  <Controller
+                    name="subserie"
+                    control={control}
+                    render={() => (
+                      <Select
+                        options={list_subsries}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                  {errors.subserie !== null && (
+                    <div className="col-12">
+                      <small className="text-center text-danger">
+                        Este campo es obligatorio
+                      </small>
+                    </div>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <ButtonGroup
                     variant="contained"
                     aria-label=" primary button group"
                   >
-                    <Button>CREAR</Button>
-                    <Button>CLONAR</Button>
-                    <Button>PREVISUALIZAR</Button>
+                    <Button
+                      onClick={() => {
+                        set_create_is_active(true);
+                        set_title('Crear subseries');
+                      }}
+                    >
+                      CREAR
+                    </Button>
+                    <Button disabled>CLONAR</Button>
+                    <Button disabled>PREVISUALIZAR</Button>
                   </ButtonGroup>
                 </Grid>
               </Grid>
@@ -360,55 +342,90 @@ export const CcdScreen: React.FC = () => {
             >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
-                  <TextField
-                    name="tipoUnidad"
-                    select
-                    label="Unidades"
-                    defaultValue="Seleccione"
-                    helperText="Seleccione Unidad"
-                    size="small"
-                    fullWidth
-                  >
-                    {tipos_unidades.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                  <label className="text-terciary">
+                    {' '}
+                    Unidades
+                    <samp className="text-danger">*</samp>
+                  </label>
+                  <Controller
+                    name="unidades_asignacion"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        options={list_unitys}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                  {errors.unidades_asignacion !== null && (
+                    <div className="col-12">
+                      <small className="text-center text-danger">
+                        Este campo es obligatorio
+                      </small>
+                    </div>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                  <TextField
-                    name="tipoUnidad"
-                    select
-                    label="Series"
-                    defaultValue="Seleccione"
-                    helperText="Seleccione Serie"
-                    size="small"
-                    fullWidth
-                  >
-                    {tipos_unidades.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                  <label className="text-terciary">
+                    Series
+                    <samp className="text-danger">*</samp>
+                  </label>
+                  <Controller
+                    name="sries_asignacion"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        options={list_sries}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                  {errors.sries_asignacion != null && (
+                    <div className="col-12">
+                      <small className="text-center text-danger">
+                        Este campo es obligatorio
+                      </small>
+                    </div>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={3}>
-                  <TextField
-                    name="tipoUnidad"
-                    select
-                    label="Subseries"
-                    defaultValue="Seleccione subseries"
-                    helperText="Seleccione CCD"
-                    size="small"
-                    fullWidth
-                  >
-                    {tipos_unidades.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                  <label className="text-terciary">
+                    Subseries
+                    <samp className="text-danger">*</samp>
+                  </label>
+                  <Controller
+                    name="subserie_asignacion"
+                    control={control}
+                    rules={{
+                      required: true,
+                    }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        isMulti
+                        options={list_subsries}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                  {errors.subserie_asignacion != null && (
+                    <div className="col-12">
+                      <small className="text-center text-danger">
+                        Este campo es obligatorio
+                      </small>
+                    </div>
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <Button
@@ -474,9 +491,10 @@ export const CcdScreen: React.FC = () => {
       <CrearSeriesCcdDialog
         is_modal_active={create_is_active}
         set_is_modal_active={set_create_is_active}
+        title={title}
       />
       {consulta_ccd_is_active && (
-        <SearchCcdModal
+        <SearchCcdsDialog
           is_modal_active={consulta_ccd_is_active}
           set_is_modal_active={set_consulta_ccd_is_active}
           title={title}
