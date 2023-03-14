@@ -29,12 +29,10 @@ body::-webkit-scrollbar-thumb {
   border: none !important;
   border-style: none;
   background: transparent;
-  background-image: linear-gradient(
-    90deg,
-    hsla(0deg, 0%, 100%, 0),
-    #fff,
-    hsla(0deg, 0%, 100%, 0)
-  ) !important;
+  background-image: linear-gradient(90deg,
+      hsla(0deg, 0%, 100%, 0),
+      #fff,
+      hsla(0deg, 0%, 100%, 0)) !important;
 }
 
 .divider2 {
@@ -42,12 +40,10 @@ body::-webkit-scrollbar-thumb {
   border: none !important;
   border-style: none;
   background: transparent;
-  background-image: linear-gradient(
-    90deg,
-    hsl(0, 0%, 100%),
-    #042f4a,
-    hsla(0, 0%, 100%)
-  ) !important;
+  background-image: linear-gradient(90deg,
+      hsl(0, 0%, 100%),
+      #042f4a,
+      hsla(0, 0%, 100%)) !important;
 }
 
 .box-shadow {
@@ -105,13 +101,4 @@ body::-webkit-scrollbar-thumb {
 
 .font-arvo {
   font-family: 'Arvo', serif !important;
-}
-
-.css-myb2s4-MuiInputBase-input-MuiOutlinedInput-input {
-  border: 1px solid #c0c0c0 !important;
-  border-radius: 4px;
-}
-
-.css-owzk0h-MuiFormLabel-root-MuiInputLabel-root {
-  background: #fafafa;
 }

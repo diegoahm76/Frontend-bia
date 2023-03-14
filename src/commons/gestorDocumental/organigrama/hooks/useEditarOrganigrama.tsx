@@ -41,7 +41,8 @@ const use_editar_organigrama = () => {
 
   const [orden_nivel, set_orden_nivel] = useState<number>(0);
   const [title_nivel, set_title_nivel] = useState<string>('Agregar');
-  const [title_unidades, set_title_unidades] = useState<string>('Agregar');
+  const [title_unidades, set_title_unidades] =
+    useState<string>('Agregar Unidades');
   const [option_nivel, set_option_nivel] = useState<ILevelUnity[]>([
     {
       label: '',
@@ -372,7 +373,7 @@ const use_editar_organigrama = () => {
   }, [unity_organigram]);
 
   useEffect(() => {
-    set_orden_nivel((levels_organigram.length as number) + 1);
+    set_orden_nivel(levels_organigram.length + 1);
     set_option_nivel(
       levels_organigram.map((item) => ({
         label: item.nombre,

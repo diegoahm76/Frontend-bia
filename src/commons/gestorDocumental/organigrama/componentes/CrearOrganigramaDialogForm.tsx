@@ -6,7 +6,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
   Stack,
   Button,
   Box,
@@ -15,12 +14,12 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import { add_organigrams_service } from '../store/thunks/organigramThunks';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../../hooks/';
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
 
 interface FormValues {
@@ -33,8 +32,8 @@ interface FormValues {
 const CrearItemOrganigramaModal = ({
   is_modal_active,
   set_is_modal_active,
-  set_position_tab_organigrama,
 }: IProps) => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -46,7 +45,7 @@ const CrearItemOrganigramaModal = ({
   };
 
   const on_submit = (data: FormValues): void => {
-    void dispatch(add_organigrams_service(data, set_position_tab_organigrama));
+    void dispatch(add_organigrams_service(data, navigate));
     handle_close_crear_organigrama();
   };
 
@@ -61,23 +60,7 @@ const CrearItemOrganigramaModal = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
-        <DialogTitle>
-          Crear organigrama
-          <IconButton
-            aria-label="close"
-            onClick={() => {
-              set_is_modal_active(false);
-            }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
+        <DialogTitle>Crear organigrama</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Controller
