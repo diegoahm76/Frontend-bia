@@ -49,11 +49,6 @@ const CrearItemOrganigramaModal = ({
     handle_close_crear_organigrama();
   };
 
-  // const on_submit = async (data: FormValues): Promise<void> => {
-  //   await dispatch(add_organigrams_service(data, navigate));
-  //   handle_close_crear_organigrama();
-  // };
-
   return (
     <Dialog
       maxWidth="xs"

@@ -19,6 +19,7 @@ import {
   get_persmisions_user,
   logout,
   open_dialog_representado,
+  set_authenticated,
 } from '../store';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -40,6 +41,8 @@ export const DialogEntorno: React.FC = () => {
 
     if (value === 'C') {
       dispatch(open_dialog_representado());
+    } else {
+      dispatch(set_authenticated());
     }
   };
 

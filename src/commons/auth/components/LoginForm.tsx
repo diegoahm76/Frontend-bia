@@ -163,7 +163,7 @@ export const LoginForm: React.FC = () => {
           <Button
             fullWidth
             sx={{ textTransform: 'none', textAlign: 'center' }}
-            href="/auth/register"
+            href="#/auth/register"
           >
             <Typography sx={{ color: 'black' }}>
               No tienes cuenta? <b>Registrese</b>
