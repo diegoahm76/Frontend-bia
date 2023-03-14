@@ -64,8 +64,7 @@ export const get_finished_ccd_service = () => {
   };
 };
 // Obtener Cuadro de Clasificación Documental
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const get_classification_ccds_service = () => {
+export const get_classification_ccds_service:any = () => {
   console.log('get_classification_ccds_service');
   return async (
     dispatch: Dispatch<any>
@@ -84,7 +83,7 @@ export const get_classification_ccds_service = () => {
 };
 
 // Reanudar Cuadro de Clasificación Documental
-export const to_resume_ccds_service = (
+export const to_resume_ccds_service:any = (
   set_flag_btn_finish: (arg0: boolean) => void
 ) => {
   return async (
@@ -106,7 +105,7 @@ export const to_resume_ccds_service = (
   };
 };
 // Finalizar Cuadro de Clasificación Documental
-export const to_finished_ccds_service = (
+export const to_finished_ccds_service:any = (
   set_flag_btn_finish: (arg0: boolean) => void
 ) => {
   return async (
