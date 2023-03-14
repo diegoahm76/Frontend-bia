@@ -1,7 +1,23 @@
+import { toast, type ToastContent } from "react-toastify";
 import Swal from "sweetalert2";
 import { api } from "../../../api/axios";
+import { control_error } from "../../../helpers/controlError";
 import { type ResponseServer } from "../../../interfaces/globalModels";
 import { type Parametros, type conf_alarma, type Datos, type Estaciones, type EstacionesDetalle, type IEstacionEstaciones, type PersonaEstacion } from "../estaciones/interfaces/interfaces";
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const control_success = (message: ToastContent) =>
+  toast.success(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light'
+  });
+
 
 
 // consultar estaciones
@@ -41,15 +57,10 @@ export const crearEstacion = async (Estacion: IEstacionEstaciones) => {
   await api
     .post("estaciones/crear-estaciones/", Estacion)
     .then(() => {
-      void Swal.fire("Correcto", "La estación se agrego correctamente", "success");
+      control_success('La estación Se creo correctamente')
     })
     .catch((error) => {
-      console.log(error);
-      void Swal.fire({
-        icon: "error",
-        title: "Hubo un error",
-        text: "Hubo un error, intenta de nuevo",
-      });
+      control_error(error)
     });
 };
 
@@ -60,15 +71,10 @@ export const crearPersona = async (Peronsa: PersonaEstacion) => {
   await api
     .post("estaciones/personas/crear-persona/", Peronsa)
     .then(() => {
-      void Swal.fire("Correcto", "El usuario se agrego correctamente", "success");
+      control_success('La persona se creo correctamente')
     })
     .catch((error) => {
-      console.log(error);
-      void Swal.fire({
-        icon: "error",
-        title: "Hubo un error",
-        text: "Hubo un error, intenta de nuevo",
-      });
+      control_error(error)
     });
 };
 
@@ -97,13 +103,7 @@ export const crearConfiAlerta = async (configuracion: PersonaEstacion) => {
 export const eliminarUsuario = async (idPersona: number) => {
   try {
     await api.delete(`estaciones/personas/eliminar-persona/${idPersona}`);
-    void Swal.fire({
-      position: "center",
-      icon: "success",
-      title: "Usuario eliminado correctamente",
-      showConfirmButton: false,
-      timer: 2000,
-    });
+    control_success('La persona se creo correctamente')
   } catch (error) {
     void Swal.fire({
       position: "center",
@@ -114,4 +114,5 @@ export const eliminarUsuario = async (idPersona: number) => {
     });
   }
 };
+
 
