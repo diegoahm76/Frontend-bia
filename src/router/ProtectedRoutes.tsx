@@ -1,4 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
+import { ConfiguracionRoutes } from '../commons/almacen/configuracion/routes/ConfiguracionRoutes';
+import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
+import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
@@ -23,6 +26,8 @@ export const ProtectedRoutes: React.FC = () => {
           <Route path="trd/*" element={<TrdRoutes />} />
           <Route path="tca/*" element={<TcaRoutes />} />
         </Route>
+        {/* Almacen */}
+        <Route path='almacen/*' element={<AlmacenRoutes />} />
       </Route>
     </Routes>
   );
