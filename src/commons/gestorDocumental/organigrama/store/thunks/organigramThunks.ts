@@ -1,5 +1,4 @@
-import { type Dispatch } from 'react';
-import { type NavigateFunction } from 'react-router-dom';
+import { type SetStateAction, type Dispatch } from 'react';
 import { toast , type ToastContent} from 'react-toastify';
 import Swal
 // , { type SweetAlertResult } 
@@ -84,7 +83,7 @@ export const get_organigrams_service = ():any => {
 };
 
 // Agregar Organigrama
-export const add_organigrams_service = (organigrama: any, navigate: NavigateFunction) => {
+export const add_organigrams_service = (organigrama: any, set_position_tab_organigrama: Dispatch<SetStateAction<string>>) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             console.log(organigrama);   
@@ -93,13 +92,13 @@ export const add_organigrams_service = (organigrama: any, navigate: NavigateFunc
             dispatch(get_organigrams_service());
             dispatch(current_organigram(data.detail));
             control_success("El organigrama se agrego correctamente");
-            navigate('/gestor_documental/organigrama/editar_organigrama')
+            set_position_tab_organigrama('2');
             return data;
         } catch (error: any) {
             console.log("add_organigrams_service");
             control_error(error.response.data.detail);
             console.log(error.response.data); 
-            navigate('/gestor_documental/organigrama/crear_organigrama')
+            set_position_tab_organigrama('1');
             return error as AxiosError;
         }
     };
@@ -122,7 +121,7 @@ export const edit_organigrams_service = (organigrama: IObjCreateOrganigram, id: 
 };
 
 // Finalizar Organigrama
-export const to_finalize_organigram_service = (id: string, navigate: NavigateFunction) => {
+export const to_finalize_organigram_service = (id: string, set_position_tab_organigrama:  Dispatch<SetStateAction<string>>) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.put(`almacen/organigrama/finalizar/${id}/`);
@@ -130,7 +129,7 @@ export const to_finalize_organigram_service = (id: string, navigate: NavigateFun
             void Swal.fire({
                 position: "center", icon: "info", title: "Atención", text: data.detail,
             });
-            navigate('/gestor_documental/organigrama/crear_organigrama');
+            set_position_tab_organigrama('1');
             return data;
         } catch (error: any) {
             console.log("to_finalize_organigram_service");

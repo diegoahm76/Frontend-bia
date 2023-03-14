@@ -1,13 +1,11 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { CrearOrganigramaScreen } from '../screens/CrearOrganigramaScreen';
-import { EditarOrganigramaScreen } from '../screens/EditarOrganigramaScreen';
+import { OrganigramaScreen } from '../screens/OrganigramaScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const OrganigramaRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="crear_organigrama" element={<CrearOrganigramaScreen />} />
-      <Route path="editar_organigrama" element={<EditarOrganigramaScreen />} />
+      <Route path="crear" element={<OrganigramaScreen />} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );

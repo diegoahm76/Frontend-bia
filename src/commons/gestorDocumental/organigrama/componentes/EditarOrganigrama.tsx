@@ -1,7 +1,5 @@
-import type React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type SetStateAction, type Dispatch } from 'react';
 import Select, { type SingleValue } from 'react-select';
-import { useNavigate } from 'react-router-dom';
 import { Controller } from 'react-hook-form';
 import {
   Grid,
@@ -22,16 +20,21 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Title } from '../../../../components';
-import { OrganigramVisualizerDialog } from '../componentes/OrganigramVisualizerDialog';
+import { OrganigramVisualizerDialog } from './OrganigramVisualizerDialog';
 import { type ILevelUnity } from '../interfaces/organigrama';
 import useEditarOrganigrama from '../hooks/useEditarOrganigrama';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { to_finalize_organigram_service } from '../store/thunks/organigramThunks';
 
+interface IProps {
+  set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarOrganigramaScreen: React.FC = () => {
+export const EditarOrganigrama = ({
+  set_position_tab_organigrama,
+}: IProps): JSX.Element => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   // Estado global
   const [view_organigram, set_view_organigram] = useState(false);
@@ -89,12 +92,12 @@ export const EditarOrganigramaScreen: React.FC = () => {
   };
 
   const handle_to_go_back = (): void => {
-    navigate('/app/gestor_documental/organigrama/crear_organigrama');
+    set_position_tab_organigrama('1');
   };
 
   useEffect(() => {
     if (organigram_current.id_organigrama === null) {
-      navigate('/app/gestor_documental/organigrama/crear_organigrama');
+      set_position_tab_organigrama('1');
     }
   }, []);
 
@@ -531,7 +534,7 @@ export const EditarOrganigramaScreen: React.FC = () => {
                 void dispatch(
                   to_finalize_organigram_service(
                     String(organigram_current.id_organigrama),
-                    navigate
+                    set_position_tab_organigrama
                   )
                 );
               }}
