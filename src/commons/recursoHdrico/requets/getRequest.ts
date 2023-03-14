@@ -72,6 +72,25 @@ export const crearPersona = async (Peronsa: PersonaEstacion) => {
     });
 };
 
+// crear Configuracion Alerta Persona
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/naming-convention
+export const crearConfiAlerta = async (configuracion: PersonaEstacion) => {
+  await api
+    .post("estaciones/configuracion/alertas/crear-configuracion-alerta/", configuracion)
+    .then(() => {
+      void Swal.fire("Correcto", "La configuración se agrego correctamente", "success");
+    })
+    .catch((error) => {
+      console.log(error);
+      void Swal.fire({
+        icon: "error",
+        title: "Hubo un error",
+        text: "Hubo un error, intenta de nuevo",
+      });
+    });
+};
+
 // eliminar persona
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
