@@ -26,6 +26,10 @@ export const ProtectedRoutes: React.FC = () => {
           <Route path="tca/*" element={<TcaRoutes />} />
         </Route>
         {/* Recurso Hidrico */}
+        <Route path="recurso_hidrico/*" >
+          <Route path="estaciones/*" element={<EstacionesRoutes />} />
+        </Route>
+        {/* Recurso Hidrico */}
         <Route path="recurso_hidrico/*">
           <Route path="estaciones/*" element={<EstacionesRoutes />} />
         </Route>
