@@ -631,7 +631,7 @@ const use_editar_organigrama = () => {
       descripcion,
       version,
     };
-    await dispatch(edit_organigrams_service(obj, id_organigrama));
+    dispatch(edit_organigrams_service(obj, id_organigrama));
   };
 
   return {
