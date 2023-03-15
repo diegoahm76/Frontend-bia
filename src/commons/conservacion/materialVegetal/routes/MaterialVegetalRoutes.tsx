@@ -1,6 +1,6 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { IngresoCuarentenaScreen  } from '../screens/IngresoCuarentenaScreen';
-import { LevantamientoCuarentenaScreen  } from '../screens/levantamientoCuarentenaScreen';
+import { LevantamientoCuarentenaScreen  } from '../screens/LevantamientoCuarentenaScreen';
 import { SiembraSemillasScreen,  } from '../screens/SiembraSemillasScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
