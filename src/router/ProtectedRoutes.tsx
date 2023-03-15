@@ -1,5 +1,4 @@
 import { Route, Routes } from 'react-router-dom';
-import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
