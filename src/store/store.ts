@@ -13,7 +13,7 @@ import { assignments_slice } from '../commons/gestorDocumental/ccd/store/slices/
 const persist_config = {
   key: 'macarenia_app',
   storage,
-  whitelist: ['auth']
+  whitelist: ['auth', 'layout']
 };
 
 const app_reducers = combineReducers({
