@@ -12,10 +12,9 @@ import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 // Componentes personalizados
 import { Title } from '../../../components';
-import { OrganigramVisualizerDialog } from '../components/OrganigramVisualizerDialog';
-// Hooks
-import useEditarOrganigrama from '../hooks/useEditarOrganigrama';
-import { useAppSelector } from '../store/hooks/hooks';
+import useEditarOrganigrama from '../organigrama/hooks/useEditarOrganigrama';
+import { useAppSelector } from '../../../hooks';
+import { OrganigramVisualizerDialog } from '../organigrama/componentes/OrganigramVisualizerDialog';
 
 const tipos_unidades = [
   {
