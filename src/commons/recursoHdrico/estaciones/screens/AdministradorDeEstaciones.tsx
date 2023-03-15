@@ -7,7 +7,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { Title } from '../../../../components/Title';
 import { type Estaciones } from '../interfaces/interfaces';
-import { consultar_estaciones } from '../../requets/getRequest';
+import { consultar_estaciones } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { CrearEstacionDialog } from '../components/CrearEstacionDialog';
 import { EditarEstacionDialog } from '../components/EditarEstacionDialog';

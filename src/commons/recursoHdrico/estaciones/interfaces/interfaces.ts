@@ -111,3 +111,10 @@ export interface PersonasEstacion {
     observacion: string;
     estacion: any
 }
+export interface CrearAlerta {
+    nombre_variable_alarma: string;
+    mensaje_alarma_maximo: string;
+    mensaje_alarma_minimo: string;
+    mensaje_no_alarma: string;
+    frecuencia_alarma: number;
+}
