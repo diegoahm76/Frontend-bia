@@ -1,8 +1,6 @@
-import { type Dispatch } from 'react';
-import { type NavigateFunction } from 'react-router-dom';
+import { type SetStateAction, type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 import Swal from 'sweetalert2'; // , { type SweetAlertResult }
-import { api } from '../../../../../api/axios';
 import {
   type AxiosError
   // type AxiosResponse
@@ -23,6 +21,7 @@ import {
   //  type IObjLevels,
   //  type IObjUnitys
 } from '../../interfaces/organigrama';
+import { api } from '../../../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -83,31 +82,25 @@ export const get_organigrams_service = (): any => {
 };
 
 // Agregar Organigrama
-export const add_organigrams_service: any = (
-  organigrama: any,
-  navigate: NavigateFunction
-) => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      console.log(organigrama);
-      const { data } = await api.post(
-        'almacen/organigrama/create/',
-        organigrama
-      );
-
-      dispatch(get_organigrams_service());
-      dispatch(current_organigram(data.detail));
-      control_success('El organigrama se agrego correctamente');
-      navigate('/gestor_documental/organigrama/editar_organigrama');
-      return data;
-    } catch (error: any) {
-      console.log('add_organigrams_service');
-      control_error(error.response.data.detail);
-      console.log(error.response.data);
-      navigate('/gestor_documental/organigrama/crear_organigrama');
-      return error as AxiosError;
-    }
-  };
+export const add_organigrams_service:any = (organigrama: any, set_position_tab_organigrama: Dispatch<SetStateAction<string>>) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(organigrama);   
+            const { data } = await api.post("almacen/organigrama/create/", organigrama);
+            
+            dispatch(get_organigrams_service());
+            dispatch(current_organigram(data.detail));
+            control_success("El organigrama se agrego correctamente");
+            set_position_tab_organigrama('2');
+            return data;
+        } catch (error: any) {
+            console.log("add_organigrams_service");
+            control_error(error.response.data.detail);
+            console.log(error.response.data); 
+            set_position_tab_organigrama('1');
+            return error as AxiosError;
+        }
+    };
 };
 
 // Editar Organigrama
@@ -117,6 +110,7 @@ export const edit_organigrams_service: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      console.log(api.defaults)
       const { data } = await api.patch(
         `almacen/organigrama/update/${id}/`,
         organigrama
@@ -133,28 +127,22 @@ export const edit_organigrams_service: any = (
 };
 
 // Finalizar Organigrama
-export const to_finalize_organigram_service: any = (
-  id: string,
-  navigate: NavigateFunction
-) => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.put(`almacen/organigrama/finalizar/${id}/`);
-      dispatch(get_organigrams_service());
-      void Swal.fire({
-        position: 'center',
-        icon: 'info',
-        title: 'Atención',
-        text: data.detail
-      });
-      navigate('/gestor_documental/organigrama/crear_organigrama');
-      return data;
-    } catch (error: any) {
-      console.log('to_finalize_organigram_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
+export const to_finalize_organigram_service:any = (id: string, set_position_tab_organigrama:  Dispatch<SetStateAction<string>>) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.put(`almacen/organigrama/finalizar/${id}/`);
+            dispatch(get_organigrams_service());
+            void Swal.fire({
+                position: "center", icon: "info", title: "Atención", text: data.detail,
+            });
+            set_position_tab_organigrama('1');
+            return data;
+        } catch (error: any) {
+            console.log("to_finalize_organigram_service");
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
 };
 
 // Niveles
