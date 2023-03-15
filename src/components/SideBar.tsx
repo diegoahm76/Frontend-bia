@@ -12,8 +12,12 @@ import {
   Toolbar,
   Collapse,
   Avatar,
+  // IconButton,
+  // useTheme,
 } from '@mui/material';
 
+// import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
@@ -76,6 +80,15 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           background: '#041926 !important',
         }}
       >
+        {/* {mobile_open && (
+          <IconButton onClick={handle_drawer_toggle}>
+            {theme.direction === 'ltr' ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        )} */}
         <img
           alt="Imagen de perfil"
           src="../image/logos/Web-Bia-logo.png"

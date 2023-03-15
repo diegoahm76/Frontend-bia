@@ -19,7 +19,7 @@ import type {
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
-import CrearSeriesCcdDialog from '../../ccd/componentes/CrearSeriesCcdDialog';
+import CrearSeriesCcdDialog from '../../organigrama/componentes/CrearSeriesCcdDialog';
 // Graficas
 
 const columns: GridColDef[] = [
@@ -417,7 +417,6 @@ export const TcaScreen: React.FC = () => {
       <CrearSeriesCcdDialog
         is_modal_active={create_is_active}
         set_is_modal_active={set_create_is_active}
-        title="title"
       />
     </>
   );
