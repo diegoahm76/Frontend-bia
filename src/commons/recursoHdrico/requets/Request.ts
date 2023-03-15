@@ -1,12 +1,11 @@
 import { toast, type ToastContent } from "react-toastify";
-import Swal from "sweetalert2";
 import { api } from "../../../api/axios";
 import { control_error } from "../../../helpers/controlError";
 import { type ResponseServer } from "../../../interfaces/globalModels";
-import { type Parametros, type conf_alarma, type Datos, type Estaciones, type EstacionesDetalle, type IEstacionEstaciones, type PersonaEstacion } from "../estaciones/interfaces/interfaces";
+import { type Parametros, type conf_alarma, type Datos, type Estaciones, type EstacionesDetalle, type IEstacionEstaciones, type PersonaEstacion, type CrearAlerta } from "../estaciones/interfaces/interfaces";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
+
+export const control_success = (message: ToastContent): any =>
   toast.success(message, {
     position: 'bottom-right',
     autoClose: 3000,
@@ -17,8 +16,6 @@ const control_success = (message: ToastContent) =>
     progress: undefined,
     theme: 'light'
   });
-
-
 
 // consultar estaciones
 export const consultar_estaciones = async (): Promise<Estaciones[]> => {
@@ -81,19 +78,14 @@ export const crearPersona = async (Peronsa: PersonaEstacion) => {
 // crear Configuracion Alerta Persona
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/naming-convention
-export const crearConfiAlerta = async (configuracion: PersonaEstacion) => {
+export const crearConfiAlerta = async (configuracion: CrearAlerta) => {
   await api
     .post("estaciones/configuracion/alertas/crear-configuracion-alerta/", configuracion)
     .then(() => {
-      void Swal.fire("Correcto", "La configuración se agrego correctamente", "success");
+      control_success('La configuración alerta persona se creó correctamente')
     })
     .catch((error) => {
-      console.log(error);
-      void Swal.fire({
-        icon: "error",
-        title: "Hubo un error",
-        text: "Hubo un error, intenta de nuevo",
-      });
+      control_error(error)
     });
 };
 
@@ -103,16 +95,18 @@ export const crearConfiAlerta = async (configuracion: PersonaEstacion) => {
 export const eliminarUsuario = async (idPersona: number) => {
   try {
     await api.delete(`estaciones/personas/eliminar-persona/${idPersona}`);
-    control_success('La persona se creo correctamente')
+    control_success('La persona se eliminó correctamente')
   } catch (error) {
-    void Swal.fire({
-      position: "center",
-      icon: "error",
-      title: `Algo pasó, intente de nuevo`,
-      showConfirmButton: true,
-      confirmButtonText: "Aceptar",
-    });
+    control_error(error)
   }
 };
+
+// eliminar Configuración Alerta Persona
+
+export const eliminar_conf_alerta_persona = async (idconfAlerta: number): Promise<any> => {
+  return await api.delete(`estaciones/configuracion/alertas/eliminar-configuracion-alerta/${idconfAlerta}`);
+
+};
+
 
 

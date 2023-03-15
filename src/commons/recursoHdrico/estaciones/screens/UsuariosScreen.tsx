@@ -20,7 +20,7 @@ import { Controller, useForm, type FieldValues, type SubmitHandler } from "react
 import Swal from "sweetalert2";
 import { api } from '../../../../api/axios';
 import { type Estaciones, type Persona } from '../interfaces/interfaces';
-import { consultar_estaciones, consultar_estaciones_id, eliminarUsuario } from '../../requets/getRequest';
+import { consultar_estaciones, consultar_estaciones_id, eliminarUsuario } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { Title } from '../../../../components/Title';
 import { NuevoUsuarioModal } from '../components/NuevoUsuarioModal';

@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperTe
 import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { Controller, type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { crearPersona } from '../../requets/getRequest';
+import { crearPersona } from '../../requets/Request';
 import Select from "react-select";
 import { api } from '../../../../api/axios';
 

@@ -3,7 +3,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, M
 import type React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { crearEstacion } from '../../requets/getRequest';
+import { crearEstacion } from '../../requets/Request';
 
 interface IProps {
     is_modal_active: boolean;
