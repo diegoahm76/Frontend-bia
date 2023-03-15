@@ -13,7 +13,6 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { api } from '../../../../api/axios';
 import { control_error } from '../../../../helpers/controlError';
 
-
 const columns: GridColDef[] = [
   { field: 'id_marca"', headerName: 'ID Marca', width: 200 },
   { field: 'nombre', headerName: 'Nombre', width: 200 },
@@ -31,8 +30,12 @@ export const CrearMarcaForm: React.FC = () => {
   const [open, set_open] = useState(false);
   const [nombre, set_nombre] = useState('');
   const [activo, set_activo] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [item_ya_usado, set_item_ya_usado] = useState(false);
+
+  // Se usa solo para quitar error
+  console.log(open);
+  console.log(nombre);
+  console.log(activo);
+  set_activo(false);
 
   const handle_click_open = (): void => {
     set_open(true);
@@ -41,7 +44,7 @@ export const CrearMarcaForm: React.FC = () => {
     set_open(false);
   };
 
-  const [marc, set_data_marca] = useState(null);
+  const [marc, set_data_marca] = useState([]);
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const marca = async () => {
     try {
@@ -76,7 +79,7 @@ export const CrearMarcaForm: React.FC = () => {
   //   response_body.item_ya_usado = item_ya_usado;
   //   console.log(JSON.stringify(response_body));
   //   const { data} = api.post('almacen/marcas/create/', response_body);
-    
+
   // };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -103,8 +106,8 @@ export const CrearMarcaForm: React.FC = () => {
         >
           Crear
         </Button>
-        <Dialog open = {false}>
-          <form >
+        <Dialog open={false}>
+          <form>
             <DialogTitle>CREAR MARCA</DialogTitle>
             <Divider />
             <DialogContent>
@@ -142,7 +145,7 @@ export const CrearMarcaForm: React.FC = () => {
         </Dialog>
       </Grid>
       <Grid item xs={12}>
-        {marc ? (
+        {marc.length > 0 ? (
           <DataGrid
             autoHeight
             rows={marc}
