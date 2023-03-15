@@ -1,16 +1,12 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
-<<<<<<< HEAD
-import { IndexEstacionesScreen, GeolocalizacionScreen } from '../screens';
-
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const RecursoHidricoRoutes: React.FC = () => {
-  return (
-    <Routes>
-      <Route path="/" element={<IndexEstacionesScreen />} />
-      <Route path="geolocalizacion" element={<GeolocalizacionScreen />} />
-      
-=======
-import { IndexEstacionesScreen, GeolocalizacionScreen, AlertasScreen, AdministradorDeEstaciones, UsuariosScreen, HistorialScreen } from '../screens';
+import {
+  IndexEstacionesScreen,
+  GeolocalizacionScreen,
+  AlertasScreen,
+  AdministradorDeEstaciones,
+  UsuariosScreen,
+  HistorialScreen,
+} from '../screens';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstacionesRoutes: React.FC = () => {
@@ -33,7 +29,6 @@ export const EstacionesRoutes: React.FC = () => {
       {/* Historial Estaciones */}
       <Route path="historial/*" element={<HistorialScreen />} />
 
->>>>>>> main
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );
