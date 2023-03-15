@@ -1,5 +1,12 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { IndexEstacionesScreen, GeolocalizacionScreen, AlertasScreen, AdministradorDeEstaciones, UsuariosScreen, HistorialScreen } from '../screens';
+import {
+  IndexEstacionesScreen,
+  GeolocalizacionScreen,
+  AlertasScreen,
+  AdministradorDeEstaciones,
+  UsuariosScreen,
+  HistorialScreen,
+} from '../screens';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstacionesRoutes: React.FC = () => {
