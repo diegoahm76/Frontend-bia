@@ -169,7 +169,7 @@ export const to_finished_ccds_service: any = (
 };
 
 // Crear Cuadro de Clasificación Documental (CCD)
-export const create_ccds_service = (
+export const create_ccds_service:any = (
   ccd: any,
   set_save_ccd: (arg0: boolean) => void
 ) => {
