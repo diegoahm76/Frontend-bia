@@ -54,7 +54,6 @@ export interface Tokens {
 
 export interface AuthHook {
   get_permissions_by_rol: (param: number) => Promise<void>;
-  submit_handler: (param: number) => Promise<void>;
   set_is_captcha_valid: Dispatch<SetStateAction<boolean>>;
   set_open: Dispatch<SetStateAction<boolean>>;
   is_captcha_valid: boolean;
