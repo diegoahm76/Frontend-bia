@@ -3,7 +3,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Avatar, CircularProgress, Grid, IconButton, Typography } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
+<<<<<<< HEAD
 import { consultar_parametros_referencia } from '../../requets/getRequest';
+=======
+import { consultar_parametros_referencia } from '../../requets/Request';
+>>>>>>> main
 import { type Parametros } from '../interfaces/interfaces';
 
 const columns: GridColDef[] = [

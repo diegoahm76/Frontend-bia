@@ -6,6 +6,7 @@ import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { type conf_alarma } from '../interfaces/interfaces';
+<<<<<<< HEAD
 import { consultar_conf_alerta_persona } from '../../requets/getRequest';
 import { control_error } from '../../../../helpers/controlError';
 
@@ -55,10 +56,80 @@ const columns: GridColDef[] = [
     ),
   },
 ];
+=======
+import { consultar_conf_alerta_persona, control_success, eliminar_conf_alerta_persona } from '../../requets/Request';
+import { control_error } from '../../../../helpers/controlError';
+import { CrearConfiAlertaDialog } from './CrearConfiAlertaDialog';
+import { EditarAlertaDialog } from './EditarAlertaDialog';
+import Swal from 'sweetalert2';
+>>>>>>> main
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConfiguracionAlarma: React.FC = () => {
   const [conf_alert_person, set_conf_alert_person] = useState<conf_alarma[]>([]);
+<<<<<<< HEAD
+=======
+  const [crear_slerta_is_active, set_crear_slerta_is_active] = useState<boolean>(false);
+  const [editar_alerta_is_active, set_editar_alerta_is_active] = useState<boolean>(false);
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_open_crear_alerta = () => {
+    set_crear_slerta_is_active(true);
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_open_editar_alerta = () => {
+    set_editar_alerta_is_active(true);
+  }
+
+  const columns: GridColDef[] = [
+    { field: 'id_confi_alerta_persona', headerName: 'NÚMERO', width: 140 },
+    { field: 'nombre_variable_alarma', headerName: 'NOMBRE VARIABLE', width: 170 },
+    { field: 'mensaje_alarma_minimo', headerName: 'MENSAJE MINIMO', width: 170 },
+    { field: 'mensaje_no_alarma', headerName: 'MENSAJE MAXIMO', width: 170 },
+    { field: 'frecuencia_alarma', headerName: 'DREACUENCIA ALARMA', width: 170 },
+    {
+      field: 'ACCIONES',
+      headerName: 'Aciones',
+      width: 200,
+      renderCell: (params) => (
+        <>
+          <IconButton>
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <EditIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                onClick={handle_open_editar_alerta}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton>
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+              onClick={() => { confirmar_eliminar_usuario(params.row.id_confi_alerta_persona); }}
+            >
+              <DeleteIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+>>>>>>> main
 
   const confi_alerta_persona = async (): Promise<void> => {
     try {
@@ -83,6 +154,26 @@ export const ConfiguracionAlarma: React.FC = () => {
     void confi_alerta_persona()
   }, []);
 
+<<<<<<< HEAD
+=======
+  const confirmar_eliminar_usuario = (id_confi_alerta_persona: number): void => {
+    void Swal.fire({
+      title: "Estas seguro?",
+      text: "Va a eliminar un usuario",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, elminar!",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await eliminar_conf_alerta_persona(id_confi_alerta_persona);
+        control_success('La configuración alerta persona se eliminó correctamente')
+      }
+    });
+  };
+>>>>>>> main
 
   return (
     <Grid container>
@@ -90,8 +181,13 @@ export const ConfiguracionAlarma: React.FC = () => {
         <Button
           sx={{ mb: '20px' }}
           variant="outlined"
+<<<<<<< HEAD
           // onClick={handle_click_open}
           startIcon={<AddIcon />}
+=======
+          startIcon={<AddIcon />}
+          onClick={handle_open_crear_alerta}
+>>>>>>> main
         >
           CREAR ALARMA
         </Button>
@@ -110,6 +206,17 @@ export const ConfiguracionAlarma: React.FC = () => {
           <CircularProgress color="secondary" />
         )}
       </Grid>
+<<<<<<< HEAD
+=======
+      <CrearConfiAlertaDialog
+        is_modal_active={crear_slerta_is_active}
+        set_is_modal_active={set_crear_slerta_is_active}
+      />
+      <EditarAlertaDialog
+        is_modal_active={editar_alerta_is_active}
+        set_is_modal_active={set_editar_alerta_is_active}
+      />
+>>>>>>> main
     </Grid>
   );
 };
