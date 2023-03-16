@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import {
   Box,
   Divider,
@@ -170,9 +170,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           <ListItemIcon>
             <MonetizationOnIcon sx={{ color: 'secondary.main' }}/>
           </ListItemIcon>
-          <Link to="/dashboard/recaudo" >
             <ListItemText primary="Recaudo" />
-          </Link>
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
