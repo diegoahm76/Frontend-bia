@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-gimport { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
+import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
 
 
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
