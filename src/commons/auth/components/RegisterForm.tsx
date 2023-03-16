@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { useEffect, useMemo, useState } from 'react';
 import { type Dayjs } from 'dayjs';
 import {
-  Button,
   FormControl,
   Grid,
   InputLabel,
@@ -295,13 +295,9 @@ export const RegisterForm: React.FC = () => {
           </Grid>
         </Grid>
         <Grid item justifyContent="center" container>
-          <Button
-            fullWidth
-            sx={{ textTransform: 'none', textAlign: 'center' }}
-            href="/auth/login"
-          >
-            <Typography sx={{ color: 'black' }}>Iniciar sesión</Typography>
-          </Button>
+          <Link to="/auth/login">
+            <Typography className="no-decoration">Iniciar sesión</Typography>
+          </Link>
         </Grid>
       </Grid>
     </form>

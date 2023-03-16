@@ -24,6 +24,14 @@ body::-webkit-scrollbar-thumb {
   background: #6ab131;
 }
 
+.no-decoration {
+  text-decoration: none !important;
+  text-align: 'center';
+  height: '100%';
+  width: '100%';
+  color: #042f4a;
+}
+
 .divider {
   height: 1.5px;
   border: none !important;
@@ -51,7 +59,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .logo {
-  height: 100px;
+  height: 70px;
 }
 
 /* Start SwiperHome */
@@ -101,4 +109,33 @@ body::-webkit-scrollbar-thumb {
 
 .font-arvo {
   font-family: 'Arvo', serif !important;
+}
+
+.css-myb2s4-MuiInputBase-input-MuiOutlinedInput-input {
+  border: 1px solid #c0c0c0 !important;
+  border-radius: 4px;
+}
+
+.css-owzk0h-MuiFormLabel-root-MuiInputLabel-root {
+  background: #fafafa;
+}
+
+@media (min-width: 900px) and (max-width: 1326px) {
+  #rc-imageselect,
+  .g-recaptcha {
+    transform: scale(0.81);
+    -webkit-transform: scale(0.81);
+    transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+  }
+}
+
+@media (max-width: 899px) {
+  #rc-imageselect,
+  .g-recaptcha {
+    transform: scale(0.86);
+    -webkit-transform: scale(0.86);
+    transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+  }
 }
