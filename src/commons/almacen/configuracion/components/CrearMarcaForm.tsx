@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'; // eslint-disable-next-line @typescript-eslint/naming-convention
+import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
@@ -8,9 +8,9 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
-import { Divider, Grid, Typography } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { api } from '../../../../api/axios';
+import { Divider, Grid, Typography } from '@mui/material';
 import { control_error } from '../../../../helpers/controlError';
 
 const columns: GridColDef[] = [
@@ -27,17 +27,9 @@ interface Marca {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearMarcaForm: React.FC = () => {
-  const [open, set_open] = useState(false);
-  const [nombre, set_nombre] = useState('');
-  const [activo, set_activo] = useState(false);
+  const [open, set_open] = useState(false);  
 
-  // Se usa solo para quitar error
-  console.log(open);
-  console.log(nombre);
-  console.log(activo);
-  set_activo(false);
-
-  const handle_click_open = (): void => {
+ const handle_click_open = (): void => {
     set_open(true);
   };
   const handle_close = (): void => {
@@ -61,36 +53,6 @@ export const CrearMarcaForm: React.FC = () => {
       control_error(e);
     }
   };
-  // interface FromDataType {
-  //   nombre: string;
-  //   activo: boolean;
-  //   item_ya_usado: boolean;
-  // }
-  // const response_body: FromDataType = {
-  //   nombre: '',
-  //   activo: true,
-  //   item_ya_usado: true,
-  // };
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  // const on_submit_handler = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   response_body.nombre = nombre;
-  //   response_body.activo = activo;
-  //   response_body.item_ya_usado = item_ya_usado;
-  //   console.log(JSON.stringify(response_body));
-  //   const { data} = api.post('almacen/marcas/create/', response_body);
-
-  // };
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  // const input_change_handler = (
-  //   setFunction: React.Dispatch<React.SetStateAction<string>>,
-  //   event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  // ) => {
-  //   setFunction(event.target.value);
-  //   console.log(event.target.value);
-  // };
-
   useEffect(() => {
     void marca();
   }, []);
@@ -106,27 +68,23 @@ export const CrearMarcaForm: React.FC = () => {
         >
           Crear
         </Button>
-        <Dialog open={false}>
-          <form>
+        <Dialog open={open} onClose={handle_close}>          
             <DialogTitle>CREAR MARCA</DialogTitle>
             <Divider />
             <DialogContent>
               <DialogContentText>
                 Ingrese la marca que desea Crear
               </DialogContentText>
-              {/* <TextField
-                autoFocus
-                onChange={(e) => {
-                  input_change_handler(set_nombre, e);
-                }}
-                margin="dense"
-                id="name"
-                label="Marca"
-                type="Any"
-                fullWidth
-                variant="standard"
-              /> */}
-            </DialogContent>
+              <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Marca"
+              type="Any"
+              fullWidth
+              variant="standard"
+            />
+             </DialogContent>
             <Divider />
             <DialogActions>
               <Button variant="outlined" onClick={handle_close}>
@@ -141,7 +99,7 @@ export const CrearMarcaForm: React.FC = () => {
                 Guardar
               </Button>
             </DialogActions>
-          </form>
+          
         </Dialog>
       </Grid>
       <Grid item xs={12}>
