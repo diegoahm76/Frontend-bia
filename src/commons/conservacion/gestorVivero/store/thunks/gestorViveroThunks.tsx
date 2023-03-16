@@ -11,14 +11,6 @@ import {
   get_nurseries,
   current_nursery
 } from '../slice/viveroSlice';
-// Interfaces
- //import {
-//   // type IObjOrganigram,
- //  type IObjCreateOrganigram
-//   // type FormValuesUnitys,
-//   //  type IObjLevels,
-//   //  type IObjUnitys
- //} from '../../interfaces/vivero';
 import { api } from '../../../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
