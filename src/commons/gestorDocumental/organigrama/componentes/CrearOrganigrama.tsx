@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/Add';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 // import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -137,9 +138,15 @@ export function CrearOrganigrama({
               }}
               variant="rounded"
             >
-              <EditIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
+              {params.row.fecha_terminado !== null ? (
+                <VisibilityIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              ) : (
+                <EditIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              )}
             </Avatar>
           </IconButton>
         </>
