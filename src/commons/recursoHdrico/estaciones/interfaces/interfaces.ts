@@ -28,7 +28,7 @@ export interface Persona {
     email_notificacion: string;
     nro_celular_notificacion: string | number;
     observacion: string;
-  }
+}
 export interface Datos {
     id_data: number,
     fecha_registro: number,
@@ -73,4 +73,48 @@ export interface Parametros {
     nivel_agua_min: number,
     velocidad_agua_max: number,
     velocidad_agua_min: number,
+}
+export interface IEstacionEstaciones {
+    nombre_estacion: string,
+    cod_tipo_estacion: string,
+    latitud: number,
+    longitud: number,
+    cod_municipio: string | number,
+    indicaciones_ubicacion: string,
+}
+export interface PersonaEstacion {
+
+    cod_tipo_documento_id: string;
+    numero_documento_id: string | number;
+    primer_nombre: string;
+    segundo_nombre: string | null;
+    primer_apellido: string;
+    segundo_apellido: string | null;
+    entidad: string | null;
+    cargo: string | null;
+    email_notificacion: string;
+    nro_celular_notificacion: string | number;
+    observacion: string;
+}
+export interface PersonasEstacion {
+
+    cod_tipo_documento_id: string;
+    numero_documento_id: string | number;
+    primer_nombre: string;
+    segundo_nombre: string | null;
+    primer_apellido: string;
+    segundo_apellido: string | null;
+    entidad: string | null;
+    cargo: string | null;
+    email_notificacion: string;
+    nro_celular_notificacion: string | number;
+    observacion: string;
+    estacion: any
+}
+export interface CrearAlerta {
+    nombre_variable_alarma: string;
+    mensaje_alarma_maximo: string;
+    mensaje_alarma_minimo: string;
+    mensaje_no_alarma: string;
+    frecuencia_alarma: number;
 }

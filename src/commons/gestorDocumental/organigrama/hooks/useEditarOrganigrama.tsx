@@ -372,7 +372,7 @@ const use_editar_organigrama = () => {
   }, [unity_organigram]);
 
   useEffect(() => {
-    set_orden_nivel(levels_organigram.length + 1);
+    set_orden_nivel((levels_organigram.length as number) + 1);
     set_option_nivel(
       levels_organigram.map((item) => ({
         label: item.nombre,

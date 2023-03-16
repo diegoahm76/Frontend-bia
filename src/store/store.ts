@@ -14,7 +14,7 @@ import { bien_form } from '../commons/almacen/entradaysalidaArticulos/slices/ind
 const persist_config = {
   key: 'macarenia_app',
   storage,
-  whitelist: ['auth']
+  whitelist: ['auth', 'layout']
 };
 
 const app_reducers = combineReducers({

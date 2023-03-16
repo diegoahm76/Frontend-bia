@@ -1,8 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
-import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
-
-
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
+import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
 import { CcdRoutes } from '../commons/gestorDocumental/ccd/routes/CcdRoutes';
@@ -26,8 +24,10 @@ export const ProtectedRoutes: React.FC = () => {
           <Route path="trd/*" element={<TrdRoutes />} />
           <Route path="tca/*" element={<TcaRoutes />} />
         </Route>
-        {/* Almacen */}
-        <Route path='almacen/*' element={<AlmacenRoutes />} />
+        {/* Recurso Hidrico */}
+        <Route path="recurso_hidrico/*" >
+          <Route path="estaciones/*" element={<EstacionesRoutes />} />
+        </Route>        
       </Route>
     </Routes>
   );
