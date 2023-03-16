@@ -243,7 +243,6 @@ const use_ccd = () => {
   };
   // submit Crear CCD
   const on_submit_create_ccd = (): void => {
-    console.log('ccd_current', ccd_current);
     if (ccd_current !== null) {
       update_ccd();
     } else {
