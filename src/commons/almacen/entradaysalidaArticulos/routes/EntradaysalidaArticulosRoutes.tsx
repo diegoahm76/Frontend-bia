@@ -8,7 +8,7 @@ export const EntradaysalidArticulosRoutes: React.FC= () =>{
     return (
     <Routes>
       <Route
-        path="catalogo-bienes"
+        path="catalogo_bienes"
         element={<CatalogodeBienesScreen />}
       />
         <Route path="/*" element={<Page404 />} />
