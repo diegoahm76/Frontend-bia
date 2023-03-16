@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 import { createSlice } from "@reduxjs/toolkit";
 import Swal from "sweetalert2";
-import { IBienGet, IBienes } from "../interfaces/catalogodebienes";
+import { IBienGet} from "../interfaces/catalogodebienes";
 
 import { api} from "../../../../api/axios";
 
@@ -53,6 +54,7 @@ export const bien_form = createSlice({
       console.log(action.payload);
     },
     editar_bien_action: (state, action) => {
+      // eslint-disable-next-line array-callback-return
       state.bien.map((bienA, index) => {
         if (bienA.id_bien === action.payload.id_bien) {
           state.bien[index] = action.payload;
@@ -173,7 +175,7 @@ export const eliminar_bien = async (dispatch: (arg0: { payload: any; type: "bien
     })
     .catch(() => {
       console.log(nodo);
-      Swal.fire({
+      void Swal.fire({
         position: "center",
         icon: "error",
         title: "Ha ocurrido un error intentelo de nuevo por favor",
@@ -183,25 +185,30 @@ export const eliminar_bien = async (dispatch: (arg0: { payload: any; type: "bien
     });
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const seleccionar_bien_edit = (dispatch: (arg0: { payload: any; type: "bien/seleccionar_bien_model_edit"; }) => void, bien: any) => {
   dispatch(seleccionar_bien_model_edit(bien));
 };
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const seleccionar_bien_create = (dispatch: (arg0: { payload: any; type: "bien/seleccionar_bien_model_crete"; }) => void, bien: any) => {
   const data = { ...bien };
   data.id_bien_padre = data.id_bien === 0 ? 0 : data.id_bien;
+  // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
   data.nivel_jerarquico = data.nivel_jerarquico + 1;
   data.id_bien = null;
   dispatch(seleccionar_bien_model_crete(data));
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const editar_bien = async (dispatch: (arg0: { payload: any; type: "bien/editar_bien_action"; }) => void, dataEdit: any) => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const dataModel = construir_modelo(dataEdit);
   await api
     .put("almacen/bienes/catalogo-bienes/create/", dataModel)
     .then(() => {
-      //cambiar llamado de servicio
+      // cambiar llamado de servicio
       dispatch(editar_bien_action(dataModel));
-      Swal.fire({
+      void Swal.fire({
         position: "center",
         icon: "success",
         title: "Articulo actualizado correctamente",
@@ -210,9 +217,10 @@ export const editar_bien = async (dispatch: (arg0: { payload: any; type: "bien/e
       });
     })
     .catch((error: { response: { data: any; }; }) => {
-      Swal.fire({
+      void Swal.fire({
         position: "center",
         icon: "error",
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         title: `Algo pasó, intente de nuevo, ${error.response.data} `,
         showConfirmButton: true,
         confirmButtonText: "Aceptar",
@@ -220,6 +228,7 @@ export const editar_bien = async (dispatch: (arg0: { payload: any; type: "bien/e
     });
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const construir_modelo = (data: { id_bien: any; codigo_bien: any; nro_elemento_bien: any; nombre: any; cod_tipo_bien: any; cod_tipo_activo: any; nivel_jerarquico: any; nombre_cientifico: any; descripcion: any; doc_identificador_nro: any; cod_metodo_valoracion: any; cod_tipo_depreciacion: any; cantidad_vida_util: any; valor_residual: any; stock_minimo: any; stock_maximo: any; solicitable_vivero: any; tiene_hoja_vida: any; maneja_hoja_vida: any; visible_solicitudes: any; id_marca: any; id_unidad_medida: any; id_porcentaje_iva: any; id_unidad_medida_vida_util: any; id_bien_padre: any; }) => {
   return {
     id_bien: data.id_bien,

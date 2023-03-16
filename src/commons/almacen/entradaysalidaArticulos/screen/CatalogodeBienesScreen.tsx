@@ -6,9 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Column } from "primereact/column";
 import { TreeTable } from "primereact/treetable";
-import { InputText } from "primereact/inputtext";
 import AddIcon from "@mui/icons-material/Add";
-
 import {
   obtener_todos_bienes,
   seleccionar_bien_edit,
@@ -17,29 +15,32 @@ import {
 } from "../../../almacen/entradaysalidaArticulos/slices/indexCatalogodeBienes";
 import {
   use_app_dispatch,
-  use_app_selector,
+ // use_app_selector,
 } from "../../entradaysalidaArticulos/hooks/hooks";
 import "primeicons/primeicons.css";
 import { type INodo } from "../interfaces/Nodo"; 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import { api } from "../../../../api/axios";
 import Button from "@mui/material/Button";
+import { Grid, Stack } from "@mui/material";
+import { Title } from "../../../../components";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const CatalogodeBienesScreen: React.FC = () => {
-  const bien = use_app_selector((state) => state.bien);
+ //  const bien = use_app_selector((state) => state.bien);
   const dispatch = use_app_dispatch();
 
   // const [buscarProducto, setBuscarProducto] = useState(true);
   // const [bienesExampleH, setBienesExampleNodes] = useState<IBienes[]>([]);
-  const [global_filter1, set_global_filter1] = useState(null);
-  const [global_filter2, set_global_filter2] = useState(null);
+  // const [global_filter1, set_global_filter1] = useState(null);
+  // const [global_filter2, set_global_filter2] = useState(null);
   const [array_total, set_array_total] = useState<INodo[]>([]);
 
   useEffect(() => {
-    get_bienes();
+    void get_bienes();
   }, []);
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const get_bienes = async () => {
     await api
       .get("almacen/bienes/catalogo-bienes/get-list")
@@ -88,6 +89,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
 
   // armarArbol();
 
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const action_template = (
     node: { data: { crear: any; editar: any; eliminar: any } },
     Column: any
@@ -166,29 +168,21 @@ export const CatalogodeBienesScreen: React.FC = () => {
           data-animation="FadeIn"
           id="configForm"
         >
-          <div className="row">
-            <h3 className="text-rigth  fw-light mt-4 mb-2">
-              {" "}
-              Catálogo de bienes
-            </h3>
-          </div>
-
-          <div className="row">
-            <div className="col-12 col-md-6  mt-4">
+       
+           <Title title='CATÁLOGO DE BIENES' />
+           <Grid/>         
+           <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>          
               <Button
                 variant="outlined"
-                startIcon={<AddIcon style={{ fontSize: "30px" }} />}
-                className=" mb-4"
+                startIcon={<AddIcon style={{ fontSize: "20px" }} />}
                 type="button"
                 title="Agregar"
-                color="inherit"
-                style={{ fontSize: "20px", textTransform: "none" }}
-                onClick={() => { crear_articulo(); }}
-              >
-                Crear carpeta padre
+                color="inherit"                
+                onClick={() => { crear_articulo(); }}>
+                Crear Carpeta Padre
               </Button>
-            </div>
-          </div>
+              </Stack>
+            
           <div className="col-12 col-md-12  mt-4">
             <div className="card">
               <TreeTable value={array_total} filterMode="strict">
@@ -226,5 +220,6 @@ export const CatalogodeBienesScreen: React.FC = () => {
         </form>
       </div>
     </div>
+    
   );
 };
