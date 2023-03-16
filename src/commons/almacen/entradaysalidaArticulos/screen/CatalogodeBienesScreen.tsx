@@ -26,7 +26,7 @@ import { api } from "../../../../api/axios";
 import Button from "@mui/material/Button";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
-const CatalogodeBienesScreen: React.FC = () => {
+export const CatalogodeBienesScreen: React.FC = () => {
   const bien = use_app_selector((state) => state.bien);
   const dispatch = use_app_dispatch();
 
@@ -44,8 +44,7 @@ const CatalogodeBienesScreen: React.FC = () => {
     await api
       .get("almacen/bienes/catalogo-bienes/get-list")
       .then((bienes) => {
-        set_array_total(bienes.data);
-        bienes.data.data;
+        set_array_total(bienes.data.data);
       })
       .catch(() => {});
   };
@@ -63,29 +62,29 @@ const CatalogodeBienesScreen: React.FC = () => {
   // });
   // }
 
-  const tree_table_func_map = {
-    global_filter1: set_global_filter1,
-    global_filter2: set_global_filter2,
-  };
+  // const tree_table_func_map = {
+  //   global_filter1: set_global_filter1,
+  //   global_filter2: set_global_filter2,
+  // };
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const get_header = (globalFilterKey: string) => {
-    return (
-      <div className="text-right">
-        <div className="p-input-icon-left">
-          <i className="pi pi-search"></i>
-          <InputText
-            type="search"
-            onInput={(e: any) =>
-              tree_table_func_map[`${globalFilterKey}`](e.target.value)
-            }
-            placeholder="Global Search"
-            size={50}
-          />
-        </div>
-      </div>
-    );
-  };
+ 
+  // const get_header = (globalFilterKey: string) => {
+  //   return (
+  //     <div className="text-right">
+  //       <div className="p-input-icon-left">
+  //         <i className="pi pi-search"></i>
+  //         <InputText
+  //           type="search"
+  //           onInput={(e: any) =>
+  //             tree_table_func_map[`${globalFilterKey}`](e.target.value)
+  //           }
+  //           placeholder="Global Search"
+  //           size={50}
+  //         />
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   // armarArbol();
 
