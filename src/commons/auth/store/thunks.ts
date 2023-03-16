@@ -1,5 +1,7 @@
 import { type Dispatch } from 'react';
+import { api } from '../../../api/axios';
 import { login_post, permissions_request } from '../request/authRequest';
+import { type UserData } from '../interfaces/authModels';
 import {
   checking_credentials,
   login,
@@ -25,6 +27,20 @@ export const checking_authentication: (
       return;
     }
 
+    const { tokens } = data?.userinfo as UserData;
+
+    // Se establece el token en el header de las peticiones
+    api.interceptors.request.use(
+      (config) => {
+        config.headers.Authorization = `Bearer ${tokens.access}`;
+        return config;
+      },
+      async (error) => {
+        return await Promise.reject(error);
+      }
+    );
+
+    // Validamos el tipo de persona y usario para mostrar u ocultar el dialog de entornos
     if (
       data?.userinfo.tipo_persona === 'J' ||
       (data?.userinfo.tipo_persona === 'N' &&
@@ -40,6 +56,7 @@ export const checking_authentication: (
       dispatch(open_dialog_entorno());
     }
 
+    // Enviamos los datos del usuario al store del login
     dispatch(login(data));
   };
 };
