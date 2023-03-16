@@ -14,12 +14,14 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { control_error } from '../../../../helpers/controlError';
 
 const columns: GridColDef[] = [
-  { field: 'id_porcentaje_iva', headerName: 'ID Porcentaje de Iva', width: 200 },
+  {
+    field: 'id_porcentaje_iva',
+    headerName: 'ID Porcentaje de Iva',
+    width: 200,
+  },
   { field: 'porcentaje', headerName: 'Porcentaje', width: 200 },
   { field: 'observacion', headerName: 'Observación', width: 200 },
   { field: 'acciones', headerName: 'Acciones', width: 200 },
-
-    
 ];
 interface Porcentaje {
   id_porcentaje_iva: number;
@@ -38,13 +40,13 @@ export const CrearPorcentajeForm: React.FC = () => {
   const handle_close = (): void => {
     set_open(false);
   };
-  const [porcentaj, set_data_porcentaj] = useState(null);
+  const [porcentaj, set_data_porcentaj] = useState([]);
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const porcentaje = async () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type
     try {
       const url = 'almacen/porcentajes/get-list/';
-      const response = await api.get(url);      
+      const response = await api.get(url);
       const porcentaje = response.data.map((porcentajes: Porcentaje) => ({
         id_porcentaje_iva: porcentajes.id_porcentaje_iva,
         porcentaje: porcentajes.porcentaje,
@@ -65,7 +67,7 @@ export const CrearPorcentajeForm: React.FC = () => {
   return (
     <Grid container>
       <Grid item xs={12}>
-     <Button
+        <Button
           sx={{ mb: '20px' }}
           variant="outlined"
           onClick={handle_click_open}
@@ -106,7 +108,7 @@ export const CrearPorcentajeForm: React.FC = () => {
         </Dialog>
       </Grid>
       <Grid item xs={12}>
-      {porcentaj ? (
+        {porcentaj.length > 0 ? (
           <DataGrid
             autoHeight
             rows={porcentaj}
@@ -118,10 +120,7 @@ export const CrearPorcentajeForm: React.FC = () => {
         ) : (
           <Typography>Cargando...</Typography>
         )}
-
       </Grid>
-     
-     
     </Grid>
   );
 };
