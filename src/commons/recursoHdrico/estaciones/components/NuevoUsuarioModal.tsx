@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperTe
 import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { Controller, type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { crearPersona } from '../../requets/Request';
+import { crear_persona } from '../../requets/Request';
 import Select from "react-select";
 import { api } from '../../../../api/axios';
 
@@ -59,7 +59,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
       observacion: data.observacion,
       id_estacion: data.estacion.value,
     };
-    void crearPersona(nueva_persona);
+    void crear_persona(nueva_persona);
     set_is_modal_active(!is_modal_active);
   };
 

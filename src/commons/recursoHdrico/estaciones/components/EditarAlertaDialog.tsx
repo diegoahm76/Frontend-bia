@@ -10,20 +10,19 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/naming-convention
-  const handleClose = ()=> {
+  const handle_close = (): void => {
     set_is_modal_active(false);
   }
 
   return (
-    <Dialog open={is_modal_active} onClose={handleClose}>
+    <Dialog open={is_modal_active} onClose={handle_close}>
       <DialogTitle>Crear Estación</DialogTitle>
       <DialogContent>
         <div>Aquí va el contenido del diálogo</div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancelar</Button>
-        <Button variant="contained" color="primary" onClick={handleClose}>Guardar</Button>
+        <Button onClick={handle_close}>Cancelar</Button>
+        <Button variant="contained" color="primary" onClick={handle_close}>Guardar</Button>
       </DialogActions>
     </Dialog>
   );

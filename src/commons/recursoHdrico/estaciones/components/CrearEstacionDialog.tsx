@@ -3,7 +3,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, M
 import type React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { crearEstacion } from '../../requets/Request';
+import { crear_estacion } from '../../requets/Request';
 
 interface IProps {
     is_modal_active: boolean;
@@ -36,7 +36,7 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
             indicaciones_ubicacion: data.indicaciones_ubicacion,
         };
 
-        void crearEstacion(nueva_estacion);
+        void crear_estacion(nueva_estacion);
         set_is_modal_active(!is_modal_active);
     };
 

@@ -14,16 +14,15 @@ import Swal from 'sweetalert2';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConfiguracionAlarma: React.FC = () => {
+
   const [conf_alert_person, set_conf_alert_person] = useState<conf_alarma[]>([]);
-  const [crear_slerta_is_active, set_crear_slerta_is_active] = useState<boolean>(false);
+  const [crear_alerta_is_active, set_crear_alerta_is_active] = useState<boolean>(false);
   const [editar_alerta_is_active, set_editar_alerta_is_active] = useState<boolean>(false);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handle_open_crear_alerta = () => {
-    set_crear_slerta_is_active(true);
+  const handle_open_crear_alerta = (): void => {
+    set_crear_alerta_is_active(true);
   }
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handle_open_editar_alerta = () => {
+  const handle_open_editar_alerta = (): void => {
     set_editar_alerta_is_active(true);
   }
 
@@ -64,7 +63,7 @@ export const ConfiguracionAlarma: React.FC = () => {
                 border: '2px solid',
               }}
               variant="rounded"
-              onClick={() => { confirmar_eliminar_usuario(params.row.id_confi_alerta_persona); }}
+              onClick={() => { confirmar_eliminar_alarma(params.row.id_confi_alerta_persona); }}
             >
               <DeleteIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
@@ -99,7 +98,7 @@ export const ConfiguracionAlarma: React.FC = () => {
     void confi_alerta_persona()
   }, []);
 
-  const confirmar_eliminar_usuario = (id_confi_alerta_persona: number): void => {
+  const confirmar_eliminar_alarma = (id_confi_alerta_persona: number): void => {
     void Swal.fire({
       title: "Estas seguro?",
       text: "Va a eliminar un usuario",
@@ -124,7 +123,10 @@ export const ConfiguracionAlarma: React.FC = () => {
           sx={{ mb: '20px' }}
           variant="outlined"
           startIcon={<AddIcon />}
-          onClick={handle_open_crear_alerta}
+          onClick={() => {
+            console.log("Botón de crear alerta clickeado")
+            handle_open_crear_alerta()
+          }}
         >
           CREAR ALARMA
         </Button>
@@ -144,8 +146,8 @@ export const ConfiguracionAlarma: React.FC = () => {
         )}
       </Grid>
       <CrearConfiAlertaDialog
-        is_modal_active={crear_slerta_is_active}
-        set_is_modal_active={set_crear_slerta_is_active}
+        is_modal_active={crear_alerta_is_active}
+        set_is_modal_active={set_crear_alerta_is_active}
       />
       <EditarAlertaDialog
         is_modal_active={editar_alerta_is_active}

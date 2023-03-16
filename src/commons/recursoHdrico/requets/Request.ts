@@ -48,9 +48,7 @@ export const consultar_estaciones_id = async (id: number | string): Promise<Esta
 }
 
 // crear estacion
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/naming-convention
-export const crearEstacion = async (Estacion: IEstacionEstaciones) => {
+export const crear_estacion = async (Estacion: IEstacionEstaciones): Promise<any> => {
   await api
     .post("estaciones/crear-estaciones/", Estacion)
     .then(() => {
@@ -62,9 +60,7 @@ export const crearEstacion = async (Estacion: IEstacionEstaciones) => {
 };
 
 // crear persona
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/naming-convention
-export const crearPersona = async (Peronsa: PersonaEstacion) => {
+export const crear_persona = async (Peronsa: PersonaEstacion): Promise<any> => {
   await api
     .post("estaciones/personas/crear-persona/", Peronsa)
     .then(() => {
@@ -75,10 +71,8 @@ export const crearPersona = async (Peronsa: PersonaEstacion) => {
     });
 };
 
-// crear Configuracion Alerta Persona
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/naming-convention
-export const crearConfiAlerta = async (configuracion: CrearAlerta) => {
+export const crear_confi_alerta = async (configuracion: CrearAlerta): Promise<any> => {
   await api
     .post("estaciones/configuracion/alertas/crear-configuracion-alerta/", configuracion)
     .then(() => {
@@ -90,22 +84,13 @@ export const crearConfiAlerta = async (configuracion: CrearAlerta) => {
 };
 
 // eliminar persona
-
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-export const eliminarUsuario = async (idPersona: number) => {
-  try {
-    await api.delete(`estaciones/personas/eliminar-persona/${idPersona}`);
-    control_success('La persona se eliminó correctamente')
-  } catch (error) {
-    control_error(error)
-  }
+export const eliminar_usuario = async (idPersona: number): Promise<any> => {
+  return await api.delete(`estaciones/personas/eliminar-persona/${idPersona}`);
 };
 
 // eliminar Configuración Alerta Persona
-
 export const eliminar_conf_alerta_persona = async (idconfAlerta: number): Promise<any> => {
   return await api.delete(`estaciones/configuracion/alertas/eliminar-configuracion-alerta/${idconfAlerta}`);
-
 };
 
 

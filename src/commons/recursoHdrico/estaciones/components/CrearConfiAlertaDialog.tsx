@@ -3,7 +3,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, M
 import type React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { crearConfiAlerta } from '../../requets/Request';
+import { crear_confi_alerta } from '../../requets/Request';
 
 interface IProps {
     is_modal_active: boolean;
@@ -35,7 +35,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
             frecuencia_alarma: data.frecuencia_alarma,
         };
 
-        void crearConfiAlerta(nueva_alerta);
+        void crear_confi_alerta(nueva_alerta);
         set_is_modal_active(!is_modal_active);
     };
 
@@ -104,7 +104,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Mensaje Mimo"
+                                label="Mensaje Maximo"
                                 fullWidth
                                 {...register("mensaje_alarma_maximo", { required: true })}
                                 error={Boolean(errors.mensaje_alarma_maximo)}
