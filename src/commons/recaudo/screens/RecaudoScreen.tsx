@@ -114,7 +114,7 @@ export const RecaudoScreen: React.FC = () => {
 
     </Grid>
 
-    <Title title="INFORMACION DE ARTICULOS"></Title>
+    <Title title="Información General"></Title>
 
     <Grid container direction='row'>
 
