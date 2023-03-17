@@ -13,12 +13,15 @@ import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
 import { CcdRoutes } from '../commons/gestorDocumental/ccd/routes/CcdRoutes';
 import { TcaRoutes } from '../commons/gestorDocumental/tca/routes/TcaRoutes';
-import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes';
+import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes'
 
 import { MainLayout } from '../layouts/MainLayout';
 import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
 import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
 import { ProduccionRoutes } from '../commons/conservacion/produccion/routes/ProduccionRoutes';
+
+import { RecaudoScreen } from '../commons/recaudo/screens/RecaudoScreen';
+import { LiquidacionTUAScreen } from '../commons/recaudo/liquidacionTUA/screens/LiquidacionTUAScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProtectedRoutes: React.FC = () => {
@@ -54,6 +57,11 @@ export const ProtectedRoutes: React.FC = () => {
         </Route>
         {/* Almacen */}
         <Route path="almacen/*" element={<AlmacenRoutes />} />
+        {/* Recaudo */}
+        <Route path="recaudo/*">
+          <Route path="datos/*" element={<RecaudoScreen />}/>
+          <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />}/>
+        </Route>
       </Route>
     </Routes>
   );
