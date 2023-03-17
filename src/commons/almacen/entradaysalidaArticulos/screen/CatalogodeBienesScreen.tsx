@@ -16,7 +16,7 @@ import {
  // use_app_selector,
 } from "../../entradaysalidaArticulos/hooks/hooks";
 import "primeicons/primeicons.css";
-import { type INodo } from "../interfaces/Nodo"; 
+import {type INodo  } from "../interfaces/Nodo"; 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import { api } from "../../../../api/axios";
 import Button from "@mui/material/Button";
