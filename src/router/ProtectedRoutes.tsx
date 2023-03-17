@@ -58,9 +58,9 @@ export const ProtectedRoutes: React.FC = () => {
         {/* Almacen */}
         <Route path="almacen/*" element={<AlmacenRoutes />} />
         {/* Recaudo */}
-        <Route path='recaudo/*'>
-          <Route path='datos/*' element={<RecaudoScreen />}/>
-          <Route path='liquidacion_tua/*' element={<LiquidacionTUAScreen />}/>
+        <Route path="recaudo/*">
+          <Route path="datos/*" element={<RecaudoScreen />}/>
+          <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />}/>
         </Route>
       </Route>
     </Routes>
