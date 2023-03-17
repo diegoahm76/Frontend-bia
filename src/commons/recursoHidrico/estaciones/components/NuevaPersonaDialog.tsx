@@ -104,7 +104,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
       open={is_modal_active}
       onClose={handle_close}
     >
-      <DialogTitle>Nuevo usuario</DialogTitle>
+      <DialogTitle>Nuevo Parte Interesada</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit(on_sumbit_persona)}>
           <Grid container spacing={3}>

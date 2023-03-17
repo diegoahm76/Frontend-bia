@@ -17,6 +17,8 @@ import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes';
 
 import { MainLayout } from '../layouts/MainLayout';
 import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
+import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
+import { ProduccionRoutes } from '../commons/conservacion/produccion/routes/ProduccionRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProtectedRoutes: React.FC = () => {

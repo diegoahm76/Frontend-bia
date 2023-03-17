@@ -13,7 +13,7 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
 
-    
+
     const handle_close = (): void => {
         set_is_modal_active(false);
     }

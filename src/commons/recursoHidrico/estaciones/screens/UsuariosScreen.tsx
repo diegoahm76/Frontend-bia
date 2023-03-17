@@ -20,7 +20,8 @@ import { type Persona } from '../interfaces/interfaces';
 import { consultar_estaciones_id, control_success, eliminar_usuario } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { Title } from '../../../../components/Title';
-import { NuevoUsuarioModal } from '../components/NuevoUsuarioModal';
+import { NuevoUsuarioModal } from '../components/NuevaPersonaDialog';
+import { EditarPersonaDialog } from '../components/EditarPersonaDialog';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UsuariosScreen: React.FC = () => {
@@ -299,10 +300,10 @@ export const UsuariosScreen: React.FC = () => {
         is_modal_active={crear_persona_is_active}
         set_is_modal_active={set_crear_persona_is_active}
       />
-      {/* {<EditarUsuarioModal
+      {<EditarPersonaDialog
       set_is_modal_active={set_is_modal_editar_active}
       is_modal_active={is_modal_editar_active}
-    />} */}
+    />}
     </>
   )
 };
