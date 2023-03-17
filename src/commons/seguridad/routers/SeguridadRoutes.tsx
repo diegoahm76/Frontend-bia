@@ -1,13 +1,15 @@
-import { Route, Routes, Navigate } from 'react-router-dom';
-import { SeguridadScreen } from '../screens/SeguridadScreen';
+import { Navigate, Route, Routes } from "react-router-dom"
+import { RolScreen } from "../screen/RolScreen"
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SeguridadRoutes: React.FC = () => {
+export  const SeguridadRoutes: React.FC =() => {
   return (
     <Routes>
-      <Route path="/" element={<SeguridadScreen />} />
-
-      <Route path="/*" element={<Navigate to={'/'} />} />
+        <Route path="/" element = {<RolScreen/>  }/>
+        <Route path ="/*" element ={<Navigate to={'/'}/> }/>    
     </Routes>
-  );
-};
+
+
+  )
+}

@@ -1,38 +1,34 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { AuthRoutes } from '../commons/auth/routes/AuthRoutes';
-import { GestorDocumentalRoutes } from '../commons/gestorDocumental/routes/GestorDocumentalRoutes';
-import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
-import { MainLayout } from '../layouts/MainLayout';
-import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
-import { RecursoHidricoRoutes } from '../commons/recursoHdrico/routers/RecursoHidricoRoutes';
-import { LiquidacionTUAScreen } from '../commons/liquidacionTUA/screens/LiquidacionTUAScreen';
-import { RecaudoScreen } from '../commons/recaudo/screens/RecaudoScreen';
+import { PrivateRoutes } from './PrivateRoutes';
+import { ProtectedRoutes } from './ProtectedRoutes';
+import { PublicRoutes } from './PublicRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AppRouter: React.FC = () => {
   return (
     <Routes>
       {/* Login */}
-      <Route path="auth/*" element={<AuthRoutes />} />
-      {/* Dashboard */}
-      <Route path="/*" element={<HomeRoutes />} />
+      <Route
+        path="auth/*"
+        element={
+          <PublicRoutes>
+            <AuthRoutes />
+          </PublicRoutes>
+        }
+      />
 
-      {/* Seguridad */}
-      <Route path="/seguridad" element={<SeguridadRoutes />} />      
+      {/* Rutas protegidas */}
+      <Route
+        path="app/*"
+        element={
+          <PrivateRoutes>
+            <ProtectedRoutes />
+          </PrivateRoutes>
+        }
+      />
 
-      <Route path="dashboard/" element={<MainLayout />}>
-        {/* Gestor Documental */}
-        <Route path="gestor-documental/*" element={<GestorDocumentalRoutes />} />
-
-        {/* Recurso Hidrico */}
-        <Route path="recurso-hidrico/*" element={<RecursoHidricoRoutes />} />
-
-        {/* Liquidacion TUA */}
-        <Route path='liquidacion-tua/*' element={<LiquidacionTUAScreen />}/>
-
-        <Route path='recaudo/*' element={<RecaudoScreen />}/>
-        
-      </Route>
+      <Route path="/*" element={<Navigate to="auth/login" />} />
     </Routes>
   );
 };

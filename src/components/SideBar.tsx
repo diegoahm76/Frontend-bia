@@ -45,12 +45,12 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
-      sidebar: {
+      layout: {
         mobile_open: boolean;
         desktop_open: boolean;
         mod_dark: boolean;
       };
-    }) => state.sidebar
+    }) => state.layout
   );
 
   const handle_drawer_toggle = (): void => {

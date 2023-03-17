@@ -10,7 +10,7 @@ export interface UserRol {
 }
 
 export interface LoginUser {
-  email: string;
+  nombre_de_usuario: string;
   password: string;
 }
 
@@ -27,6 +27,7 @@ export interface IUserInfo {
   error_message: string;
   open_dialog: boolean;
   entorno: 'C' | 'L';
+  dialog_representante: boolean;
 }
 
 export interface Permiso {
@@ -53,7 +54,6 @@ export interface Tokens {
 
 export interface AuthHook {
   get_permissions_by_rol: (param: number) => Promise<void>;
-  submit_handler: (param: number) => Promise<void>;
   set_is_captcha_valid: Dispatch<SetStateAction<boolean>>;
   set_open: Dispatch<SetStateAction<boolean>>;
   is_captcha_valid: boolean;
