@@ -20,6 +20,9 @@ import { MainLayout } from '../layouts/MainLayout';
 import { ProduccionRoutes } from '../commons/conservacion/produccion/routes/ProduccionRoutes';
 import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
 
+import { RecaudoScreen } from '../commons/recaudo/screens/RecaudoScreen';
+import { LiquidacionTUAScreen } from '../commons/recaudo/liquidacionTUA/screens/LiquidacionTUAScreen';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProtectedRoutes: React.FC = () => {
   return (
@@ -54,6 +57,11 @@ export const ProtectedRoutes: React.FC = () => {
         </Route>
         {/* Almacen */}
         <Route path="almacen/*" element={<AlmacenRoutes />} />
+        {/* Recaudo */}
+        <Route path='recaudo/*'>
+          <Route path='datos/*' element={<RecaudoScreen />}/>
+          <Route path='liquidacion_tua/*' element={<LiquidacionTUAScreen />}/>
+        </Route>
       </Route>
     </Routes>
   );

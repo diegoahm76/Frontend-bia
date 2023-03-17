@@ -123,12 +123,11 @@ export const RecaudoScreen: React.FC = () => {
         sx={{
           mt: '20px',
           ml: '10px',
-          mr: '10px'
         }}
       >
          <Box 
           sx={{ 
-            width: 500,
+            width: 470,
             maxWidth: 3000,
             maxHeight: 1700,
             position: 'relative',

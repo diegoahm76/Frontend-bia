@@ -13,7 +13,7 @@ export const CuadroInformacion:React.FC<Props> = ({ titulo, numero_principal, po
             position: 'relative',
             background: '#FAFAFA',
             borderRadius: '15px',
-            p: '10px',
+            p: '8.09px',
             m: '10px',
             boxShadow: '0px 3px 6px #042F4A26',
         }}
