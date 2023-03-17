@@ -9,7 +9,6 @@ import { ReporteRoutes } from '../commons/conservacion/reporte/routes/ReporteRou
 import { SolicitudMaterialRoutes } from '../commons/conservacion/solicitudMaterial/routes/SolucitudMaterialRoutes';
 
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
-import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
 import { CcdRoutes } from '../commons/gestorDocumental/ccd/routes/CcdRoutes';
@@ -17,8 +16,9 @@ import { TcaRoutes } from '../commons/gestorDocumental/tca/routes/TcaRoutes';
 import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes'
 
 import { MainLayout } from '../layouts/MainLayout';
-import { ProduccionRoutes } from '../commons/conservacion/produccion/routes/ProduccionRoutes';
+import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
 import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
+import { ProduccionRoutes } from '../commons/conservacion/produccion/routes/ProduccionRoutes';
 
 import { RecaudoScreen } from '../commons/recaudo/screens/RecaudoScreen';
 import { LiquidacionTUAScreen } from '../commons/recaudo/liquidacionTUA/screens/LiquidacionTUAScreen';

@@ -1,5 +1,5 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { IndexEstacionesScreen, GeolocalizacionScreen, AlertasScreen, AdministradorDeEstaciones, UsuariosScreen, HistorialScreen, DashboardScreen } from '../screens';
+import { IndexEstacionesScreen, GeolocalizacionScreen, AlertasScreen, AdministradorDeEstaciones, UsuariosScreen, HistorialScreen } from '../screens';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstacionesRoutes: React.FC = () => {
@@ -21,9 +21,6 @@ export const EstacionesRoutes: React.FC = () => {
 
       {/* Historial Estaciones */}
       <Route path="historial/*" element={<HistorialScreen />} />
-      
-      {/* Dashboard de monitoreo de las estaciones */}
-      <Route path="dashboard/*" element={<DashboardScreen />} />
 
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { crearEstacion } from '../../requets/getRequest';
+import { crear_estacion } from '../../requets/Request';
 
 interface IProps {
     is_modal_active: boolean;
@@ -13,7 +13,7 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
 
-    
+
     const handle_close = (): void => {
         set_is_modal_active(false);
     }
@@ -36,7 +36,7 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
             indicaciones_ubicacion: data.indicaciones_ubicacion,
         };
 
-        void crearEstacion(nueva_estacion);
+        void crear_estacion(nueva_estacion);
         set_is_modal_active(!is_modal_active);
     };
 
@@ -53,16 +53,22 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
 
     return (
         <Dialog open={is_modal_active}
-            onClose={handle_close}>
+            onClose={handle_close}
+            maxWidth="xs">
             <Box component="form"
                 onSubmit={handleSubmit(on_sumbit_estacion)}>
                 <DialogTitle>Crear Estación</DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={3}>
+                <Divider />
+                <DialogContent sx={{ mb: '0px' }}>
+                    <Grid container spacing={1}>
                         <Grid item xs={12}>
                             <TextField
                                 label="Nombre Estación"
                                 fullWidth
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 {...register("nombre_estacion", { required: true })}
                                 error={Boolean(errors.nombre_estacion)}
                                 helperText={(errors.nombre_estacion != null) ? "Este campo es obligatorio" : ""}
@@ -73,6 +79,10 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                                 label="Tipo de Estación"
                                 select
                                 fullWidth
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 {...register("cod_tipo_estacion", { required: true })}
                                 error={Boolean(errors.cod_tipo_estacion)}
                                 helperText={(errors.cod_tipo_estacion != null) ? "Este campo es obligatorio" : ""}
@@ -89,6 +99,10 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                                 label="Latitud"
                                 type="number"
                                 fullWidth
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 {...register("latitud", { required: true })}
                                 error={Boolean(errors.latitud)}
                                 helperText={(errors.latitud != null) ? "Este campo es obligatorio" : ""}
@@ -99,6 +113,10 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                                 label="Longitud"
                                 type="number"
                                 fullWidth
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 {...register("longitud", { required: true })}
                                 error={Boolean(errors.longitud)}
                                 helperText={(errors.longitud != null) ? "Este campo es obligatorio" : ""}
@@ -109,6 +127,10 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                                 label="Municipio"
                                 type="text"
                                 fullWidth
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 {...register("cod_municipio", { required: true })}
                                 error={Boolean(errors.cod_municipio)}
                                 helperText={(errors.cod_municipio != null) ? "Este campo es obligatorio" : ""}
@@ -118,6 +140,10 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                             <TextField
                                 label="Indicaciones de Ubicación"
                                 fullWidth
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 {...register("indicaciones_ubicacion", { required: true })}
                                 error={Boolean(errors.indicaciones_ubicacion)}
                                 helperText={(errors.indicaciones_ubicacion != null) ? "Este campo es obligatorio" : ""}
