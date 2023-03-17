@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'; // eslint-disable-next-line @typescript-eslint/naming-convention
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -28,7 +27,7 @@ interface Marca {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearMarcaForm: React.FC = () => {
   const [open, set_open] = useState(false);
-  const [nombre, set_nombre] = useState('');
+  const [nombre, ] = useState('');
   const [activo, set_activo] = useState(false);
 
   // Se usa solo para quitar error
@@ -113,19 +112,7 @@ export const CrearMarcaForm: React.FC = () => {
             <DialogContent>
               <DialogContentText>
                 Ingrese la marca que desea Crear
-              </DialogContentText>
-              {/* <TextField
-                autoFocus
-                onChange={(e) => {
-                  input_change_handler(set_nombre, e);
-                }}
-                margin="dense"
-                id="name"
-                label="Marca"
-                type="Any"
-                fullWidth
-                variant="standard"
-              /> */}
+              </DialogContentText>              
             </DialogContent>
             <Divider />
             <DialogActions>
