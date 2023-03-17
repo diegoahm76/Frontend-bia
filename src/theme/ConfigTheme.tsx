@@ -22,6 +22,7 @@ export const use_theme = (): {
           mode: mod_dark ? 'dark' : 'light',
           ...(mod_dark ? dark_theme : light_theme),
         },
+
         typography: {
           fontFamily: 'Roboto',
         },
@@ -31,6 +32,25 @@ export const use_theme = (): {
               style: {},
             },
           },
+          // MuiTextField: {
+          //   styleOverrides: {
+          //     root: {
+          //       '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+          //         {
+          //           borderColor: '#6AB131', // Cambia el color del borde al estar enfocado
+          //         },
+          //     },
+          //   },
+          // },
+          // MuiFormLabel: {
+          //   styleOverrides: {
+          //     root: {
+          //       '& .MuiFormLabel-root-MuiInputLabel-root .Mui-disabled': {
+          //         color: '#000000',
+          //       },
+          //     },
+          //   },
+          // },
         },
       }),
     [mod_dark]
