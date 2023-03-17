@@ -1,4 +1,7 @@
 import { Box, Grid, Typography, Divider, List, ListItem } from '@mui/material';
+import { Title } from '../../../components';
+import { LinearWithValueLabel } from '../hooks/LinearProgressWithLabel';
+import { CuadroInformacion } from '../components/CuadroInformacion';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
@@ -6,384 +9,126 @@ import AssignmentReturnedIcon from '@mui/icons-material/AssignmentReturned';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
-import PieChartIcon from '@mui/icons-material/PieChart';
-import { Title } from '../../../components';
-import { LinearWithValueLabel } from '../hooks/LinearProgressWithLabel';
+import { CuadroComparacion } from '../components/CuadroComparacion';
+// import { ChartRecaudo } from '../chart/ChartRecaudo';
+import { ChartComponent } from '../chart/ChartComponent';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecaudoScreen: React.FC = () => {
   return (
     <>
+      {/* CUADRO DE INFORMACION */}
       <Grid container direction='row'>
-        <Grid item 
-          sx={{
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            m: '10px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }} 
-          xs={2}
-          md={3} 
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+
+        {/* CANTIDAD DEUDORES */}
+        <CuadroInformacion 
+          titulo={'Cantidad Deudores'}
+          numero_principal={'1000'}
+          porcentaje={'-25%'}
+          color={'red'} 
+          icono={
             <AssignmentIcon color="info" sx={{ height: 40, width: 40 }}></AssignmentIcon>
-              <Box sx={{ display: 'flex', flexDirection: 'column', pl: '20px' }}>
-                <Typography variant="subtitle2" color='gray'>
-                  Cantidad Deudores
-                </Typography>
-                <Typography variant="h5">
-                  1000
-                </Typography>
-              </Box>
-              <Typography sx={{ pl: '40px' }} variant="body2" color='red' alignContent='end'>
-                -25%
-              </Typography>
-          </Box>
-        </Grid>
-        <Grid 
-          item 
-          sx={{
-            // width: '200px',
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            m: '10px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }} 
-          xs={2} 
-          md={3}
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          } 
+        />
+
+        {/* TAREAS PENDIENTES */}
+        <CuadroInformacion 
+          titulo={'Tareas Pendientes'}
+          numero_principal={'14'}
+          porcentaje={'+10%'}
+          color={'green'} 
+          icono={
             <PendingActionsIcon color="warning" sx={{ height: 40, width: 40 }}></PendingActionsIcon>
-              <Box sx={{ display: 'flex', flexDirection: 'column', pl: '20px' }}>
-                <Typography variant="subtitle2" color='gray'>
-                  Tareas Pendientes
-                </Typography>
-                <Typography variant="h5">
-                  14
-                </Typography>
-              </Box>
-              <Typography sx={{ pl: '40px' }} variant="body2" color='green' alignContent='end'>
-                +10%
-              </Typography>
-          </Box>
-        </Grid>
-        <Grid 
-          item
-          sx={{
-            // width: '200px',
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            m: '10px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-          xs={2}
-          md={3}
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          } 
+        />
+
+        {/* TAREAS URGENTES */}
+        <CuadroInformacion
+          titulo={'Tareas Urgentes'}
+          numero_principal={'5'}
+          porcentaje={'-10%'}
+          color={'red'} 
+          icono={
             <AssignmentReturnedIcon color="error" sx={{ height: 40, width: 40 }}></AssignmentReturnedIcon>
-              <Box sx={{ display: 'flex', flexDirection: 'column', pl: '20px' }}>
-                <Typography variant="subtitle2" color='gray'>
-                  Tareas Urgentes
-                </Typography>
-                <Typography variant="h5">
-                  5
-                </Typography>
-              </Box>
-              <Typography sx={{ pl: '40px' }} variant="body2" color='red' alignContent='end'>
-                -10%
-              </Typography>
-          </Box>
-        </Grid>
-        <Grid
-          item
-          sx={{
-            // width: '200px',
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            m: '10px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-          xs={2}
-          md={3.1}
-        >
-         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          } 
+        />
+
+        {/* TAREAS COMPLETADAS */}
+        <CuadroInformacion
+          titulo={'Tareas Completadas'}
+          numero_principal={'7'}
+          porcentaje={'+25%'}
+          color={'green'} 
+          icono={
             <AssignmentTurnedInIcon color="success" sx={{ height: 40, width: 40 }}></AssignmentTurnedInIcon>
-              <Box sx={{ display: 'flex', flexDirection: 'column', pl: '20px' }}>
-                <Typography variant="subtitle2" color='gray'>
-                  Tareas Completadas
-                </Typography>
-                <Typography variant="h5">
-                  7
-                </Typography>
-              </Box>
-              <Typography sx={{ pl: '40px' }} variant="body2" color='green' alignContent='end'>
-                +25%
-              </Typography>
-          </Box>
-        </Grid>
+          } 
+        />
+
       </Grid>
 
     <Grid container direction='row'>
+      
+      {/* CARTERA TOTAL */}
+      <CuadroComparacion 
+        titulo={'Cartera Total'}
+        precio={'$1.2M'}
+        porcentaje={'-25%'}
+        color={'red'}
+        icono={
+          <TrendingDownIcon color='error' sx={{ height: 70, width: 70}}></TrendingDownIcon>
+        }
+      />
 
-    <Grid item 
-          sx={{
-            m: '10px',
-          }} 
-          xs={2}
-          md={3} 
-        >
+      {/* COMPARACION DEL AÑO ANTERIOR */}
+      <CuadroComparacion 
+        titulo={'Comparacion del Año anterior'}
+        precio={'$1,534'}
+        porcentaje={'+7%'}
+        color={'green'}
+        icono={
+          <TrendingUpIcon color='success' sx={{ height: 70, width: 70}}></TrendingUpIcon>
+        }
+      />
 
-      <Box 
-        sx={{ 
-          width: '100%',
-          maxWidth: 300,
-          maxHeight: 170,
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <List>
-          <ListItem disablePadding>
-            <Typography variant='subtitle2' color='gray'>Cartera Total</Typography>
-          </ListItem>
-        </List>
-        <Divider />
-          <List>
-            <ListItem disablePadding>
+      {/* TOTAL VISITANTES */}
+      <CuadroComparacion 
+        titulo={'Total Visitantes'}
+        precio={'155k'}
+        porcentaje={'+25%'}
+        color={'green'}
+        icono={
+          <TrendingUpIcon color='success' sx={{ height: 70, width: 70}}></TrendingUpIcon>
+        }
+      />
 
-              <Box flexDirection='column'>
-                <Typography variant='h5'>
-                  $1.2M
-                </Typography>
-                <Typography variant="body2" color='red' alignContent='end'>
-                  -25%
-                </Typography>
-              </Box>
+      {/* TOTAL USUARIOS */}
+      <CuadroComparacion 
+        titulo={'Total Usuarios'}
+        precio={'4234'}
+        porcentaje={'+19%'}
+        color={'green'}
+        icono={
+          <EqualizerIcon color='success' sx={{ height: 70, width: 70}}></EqualizerIcon>
+        }
+      />
 
-              <Box sx={{ pl: '100px' }}>
-                <TrendingDownIcon color='error' sx={{ height: 70, width: 70}}></TrendingDownIcon>
-              </Box>
-
-            </ListItem>
-
-          </List>
-      </Box>
-      </Grid>
-
-      <Grid item 
-          sx={{
-            m: '10px',
-          }} 
-          xs={2}
-          md={3} 
-        >
-      <Box 
-        sx={{ 
-          width: '100%',
-          maxWidth: 300,
-          maxHeight: 170,
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <List>
-          <ListItem disablePadding>
-            <Typography variant='subtitle2' color='gray'>Comparacion del Año anterior</Typography>
-          </ListItem>
-        </List>
-        <Divider />
-          <List>
-            <ListItem disablePadding>
-
-              <Box flexDirection='column'>
-                <Typography variant='h5'>
-                  $1,534
-                </Typography>
-                <Typography variant="body2" color='green' alignContent='end'>
-                  +7%
-                </Typography>
-              </Box>
-
-              <Box sx={{ pl: '100px' }}>
-                <TrendingUpIcon color='success' sx={{ height: 70, width: 70}}></TrendingUpIcon>
-              </Box>
-
-            </ListItem>
-
-          </List>
-      </Box>
-      </Grid>
-
-      <Grid item 
-          sx={{
-            m: '10px',
-          }} 
-          xs={2}
-          md={3} 
-        >
-        <Box 
-          sx={{ 
-            width: '100%',
-            maxWidth: 300,
-            maxHeight: 170,
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            // mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-        >
-        <List>
-          <ListItem disablePadding>
-            <Typography variant='subtitle2' color='gray'>Total Visitantes</Typography>
-          </ListItem>
-        </List>
-        <Divider />
-          <List>
-            <ListItem disablePadding>
-
-              <Box flexDirection='column'>
-                <Typography variant='h5'>
-                  $155K
-                </Typography>
-                <Typography variant="body2" color='green' alignContent='end'>
-                  +25%
-                </Typography>
-              </Box>
-
-              <Box sx={{ pl: '100px' }}>
-                <TrendingUpIcon color='success' sx={{ height: 70, width: 70}}></TrendingUpIcon>
-              </Box>
-
-            </ListItem>
-
-          </List>
-        </Box>
-      </Grid>
-
-      <Grid item 
-          sx={{
-            m: '10px',
-          }}
-      >
-        <Box 
-          sx={{ 
-            width: '100%',
-            maxWidth: 300,
-            maxHeight: 170,
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            // mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-          
-        >
-        <List>
-          <ListItem disablePadding>
-            <Typography variant='subtitle2' color='gray'>Total Usuarios</Typography>
-          </ListItem>
-        </List>
-        <Divider />
-          <List>
-            <ListItem disablePadding>
-
-              <Box flexDirection='column'>
-                <Typography variant='h5'>
-                  4234
-                </Typography>
-                <Typography variant="body2" color='green' alignContent='end'>
-                  +19%
-                </Typography>
-              </Box>
-
-              <Box sx={{ pl: '100px' }}>
-                <EqualizerIcon color='success' sx={{ height: 70, width: 70}}></EqualizerIcon>
-              </Box>
-
-            </ListItem>
-
-          </List>
-        </Box>
-      </Grid>
-
-      <Grid item 
-          sx={{
-            m: '10px',
-          }}
-          xs={2}
-          md={3} 
-      >
-        <Box 
-          sx={{ 
-            width: '100%',
-            maxWidth: 300,
-            maxHeight: 170,
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-        >
-        <List>
-          <ListItem disablePadding>
-            <Typography variant='subtitle2' color='gray'>Cantidad Deudores Vs Al dia</Typography>
-          </ListItem>
-        </List>
-        <Divider />
-          <List>
-            <ListItem disablePadding>
-
-              <Box flexDirection='column'>
-                <Typography variant='h5'>
-                  155k
-                </Typography>
-              </Box>
-
-              <Box sx={{ pl: '100px' }}>
-                <PieChartIcon color='info' sx={{ height: 70, width: 70}}></PieChartIcon>
-              </Box>
-
-            </ListItem>
-
-          </List>
-        </Box>
-      </Grid>
     </Grid>
 
     <Title title="INFORMACION DE ARTICULOS"></Title>
 
     <Grid container direction='row'>
+
       <Grid
         item
         sx={{
           mt: '20px',
-          ml: '10px'
+          ml: '10px',
+          mr: '10px'
         }}
       >
          <Box 
           sx={{ 
-            width: '160%',
+            width: 500,
             maxWidth: 3000,
             maxHeight: 1700,
             position: 'relative',
@@ -395,63 +140,62 @@ export const RecaudoScreen: React.FC = () => {
           }}
         >
           <List>
+
             <ListItem disablePadding>
               <Typography variant='subtitle2' color='gray'>Usuarios</Typography>
             </ListItem>
+
           </List>
           <Divider/>
 
           <List>
             <ListItem>
               <Box flexDirection='column'>
-                <Typography>
-                  Proceso Facturación
-                </Typography>
+
+                <Typography>Proceso Facturación</Typography>
+
                 <LinearWithValueLabel  />
+
                 <Typography>Instancia de Cobro Persuasivo</Typography>
+                
                 <LinearWithValueLabel  />
+                
                 <Typography>Instancia de Cobro Coactivo</Typography>
+                
                 <LinearWithValueLabel  />
+                
                 <Typography>Notificaciones</Typography>
+                
                 <LinearWithValueLabel  />
+                
                 <Typography>Notificaciones</Typography>
+                
                 <LinearWithValueLabel  />
+                
                 <Typography>Alarmas</Typography>
+                
                 <LinearWithValueLabel  />
+
               </Box>
             </ListItem>
           </List>
 
         </Box>
-
-        {/* <Box 
-          sx={{ 
-            width: '100%',
-            maxWidth: 300,
-            maxHeight: 170,
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-        ></Box> */}
       </Grid>
 
       <Grid
-        container
-        direction='column'
+        item
         sx={{
-          mt: '10px',
-          ml: '10px'
+          mt: '20px',
+          ml: '10px',
+          mr: '10px'
         }}
       >
-        <Box
+        <Box 
           sx={{ 
-            width: '100%',
-            maxWidth: 300,
-            maxHeight: 170,
+            width: 630,
+            maxWidth: 3000,
+            maxHeight: 1700,
             position: 'relative',
             background: '#FAFAFA',
             borderRadius: '15px',
@@ -460,83 +204,21 @@ export const RecaudoScreen: React.FC = () => {
             boxShadow: '0px 3px 6px #042F4A26',
           }}
         >
+
           <List>
             <ListItem disablePadding>
-              <Typography variant='subtitle2' color='gray'>Total Balance</Typography>
+                <Typography variant='subtitle2' color='gray'>Grafica de Tendencia</Typography>
             </ListItem>
           </List>
+
           <Divider />
-          <List>
-            <ListItem disablePadding>
 
-            <Box flexDirection='column'>
-                <Typography variant='h5'>
-                  $1,534
-                </Typography>
-                <Typography variant="body2" color='green' alignContent='end'>
-                  +7%
-                </Typography>
-              </Box>
+          {/* TODO */}
+          <ChartComponent />
 
-              <Box sx={{ pl: '100px' }}>
-                <TrendingUpIcon color='success' sx={{ height: 70, width: 70}}></TrendingUpIcon>
-              </Box>
-
-            </ListItem>
-
-          </List>
         </Box>
-        
       </Grid>
-      <Grid
-        container
-        direction='column'
-        sx={{
-          mt: '5px',
-          ml: '10px'
-        }}
-      >
-        <Box
-          sx={{ 
-            width: '100%',
-            maxWidth: 300,
-            maxHeight: 170,
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-        >
-          <List>
-            <ListItem disablePadding>
-              <Typography variant='subtitle2' color='gray'>Total Users</Typography>
-            </ListItem>
-          </List>
-          <Divider />
-          <List>
-            <ListItem disablePadding>
 
-            <Box flexDirection='column'>
-                <Typography variant='h5'>
-                  4234
-                </Typography>
-                <Typography variant="body2" color='green' alignContent='end'>
-                  +19%
-                </Typography>
-              </Box>
-
-              <Box sx={{ pl: '100px' }}>
-                <EqualizerIcon color='success' sx={{ height: 70, width: 70}}></EqualizerIcon>
-              </Box>
-
-            </ListItem>
-
-          </List>
-        </Box>
-        
-      </Grid>
     </Grid>
           
     </>
