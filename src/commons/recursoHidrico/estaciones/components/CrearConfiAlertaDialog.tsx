@@ -84,7 +84,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
             maxWidth="xs">
             <Box component="form"
                 onSubmit={handleSubmit(on_sumbit_alerta)}>
-                <DialogTitle>Crear Configuracion Alerta Estación</DialogTitle>
+                <DialogTitle>Crear Configuración Alerta Estación</DialogTitle>
                 <Divider />
                 <DialogContent sx={{ mb: '0px' }}>
                     <Grid container spacing={2}>
