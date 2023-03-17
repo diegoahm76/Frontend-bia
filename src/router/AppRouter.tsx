@@ -30,6 +30,7 @@ export const AppRouter: React.FC = () => {
         {/* Liquidacion TUA */}
         <Route path='liquidacion-tua/*' element={<LiquidacionTUAScreen />}/>
 
+        {/* Recaudo */}
         <Route path='recaudo/*' element={<RecaudoScreen />}/>
         
       </Route>
