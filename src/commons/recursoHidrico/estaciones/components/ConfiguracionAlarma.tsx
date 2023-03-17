@@ -6,7 +6,6 @@ import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { type conf_alarma } from '../interfaces/interfaces';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { consultar_conf_alerta_persona, control_success, eliminar_conf_alerta_persona, llamar_alertas } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { CrearConfiAlertaDialog } from './CrearConfiAlertaDialog';
@@ -117,9 +116,37 @@ export const ConfiguracionAlarma: React.FC = () => {
     });
   };
 
-  // setInterval(() => {
-  //   void llamar_alertas();
-  // }, 1000);
+  if(conf_alert_person.length > 0){
+    console.log("Paso")
+    const alerta = conf_alert_person.find((alert: any) => alert.nombre_variable_alarma === 'NDA');
+    if (alerta != null) {
+      console.log("Nivel de agua  " )
+      const tiempo = alerta.frecuencia_alarma * 60000;
+      setInterval(() => {
+        void llamar_alertas();
+      }, tiempo);
+    }else{
+      console.log("Error en el envio del mensaje")
+    }
+  }else{
+    console.log("NO SE ENCONTRO CONFIGURACION ALARMA")
+  }
+
+  if(conf_alert_person.length > 0){
+    console.log("Paso")
+    const alerta = conf_alert_person.find((alert: any) => alert.nombre_variable_alarma === 'TMP');
+    if (alerta != null) {
+      console.log("Alerta de temperatura" )
+      const tiempo = alerta.frecuencia_alarma * 60000;
+      setInterval(() => {
+        void llamar_alertas();
+      }, tiempo);
+    }else{
+      console.log("Error en el envio del mensaje")
+    }
+  }else{
+    console.log("NO SE ENCONTRO CONFIGURACION ALARMA")
+  }
 
   return (
     <Grid container>
