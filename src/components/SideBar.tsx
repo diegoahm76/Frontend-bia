@@ -22,7 +22,15 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import { open_drawer_desktop, open_drawer_mobile } from '../store/layoutSlice';
 
 interface Props {
@@ -96,7 +104,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         />
       </Toolbar>
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      <List sx={{ margin: '0 20px', color: 'secondary.main' }}>
+      <List sx={{ margin: '0 20px', color: 'secondary.main' }} >
         <ListItemButton onClick={handle_click} sx={{ borderRadius: '10px' }}>
           <ListItemIcon>
             <Avatar alt="Cristian Mendoza" src="/static/images/avatar/1.jpg" />
@@ -142,7 +150,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           <ListItemIcon>
             <AssignmentOutlinedIcon sx={{ color: 'secondary.main' }} />
           </ListItemIcon>
-          <ListItemText primary="Inbox" />
+          <ListItemText primary="Tableros de control" />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
@@ -160,18 +168,54 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
       <List sx={{ margin: '0 20px', color: 'secondary.main' }}>
         <ListItemButton onClick={handle_click}>
           <ListItemIcon>
-            <InboxIcon sx={{ color: 'secondary.main' }} />
+            <MonetizationOnIcon sx={{ color: 'secondary.main' }}/>
           </ListItemIcon>
-          <ListItemText primary="Inbox" />
+            <ListItemText primary="Recaudo" />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
+                <ReceiptIcon sx={{ color: 'secondary.main' }} />
               </ListItemIcon>
-              <ListItemText primary="Starred" />
+              <ListItemText primary="Facturación" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <AccountBalanceWalletIcon sx={{ color: 'secondary.main' }} />
+              </ListItemIcon>
+              <ListItemText primary="Instancias de cobro" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <AccountBalanceIcon sx={{ color: 'secondary.main' }}/>
+              </ListItemIcon>
+              <ListItemText primary="Deudores" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <NotificationsIcon sx={{ color: 'secondary.main' }}/>
+              </ListItemIcon>
+              <ListItemText primary="Notificaciones" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <LocalAtmIcon sx={{ color: 'secondary.main' }}/>
+              </ListItemIcon>
+              <ListItemText primary="Facilidades de Pago" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <CreditCardIcon sx={{ color: 'secondary.main' }}/>
+              </ListItemIcon>
+              <ListItemText primary="Pagos" />
+            </ListItemButton>
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <RequestQuoteIcon sx={{ color: 'secondary.main' }}/>
+              </ListItemIcon>
+              <ListItemText primary="Reportes" />
             </ListItemButton>
           </List>
         </Collapse>

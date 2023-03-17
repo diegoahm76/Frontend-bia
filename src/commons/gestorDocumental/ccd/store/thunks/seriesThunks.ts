@@ -30,7 +30,7 @@ export const get_series_service: any = () => {
 };
 
 // Crear, actualizar y/o eliminar series
-export const create_series_service = (
+export const create_series_service:any = (
   newSeries: ISeriesObject[],
   clean: () => void
 ) => {
