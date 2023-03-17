@@ -6,7 +6,8 @@ import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { type conf_alarma } from '../interfaces/interfaces';
-import { consultar_conf_alerta_persona, control_success, eliminar_conf_alerta_persona } from '../../requets/Request';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { consultar_conf_alerta_persona, control_success, eliminar_conf_alerta_persona, llamar_alertas } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { CrearConfiAlertaDialog } from './CrearConfiAlertaDialog';
 import { EditarAlertaDialog } from './EditarAlertaDialog';
@@ -115,6 +116,10 @@ export const ConfiguracionAlarma: React.FC = () => {
       }
     });
   };
+
+  // setInterval(() => {
+  //   void llamar_alertas();
+  // }, 1000);
 
   return (
     <Grid container>

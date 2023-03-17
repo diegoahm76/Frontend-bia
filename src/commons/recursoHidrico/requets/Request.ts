@@ -3,6 +3,12 @@ import { api } from "../../../api/axios";
 import { control_error } from "../../../helpers/controlError";
 import { type ResponseServer } from "../../../interfaces/globalModels";
 import { type Parametros, type conf_alarma, type Datos, type Estaciones, type EstacionesDetalle, type IEstacionEstaciones, type PersonaEstacion, type CrearAlerta } from "../estaciones/interfaces/interfaces";
+import axios from 'axios';
+
+export const alertas = axios.create({
+  // baseURL: process.env.REACT_APP_BACKEND_URL,
+  baseURL: 'http://localhost:8000/api/'
+});
 
 
 export const control_success = (message: ToastContent): any =>
@@ -16,6 +22,18 @@ export const control_success = (message: ToastContent): any =>
     progress: undefined,
     theme: 'light'
   });
+
+// llamar alerta
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const llamar_alertas = async () => {
+  try {
+    const response = await alertas.get('estaciones/prueba/');
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 // consultar estaciones
 export const consultar_estaciones = async (): Promise<Estaciones[]> => {
@@ -91,6 +109,16 @@ export const eliminar_usuario = async (idPersona: number): Promise<any> => {
 // eliminar Configuración Alerta Persona
 export const eliminar_conf_alerta_persona = async (idconfAlerta: number): Promise<any> => {
   return await api.delete(`estaciones/configuracion/alertas/eliminar-configuracion-alerta/${idconfAlerta}`);
+};
+
+// editar estacion
+export const editar_estacion = async (estacion: number, datos_estacion: IEstacionEstaciones): Promise<any> => {
+  try {
+    const response = await api.put(`estaciones/actualizar-estaciones/${estacion}`, datos_estacion);
+    return response.data;
+  } catch (error) {
+    throw new Error('No se pudo actualizar la estación. Por favor, inténtalo de nuevo más tarde.');
+  }
 };
 
 
