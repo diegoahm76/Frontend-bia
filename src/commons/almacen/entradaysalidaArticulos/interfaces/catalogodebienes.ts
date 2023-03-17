@@ -1,4 +1,5 @@
 export interface IBienGet {
+    [x: string]: any;
     bien: IBienes[];
     bienSeleccionado: IBienes;
     dataEdit: IDataEdit;
@@ -37,4 +38,13 @@ export interface IBienGet {
     id_bien_padre: number|null,
     nivel_jerarquico: number,
   } 
+
+  export interface IGeneric {
+    label: string;
+    value: string
+}
+
+export interface IGeneric2{
+    value: string;
+}
   
