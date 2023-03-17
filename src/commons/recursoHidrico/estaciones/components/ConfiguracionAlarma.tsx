@@ -6,10 +6,12 @@ import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { type conf_alarma } from '../interfaces/interfaces';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import {
   consultar_conf_alerta_persona,
   control_success,
   eliminar_conf_alerta_persona,
+  // llamar_alertas,
 } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { CrearConfiAlertaDialog } from './CrearConfiAlertaDialog';
@@ -21,17 +23,15 @@ export const ConfiguracionAlarma: React.FC = () => {
   const [conf_alert_person, set_conf_alert_person] = useState<conf_alarma[]>(
     []
   );
-  const [crear_slerta_is_active, set_crear_slerta_is_active] =
+  const [crear_alerta_is_active, set_crear_alerta_is_active] =
     useState<boolean>(false);
   const [editar_alerta_is_active, set_editar_alerta_is_active] =
     useState<boolean>(false);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handle_open_crear_alerta = () => {
-    set_crear_slerta_is_active(true);
+  const handle_open_crear_alerta = (): void => {
+    set_crear_alerta_is_active(true);
   };
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handle_open_editar_alerta = () => {
+  const handle_open_editar_alerta = (): void => {
     set_editar_alerta_is_active(true);
   };
 
@@ -85,7 +85,7 @@ export const ConfiguracionAlarma: React.FC = () => {
               }}
               variant="rounded"
               onClick={() => {
-                confirmar_eliminar_usuario(params.row.id_confi_alerta_persona);
+                confirmar_eliminar_alarma(params.row.id_confi_alerta_persona);
               }}
             >
               <DeleteIcon
@@ -120,9 +120,7 @@ export const ConfiguracionAlarma: React.FC = () => {
     void confi_alerta_persona();
   }, []);
 
-  const confirmar_eliminar_usuario = (
-    id_confi_alerta_persona: number
-  ): void => {
+  const confirmar_eliminar_alarma = (id_confi_alerta_persona: number): void => {
     void Swal.fire({
       title: 'Estas seguro?',
       text: 'Va a eliminar un usuario',
@@ -142,6 +140,10 @@ export const ConfiguracionAlarma: React.FC = () => {
     });
   };
 
+  // setInterval(() => {
+  //   void llamar_alertas();
+  // }, 1000);
+
   return (
     <Grid container>
       <Grid item xs={12}>
@@ -149,7 +151,10 @@ export const ConfiguracionAlarma: React.FC = () => {
           sx={{ mb: '20px' }}
           variant="outlined"
           startIcon={<AddIcon />}
-          onClick={handle_open_crear_alerta}
+          onClick={() => {
+            console.log('Botón de crear alerta clickeado');
+            handle_open_crear_alerta();
+          }}
         >
           CREAR ALARMA
         </Button>
@@ -169,8 +174,8 @@ export const ConfiguracionAlarma: React.FC = () => {
         )}
       </Grid>
       <CrearConfiAlertaDialog
-        is_modal_active={crear_slerta_is_active}
-        set_is_modal_active={set_crear_slerta_is_active}
+        is_modal_active={crear_alerta_is_active}
+        set_is_modal_active={set_crear_alerta_is_active}
       />
       <EditarAlertaDialog
         is_modal_active={editar_alerta_is_active}

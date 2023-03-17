@@ -94,23 +94,46 @@ export interface PersonaEstacion {
   observacion: string;
 }
 export interface PersonasEstacion {
-  cod_tipo_documento_id: string;
-  numero_documento_id: string | number;
-  primer_nombre: string;
-  segundo_nombre: string | null;
-  primer_apellido: string;
-  segundo_apellido: string | null;
-  entidad: string | null;
-  cargo: string | null;
-  email_notificacion: string;
-  nro_celular_notificacion: string | number;
-  observacion: string;
-  estacion: any;
+
+    cod_tipo_documento_id: string;
+    numero_documento_id: string | number;
+    primer_nombre: string;
+    segundo_nombre: string | null;
+    primer_apellido: string;
+    segundo_apellido: string | null;
+    entidad: string | null;
+    cargo: string | null;
+    email_notificacion: string;
+    nro_celular_notificacion: string | number;
+    observacion: string;
+    estacion: any
 }
 export interface CrearAlerta {
-  nombre_variable_alarma: string;
-  mensaje_alarma_maximo: string;
-  mensaje_alarma_minimo: string;
-  mensaje_no_alarma: string;
-  frecuencia_alarma: number;
+    nombre_variable_alarma: string;
+    mensaje_alarma_maximo: string;
+    mensaje_alarma_minimo: string;
+    mensaje_no_alarma: string;
+    frecuencia_alarma: number;
 }
+export interface Tipos {
+    frecuencia_solicitud_datos: number;
+    temperatura_ambiente_max: number;
+    temperatura_ambiente_min: number;
+    humedad_ambiente_max: number;
+    humedad_ambiente_min: number;
+    presion_barometrica_max: number;
+    presion_barometrica_min: number;
+    velocidad_viento_max: number;
+    velocidad_viento_min: number;
+    direccion_viento_max: number;
+    direccion_viento_min: number;
+    precipitacion_max: number;
+    precipitacion_min: number;
+    luminosidad_max: number;
+    luminosidad_min: number;
+    nivel_agua_max: number;
+    nivel_agua_min: string;
+    velocidad_agua_max: number;
+    velocidad_agua_min: number;
+}
+
