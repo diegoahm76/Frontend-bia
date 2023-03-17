@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -83,14 +83,19 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
       onClose={handle_close}
     >
       <DialogTitle>Editar Parte Interesada</DialogTitle>
+      <Divider />
       <DialogContent>
         <form>
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 label="Tipo de Identificación"
                 select
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               >
                 {tiposdoc.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -104,36 +109,60 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 label="Número Identificación"
                 type="number"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Primer Nombre"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Segundo Nombre"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Primer Apellido"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Segundo Apellido"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 label="Entidad a la cual pertenece"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 placeholder="Entidad a la cual pertenece"
               />
             </Grid>
@@ -141,6 +170,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
               <TextField
                 label="Cargo"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               />
             </Grid>
             <Grid item xs={12}>
@@ -148,6 +181,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 label="Correo Electronico"
                 type="email"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               />
             </Grid>
             <Grid item xs={12}>
@@ -155,6 +192,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 label="Número Celular"
                 type="number"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               />
             </Grid>
             <Grid item xs={12}>
@@ -162,6 +203,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 label="Observación"
                 multiline
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
               />
             </Grid>
             <Grid item xs={12}>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { Controller, type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
@@ -17,7 +17,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
 
   const handle_close = (): void => {
     set_is_modal_active(false);
-  }  
+  }
   const {
     register,
     control,
@@ -43,7 +43,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
     void get_data_initial();
   }, []);
 
-  const on_sumbit_persona: SubmitHandler<FieldValues>= (data): void => {
+  const on_sumbit_persona: SubmitHandler<FieldValues> = (data): void => {
     const nueva_persona = {
 
       cod_tipo_documento_id: data.cod_tipo_documento_id,
@@ -105,14 +105,19 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
       onClose={handle_close}
     >
       <DialogTitle>Nuevo Parte Interesada</DialogTitle>
-      <DialogContent>
+      <Divider />
+      <DialogContent sx={{ mb: '0px' }}>
         <form onSubmit={handleSubmit(on_sumbit_persona)}>
-          <Grid container spacing={3}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 label="Tipo de Identificación"
                 select
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("cod_tipo_documento_id", { required: true })}
                 error={Boolean(errors.cod_tipo_documento_id)}
                 helperText={(errors.cod_tipo_documento_id != null) ? "Este campo es obligatorio" : ""}
@@ -129,6 +134,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 label="Número Identificación"
                 type="number"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("numero_documento_id", { required: true })}
                 error={Boolean(errors.numero_documento_id)}
                 helperText={(errors.numero_documento_id != null) ? "Este campo es obligatorio" : ""}
@@ -138,6 +147,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
               <TextField
                 label="Primer Nombre"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("primer_nombre", { required: true })}
                 error={Boolean(errors.primer_nombre)}
                 helperText={(errors.primer_nombre != null) ? "Este campo es obligatorio" : ""}
@@ -147,6 +160,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
               <TextField
                 label="Segundo Nombre"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("segundo_nombre", { required: true })}
                 error={Boolean(errors.segundo_nombre)}
                 helperText={(errors.segundo_nombre != null) ? "Este campo es obligatorio" : ""}
@@ -156,6 +173,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
               <TextField
                 label="Primer Apellido"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("primer_apellido", { required: true })}
                 error={Boolean(errors.primer_apellido)}
                 helperText={(errors.primer_apellido != null) ? "Este campo es obligatorio" : ""}
@@ -165,6 +186,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
               <TextField
                 label="Segundo Apellido"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("segundo_apellido", { required: true })}
                 error={Boolean(errors.segundo_apellido)}
                 helperText={(errors.segundo_apellido != null) ? "Este campo es obligatorio" : ""}
@@ -174,6 +199,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
               <TextField
                 label="Entidad a la cual pertenece"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 placeholder="Entidad a la cual pertenece"
                 {...register("entidad", { required: true })}
                 error={Boolean(errors.entidad)}
@@ -184,6 +213,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
               <TextField
                 label="Cargo"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("cargo", { required: true })}
                 error={Boolean(errors.cargo)}
                 helperText={(errors.cargo != null) ? "Este campo es obligatorio" : ""}
@@ -194,6 +227,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 label="Correo Electronico"
                 type="email"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("email_notificacion", { required: true })}
                 error={Boolean(errors.email_notificacion)}
                 helperText={(errors.email_notificacion != null) ? "Este campo es obligatorio" : ""}
@@ -204,6 +241,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 label="Número Celular"
                 type="number"
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("nro_celular_notificacion", { required: true })}
                 error={Boolean(errors.nro_celular_notificacion)}
                 helperText={
@@ -216,6 +257,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 label="Observación"
                 multiline
                 fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
                 {...register("observacion", { required: true })}
                 error={Boolean(errors.observacion)}
                 helperText={(errors.observacion != null) ? "Este campo es obligatorio" : ""}

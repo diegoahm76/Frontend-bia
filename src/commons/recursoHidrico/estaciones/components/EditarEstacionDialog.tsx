@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -41,7 +41,7 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
         id_persona_modifica: estaciones.id_persona_modifica,
 
       }))
-      
+
     } catch (err) {
       control_error(err);
     }
@@ -61,74 +61,100 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
 
   const tipo_estacion = [
     {
-        value: 'AG',
-        label: 'Agua'
+      value: 'AG',
+      label: 'Agua'
     },
     {
-        value: 'AI',
-        label: 'Aire',
+      value: 'AI',
+      label: 'Aire',
     },
-]
+  ]
   return (
     <Dialog open={is_modal_active}
-            onClose={handle_close}>
-            <Box component="form">
-                <DialogTitle>Editar Estación</DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Nombre Estación"
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Tipo de Estación"
-                                select
-                                fullWidth
-                            >
-                                {tipo_estacion.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Latitud"
-                                type="number"
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Longitud"
-                                type="number"
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Municipio"
-                                type="text"
-                                fullWidth
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Indicaciones de Ubicación"
-                                fullWidth
-                            />
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handle_close}>Cancelar</Button>
-                    <Button variant="contained" color="primary" >Actualizar</Button>
-                </DialogActions>
-            </Box>
-        </Dialog>
+      onClose={handle_close}
+      maxWidth="xs">
+      <Box component="form">
+        <DialogTitle>Editar Estación</DialogTitle>
+        <Divider />
+        <DialogContent sx={{ mb: '0px' }}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <TextField
+                label="Nombre Estación"
+                fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Tipo de Estación"
+                select
+                fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
+              >
+                {tipo_estacion.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Latitud"
+                type="number"
+                fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Longitud"
+                type="number"
+                fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Municipio"
+                type="text"
+                fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Indicaciones de Ubicación"
+                fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handle_close}>Cancelar</Button>
+          <Button variant="contained" color="primary" >Actualizar</Button>
+        </DialogActions>
+      </Box>
+    </Dialog>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, InputAdornment, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, InputAdornment, TextField } from '@mui/material';
 import type React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
 import { AcUnit } from '@mui/icons-material';
@@ -21,9 +21,10 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
       onClose={handle_close}
     >
       <DialogTitle>Editar Parametros Referencia</DialogTitle>
+      <Divider />
       <DialogContent sx={{ mb: '0px' }}>
         <Box>
-          <Grid container spacing={3} >
+          <Grid container spacing={1} >
             <Grid item xs={12}>
               <TextField
                 label="Frecuencia solicitud de datos"

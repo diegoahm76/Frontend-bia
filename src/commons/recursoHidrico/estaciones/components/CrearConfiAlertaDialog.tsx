@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
@@ -80,16 +80,22 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
 
     return (
         <Dialog open={is_modal_active}
-            onClose={handle_close}>
+            onClose={handle_close}
+            maxWidth="xs">
             <Box component="form"
                 onSubmit={handleSubmit(on_sumbit_alerta)}>
                 <DialogTitle>Crear Configuracion Alerta Estación</DialogTitle>
-                <DialogContent>
-                    <Grid container spacing={3}>
+                <Divider />
+                <DialogContent sx={{ mb: '0px' }}>
+                    <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
                                 label="Nombre Variable"
                                 select
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 fullWidth
                                 {...register("nombre_variable_alarma", { required: true })}
                                 error={Boolean(errors.nombre_variable_alarma)}
@@ -105,6 +111,10 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                         <Grid item xs={12}>
                             <TextField
                                 label="Mensaje Maximo"
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 fullWidth
                                 {...register("mensaje_alarma_maximo", { required: true })}
                                 error={Boolean(errors.mensaje_alarma_maximo)}
@@ -114,6 +124,10 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                         <Grid item xs={12}>
                             <TextField
                                 label="Mensaje Minimo"
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 fullWidth
                                 {...register("mensaje_alarma_minimo", { required: true })}
                                 error={Boolean(errors.mensaje_alarma_minimo)}
@@ -123,6 +137,10 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                         <Grid item xs={12}>
                             <TextField
                                 label="Mensaje estable"
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 fullWidth
                                 {...register("mensaje_no_alarma", { required: true })}
                                 error={Boolean(errors.mensaje_no_alarma)}
@@ -133,6 +151,10 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                             <TextField
                                 label="Frecuencia de alerta"
                                 type="number"
+                                size="small"
+                                margin="dense"
+                                required
+                                autoFocus
                                 fullWidth
                                 {...register("frecuencia_alarma", { required: true })}
                                 error={Boolean(errors.frecuencia_alarma)}

@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, MenuItem, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
 
@@ -15,49 +15,51 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
   }
   const tipo_estacion = [
     {
-        value: 'TMP',
-        label: 'Temperatura'
+      value: 'TMP',
+      label: 'Temperatura'
     },
     {
-        value: 'HUR',
-        label: 'Humedad',
+      value: 'HUR',
+      label: 'Humedad',
     },
     {
-        value: 'PRB',
-        label: 'Presion barometrica'
+      value: 'PRB',
+      label: 'Presion barometrica'
     },
     {
-        value: 'VDV',
-        label: 'Velocidad del viento',
+      value: 'VDV',
+      label: 'Velocidad del viento',
     },
     {
-        value: 'DDV',
-        label: 'Direccion del viento'
+      value: 'DDV',
+      label: 'Direccion del viento'
     },
     {
-        value: 'PCT',
-        label: 'Precipitacion',
+      value: 'PCT',
+      label: 'Precipitacion',
     },
     {
-        value: 'LMN',
-        label: 'Luminosidad'
+      value: 'LMN',
+      label: 'Luminosidad'
     },
     {
-        value: 'NDA',
-        label: 'Nivel del agua',
+      value: 'NDA',
+      label: 'Nivel del agua',
     },
     {
-        value: 'VDA',
-        label: 'velocidad del agua',
+      value: 'VDA',
+      label: 'velocidad del agua',
     },
-]
+  ]
   return (
     <Dialog open={is_modal_active}
-      onClose={handle_close}>
+      onClose={handle_close}
+      maxWidth="xs">
       <Box component="form">
         <DialogTitle>Editar Configuracion Alerta Estación</DialogTitle>
-        <DialogContent>
-          <Grid container spacing={3}>
+        <Divider />
+        <DialogContent sx={{ mb: '0px' }}>
+          <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 label="Nombre Variable"
