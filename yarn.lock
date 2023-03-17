@@ -1799,12 +1799,12 @@
   resolved "https://registry.yarnpkg.com/@mui/core-downloads-tracker/-/core-downloads-tracker-5.11.13.tgz#0419a88ae98b3eaff2a633229d23ee04c8868be1"
   integrity sha512-lx+GXBR9h/ApZsEP728tl0pyZyuajto+VnBgsoAzw1d5+CbmOo8ZWieKwVUGxZlPT1wMYNUYS5NtKzCli0xYjw==
 
-"@mui/icons-material@^5.11.9":
-  version "5.11.9"
-  resolved "https://registry.npmjs.org/@mui/icons-material/-/icons-material-5.11.9.tgz"
-  integrity sha512-SPANMk6K757Q1x48nCwPGdSNb8B71d+2hPMJ0V12VWerpSsbjZtvAPi5FAn13l2O5mwWkvI0Kne+0tCgnNxMNw==
+"@mui/icons-material@^5.11.11":
+  version "5.11.11"
+  resolved "https://registry.yarnpkg.com/@mui/icons-material/-/icons-material-5.11.11.tgz#d4e01bd405b0dac779f5e060586277f91f3acb6e"
+  integrity sha512-Eell3ADmQVE8HOpt/LZ3zIma8JSvPh3XgnhwZLT0k5HRqZcd6F/QDHc7xsWtgz09t+UEFvOYJXjtrwKmLdwwpw==
   dependencies:
-    "@babel/runtime" "^7.20.13"
+    "@babel/runtime" "^7.21.0"
 
 "@mui/lab@^5.0.0-alpha.120":
   version "5.0.0-alpha.120"
@@ -2567,12 +2567,12 @@
   dependencies:
     react-leaflet "*"
 
-"@types/react-select@^5.0.1":
-  version "5.0.1"
-  resolved "https://registry.npmjs.org/@types/react-select/-/react-select-5.0.1.tgz"
-  integrity sha512-h5Im0AP0dr4AVeHtrcvQrLV+gmPa7SA0AGdxl2jOhtwiE6KgXBFSogWw8az32/nusE6AQHlCOHQWjP1S/+oMWA==
+"@types/react-modal@^3.13.1":
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/@types/react-modal/-/react-modal-3.13.1.tgz#5b9845c205fccc85d9a77966b6e16dc70a60825a"
+  integrity sha512-iY/gPvTDIy6Z+37l+ibmrY+GTV4KQTHcCyR5FIytm182RQS69G5ps4PH2FxtC7bAQ2QRHXMevsBgck7IQruHNg==
   dependencies:
-    react-select "*"
+    "@types/react" "*"
 
 "@types/react-transition-group@^4.2.0", "@types/react-transition-group@^4.4.0", "@types/react-transition-group@^4.4.1", "@types/react-transition-group@^4.4.5":
   version "4.4.5"
@@ -8489,7 +8489,7 @@ react-scripts@5.0.1:
   optionalDependencies:
     fsevents "^2.3.2"
 
-react-select@*, react-select@^5.7.0:
+react-select@^5.7.0:
   version "5.7.0"
   resolved "https://registry.npmjs.org/react-select/-/react-select-5.7.0.tgz"
   integrity sha512-lJGiMxCa3cqnUr2Jjtg9YHsaytiZqeNOKeibv6WF5zbK/fPegZ1hg3y/9P1RZVLhqBTs0PfqQLKuAACednYGhQ==
