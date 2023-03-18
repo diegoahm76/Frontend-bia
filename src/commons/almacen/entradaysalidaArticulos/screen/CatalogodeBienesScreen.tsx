@@ -5,6 +5,7 @@ import { Column } from "primereact/column";
 import { TreeTable } from "primereact/treetable";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   obtener_todos_bienes,
   seleccionar_bien_edit,
@@ -116,7 +117,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
         ></Button>
         <Button
           type="button"
-          startIcon={<AddIcon />}
+          startIcon={<DeleteIcon />}
           className="p-button-danger p-button-outlined"
           title="Eliminar"
           style={{ marginRight: ".5em", color: "black", border: "none" }}
