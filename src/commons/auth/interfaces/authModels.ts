@@ -1,8 +1,9 @@
-import { type ChangeEvent, type Dispatch, type SetStateAction } from 'react';
-import {
-  type Paises,
-  type TipoDocumento,
-  type TipoPersona
+import type { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import type {
+  IList,
+  Paises,
+  TipoDocumento,
+  TipoPersona
 } from '../../../interfaces/globalModels';
 
 export interface UserRol {
@@ -71,6 +72,18 @@ export interface AuthHook {
 export interface SimpleDialogProps {
   open: boolean;
   on_close: (value: string) => void;
+}
+
+export interface IFormValues {
+  fechaNacimiento: string | number | Date;
+  tipo_persona: IList;
+  digito_verificacion: string;
+  municipioNotificacion: any;
+  paisNotificacion?: any;
+}
+
+export interface IDatosNotificacion {
+  departamento: any;
 }
 
 export interface IAuth {

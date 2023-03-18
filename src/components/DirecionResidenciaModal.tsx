@@ -1,11 +1,30 @@
-import { Box, Button, Grid, Modal, Typography } from '@mui/material';
+/* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useState, useEffect } from 'react';
+import Modal from 'react-modal';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { useForm, Controller } from 'react-hook-form';
 import Select from 'react-select';
-import { type IGeneric } from '../interfaces/globalModels';
-import { get_direcciones } from '../request/getRequest';
-import SaveIcon from '@mui/icons-material/Save';
+import type { IList } from '../../../front-bia/src/Interfaces/auth';
+import { Button, Typography } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import SavelIcon from '@mui/icons-material/Save';
+import { useEscapeKey } from '../hooks/useEscapeKey';
+import { api } from '../api/axios';
+
+const custom_styles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: '9999',
+  },
+};
+Modal.setAppElement('#root');
 
 const valores1 = [
   { label: 'Urbano', value: 'urb' },
@@ -60,14 +79,14 @@ const default_values = {
   complemento: '',
   adicional: '',
 };
-const generic_initial: IGeneric[] = [
+const generic_initial: IList[] = [
   {
     label: '',
     value: '',
   },
 ];
 
-type key_array =
+type key_arrays =
   | 'ubicacion'
   | 'nombreUbicacion'
   | 'residencia'
@@ -85,37 +104,16 @@ type key_array =
   | 'complemento'
   | 'adicional';
 
-interface Props {
-  is_modal_active: any;
-  setIsModalActive: any;
-  completeAddress: any;
-  setCompleteAddress: any;
-  reset: any;
-  keyReset: any;
-  watch: any;
-}
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '580px',
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-};
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DirecionResidenciaModal: React.FC<Props> = ({
-  is_modal_active,
+export const DirecionResidenciaModal: React.FC<any> = ({
+  isModalActive,
   setIsModalActive,
   completeAddress,
   setCompleteAddress,
   reset,
   keyReset,
   watch,
-}: Props) => {
+}) => {
   const [principal_rural_options, set_principal_rural_options_options] =
     useState(generic_initial);
   const [complemento_rural_options, set_complemento_rural_options] =
@@ -178,11 +176,12 @@ export const DirecionResidenciaModal: React.FC<Props> = ({
     formState: { errors },
   } = useForm();
 
-  const on_submit = (e: any): void => {
+  const on_submit = (): void => {
     const complete_address_without_white_spaces = completeAddress
+      // eslint-disable-next-line react/prop-types
       .trim()
       .split('')
-      .filter((letter: any, index: number, arrFilter: []) => {
+      .filter((letter: string, index: number, arrFilter: []) => {
         if (index > 0) {
           if (arrFilter[index] === ' ' && arrFilter[index - 1] === ' ') {
             return false;
@@ -216,7 +215,7 @@ export const DirecionResidenciaModal: React.FC<Props> = ({
   };
 
   const get_data_direcciones = async (): Promise<void> => {
-    const { data } = await get_direcciones();
+    const { data } = await api.get<any>('choices/direcciones/');
     set_principal_rural_options_options(
       data['Principal rural'].map((item: any) => ({
         label: item.label,
@@ -257,431 +256,463 @@ export const DirecionResidenciaModal: React.FC<Props> = ({
     let full_address = '';
     if (selec_direccion.value === 'urb') {
       order_urbano.forEach((field: string) => {
-        const temp_field = field as key_array;
+        const temp_field = field as key_arrays;
         const data_field = form_values[temp_field];
         const data_field_trim = data_field.trim();
         if (field === 'letra1' || field === 'letra2') {
           full_address = full_address + data_field_trim;
-        } else if (field === 'numeroSecundario' && data_field_trim !== '') {
+        } else if (field === 'numeroSecundario' && data_field_trim) {
           full_address = full_address + ' No. ' + data_field_trim;
         } else {
-          full_address = full_address + ' ' + data_field_trim;
+          full_address = `${full_address} ${data_field_trim}`;
         }
       });
       // setCompleteAddress(full_address);
       setCompleteAddress('direccionNotificacion', full_address);
     } else if (selec_direccion.value === 'rur') {
       order_rural.forEach((field: string) => {
-        const temp_field = field as key_array;
+        const temp_field = field as key_arrays;
         const data_field = form_values[temp_field];
-        const data_field_trim = data_field?.trim() ?? '';
-        if (data_field_trim !== '') {
-          full_address = full_address + ' ' + data_field_trim;
+        const data_field_trim = data_field.trim();
+        if (data_field_trim) {
+          full_address = `${full_address} ${data_field_trim}`;
         }
       });
       setCompleteAddress('direccionNotificacion', full_address);
+      // setCompleteAddress(full_address);
+    } else {
+      // setCompleteAddress("direccionNotificacion", '');
     }
   }, [form_values]);
+
+  const handle_close_modal_esc = (e: any): void => {
+    setIsModalActive(false);
+  };
+
+  useEscapeKey(handle_close_modal_esc);
 
   useEffect(() => {
     set_form_values(default_values);
   }, [selec_direccion]);
 
   return (
-    <Modal open={is_modal_active}>
-      <Box sx={style}>
-        <form
-          className="multisteps-form__panel border-radius-xl bg-white js-active p-4 position-relative"
-          data-animation="FadeIn"
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={handleSubmit(on_submit)}
-        >
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography>Dirección de residencia</Typography>
-            </Grid>
+    <Modal
+      isOpen={isModalActive}
+      style={custom_styles}
+      className="modal"
+      overlayClassName="modal-fondo"
+      closeTimeoutMS={300}
+    >
+      <div className="row min-vh-100">
+        <div className="col-lg-12 mx-auto">
+          <form
+            className="multisteps-form__panel border-radius-xl bg-white js-active p-4 position-relative"
+            data-animation="FadeIn"
+            onSubmit={handleSubmit(on_submit)}
+          >
+            <Typography>Dirección de residencia</Typography>
 
-            <Grid item xs={12}>
-              <label className="text-terciary form-control ms-0">
-                Ubicación: <span className="text-danger">*</span>
-              </label>
-              <Controller
-                name="direccion"
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    onChange={handle_change_type_location}
-                    options={valores1}
-                    placeholder="Seleccione"
-                  />
-                )}
-              />
-            </Grid>
+            <div className="row ">
+              <div className="col-12 col-md-6">
+                <label className="text-terciary form-control ms-0">
+                  Ubicación: <span className="text-danger">*</span>
+                </label>
+                <Controller
+                  name="direccion"
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      onChange={handle_change_type_location}
+                      options={valores1}
+                      placeholder="Seleccione"
+                    />
+                  )}
+                />
+              </div>
+            </div>
 
             {selec_direccion.value === 'rur' ? (
-              <>
-                <Grid item xs={12}>
-                  <Typography>Datos de la dirección rural</Typography>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">
-                    Principal: <span className="text-danger">*</span>
-                  </label>
-                  <Controller
-                    name="ubicacion"
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={principal_rural_options}
+              <div className="multisteps-form__content row">
+                <Typography>Datos de la dirección rural</Typography>
+                <div className="row d-flex align-items-end mt-2 mx-2">
+                  <div className="col-12 col-md-6 mb-3">
+                    <label className="text-terciary">
+                      Principal: <span className="text-danger">*</span>
+                    </label>
+                    <Controller
+                      name="ubicacion"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={principal_rural_options}
+                          onChange={(e) => {
+                            set_form_values({
+                              ...form_values,
+                              ubicacion: e.value,
+                            });
+                            reset_direction({
+                              ...watch_direction(),
+                              ubicacion: e,
+                            });
+                          }}
+                          placeholder="Seleccionar"
+                        />
+                      )}
+                    />
+                    {errors.ubicacion && (
+                      <p className="text-danger">Este campo es obligatorio</p>
+                    )}
+                  </div>
+                  <div className="col-12 col-md-6 mb-3">
+                    <div>
+                      <label className="text-terciary">
+                        Nombre: <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control border border-terciary rounded-pill px-3"
+                        {...register('nombre', { required: true })}
                         onChange={(e) => {
                           set_form_values({
                             ...form_values,
-                            ubicacion: e.value,
+                            nombreUbicacion: e.target.value,
                           });
                           reset_direction({
                             ...watch_direction(),
-                            ubicacion: e,
+                            nombre: e.target.value,
                           });
                         }}
-                        placeholder="Seleccionar"
                       />
+                    </div>
+                    {errors.nombre && (
+                      <p className="text-danger">Este campo es obligatorio</p>
                     )}
-                  />
-                  {errors.ubicacion != null && (
-                    <p className="text-danger">Este campo es obligatorio</p>
-                  )}
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <div>
-                    <label className="text-terciary">
-                      Nombre: <span className="text-danger">*</span>
-                    </label>
+                  </div>
+                </div>
+                <div className="row d-flex align-items-end mt-2 mx-2">
+                  <div className="col-12 col-md-6 mb-3">
+                    <label className="text-terciary">Complemento:</label>
+                    <Controller
+                      name="residencia"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={complemento_rural_options}
+                          onChange={(e) => {
+                            set_form_values({
+                              ...form_values,
+                              residencia: e.value,
+                            });
+                          }}
+                          placeholder="Seleccionar"
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="col-12 col-md-6 mb-3">
+                    <label className="text-terciary">Número:</label>
                     <input
-                      type="text"
+                      type="number"
                       className="form-control border border-terciary rounded-pill px-3"
-                      {...register('nombre', { required: true })}
                       onChange={(e) => {
                         set_form_values({
                           ...form_values,
-                          nombreUbicacion: e.target.value,
-                        });
-                        reset_direction({
-                          ...watch_direction(),
-                          nombre: e.target.value,
+                          numeroResidencia: e.target.value,
                         });
                       }}
                     />
                   </div>
-                  {errors.nombre != null && (
-                    <p className="text-danger">Este campo es obligatorio</p>
-                  )}
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Complemento:</label>
-                  <Controller
-                    name="residencia"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={complemento_rural_options}
-                        onChange={(e) => {
-                          set_form_values({
-                            ...form_values,
-                            residencia: e.value,
-                          });
-                        }}
-                        placeholder="Seleccionar"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Número:</label>
-                  <input
-                    type="number"
-                    className="form-control border border-terciary rounded-pill px-3"
-                    onChange={(e) => {
-                      set_form_values({
-                        ...form_values,
-                        numeroResidencia: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
+                </div>
 
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Complemento</label>
-                  <textarea
-                    className="form-control border rounded-pill px-5 border-terciary"
-                    rows={3}
-                    onChange={(e) => {
-                      set_form_values({
-                        ...form_values,
-                        complementoRural: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
-              </>
+                <div className="row d-flex align-items-end mt-2 mx-2">
+                  <div className="col-12 col-md-12">
+                    <label className="text-terciary">Complemento</label>
+                    <textarea
+                      className="form-control border rounded-pill px-5 border-terciary"
+                      rows={3}
+                      onChange={(e) => {
+                        set_form_values({
+                          ...form_values,
+                          complementoRural: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
             ) : (
               ''
             )}
 
-            {selec_direccion.value === 'urb' && (
-              <>
+            {selec_direccion.value === 'urb' ? (
+              <div className="multisteps-form__content row">
                 <Typography>Datos de la dirección urbano</Typography>
 
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">
-                    Principal: <span className="text-danger">*</span>
-                  </label>
-                  <Controller
-                    name="principal"
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={principal_urbano_options}
+                <div className="row d-flex align-items-end mt-2 mx-auto">
+                  <div className="col-12 col-md-6">
+                    <label className="text-terciary">
+                      Principal: <span className="text-danger">*</span>
+                    </label>
+                    <Controller
+                      name="principal"
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={principal_urbano_options}
+                          onChange={(e) => {
+                            set_form_values({
+                              ...form_values,
+                              principal: e.value,
+                            });
+                            reset_direction({
+                              ...watch_direction(),
+                              principal: e,
+                            });
+                          }}
+                          placeholder="Selecciona"
+                        />
+                      )}
+                    />
+                    {errors.principal && (
+                      <div className="col-12">
+                        <small className="text-center text-danger">
+                          Este campo es obligatorio
+                        </small>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="col-12 col-md-6">
+                    <div>
+                      <label className="text-terciary">
+                        Número: <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control border border-terciary rounded-pill px-3"
+                        {...register('numero', { required: true })}
                         onChange={(e) => {
                           set_form_values({
                             ...form_values,
-                            principal: e.value,
+                            numero: e.target.value,
                           });
                           reset_direction({
                             ...watch_direction(),
-                            principal: e,
+                            numero: e.target.value,
                           });
                         }}
-                        placeholder="Selecciona"
                       />
-                    )}
-                  />
-                  {errors.principal != null && (
-                    <div className="col-12">
-                      <small className="text-center text-danger">
-                        Este campo es obligatorio
-                      </small>
                     </div>
-                  )}
-                </Grid>
+                    {errors.numero && (
+                      <div className="col-12">
+                        <small className="text-center text-danger">
+                          Este campo es obligatorio
+                        </small>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-                <Grid item xs={12} sm={6}>
-                  <div>
-                    <label className="text-terciary">
-                      Número: <span className="text-danger">*</span>
-                    </label>
+                <div className="row d-flex align-items-end mt-2 mx-auto">
+                  <div className="col-12 col-md-5">
+                    <label className="text-terciary">Letra :</label>
+                    <Controller
+                      name="letra1"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={letras_options}
+                          onChange={(e) => {
+                            set_form_values({
+                              ...form_values,
+                              letra1: e.value,
+                            });
+                          }}
+                          placeholder="Selecciona"
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="col-12 col-md-2">
+                    <div className="form-check">
+                      <label
+                        className="form-check-label mx-2"
+                        htmlFor="flexCheckDefault"
+                      >
+                        Bis
+                      </label>
+                      <input
+                        className="form-check-input mx-2"
+                        type="checkbox"
+                        onChange={(e) => {
+                          console.log(e.target.checked);
+                          if (e.target.checked) {
+                            set_form_values({
+                              ...form_values,
+                              bis: 'BIS',
+                            });
+                          } else {
+                            set_form_values({
+                              ...form_values,
+                              bis: '',
+                            });
+                          }
+                        }}
+                        id="flexCheckDefault"
+                      />
+                      <label
+                        className="form-check-label mx-2"
+                        htmlFor="flexCheckDefault"
+                      ></label>
+                    </div>
+                  </div>
+
+                  <div className="col-12 col-md-5">
+                    <label className="text-terciary">Orientacion :</label>
+                    <Controller
+                      name="orientacion"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={orientacion_urbano_options}
+                          onChange={(e) => {
+                            set_form_values({
+                              ...form_values,
+                              orientacion: e.value,
+                            });
+                          }}
+                          placeholder="Selecciona"
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="row d-flex align-items-end mt-2 mx-auto">
+                  <div className="col-12 col-md-6">
+                    <label className="text-terciary">Número:</label>
                     <input
                       type="number"
                       className="form-control border border-terciary rounded-pill px-3"
-                      {...register('numero', { required: true })}
                       onChange={(e) => {
                         set_form_values({
                           ...form_values,
-                          numero: e.target.value,
-                        });
-                        reset_direction({
-                          ...watch_direction(),
-                          numero: e.target.value,
+                          numero2: e.target.value,
                         });
                       }}
                     />
                   </div>
-                  {errors.numero != null && (
-                    <div className="col-12">
-                      <small className="text-center text-danger">
-                        Este campo es obligatorio
-                      </small>
-                    </div>
-                  )}
-                </Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Letra :</label>
-                  <Controller
-                    name="letra1"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={letras_options}
-                        onChange={(e) => {
-                          set_form_values({
-                            ...form_values,
-                            letra1: e.value,
-                          });
-                        }}
-                        placeholder="Selecciona"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <div className="form-check">
-                    <label
-                      className="form-check-label mx-2"
-                      htmlFor="flexCheckDefault"
-                    >
-                      Bis
-                    </label>
+                  <div className="col-12 col-md-6">
+                    <label className="text-terciary">Letra :</label>
+                    <Controller
+                      name="letra2"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={letras_options}
+                          placeholder="Selecciona"
+                          onChange={(e) => {
+                            set_form_values({
+                              ...form_values,
+                              letra2: e.value,
+                            });
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="row d-flex align-items-end mt-2 mx-auto">
+                  <div className="col-12 col-md-6">
+                    <label className="text-terciary">Número Secundario:</label>
                     <input
-                      className="form-check-input mx-2"
-                      type="checkbox"
+                      type="number"
+                      className="form-control border border-terciary rounded-pill px-3"
                       onChange={(e) => {
-                        console.log(e.target.checked);
-                        if (e.target.checked) {
-                          set_form_values({
-                            ...form_values,
-                            bis: 'BIS',
-                          });
-                        } else {
-                          set_form_values({
-                            ...form_values,
-                            bis: '',
-                          });
-                        }
+                        set_form_values({
+                          ...form_values,
+                          numeroSecundario: e.target.value,
+                        });
                       }}
-                      id="flexCheckDefault"
                     />
-                    <label
-                      className="form-check-label mx-2"
-                      htmlFor="flexCheckDefault"
-                    ></label>
                   </div>
-                </Grid>
 
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Orientacion :</label>
-                  <Controller
-                    name="orientacion"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={orientacion_urbano_options}
-                        onChange={(e) => {
-                          set_form_values({
-                            ...form_values,
-                            orientacion: e.value,
-                          });
-                        }}
-                        placeholder="Selecciona"
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Número:</label>
-                  <input
-                    type="number"
-                    className="form-control border border-terciary rounded-pill px-3"
-                    onChange={(e) => {
-                      set_form_values({
-                        ...form_values,
-                        numero2: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
+                  <div className="col-12 col-md-6">
+                    <label className="text-terciary">Orientacion :</label>
+                    <Controller
+                      name="orientacion2"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={orientacion_urbano_options}
+                          placeholder="Selecciona"
+                          onChange={(e) => {
+                            set_form_values({
+                              ...form_values,
+                              orientacion2: e.value,
+                            });
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
 
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Letra :</label>
-                  <Controller
-                    name="letra2"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={letras_options}
-                        placeholder="Selecciona"
-                        onChange={(e) => {
-                          set_form_values({
-                            ...form_values,
-                            letra2: e.value,
-                          });
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Número Secundario:</label>
-                  <input
-                    type="number"
-                    className="form-control border border-terciary rounded-pill px-3"
-                    onChange={(e) => {
-                      set_form_values({
-                        ...form_values,
-                        numeroSecundario: e.target.value,
-                      });
-                    }}
-                  />
-                </Grid>
+                <div className="row d-flex align-items-end mt-2 mx-auto">
+                  <div className="col-12 col-md-6 mb-5">
+                    <label className="text-terciary">Complemento:</label>
+                    <Controller
+                      name="complemento"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          options={complemento_urbano_options}
+                          placeholder="Selecciona"
+                          onChange={(e) => {
+                            set_form_values({
+                              ...form_values,
+                              complemento: e.value,
+                            });
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
 
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Orientacion :</label>
-                  <Controller
-                    name="orientacion2"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={orientacion_urbano_options}
-                        placeholder="Selecciona"
-                        onChange={(e) => {
-                          set_form_values({
-                            ...form_values,
-                            orientacion2: e.value,
-                          });
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Complemento:</label>
-                  <Controller
-                    name="complemento"
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={complemento_urbano_options}
-                        placeholder="Selecciona"
-                        onChange={(e) => {
-                          set_form_values({
-                            ...form_values,
-                            complemento: e.value,
-                          });
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={12} sm={6}>
-                  <label className="text-terciary">Adicional</label>
-                  <textarea
-                    className="form-control border rounded-pill px-5 border-terciary"
-                    onChange={(e) => {
-                      set_form_values({
-                        ...form_values,
-                        adicional: e.target.value,
-                      });
-                    }}
-                    rows={3}
-                  />
-                </Grid>
-              </>
+                  <div className="col-12 col-md-6">
+                    <label className="text-terciary">Adicional</label>
+                    <textarea
+                      className="form-control border rounded-pill px-5 border-terciary"
+                      onChange={(e) => {
+                        set_form_values({
+                          ...form_values,
+                          adicional: e.target.value,
+                        });
+                      }}
+                      rows={3}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              ''
             )}
 
-            <Grid item xs={12}>
+            {/* <p className="text-center my-2 mt-4 fs-4">{completeAddress}</p> */}
+
+            <div className="col-12">
               <label className="text-terciary">Dirección estandarizada:</label>
               <input
                 type="text"
@@ -689,9 +720,9 @@ export const DirecionResidenciaModal: React.FC<Props> = ({
                 disabled
                 value={completeAddress}
               />
-            </Grid>
+            </div>
 
-            <Grid item xs={12}>
+            <div className="mt-3 d-flex justify-content-end gap-2">
               <Button
                 onClick={() => {
                   setIsModalActive(false);
@@ -708,13 +739,17 @@ export const DirecionResidenciaModal: React.FC<Props> = ({
               >
                 Cancelar
               </Button>
-              <Button type="submit" variant="outlined" startIcon={<SaveIcon />}>
-                Guardar
+              <Button
+                variant="outlined"
+                type="submit"
+                startIcon={<SavelIcon />}
+              >
+                Cancelar
               </Button>
-            </Grid>
-          </Grid>
-        </form>
-      </Box>
+            </div>
+          </form>
+        </div>
+      </div>
     </Modal>
   );
 };

@@ -28,7 +28,29 @@ import { useForm } from 'react-hook-form';
 import { get_person_by_document } from '../request/authRequest';
 import { control_error } from '../../../helpers/controlError';
 import { type IPerson } from '../interfaces';
-import { DirecionResidenciaModal } from '../../../components/DirecionResidenciaModal';
+
+type keys_object =
+  | 'tipo_persona'
+  | 'tipo_documento'
+  | 'numero_documento'
+  | 'digito_verificacion'
+  | 'nombre_comercial'
+  | 'primer_nombre'
+  | 'segundo_nombre'
+  | 'primer_apellido'
+  | 'segundo_apellido'
+  | 'fecha_nacimiento'
+  | 'email'
+  | 'telefono_celular'
+  | 'ubicacion_georeferenciada'
+  | 'razon_social'
+  | 'telefono_celular_empresa'
+  | 'direccion_notificaciones'
+  | 'representante_legal'
+  | 'confirmar_celular'
+  | 'confirmar_email'
+  | 'cod_municipio_notificacion_nal'
+  | 'require_nombre_comercial';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegisterForm: React.FC = () => {
@@ -42,7 +64,6 @@ export const RegisterForm: React.FC = () => {
     setValue,
     formState: { errors },
     watch,
-    reset,
   } = useForm<IPerson>();
   const {
     tipo_documento_opt,
@@ -154,7 +175,6 @@ export const RegisterForm: React.FC = () => {
   // Consultamos si el usuario existe
   useEffect(() => {
     if (numero_documento !== undefined && numero_documento !== '') {
-      console.log(numero_documento);
       void validate_exits();
     }
   }, [numero_documento]);
@@ -182,6 +202,16 @@ export const RegisterForm: React.FC = () => {
     }
     set_error_password(false);
   }, [password, confirmar_password]);
+
+  // / Cambio inputs
+  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_data_register({
+      ...data_register,
+      [e.target.name]: e.target.value,
+    });
+    const name = e.target.name as keys_object;
+    setValue(name, e.target.value);
+  };
 
   const on_submit = handleSubmit((data) => {
     set_is_saving(true);
@@ -457,7 +487,7 @@ export const RegisterForm: React.FC = () => {
               )}
             </FormControl>
           </Grid>
-          {tipo_persona !== '' ? (
+          {tipo_persona === 'J' && (
             <>
               <Grid item xs={12} container justifyContent="center">
                 <Grid item>
@@ -471,6 +501,10 @@ export const RegisterForm: React.FC = () => {
                   </FormGroup>
                 </Grid>
               </Grid>
+            </>
+          )}
+          {tipo_persona !== '' ? (
+            <>
               {is_search ? (
                 <Grid item xs={12}>
                   <Grid container justifyContent="center" textAlign="center">
@@ -505,16 +539,15 @@ export const RegisterForm: React.FC = () => {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
+                      label="Dígito de verificación"
                       error={errors.digito_verificacion?.type === 'required'}
                       helperText={
                         errors.digito_verificacion?.type === 'required'
                           ? 'Este campo es obligatorio'
                           : ''
                       }
-                      label="Dígito de verificación"
-                      {...register('digito_verificacion', {
-                        required: true,
-                      })}
+                      {...register('digito_verificacion', { required: true })}
+                      onChange={handle_change}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -530,6 +563,7 @@ export const RegisterForm: React.FC = () => {
                       {...register('nombre_comercial', {
                         required: true,
                       })}
+                      onChange={handle_change}
                     />
                   </Grid>
                 </>
@@ -540,6 +574,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  label="Primer nombre"
                   error={errors.primer_nombre?.type === 'required'}
                   value={data_register.primer_nombre}
                   helperText={
@@ -547,10 +582,8 @@ export const RegisterForm: React.FC = () => {
                       ? 'Este campo es obligatorio'
                       : ''
                   }
-                  label="Primer nombre"
-                  {...register('primer_nombre', {
-                    required: true,
-                  })}
+                  {...register('primer_nombre', { required: true })}
+                  onChange={handle_change}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -559,6 +592,7 @@ export const RegisterForm: React.FC = () => {
                   label="Segundo nombre"
                   value={data_register.segundo_nombre}
                   {...register('segundo_nombre')}
+                  onChange={handle_change}
                 />
                 {}
               </Grid>
@@ -576,6 +610,7 @@ export const RegisterForm: React.FC = () => {
                   {...register('primer_apellido', {
                     required: true,
                   })}
+                  onChange={handle_change}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -584,6 +619,7 @@ export const RegisterForm: React.FC = () => {
                   value={data_register.segundo_apellido}
                   label="Segundo apellido"
                   {...register('segundo_apellido')}
+                  onChange={handle_change}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -601,6 +637,7 @@ export const RegisterForm: React.FC = () => {
                         {...register('fecha_nacimiento', {
                           required: true,
                         })}
+                        onChange={handle_change}
                         error={errors.fecha_nacimiento?.type === 'required'}
                         helperText={
                           errors.fecha_nacimiento?.type === 'required'
@@ -634,6 +671,7 @@ export const RegisterForm: React.FC = () => {
                   {...register('email', {
                     required: true,
                   })}
+                  onChange={handle_change}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -655,6 +693,7 @@ export const RegisterForm: React.FC = () => {
                   {...register('confirmar_email', {
                     required: true,
                   })}
+                  onChange={handle_change}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -671,6 +710,7 @@ export const RegisterForm: React.FC = () => {
                   {...register('telefono_celular', {
                     required: true,
                   })}
+                  onChange={handle_change}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -686,6 +726,7 @@ export const RegisterForm: React.FC = () => {
                   {...register('confirmar_celular', {
                     required: true,
                   })}
+                  onChange={handle_change}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -706,6 +747,7 @@ export const RegisterForm: React.FC = () => {
                   {...register('nombre_de_usuario', {
                     required: true,
                   })}
+                  onChange={handle_change}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -715,6 +757,7 @@ export const RegisterForm: React.FC = () => {
                   {...register('password', {
                     required: true,
                   })}
+                  onChange={handle_change}
                   error={errors.password?.type === 'required' || error_password}
                   helperText={
                     errors.password?.type === 'required'
@@ -743,6 +786,7 @@ export const RegisterForm: React.FC = () => {
                   {...register('confirmar_password', {
                     required: true,
                   })}
+                  onChange={handle_change}
                 />
               </Grid>
               <Grid item justifyContent="center" container>
@@ -777,15 +821,6 @@ export const RegisterForm: React.FC = () => {
           )}
         </Grid>
       </form>
-      <DirecionResidenciaModal
-        is_modal_active={false}
-        setIsModalActive={() => {}}
-        completeAddress={''}
-        setCompleteAddress={() => {}}
-        reset={reset}
-        keyReset
-        watch
-      />
     </>
   );
 };

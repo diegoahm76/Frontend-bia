@@ -25,10 +25,6 @@ export interface TipoPersona {
   tipo_persona: string;
 }
 
-export interface IGeneric {
-  label: string;
-  value: string;
-}
 export interface IList {
   label: string;
   value: string;
