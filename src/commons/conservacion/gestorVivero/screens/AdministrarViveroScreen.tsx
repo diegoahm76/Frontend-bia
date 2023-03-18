@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 // Componentes de Material UI
 import {
   Grid,
@@ -8,7 +8,7 @@ import {
   Button,
   IconButton,
   Avatar,
-  Chip,
+  // Chip,
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/Add';
@@ -27,7 +27,7 @@ import { Title } from '../../../../components/Title';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdministrarViveroScreen(): JSX.Element {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { nurseries } = useAppSelector((state) => state.nursery);
   const [add_nursery_is_active, set_add_nursery_is_active] =
@@ -77,7 +77,7 @@ export function AdministrarViveroScreen(): JSX.Element {
             <IconButton
               onClick={() => {
                 dispatch(current_nursery(params.row));
-                console.log("editar "+ params.row)
+                // console.log("editar "+ params.row)
                 // navigate(
                 //   '/dashboard/gestor-documental/organigrama/editar-organigrama'
                 // );
