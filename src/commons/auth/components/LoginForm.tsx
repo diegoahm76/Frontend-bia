@@ -89,7 +89,7 @@ export const LoginForm: React.FC = () => {
           <Grid item sx={{ pt: '10px !important' }}>
             <FormControl size="small" fullWidth>
               <InputLabel htmlFor="outlined-adornment-password">
-                Contraseña*
+                Contraseña *
               </InputLabel>
               <OutlinedInput
                 required
@@ -168,6 +168,7 @@ export const LoginForm: React.FC = () => {
           item
           md={6}
           sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}
+          spacing={1}
         >
           <Grid item justifyContent="center"></Grid>
           <Grid
@@ -212,7 +213,7 @@ export const LoginForm: React.FC = () => {
             >
               <i>
                 Si tiene algún reclamo o solicitud, ingrese a{' '}
-                <a href="#">PQR en lineá</a> Número de atención: Linea nacional
+                <a href="#">PQR en linéa</a> Número de atención: Linea nacional
                 01-8000-51847095 Email:{' '}
                 <a href="#">atención.usuario@macarenia.org</a>
               </i>

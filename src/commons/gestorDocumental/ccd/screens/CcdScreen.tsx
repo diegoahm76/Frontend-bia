@@ -487,7 +487,6 @@ export const CcdScreen: React.FC = () => {
           </Grid>
         </Grid>
       </>
-      {/* // )} */}
       <CrearSeriesCcdDialog
         is_modal_active={create_is_active}
         set_is_modal_active={set_create_is_active}
