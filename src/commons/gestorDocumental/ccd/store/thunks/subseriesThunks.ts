@@ -4,10 +4,9 @@ import { api } from '../../../../../api/axios';
 // Types
 import { type AxiosError, type AxiosResponse } from 'axios';
 // Reducers
-
+import { get_subseries_ccd } from '../slices/subseriesSlice';
 // Interfaces
 import { type ISubSeriesObject } from '../../interfaces/ccd';
-import { get_subseries_ccd } from '../slices/subseriesSlice';
 
 // Consulta subseries documentales
 export const get_subseries_service: any = () => {
@@ -30,7 +29,7 @@ export const get_subseries_service: any = () => {
 };
 
 // Crear, actualizar y/o eliminar subseries
-export const create_subseries_service = (
+export const create_subseries_service:any = (
   newSubSeries: ISubSeriesObject[],
   clean: () => void
 ) => {
