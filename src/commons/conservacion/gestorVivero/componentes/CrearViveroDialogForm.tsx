@@ -82,7 +82,7 @@ const CrearViveroDialogForm = ({
   };
   const on_change_file: any = (e: any) => {
     console.log(e)
-     if (e.target.files) {
+     if (e.target.files != null) {
        if (e.target.files.length > 0) set_file(e.target.files[0])
      }
     
