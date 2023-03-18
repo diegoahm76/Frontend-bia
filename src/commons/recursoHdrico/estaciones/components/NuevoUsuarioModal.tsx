@@ -5,7 +5,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   FormHelperText,
   Grid,
   InputLabel,
@@ -20,7 +19,7 @@ import {
   type SubmitHandler,
   useForm,
 } from 'react-hook-form';
-import { crear_persona } from '../../requets/Request';
+import { crearPersona } from '../../requets/Request';
 import Select from 'react-select';
 import { api } from '../../../../api/axios';
 
@@ -83,7 +82,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
       observacion: data.observacion,
       id_estacion: data.estacion.value,
     };
-    void crear_persona(nueva_persona);
+    void crearPersona(nueva_persona);
     set_is_modal_active(!is_modal_active);
   };
 
@@ -124,20 +123,15 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
 
   return (
     <Dialog open={is_modal_active} onClose={handle_close}>
-      <DialogTitle>Nuevo Parte Interesada</DialogTitle>
-      <Divider />
-      <DialogContent sx={{ mb: '0px' }}>
+      <DialogTitle>Nuevo usuario</DialogTitle>
+      <DialogContent>
         <form onSubmit={handleSubmit(on_sumbit_persona)}>
-          <Grid container spacing={2}>
+          <Grid container spacing={3}>
             <Grid item xs={12}>
               <TextField
                 label="Tipo de Identificación"
                 select
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('cod_tipo_documento_id', { required: true })}
                 error={Boolean(errors.cod_tipo_documento_id)}
                 helperText={
@@ -158,10 +152,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
                 label="Número Identificación"
                 type="number"
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('numero_documento_id', { required: true })}
                 error={Boolean(errors.numero_documento_id)}
                 helperText={
@@ -175,10 +165,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
               <TextField
                 label="Primer Nombre"
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('primer_nombre', { required: true })}
                 error={Boolean(errors.primer_nombre)}
                 helperText={
@@ -192,10 +178,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
               <TextField
                 label="Segundo Nombre"
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('segundo_nombre', { required: true })}
                 error={Boolean(errors.segundo_nombre)}
                 helperText={
@@ -209,10 +191,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
               <TextField
                 label="Primer Apellido"
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('primer_apellido', { required: true })}
                 error={Boolean(errors.primer_apellido)}
                 helperText={
@@ -226,10 +204,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
               <TextField
                 label="Segundo Apellido"
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('segundo_apellido', { required: true })}
                 error={Boolean(errors.segundo_apellido)}
                 helperText={
@@ -243,10 +217,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
               <TextField
                 label="Entidad a la cual pertenece"
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 placeholder="Entidad a la cual pertenece"
                 {...register('entidad', { required: true })}
                 error={Boolean(errors.entidad)}
@@ -259,10 +229,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
               <TextField
                 label="Cargo"
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('cargo', { required: true })}
                 error={Boolean(errors.cargo)}
                 helperText={
@@ -275,10 +241,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
                 label="Correo Electronico"
                 type="email"
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('email_notificacion', { required: true })}
                 error={Boolean(errors.email_notificacion)}
                 helperText={
@@ -293,10 +255,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
                 label="Número Celular"
                 type="number"
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('nro_celular_notificacion', { required: true })}
                 error={Boolean(errors.nro_celular_notificacion)}
                 helperText={
@@ -311,10 +269,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
                 label="Observación"
                 multiline
                 fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
                 {...register('observacion', { required: true })}
                 error={Boolean(errors.observacion)}
                 helperText={

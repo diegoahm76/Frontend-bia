@@ -20,10 +20,12 @@ export const AdministradorDeEstaciones: React.FC = () => {
   const [editar_estacion_is_active, set_editar_estacion_is_active] =
     useState<boolean>(false);
 
-  const handle_open_crear_estacion = (): void => {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_open_crear_estacion = () => {
     set_crear_estacion_is_active(true);
   };
-  const handle_open_editar_estacion = (): void => {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_open_editar_estacion = () => {
     set_editar_estacion_is_active(true);
   };
 

@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Grid,
   Box,
@@ -27,16 +30,15 @@ import {
 } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { api } from '../../../../api/axios';
-import { type Persona } from '../interfaces/interfaces';
+import { type Estaciones, type Persona } from '../interfaces/interfaces';
 import {
+  consultar_estaciones,
   consultar_estaciones_id,
-  control_success,
-  eliminar_usuario,
+  eliminarUsuario,
 } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { Title } from '../../../../components/Title';
-import { NuevoUsuarioModal } from '../components/NuevaPersonaDialog';
-import { EditarPersonaDialog } from '../components/EditarPersonaDialog';
+import { NuevoUsuarioModal } from '../components/NuevoUsuarioModal';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UsuariosScreen: React.FC = () => {
@@ -48,13 +50,14 @@ export const UsuariosScreen: React.FC = () => {
   const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<
     Persona[]
   >([]);
-  // const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
+  const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
 
-  const handle_open_crear_persona = (): void => {
+  const handle_open_crear_persona = () => {
     set_crear_persona_is_active(true);
   };
 
-  const columns: GridColDef[] = [
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const columnDefs: GridColDef[] = [
     {
       headerName: 'Estacion',
       field: 'nombre_estacion',
@@ -115,7 +118,7 @@ export const UsuariosScreen: React.FC = () => {
     formState: { errors: errors_filtrar },
   } = useForm();
 
-  const get_data_initial = async (): Promise<void> => {
+  const get_data_initial = async () => {
     try {
       set_loading(true);
       const { data } = await api.get('/estaciones/consultar-estaciones/');
@@ -170,11 +173,10 @@ export const UsuariosScreen: React.FC = () => {
   };
 
   const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors },
   } = useForm();
 
-  const confirmar_eliminar_usuario = (idPersona: number): void => {
+  const confirmar_eliminar_usuario = (idPersona: number) => {
     void Swal.fire({
       title: 'Estas seguro?',
       text: 'Va a eliminar un usuario',
@@ -184,14 +186,12 @@ export const UsuariosScreen: React.FC = () => {
       cancelButtonColor: '#d33',
       confirmButtonText: 'Si, elminar!',
       cancelButtonText: 'Cancelar',
-    }).then(async (result) => {
+    }).then((result) => {
       if (result.isConfirmed) {
-        await eliminar_usuario(idPersona);
-        control_success('La persona se eliminó correctamente');
+        void eliminarUsuario(idPersona);
       }
     });
   };
-
   return (
     <>
       <Grid
@@ -306,7 +306,7 @@ export const UsuariosScreen: React.FC = () => {
                     density="compact"
                     autoHeight
                     rows={estaciones_meteologicas}
-                    columns={columns}
+                    columns={columnDefs}
                     getRowId={(row) => row.id_persona}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
@@ -323,12 +323,10 @@ export const UsuariosScreen: React.FC = () => {
         is_modal_active={crear_persona_is_active}
         set_is_modal_active={set_crear_persona_is_active}
       />
-      {
-        <EditarPersonaDialog
-          set_is_modal_active={set_is_modal_editar_active}
-          is_modal_active={is_modal_editar_active}
-        />
-      }
+      {/* {<EditarUsuarioModal
+      set_is_modal_active={set_is_modal_editar_active}
+      is_modal_active={is_modal_editar_active}
+    />} */}
     </>
   );
 };
