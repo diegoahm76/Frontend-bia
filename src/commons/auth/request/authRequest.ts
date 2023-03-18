@@ -1,13 +1,17 @@
 import { api } from '../../../api/axios';
-import {
-  type ResponseAuth,
-  type LoginUser,
-  type Permissions,
-  type IUserInfo,
+import type {
+  ResponseAuth,
+  LoginUser,
+  Permissions,
+  IUserInfo,
+  Persona
 } from '../interfaces/authModels';
 import {
+  type Paises,
+  type TipoDocumento,
+  type TipoPersona,
   type ResponseServer,
-  type ResponseThunks,
+  type ResponseThunks
 } from '../../../interfaces/globalModels';
 import { type AxiosResponse, type AxiosError } from 'axios';
 import { control_error } from '../../../helpers/controlError';
@@ -17,22 +21,22 @@ export const login_post = async (
 ): Promise<ResponseThunks<IUserInfo>> => {
   try {
     const {
-      data: { userinfo },
+      data: { userinfo }
     } = await api.post<ResponseAuth>('users/login/', loginUser);
 
     return {
       ok: true,
-      data: { ...userinfo },
+      data: { ...userinfo }
     };
   } catch (error: any) {
     console.error(error);
     const {
-      response: { data },
+      response: { data }
     } = error;
 
     return {
       ok: false,
-      error_message: data.detail,
+      error_message: data.detail
     };
   }
 };
@@ -43,14 +47,14 @@ export const permissions_request = async (
 ): Promise<ResponseThunks<Permissions>> => {
   try {
     const {
-      data: { data },
+      data: { data }
     } = await api.get<ResponseServer<Permissions>>(
       `permisos/permisos-rol/get-by-entorno/?id_usuario=${id_usuario}&tipo_entorno=${tipo_entorno}`
     );
 
     return {
       ok: true,
-      data,
+      data
     };
   } catch (error: any) {
     const { response } = error as AxiosError<AxiosResponse>;
@@ -61,7 +65,36 @@ export const permissions_request = async (
 
     return {
       ok: false,
-      error_message: data.detail,
+      error_message: data.detail
     };
   }
+};
+
+export const get_tipo_persona = async (): Promise<
+  AxiosResponse<ResponseServer<TipoPersona[]>>
+> => {
+  return await api.get<ResponseServer<TipoPersona[]>>('listas/tipo-persona/');
+};
+
+export const get_tipo_documento = async (): Promise<
+  AxiosResponse<ResponseServer<TipoDocumento[]>>
+> => {
+  return await api.get<ResponseServer<TipoDocumento[]>>(
+    'listas/tipo-documento/'
+  );
+};
+
+export const get_paises = async (): Promise<
+  AxiosResponse<ResponseServer<Paises[]>>
+> => {
+  return await api.get<ResponseServer<Paises[]>>('listas/paises/');
+};
+
+export const get_person_by_document = async (
+  tipo_documento: string,
+  numero_documento: string
+): Promise<AxiosResponse<ResponseServer<Persona>>> => {
+  return await api.get(
+    `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
+  );
 };
