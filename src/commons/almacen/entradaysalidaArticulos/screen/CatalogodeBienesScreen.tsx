@@ -1,12 +1,10 @@
-import { Grid } from "@mui/material"
-import { Title } from '../../../../components/Title';
-
-
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { Column } from "primereact/column";
 import { TreeTable } from "primereact/treetable";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   obtener_todos_bienes,
   seleccionar_bien_edit,
@@ -18,7 +16,7 @@ import {
  // use_app_selector,
 } from "../../entradaysalidaArticulos/hooks/hooks";
 import "primeicons/primeicons.css";
-import { type INodo } from "../interfaces/Nodo"; 
+import {type INodo  } from "../interfaces/Nodo"; 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import { api } from "../../../../api/axios";
 import Button from "@mui/material/Button";
@@ -95,25 +93,59 @@ export const CatalogodeBienesScreen: React.FC = () => {
     Column: any
   ) => {
     return (
-      <>
-      <Title title='INFORMACIÓN GENERAL' />
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      ></Grid></>
+      <div>
+        <Button
+          type="button"
+          startIcon={<AddIcon />}
+          title="Agregar"
+          style={{ marginRight: ".5em", color: "black", border: "none" }}
+          onClick={() => {
+            enviar_datos(node, false); // crear
+          }}
+          disabled={!node.data.crear}
+        ></Button>
+        <Button 
+          type="button"
+          startIcon={< EditIcon />}
+          title="Editar"
+          style={{ marginRight: ".5em", color: "black", border: "none" }}
+          onClick={() => {
+            enviar_datos(node, true); // true
+          }}
+          disabled={!node.data.editar}
+        ></Button>
+        <Button
+          type="button"
+          startIcon={<DeleteIcon />}
+          className="p-button-danger p-button-outlined"
+          title="Eliminar"
+          style={{ marginRight: ".5em", color: "black", border: "none" }}
+          disabled={!node.data.eliminar}
+          onClick={() => {
+            eliminarNodo(node); // true
+          }}
+        ></Button>
+      </div>
+    );
+  };
 
-        
-   
-    )
-}
+  function enviar_datos(nodo: { data: any }, accion: boolean) : void {
+    if (accion) {
+      seleccionar_bien_edit(dispatch, nodo.data.bien);
+    } else {
+      seleccionar_bien_create(dispatch, nodo.data.bien);
+    }
+    navigate(
+      "/dashboard/Recaudo/gestor-notificacion/crear-entrada-articulos-fijos"
+    );
+  }
+
+  function eliminarNodo(nodo: {
+    data: { crear: any; editar: any; eliminar: any } | { id_nodo: any };
+  }) : void {
+    // eliminarBien(dispatch, nodo);
+    void obtener_todos_bienes(dispatch);
+  }
 
   const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
