@@ -6,7 +6,7 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { useForm, Controller } from 'react-hook-form';
 import Select from 'react-select';
-import type { IList } from '../../../front-bia/src/Interfaces/auth';
+import type { IList } from '../interfaces/globalModels';
 import { Button, Typography } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SavelIcon from '@mui/icons-material/Save';
