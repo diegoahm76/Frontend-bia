@@ -13,7 +13,7 @@ export const initial_state_bien: IBienGet = {
     id_bien_padre: 0,
     nivel_jerarquico: 0,
   },
-  bienSeleccionado: {
+  bien_seleccionado: {
     id_bien: 0,
     codigo_bien: "",
     nro_elemento_bien: 0,
@@ -40,6 +40,7 @@ export const initial_state_bien: IBienGet = {
     id_unidad_medida_vida_util: 0,
     id_bien_padre: null,
   },
+
 };
 
 export const bien_form = createSlice({
@@ -62,7 +63,7 @@ export const bien_form = createSlice({
       });
     },
     seleccionar_bien_model_crete: (state, action) => {
-      state.bienSeleccionado = action.payload;
+      state.bien_seleccionado = action.payload;
       state.dataEdit = {
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         nivel_jerarquico: action.payload.nivel_jerarquico + 1,
@@ -71,7 +72,7 @@ export const bien_form = createSlice({
       };
     },
     seleccionar_bien_model_edit: (state, action) => {
-      state.bienSeleccionado = action.payload;
+      state.bien_seleccionado = action.payload;
       state.dataEdit = {
         nivel_jerarquico: action.payload.nivel_jerarquico,
         id_bien_padre: action.payload?.id_bien,
@@ -79,7 +80,7 @@ export const bien_form = createSlice({
       };
     },
     obtener_bien_action: (state, action) => {
-      state.bienSeleccionado = action.payload;
+      state.bien_seleccionado = action.payload;
     },
     eliminar_bien_action: (state, action) => {
       state.bien = state.bien.filter(b => b.id_bien !== action.payload)

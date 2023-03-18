@@ -1,7 +1,7 @@
 export interface IBienGet {
     [x: string]: any;
     bien: IBienes[];
-    bienSeleccionado: IBienes;
+    bien_seleccionado: IBienes;
     dataEdit: IDataEdit;
   }
   
