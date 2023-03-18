@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
-import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
 import { CcdRoutes } from '../commons/gestorDocumental/ccd/routes/CcdRoutes';
@@ -8,6 +7,9 @@ import { TcaRoutes } from '../commons/gestorDocumental/tca/routes/TcaRoutes';
 import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes';
 import { MainLayout } from '../layouts/MainLayout';
 import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
+import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
+import { ConservacionRoutes } from '../commons/conservacion/routes/ConservacionRoutes';
+import { RecaudoRoutes } from '../commons/recaudo/routes/RecaudoRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProtectedRoutes: React.FC = () => {
@@ -18,6 +20,8 @@ export const ProtectedRoutes: React.FC = () => {
         <Route path="home/*" element={<HomeRoutes />} />
         {/* Seguridad */}
         <Route path="seguridad/*" element={<SeguridadRoutes />} />
+        {/* conservacion */}
+        <Route path="conservacion/*" element={<ConservacionRoutes />} />
         {/* Gestor documental */}
         <Route path="gestor_documental/*">
           <Route path="organigrama/*" element={<OrganigramaRoutes />} />
@@ -31,6 +35,8 @@ export const ProtectedRoutes: React.FC = () => {
         </Route>
         {/* Almacen */}
         <Route path="almacen/*" element={<AlmacenRoutes />} />
+        {/* Recaudo */}
+        <Route path="recaudo/*" element={<RecaudoRoutes />} />
       </Route>
     </Routes>
   );

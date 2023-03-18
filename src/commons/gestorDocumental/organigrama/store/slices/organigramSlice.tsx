@@ -47,6 +47,9 @@ export const organigrama_slice = createSlice({
     ) => {
       state.organigram_current = action.payload;
     },
+    clean_current_organigram: (state: IOrganigram) => {
+      state.organigram_current = initial_state_organigram_current;
+    },
     get_levels: (state: IOrganigram, action: PayloadAction<IObjLevels[]>) => {
       state.levels_organigram = action.payload;
     },
@@ -60,6 +63,7 @@ export const {
   get_mold_organigrams,
   get_organigrams,
   current_organigram,
+  clean_current_organigram,
   get_levels,
   get_unitys,
 } = organigrama_slice.actions;
