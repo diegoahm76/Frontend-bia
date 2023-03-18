@@ -102,7 +102,7 @@ export function CrearOrganigrama({
       headerName: 'Fecha retiro',
       width: 150,
       valueFormatter: (params) => {
-        if (!params.value) {
+        if (params.value === '') {
           return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
         }
         const date = new Date(params.value);

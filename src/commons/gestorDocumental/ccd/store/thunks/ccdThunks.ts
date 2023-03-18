@@ -178,9 +178,11 @@ export const create_ccds_service: any = (
       const { data } = await api.post('gestor/ccd/create/', ccd);
       dispatch(get_ccd_current(data.data));
       control_success(data.detail);
+      console.log(data.detail, 'success');
       set_save_ccd(true);
       return data;
     } catch (error: any) {
+      console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

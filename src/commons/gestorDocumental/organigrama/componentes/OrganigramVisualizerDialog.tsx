@@ -66,7 +66,7 @@ export const OrganigramVisualizerDialog = ({
       </AppBar>
       <Box>
         <DialogContent sx={{ mb: '0px' }}>
-          <Subtitle title={` ${organigram_current.nombre}`} />
+          <Subtitle title={organigram_current.nombre} />
           <OrganigramVisual />
         </DialogContent>
       </Box>

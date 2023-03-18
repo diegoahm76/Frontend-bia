@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Alert,
   Button,
@@ -8,7 +9,6 @@ import {
   IconButton,
   InputAdornment,
   InputLabel,
-  Link,
   TextField,
   Typography,
 } from '@mui/material';
@@ -73,105 +73,153 @@ export const LoginForm: React.FC = () => {
 
   return (
     <form onSubmit={on_submit}>
-      <Grid container direction={'column'} spacing={3}>
-        <Grid item>
-          <TextField
-            required
-            fullWidth
-            label="Usuario"
-            name="nombre_de_usuario"
-            value={nombre_de_usuario}
-            onChange={on_input_change}
-          />
-        </Grid>
-        <Grid item>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="outlined-adornment-password">
-              Contraseña
-            </InputLabel>
-            <OutlinedInput
-              required
-              id="outlined-adornment-password"
-              type={show_password ? 'text' : 'password'}
-              value={password}
-              name="password"
-              onChange={on_input_change}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handle_click_show_password}
-                    edge="end"
-                  >
-                    {show_password ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Contraseña"
-            />
-          </FormControl>
-        </Grid>
-        {is_error ? (
+      <Grid container justifyContent={'column'} spacing={2}>
+        <Grid item xs={12} sm={12} md={6}>
           <Grid item>
-            <Alert
-              severity="error"
-              onClose={() => {
-                set_is_error(false);
+            <TextField
+              required
+              fullWidth
+              label="Usuario"
+              name="nombre_de_usuario"
+              size="small"
+              value={nombre_de_usuario}
+              onChange={on_input_change}
+            />
+          </Grid>
+          <Grid item sx={{ pt: '10px !important' }}>
+            <FormControl size="small" fullWidth>
+              <InputLabel htmlFor="outlined-adornment-password">
+                Contraseña*
+              </InputLabel>
+              <OutlinedInput
+                required
+                id="outlined-adornment-password"
+                type={show_password ? 'text' : 'password'}
+                value={password}
+                name="password"
+                onChange={on_input_change}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handle_click_show_password}
+                      edge="end"
+                    >
+                      {show_password ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Contraseña"
+              />
+            </FormControl>
+          </Grid>
+          {is_error ? (
+            <Grid item sx={{ pt: '10px !important' }}>
+              <Alert
+                severity="error"
+                onClose={() => {
+                  set_is_error(false);
+                }}
+              >
+                {error_message}
+              </Alert>
+            </Grid>
+          ) : (
+            ''
+          )}
+          <Grid item container sx={{ pt: '10px !important' }}>
+            <ReCaptcha
+              className="g-recaptcha"
+              sitekey={process.env.REACT_APP_SITE_KEY ?? ''}
+              hl="es"
+              onChange={() => {
+                set_value(true);
+              }}
+              onExpired={() => {
+                set_value(false);
+              }}
+              onError={() => {
+                set_value(false);
+              }}
+            />
+          </Grid>
+          <Grid item justifyContent="center" sx={{ pt: '10px !important' }}>
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              fullWidth
+              color="success"
+              loading={is_authenticating}
+              disabled={disable}
+              style={{ fontSize: '.9rem' }}
+            >
+              Iniciar Sesión
+            </LoadingButton>
+          </Grid>
+          <Grid item sx={{ pt: '10px !important' }}>
+            <Link className="no-decoration" to="#">
+              <Typography sx={{ textAlign: 'center', mb: '20px' }}>
+                ¿Olvidó su contraseña?
+              </Typography>
+            </Link>
+          </Grid>
+        </Grid>
+        <Grid
+          item
+          md={6}
+          sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}
+        >
+          <Grid item justifyContent="center"></Grid>
+          <Grid
+            item
+            xs={12}
+            container
+            justifyContent="center"
+            mb={3}
+            sx={{
+              background: '#F1F2F8',
+              padding: '10px 15px',
+              borderRadius: '15px',
+              mb: '10px',
+            }}
+          >
+            <Typography sx={{ fontSize: '17px' }}>Bienvenido</Typography>
+            <Typography sx={{ fontSize: '13px', textAlign: 'justify' }}>
+              Este es nuestro portal de trámites en lineá un sistema fácil de
+              usar, ágil y sencillo para el control general de solicitudes y
+              requerimientos ambientales en el departamento del Meta.
+            </Typography>
+          </Grid>
+          <Grid item justifyContent="center">
+            <Button
+              type="button"
+              variant="outlined"
+              fullWidth
+              color="primary"
+              style={{ fontSize: '.9rem' }}
+            >
+              <Link className="no-decoration" to="/auth/register">
+                Regístrese
+              </Link>
+            </Button>
+          </Grid>
+          <Grid item sx={{ p: '10px 0' }}>
+            <Typography
+              sx={{
+                fontSize: '13px',
+                textAlign: 'center',
               }}
             >
-              {error_message}
-            </Alert>
-          </Grid>
-        ) : (
-          ''
-        )}
-
-        <Grid item>
-          <Link sx={{ textDecoration: 'none' }} href="#">
-            <Typography>¿Olvidó su contraseña?</Typography>
-          </Link>
-        </Grid>
-        <Grid item container justifyContent={'center'}>
-          <ReCaptcha
-            sitekey={process.env.REACT_APP_SITE_KEY ?? ''}
-            hl="es"
-            onChange={() => {
-              set_value(true);
-            }}
-            onExpired={() => {
-              set_value(false);
-            }}
-            onError={() => {
-              set_value(false);
-            }}
-          />
-        </Grid>
-        <Grid item justifyContent="center" container>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            fullWidth
-            color="success"
-            loading={is_authenticating}
-            disabled={disable}
-            style={{ fontSize: '.9rem' }}
-          >
-            Iniciar Sesión
-          </LoadingButton>
-        </Grid>
-        <Grid item>
-          <Button
-            fullWidth
-            sx={{ textTransform: 'none', textAlign: 'center' }}
-            href="#/auth/register"
-          >
-            <Typography sx={{ color: 'black' }}>
-              No tienes cuenta? <b>Registrese</b>
+              <i>
+                Si tiene algún reclamo o solicitud, ingrese a{' '}
+                <a href="#">PQR en lineá</a> Número de atención: Linea nacional
+                01-8000-51847095 Email:{' '}
+                <a href="#">atención.usuario@macarenia.org</a>
+              </i>
             </Typography>
-          </Button>
+          </Grid>
         </Grid>
       </Grid>
-      {/* Dialog para seleccionar entorno  */}
       <DialogEntorno />
     </form>
   );
