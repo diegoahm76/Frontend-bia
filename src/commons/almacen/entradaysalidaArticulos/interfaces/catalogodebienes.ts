@@ -1,11 +1,17 @@
-export interface IBienGet {
-    [x: string]: any;
-    bien: IBienes[];
-    bien_seleccionado: IBienes;
-    dataEdit: IDataEdit;
-  }
-  
-  export interface IBienes {
+export interface IBien {
+  //mold_organigram: IDatum[];
+  bienes: IObjBien[];
+  current_bien: IObjBien;
+  //levels_organigram: IObjLevels[];
+  //unity_organigram: IObjUnitys[];
+}
+
+export interface IList{
+  value: string|number,
+  label: string|number
+}
+
+  export interface IObjBien {
     id_bien: number|null;
     codigo_bien: string;
     nro_elemento_bien: number;
@@ -32,19 +38,4 @@ export interface IBienGet {
     id_unidad_medida_vida_util?: number;
     id_bien_padre?: number | null;
   }
-  
-  interface IDataEdit{
-    edit: boolean,
-    id_bien_padre: number|null,
-    nivel_jerarquico: number,
-  } 
-
-  export interface IGeneric {
-    label: string;
-    value: string
-}
-
-export interface IGeneric2{
-    value: string;
-}
   

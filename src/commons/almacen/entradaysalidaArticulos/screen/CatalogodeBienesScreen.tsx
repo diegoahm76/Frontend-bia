@@ -5,16 +5,8 @@ import { Column } from "primereact/column";
 import { TreeTable } from "primereact/treetable";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from '@mui/icons-material/Edit';
-import {
-  obtener_todos_bienes,
-  seleccionar_bien_edit,
-  seleccionar_bien_create,
-  initial_state_bien,
-} from "../../../almacen/entradaysalidaArticulos/slices/indexCatalogodeBienes";
-import {
-  use_app_dispatch,
- // use_app_selector,
-} from "../../entradaysalidaArticulos/hooks/hooks";
+import { current_bien } from '../store/slices/indexCatalogodeBienes';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import "primeicons/primeicons.css";
 import {type INodo  } from "../interfaces/Nodo"; 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -22,11 +14,13 @@ import { api } from "../../../../api/axios";
 import Button from "@mui/material/Button";
 import { Grid, Stack } from "@mui/material";
 import { Title } from "../../../../components";
+import { get_bienes_service } from '../store/thunks/catalogoBienesThunks';
+import CrearBienDialogForm from '../componentes/CrearBienDialogForm';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const CatalogodeBienesScreen: React.FC = () => {
  //  const bien = use_app_selector((state) => state.bien);
-  const dispatch = use_app_dispatch();
+  const dispatch = useAppDispatch();
 
   // const [buscarProducto, setBuscarProducto] = useState(true);
   // const [bienesExampleH, setBienesExampleNodes] = useState<IBienes[]>([]);
@@ -34,61 +28,25 @@ export const CatalogodeBienesScreen: React.FC = () => {
   // const [global_filter2, set_global_filter2] = useState(null);
   const [array_total, set_array_total] = useState<INodo[]>([]);
 
-  useEffect(() => {
-    void get_bienes();
-  }, []);
+  const { bienes } = useAppSelector((state) => state.bien);
+  const [add_bien_is_active, set_add_bien_is_active] =
+    useState<boolean>(false);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const get_bienes = async () => {
-    await api
-      .get("almacen/bienes/catalogo-bienes/get-list")
-      .then((bienes) => {
-        set_array_total(bienes.data.data);
-      })
-      .catch(() => {});
-  };
-  console.log(array_total, "estos son todos los datos");
+    useEffect(() => {
+      get_bienes();
+    }, []);
+  
+    const get_bienes: any = async () => {
+      await api
+        .get("almacen/bienes/catalogo-bienes/get-list")
+        .then((bienes_data) => {
+          set_array_total(bienes_data.data.data);
+        })
+        .catch(() => {});
+    };
 
-  // useEffect(() => {
-  //   armarArbol(bien);
-  // }, [bien]);
-
-  // function armarArbol(bienArray) {
-  //   let contador = 0;
-  //   bien.forEach((bienElement) => {
-  //     agregarNodosBase(bienElement, contador);
-  //     contador = array_total.length;
-  // });
-  // }
-
-  // const tree_table_func_map = {
-  //   global_filter1: set_global_filter1,
-  //   global_filter2: set_global_filter2,
-  // };
-
- 
-  // const get_header = (globalFilterKey: string) => {
-  //   return (
-  //     <div className="text-right">
-  //       <div className="p-input-icon-left">
-  //         <i className="pi pi-search"></i>
-  //         <InputText
-  //           type="search"
-  //           onInput={(e: any) =>
-  //             tree_table_func_map[`${globalFilterKey}`](e.target.value)
-  //           }
-  //           placeholder="Global Search"
-  //           size={50}
-  //         />
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
-  // armarArbol();
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const action_template = (
+  
+  const action_template: any = (
     node: { data: { crear: any; editar: any; eliminar: any } },
     Column: any
   ) => {
@@ -99,9 +57,9 @@ export const CatalogodeBienesScreen: React.FC = () => {
           startIcon={<AddIcon />}
           title="Agregar"
           style={{ marginRight: ".5em", color: "black", border: "none" }}
-          onClick={() => {
-            enviar_datos(node, false); // crear
-          }}
+          // onClick={() => {
+          //   enviar_datos(node, false); // crear
+          // }}
           disabled={!node.data.crear}
         ></Button>
         <Button 
@@ -109,9 +67,9 @@ export const CatalogodeBienesScreen: React.FC = () => {
           startIcon={< EditIcon />}
           title="Editar"
           style={{ marginRight: ".5em", color: "black", border: "none" }}
-          onClick={() => {
-            enviar_datos(node, true); // true
-          }}
+          // onClick={() => {
+          //   enviar_datos(node, true); // true
+          // }}
           disabled={!node.data.editar}
         ></Button>
         <Button
@@ -121,41 +79,41 @@ export const CatalogodeBienesScreen: React.FC = () => {
           title="Eliminar"
           style={{ marginRight: ".5em", color: "black", border: "none" }}
           disabled={!node.data.eliminar}
-          onClick={() => {
-            eliminarNodo(node); // true
-          }}
+          // onClick={() => {
+          //   eliminarNodo(node); // true
+          // }}
         ></Button>
       </div>
     );
   };
 
-  function enviar_datos(nodo: { data: any }, accion: boolean) : void {
-    if (accion) {
-      seleccionar_bien_edit(dispatch, nodo.data.bien);
-    } else {
-      seleccionar_bien_create(dispatch, nodo.data.bien);
-    }
-    navigate(
-      "/dashboard/Recaudo/gestor-notificacion/crear-entrada-articulos-fijos"
-    );
-  }
+  // function enviar_datos(nodo: { data: any }, accion: boolean) : void {
+  //   if (accion) {
+  //     seleccionar_bien_edit(dispatch, nodo.data.bien);
+  //   } else {
+  //     seleccionar_bien_create(dispatch, nodo.data.bien);
+  //   }
+  //   navigate(
+  //     "/dashboard/Recaudo/gestor-notificacion/crear-entrada-articulos-fijos"
+  //   );
+  // }
 
-  function eliminarNodo(nodo: {
-    data: { crear: any; editar: any; eliminar: any } | { id_nodo: any };
-  }) : void {
-    // eliminarBien(dispatch, nodo);
-    void obtener_todos_bienes(dispatch);
-  }
+  // function eliminarNodo(nodo: {
+  //   data: { crear: any; editar: any; eliminar: any } | { id_nodo: any };
+  // }) : void {
+  //   // eliminarBien(dispatch, nodo);
+  //   void obtener_todos_bienes(dispatch);
+  // }
 
-  const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const crear_articulo = () => {
-    console.log("crear", initial_state_bien);
-    seleccionar_bien_create(dispatch, initial_state_bien.bienSeleccionado);
-    navigate(
-      "/dashboard/Recaudo/gestor-notificacion/crear-entrada-articulos-fijos"
-    );
-  };
+  // const navigate = useNavigate();
+  // // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  // const crear_articulo = () => {
+  //   console.log("crear", initial_state_bien);
+  //   seleccionar_bien_create(dispatch, initial_state_bien.bienSeleccionado);
+  //   navigate(
+  //     "/dashboard/Recaudo/gestor-notificacion/crear-entrada-articulos-fijos"
+  //   );
+  // };
 
   return (
     <div className="row min-vh-100">
@@ -175,7 +133,10 @@ export const CatalogodeBienesScreen: React.FC = () => {
                 type="button"
                 title="Agregar"
                 color="inherit"                
-                onClick={() => { crear_articulo(); }}>
+                onClick={() => {
+                  set_add_bien_is_active(true);
+                }}
+                >
                 Crear Carpeta Padre
               </Button>
               </Stack>
@@ -211,7 +172,10 @@ export const CatalogodeBienesScreen: React.FC = () => {
                     <Column field="editar" header="Editar"></Column>
                     <Column field="eliminar" header="Eliminar"></Column> */}
               </TreeTable>
-              ;
+              <CrearBienDialogForm
+            is_modal_active={add_bien_is_active}
+            set_is_modal_active={set_add_bien_is_active}
+          /> 
             </div>
           </div>
         </form>

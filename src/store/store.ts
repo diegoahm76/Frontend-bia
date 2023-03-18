@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist';
 import { layout_slice } from './layoutSlice';
 import { auth_slice } from '../commons/auth/store/authSlice';
 import { nursery_slice } from '../commons/conservacion/gestorVivero/store/slice/viveroSlice';
+import { bien_slice } from '../commons/almacen/entradaysalidaArticulos/store/slices/indexCatalogodeBienes';
 
 import { organigrama_slice } from '../commons/gestorDocumental/organigrama/store/slices/organigramSlice';
 import { ccd_slice } from '../commons/gestorDocumental/ccd/store/slices/ccdSlice';
@@ -27,6 +28,7 @@ const app_reducers = combineReducers({
   subseries: subseries_slice.reducer,
   assignments: assignments_slice.reducer,
   nursery: nursery_slice.reducer,
+  bien: bien_slice.reducer,
 
 });
 
