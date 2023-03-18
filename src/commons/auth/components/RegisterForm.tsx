@@ -778,7 +778,7 @@ export const RegisterForm: React.FC = () => {
         </Grid>
       </form>
       <DirecionResidenciaModal
-        is_modal_active={true}
+        is_modal_active={false}
         setIsModalActive={() => {}}
         completeAddress={''}
         setCompleteAddress={() => {}}
