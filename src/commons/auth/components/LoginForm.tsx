@@ -127,7 +127,13 @@ export const LoginForm: React.FC = () => {
           ) : (
             ''
           )}
-          <Grid item container sx={{ pt: '10px !important' }}>
+          <Grid
+            item
+            container
+            justifyContent="center"
+            sx={{ pt: '10px !important' }}
+            xs={12}
+          >
             <ReCaptcha
               className="g-recaptcha"
               sitekey={process.env.REACT_APP_SITE_KEY ?? ''}
@@ -169,6 +175,7 @@ export const LoginForm: React.FC = () => {
           md={6}
           sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}
           spacing={1}
+          container
         >
           <Grid item justifyContent="center"></Grid>
           <Grid
