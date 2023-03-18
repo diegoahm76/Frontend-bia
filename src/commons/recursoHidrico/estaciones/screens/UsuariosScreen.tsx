@@ -1,73 +1,88 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Grid, Box, Stack, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Stack,
+  Button,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
 import CircularProgress from '@mui/material/CircularProgress';
-import Select from "react-select";
-import type {
-  GridColDef,
-} from '@mui/x-data-grid';
+import Select from 'react-select';
+import type { GridColDef } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import type React from "react";
-import { useEffect, useState } from "react";
-import { Controller, useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
-import Swal from "sweetalert2";
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import {
+  Controller,
+  useForm,
+  type FieldValues,
+  type SubmitHandler,
+} from 'react-hook-form';
+import Swal from 'sweetalert2';
 import { api } from '../../../../api/axios';
-import { type Estaciones, type Persona } from '../interfaces/interfaces';
-import { consultar_estaciones, consultar_estaciones_id, eliminarUsuario } from '../../requets/getRequest';
+import { type Persona } from '../interfaces/interfaces';
+import {
+  consultar_estaciones_id,
+  control_success,
+  eliminar_usuario,
+} from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { Title } from '../../../../components/Title';
-import { NuevoUsuarioModal } from '../components/NuevoUsuarioModal';
+import { NuevoUsuarioModal } from '../components/NuevaPersonaDialog';
+import { EditarPersonaDialog } from '../components/EditarPersonaDialog';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UsuariosScreen: React.FC = () => {
-  const [crear_persona_is_active, set_crear_persona_is_active] = useState<boolean>(false);
+  const [crear_persona_is_active, set_crear_persona_is_active] =
+    useState<boolean>(false);
   const [is_modal_editar_active, set_is_modal_editar_active] = useState(false);
   const [estaciones_options, set_estaciones_options] = useState([]);
   const [loading, set_loading] = useState(false);
-  const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<Persona[]>([]);
-  const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
+  const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<
+    Persona[]
+  >([]);
+  // const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
 
-  const handle_open_crear_persona = () => {
+  const handle_open_crear_persona = (): void => {
     set_crear_persona_is_active(true);
-  }
+  };
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const columnDefs: GridColDef[] = [
+  const columns: GridColDef[] = [
     {
-      headerName: "Estacion",
-      field: "nombre_estacion",
+      headerName: 'Estacion',
+      field: 'nombre_estacion',
       minWidth: 140,
       editable: true,
     },
     {
-      headerName: "Tipo de documento",
-      field: "cod_tipo_documento_id",
+      headerName: 'Tipo de documento',
+      field: 'cod_tipo_documento_id',
       minWidth: 140,
       editable: true,
     },
     {
-      headerName: "Identificacion",
-      field: "numero_documento_id",
+      headerName: 'Identificacion',
+      field: 'numero_documento_id',
       minWidth: 140,
       editable: true,
     },
-    { headerName: "Primer Nombre", field: "primer_nombre", minWidth: 140 },
-    { headerName: "Primer Apellido", field: "primer_apellido", minWidth: 140 },
-    { headerName: "Entidad", field: "entidad", minWidth: 140 },
-    { headerName: "Cargo", field: "cargo", minWidth: 140 },
-    { headerName: "Email", field: "email_notificacion", minWidth: 140 },
-    { headerName: "Celular", field: "nro_celular_notificacion", minWidth: 140 },
-    { headerName: "Observacion", field: "observacion", minWidth: 140 },
+    { headerName: 'Primer Nombre', field: 'primer_nombre', minWidth: 140 },
+    { headerName: 'Primer Apellido', field: 'primer_apellido', minWidth: 140 },
+    { headerName: 'Entidad', field: 'entidad', minWidth: 140 },
+    { headerName: 'Cargo', field: 'cargo', minWidth: 140 },
+    { headerName: 'Email', field: 'email_notificacion', minWidth: 140 },
+    { headerName: 'Celular', field: 'nro_celular_notificacion', minWidth: 140 },
+    { headerName: 'Observacion', field: 'observacion', minWidth: 140 },
     {
-      headerName: "Acciones",
-      field: "acciones",
+      headerName: 'Acciones',
+      field: 'acciones',
       minWidth: 140,
       renderCell: (params) => (
         <div className="d-flex gap-1">
@@ -83,7 +98,9 @@ export const UsuariosScreen: React.FC = () => {
           <IconButton
             size="small"
             className="btn-tablas"
-            onClick={() => { confirmar_eliminar_usuario(params.row.id_persona); }}
+            onClick={() => {
+              confirmar_eliminar_usuario(params.row.id_persona);
+            }}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
@@ -92,22 +109,25 @@ export const UsuariosScreen: React.FC = () => {
     },
   ];
 
-
   const {
     handleSubmit: handle_submit_filtrar,
     control: control_filtrar,
     formState: { errors: errors_filtrar },
   } = useForm();
 
-
-  const get_data_initial = async () => {
+  const get_data_initial = async (): Promise<void> => {
     try {
       set_loading(true);
       const { data } = await api.get('/estaciones/consultar-estaciones/');
-      const estaciones_maped = data.data.map((estacion: { nombre_estacion: string; id_estacion: number | string; }) => ({
-        label: estacion.nombre_estacion,
-        value: estacion.id_estacion,
-      }));
+      const estaciones_maped = data.data.map(
+        (estacion: {
+          nombre_estacion: string;
+          id_estacion: number | string;
+        }) => ({
+          label: estacion.nombre_estacion,
+          value: estacion.id_estacion,
+        })
+      );
       set_estaciones_options(estaciones_maped);
       set_loading(false);
     } catch (err) {
@@ -150,28 +170,33 @@ export const UsuariosScreen: React.FC = () => {
   };
 
   const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors },
   } = useForm();
 
-  const confirmar_eliminar_usuario = (idPersona: number) => {
+  const confirmar_eliminar_usuario = (idPersona: number): void => {
     void Swal.fire({
-      title: "Estas seguro?",
-      text: "Va a eliminar un usuario",
-      icon: "warning",
+      title: 'Estas seguro?',
+      text: 'Va a eliminar un usuario',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, elminar!",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, elminar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        void eliminarUsuario(idPersona);
+        await eliminar_usuario(idPersona);
+        control_success('La persona se eliminó correctamente');
       }
     });
   };
+
   return (
     <>
-      <Grid container spacing={2}
+      <Grid
+        container
+        spacing={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
@@ -179,7 +204,8 @@ export const UsuariosScreen: React.FC = () => {
           p: '20px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
-        }}>
+        }}
+      >
         <Grid item xs={12}>
           <Grid
             item
@@ -200,13 +226,16 @@ export const UsuariosScreen: React.FC = () => {
           >
             <Title title="PARTES INTERESADAS"></Title>
           </Grid>
-          <form className="row" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
+          <form
+            className="row"
+            onSubmit={handle_submit_filtrar(on_submit_filtrar)}
+          >
             {/* <form className='row'> */}
             <Grid item xs={12} sm={4}>
               <Stack sx={{ m: '20px 0' }} direction="row" spacing={2}>
                 <FormControl fullWidth>
                   <InputLabel>
-                    <span style={{ color: "red" }}></span>
+                    <span style={{ color: 'red' }}></span>
                   </InputLabel>
                   <Controller
                     name="estacion"
@@ -222,10 +251,9 @@ export const UsuariosScreen: React.FC = () => {
                       />
                     )}
                   />
-                  {(errors_filtrar.estacion != null) && (
+                  {errors_filtrar.estacion != null && (
                     <FormHelperText error>
                       Seleccione una estación para continuar
-
                     </FormHelperText>
                   )}
                 </FormControl>
@@ -235,14 +263,10 @@ export const UsuariosScreen: React.FC = () => {
                   disabled={loading}
                   className="text-capitalize rounded-pill  "
                   startIcon={
-                    loading ? (
-                      <CircularProgress size={20} />
-                    ) : (
-                      <SearchIcon />
-                    )
+                    loading ? <CircularProgress size={20} /> : <SearchIcon />
                   }
                 >
-                  {loading ? "Cargando..." : ""}
+                  {loading ? 'Cargando...' : ''}
                 </Button>
               </Stack>
             </Grid>
@@ -251,7 +275,6 @@ export const UsuariosScreen: React.FC = () => {
             <>
               <Grid
                 item
-
                 className={`border px-4 text-white fs-5 p-1`}
                 sx={{
                   display: 'grid',
@@ -283,7 +306,7 @@ export const UsuariosScreen: React.FC = () => {
                     density="compact"
                     autoHeight
                     rows={estaciones_meteologicas}
-                    columns={columnDefs}
+                    columns={columns}
                     getRowId={(row) => row.id_persona}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
@@ -300,10 +323,12 @@ export const UsuariosScreen: React.FC = () => {
         is_modal_active={crear_persona_is_active}
         set_is_modal_active={set_crear_persona_is_active}
       />
-      {/* {<EditarUsuarioModal
-      set_is_modal_active={set_is_modal_editar_active}
-      is_modal_active={is_modal_editar_active}
-    />} */}
+      {
+        <EditarPersonaDialog
+          set_is_modal_active={set_is_modal_editar_active}
+          is_modal_active={is_modal_editar_active}
+        />
+      }
     </>
-  )
+  );
 };
