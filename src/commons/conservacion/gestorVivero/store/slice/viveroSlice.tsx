@@ -2,6 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
     type IObjNursery,
     type INursery,
+    type IList,
   } from '../../interfaces/vivero';
 
   const initial_state_current_nursery = {

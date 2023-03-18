@@ -1,7 +1,7 @@
 import { type Dispatch } from 'react';
 import { type NavigateFunction } from 'react-router-dom';
 import { toast, type ToastContent } from 'react-toastify';
-import Swal from 'sweetalert2'; // , { type SweetAlertResult }
+// import Swal from 'sweetalert2'; // , { type SweetAlertResult }
 import {
   type AxiosError
   // type AxiosResponse
@@ -46,11 +46,39 @@ export const get_nurseries_service = (): any => {
     try {
       const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio/apertura-cierre');
       console.log(data)
-      dispatch(get_nurseries(data.Organigramas));
+      dispatch(get_nurseries(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_organigrams_service');
+      console.log('get_nursery_service');
       control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Agregar Vivero
+export const add_nursery_service: any = (
+  nursery: any,
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(nursery);
+      const { data } = await api.post(
+        'conservacion/viveros/create/',
+        nursery
+      );
+
+      dispatch(get_nurseries_service());
+      dispatch(current_nursery(data.detail));
+      control_success('El vivero se agrego correctamente');
+      // navigate('/gestor_documental/organigrama/editar_organigrama');
+      return data;
+    } catch (error: any) {
+      console.log('add_nursery_service');
+      control_error(error.response.data.detail);
+      console.log(error.response.data);
+      //     navigate('/gestor_documental/organigrama/crear_organigrama');
       return error as AxiosError;
     }
   };

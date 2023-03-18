@@ -6,6 +6,15 @@ export interface INursery {
   //unity_organigram: IObjUnitys[];
 }
 
+export interface IList{
+  value: string|number,
+  label: string|number
+}
+
+
+export interface IMunicipalities{
+
+}
 export interface IObjNursery {
   id_vivero: number | null;
   nombre: string | null;
