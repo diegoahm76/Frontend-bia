@@ -8,10 +8,6 @@ import {ParametrosReferencia} from '../components/ParametrosReferencia';
 import {ConfiguracionAlarma} from '../components/ConfiguracionAlarma';
 import { Grid } from '@mui/material';
 import  { Title }  from '../../../../components/Title';
-
-// import VisibilityIcon from '@mui/icons-material/Visibility';
-// import { api } from '../../../../api/axios';
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AlertasScreen: React.FC = () => {
     const [value, set_value] = useState('1');
@@ -36,7 +32,7 @@ export const AlertasScreen: React.FC = () => {
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <TabList onChange={handle_change} aria-label="lab API tabs example">
                 <Tab label="Parametros de Referencia" value="1" />
-                <Tab label="Configiracion Alarma Persona" value="2" />
+                <Tab label="Configuración Alarma Persona" value="2" />
               </TabList>
             </Box>
             <TabPanel value="1">

@@ -4,6 +4,8 @@ import thunk from 'redux-thunk';
 import { persistReducer } from 'redux-persist';
 import { layout_slice } from './layoutSlice';
 import { auth_slice } from '../commons/auth/store/authSlice';
+import { nursery_slice } from '../commons/conservacion/gestorVivero/store/slice/viveroSlice';
+
 import { organigrama_slice } from '../commons/gestorDocumental/organigrama/store/slices/organigramSlice';
 import { ccd_slice } from '../commons/gestorDocumental/ccd/store/slices/ccdSlice';
 import { series_slice } from '../commons/gestorDocumental/ccd/store/slices/seriesSlice';
@@ -23,7 +25,9 @@ const app_reducers = combineReducers({
   ccd: ccd_slice.reducer,
   series: series_slice.reducer,
   subseries: subseries_slice.reducer,
-  assignments: assignments_slice.reducer
+  assignments: assignments_slice.reducer,
+  nursery: nursery_slice.reducer,
+
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

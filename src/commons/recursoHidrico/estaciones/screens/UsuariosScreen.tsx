@@ -1,7 +1,4 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Grid, Box, Stack, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -19,11 +16,12 @@ import { useEffect, useState } from "react";
 import { Controller, useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import Swal from "sweetalert2";
 import { api } from '../../../../api/axios';
-import { type Estaciones, type Persona } from '../interfaces/interfaces';
-import { consultar_estaciones, consultar_estaciones_id, eliminarUsuario } from '../../requets/getRequest';
+import { type Persona } from '../interfaces/interfaces';
+import { consultar_estaciones_id, control_success, eliminar_usuario } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { Title } from '../../../../components/Title';
-import { NuevoUsuarioModal } from '../components/NuevoUsuarioModal';
+import { NuevoUsuarioModal } from '../components/NuevaPersonaDialog';
+import { EditarPersonaDialog } from '../components/EditarPersonaDialog';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UsuariosScreen: React.FC = () => {
@@ -32,14 +30,13 @@ export const UsuariosScreen: React.FC = () => {
   const [estaciones_options, set_estaciones_options] = useState([]);
   const [loading, set_loading] = useState(false);
   const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<Persona[]>([]);
-  const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
+  // const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
 
-  const handle_open_crear_persona = () => {
+  const handle_open_crear_persona = (): void => {
     set_crear_persona_is_active(true);
   }
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const columnDefs: GridColDef[] = [
+  const columns: GridColDef[] = [
     {
       headerName: "Estacion",
       field: "nombre_estacion",
@@ -100,7 +97,7 @@ export const UsuariosScreen: React.FC = () => {
   } = useForm();
 
 
-  const get_data_initial = async () => {
+  const get_data_initial = async (): Promise<void> => {
     try {
       set_loading(true);
       const { data } = await api.get('/estaciones/consultar-estaciones/');
@@ -150,10 +147,11 @@ export const UsuariosScreen: React.FC = () => {
   };
 
   const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors },
   } = useForm();
 
-  const confirmar_eliminar_usuario = (idPersona: number) => {
+  const confirmar_eliminar_usuario = (idPersona: number): void => {
     void Swal.fire({
       title: "Estas seguro?",
       text: "Va a eliminar un usuario",
@@ -163,12 +161,14 @@ export const UsuariosScreen: React.FC = () => {
       cancelButtonColor: "#d33",
       confirmButtonText: "Si, elminar!",
       cancelButtonText: "Cancelar",
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        void eliminarUsuario(idPersona);
+        await eliminar_usuario(idPersona);
+        control_success('La persona se eliminó correctamente')
       }
     });
   };
+
   return (
     <>
       <Grid container spacing={2}
@@ -283,7 +283,7 @@ export const UsuariosScreen: React.FC = () => {
                     density="compact"
                     autoHeight
                     rows={estaciones_meteologicas}
-                    columns={columnDefs}
+                    columns={columns}
                     getRowId={(row) => row.id_persona}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
@@ -300,10 +300,10 @@ export const UsuariosScreen: React.FC = () => {
         is_modal_active={crear_persona_is_active}
         set_is_modal_active={set_crear_persona_is_active}
       />
-      {/* {<EditarUsuarioModal
+      {<EditarPersonaDialog
       set_is_modal_active={set_is_modal_editar_active}
       is_modal_active={is_modal_editar_active}
-    />} */}
+    />}
     </>
   )
 };

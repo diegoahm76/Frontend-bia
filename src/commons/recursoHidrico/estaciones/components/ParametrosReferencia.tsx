@@ -1,70 +1,74 @@
 import EditIcon from '@mui/icons-material/Edit';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Avatar, CircularProgress, Grid, IconButton, Typography } from '@mui/material';
+import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { consultar_parametros_referencia } from '../../requets/getRequest';
+import { consultar_parametros_referencia } from '../../requets/Request';
 import { type Parametros } from '../interfaces/interfaces';
-
-const columns: GridColDef[] = [
-    { field: 'id_estacion', headerName: 'ESTACIÓN', width: 140 },
-    { field: 'fecha_modificacion', headerName: 'FECHA MODIFICACIÓN', width: 140 },
-    { field: 'frecuencia_solicitud_datos', headerName: 'FRECUENCIA', width: 140 },
-
-    { field: 'temperatura_ambiente_max', headerName: 'TEMPERATURA MAX', width: 140 },
-    { field: 'temperatura_ambiente_min', headerName: 'TEMPERATURA MIN', width: 140 },
-    { field: 'humedad_ambiente_max', headerName: 'HUMEDAD MAX', width: 140 },
-    { field: 'humedad_ambiente_min', headerName: 'HUMEDAD MIN', width: 140 },
-
-    { field: 'presion_barometrica_max', headerName: 'PRESIÓN MAX', width: 140 },
-    { field: 'presion_barometrica_min', headerName: 'PRESIÓN MIN', width: 140 },
-    { field: 'velocidad_viento_max', headerName: 'VEL. VIENTO MAX', width: 140 },
-    { field: 'velocidad_viento_min', headerName: 'VEL. VIENTO MIN', width: 140 },
-
-    { field: 'direccion_viento_max', headerName: 'DIR. VIENTO MAX', width: 140 },
-    { field: 'direccion_viento_min', headerName: 'DIR. VIENTO MIN', width: 140 },
-    { field: 'precipitacion_max', headerName: 'PRECIPITACIÓN MAX', width: 140 },
-    { field: 'precipitacion_min', headerName: 'PRECIPITACIÓN MIN', width: 140 },
-
-    { field: 'luminosidad_max', headerName: 'LUMINOSIDAD MAX', width: 140 },
-    { field: 'luminosidad_min', headerName: 'LUMINOSIDAD MIN', width: 140 },
-    { field: 'nivel_agua_max', headerName: 'NIV. AGUA MAX', width: 140 },
-    { field: 'nivel_agua_min', headerName: 'NIV. AGUA MIN', width: 140 },
-
-    { field: 'velocidad_agua_max', headerName: 'VEL. AGUA MAX', width: 140 },
-    { field: 'velocidad_agua_min', headerName: 'VEL. AGUA MIN', width: 140 },
-
-    {
-        field: 'acciones',
-        headerName: 'Aciones',
-        width: 200,
-        renderCell: (params) => (
-            <>
-                <IconButton>
-                    <Avatar
-                        sx={{
-                            width: 24,
-                            height: 24,
-                            background: '#fff',
-                            border: '2px solid',
-                        }}
-                        variant="rounded"
-                    >
-                        <EditIcon
-                            sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                        />
-                    </Avatar>
-                </IconButton>
-
-            </>
-        ),
-    },
-];
+import { EditarParametosReferenciaDialog } from './EditarParametosReferenciaDialog';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ParametrosReferencia: React.FC = () => {
     const [parametro_referencia, set_data_parametro] = useState<Parametros[]>([]);
+    const [editar_parametros_is_active, set_editar_parametros_is_active] = useState<boolean>(false);
 
+    const handle_open_editar_parametros = (): void => {
+        set_editar_parametros_is_active(true);
+    }
+    const columns: GridColDef[] = [
+        { field: 'id_estacion', headerName: 'ESTACIÓN', width: 140 },
+        { field: 'fecha_modificacion', headerName: 'FECHA MODIFICACIÓN', width: 140 },
+        { field: 'frecuencia_solicitud_datos', headerName: 'FRECUENCIA', width: 140 },
+
+        { field: 'temperatura_ambiente_max', headerName: 'TEMPERATURA MAX', width: 140 },
+        { field: 'temperatura_ambiente_min', headerName: 'TEMPERATURA MIN', width: 140 },
+        { field: 'humedad_ambiente_max', headerName: 'HUMEDAD MAX', width: 140 },
+        { field: 'humedad_ambiente_min', headerName: 'HUMEDAD MIN', width: 140 },
+
+        { field: 'presion_barometrica_max', headerName: 'PRESIÓN MAX', width: 140 },
+        { field: 'presion_barometrica_min', headerName: 'PRESIÓN MIN', width: 140 },
+        { field: 'velocidad_viento_max', headerName: 'VEL. VIENTO MAX', width: 140 },
+        { field: 'velocidad_viento_min', headerName: 'VEL. VIENTO MIN', width: 140 },
+
+        { field: 'direccion_viento_max', headerName: 'DIR. VIENTO MAX', width: 140 },
+        { field: 'direccion_viento_min', headerName: 'DIR. VIENTO MIN', width: 140 },
+        { field: 'precipitacion_max', headerName: 'PRECIPITACIÓN MAX', width: 140 },
+        { field: 'precipitacion_min', headerName: 'PRECIPITACIÓN MIN', width: 140 },
+
+        { field: 'luminosidad_max', headerName: 'LUMINOSIDAD MAX', width: 140 },
+        { field: 'luminosidad_min', headerName: 'LUMINOSIDAD MIN', width: 140 },
+        { field: 'nivel_agua_max', headerName: 'NIV. AGUA MAX', width: 140 },
+        { field: 'nivel_agua_min', headerName: 'NIV. AGUA MIN', width: 140 },
+
+        { field: 'velocidad_agua_max', headerName: 'VEL. AGUA MAX', width: 140 },
+        { field: 'velocidad_agua_min', headerName: 'VEL. AGUA MIN', width: 140 },
+
+        {
+            field: 'acciones',
+            headerName: 'Aciones',
+            width: 200,
+            renderCell: (params) => (
+                <>
+                    <IconButton>
+                        <Avatar
+                            sx={{
+                                width: 24,
+                                height: 24,
+                                background: '#fff',
+                                border: '2px solid',
+                            }}
+                            variant="rounded"
+                        >
+                            <EditIcon
+                                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                onClick={handle_open_editar_parametros}
+                            />
+                        </Avatar>
+                    </IconButton>
+
+                </>
+            ),
+        },
+    ];
     const parametros = async (): Promise<void> => {
         try {
             const response = await consultar_parametros_referencia();
@@ -118,6 +122,10 @@ export const ParametrosReferencia: React.FC = () => {
                         <CircularProgress color="secondary" />
                     )}
                 </Grid>
+                <EditarParametosReferenciaDialog
+                    is_modal_active={editar_parametros_is_active}
+                    set_is_modal_active={set_editar_parametros_is_active}
+                />
             </Grid>
         </>
     );
