@@ -5,15 +5,14 @@ import 'leaflet/dist/leaflet.css';
 const position: L.LatLngExpression = [4.258179477894017, -73.60700306515551];
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const icono: string = require("../assets/icons/locate.svg").default;
+const icono: string = require('../assets/icons/locate.svg').default;
 
 const icon_locate = new L.Icon({
   iconUrl: icono,
-  iconSize: [45,45]
+  iconSize: [45, 45],
 });
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GeolocalizacionScreen: React.FC = () => {
-
   return (
     <div>
       <MapContainer
@@ -27,12 +26,11 @@ export const GeolocalizacionScreen: React.FC = () => {
           attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         />
         <Marker position={position} icon={icon_locate}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
       </MapContainer>
-
     </div>
   );
 };
