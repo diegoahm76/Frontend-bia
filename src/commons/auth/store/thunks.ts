@@ -74,6 +74,13 @@ export const get_persmisions_user: (
       return;
     }
 
-    dispatch(set_permissions(resp.data));
+    dispatch(
+      set_permissions(
+        resp.data?.map((e) => {
+          e.expanded = false;
+          return e;
+        })
+      )
+    );
   };
 };

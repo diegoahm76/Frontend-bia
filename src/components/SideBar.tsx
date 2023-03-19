@@ -12,26 +12,18 @@ import {
   Toolbar,
   Collapse,
   Avatar,
-  // IconButton,
-  // useTheme,
 } from '@mui/material';
 
 // import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 // import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import StarBorder from '@mui/icons-material/StarBorder';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
-import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import CircleIcon from '@mui/icons-material/Circle';
+// import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import { open_drawer_desktop, open_drawer_mobile } from '../store/layoutSlice';
+import LogoutIcon from '@mui/icons-material/Logout';
+import type { AuthSlice, Permisos } from '../commons/auth/interfaces';
+import { logout } from '../commons/auth/store';
 
 interface Props {
   window?: () => Window;
@@ -42,6 +34,98 @@ interface Props {
 export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   const dispatch = useDispatch();
   const [open, set_open] = useState(false);
+  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const [permisos, set_permisos] = useState<Permisos[]>([
+    {
+      subsistema: 'SEGU',
+      desc_subsistema: 'Seguridad',
+      expanded: true,
+      modulos: [
+        {
+          id_modulo: 2,
+          nombre_modulo: 'Administración de Usuarios',
+          descripcion:
+            'Permite administrar las credenciales de acceso de las personas al sistema',
+          ruta_formulario: '/#/app/seguridad/administracion_usuarios',
+          nombre_icono: 'test',
+          permisos: {
+            actualizar: true,
+            consultar: true,
+            crear: true,
+          },
+        },
+        {
+          id_modulo: 5,
+          nombre_modulo: 'Roles',
+          descripcion: 'Permite administrar los roles del sistema',
+          ruta_formulario: '/#/app/seguridad/roles',
+          nombre_icono: 'test',
+          permisos: {
+            actualizar: true,
+            borrar: true,
+            consultar: true,
+            crear: true,
+          },
+        },
+        {
+          id_modulo: 8,
+          nombre_modulo: 'Delegación del Rol de SuperUsuario',
+          descripcion:
+            'Proceso que permite a un SuperUsuario delegar dicha función a otra persona',
+          ruta_formulario: '/#/app/seguridad/superusuario',
+          nombre_icono: 'test',
+          permisos: {
+            consultar: true,
+            ejecutar: true,
+          },
+        },
+        {
+          id_modulo: 3,
+          nombre_modulo: 'Actualizacion de Datos Usuario',
+          descripcion:
+            'Permite administrar a una persona que tiene un usuario interno, los datos de su usuario desde el sistema-Sóo para usuarios internos',
+          ruta_formulario: '/test',
+          nombre_icono: 'test',
+          permisos: {
+            actualizar: true,
+            consultar: true,
+          },
+        },
+        {
+          id_modulo: 4,
+          nombre_modulo: 'Actualizacion Datos Usuario Externo',
+          descripcion:
+            'Permite administrar a una persona que tiene un usuario externo, los datos de su usuario desde el portal web-Sólo para usuarios externos',
+          ruta_formulario: '/test',
+          nombre_icono: 'test',
+          permisos: {
+            actualizar: true,
+            consultar: true,
+          },
+        },
+      ],
+    },
+    {
+      subsistema: 'TRSV',
+      desc_subsistema: 'Transversal',
+      expanded: true,
+      modulos: [
+        {
+          id_modulo: 1,
+          nombre_modulo: 'Administración de Personas',
+          descripcion:
+            'Permite administrar las personas registradas en el sistema',
+          ruta_formulario: '/test',
+          nombre_icono: 'test',
+          permisos: {
+            actualizar: true,
+            consultar: true,
+            crear: true,
+          },
+        },
+      ],
+    },
+  ]);
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
@@ -63,6 +147,11 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
 
   const handle_click = (): void => {
     set_open(!open);
+  };
+
+  const open_collapse = (obj: Permisos, key: number): void => {
+    permisos[key] = { ...obj, expanded: !obj.expanded };
+    set_permisos([...permisos]);
   };
 
   const container =
@@ -104,12 +193,12 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         />
       </Toolbar>
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      <List sx={{ margin: '0 20px', color: 'secondary.main' }} >
+      <List sx={{ margin: '0 20px', color: 'secondary.main' }}>
         <ListItemButton onClick={handle_click} sx={{ borderRadius: '10px' }}>
           <ListItemIcon>
             <Avatar alt="Cristian Mendoza" src="/static/images/avatar/1.jpg" />
           </ListItemIcon>
-          <ListItemText primary="Cristian Mendoza" />
+          <ListItemText primary={userinfo.nombre_de_usuario} />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <Collapse
@@ -125,237 +214,59 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
+                <CircleIcon sx={{ color: 'secondary.main', height: '10px' }} />
               </ListItemIcon>
               <ListItemText primary="Starred" />
             </ListItemButton>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
+                <CircleIcon sx={{ color: 'secondary.main', height: '10px' }} />
               </ListItemIcon>
               <ListItemText primary="Starred" />
             </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
+            <ListItemButton
+              sx={{ pl: 4 }}
+              onClick={() => {
+                dispatch(logout(''));
+              }}
+            >
               <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
+                <LogoutIcon sx={{ color: 'secondary.main' }} />
               </ListItemIcon>
-              <ListItemText primary="Starred" />
+              <ListItemText primary="Cerrar Sesión" />
             </ListItemButton>
           </List>
         </Collapse>
       </List>
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      <List sx={{ margin: '0 20px', color: 'secondary.main' }}>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <AssignmentOutlinedIcon sx={{ color: 'secondary.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Tableros de control" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
+      {permisos.map((e, k) => {
+        return (
+          <List sx={{ margin: '0 20px', color: 'secondary.main' }} key={k}>
+            <ListItemButton
+              onClick={() => {
+                open_collapse(e, k);
+              }}
+            >
+              {/* <ListItemIcon>
+                <AssignmentOutlinedIcon sx={{ color: 'secondary.main' }} />
+              </ListItemIcon> */}
+              <ListItemText primary="Tableros de control" />
+              {e.expanded ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
+
+            <Collapse timeout="auto" unmountOnExit in={e.expanded}>
+              <List component="div" disablePadding>
+                <ListItemButton sx={{ pl: 4 }}>
+                  <ListItemIcon>
+                    <CircleIcon sx={{ color: 'secondary.main' }} />
+                  </ListItemIcon>
+                  <ListItemText primary="Starred" />
+                </ListItemButton>
+              </List>
+            </Collapse>
           </List>
-        </Collapse>
-      </List>
-      <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      <List sx={{ margin: '0 20px', color: 'secondary.main' }}>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <MonetizationOnIcon sx={{ color: 'secondary.main' }}/>
-          </ListItemIcon>
-            <ListItemText primary="Recaudo" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <ReceiptIcon sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Facturación" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <AccountBalanceWalletIcon sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Instancias de cobro" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <AccountBalanceIcon sx={{ color: 'secondary.main' }}/>
-              </ListItemIcon>
-              <ListItemText primary="Deudores" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <NotificationsIcon sx={{ color: 'secondary.main' }}/>
-              </ListItemIcon>
-              <ListItemText primary="Notificaciones" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <LocalAtmIcon sx={{ color: 'secondary.main' }}/>
-              </ListItemIcon>
-              <ListItemText primary="Facilidades de Pago" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <CreditCardIcon sx={{ color: 'secondary.main' }}/>
-              </ListItemIcon>
-              <ListItemText primary="Pagos" />
-            </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <RequestQuoteIcon sx={{ color: 'secondary.main' }}/>
-              </ListItemIcon>
-              <ListItemText primary="Reportes" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <InboxIcon sx={{ color: 'secondary.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <InboxIcon sx={{ color: 'secondary.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <InboxIcon sx={{ color: 'secondary.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <InboxIcon sx={{ color: 'secondary.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <InboxIcon sx={{ color: 'secondary.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <InboxIcon sx={{ color: 'secondary.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <InboxIcon sx={{ color: 'secondary.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton onClick={handle_click}>
-          <ListItemIcon>
-            <InboxIcon sx={{ color: 'secondary.main' }} />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder sx={{ color: 'secondary.main' }} />
-              </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-      </List>
+        );
+      })}
     </Box>
   );
 
