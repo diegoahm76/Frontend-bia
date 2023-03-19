@@ -1,9 +1,9 @@
 export interface INursery {
-  //mold_organigram: IDatum[];
+  // mold_organigram: IDatum[];
   nurseries: IObjNursery[];
   current_nursery: IObjNursery;
-  //levels_organigram: IObjLevels[];
-  //unity_organigram: IObjUnitys[];
+  // levels_organigram: IObjLevels[];
+  // unity_organigram: IObjUnitys[];
 }
 
 export interface IList{
@@ -11,10 +11,6 @@ export interface IList{
   label: string|number
 }
 
-
-export interface IMunicipalities{
-
-}
 export interface IObjNursery {
   id_vivero: number | null;
   nombre: string | null;

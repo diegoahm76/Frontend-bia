@@ -1,27 +1,26 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from "react-router-dom";
 
-import { GestorViveroRoutes } from '../commons/conservacion/gestorVivero/routes/GestorViveroRoutes';
-import { ConfiguracionRoutes } from '../commons/conservacion/configuracion/routes/ConfiguracionRoutes';
-import { DistribucionRoutes } from '../commons/conservacion/distribucion/routes/DistribucionRoutes';
-import { MaterialVegetalRoutes } from '../commons/conservacion/materialVegetal/routes/MaterialVegetalRoutes';
-import { NotificacionRoutes } from '../commons/conservacion/notificacion/routes/NotificacionRoutes';
-import { ReporteRoutes } from '../commons/conservacion/reporte/routes/ReporteRoutes';
-import { SolicitudMaterialRoutes } from '../commons/conservacion/solicitudMaterial/routes/SolucitudMaterialRoutes';
+import { GestorViveroRoutes } from "../commons/conservacion/gestorVivero/routes/GestorViveroRoutes";
+import { ConfiguracionRoutes } from "../commons/conservacion/configuracion/routes/ConfiguracionRoutes";
+import { DistribucionRoutes } from "../commons/conservacion/distribucion/routes/DistribucionRoutes";
+import { MaterialVegetalRoutes } from "../commons/conservacion/materialVegetal/routes/MaterialVegetalRoutes";
+import { NotificacionRoutes } from "../commons/conservacion/notificacion/routes/NotificacionRoutes";
+import { ReporteRoutes } from "../commons/conservacion/reporte/routes/ReporteRoutes";
+import { SolicitudMaterialRoutes } from "../commons/conservacion/solicitudMaterial/routes/SolucitudMaterialRoutes";
 
-import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
-import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
-import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
-import { CcdRoutes } from '../commons/gestorDocumental/ccd/routes/CcdRoutes';
-import { TcaRoutes } from '../commons/gestorDocumental/tca/routes/TcaRoutes';
-import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes'
+import { HomeRoutes } from "../commons/home/routes/HomeRoutes";
+import { SeguridadRoutes } from "../commons/seguridad/routers/SeguridadRoutes";
+import { OrganigramaRoutes } from "../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes";
+import { CcdRoutes } from "../commons/gestorDocumental/ccd/routes/CcdRoutes";
+import { TcaRoutes } from "../commons/gestorDocumental/tca/routes/TcaRoutes";
+import { TrdRoutes } from "../commons/gestorDocumental/trd/routes/TrdRoutes";
 
-import { MainLayout } from '../layouts/MainLayout';
-import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
-import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
-import { ProduccionRoutes } from '../commons/conservacion/produccion/routes/ProduccionRoutes';
+import { MainLayout } from "../layouts/MainLayout";
+import { AlmacenRoutes } from "../commons/almacen/router/AlmacenRoutes";
+import { ProduccionRoutes } from "../commons/conservacion/produccion/routes/ProduccionRoutes";
 
-import { RecaudoScreen } from '../commons/recaudo/screens/RecaudoScreen';
-import { LiquidacionTUAScreen } from '../commons/recaudo/liquidacionTUA/screens/LiquidacionTUAScreen';
+import { RecaudoScreen } from "../commons/recaudo/screens/RecaudoScreen";
+import { LiquidacionTUAScreen } from "../commons/recaudo/liquidacionTUA/screens/LiquidacionTUAScreen";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProtectedRoutes: React.FC = () => {
@@ -37,12 +36,20 @@ export const ProtectedRoutes: React.FC = () => {
           <Route path="gestor-vivero/*" element={<GestorViveroRoutes />} />
           <Route path="configuracion/*" element={<ConfiguracionRoutes />} />
           <Route path="distribucion/*" element={<DistribucionRoutes />} />
-          <Route path="material-vegetal/*" element={<MaterialVegetalRoutes />} />
-          <Route path="notificaciones-alertas/*" element={<NotificacionRoutes />} />
+          <Route
+            path="material-vegetal/*"
+            element={<MaterialVegetalRoutes />}
+          />
+          <Route
+            path="notificaciones-alertas/*"
+            element={<NotificacionRoutes />}
+          />
           <Route path="produccion/*" element={<ProduccionRoutes />} />
           <Route path="reportes/*" element={<ReporteRoutes />} />
-          <Route path="solicitud-material/*" element={<SolicitudMaterialRoutes />} />
-
+          <Route
+            path="solicitud-material/*"
+            element={<SolicitudMaterialRoutes />}
+          />
         </Route>
         {/* Gestor documental */}
         <Route path="gestor_documental/*">
@@ -51,16 +58,13 @@ export const ProtectedRoutes: React.FC = () => {
           <Route path="trd/*" element={<TrdRoutes />} />
           <Route path="tca/*" element={<TcaRoutes />} />
         </Route>
-        {/* Recurso Hidrico */}
-        <Route path="recurso_hidrico/*">
-          <Route path="estaciones/*" element={<EstacionesRoutes />} />
-        </Route>
+
         {/* Almacen */}
         <Route path="almacen/*" element={<AlmacenRoutes />} />
         {/* Recaudo */}
         <Route path="recaudo/*">
-          <Route path="datos/*" element={<RecaudoScreen />}/>
-          <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />}/>
+          <Route path="datos/*" element={<RecaudoScreen />} />
+          <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />} />
         </Route>
       </Route>
     </Routes>

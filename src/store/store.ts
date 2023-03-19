@@ -11,6 +11,7 @@ import { ccd_slice } from '../commons/gestorDocumental/ccd/store/slices/ccdSlice
 import { series_slice } from '../commons/gestorDocumental/ccd/store/slices/seriesSlice';
 import { subseries_slice } from '../commons/gestorDocumental/ccd/store/slices/subseriesSlice';
 import { assignments_slice } from '../commons/gestorDocumental/ccd/store/slices/assignmentsSlice';
+import { marcas_slice } from '../commons/almacen/configuracion/store/slice/marcaSlice';
 
 const persist_config = {
   key: 'macarenia_app',
@@ -27,6 +28,7 @@ const app_reducers = combineReducers({
   subseries: subseries_slice.reducer,
   assignments: assignments_slice.reducer,
   nursery: nursery_slice.reducer,
+  marca: marcas_slice.reducer
 
 });
 
