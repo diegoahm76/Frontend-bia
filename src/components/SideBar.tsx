@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import {
@@ -12,14 +12,11 @@ import {
   Toolbar,
   Collapse,
   Avatar,
+  Icon,
 } from '@mui/material';
-
-// import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import CircleIcon from '@mui/icons-material/Circle';
-// import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined';
 import { open_drawer_desktop, open_drawer_mobile } from '../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
 import type { AuthSlice, Permisos } from '../commons/auth/interfaces';
@@ -34,98 +31,10 @@ interface Props {
 export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   const dispatch = useDispatch();
   const [open, set_open] = useState(false);
-  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const [permisos, set_permisos] = useState<Permisos[]>([
-    {
-      subsistema: 'SEGU',
-      desc_subsistema: 'Seguridad',
-      expanded: true,
-      modulos: [
-        {
-          id_modulo: 2,
-          nombre_modulo: 'Administración de Usuarios',
-          descripcion:
-            'Permite administrar las credenciales de acceso de las personas al sistema',
-          ruta_formulario: '/#/app/seguridad/administracion_usuarios',
-          nombre_icono: 'test',
-          permisos: {
-            actualizar: true,
-            consultar: true,
-            crear: true,
-          },
-        },
-        {
-          id_modulo: 5,
-          nombre_modulo: 'Roles',
-          descripcion: 'Permite administrar los roles del sistema',
-          ruta_formulario: '/#/app/seguridad/roles',
-          nombre_icono: 'test',
-          permisos: {
-            actualizar: true,
-            borrar: true,
-            consultar: true,
-            crear: true,
-          },
-        },
-        {
-          id_modulo: 8,
-          nombre_modulo: 'Delegación del Rol de SuperUsuario',
-          descripcion:
-            'Proceso que permite a un SuperUsuario delegar dicha función a otra persona',
-          ruta_formulario: '/#/app/seguridad/superusuario',
-          nombre_icono: 'test',
-          permisos: {
-            consultar: true,
-            ejecutar: true,
-          },
-        },
-        {
-          id_modulo: 3,
-          nombre_modulo: 'Actualizacion de Datos Usuario',
-          descripcion:
-            'Permite administrar a una persona que tiene un usuario interno, los datos de su usuario desde el sistema-Sóo para usuarios internos',
-          ruta_formulario: '/test',
-          nombre_icono: 'test',
-          permisos: {
-            actualizar: true,
-            consultar: true,
-          },
-        },
-        {
-          id_modulo: 4,
-          nombre_modulo: 'Actualizacion Datos Usuario Externo',
-          descripcion:
-            'Permite administrar a una persona que tiene un usuario externo, los datos de su usuario desde el portal web-Sólo para usuarios externos',
-          ruta_formulario: '/test',
-          nombre_icono: 'test',
-          permisos: {
-            actualizar: true,
-            consultar: true,
-          },
-        },
-      ],
-    },
-    {
-      subsistema: 'TRSV',
-      desc_subsistema: 'Transversal',
-      expanded: true,
-      modulos: [
-        {
-          id_modulo: 1,
-          nombre_modulo: 'Administración de Personas',
-          descripcion:
-            'Permite administrar las personas registradas en el sistema',
-          ruta_formulario: '/test',
-          nombre_icono: 'test',
-          permisos: {
-            actualizar: true,
-            consultar: true,
-            crear: true,
-          },
-        },
-      ],
-    },
-  ]);
+  const { userinfo, permisos: permisos_store } = useSelector(
+    (state: AuthSlice) => state.auth
+  );
+  const [permisos, set_permisos] = useState<Permisos[]>([]);
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
@@ -157,6 +66,10 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
+  useEffect(() => {
+    set_permisos(permisos_store);
+  }, []);
+
   const conten_drawer = (
     <Box
       className="drawer"
@@ -177,15 +90,6 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           background: '#041926 !important',
         }}
       >
-        {/* {mobile_open && (
-          <IconButton onClick={handle_drawer_toggle}>
-            {theme.direction === 'ltr' ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        )} */}
         <img
           alt="Imagen de perfil"
           src="../image/logos/Web-Bia-logo.png"
@@ -247,21 +151,26 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 open_collapse(e, k);
               }}
             >
-              {/* <ListItemIcon>
-                <AssignmentOutlinedIcon sx={{ color: 'secondary.main' }} />
-              </ListItemIcon> */}
-              <ListItemText primary="Tableros de control" />
+              <ListItemText primary={e.desc_subsistema} />
               {e.expanded ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
 
             <Collapse timeout="auto" unmountOnExit in={e.expanded}>
               <List component="div" disablePadding>
-                <ListItemButton sx={{ pl: 4 }}>
-                  <ListItemIcon>
-                    <CircleIcon sx={{ color: 'secondary.main' }} />
-                  </ListItemIcon>
-                  <ListItemText primary="Starred" />
-                </ListItemButton>
+                {e.modulos.map((m, km) => {
+                  return (
+                    <ListItemButton
+                      sx={{ pl: 4 }}
+                      key={km}
+                      href={m.ruta_formulario}
+                    >
+                      <ListItemIcon sx={{ minWidth: '25px' }}>
+                        <Icon sx={{ fontSize: '10px' }}>circle</Icon>
+                      </ListItemIcon>
+                      <ListItemText primary={m.nombre_modulo} />
+                    </ListItemButton>
+                  );
+                })}
               </List>
             </Collapse>
           </List>
