@@ -10,10 +10,7 @@ import { SolicitudMaterialRoutes } from '../commons/conservacion/solicitudMateri
 
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
-import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
-import { CcdRoutes } from '../commons/gestorDocumental/ccd/routes/CcdRoutes';
-import { TcaRoutes } from '../commons/gestorDocumental/tca/routes/TcaRoutes';
-import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes'
+import { GestorDocumentalRoutes } from '../commons/gestorDocumental/routes/GestorDocumentalRoutes';
 
 import { MainLayout } from '../layouts/MainLayout';
 import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
@@ -37,20 +34,27 @@ export const ProtectedRoutes: React.FC = () => {
           <Route path="gestor-vivero/*" element={<GestorViveroRoutes />} />
           <Route path="configuracion/*" element={<ConfiguracionRoutes />} />
           <Route path="distribucion/*" element={<DistribucionRoutes />} />
-          <Route path="material-vegetal/*" element={<MaterialVegetalRoutes />} />
-          <Route path="notificaciones-alertas/*" element={<NotificacionRoutes />} />
+          <Route
+            path="material-vegetal/*"
+            element={<MaterialVegetalRoutes />}
+          />
+          <Route
+            path="notificaciones-alertas/*"
+            element={<NotificacionRoutes />}
+          />
           <Route path="produccion/*" element={<ProduccionRoutes />} />
           <Route path="reportes/*" element={<ReporteRoutes />} />
-          <Route path="solicitud-material/*" element={<SolicitudMaterialRoutes />} />
-
+          <Route
+            path="solicitud-material/*"
+            element={<SolicitudMaterialRoutes />}
+          />
         </Route>
         {/* Gestor documental */}
-        <Route path="gestor_documental/*">
-          <Route path="organigrama/*" element={<OrganigramaRoutes />} />
-          <Route path="ccd/*" element={<CcdRoutes />} />
-          <Route path="trd/*" element={<TrdRoutes />} />
-          <Route path="tca/*" element={<TcaRoutes />} />
-        </Route>
+        <Route
+          path="gestor_documental/*"
+          element={<GestorDocumentalRoutes />}
+        />
+
         {/* Recurso Hidrico */}
         <Route path="recurso_hidrico/*">
           <Route path="estaciones/*" element={<EstacionesRoutes />} />
@@ -59,8 +63,8 @@ export const ProtectedRoutes: React.FC = () => {
         <Route path="almacen/*" element={<AlmacenRoutes />} />
         {/* Recaudo */}
         <Route path="recaudo/*">
-          <Route path="datos/*" element={<RecaudoScreen />}/>
-          <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />}/>
+          <Route path="datos/*" element={<RecaudoScreen />} />
+          <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />} />
         </Route>
       </Route>
     </Routes>

@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { CrearOrganigrama } from '../componentes/CrearOrganigrama';
+import { ListOrganigramas } from '../componentes/ListOrganigramas';
 import { EditarOrganigrama } from '../componentes/EditarOrganigrama';
 import { clean_current_organigram } from '../store/slices/organigramSlice';
 import { Grid } from '@mui/material';
@@ -50,7 +50,7 @@ export const OrganigramaScreen: React.FC = () => {
             </TabList>
           </Box>
           <TabPanel value="1" sx={{ p: '20px 0' }}>
-            <CrearOrganigrama
+            <ListOrganigramas
               set_position_tab_organigrama={set_position_tab_organigrama}
             />
           </TabPanel>
