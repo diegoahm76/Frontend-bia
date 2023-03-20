@@ -7,9 +7,9 @@ import { TcaRoutes } from '../commons/gestorDocumental/tca/routes/TcaRoutes';
 import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes';
 import { MainLayout } from '../layouts/MainLayout';
 import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
-import { EstacionesRoutes } from '../commons/recursoHidrico/estaciones/routers/EstacionesRoutes';
 import { ConservacionRoutes } from '../commons/conservacion/routes/ConservacionRoutes';
 import { RecaudoRoutes } from '../commons/recaudo/routes/RecaudoRoutes';
+import { RecursoHidricoRoutes } from '../commons/recursoHidrico/routers/RecursoHidricoRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProtectedRoutes: React.FC = () => {
@@ -29,10 +29,10 @@ export const ProtectedRoutes: React.FC = () => {
           <Route path="trd/*" element={<TrdRoutes />} />
           <Route path="tca/*" element={<TcaRoutes />} />
         </Route>
-        {/* Recurso Hidrico */}
-        <Route path="recurso_hidrico/*">
-          <Route path="estaciones/*" element={<EstacionesRoutes />} />
-        </Route>
+        
+        {/* Recurso Hidrico */}        
+        <Route path="recurso_hidrico/*" element={<RecursoHidricoRoutes />} />
+        
         {/* Almacen */}
         <Route path="almacen/*" element={<AlmacenRoutes />} />
         {/* Recaudo */}

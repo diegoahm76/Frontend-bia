@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router';
+import { Page404 } from '../../../screens/404';
 import { LiquidacionTUAScreen } from '../liquidacionTUA/screens/LiquidacionTUAScreen';
 import { RecaudoScreen } from '../screens/RecaudoScreen';
 
@@ -8,6 +9,7 @@ export const RecaudoRoutes: React.FC = () => {
     <Routes>
       <Route path="datos/*" element={<RecaudoScreen />} />
       <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />} />
+      <Route path="/*" element={<Page404 />} />
     </Routes>
   );
 };
