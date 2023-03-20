@@ -143,39 +143,41 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         </Collapse>
       </List>
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      {permisos.map((e, k) => {
-        return (
-          <List sx={{ margin: '0 20px', color: 'secondary.main' }} key={k}>
-            <ListItemButton
-              onClick={() => {
-                open_collapse(e, k);
-              }}
-            >
-              <ListItemText primary={e.desc_subsistema} />
-              {e.expanded ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
+      {permisos.length > 0
+        ? permisos.map((e, k) => {
+            return (
+              <List sx={{ margin: '0 20px', color: 'secondary.main' }} key={k}>
+                <ListItemButton
+                  onClick={() => {
+                    open_collapse(e, k);
+                  }}
+                >
+                  <ListItemText primary={e.desc_subsistema} />
+                  {e.expanded ? <ExpandLess /> : <ExpandMore />}
+                </ListItemButton>
 
-            <Collapse timeout="auto" unmountOnExit in={e.expanded}>
-              <List component="div" disablePadding>
-                {e.modulos.map((m, km) => {
-                  return (
-                    <ListItemButton
-                      sx={{ pl: 4 }}
-                      key={km}
-                      href={m.ruta_formulario}
-                    >
-                      <ListItemIcon sx={{ minWidth: '25px' }}>
-                        <Icon sx={{ fontSize: '10px' }}>circle</Icon>
-                      </ListItemIcon>
-                      <ListItemText primary={m.nombre_modulo} />
-                    </ListItemButton>
-                  );
-                })}
+                <Collapse timeout="auto" unmountOnExit in={e.expanded}>
+                  <List component="div" disablePadding>
+                    {e.modulos.map((m, km) => {
+                      return (
+                        <ListItemButton
+                          sx={{ pl: 4 }}
+                          key={km}
+                          href={m.ruta_formulario}
+                        >
+                          <ListItemIcon sx={{ minWidth: '25px' }}>
+                            <Icon sx={{ fontSize: '10px' }}>circle</Icon>
+                          </ListItemIcon>
+                          <ListItemText primary={m.nombre_modulo} />
+                        </ListItemButton>
+                      );
+                    })}
+                  </List>
+                </Collapse>
               </List>
-            </Collapse>
-          </List>
-        );
-      })}
+            );
+          })
+        : 'Cargando...'}
     </Box>
   );
 

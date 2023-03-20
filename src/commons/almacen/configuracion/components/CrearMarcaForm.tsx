@@ -9,7 +9,7 @@ import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { api } from '../../../../api/axios';
-import { Divider, Grid, Typography } from '@mui/material';
+import { Divider, Grid, TextField, Typography } from '@mui/material';
 import { control_error } from '../../../../helpers/controlError';
 
 const columns: GridColDef[] = [
@@ -26,9 +26,9 @@ interface Marca {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearMarcaForm: React.FC = () => {
-  const [open, set_open] = useState(false);  
+  const [open, set_open] = useState(false);
 
- const handle_click_open = (): void => {
+  const handle_click_open = (): void => {
     set_open(true);
   };
   const handle_close = (): void => {
@@ -67,14 +67,14 @@ export const CrearMarcaForm: React.FC = () => {
         >
           Crear
         </Button>
-        <Dialog open={open} onClose={handle_close}>          
-            <DialogTitle>CREAR MARCA</DialogTitle>
-            <Divider />
-            <DialogContent>
-              <DialogContentText>
-                Ingrese la marca que desea Crear
-              </DialogContentText>
-              <TextField
+        <Dialog open={open} onClose={handle_close}>
+          <DialogTitle>CREAR MARCA</DialogTitle>
+          <Divider />
+          <DialogContent>
+            <DialogContentText>
+              Ingrese la marca que desea Crear
+            </DialogContentText>
+            <TextField
               autoFocus
               margin="dense"
               id="name"
@@ -83,22 +83,21 @@ export const CrearMarcaForm: React.FC = () => {
               fullWidth
               variant="standard"
             />
-             </DialogContent>
-            <Divider />
-            <DialogActions>
-              <Button variant="outlined" onClick={handle_close}>
-                Cerrar
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                startIcon={<SaveIcon />}
-              >
-                Guardar
-              </Button>
-            </DialogActions>
-          
+          </DialogContent>
+          <Divider />
+          <DialogActions>
+            <Button variant="outlined" onClick={handle_close}>
+              Cerrar
+            </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              startIcon={<SaveIcon />}
+            >
+              Guardar
+            </Button>
+          </DialogActions>
         </Dialog>
       </Grid>
       <Grid item xs={12}>

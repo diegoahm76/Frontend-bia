@@ -1,34 +1,40 @@
 /* eslint-disable eqeqeq */
-import type React from "react";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import Select from "react-select";
-import { useNavigate } from "react-router-dom";
-import { use_app_dispatch, use_app_selector } from "../../entradaysalidaArticulos/hooks/hooks";
-import { type IBienes, type IGeneric} from "../../entradaysalidaArticulos/interfaces/catalogodebienes";
-import { api } from "../../../../api/axios";
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import Select from 'react-select';
+import { useNavigate } from 'react-router-dom';
+import {
+  use_app_dispatch,
+  use_app_selector,
+} from '../../entradaysalidaArticulos/hooks/hooks';
+import {
+  type IBienes,
+  type IGeneric,
+} from '../../entradaysalidaArticulos/interfaces/catalogodebienes';
+import { api } from '../../../../api/axios';
 import {
   crear_bien,
   editar_bien,
   obtener_todos_bienes,
-} from "../../entradaysalidaArticulos/slices/indexCatalogodeBienes";
-import Swal from "sweetalert2";
-import { Title } from "../../../../components";
-import { Grid } from "@mui/material";
+} from '../../entradaysalidaArticulos/slices/indexCatalogodeBienes';
+import Swal from 'sweetalert2';
+import { Title } from '../../../../components';
+import { Grid } from '@mui/material';
 
 const edit_state: any = {
   id_bien: 0,
-  codigo_bien: "",
+  codigo_bien: '',
   nro_elemento_bien: 0,
-  nombre: "",
-  cod_tipo_bien: { value: "", label: "" },
-  cod_tipo_activo: { value: "", label: "" },
+  nombre: '',
+  cod_tipo_bien: { value: '', label: '' },
+  cod_tipo_activo: { value: '', label: '' },
   nivel_jerarquico: 0,
-  nombre_cientifico: "",
-  descripcion: "",
-  doc_identificador_nro: "",
-  cod_metodo_valoracion: { value: "", label: "" },
-  cod_tipo_depreciacion: { value: "", label: "" },
+  nombre_cientifico: '',
+  descripcion: '',
+  doc_identificador_nro: '',
+  cod_metodo_valoracion: { value: '', label: '' },
+  cod_tipo_depreciacion: { value: '', label: '' },
   cantidad_vida_util: 0,
   valor_residual: 0,
   stock_minimo: 0,
@@ -37,10 +43,10 @@ const edit_state: any = {
   tiene_hoja_vida: false,
   maneja_hoja_vida: false,
   visible_solicitudes: false,
-  id_marca: { value: "", label: "" },
-  id_unidad_medida: { value: "", label: "" },
-  id_porcentaje_iva: { value: "", label: "" },
-  id_unidad_medida_vida_util: { value: "", label: "" },
+  id_marca: { value: '', label: '' },
+  id_unidad_medida: { value: '', label: '' },
+  id_porcentaje_iva: { value: '', label: '' },
+  id_unidad_medida_vida_util: { value: '', label: '' },
   id_bien_padre: 0,
 };
 
@@ -48,8 +54,8 @@ const edit_state: any = {
 export const CreacionArticulosFijosForm: React.FC = () => {
   const initial_options: IGeneric[] = [
     {
-      label: "",
-      value: "",
+      label: '',
+      value: '',
     },
   ];
 
@@ -63,23 +69,28 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   } = useForm();
 
   const data = watch();
-  console.log(data, "data");
+  console.log(data, 'data');
   const navigate = useNavigate();
   // state
+  // TODO => CREAR INTERFAZ PARA NO USAR ANY
   const bien_seleccionado: IBienes = use_app_selector(
-    (state) => state.bien.bien_seleccionado);
+    (state: any) => state.bien.bien_seleccionado
+  );
 
-  console.log(bien_seleccionado, "bien_seleccionado");
-  const data_edit = use_app_selector((state) => state.bien.data_edit);
+  console.log(bien_seleccionado, 'bien_seleccionado');
+  // TODO => CREAR INTERFAZ PARA NO USAR ANY
+  const data_edit = use_app_selector((state: any) => state.bien.data_edit);
 
   // choice
   const [tipo_bien_options, set_tipo_bien_options] = useState(initial_options);
-  const [tipo_activo_options, set_tipo_activo_options] = useState(initial_options);
+  const [tipo_activo_options, set_tipo_activo_options] =
+    useState(initial_options);
   const [unidad_medida_options, set_unidad_medida_options] =
     useState(initial_options);
   const [metodo_valoracion_options, set_metodo_valoracion_options] =
     useState(initial_options);
-  const [porcentaje_options, set_porcentaje_options] = useState(initial_options);
+  const [porcentaje_options, set_porcentaje_options] =
+    useState(initial_options);
   const [depresiacion_options, set_depresiacion_options] =
     useState(initial_options);
   const [marca_options, set_marca_options] = useState(initial_options);
@@ -91,13 +102,13 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   const [max_length, set_max_length] = useState(1);
 
   // estados definicion inicial
-  const [is_edit,] = useState(data_edit.edit);
+  const [is_edit] = useState(data_edit.edit);
 
   const [bien_edit, set_bien_edit] = useState(edit_state);
   // estado edit --bien_seleccionado
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
- // const { loading } = use_app_selector((state) => state.loading);
+  // const { loading } = use_app_selector((state) => state.loading);
   const dispatch = use_app_dispatch();
   // False = crear
   // true = editar
@@ -123,7 +134,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
     marca_options,
   ]);
 
-  console.log(bien_edit.id_unidad_medida.value, "bien_edit.id_unidad_medida");
+  console.log(bien_edit.id_unidad_medida.value, 'bien_edit.id_unidad_medida');
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const cargar_datos_iniciales = () => {
@@ -214,7 +225,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const get_tipo_bien = async () => {
-    const { data } = await api.get("almacen/choices/tipo-bien");
+    const { data } = await api.get('almacen/choices/tipo-bien');
     const tipo_bien_maped = data.map((bien: any[]) => ({
       label: bien[1],
       value: bien[0],
@@ -223,8 +234,8 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const  get_tipo_activo = async () => {
-    const { data } = await api.get("almacen/choices/tipo-activo");
+  const get_tipo_activo = async () => {
+    const { data } = await api.get('almacen/choices/tipo-activo');
     const tipo_activo_maped = data.map((activo: any[]) => ({
       label: activo[1],
       value: activo[0],
@@ -234,29 +245,31 @@ export const CreacionArticulosFijosForm: React.FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const get_unidad_medida = async () => {
-    const { data } = await api.get("almacen/unidades-medida/get-list");
-    const unidad_medida_maped = data.map((bien: { nombre: any; id_unidad_medida: any; }) => ({
-      label: bien.nombre,
-      value: bien.id_unidad_medida,
-    }));
+    const { data } = await api.get('almacen/unidades-medida/get-list');
+    const unidad_medida_maped = data.map(
+      (bien: { nombre: any; id_unidad_medida: any }) => ({
+        label: bien.nombre,
+        value: bien.id_unidad_medida,
+      })
+    );
     set_unidad_medida_options(unidad_medida_maped);
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const get_porcentaje = async () => {
-    const { data } = await api.get("almacen/porcentajes/get-list");
-    const porcentaje_maped = data.map((porcentaje: { porcentaje: any; id_porcentaje_iva: any; }) => ({
-      label: porcentaje.porcentaje,
-      value: porcentaje.id_porcentaje_iva,
-    }));
-    set_porcentaje_options(porcentaje_maped );
+    const { data } = await api.get('almacen/porcentajes/get-list');
+    const porcentaje_maped = data.map(
+      (porcentaje: { porcentaje: any; id_porcentaje_iva: any }) => ({
+        label: porcentaje.porcentaje,
+        value: porcentaje.id_porcentaje_iva,
+      })
+    );
+    set_porcentaje_options(porcentaje_maped);
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const get_depresiacion = async () => {
-    const { data } = await api.get(
-      "almacen/choices/tipo-depreciacion-activo"
-    );
+    const { data } = await api.get('almacen/choices/tipo-depreciacion-activo');
     const depresiacion_maped = data.map((depresiacion: any[]) => ({
       label: depresiacion[1],
       value: depresiacion[0],
@@ -266,8 +279,8 @@ export const CreacionArticulosFijosForm: React.FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const get_marca = async () => {
-    const { data } = await api.get("almacen/marcas/get-list");
-    const marca_maped = data.map((marca: { nombre: any; id_marca: any; }) => ({
+    const { data } = await api.get('almacen/marcas/get-list');
+    const marca_maped = data.map((marca: { nombre: any; id_marca: any }) => ({
       label: marca.nombre,
       value: marca.id_marca,
     }));
@@ -277,7 +290,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const get_metodo_valoracion = async () => {
     const { data } = await api.get(
-      "almacen/choices/metodo-valoracion-articulo/"
+      'almacen/choices/metodo-valoracion-articulo/'
     );
     const metodo_maped = data.map((metodo: any[]) => ({
       label: metodo[1],
@@ -288,75 +301,87 @@ export const CreacionArticulosFijosForm: React.FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const handle_validation = () => {
-   
     // eslint-disable-next-line @typescript-eslint/naming-convention
     let requiredFields: any = [];
     // eslint-disable-next-line eqeqeq
-    if (bien_edit.cod_tipo_bien.value == "A") {
+    if (bien_edit.cod_tipo_bien.value == 'A') {
       requiredFields = [
         { name: 'Tipo de activo', value: bien_edit.cod_tipo_activo.value },
         { name: 'Unidad de medida', value: bien_edit.id_unidad_medida.value },
         { name: 'Porcentaje IVA', value: bien_edit.id_porcentaje_iva.value },
-        { name: 'Tipo de depreciación', value: bien_edit.cod_tipo_depreciacion.value },
-        { name: 'Unidad de vida útil', value: bien_edit.id_unidad_medida_vida_util.value },
+        {
+          name: 'Tipo de depreciación',
+          value: bien_edit.cod_tipo_depreciacion.value,
+        },
+        {
+          name: 'Unidad de vida útil',
+          value: bien_edit.id_unidad_medida_vida_util.value,
+        },
         { name: 'Marca', value: bien_edit.id_marca.value },
       ];
     } else {
       requiredFields = [
-        { name: 'Metodo de valoración', value: bien_edit.cod_metodo_valoracion.value },
+        {
+          name: 'Metodo de valoración',
+          value: bien_edit.cod_metodo_valoracion.value,
+        },
         { name: 'Unidad de medida', value: bien_edit.id_unidad_medida.value },
         { name: 'Porcentaje IVA', value: bien_edit.id_porcentaje_iva.value },
       ];
     }
     // Validar que todos los campos requeridos tengan un valor seleccionado
-    const invalid_fields = requiredFields.filter((field: { value: any; }) => !field.value);
+    const invalid_fields = requiredFields.filter(
+      (field: { value: any }) => field.value
+    );
     if (invalid_fields.length > 0) {
-      const field_names = invalid_fields.map((field: { name: any; }) => field.name).join(', ');
+      const field_names = invalid_fields
+        .map((field: { name: any }) => field.name)
+        .join(', ');
       void Swal.fire({
-        position: "center",
-        icon: "info",
+        position: 'center',
+        icon: 'info',
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         title: `Debe seleccionar un valor para los siguientes campos requeridos: ${field_names}`,
         showConfirmButton: true,
-        confirmButtonText: "Aceptar",
+        confirmButtonText: 'Aceptar',
       });
       return false;
     }
     return true;
-  }
+  };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-   const crear_modelo_data = () => {
-  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   const bien_model: IBienes = {
-  //     id_bien: bien_edit.id_bien !== 0 ? bien_edit.id_bien : null,
-  //     cantidad_vida_util: bien_edit.cantidad_vida_util,
-  //     cod_metodo_valoracion: bien_edit.cod_metodo_valoracion.value,
-  //     cod_tipo_activo: bien_edit.cod_tipo_activo.value,
-  //     cod_tipo_bien: bien_edit.cod_tipo_bien.value,
-  //     cod_tipo_depreciacion: bien_edit.cod_tipo_depreciacion.value,
-  //     codigo_bien: bien_edit.codigo_bien, // quemado
-  //     descripcion: bien_edit.descripcion,
-  //     doc_identificador_nro: bien_edit.doc_identificador_nro,
-  //     maneja_hoja_vida: check_box_hoja,
-  //     nivel_jerarquico:
-  //     bien_edit.nivel_jerarquico !== 0 ? bien_edit.nivel_jerarquico : 1,
-  //     nombre: bien_edit.nombre,
-  //     nombre_cientifico: bien_edit.nombre_cientifico,
-  //     nro_elemento_bien: bien_edit.nro_elemento_bien,
-  //     solicitable_vivero: check_box_hoja,
-  //     stock_maximo: bien_edit.stock_maximo,
-  //     stock_minimo: bien_edit.stock_minimo,
-  //     tiene_hoja_vida: check_box_hoja,
-  //     valor_residual: bien_edit.valor_residual,
-  //     visible_solicitudes: check_box_soli,
-  //     id_bien_padre:
-  //     bien_edit.id_bien_padre !== 0 ? bien_edit.id_bien_padre : null,
-  //     id_marca: bien_edit.id_marca.value,
-  //     id_porcentaje_iva: bien_edit.id_porcentaje_iva.value,
-  //     id_unidad_medida: bien_edit.id_unidad_medida.value,
-  //     id_unidad_medida_vida_util: bien_edit.id_unidad_medida_vida_util.value,
-    };
+  const crear_modelo_data = () => {
+    //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    //   const bien_model: IBienes = {
+    //     id_bien: bien_edit.id_bien !== 0 ? bien_edit.id_bien : null,
+    //     cantidad_vida_util: bien_edit.cantidad_vida_util,
+    //     cod_metodo_valoracion: bien_edit.cod_metodo_valoracion.value,
+    //     cod_tipo_activo: bien_edit.cod_tipo_activo.value,
+    //     cod_tipo_bien: bien_edit.cod_tipo_bien.value,
+    //     cod_tipo_depreciacion: bien_edit.cod_tipo_depreciacion.value,
+    //     codigo_bien: bien_edit.codigo_bien, // quemado
+    //     descripcion: bien_edit.descripcion,
+    //     doc_identificador_nro: bien_edit.doc_identificador_nro,
+    //     maneja_hoja_vida: check_box_hoja,
+    //     nivel_jerarquico:
+    //     bien_edit.nivel_jerarquico !== 0 ? bien_edit.nivel_jerarquico : 1,
+    //     nombre: bien_edit.nombre,
+    //     nombre_cientifico: bien_edit.nombre_cientifico,
+    //     nro_elemento_bien: bien_edit.nro_elemento_bien,
+    //     solicitable_vivero: check_box_hoja,
+    //     stock_maximo: bien_edit.stock_maximo,
+    //     stock_minimo: bien_edit.stock_minimo,
+    //     tiene_hoja_vida: check_box_hoja,
+    //     valor_residual: bien_edit.valor_residual,
+    //     visible_solicitudes: check_box_soli,
+    //     id_bien_padre:
+    //     bien_edit.id_bien_padre !== 0 ? bien_edit.id_bien_padre : null,
+    //     id_marca: bien_edit.id_marca.value,
+    //     id_porcentaje_iva: bien_edit.id_porcentaje_iva.value,
+    //     id_unidad_medida: bien_edit.id_unidad_medida.value,
+    //     id_unidad_medida_vida_util: bien_edit.id_unidad_medida_vida_util.value,
+  };
   //   return field_names;
   // };
 
@@ -393,7 +418,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {
-    console.log("onSubmit", handle_validation());
+    console.log('onSubmit', handle_validation());
     if (!handle_validation()) {
       return;
     }
@@ -402,28 +427,28 @@ export const CreacionArticulosFijosForm: React.FC = () => {
       void editar_bien(dispatch, crear_modelo_data());
       void obtener_todos_bienes(dispatch);
       navigate(
-        "/dashboard/almacen/entrada-y-salida-de-articulos/catalogo-bienes"
+        '/dashboard/almacen/entrada-y-salida-de-articulos/catalogo-bienes'
       );
     } else {
       // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
       void crear_bien(dispatch, crear_modelo_data());
       void obtener_todos_bienes(dispatch);
       navigate(
-        "/dashboard/almacen/entrada-y-salida-de-articulos/catalogo-bienes"
+        '/dashboard/almacen/entrada-y-salida-de-articulos/catalogo-bienes'
       );
     }
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handle_change = (e: { target: { name: any; value: any; }; }) => {
+  const handle_change = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
     set_bien_edit({ ...bien_edit, [name]: value });
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const change_select_tipo_activo = (e: { value: any; label: any; }) => {
+  const change_select_tipo_activo = (e: { value: any; label: any }) => {
     // eslint-disable-next-line prefer-const
-    let catalogo_bien = { ...bien_edit};
+    let catalogo_bien = { ...bien_edit };
     catalogo_bien.cod_tipo_activo = {
       value: e.value,
       label: e.label,
@@ -432,7 +457,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const change_select_tipo_bien = (e: { value: any; label: any; }) => {
+  const change_select_tipo_bien = (e: { value: any; label: any }) => {
     // eslint-disable-next-line prefer-const
     let catalogo_bien = { ...bien_edit };
     catalogo_bien.cod_tipo_bien = {
@@ -443,9 +468,9 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const change_select_tipo_unidad_medida = (e: { value: any; label: any; }) => {
+  const change_select_tipo_unidad_medida = (e: { value: any; label: any }) => {
     // eslint-disable-next-line prefer-const
-    let catalogo_bien = { ...bien_edit};
+    let catalogo_bien = { ...bien_edit };
     catalogo_bien.id_unidad_medida = {
       value: e.value,
       label: e.label,
@@ -454,7 +479,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const change_select_tipo_marca = (e: { value: any; label: any; }) => {
+  const change_select_tipo_marca = (e: { value: any; label: any }) => {
     // eslint-disable-next-line prefer-const
     let catalogo_bien = { ...bien_edit };
     catalogo_bien.id_marca = {
@@ -465,7 +490,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const change_select_tipo_porcentaje = (e: { value: any; label: any; }) => {
+  const change_select_tipo_porcentaje = (e: { value: any; label: any }) => {
     // eslint-disable-next-line prefer-const
     let catalogo_bien = { ...bien_edit };
     catalogo_bien.id_porcentaje_iva = {
@@ -476,9 +501,9 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const change_select_tipo_depreciacion = (e: { value: any; label: any; }) => {
+  const change_select_tipo_depreciacion = (e: { value: any; label: any }) => {
     // eslint-disable-next-line prefer-const
-    let catalogo_bien = { ...bien_edit};
+    let catalogo_bien = { ...bien_edit };
     catalogo_bien.cod_tipo_depreciacion = {
       value: e.value,
       label: e.label,
@@ -487,9 +512,12 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const change_select_tipo_metodo_valoracion = (e: { value: any; label: any; }) => {
+  const change_select_tipo_metodo_valoracion = (e: {
+    value: any;
+    label: any;
+  }) => {
     // eslint-disable-next-line prefer-const
-    let catalogo_bien = { ...bien_edit};
+    let catalogo_bien = { ...bien_edit };
     catalogo_bien.cod_metodo_valoracion = {
       value: e.value,
       label: e.label,
@@ -498,7 +526,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const change_select_tipo_vida_util = (e: { value: any; label: any; }) => {
+  const change_select_tipo_vida_util = (e: { value: any; label: any }) => {
     // eslint-disable-next-line prefer-const
     let catalogo_bien = { ...bien_edit };
     catalogo_bien.id_unidad_medida_vida_util = {
@@ -510,43 +538,42 @@ export const CreacionArticulosFijosForm: React.FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const volver = () => {
-    navigate("/dashboard/Recaudo/gestor-notificacion/catalogo-bienes-Screen");
+    navigate('/dashboard/Recaudo/gestor-notificacion/catalogo-bienes-Screen');
   };
 
   useEffect(() => {
-    console.log(bien_edit.codigo_bien.split(""), ".split()");
-    console.log(bien_edit.codigo_bien.split("")[0], "[0]");
+    console.log(bien_edit.codigo_bien.split(''), '.split()');
+    console.log(bien_edit.codigo_bien.split('')[0], '[0]');
     console.log(
-      bien_edit.codigo_bien.split("").length,
-      "bien_edit.codigo_bien.split()[0]"
+      bien_edit.codigo_bien.split('').length,
+      'bien_edit.codigo_bien.split()[0]'
     );
-    if (bien_edit.codigo_bien.split("").length === 0) {
+    if (bien_edit.codigo_bien.split('').length === 0) {
       // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression, no-sequences
-      return console.log("entro hijo 1"), set_max_length(1);
+      return console.log('entro hijo 1'), set_max_length(1);
     }
     if (
-      bien_edit.codigo_bien.split("")[0] !== "" &&
-      bien_edit.codigo_bien.split("").length === 1
+      bien_edit.codigo_bien.split('')[0] !== '' &&
+      bien_edit.codigo_bien.split('').length === 1
     ) {
       // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression, no-sequences
-      return console.log("entro hijo 2"), set_max_length(2);
+      return console.log('entro hijo 2'), set_max_length(2);
     }
-    if (bien_edit.codigo_bien.split("").length === 2) {
+    if (bien_edit.codigo_bien.split('').length === 2) {
       // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression, no-sequences
-      return console.log("entro hijo 4"), set_max_length(4);
+      return console.log('entro hijo 4'), set_max_length(4);
     }
-    if (bien_edit.codigo_bien.split("").length === 4) {
+    if (bien_edit.codigo_bien.split('').length === 4) {
       // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression, no-sequences
-      return console.log("entro hijo 7"), set_max_length(7);
+      return console.log('entro hijo 7'), set_max_length(7);
     }
-    if (bien_edit.codigo_bien.split("").length === 7) {
+    if (bien_edit.codigo_bien.split('').length === 7) {
       // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression, no-sequences
-      return console.log("entro hijo 12"), set_max_length(12);
+      return console.log('entro hijo 12'), set_max_length(12);
     }
   }, [flag]);
-  console.log(bien_edit, "este es el bienEdir");
+  console.log(bien_edit, 'este es el bienEdir');
 
- 
   return (
     <div className="row min-vh-100">
       <div className="col-lg-12 col-md-10 col-12 mx-auto">
@@ -555,8 +582,8 @@ export const CreacionArticulosFijosForm: React.FC = () => {
             <b>Creación de artículo</b>
           </h3>
 
-          <Title title='CATÁLOGO DE BIENES' />
-           <Grid/>
+          <Title title="CATÁLOGO DE BIENES" />
+          <Grid />
 
           <div className="row">
             <div className="col-12 col-lg-3  mt-2">
@@ -581,7 +608,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
             <div className="col-12 col-md-3 mt-2"></div>
           </div>
 
-          {bien_edit.cod_tipo_bien.value == "A" ? (
+          {bien_edit.cod_tipo_bien.value == 'A' ? (
             <div>
               <form
                 className="row"
@@ -597,7 +624,9 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                     <input
                       className="form-control border border-terciary border rounded-pill px-3"
                       type="text"
-                      onMouseOver={() => { set_flag(true); }}
+                      onMouseOver={() => {
+                        set_flag(true);
+                      }}
                       maxLength={max_length}
                       placeholder="Código"
                       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -729,7 +758,8 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                   <div className="col-12 col-lg-3  mt-3">
                     <div>
                       <label className="ms-2 text-terciary">
-                        Cantidad de vida útil <span className="text-danger">*</span>
+                        Cantidad de vida útil{' '}
+                        <span className="text-danger">*</span>
                       </label>
                       <input
                         name="cantidad_vida_util"
@@ -780,17 +810,19 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         className="btn btn-sm btn-tablas mt-2"
                         type="button"
                         title="Solicitudes"
-                        onClick={() => { set_check_box_soli(!check_box_soli); }}
+                        onClick={() => {
+                          set_check_box_soli(!check_box_soli);
+                        }}
                       >
                         {!check_box_soli ? (
                           <i
                             className="fa-solid fa-toggle-off fs-3"
-                            style={{ color: "black" }}
+                            style={{ color: 'black' }}
                           ></i>
                         ) : (
                           <i
                             className="fa-solid fa-toggle-on fs-3"
-                            style={{ color: "#8cd81e" }}
+                            style={{ color: '#8cd81e' }}
                           ></i>
                         )}
                       </button>
@@ -807,17 +839,19 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         className="btn btn-sm btn-tablas mt-2"
                         type="button"
                         title="Solicitudes"
-                        onClick={() => { set_check_box_hoja(!check_box_hoja); }}
+                        onClick={() => {
+                          set_check_box_hoja(!check_box_hoja);
+                        }}
                       >
                         {!check_box_hoja ? (
                           <i
                             className="fa-solid fa-toggle-off fs-3"
-                            style={{ color: "black" }}
+                            style={{ color: 'black' }}
                           ></i>
                         ) : (
                           <i
                             className="fa-solid fa-toggle-on fs-3"
-                            style={{ color: "#8cd81e" }}
+                            style={{ color: '#8cd81e' }}
                           ></i>
                         )}
                       </button>
@@ -844,7 +878,9 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                     <button
                       type="button"
                       className="btn   text-capitalize"
-                      onClick={() => { volver(); }}
+                      onClick={() => {
+                        volver();
+                      }}
                     >
                       <i className="fa-solid fa-x fs-3"></i>
                     </button>
@@ -856,9 +892,9 @@ export const CreacionArticulosFijosForm: React.FC = () => {
               </form>
             </div>
           ) : (
-            ""
+            ''
           )}
-          {bien_edit.cod_tipo_bien.value == "C" ? (
+          {bien_edit.cod_tipo_bien.value == 'C' ? (
             <div>
               <form
                 className="row"
@@ -874,13 +910,15 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                     <input
                       className="form-control border border-terciary border rounded-pill px-3"
                       type="text"
-                      onMouseOver={() => { set_flag(true); }}
-                      maxLength= {max_length}
+                      onMouseOver={() => {
+                        set_flag(true);
+                      }}
+                      maxLength={max_length}
                       placeholder="Código"
                       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                       disabled={data_edit.edit!}
                       value={bien_edit.codigo_bien}
-                      {...register("codigo_bien")}
+                      {...register('codigo_bien')}
                       onChange={handle_change}
                       required
                     />
@@ -896,8 +934,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         type="text"
                         value={bien_edit.nombre}
                         placeholder="Nombre"
-                        {...register("nombre", { required: "true" })}
-
+                        {...register('nombre', { required: 'true' })}
                         onChange={handle_change}
                         required
                       />
@@ -911,7 +948,8 @@ export const CreacionArticulosFijosForm: React.FC = () => {
 
                   <div className="col-12 col-lg-3  mt-3">
                     <label className="form-floating input-group input-group-dynamic ms-2">
-                      Metodo de valoración <span className="text-danger">*</span>
+                      Metodo de valoración{' '}
+                      <span className="text-danger">*</span>
                     </label>
                     <Controller
                       name="tipoactivo"
@@ -933,7 +971,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                       className="form-control border border-terciary border rounded-pill px-3"
                       type="text"
                       placeholder="Carpeta Padre"
-                      {...register("padre")}
+                      {...register('padre')}
                       value={bien_edit.nombre_padre}
                       required
                       disabled
@@ -974,9 +1012,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
 
                   <div className="col-12 col-lg-3  mt-3">
                     <div>
-                      <label className="ms-2 text-terciary">
-                        Stock minimo
-                      </label>
+                      <label className="ms-2 text-terciary">Stock minimo</label>
                       <input
                         name="stock_minimo"
                         className="form-control border border-terciary border rounded-pill px-3"
@@ -994,9 +1030,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                   </div>
                   <div className="col-12 col-lg-3  mt-3">
                     <div>
-                      <label className="ms-2 text-terciary">
-                        Stock maximo
-                      </label>
+                      <label className="ms-2 text-terciary">Stock maximo</label>
                       <input
                         name="stock_maximo"
                         className="form-control border border-terciary border rounded-pill px-3"
@@ -1048,24 +1082,25 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         className="btn btn-sm btn-tablas mt-2"
                         type="button"
                         title="Solicitudes"
-                        onClick={() => { set_check_box_soli(!check_box_soli); }}
+                        onClick={() => {
+                          set_check_box_soli(!check_box_soli);
+                        }}
                       >
                         {!check_box_soli ? (
                           <i
                             className="fa-solid fa-toggle-off fs-3"
-                            style={{ color: "black" }}
+                            style={{ color: 'black' }}
                           ></i>
                         ) : (
                           <i
                             className="fa-solid fa-toggle-on fs-3"
-                            style={{ color: "#8cd81e" }}
+                            style={{ color: '#8cd81e' }}
                           ></i>
                         )}
                       </button>
                     </div>
                   </div>
                   <div className="col-12 col-lg-3  mt-3 d-flex">
-
                     <div className="col-12 col-lg-6  mt-4 ">
                       <label className="form-floating input-group input-group-dynamic ms-2 mt-2">
                         Solicitable por vivero:
@@ -1076,17 +1111,19 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         className="btn btn-sm btn-tablas"
                         type="button"
                         title="Vivero"
-                        onClick={() => { set_check_box_vivero(!check_box_vivero); }}
+                        onClick={() => {
+                          set_check_box_vivero(!check_box_vivero);
+                        }}
                       >
                         {!check_box_vivero ? (
                           <i
                             className="fa-solid fa-toggle-off fs-3"
-                            style={{ color: "black" }}
+                            style={{ color: 'black' }}
                           ></i>
                         ) : (
                           <i
                             className="fa-solid fa-toggle-on fs-3"
-                            style={{ color: "#8cd81e" }}
+                            style={{ color: '#8cd81e' }}
                           ></i>
                         )}
                       </button>
@@ -1109,7 +1146,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    ""
+                    ''
                   )}
                 </div>
                 <div className="row">
@@ -1132,7 +1169,9 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                     <button
                       type="submit"
                       className="btn   text-capitalize"
-                      onClick={() => { volver(); }}
+                      onClick={() => {
+                        volver();
+                      }}
                     >
                       <i className="fa-solid fa-x fs-3"></i>
                     </button>
@@ -1144,10 +1183,10 @@ export const CreacionArticulosFijosForm: React.FC = () => {
               </form>
             </div>
           ) : (
-            ""
+            ''
           )}
         </div>
       </div>
     </div>
   );
-          }
+};
