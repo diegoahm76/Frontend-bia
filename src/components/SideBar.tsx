@@ -59,8 +59,9 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   };
 
   const open_collapse = (obj: Permisos, key: number): void => {
-    permisos[key] = { ...obj, expanded: !obj.expanded };
-    set_permisos([...permisos]);
+    const temp_permisos = [...permisos];
+    temp_permisos[key] = { ...obj, expanded: !obj.expanded };
+    set_permisos([...temp_permisos]);
   };
 
   const container =
@@ -68,7 +69,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
 
   useEffect(() => {
     set_permisos(permisos_store);
-  }, []);
+  }, [permisos_store]);
 
   const conten_drawer = (
     <Box
@@ -143,7 +144,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         </Collapse>
       </List>
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      {permisos.length > 0
+      {permisos_store.length > 0
         ? permisos.map((e, k) => {
             return (
               <List sx={{ margin: '0 20px', color: 'secondary.main' }} key={k}>

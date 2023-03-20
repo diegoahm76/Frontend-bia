@@ -22,6 +22,11 @@ export const checking_authentication: (
       nombre_de_usuario,
       password
     });
+    // Se limpia los permisos que vienen del back
+    if (data?.permisos !== undefined) {
+      data.permisos.length = 0;
+    }
+
     if (!ok) {
       dispatch(logout({ error_message }));
       return;
