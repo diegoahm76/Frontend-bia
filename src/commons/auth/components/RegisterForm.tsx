@@ -17,6 +17,9 @@ import {
   CircularProgress,
   Typography,
   Button,
+  OutlinedInput,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
 
 import { LoadingButton } from '@mui/lab';
@@ -28,6 +31,8 @@ import { useForm } from 'react-hook-form';
 import { get_person_by_document } from '../request/authRequest';
 import { control_error } from '../../../helpers/controlError';
 import { type IPerson } from '../interfaces';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 
 type keys_object =
   | 'tipo_persona'
@@ -64,7 +69,34 @@ export const RegisterForm: React.FC = () => {
     setValue,
     formState: { errors },
     watch,
-  } = useForm<IPerson>();
+  } = useForm<IPerson>({
+    defaultValues: {
+      tipo_persona: '',
+      tipo_documento: '',
+      numero_documento: '',
+      digito_verificacion: '',
+      nombre_comercial: '',
+      primer_nombre: '',
+      segundo_nombre: '',
+      primer_apellido: '',
+      segundo_apellido: '',
+      fecha_nacimiento: '',
+      email: '',
+      confirmar_email: '',
+      telefono_celular: '',
+      confirmar_celular: '',
+      ubicacion_georeferenciada: '',
+      razon_social: '',
+      telefono_celular_empresa: '',
+      direccion_notificaciones: '',
+      representante_legal: '',
+      cod_municipio_notificacion_nal: '',
+      nombre_de_usuario: '',
+      password: '',
+      confirmar_password: '',
+      require_nombre_comercial: false,
+    },
+  });
   const {
     tipo_documento_opt,
     tipo_persona_opt,
@@ -73,12 +105,14 @@ export const RegisterForm: React.FC = () => {
     tipo_persona,
     set_tipo_persona,
     set_tipo_documento,
+    validate_password,
   } = use_register();
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
   const [error_email, set_error_email] = useState(false);
   const [error_password, set_error_password] = useState(false);
   const [is_saving, set_is_saving] = useState(false);
   const [is_search, set_is_search] = useState(false);
+  const [message_error_password, set_message_error_password] = useState('');
   const [data_register, set_data_register] = useState<IPerson>({
     tipo_persona: '',
     tipo_documento: '',
@@ -102,6 +136,7 @@ export const RegisterForm: React.FC = () => {
     cod_municipio_notificacion_nal: '',
     require_nombre_comercial: false,
   });
+  const [show_password, set_show_password] = useState(false);
   // watchers
   const requiere_nombre_comercial: boolean = watch('require_nombre_comercial');
   const email = watch('email');
@@ -184,6 +219,13 @@ export const RegisterForm: React.FC = () => {
   }, [watch('tipo_persona')]);
 
   useEffect(() => {
+    if (tipo_persona === 'J') {
+      setValue('tipo_documento', 'NT');
+      set_tipo_documento('NT');
+    }
+  }, [tipo_persona]);
+
+  useEffect(() => {
     set_tipo_documento(watch('tipo_documento'));
   }, [watch('tipo_documento')]);
 
@@ -197,11 +239,25 @@ export const RegisterForm: React.FC = () => {
 
   useEffect(() => {
     if (password !== confirmar_password) {
+      set_message_error_password('Las contraseñas no son iguales');
       set_error_password(true);
       return;
     }
+    if (password !== undefined && password !== '') {
+      if (!validate_password(password)) {
+        set_error_password(true);
+        set_message_error_password(
+          'La contraseña no cumple con el formato requerido'
+        );
+        return;
+      }
+    }
     set_error_password(false);
   }, [password, confirmar_password]);
+
+  const handle_click_show_password = (): void => {
+    set_show_password((show) => !show);
+  };
 
   // / Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -412,7 +468,7 @@ export const RegisterForm: React.FC = () => {
               error={errors.tipo_persona?.type === 'required'}
             >
               {loading ? (
-                <Skeleton variant="rectangular" width="100%" height={55} />
+                <Skeleton variant="rectangular" width="100%" height={45} />
               ) : (
                 <>
                   <InputLabel id="label_tipo_persona">
@@ -452,9 +508,10 @@ export const RegisterForm: React.FC = () => {
               fullWidth
               size="small"
               error={errors.tipo_documento?.type === 'required'}
+              disabled={(tipo_persona === 'J' || tipo_persona === '') ?? true}
             >
               {loading ? (
-                <Skeleton variant="rectangular" width="100%" height={55} />
+                <Skeleton variant="rectangular" width="100%" height={45} />
               ) : (
                 <>
                   <InputLabel id="label_tipo_documento">
@@ -480,10 +537,8 @@ export const RegisterForm: React.FC = () => {
                       );
                     })}
                   </Select>
-                  {errors.tipo_documento?.type === 'required' ? (
+                  {errors.tipo_documento?.type === 'required' && (
                     <FormHelperText color={''}>Campo Requerido</FormHelperText>
-                  ) : (
-                    ''
                   )}
                 </>
               )}
@@ -747,6 +802,17 @@ export const RegisterForm: React.FC = () => {
                   Datos de la cuenta
                 </Typography>
               </Grid>
+              <Grid item xs={12} sm={12}>
+                <Typography>
+                  La contraseña debe cumplir con las siguientes reglas
+                </Typography>
+                <ul>
+                  <li>Debe contener mínimo 6 caracteres</li>
+                  <li>Debe contener 1 Caracter en Mayúscula</li>
+                  <li>Debe contener 1 Caracter numérico</li>
+                  <li>Debe contener 1 Caracter simbólico (*,-,_,%...)</li>
+                </ul>
+              </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
@@ -765,45 +831,84 @@ export const RegisterForm: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
+                <FormControl
                   size="small"
-                  label="Contraseña"
-                  {...register('password', {
-                    required: true,
-                  })}
-                  onChange={handle_change}
+                  fullWidth
                   error={errors.password?.type === 'required' || error_password}
-                  helperText={
-                    errors.password?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : error_password
-                      ? 'Las contraseñas no coinciden'
-                      : ''
-                  }
-                />
+                >
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Contraseña *
+                  </InputLabel>
+                  <OutlinedInput
+                    required
+                    id="outlined-adornment-password"
+                    type={show_password ? 'text' : 'password'}
+                    error={errors.password?.type === 'required'}
+                    {...register('password', {
+                      required: true,
+                    })}
+                    onChange={handle_change}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handle_click_show_password}
+                          edge="end"
+                        >
+                          {show_password ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Contraseña"
+                  />
+                  {errors.password?.type === 'required' ? (
+                    <FormHelperText>Este campo es obligatorio</FormHelperText>
+                  ) : error_password ? (
+                    <FormHelperText>{message_error_password}</FormHelperText>
+                  ) : (
+                    ''
+                  )}
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
+                <FormControl
                   size="small"
-                  label="Repita la contraseña"
-                  error={
-                    errors.confirmar_password?.type === 'required' ||
-                    error_password
-                  }
-                  helperText={
-                    errors.confirmar_password?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : error_password
-                      ? 'Las contraseñas no coinciden'
-                      : ''
-                  }
-                  {...register('confirmar_password', {
-                    required: true,
-                  })}
-                  onChange={handle_change}
-                />
+                  fullWidth
+                  error={errors.password?.type === 'required' || error_password}
+                >
+                  <InputLabel htmlFor="outlined-adornment-password">
+                    Repita la contraseña *
+                  </InputLabel>
+                  <OutlinedInput
+                    required
+                    id="outlined-adornment-password"
+                    type={show_password ? 'text' : 'password'}
+                    error={errors.confirmar_password?.type === 'required'}
+                    {...register('confirmar_password', {
+                      required: true,
+                    })}
+                    onChange={handle_change}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handle_click_show_password}
+                          edge="end"
+                        >
+                          {show_password ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
+                    label="Repita la contraseña"
+                  />
+                  {errors.confirmar_password?.type === 'required' ? (
+                    <FormHelperText>Este campo es obligatorio</FormHelperText>
+                  ) : error_password ? (
+                    <FormHelperText>{message_error_password}</FormHelperText>
+                  ) : (
+                    ''
+                  )}
+                </FormControl>
               </Grid>
               <Grid item justifyContent="center" container>
                 <Grid item xs={12} sm={8} md={4}>

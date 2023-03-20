@@ -54,6 +54,15 @@ export const use_register = (): ReisterHook => {
     }
   };
 
+  const validate_password = (password: string): boolean => {
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+    if (regex.test(password) && password.length > 5) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   useEffect(() => {
     void get_selects_options();
   }, []);
@@ -70,5 +79,6 @@ export const use_register = (): ReisterHook => {
     handle_change_checkbox,
     set_tipo_persona,
     set_tipo_documento,
+    validate_password,
   };
 };

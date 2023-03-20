@@ -181,6 +181,7 @@ export interface ReisterHook {
   set_tipo_persona: Dispatch<SetStateAction<string>>;
   set_tipo_documento: Dispatch<SetStateAction<string>>;
   get_selects_options: () => Promise<void>;
+  validate_password: (string: string) => boolean;
   handle_change_checkbox: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
