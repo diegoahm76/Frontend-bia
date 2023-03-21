@@ -7,8 +7,7 @@ export const ConfiguracionRoutes: React.FC = () => {
   return (
     <Routes>
       <Route
-        path="crear_marca_porcentaje_medida"
-        element={<CrearMarcaPorcentajeMedidaScreen />}
+        path="crear_marca_porcentaje_medida" element={<CrearMarcaPorcentajeMedidaScreen />}
       />
       <Route path="/*" element={<Page404 />} />
     </Routes>

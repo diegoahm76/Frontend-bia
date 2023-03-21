@@ -8,6 +8,7 @@ import {
   Button,
   TextField,
   Typography,
+  Chip,
   // MenuItem,
   // InputLabel,
   // FormControl,
@@ -104,6 +105,26 @@ export const EditarOrganigrama = ({
   return (
     <>
       <Grid item xs={12}>
+        <Box sx={{ m: '0 0 20px 0' }}>
+          <Typography>
+            Estado del organigrama:{' '}
+            {organigram_current.fecha_terminado !== null ? (
+              <Chip
+                size="small"
+                label="Terminado"
+                color="success"
+                variant="outlined"
+              />
+            ) : (
+              <Chip
+                size="small"
+                label="En proceso"
+                color="warning"
+                variant="outlined"
+              />
+            )}
+          </Typography>
+        </Box>
         <Box
           component="form"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -126,6 +147,7 @@ export const EditarOrganigrama = ({
                     size="small"
                     label="Nombre"
                     variant="outlined"
+                    disabled={organigram_current.fecha_terminado !== null}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -154,6 +176,7 @@ export const EditarOrganigrama = ({
                     size="small"
                     label="Versión"
                     variant="outlined"
+                    disabled={organigram_current.fecha_terminado !== null}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -183,6 +206,7 @@ export const EditarOrganigrama = ({
                     label="Descripcion"
                     variant="outlined"
                     value={value}
+                    disabled={organigram_current.fecha_terminado !== null}
                     onChange={onChange}
                     error={!(error == null)}
                     helperText={
@@ -200,6 +224,7 @@ export const EditarOrganigrama = ({
               type="submit"
               color="primary"
               variant="outlined"
+              disabled={organigram_current.fecha_terminado !== null}
               startIcon={<SaveIcon />}
             >
               EDITAR
@@ -212,54 +237,62 @@ export const EditarOrganigrama = ({
         <Title title="NIVELES ORGANIZACIONALES" />
         <Box sx={{ mt: '20px' }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={4}>
-              <Box
-                component="form"
-                // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                onSubmit={handle_submit_nivel(submit_nivel)}
-              >
-                <Typography>Nivel {orden_nivel}</Typography>
-                <Controller
-                  name="nombre"
-                  control={control_nivel}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      size="small"
-                      label="Nombre de nivel"
+            {organigram_current.fecha_terminado === null && (
+              <Grid item xs={12} sm={4}>
+                <Box
+                  component="form"
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onSubmit={handle_submit_nivel(submit_nivel)}
+                >
+                  <Typography>Nivel {orden_nivel}</Typography>
+                  <Controller
+                    name="nombre"
+                    control={control_nivel}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        label="Nombre de nivel"
+                        variant="outlined"
+                        disabled={organigram_current.fecha_terminado !== null}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar un nombre'
+                            : 'Ingrese nombre del nivel'
+                        }
+                      />
+                    )}
+                  />
+                  <Stack direction="row" justifyContent="flex-end" spacing={2}>
+                    <Button
+                      type="submit"
+                      color="primary"
+                      disabled={organigram_current.fecha_terminado !== null}
                       variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre del nivel'
+                      startIcon={
+                        title_nivel === 'Agregar' ? <AddIcon /> : <EditIcon />
                       }
-                    />
-                  )}
-                />
-                <Stack direction="row" justifyContent="flex-end" spacing={2}>
-                  <Button
-                    type="submit"
-                    color="primary"
-                    variant="outlined"
-                    startIcon={
-                      title_nivel === 'Agregar' ? <AddIcon /> : <EditIcon />
-                    }
-                  >
-                    {title_nivel === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
-                  </Button>
-                </Stack>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={8}>
+                    >
+                      {title_nivel === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
+                    </Button>
+                  </Stack>
+                </Box>
+              </Grid>
+            )}
+            <Grid
+              item
+              xs={12}
+              sm={organigram_current.fecha_terminado !== null ? 12 : 8}
+            >
               <Grid item>
                 <Box sx={{ width: '100%' }}>
                   <DataGrid
@@ -281,178 +314,183 @@ export const EditarOrganigrama = ({
 
       <Grid item xs={12}>
         <Title title="UNIDADES ORGANIZACIONALES" />
-        <Box
-          component="form"
-          sx={{ mt: '20px' }}
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={handle_submit_unidades(submit_unidades)}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={3}>
-              <Controller
-                name="codigo"
-                control={control_unidades}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    size="small"
-                    label="Código"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio ingresar un código'
-                        : 'Ingrese código'
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Controller
-                name="nombre"
-                control={control_unidades}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    size="small"
-                    label="Nombre"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio ingresar un nombre'
-                        : 'Ingrese un nombre'
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Controller
-                name="tipo_unidad"
-                control={control_unidades}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    value={field.value}
-                    onChange={(option: SingleValue<any>) => {
-                      set_value_unidades('tipo_unidad', option);
-                    }}
-                    options={options_tipo_unidad.map((item) =>
-                      item.value !== 'LI' && unity_organigram.length === 0
-                        ? { ...item, isDisabled: true }
-                        : { ...item, isDisabled: false }
-                    )}
-                    placeholder="Seleccionar"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Controller
-                name="nivel_unidad"
-                control={control_unidades}
-                rules={{ required: true }}
-                defaultValue={option_nivel[0]}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    value={field.value}
-                    onChange={(option: SingleValue<ILevelUnity>) => {
-                      set_unity_root(option);
-                    }}
-                    options={option_nivel}
-                    placeholder="Seleccionar"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Controller
-                name="unidad_raiz"
-                control={control_unidades}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    isDisabled={true}
-                    value={field.value}
-                    options={option_raiz}
-                    placeholder="Seleccionar unidad raiz"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Controller
-                name="agrupacion_documental"
-                control={control_unidades}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    value={field.value}
-                    onChange={(option: SingleValue<any>) => {
-                      set_value_unidades('agrupacion_documental', option);
-                    }}
-                    options={options_agrupacion_d}
-                    placeholder="Seleccionar"
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Controller
-                name="nivel_padre"
-                control={control_unidades}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    value={field.value}
-                    onChange={(option: SingleValue<any>) => {
-                      set_value_unidades('nivel_padre', option);
-                    }}
-                    options={option_unidad_padre}
-                    placeholder="Seleccionar"
-                  />
-                )}
-              />
-            </Grid>
-          </Grid>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mb: '20px' }}
-          >
-            <Button
-              type="submit"
-              color="primary"
-              variant="outlined"
-              startIcon={
-                title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />
-              }
+        <Box sx={{ mt: '20px' }}>
+          {organigram_current.fecha_terminado === null && (
+            <Box
+              component="form"
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onSubmit={handle_submit_unidades(submit_unidades)}
             >
-              {title_unidades === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
-            </Button>
-          </Stack>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="codigo"
+                    control={control_unidades}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        label="Código"
+                        variant="outlined"
+                        disabled={organigram_current.fecha_terminado !== null}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar un código'
+                            : 'Ingrese código'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="nombre"
+                    control={control_unidades}
+                    defaultValue=""
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        label="Nombre"
+                        variant="outlined"
+                        disabled={organigram_current.fecha_terminado !== null}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar un nombre'
+                            : 'Ingrese un nombre'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="tipo_unidad"
+                    control={control_unidades}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onChange={(option: SingleValue<any>) => {
+                          set_value_unidades('tipo_unidad', option);
+                        }}
+                        options={options_tipo_unidad.map((item) =>
+                          item.value !== 'LI' && unity_organigram.length === 0
+                            ? { ...item, isDisabled: true }
+                            : { ...item, isDisabled: false }
+                        )}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="nivel_unidad"
+                    control={control_unidades}
+                    rules={{ required: true }}
+                    defaultValue={option_nivel[0]}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onChange={(option: SingleValue<ILevelUnity>) => {
+                          set_unity_root(option);
+                        }}
+                        options={option_nivel}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="unidad_raiz"
+                    control={control_unidades}
+                    rules={{ required: true }}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        isDisabled={true}
+                        value={field.value}
+                        options={option_raiz}
+                        placeholder="Seleccionar unidad raiz"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="agrupacion_documental"
+                    control={control_unidades}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onChange={(option: SingleValue<any>) => {
+                          set_value_unidades('agrupacion_documental', option);
+                        }}
+                        options={options_agrupacion_d}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="nivel_padre"
+                    control={control_unidades}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onChange={(option: SingleValue<any>) => {
+                          set_value_unidades('nivel_padre', option);
+                        }}
+                        options={option_unidad_padre}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                </Grid>
+              </Grid>
+              <Stack
+                direction="row"
+                justifyContent="flex-end"
+                spacing={2}
+                sx={{ mb: '20px' }}
+              >
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="outlined"
+                  startIcon={
+                    title_unidades === 'Agregar' ? <AddIcon /> : <EditIcon />
+                  }
+                >
+                  {title_unidades === 'Agregar' ? 'AGREGAR' : 'EDITAR'}
+                </Button>
+              </Stack>
+            </Box>
+          )}
         </Box>
         <Grid item>
           <Box sx={{ width: '100%' }}>
@@ -491,21 +529,23 @@ export const EditarOrganigrama = ({
           >
             VER
           </Button>
-          <Button
-            color="success"
-            variant="contained"
-            startIcon={<SaveIcon />}
-            onClick={() => {
-              void dispatch(
-                to_finalize_organigram_service(
-                  String(organigram_current.id_organigrama),
-                  set_position_tab_organigrama
-                )
-              );
-            }}
-          >
-            FINALIZAR
-          </Button>
+          {organigram_current.fecha_terminado === null && (
+            <Button
+              color="success"
+              variant="contained"
+              startIcon={<SaveIcon />}
+              onClick={() => {
+                void dispatch(
+                  to_finalize_organigram_service(
+                    String(organigram_current.id_organigrama),
+                    set_position_tab_organigrama
+                  )
+                );
+              }}
+            >
+              FINALIZAR
+            </Button>
+          )}
         </Stack>
 
         <OrganigramVisualizerDialog

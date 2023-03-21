@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-
 import { useNavigate } from "react-router-dom";
-
 import { Column } from "primereact/column";
 import { TreeTable } from "primereact/treetable";
 import AddIcon from "@mui/icons-material/Add";
+import EditIcon from '@mui/icons-material/Edit';
 import {
   obtener_todos_bienes,
   seleccionar_bien_edit,
@@ -16,7 +15,7 @@ import {
  // use_app_selector,
 } from "../../entradaysalidaArticulos/hooks/hooks";
 import "primeicons/primeicons.css";
-import { type INodo } from "../interfaces/Nodo"; 
+import {type INodo  } from "../interfaces/Nodo"; 
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import { api } from "../../../../api/axios";
 import Button from "@mui/material/Button";
@@ -104,10 +103,9 @@ export const CatalogodeBienesScreen: React.FC = () => {
           }}
           disabled={!node.data.crear}
         ></Button>
-        <Button
+        <Button 
           type="button"
-          startIcon={<AddIcon />}
-          className="p-button-white p-button-outlined"
+          startIcon={< EditIcon />}
           title="Editar"
           style={{ marginRight: ".5em", color: "black", border: "none" }}
           onClick={() => {

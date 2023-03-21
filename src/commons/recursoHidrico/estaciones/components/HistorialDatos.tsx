@@ -2,7 +2,7 @@ import { CircularProgress, Grid } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { control_error } from '../../../../helpers/controlError';
-import { consultar_datos } from '../../requets/getRequest';
+import { consultar_datos } from '../../requets/Request';
 import { type Datos } from '../interfaces/interfaces';
 
 const columns: GridColDef[] = [

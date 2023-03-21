@@ -22,6 +22,11 @@ export const checking_authentication: (
       nombre_de_usuario,
       password
     });
+    // Se limpia los permisos que vienen del back
+    if (data?.permisos !== undefined) {
+      data.permisos.length = 0;
+    }
+
     if (!ok) {
       dispatch(logout({ error_message }));
       return;
@@ -74,6 +79,13 @@ export const get_persmisions_user: (
       return;
     }
 
-    dispatch(set_permissions(resp.data));
+    dispatch(
+      set_permissions(
+        resp.data?.map((e) => {
+          e.expanded = false;
+          return e;
+        })
+      )
+    );
   };
 };
