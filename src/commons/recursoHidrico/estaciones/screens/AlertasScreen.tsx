@@ -8,10 +8,6 @@ import {ParametrosReferencia} from '../components/ParametrosReferencia';
 import {ConfiguracionAlarma} from '../components/ConfiguracionAlarma';
 import { Grid } from '@mui/material';
 import  { Title }  from '../../../../components/Title';
-
-// import VisibilityIcon from '@mui/icons-material/Visibility';
-// import { api } from '../../../../api/axios';
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AlertasScreen: React.FC = () => {
     const [value, set_value] = useState('1');

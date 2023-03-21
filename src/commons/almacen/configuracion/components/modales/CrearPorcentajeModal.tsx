@@ -15,7 +15,7 @@ import {
 
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import { add_marca_service} from '../../store/thunks/MarcaMedidaPorcentajeThunks';
+import { add_porcentaje_service} from '../../store/thunks/MarcaMedidaPorcentajeThunks';
  import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../../../../hooks/';
 // import { type IList } from "../interfaces/marca";
@@ -26,15 +26,15 @@ interface IProps {
 }
 
 interface FormValues {
-    id_marca: number | null,
-    nombre: string,
-    activo: boolean,
-    item_ya_usado: boolean,
-}
+        id_porcentaje_iva: number | null;
+        porcentaje: number;
+        observacion: string;
+        acciones: string;
+      }
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const CrearMarcaModal = ({
+const CrearPorcentajeModal = ({
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
@@ -43,17 +43,17 @@ const CrearMarcaModal = ({
   const dispatch = useAppDispatch();
 
  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { control: control_marca, handleSubmit: handle_submit } =
+  const { control: control_porcentaje, handleSubmit: handle_submit } =
     useForm<FormValues>();
 
-  const handle_close_add_marca = (): void => {
+  const handle_close_add_porcentaje = (): void => {
     set_is_modal_active(false);
   };
   
   const on_submit = (data: FormValues): void => {
   
-    void dispatch(add_marca_service(data, navigate));
-    handle_close_add_marca();
+    void dispatch(add_porcentaje_service(data, navigate));
+    handle_close_add_porcentaje();
   };
  
 
@@ -61,38 +61,60 @@ const CrearMarcaModal = ({
     <Dialog
       maxWidth="xl"
       open={is_modal_active}
-      onClose={handle_close_add_marca}
+      onClose={handle_close_add_porcentaje}
     >
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
        onSubmit={handle_submit(on_submit)}
       >
-        <DialogTitle>Crear marca</DialogTitle>
+        <DialogTitle>Crear Porcentaje</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
          <Grid container >
          <Grid xs={ 11 } md={ 11 } margin={ 1 }>
           <Controller
-            name="nombre"
-            control={control_marca}
-            defaultValue=""
+            name="porcentaje"
+            control={control_porcentaje}
+            defaultValue = {0}
             rules={{ required: true }}
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <TextField
                 margin="dense"
                 fullWidth
                 size="small"
-                label="Marca"
+                label="Porcentaje"
                 variant="outlined"
                 value={value}
                 onChange={onChange}
                 error={!(error == null)}
                 helperText={
                   error != null
-                    ? 'Es obligatorio ingresar una marca'
-                    : 'Ingrese marca'
+                    ? 'Es obligatorio ingresar un nombre'
+                    : 'Ingrese nombre'
                 }
+              />
+            )}
+          />
+          </Grid>
+
+          <Grid xs={ 11 } md={ 11 } margin={ 1 }>
+          <Controller
+            name="observacion"
+            control={control_porcentaje}
+            defaultValue = ""
+            rules={{ required: true }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <TextField
+                margin="dense"
+                fullWidth
+                size="small"
+                label="Observación"
+                variant="outlined"
+                value={value}
+                onChange={onChange}
+                error={!(error == null)}
+              
               />
             )}
           />
@@ -109,7 +131,7 @@ const CrearMarcaModal = ({
           >
             <Button
               variant="outlined"
-              onClick={handle_close_add_marca}
+              onClick={handle_close_add_porcentaje}
               startIcon={<CloseIcon />}
             >
               CERRAR
@@ -125,4 +147,4 @@ const CrearMarcaModal = ({
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default CrearMarcaModal;
+export default CrearPorcentajeModal;

@@ -31,7 +31,7 @@ export const CrearMarcaPorcentajeMedidaScreen: React.FC = () => {
       mb: '20px',
       boxShadow: '0px 3px 6px #042F4A26',
     }}>
-      <Title title='INFORMACIÓN GENERAL'/>
+      <Title title=''/>
       <Box sx={{ width: '100%', typography: 'body1'}}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
