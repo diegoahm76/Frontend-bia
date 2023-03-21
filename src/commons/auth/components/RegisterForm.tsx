@@ -1,6 +1,4 @@
-import { useEffect, useState } from 'react';
-import { type Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
+import { useEffect } from 'react';
 import {
   FormControl,
   Grid,
@@ -28,11 +26,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { use_register } from '../hooks/registerHooks';
 import { useForm } from 'react-hook-form';
-import { get_person_by_document } from '../request/authRequest';
-import { control_error } from '../../../helpers/controlError';
 import { type IPerson } from '../interfaces';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
+import { crear_persona_natural } from '../request/authRequest';
 
 type keys_object =
   | 'tipo_persona'
@@ -95,48 +92,52 @@ export const RegisterForm: React.FC = () => {
       password: '',
       confirmar_password: '',
       require_nombre_comercial: false,
+      telefono_empresa_2: '',
+      sexo: '',
+      estado_civil: '',
+      pais_nacimiento: '',
+      email_empresarial: '',
+      telefono_fijo_residencial: '',
+      pais_residencia: '',
+      municipio_residencia: '',
+      direccion_residencia: '',
+      direccion_laboral: '',
+      direccion_residencia_ref: '',
+      cod_municipio_laboral_nal: '',
+      acepta_notificacion_sms: false,
+      acepta_notificacion_email: false,
+      acepta_tratamiento_datos: false,
     },
   });
   const {
+    error_email,
     tipo_documento_opt,
     tipo_persona_opt,
     loading,
     tipo_documento,
     tipo_persona,
+    show_password,
+    data_register,
+    is_search,
+    fecha_nacimiento,
+    error_password,
+    message_error_password,
+    is_saving,
+    is_exists,
+    error_phone,
+    set_error_error_phone,
+    set_fecha_nacimiento,
+    set_data_register,
+    set_error_email,
+    handle_click_show_password,
     set_tipo_persona,
     set_tipo_documento,
     validate_password,
+    set_message_error_password,
+    set_error_password,
+    validate_exits,
+    set_is_saving,
   } = use_register();
-  const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
-  const [error_email, set_error_email] = useState(false);
-  const [error_password, set_error_password] = useState(false);
-  const [is_saving, set_is_saving] = useState(false);
-  const [is_search, set_is_search] = useState(false);
-  const [message_error_password, set_message_error_password] = useState('');
-  const [data_register, set_data_register] = useState<IPerson>({
-    tipo_persona: '',
-    tipo_documento: '',
-    numero_documento: '',
-    digito_verificacion: '',
-    nombre_comercial: '',
-    primer_nombre: '',
-    segundo_nombre: '',
-    primer_apellido: '',
-    segundo_apellido: '',
-    fecha_nacimiento: '',
-    email: '',
-    telefono_celular: '',
-    ubicacion_georeferenciada: '',
-    razon_social: '',
-    telefono_celular_empresa: '',
-    direccion_notificaciones: '',
-    representante_legal: '',
-    confirmar_celular: '',
-    confirmar_email: '',
-    cod_municipio_notificacion_nal: '',
-    require_nombre_comercial: false,
-  });
-  const [show_password, set_show_password] = useState(false);
   // watchers
   const requiere_nombre_comercial: boolean = watch('require_nombre_comercial');
   const email = watch('email');
@@ -144,73 +145,12 @@ export const RegisterForm: React.FC = () => {
   const numero_documento = watch('numero_documento');
   const password = watch('password');
   const confirmar_password = watch('confirmar_password');
-
-  const validate_exits = async (): Promise<void> => {
-    // console.log(getValues());
-    set_is_search(true);
-    try {
-      const {
-        data: { data },
-      } = await get_person_by_document(tipo_documento, numero_documento);
-
-      if (data.numero_documento !== '') {
-        set_data_register({
-          tipo_persona: data.tipo_persona,
-          tipo_documento,
-          numero_documento: data.numero_documento,
-          digito_verificacion: data.digito_verificacion,
-          nombre_comercial: data.nombre_comercial,
-          primer_nombre: data.primer_nombre,
-          segundo_nombre: data.segundo_nombre,
-          primer_apellido: data.primer_apellido,
-          segundo_apellido: data.segundo_apellido,
-          fecha_nacimiento: data.fecha_nacimiento,
-          email: data.email,
-          telefono_celular: data.telefono_celular,
-          ubicacion_georeferenciada: data.ubicacion_georeferenciada,
-          razon_social: data.razon_social,
-          telefono_celular_empresa: data.telefono_celular_empresa,
-          direccion_notificaciones: data.direccion_notificaciones,
-          representante_legal: data.representante_legal,
-          confirmar_celular: '',
-          confirmar_email: '',
-          cod_municipio_notificacion_nal: data.cod_municipio_notificacion_nal,
-          require_nombre_comercial: false,
-        });
-
-        setValue('numero_documento', data.numero_documento);
-        setValue('digito_verificacion', data.digito_verificacion);
-        setValue('nombre_comercial', data.nombre_comercial);
-        setValue('primer_nombre', data.primer_nombre);
-        setValue('segundo_nombre', data.segundo_nombre);
-        setValue('primer_apellido', data.primer_apellido);
-        setValue('segundo_apellido', data.segundo_apellido);
-        setValue('fecha_nacimiento', data.fecha_nacimiento);
-        setValue('email', data.email);
-        setValue('confirmar_email', data.email);
-        setValue('telefono_celular', data.telefono_celular);
-        setValue('razon_social', data.razon_social);
-        setValue('telefono_celular_empresa', data.telefono_celular_empresa);
-        setValue('direccion_notificaciones', data.direccion_notificaciones);
-        setValue('representante_legal', data.representante_legal);
-        setValue(
-          'cod_municipio_notificacion_nal',
-          data.cod_municipio_notificacion_nal
-        );
-
-        set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
-      }
-    } catch (error) {
-      control_error(error);
-    } finally {
-      set_is_search(false);
-    }
-  };
-
+  const telefono_celular = watch('telefono_celular');
+  const confirmar_celular = watch('confirmar_celular');
   // Consultamos si el usuario existe
   useEffect(() => {
     if (numero_documento !== undefined && numero_documento !== '') {
-      void validate_exits();
+      void validate_exits(numero_documento);
     }
   }, [numero_documento]);
 
@@ -238,6 +178,14 @@ export const RegisterForm: React.FC = () => {
   }, [email, confirmar_email]);
 
   useEffect(() => {
+    if (telefono_celular !== confirmar_celular) {
+      set_error_error_phone(true);
+      return;
+    }
+    set_error_error_phone(false);
+  }, [telefono_celular, confirmar_celular]);
+
+  useEffect(() => {
     if (password !== confirmar_password) {
       set_message_error_password('Las contraseñas no son iguales');
       set_error_password(true);
@@ -255,11 +203,7 @@ export const RegisterForm: React.FC = () => {
     set_error_password(false);
   }, [password, confirmar_password]);
 
-  const handle_click_show_password = (): void => {
-    set_show_password((show) => !show);
-  };
-
-  // / Cambio inputs
+  // Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
     set_data_register({
       ...data_register,
@@ -269,11 +213,12 @@ export const RegisterForm: React.FC = () => {
     setValue(name, e.target.value);
   };
 
-  const on_submit = handleSubmit((data) => {
+  const on_submit = handleSubmit(async (data) => {
     set_is_saving(true);
     try {
       if (data.tipo_persona === 'N') {
-        // await clienteAxios.post('personas/persona-natural/create/', data);
+        const response = await crear_persona_natural(data_register);
+        console.log(response);
       } else {
         // await clienteAxios.get(
         //   `personas/get-personas-naturales-by-document/${createPersonaModel.tipo_documento}/${createPersonaModel.numero_documento}/`
@@ -494,10 +439,8 @@ export const RegisterForm: React.FC = () => {
                       );
                     })}
                   </Select>
-                  {errors.tipo_persona?.type === 'required' ? (
+                  {errors.tipo_persona?.type === 'required' && (
                     <FormHelperText>Campo Requerido</FormHelperText>
-                  ) : (
-                    ''
                   )}
                 </>
               )}
@@ -562,7 +505,7 @@ export const RegisterForm: React.FC = () => {
           )}
           {tipo_persona !== '' && (
             <>
-              {is_search ? (
+              {is_search && (
                 <Grid item xs={12}>
                   <Grid container justifyContent="center" textAlign="center">
                     <Alert icon={false} severity="info">
@@ -571,8 +514,6 @@ export const RegisterForm: React.FC = () => {
                     </Alert>
                   </Grid>
                 </Grid>
-              ) : (
-                ''
               )}
               <Grid item xs={12} sm={6}>
                 <TextField
@@ -592,7 +533,7 @@ export const RegisterForm: React.FC = () => {
                   })}
                 />
               </Grid>
-              {requiere_nombre_comercial ? (
+              {requiere_nombre_comercial && (
                 <>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -626,12 +567,10 @@ export const RegisterForm: React.FC = () => {
                     />
                   </Grid>
                 </>
-              ) : (
-                ''
               )}
-
               <Grid item xs={12} sm={6}>
                 <TextField
+                  disabled={is_exists}
                   fullWidth
                   size="small"
                   label="Primer nombre"
@@ -648,6 +587,7 @@ export const RegisterForm: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  disabled={is_exists}
                   fullWidth
                   size="small"
                   label="Segundo nombre"
@@ -659,6 +599,7 @@ export const RegisterForm: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  disabled={is_exists}
                   fullWidth
                   size="small"
                   label="Primer apellido"
@@ -677,6 +618,7 @@ export const RegisterForm: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  disabled={is_exists}
                   fullWidth
                   size="small"
                   value={data_register.segundo_apellido}
@@ -688,6 +630,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
+                    disabled={is_exists}
                     label="Fecha de nacimiento"
                     value={fecha_nacimiento}
                     onChange={(newValue) => {
@@ -767,11 +710,16 @@ export const RegisterForm: React.FC = () => {
                   fullWidth
                   size="small"
                   label="Celular"
+                  onCopy={(e: any) => e.preventDefault()}
                   value={data_register.telefono_celular}
-                  error={errors.telefono_celular?.type === 'required'}
+                  error={
+                    errors.telefono_celular?.type === 'required' || error_phone
+                  }
                   helperText={
                     errors.telefono_celular?.type === 'required'
                       ? 'Este campo es obligatorio'
+                      : error_phone
+                      ? 'Los número de celular no son iguales'
                       : ''
                   }
                   {...register('telefono_celular', {
@@ -785,10 +733,15 @@ export const RegisterForm: React.FC = () => {
                   fullWidth
                   size="small"
                   label="Confirme su celular"
-                  error={errors.confirmar_celular?.type === 'required'}
+                  onCopy={(e: any) => e.preventDefault()}
+                  error={
+                    errors.confirmar_celular?.type === 'required' || error_phone
+                  }
                   helperText={
                     errors.confirmar_celular?.type === 'required'
                       ? 'Este campo es obligatorio'
+                      : error_phone
+                      ? 'Los número de celular no son iguales'
                       : ''
                   }
                   {...register('confirmar_celular', {
@@ -834,14 +787,13 @@ export const RegisterForm: React.FC = () => {
                 <FormControl
                   size="small"
                   fullWidth
+                  onCopy={(e: any) => e.preventDefault()}
                   error={errors.password?.type === 'required' || error_password}
                 >
-                  <InputLabel htmlFor="outlined-adornment-password">
-                    Contraseña *
-                  </InputLabel>
+                  <InputLabel htmlFor="password">Contraseña *</InputLabel>
                   <OutlinedInput
                     required
-                    id="outlined-adornment-password"
+                    id="password"
                     type={show_password ? 'text' : 'password'}
                     error={errors.password?.type === 'required'}
                     {...register('password', {
@@ -874,14 +826,18 @@ export const RegisterForm: React.FC = () => {
                 <FormControl
                   size="small"
                   fullWidth
-                  error={errors.password?.type === 'required' || error_password}
+                  onCopy={(e: any) => e.preventDefault()}
+                  error={
+                    errors.confirmar_password?.type === 'required' ||
+                    error_password
+                  }
                 >
-                  <InputLabel htmlFor="outlined-adornment-password">
+                  <InputLabel htmlFor="repita-password">
                     Repita la contraseña *
                   </InputLabel>
                   <OutlinedInput
                     required
-                    id="outlined-adornment-password"
+                    id="repita-password"
                     type={show_password ? 'text' : 'password'}
                     error={errors.confirmar_password?.type === 'required'}
                     {...register('confirmar_password', {

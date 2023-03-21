@@ -217,6 +217,21 @@ export const RegisterForm: React.FC = () => {
       confirmar_celular: '',
       confirmar_email: '',
       require_nombre_comercial: false,
+      telefono_empresa_2: '',
+      sexo: '',
+      estado_civil: '',
+      pais_nacimiento: '',
+      email_empresarial: '',
+      telefono_fijo_residencial: '',
+      pais_residencia: '',
+      municipio_residencia: '',
+      direccion_residencia: '',
+      direccion_laboral: '',
+      direccion_residencia_ref: '',
+      cod_municipio_laboral_nal: '',
+      acepta_notificacion_sms: false,
+      acepta_notificacion_email: false,
+      acepta_tratamiento_datos: false,
     };
 
     set_loading(true);
