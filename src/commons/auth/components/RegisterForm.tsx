@@ -125,6 +125,7 @@ export const RegisterForm: React.FC = () => {
     is_saving,
     is_exists,
     error_phone,
+    has_user,
     set_error_error_phone,
     set_fecha_nacimiento,
     set_data_register,
@@ -406,7 +407,7 @@ export const RegisterForm: React.FC = () => {
               Datos personales
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <FormControl
               fullWidth
               size="small"
@@ -446,7 +447,7 @@ export const RegisterForm: React.FC = () => {
               )}
             </FormControl>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6} md={4}>
             <FormControl
               fullWidth
               size="small"
@@ -472,13 +473,19 @@ export const RegisterForm: React.FC = () => {
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    {tipo_documento_opt.map((e, k: number) => {
-                      return (
-                        <MenuItem value={e.cod_tipo_documento} key={k}>
-                          {e.nombre}
-                        </MenuItem>
-                      );
-                    })}
+                    {tipo_documento_opt
+                      .filter(({ cod_tipo_documento }) =>
+                        tipo_persona === 'N'
+                          ? cod_tipo_documento !== 'NT'
+                          : cod_tipo_documento === 'NT'
+                      )
+                      .map((e, k: number) => {
+                        return (
+                          <MenuItem value={e.cod_tipo_documento} key={k}>
+                            {e.nombre}
+                          </MenuItem>
+                        );
+                      })}
                   </Select>
                   {errors.tipo_documento?.type === 'required' && (
                     <FormHelperText color={''}>Campo Requerido</FormHelperText>
@@ -487,6 +494,39 @@ export const RegisterForm: React.FC = () => {
               )}
             </FormControl>
           </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            {loading ? (
+              <Skeleton variant="rectangular" width="100%" height={45} />
+            ) : (
+              <TextField
+                fullWidth
+                label="Número de documento"
+                type="number"
+                size="small"
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                error={errors.numero_documento?.type === 'required'}
+                helperText={
+                  errors.numero_documento?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+                {...register('numero_documento', {
+                  required: true,
+                })}
+              />
+            )}
+          </Grid>
+          {/* Muestra loading cuando esta buscando datos de la persona */}
+          {is_search && (
+            <Grid item xs={12}>
+              <Grid container justifyContent="center" textAlign="center">
+                <Alert icon={false} severity="info">
+                  <CircularProgress />
+                  <Typography>Buscando persona...</Typography>
+                </Alert>
+              </Grid>
+            </Grid>
+          )}
           {tipo_persona === 'J' && (
             <>
               <Grid item xs={12} container justifyContent="center">
@@ -503,39 +543,11 @@ export const RegisterForm: React.FC = () => {
               </Grid>
             </>
           )}
-          {tipo_persona !== '' && (
+          {tipo_persona !== '' && !has_user && (
             <>
-              {is_search && (
-                <Grid item xs={12}>
-                  <Grid container justifyContent="center" textAlign="center">
-                    <Alert icon={false} severity="info">
-                      <CircularProgress />
-                      <Typography>Buscando persona...</Typography>
-                    </Alert>
-                  </Grid>
-                </Grid>
-              )}
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Número de documento"
-                  type="number"
-                  size="small"
-                  inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                  error={errors.numero_documento?.type === 'required'}
-                  helperText={
-                    errors.numero_documento?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  {...register('numero_documento', {
-                    required: true,
-                  })}
-                />
-              </Grid>
               {requiere_nombre_comercial && (
                 <>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <TextField
                       fullWidth
                       label="Dígito de verificación"
@@ -549,7 +561,7 @@ export const RegisterForm: React.FC = () => {
                       onChange={handle_change}
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={6} md={4}>
                     <TextField
                       fullWidth
                       size="small"
@@ -568,7 +580,7 @@ export const RegisterForm: React.FC = () => {
                   </Grid>
                 </>
               )}
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   disabled={is_exists}
                   fullWidth
@@ -585,7 +597,7 @@ export const RegisterForm: React.FC = () => {
                   onChange={handle_change}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   disabled={is_exists}
                   fullWidth
@@ -597,7 +609,7 @@ export const RegisterForm: React.FC = () => {
                 />
                 {}
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   disabled={is_exists}
                   fullWidth
@@ -616,7 +628,7 @@ export const RegisterForm: React.FC = () => {
                   onChange={handle_change}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   disabled={is_exists}
                   fullWidth
@@ -627,7 +639,7 @@ export const RegisterForm: React.FC = () => {
                   onChange={handle_change}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     disabled={is_exists}
@@ -661,7 +673,7 @@ export const RegisterForm: React.FC = () => {
                   Datos de notificación
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   fullWidth
                   size="small"
@@ -682,7 +694,7 @@ export const RegisterForm: React.FC = () => {
                   onChange={handle_change}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   fullWidth
                   size="small"
@@ -705,48 +717,39 @@ export const RegisterForm: React.FC = () => {
                   onChange={handle_change}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
+                <Typography variant="caption" fontWeight="bold">
+                  NOTA: Se recomienda el registro de un número celular, este se
+                  usará como medio de recuperación de la cuenta, en caso de que
+                  olvide sus datos de acceso.
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   fullWidth
                   size="small"
                   label="Celular"
                   onCopy={(e: any) => e.preventDefault()}
                   value={data_register.telefono_celular}
-                  error={
-                    errors.telefono_celular?.type === 'required' || error_phone
-                  }
+                  error={error_phone}
                   helperText={
-                    errors.telefono_celular?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : error_phone
-                      ? 'Los número de celular no son iguales'
-                      : ''
+                    error_phone ? 'Los número de celular no son iguales' : ''
                   }
-                  {...register('telefono_celular', {
-                    required: true,
-                  })}
+                  {...register('telefono_celular')}
                   onChange={handle_change}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   fullWidth
                   size="small"
                   label="Confirme su celular"
                   onCopy={(e: any) => e.preventDefault()}
-                  error={
-                    errors.confirmar_celular?.type === 'required' || error_phone
-                  }
+                  error={error_phone}
                   helperText={
-                    errors.confirmar_celular?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : error_phone
-                      ? 'Los número de celular no son iguales'
-                      : ''
+                    error_phone ? 'Los número de celular no son iguales' : ''
                   }
-                  {...register('confirmar_celular', {
-                    required: true,
-                  })}
+                  {...register('confirmar_celular')}
                   onChange={handle_change}
                 />
               </Grid>
@@ -766,7 +769,7 @@ export const RegisterForm: React.FC = () => {
                   <li>Debe contener 1 Caracter simbólico (*,-,_,%...)</li>
                 </ul>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <TextField
                   fullWidth
                   size="small"
@@ -783,7 +786,7 @@ export const RegisterForm: React.FC = () => {
                   onChange={handle_change}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <FormControl
                   size="small"
                   fullWidth
@@ -822,7 +825,7 @@ export const RegisterForm: React.FC = () => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6} md={4}>
                 <FormControl
                   size="small"
                   fullWidth
@@ -883,8 +886,31 @@ export const RegisterForm: React.FC = () => {
               </Grid>
             </>
           )}
+          {is_exists && data_register.email === '' && (
+            <>
+              <Grid item sx={{ pt: '10px !important' }}>
+                <Alert severity="error">
+                  Lo sentimos, debe acercarse a <b>Cormacarena</b> para
+                  actualizar sus datos debido a que no tiene un correo
+                  electrónico asociado
+                </Alert>
+              </Grid>
+            </>
+          )}
+          {has_user && (
+            <>
+              <Grid item sx={{ pt: '10px !important' }}>
+                <Alert severity="error">
+                  Lo sentimos, usted ya tiene usuario, por ende no puede
+                  registrarse, si desea actualizar sus datos, debe iniciar
+                  sesión, si ha olvidado los datos de acceso puede elegir la
+                  opción, recuperar contraseña
+                </Alert>
+              </Grid>
+            </>
+          )}
           <Grid item justifyContent="center" container>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} md={4}>
               <Button
                 fullWidth
                 sx={{ textTransform: 'none', textAlign: 'center' }}

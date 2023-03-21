@@ -1,11 +1,6 @@
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
-import {
-  get_paises,
-  get_person_by_document,
-  get_tipo_documento,
-  get_tipo_persona,
-} from '../request/authRequest';
+import { get_person_by_document } from '../request/authRequest';
 import {
   type TipoPersona,
   type Paises,
@@ -14,6 +9,11 @@ import {
 import type { IPerson, ReisterHook } from '../interfaces';
 import dayjs, { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
+import {
+  get_paises,
+  get_tipo_documento,
+  get_tipo_persona,
+} from '../../../request/getRequest';
 
 export const use_register = (): ReisterHook => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -36,6 +36,7 @@ export const use_register = (): ReisterHook => {
   const [is_saving, set_is_saving] = useState(false);
   const [is_search, set_is_search] = useState(false);
   const [is_exists, set_is_exists] = useState(false);
+  const [has_user, set_has_user] = useState(false);
   const [message_error_password, set_message_error_password] = useState('');
   const [data_register, set_data_register] = useState<IPerson>({
     tipo_persona: '',
@@ -119,6 +120,7 @@ export const use_register = (): ReisterHook => {
     set_show_password((show) => !show);
   };
 
+  // Valida si la persona a registrar ya esta registrada en el sistema
   const validate_exits = async (numero_documento: string): Promise<void> => {
     // console.log(getValues());
     set_is_search(true);
@@ -126,33 +128,39 @@ export const use_register = (): ReisterHook => {
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
-
-      if (data.numero_documento !== '') {
-        set_data_register({ ...data });
-
-        setValue('numero_documento', data.numero_documento);
-        setValue('digito_verificacion', data.digito_verificacion);
-        setValue('nombre_comercial', data.nombre_comercial);
-        setValue('primer_nombre', data.primer_nombre);
-        setValue('segundo_nombre', data.segundo_nombre);
-        setValue('primer_apellido', data.primer_apellido);
-        setValue('segundo_apellido', data.segundo_apellido);
-        setValue('fecha_nacimiento', data.fecha_nacimiento);
-        setValue('email', data.email);
-        setValue('confirmar_email', data.email);
-        setValue('telefono_celular', data.telefono_celular);
-        setValue('razon_social', data.razon_social);
-        setValue('telefono_celular_empresa', data.telefono_celular_empresa);
-        setValue('direccion_notificaciones', data.direccion_notificaciones);
-        setValue('representante_legal', data.representante_legal);
-        setValue(
-          'cod_municipio_notificacion_nal',
-          data.cod_municipio_notificacion_nal
-        );
-        set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
-        set_is_exists(true);
+      // TODO => MODIFICAR VALIDACION CUANDO OSCAR MODIFIQUE LOS SERVICIOS
+      if (data !== null && data.numero_documento !== '') {
+        if (!data.tiene_usuario) {
+          set_data_register({ ...data });
+          setValue('numero_documento', data.numero_documento);
+          setValue('digito_verificacion', data.digito_verificacion);
+          setValue('nombre_comercial', data.nombre_comercial);
+          setValue('primer_nombre', data.primer_nombre);
+          setValue('segundo_nombre', data.segundo_nombre);
+          setValue('primer_apellido', data.primer_apellido);
+          setValue('segundo_apellido', data.segundo_apellido);
+          setValue('fecha_nacimiento', data.fecha_nacimiento);
+          setValue('email', data.email);
+          setValue('confirmar_email', data.email);
+          setValue('telefono_celular', data.telefono_celular);
+          setValue('razon_social', data.razon_social);
+          setValue('telefono_celular_empresa', data.telefono_celular_empresa);
+          setValue('direccion_notificaciones', data.direccion_notificaciones);
+          setValue('representante_legal', data.representante_legal);
+          setValue(
+            'cod_municipio_notificacion_nal',
+            data.cod_municipio_notificacion_nal
+          );
+          set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
+          set_is_exists(true);
+          return;
+        } else {
+          set_has_user(true);
+          return;
+        }
       } else {
-        set_is_exists(true);
+        set_has_user(false);
+        set_is_exists(false);
       }
     } catch (error) {
       control_error(error);
@@ -183,6 +191,8 @@ export const use_register = (): ReisterHook => {
     message_error_password,
     data_register,
     error_phone,
+    has_user,
+    set_has_user,
     set_error_error_phone,
     set_is_exists,
     set_fecha_nacimiento,

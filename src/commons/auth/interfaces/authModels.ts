@@ -204,6 +204,8 @@ export interface ReisterHook {
   data_register: IPerson;
   is_exists: boolean;
   error_phone: boolean;
+  has_user: boolean;
+  set_has_user: Dispatch<SetStateAction<boolean>>;
   set_error_error_phone: Dispatch<SetStateAction<boolean>>;
   set_is_exists: Dispatch<SetStateAction<boolean>>;
   set_fecha_nacimiento: Dispatch<SetStateAction<Dayjs | null>>;

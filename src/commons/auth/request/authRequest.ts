@@ -8,9 +8,6 @@ import type {
   IPerson
 } from '../interfaces/authModels';
 import type {
-  Paises,
-  TipoDocumento,
-  TipoPersona,
   ResponseServer,
   ResponseThunks
 } from '../../../interfaces/globalModels';
@@ -71,30 +68,10 @@ export const permissions_request = async (
   }
 };
 
-export const get_tipo_persona = async (): Promise<
-  AxiosResponse<ResponseServer<TipoPersona[]>>
-> => {
-  return await api.get<ResponseServer<TipoPersona[]>>('listas/tipo-persona/');
-};
-
-export const get_tipo_documento = async (): Promise<
-  AxiosResponse<ResponseServer<TipoDocumento[]>>
-> => {
-  return await api.get<ResponseServer<TipoDocumento[]>>(
-    'listas/tipo-documento/'
-  );
-};
-
-export const get_paises = async (): Promise<
-  AxiosResponse<ResponseServer<Paises[]>>
-> => {
-  return await api.get<ResponseServer<Paises[]>>('listas/paises/');
-};
-
 export const get_person_by_document = async (
   tipo_documento: string,
   numero_documento: string
-): Promise<AxiosResponse<ResponseServer<InfoPersona>>> => {
+): Promise<AxiosResponse<ResponseServer<InfoPersona | null>>> => {
   return await api.get(
     `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
   );

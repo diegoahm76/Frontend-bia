@@ -8,7 +8,7 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
   const { pathname } = useLocation();
-  const mode = pathname === '/auth/register' ? 2 : false;
+  const mode = pathname === '/auth/register' ? 'register' : 'login';
   return (
     <Grid
       container
@@ -27,9 +27,9 @@ export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
         <Grid
           item
           xs={12}
-          sm={mode === 2 ? 9 : 6}
-          md={mode === 2 ? 8 : 6}
-          lg={mode === 2 ? 4 : 6}
+          sm={mode === 'register' ? 10 : 6}
+          md={mode === 'register' ? 10 : 6}
+          lg={mode === 'register' ? 8 : 6}
           sx={{
             backgroundColor: '#ffff',
             borderRadius: 5,
