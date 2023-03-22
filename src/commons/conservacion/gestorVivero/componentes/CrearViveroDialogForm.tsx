@@ -58,7 +58,8 @@ const CrearViveroDialogForm = ({
     useState<IList[]>(initial_options);
   const [nursery_types, set_nursery_types] = useState(initial_options);
   const [source_resources, set_source_resources] = useState(initial_options);
-  const [file, set_file] = useState<any>('');
+  const [file, set_file] = useState<any>(null);
+  
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { control: control_vivero, handleSubmit: handle_submit } =
@@ -69,9 +70,23 @@ const CrearViveroDialogForm = ({
   };
 
   const on_submit = (data: FormValues): void => {
-    data.ruta_archivo_creacion = file;
-    console.log(data);
-    void dispatch(add_nursery_service(data, navigate));
+    console.log(file)
+    data.ruta_archivo_creacion = file
+    console.log(data.ruta_archivo_creacion)
+    console.log(data)
+    const form_data:any = new FormData();
+    form_data.append('nombre', data.nombre);
+        form_data.append('cod_municipio', data.cod_municipio);
+        form_data.append('direccion', data.direccion);
+        form_data.append('area_mt2', data.area_mt2);
+        form_data.append('area_propagacion_mt2', data.area_propagacion_mt2);
+        form_data.append('tiene_area_produccion', data.tiene_area_produccion);
+        form_data.append('tiene_areas_pep_sustrato', data.tiene_areas_pep_sustrato);
+        form_data.append('tiene_area_embolsado', data.tiene_area_embolsado);
+        form_data.append('cod_tipo_vivero', data.cod_tipo_vivero);
+        form_data.append('cod_origen_recursos_vivero', data.cod_origen_recursos_vivero);
+        form_data.append('ruta_archivo_creacion', file === null ? '' : file);
+    void dispatch(add_nursery_service(form_data, navigate));
     handle_close_add_nursery();
   };
 
@@ -82,13 +97,7 @@ const CrearViveroDialogForm = ({
     }));
     return data_new_format;
   };
-  const on_change_file: any = (e: any) => {
-    console.log(e)
-     if (e.target.files != null) {
-       if (e.target.files.length > 0) set_file(e.target.files[0])
-     }
-    
-};
+  
 
   useEffect(() => {
     const get_selects_options: any = async () => {
@@ -128,6 +137,12 @@ const CrearViveroDialogForm = ({
     };
     void get_selects_options();
   }, []);
+
+  const on_change_file: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.files!=null?e.target.files[0]:"")
+    set_file(e.target.files!=null?e.target.files[0]:"")    
+  };
+
 
   return (
     <Dialog
@@ -467,7 +482,8 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid xs={11} md={5} margin={1}>
+            <Grid xs={ 11 } md={ 5 } margin={ 1 }>
+          
               <TextField
                 margin="dense"
                 fullWidth
@@ -475,11 +491,10 @@ const CrearViveroDialogForm = ({
                 label="archivo"
                 variant="outlined"
                 type="file"
-                onChange={(e) => {
-                  on_change_file(e);
-                }}
+                onChange={ on_change_file }
               />
-            </Grid>
+            
+          </Grid>
           </Grid>
         </DialogContent>
         <Divider />

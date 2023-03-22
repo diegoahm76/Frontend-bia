@@ -5,7 +5,6 @@ import {
   AlertasScreen,
   AdministradorDeEstaciones,
   UsuariosScreen,
-  HistorialScreen,
 } from '../screens';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -30,4 +29,3 @@ export const EstacionesRoutes: React.FC = () => {
     </Routes>
   );
 };
-

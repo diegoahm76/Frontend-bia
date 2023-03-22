@@ -10,7 +10,7 @@ export const DistribucionRoutes: React.FC = () => {
     <Routes>
       <Route path="traslado" element={<TrasladoScreen/>} />
       <Route path="despacho" element={<DespachoScreen/>} />
-      <Route path="cierre-solicitudes" element={<CierreSolicitudScreen/>} />
+      <Route path="cierre_solicitudes" element={<CierreSolicitudScreen/>} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );

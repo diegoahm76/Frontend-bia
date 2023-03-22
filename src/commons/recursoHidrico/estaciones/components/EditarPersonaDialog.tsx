@@ -1,28 +1,26 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
-import { Controller, type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { crear_persona } from '../../requets/Request';
-import Select from "react-select";
+import { Controller, useForm } from 'react-hook-form';
 import { api } from '../../../../api/axios';
+import Select from "react-select";
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
 }
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
+export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
+
   const [estaciones_options, set_estaciones_options] = useState([]);
 
   const handle_close = (): void => {
     set_is_modal_active(false);
   }
   const {
-    register,
     control,
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    handleSubmit,
     formState: { errors },
   } = useForm();
 
@@ -42,26 +40,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
   useEffect(() => {
     void get_data_initial();
   }, []);
-
-  const on_sumbit_persona: SubmitHandler<FieldValues> = (data): void => {
-    const nueva_persona = {
-
-      cod_tipo_documento_id: data.cod_tipo_documento_id,
-      numero_documento_id: data.numero_documento_id,
-      primer_nombre: data.primer_nombre,
-      segundo_nombre: data.segundo_nombre,
-      primer_apellido: data.primer_apellido,
-      segundo_apellido: data.segundo_apellido,
-      entidad: data.entidad,
-      cargo: data.cargo,
-      email_notificacion: data.email_notificacion,
-      nro_celular_notificacion: data.nro_celular_notificacion,
-      observacion: data.observacion,
-      id_estacion: data.estacion.value,
-    };
-    void crear_persona(nueva_persona);
-    set_is_modal_active(!is_modal_active);
-  };
 
   const tiposdoc = [
     {
@@ -104,10 +82,10 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
       open={is_modal_active}
       onClose={handle_close}
     >
-      <DialogTitle>Nuevo Parte Interesada</DialogTitle>
+      <DialogTitle>Editar Parte Interesada</DialogTitle>
       <Divider />
-      <DialogContent sx={{ mb: '0px' }}>
-        <form onSubmit={handleSubmit(on_sumbit_persona)}>
+      <DialogContent>
+        <form>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -118,9 +96,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("cod_tipo_documento_id", { required: true })}
-                error={Boolean(errors.cod_tipo_documento_id)}
-                helperText={(errors.cod_tipo_documento_id != null) ? "Este campo es obligatorio" : ""}
               >
                 {tiposdoc.map((option) => (
                   <MenuItem key={option.value} value={option.value}>
@@ -138,9 +113,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("numero_documento_id", { required: true })}
-                error={Boolean(errors.numero_documento_id)}
-                helperText={(errors.numero_documento_id != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -151,9 +123,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("primer_nombre", { required: true })}
-                error={Boolean(errors.primer_nombre)}
-                helperText={(errors.primer_nombre != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -164,9 +133,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("segundo_nombre", { required: true })}
-                error={Boolean(errors.segundo_nombre)}
-                helperText={(errors.segundo_nombre != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -177,9 +143,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("primer_apellido", { required: true })}
-                error={Boolean(errors.primer_apellido)}
-                helperText={(errors.primer_apellido != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -190,9 +153,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("segundo_apellido", { required: true })}
-                error={Boolean(errors.segundo_apellido)}
-                helperText={(errors.segundo_apellido != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -204,9 +164,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 required
                 autoFocus
                 placeholder="Entidad a la cual pertenece"
-                {...register("entidad", { required: true })}
-                error={Boolean(errors.entidad)}
-                helperText={(errors.entidad != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -217,9 +174,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("cargo", { required: true })}
-                error={Boolean(errors.cargo)}
-                helperText={(errors.cargo != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -231,9 +185,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("email_notificacion", { required: true })}
-                error={Boolean(errors.email_notificacion)}
-                helperText={(errors.email_notificacion != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -245,11 +196,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("nro_celular_notificacion", { required: true })}
-                error={Boolean(errors.nro_celular_notificacion)}
-                helperText={
-                  (errors.nro_celular_notificacion != null) ? "Este campo es obligatorio" : ""
-                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -261,9 +207,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 margin="dense"
                 required
                 autoFocus
-                {...register("observacion", { required: true })}
-                error={Boolean(errors.observacion)}
-                helperText={(errors.observacion != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -294,7 +237,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
               Cancelar
             </Button>
             <Button variant="contained" color="primary" type="submit">
-              Guardar
+              Actializar
             </Button>
           </DialogActions>
         </form>
