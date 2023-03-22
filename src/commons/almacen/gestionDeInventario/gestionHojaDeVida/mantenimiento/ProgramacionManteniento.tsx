@@ -1,100 +1,130 @@
-import { Grid, Box, Stack, TextField, Button, MenuItem, Select } from '@mui/material';
+import { Grid } from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import SearchIcon from '@mui/icons-material/Search';
+import { ArticuloComponent } from './components/ArticuloComponent';
+import { DetallesComponent } from './components/DetallesComponent';
+import { MantenimientoComponent } from './components/MantenimientoComponent';
+import { FechasComponent } from './components/FechasComponent';
+import { KilometrajeComponent } from './components/KilometrajeComponent';
+import { PrevisualizacionComponent } from './components/PrevisualizacionComponent';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
-const tipo_mantenimiento = [
-    {
-        value: 'Com',
-        label: 'Computo'
-    },
-    {
-        value: 'Veh',
-        label: 'Vehiculo'
-    },
-    {
-        value: 'OAc',
-        label: 'Otro'
-    }
-]
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramacionManteniento:React.FC = () => {
-  return (
-    <>
-        <h1>ProgramacionManteniento</h1>
-        <Grid 
-            container
-            sx={{
-                position: 'relative',
-                background: '#FAFAFA',
-                borderRadius: '15px',
-                p: '20px',
-                mb: '20px',
-                boxShadow: '0px 3px 6px #042F4A26',
-            }}
-        >
-            <Grid item xs={12}>
-                <Title title="Articulo"/>
-                <Box
-                    component="form"
-                    sx={{ mt: '20px'}}
-                    noValidate
-                    autoComplete="off"
-                >
-                    {/* <FormControl fullWidth> */}
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={4}>
-                            <TextField
-                                label="Código"
-                                helperText="Seleccione Código"
-                                size="small"
-                                fullWidth
-                            />
-                        </Grid>
-                            <Grid item xs={12} sm={4}>
-                                <TextField
-                                    label="Nombre"
-                                    helperText="Seleccione Nombre"
-                                    size="small"
-                                    fullWidth
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={4}>
-                                {/* <InputLabel id="demo">Tipo</InputLabel> */}
-                                <Select
-                                    id="demo"
-                                    label="Tipo"
-                                    size="small"
-                                    fullWidth
-                                >
-                                    { tipo_mantenimiento.map(({value, label}) => (
-                                        <MenuItem key={value} value={value}>
-                                            {label}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </Grid>
-                        </Grid>
-                    {/* </FormControl> */}
-                </Box>
-                <Stack
-                    direction="row"
-                    justifyContent="flex-end"
-                    spacing={2}
-                    sx={{ mb: '20px' }}
-                >
-                    <Button
-                        color='primary'
-                        variant='contained'
-                        startIcon={<SearchIcon />}
-                    >
-                        Buscar Articulo
-                    </Button>
-                </Stack>
+    return (
+        <>
+            <h1>Programación Mantenimiento</h1>
+            <Grid 
+                container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                }}
+            >
+                <Grid item xs={12}>
+                    {/* ARTICULO COMPONENT */}
+                    <Title title="Articulo"/>
+                    <ArticuloComponent />
+                </Grid>
+
             </Grid>
 
-        </Grid>
-    </>
-  )
+            <Grid 
+                container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                }}
+            >
+                 <Grid item xs={12}>
+                    {/* DETALLES COMPONENT */}
+                    <Title title="Detalles del articulo"/>
+                    <DetallesComponent />
+                 </Grid>
+            </Grid>
+
+            <Grid 
+                container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                }}
+            >
+                <Grid item xs={12}>
+                    {/* MANTENIMIENTO COMPONENT */}
+                    <Title title='Articulo'/>
+                    <MantenimientoComponent />
+                </Grid>
+            </Grid>
+
+           <Grid 
+                container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                }}
+            >
+                <Grid item xs={12}>
+                    {/* FECHAS COMPONENT */}
+                    <Title title='Programar por fechas'/>
+                    <FechasComponent />
+                </Grid>
+            </Grid>
+
+            <Grid 
+                container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                }}
+            >
+                <Grid item xs={12}>
+                    {/* KILOMETRAJE COMPONENT */}
+                    <Title title='Programar por kilometraje'/>
+                    <KilometrajeComponent />
+                </Grid>
+            </Grid>
+
+            <Grid 
+                container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                }}
+            >
+                <Grid item xs={12}>
+                    {/* PREVISUALIZACION COMPONENT */}
+                    <Title title='Previsualización'/>
+                    <PrevisualizacionComponent />
+                </Grid>
+            </Grid>
+        </>
+    )
 }

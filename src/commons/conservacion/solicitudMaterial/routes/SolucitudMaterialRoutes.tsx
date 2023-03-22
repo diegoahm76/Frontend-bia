@@ -10,14 +10,14 @@ export const SolicitudMaterialRoutes: React.FC = () => {
   return (
     
     <Routes>
-      <Route path="plantas-insumos" element={<PlantasInsumosScreen/>} />
+      <Route path="plantas_insumos" element={<PlantasInsumosScreen/>} />
       <Route path="coordinador/*">
-          <Route path="solicitudes-pendientes/*" element={<SolicitudesPendientesCScreen />} />
-          <Route path="aprobar-solicitud/*" element={<AprobacionSolicitudCScreen />} />
+          <Route path="solicitudes_pendientes/*" element={<SolicitudesPendientesCScreen />} />
+          <Route path="aprobar_solicitud/*" element={<AprobacionSolicitudCScreen />} />
         </Route>
         <Route path="funcionario/*">
-          <Route path="solicitudes-pendientes/*" element={<SolicitudesPendientesScreen />} />
-          <Route path="aprobar-solicitud/*" element={<AprobacionSolicitudScreen />} />
+          <Route path="solicitudes_pendientes/*" element={<SolicitudesPendientesScreen />} />
+          <Route path="aprobar_solicitud/*" element={<AprobacionSolicitudScreen />} />
         </Route>
       <Route path="/*" element={<Page404 />} />
     </Routes>
