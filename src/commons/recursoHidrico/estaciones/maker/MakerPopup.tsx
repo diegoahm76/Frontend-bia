@@ -1,13 +1,7 @@
 import { Popup } from "react-leaflet";
-import { useNavigate } from "react-router";
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const MarkerPopup = (props) => {
-  const navigate = useNavigate();
-  const RedirectLink = (data) => {
-    debugger
-    navigate('/dashboard/recurso-hidrico/estaciones/DashboardEstaciones/'+ data.OBJECTID)
-  }
+export const marker_popup: React.FC = () => {
+
   return (
     <Popup>
       <div className="row">
@@ -29,3 +23,4 @@ export const MarkerPopup = (props) => {
     </Popup>
   );
 };
+
