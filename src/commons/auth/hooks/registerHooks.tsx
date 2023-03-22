@@ -1,15 +1,22 @@
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
 import { get_person_by_document } from '../request/authRequest';
-import {
-  type TipoPersona,
-  type Paises,
-  type TipoDocumento,
+import type {
+  TipoPersona,
+  Paises,
+  TipoDocumento,
+  IList,
+  Departamentos,
+  Municipios,
 } from '../../../interfaces/globalModels';
 import type { IPerson, ReisterHook } from '../interfaces';
 import dayjs, { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import {
+  get_ciudades,
+  get_departamentos,
+  get_estado_civil,
+  get_generos,
   get_paises,
   get_tipo_documento,
   get_tipo_persona,
@@ -24,9 +31,20 @@ export const use_register = (): ReisterHook => {
   >([]);
   const [paises_options, set_paises_options] = useState<Paises[]>([]);
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<TipoPersona[]>([]);
+  const [departamentos_opt, set_departamentos_opt] = useState<Departamentos[]>(
+    []
+  );
+  const [ciudades_opt, set_ciudades_opt] = useState<Municipios[]>([]);
+  const [departamento_expedicion, set_departamento] = useState('');
+  const [ciudad_expedicion, set_ciudad_expedicion] = useState('');
+  const [estado_civil, set_estado_civil] = useState('');
+  const [genero_opt, set_genero_opt] = useState<IList[]>([]);
+  const [estado_civil_opt, set_estado_civil_opt] = useState<IList[]>([]);
   const [requiere_nombre_comercial, set_requiere_nombre_comercial] =
     useState(false);
   const [tipo_persona, set_tipo_persona] = useState('');
+  const [genero, set_genero] = useState('');
+  const [pais_nacimiento, set_pais_nacimiento] = useState('');
   const [tipo_documento, set_tipo_documento] = useState('');
   const [show_password, set_show_password] = useState(false);
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
@@ -59,6 +77,9 @@ export const use_register = (): ReisterHook => {
     confirmar_celular: '',
     confirmar_email: '',
     cod_municipio_notificacion_nal: '',
+    departamento_nacimiento: '',
+    departamento_expedicion: '',
+    ciudad_expedicion: '',
     require_nombre_comercial: false,
     telefono_empresa_2: '',
     sexo: '',
@@ -100,6 +121,12 @@ export const use_register = (): ReisterHook => {
         data: { data: res_tipo_documento },
       } = await get_tipo_documento();
       set_tipo_documento_opt(res_tipo_documento);
+
+      const generos = await get_generos();
+      set_genero_opt(generos);
+
+      const estado_civil = await get_estado_civil();
+      set_estado_civil_opt(estado_civil);
     } catch (err) {
       control_error(err);
     } finally {
@@ -169,6 +196,43 @@ export const use_register = (): ReisterHook => {
     }
   };
 
+  const get_ciudades_opt = async (): Promise<void> => {
+    set_loading(true);
+    try {
+      const {
+        data: { data },
+      } = await get_ciudades(departamento_expedicion);
+      set_ciudades_opt(data);
+    } catch (error) {
+      control_error(error);
+    } finally {
+      set_loading(false);
+    }
+  };
+
+  // Obtiene los departamentos acorde al pais
+  const get_departamentos_por_pais = async (): Promise<void> => {
+    set_loading(true);
+    try {
+      const {
+        data: { data: departamentos },
+      } = await get_departamentos(pais_nacimiento);
+      set_departamentos_opt(departamentos);
+    } catch (error) {
+      control_error(error);
+    } finally {
+      set_loading(false);
+    }
+  };
+
+  useEffect(() => {
+    void get_departamentos_por_pais();
+  }, [pais_nacimiento]);
+
+  useEffect(() => {
+    void get_ciudades_opt();
+  }, [departamento_expedicion]);
+
   useEffect(() => {
     void get_selects_options();
   }, []);
@@ -192,6 +256,24 @@ export const use_register = (): ReisterHook => {
     data_register,
     error_phone,
     has_user,
+    pais_nacimiento,
+    genero_opt,
+    genero,
+    estado_civil_opt,
+    departamentos_opt,
+    departamento_expedicion,
+    ciudades_opt,
+    ciudad_expedicion,
+    estado_civil,
+    set_estado_civil,
+    set_ciudad_expedicion,
+    set_ciudades_opt,
+    set_departamento,
+    set_departamentos_opt,
+    set_estado_civil_opt,
+    set_genero,
+    set_genero_opt,
+    set_pais_nacimiento,
     set_has_user,
     set_error_error_phone,
     set_is_exists,

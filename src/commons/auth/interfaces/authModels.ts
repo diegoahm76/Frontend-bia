@@ -4,7 +4,9 @@ import type {
   IList,
   Paises,
   TipoDocumento,
-  TipoPersona
+  TipoPersona,
+  Departamentos,
+  Municipios
 } from '../../../interfaces/globalModels';
 
 export interface UserRol {
@@ -75,7 +77,7 @@ export interface IFormValues {
 }
 
 export interface IDatosNotificacion {
-  departamento: any;
+  departamento_expedicion: any;
 }
 
 export interface IAuth {
@@ -149,6 +151,9 @@ export interface IPerson {
   telefono_fijo_residencial: string | null;
   pais_residencia: string;
   municipio_residencia: string;
+  departamento_nacimiento: string;
+  departamento_expedicion: string;
+  ciudad_expedicion: string;
   direccion_residencia: string;
   direccion_laboral: string;
   direccion_residencia_ref: string;
@@ -205,6 +210,24 @@ export interface ReisterHook {
   is_exists: boolean;
   error_phone: boolean;
   has_user: boolean;
+  pais_nacimiento: string;
+  genero_opt: IList[];
+  genero: string;
+  estado_civil_opt: IList[];
+  departamentos_opt: Departamentos[];
+  departamento_expedicion: string;
+  ciudades_opt: Municipios[];
+  ciudad_expedicion: string;
+  estado_civil: string;
+  set_estado_civil: Dispatch<SetStateAction<string>>;
+  set_ciudad_expedicion: Dispatch<SetStateAction<string>>;
+  set_ciudades_opt: Dispatch<SetStateAction<Municipios[]>>;
+  set_departamento: Dispatch<SetStateAction<string>>;
+  set_departamentos_opt: Dispatch<SetStateAction<Departamentos[]>>;
+  set_estado_civil_opt: Dispatch<SetStateAction<IList[]>>;
+  set_genero: Dispatch<SetStateAction<string>>;
+  set_genero_opt: Dispatch<SetStateAction<IList[]>>;
+  set_pais_nacimiento: Dispatch<SetStateAction<string>>;
   set_has_user: Dispatch<SetStateAction<boolean>>;
   set_error_error_phone: Dispatch<SetStateAction<boolean>>;
   set_is_exists: Dispatch<SetStateAction<boolean>>;

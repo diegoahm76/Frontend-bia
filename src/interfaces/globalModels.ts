@@ -29,3 +29,13 @@ export interface IList {
   label: string;
   value: string;
 }
+export interface Departamentos {
+  cod_departamento: string;
+  nombre: string;
+  pais: string;
+}
+export interface Municipios {
+  cod_municipio: string;
+  nombre: string;
+  cod_departamento: string;
+}

@@ -403,7 +403,8 @@ const use_editar_organigrama = () => {
     if (datos_unidades.nivel_unidad != null) {
       set_option_unidad_padre(
         unity_organigram.map((item) =>
-          item.id_nivel_organigrama < datos_unidades!.nivel_unidad!.value!
+          item.id_nivel_organigrama <
+          Number(datos_unidades!.nivel_unidad!.value!)
             ? {
                 label: item.nombre,
                 value: item.codigo,

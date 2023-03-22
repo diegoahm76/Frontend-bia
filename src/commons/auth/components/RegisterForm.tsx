@@ -29,7 +29,7 @@ import { useForm } from 'react-hook-form';
 import { type IPerson } from '../interfaces';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
-import { crear_persona_natural } from '../request/authRequest';
+// import { crear_persona_natural } from '../request/authRequest';
 
 type keys_object =
   | 'tipo_persona'
@@ -58,8 +58,6 @@ type keys_object =
 export const RegisterForm: React.FC = () => {
   const {
     register,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    // getValues,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     handleSubmit,
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -116,6 +114,7 @@ export const RegisterForm: React.FC = () => {
     loading,
     tipo_documento,
     tipo_persona,
+    pais_nacimiento,
     show_password,
     data_register,
     is_search,
@@ -126,6 +125,20 @@ export const RegisterForm: React.FC = () => {
     is_exists,
     error_phone,
     has_user,
+    paises_options,
+    genero,
+    genero_opt,
+    departamentos_opt,
+    departamento_expedicion,
+    ciudades_opt,
+    ciudad_expedicion,
+    estado_civil,
+    estado_civil_opt,
+    set_estado_civil,
+    set_genero,
+    set_ciudad_expedicion,
+    set_departamento,
+    set_pais_nacimiento,
     set_error_error_phone,
     set_fecha_nacimiento,
     set_data_register,
@@ -156,8 +169,40 @@ export const RegisterForm: React.FC = () => {
   }, [numero_documento]);
 
   useEffect(() => {
-    set_tipo_persona(watch('tipo_persona'));
+    if (watch('departamento_expedicion') !== undefined) {
+      set_departamento(watch('departamento_expedicion'));
+    }
+  }, [watch('departamento_expedicion')]);
+
+  useEffect(() => {
+    if (watch('ciudad_expedicion') !== undefined) {
+      set_ciudad_expedicion(watch('ciudad_expedicion'));
+    }
+  }, [watch('ciudad_expedicion')]);
+
+  useEffect(() => {
+    if (watch('tipo_persona') !== undefined) {
+      set_tipo_persona(watch('tipo_persona'));
+    }
   }, [watch('tipo_persona')]);
+
+  useEffect(() => {
+    if (watch('pais_nacimiento') !== undefined) {
+      set_pais_nacimiento(watch('pais_nacimiento'));
+    }
+  }, [watch('pais_nacimiento')]);
+
+  useEffect(() => {
+    if (watch('sexo') !== undefined) {
+      set_genero(watch('sexo'));
+    }
+  }, [watch('sexo')]);
+
+  useEffect(() => {
+    if (watch('estado_civil') !== undefined) {
+      set_estado_civil(watch('estado_civil'));
+    }
+  }, [watch('estado_civil')]);
 
   useEffect(() => {
     if (tipo_persona === 'J') {
@@ -167,7 +212,9 @@ export const RegisterForm: React.FC = () => {
   }, [tipo_persona]);
 
   useEffect(() => {
-    set_tipo_documento(watch('tipo_documento'));
+    if (watch('tipo_documento') !== undefined) {
+      set_tipo_documento(watch('tipo_documento'));
+    }
   }, [watch('tipo_documento')]);
 
   useEffect(() => {
@@ -217,120 +264,121 @@ export const RegisterForm: React.FC = () => {
   const on_submit = handleSubmit(async (data) => {
     set_is_saving(true);
     try {
-      if (data.tipo_persona === 'N') {
-        const response = await crear_persona_natural(data_register);
-        console.log(response);
-      } else {
-        // await clienteAxios.get(
-        //   `personas/get-personas-naturales-by-document/${createPersonaModel.tipo_documento}/${createPersonaModel.numero_documento}/`
-        // );
-        // try {
-        // } catch (error) {
-        //   // ERROR AL CREAR PERSONAS NATURAlES
-        //   console.error(error);
-        //   // Swal.fire({
-        //   //   title:
-        //   //     'No existe un representante legal registrado con el documento ingresado',
-        //   //   text: '¿Quiere crear una persona natural?',
-        //   //   icon: 'info',
-        //   //   showCancelButton: true,
-        //   //   confirmButtonColor: '#3BA9E0',
-        //   //   cancelButtonColor: '#6c757d',
-        //   //   confirmButtonText: 'Si',
-        //   //   cancelButtonText: 'No',
-        //   // }).then((result) => {
-        //   //   if (result.isConfirmed) {
-        //   //     handleChangeTypePerson({ label: 'Natural', value: 'N' });
-        //   //     setFormValues({
-        //   //       ...formValues,
-        //   //       tipo_persona: { label: 'Natural', value: 'N' },
-        //   //     });
-        //   //   }
-        //   // });
-        //   set_is_saving(false);
-        //   return error as AxiosError;
-        // }
-        // try {
-        //   await clienteAxios.post('personas/persona-juridica/create/', persona);
-        //   // Swal.fire({
-        //   //   title: 'Registrado como persona juridica',
-        //   //   text: '¿Desea registrarse como usuario?',
-        //   //   icon: 'success',
-        //   //   showCancelButton: true,
-        //   //   confirmButtonColor: '#3BA9E0',
-        //   //   cancelButtonColor: '#6c757d',
-        //   //   confirmButtonText: 'Si',
-        //   //   cancelButtonText: 'No',
-        //   // }).then((result) => {
-        //   //   if (result.isConfirmed) {
-        //   //     navigate('/registeruser');
-        //   //   } else {
-        //   //     resetValues();
-        //   //   }
-        //   // });
-        // } catch (err: any) {
-        //   if (
-        //     err.response?.data?.email &&
-        //     err.response?.data?.numero_documento
-        //   ) {
-        //     // Swal.fire({
-        //     //   title: 'Este documento y correo ya estan relacionados',
-        //     //   text: '¿Desea registrarse como usuario?',
-        //     //   icon: 'warning',
-        //     //   showCancelButton: true,
-        //     //   confirmButtonColor: '#3BA9E0',
-        //     //   cancelButtonColor: '#6c757d',
-        //     //   confirmButtonText: 'Si',
-        //     //   cancelButtonText: 'No',
-        //     // }).then((result) => {
-        //     //   if (result.isConfirmed) {
-        //     //     navigate('/registeruser');
-        //     //   }
-        //     // });
-        //   } else if (err.response?.data?.non_field_errors) {
-        //     // Swal.fire({
-        //     //   title: 'Este documento ya esta relacionado',
-        //     //   text: '¿Desea registrarse como usuario?',
-        //     //   icon: 'warning',
-        //     //   showCancelButton: true,
-        //     //   confirmButtonColor: '#3BA9E0',
-        //     //   cancelButtonColor: '#6c757d',
-        //     //   confirmButtonText: 'Si',
-        //     //   cancelButtonText: 'No',
-        //     // }).then((result) => {
-        //     //   if (result.isConfirmed) {
-        //     //     navigate('/registeruser');
-        //     //   }
-        //     // });
-        //   } else if (err.response?.data?.numero_documento) {
-        //     // Swal.fire({
-        //     //   title: 'Este documento ya existe',
-        //     //   text: '¿Desea registrarse como usuario?',
-        //     //   icon: 'warning',
-        //     //   showCancelButton: true,
-        //     //   confirmButtonColor: '#3BA9E0',
-        //     //   cancelButtonColor: '#6c757d',
-        //     //   confirmButtonText: 'Si',
-        //     //   cancelButtonText: 'No',
-        //     // }).then((result) => {
-        //     //   if (result.isConfirmed) {
-        //     //     navigate('/registeruser');
-        //     //   }
-        //     // });
-        //   } else if (err.response?.data?.email) {
-        //     // Swal.fire({
-        //     //   title: 'Este correo electronico ya existe',
-        //     //   text: 'Verifica tus datos',
-        //     //   icon: 'info',
-        //     //   confirmButtonColor: '#3BA9E0',
-        //     //   cancelButtonColor: '#6c757d',
-        //     //   confirmButtonText: 'Aceptar',
-        //     // });
-        //   } else {
-        //     console.log(err);
-        //   }
-        // }
-      }
+      console.log(data);
+      // if (data.tipo_persona === 'N') {
+      //   const response = await crear_persona_natural(data_register);
+      //   console.log(response);
+      // } else {
+      //   // await clienteAxios.get(
+      //   //   `personas/get-personas-naturales-by-document/${createPersonaModel.tipo_documento}/${createPersonaModel.numero_documento}/`
+      //   // );
+      //   // try {
+      //   // } catch (error) {
+      //   //   // ERROR AL CREAR PERSONAS NATURAlES
+      //   //   console.error(error);
+      //   //   // Swal.fire({
+      //   //   //   title:
+      //   //   //     'No existe un representante legal registrado con el documento ingresado',
+      //   //   //   text: '¿Quiere crear una persona natural?',
+      //   //   //   icon: 'info',
+      //   //   //   showCancelButton: true,
+      //   //   //   confirmButtonColor: '#3BA9E0',
+      //   //   //   cancelButtonColor: '#6c757d',
+      //   //   //   confirmButtonText: 'Si',
+      //   //   //   cancelButtonText: 'No',
+      //   //   // }).then((result) => {
+      //   //   //   if (result.isConfirmed) {
+      //   //   //     handleChangeTypePerson({ label: 'Natural', value: 'N' });
+      //   //   //     setFormValues({
+      //   //   //       ...formValues,
+      //   //   //       tipo_persona: { label: 'Natural', value: 'N' },
+      //   //   //     });
+      //   //   //   }
+      //   //   // });
+      //   //   set_is_saving(false);
+      //   //   return error as AxiosError;
+      //   // }
+      //   // try {
+      //   //   await clienteAxios.post('personas/persona-juridica/create/', persona);
+      //   //   // Swal.fire({
+      //   //   //   title: 'Registrado como persona juridica',
+      //   //   //   text: '¿Desea registrarse como usuario?',
+      //   //   //   icon: 'success',
+      //   //   //   showCancelButton: true,
+      //   //   //   confirmButtonColor: '#3BA9E0',
+      //   //   //   cancelButtonColor: '#6c757d',
+      //   //   //   confirmButtonText: 'Si',
+      //   //   //   cancelButtonText: 'No',
+      //   //   // }).then((result) => {
+      //   //   //   if (result.isConfirmed) {
+      //   //   //     navigate('/registeruser');
+      //   //   //   } else {
+      //   //   //     resetValues();
+      //   //   //   }
+      //   //   // });
+      //   // } catch (err: any) {
+      //   //   if (
+      //   //     err.response?.data?.email &&
+      //   //     err.response?.data?.numero_documento
+      //   //   ) {
+      //   //     // Swal.fire({
+      //   //     //   title: 'Este documento y correo ya estan relacionados',
+      //   //     //   text: '¿Desea registrarse como usuario?',
+      //   //     //   icon: 'warning',
+      //   //     //   showCancelButton: true,
+      //   //     //   confirmButtonColor: '#3BA9E0',
+      //   //     //   cancelButtonColor: '#6c757d',
+      //   //     //   confirmButtonText: 'Si',
+      //   //     //   cancelButtonText: 'No',
+      //   //     // }).then((result) => {
+      //   //     //   if (result.isConfirmed) {
+      //   //     //     navigate('/registeruser');
+      //   //     //   }
+      //   //     // });
+      //   //   } else if (err.response?.data?.non_field_errors) {
+      //   //     // Swal.fire({
+      //   //     //   title: 'Este documento ya esta relacionado',
+      //   //     //   text: '¿Desea registrarse como usuario?',
+      //   //     //   icon: 'warning',
+      //   //     //   showCancelButton: true,
+      //   //     //   confirmButtonColor: '#3BA9E0',
+      //   //     //   cancelButtonColor: '#6c757d',
+      //   //     //   confirmButtonText: 'Si',
+      //   //     //   cancelButtonText: 'No',
+      //   //     // }).then((result) => {
+      //   //     //   if (result.isConfirmed) {
+      //   //     //     navigate('/registeruser');
+      //   //     //   }
+      //   //     // });
+      //   //   } else if (err.response?.data?.numero_documento) {
+      //   //     // Swal.fire({
+      //   //     //   title: 'Este documento ya existe',
+      //   //     //   text: '¿Desea registrarse como usuario?',
+      //   //     //   icon: 'warning',
+      //   //     //   showCancelButton: true,
+      //   //     //   confirmButtonColor: '#3BA9E0',
+      //   //     //   cancelButtonColor: '#6c757d',
+      //   //     //   confirmButtonText: 'Si',
+      //   //     //   cancelButtonText: 'No',
+      //   //     // }).then((result) => {
+      //   //     //   if (result.isConfirmed) {
+      //   //     //     navigate('/registeruser');
+      //   //     //   }
+      //   //     // });
+      //   //   } else if (err.response?.data?.email) {
+      //   //     // Swal.fire({
+      //   //     //   title: 'Este correo electronico ya existe',
+      //   //     //   text: 'Verifica tus datos',
+      //   //     //   icon: 'info',
+      //   //     //   confirmButtonColor: '#3BA9E0',
+      //   //     //   cancelButtonColor: '#6c757d',
+      //   //     //   confirmButtonText: 'Aceptar',
+      //   //     // });
+      //   //   } else {
+      //   //     console.log(err);
+      //   //   }
+      //   // }
+      // }
 
       // Creamos el usuario
 
@@ -503,6 +551,7 @@ export const RegisterForm: React.FC = () => {
                 label="Número de documento"
                 type="number"
                 size="small"
+                disabled={tipo_persona === '' ?? true}
                 inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                 error={errors.numero_documento?.type === 'required'}
                 helperText={
@@ -668,6 +717,207 @@ export const RegisterForm: React.FC = () => {
                   />
                 </LocalizationProvider>
               </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.pais_nacimiento?.type === 'required'}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_pais_nacimiento">
+                        País de nacimiento
+                      </InputLabel>
+                      <Select
+                        labelId="label_pais_nacimiento"
+                        label="País de nacimiento"
+                        fullWidth
+                        value={pais_nacimiento}
+                        {...register('pais_nacimiento', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {paises_options.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.cod_pais} key={k}>
+                              {e.nombre}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.pais_nacimiento?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.sexo?.type === 'required'}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_genero">Género</InputLabel>
+                      <Select
+                        labelId="label_genero"
+                        label="Género"
+                        fullWidth
+                        value={genero}
+                        {...register('sexo', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {genero_opt.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.value} key={k}>
+                              {e.label}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.sexo?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.estado_civil?.type === 'required'}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_civil">Estado civil</InputLabel>
+                      <Select
+                        labelId="label_civil"
+                        label="Estado civil"
+                        fullWidth
+                        value={estado_civil}
+                        {...register('estado_civil', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {estado_civil_opt.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.value} key={k}>
+                              {e.label}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.estado_civil?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Lugar de expedición del documento
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.departamento_expedicion?.type === 'required'}
+                  disabled={pais_nacimiento === '' ?? true}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_departamento">
+                        Departamento
+                      </InputLabel>
+                      <Select
+                        labelId="label_departamento"
+                        label="Departamento"
+                        fullWidth
+                        value={departamento_expedicion}
+                        {...register('departamento_expedicion', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {departamentos_opt.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.cod_departamento} key={k}>
+                              {e.nombre}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.departamento_expedicion?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.ciudad_expedicion?.type === 'required'}
+                  disabled={departamento_expedicion === '' ?? true}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_ciudad">Ciudad</InputLabel>
+                      <Select
+                        labelId="label_ciudad"
+                        label="Ciudad"
+                        fullWidth
+                        value={ciudad_expedicion}
+                        {...register('ciudad_expedicion', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {ciudades_opt.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.cod_municipio} key={k}>
+                              {e.nombre}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.ciudad_expedicion?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle1" fontWeight="bold">
                   Datos de notificación
@@ -675,6 +925,7 @@ export const RegisterForm: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
+                  disabled={is_exists}
                   fullWidth
                   size="small"
                   label="E-mail"
@@ -696,6 +947,7 @@ export const RegisterForm: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
+                  disabled={is_exists}
                   fullWidth
                   size="small"
                   label="Confirme su e-mail"
@@ -726,6 +978,7 @@ export const RegisterForm: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
+                  disabled={is_exists}
                   fullWidth
                   size="small"
                   label="Celular"
@@ -741,6 +994,7 @@ export const RegisterForm: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
+                  disabled={is_exists}
                   fullWidth
                   size="small"
                   label="Confirme su celular"
