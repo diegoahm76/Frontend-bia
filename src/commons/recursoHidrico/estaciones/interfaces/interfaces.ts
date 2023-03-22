@@ -139,4 +139,15 @@ export interface Tipos {
     velocidad_agua_max: number;
     velocidad_agua_min: number;
 }
+export interface EditarPersona {
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+    entidad: string;
+    cargo: string;
+    email_notificacion: string;
+    nro_celular_notificacion: string;
+    observacion: string;
+}
 

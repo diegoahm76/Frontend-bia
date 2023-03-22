@@ -2,7 +2,7 @@ import { toast, type ToastContent } from "react-toastify";
 import { api } from "../../../api/axios";
 import { control_error } from "../../../helpers/controlError";
 import { type ResponseServer } from "../../../interfaces/globalModels";
-import { type Parametros, type conf_alarma, type Datos, type Estaciones, type EstacionesDetalle, type IEstacionEstaciones, type PersonaEstacion, type CrearAlerta } from "../estaciones/interfaces/interfaces";
+import { type Parametros, type conf_alarma, type Datos, type Estaciones, type EstacionesDetalle, type IEstacionEstaciones, type PersonaEstacion, type CrearAlerta, type EditarPersona, } from "../estaciones/interfaces/interfaces";
 import axios from 'axios';
 
 export const alertas = axios.create({
@@ -114,12 +114,21 @@ export const eliminar_conf_alerta_persona = async (idconfAlerta: number): Promis
 // editar estacion
 export const editar_estacion = async (estacion: number, datos_estacion: IEstacionEstaciones): Promise<any> => {
   try {
-    const response = await api.put(`estaciones/actualizar-estaciones/${estacion}`, datos_estacion);
+    const response = await api.put(`estaciones/actualizar-estaciones/${estacion}/`, datos_estacion);
     return response.data;
   } catch (error) {
     throw new Error('No se pudo actualizar la estación. Por favor, inténtalo de nuevo más tarde.');
   }
 };
+
+// editar estacion
+export const editar_persona = async (estacion: number, datos_estacion: EditarPersona): Promise<any> => {
+
+  const response = await api.put(`estaciones/personas/actualizar-persona/${estacion}/`, datos_estacion);
+  return response.data;
+
+};
+
 
 
 
