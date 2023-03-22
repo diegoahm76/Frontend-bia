@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
-import { AdminPersonasScreen } from '../screens/AdminPersonasScreen';
-import { AuditoriaScreen } from '../screens/AuditoriaScreen';
+import { AdminUsuariosScreen } from '../screens/AdminUsuariosScreen';
+import AuditoriaScreen from '../screens/AuditoriaScreen';
 import { RolScreen } from '../screens/RolScreen';
 import { Page404 } from '../../../screens/404';
 
@@ -8,10 +8,7 @@ import { Page404 } from '../../../screens/404';
 export const SeguridadRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route
-        path="/administrador_de_personas"
-        element={<AdminPersonasScreen />}
-      />
+      <Route path="/administrar_usuarios" element={<AdminUsuariosScreen />} />
       <Route path="/auditoria" element={<AuditoriaScreen />} />
       <Route path="/roles" element={<RolScreen />} />
       <Route path="/*" element={<Page404 />} />
