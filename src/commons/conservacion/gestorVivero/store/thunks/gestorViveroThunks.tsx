@@ -68,6 +68,7 @@ export const add_nursery_service: any = (
         'conservacion/viveros/create/',
         nursery
       );
+      console.log(data)
 
       dispatch(get_nurseries_service());
       dispatch(current_nursery(data.detail));

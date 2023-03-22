@@ -1,5 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
-import { Page404 } from '../../../../screens/404';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { CambioEtapaScreen  } from '../screens/CambioEtapaScreen';
 import { MortalidadPlantasScreen  } from '../screens/MortalidadPlantasScreen';
 import { PreparacionMezclaScreen  } from '../screens/PreparacionMezclaScreen';
@@ -10,11 +9,11 @@ export const ProduccionRoutes: React.FC = () => {
   return (
     
     <Routes>
-      <Route path="preparacion-mezcla" element={<PreparacionMezclaScreen/>} />
-      <Route path="cambio-etapa" element={<CambioEtapaScreen/>} />
-      <Route path="incidencia-material-vegetal" element={<RegistroIncidenciaScreen/>} />
-      <Route path="mortalidad-plantas" element={<MortalidadPlantasScreen/>} />
-      <Route path="/*" element={<Page404 />} />
+      <Route path="preparacion_mezcla" element={<PreparacionMezclaScreen/>} />
+      <Route path="cambio_etapa" element={<CambioEtapaScreen/>} />
+      <Route path="incidencia_material_vegetal" element={<RegistroIncidenciaScreen/>} />
+      <Route path="mortalidad_plantas" element={<MortalidadPlantasScreen/>} />
+      <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );
 };

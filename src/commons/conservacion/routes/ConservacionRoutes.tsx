@@ -12,11 +12,11 @@ import { SolicitudMaterialRoutes } from '../solicitudMaterial/routes/SolucitudMa
 export const ConservacionRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="gestor-vivero/*" element={<GestorViveroRoutes />} />
+      <Route path="gestor_vivero/*" element={<GestorViveroRoutes />} />
       <Route path="configuracion/*" element={<ConfiguracionRoutes />} />
       <Route path="distribucion/*" element={<DistribucionRoutes />} />
-      <Route path="material-vegetal/*" element={<MaterialVegetalRoutes />} />
-      <Route path="notificaciones-alertas/*" element={<NotificacionRoutes />} />
+      <Route path="material_vegetal/*" element={<MaterialVegetalRoutes />} />
+      <Route path="notificaciones_alertas/*" element={<NotificacionRoutes />} />
       <Route path="produccion/*" element={<ProduccionRoutes />} />
       <Route path="reportes/*" element={<ReporteRoutes />} />
       <Route
