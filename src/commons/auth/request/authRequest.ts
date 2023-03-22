@@ -2,9 +2,9 @@ import { api } from '../../../api/axios';
 import type {
   ResponseAuth,
   LoginUser,
-  Permissions,
   IUserInfo,
-  Persona
+  Persona,
+  Permisos
 } from '../interfaces/authModels';
 import {
   type Paises,
@@ -44,11 +44,11 @@ export const login_post = async (
 export const permissions_request = async (
   id_usuario: number,
   tipo_entorno: string
-): Promise<ResponseThunks<Permissions>> => {
+): Promise<ResponseThunks<Permisos[]>> => {
   try {
     const {
       data: { data }
-    } = await api.get<ResponseServer<Permissions>>(
+    } = await api.get<ResponseServer<Permisos[]>>(
       `permisos/permisos-rol/get-by-entorno/?id_usuario=${id_usuario}&tipo_entorno=${tipo_entorno}`
     );
 

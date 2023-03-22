@@ -10,7 +10,8 @@ import {
   Chip,
 } from '@mui/material';
 // Icons de Material UI
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/AddBoxOutlined';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedInOutlined';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -18,7 +19,8 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // Thunks
 import { get_organigrams_service } from '../store/thunks/organigramThunks';
-import CrearOrganigramaDialogForm from './CrearOrganigramaDialogForm';
+import DialogCrearOrganigrama from './DialogCrearOrganigrama';
+import DialogElegirOrganigramaActual from './DialogElegirOrganigramaActual';
 // Slices
 import { current_organigram } from '../store/slices/organigramSlice';
 
@@ -27,13 +29,17 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function CrearOrganigrama({
+export function ListOrganigramas({
   set_position_tab_organigrama,
 }: IProps): JSX.Element {
   const dispatch = useAppDispatch();
   const { organigram } = useAppSelector((state) => state.organigram);
   const [crear_organigrama_is_active, set_crear_organigrama_is_active] =
     useState<boolean>(false);
+  const [
+    elegir_organigrama_actual_is_active,
+    set_elegir_organigrama_actual_is_active,
+  ] = useState<boolean>(false);
 
   const columns: GridColDef[] = [
     { field: 'id_organigrama', headerName: 'ID', width: 20 },
@@ -167,7 +173,16 @@ export function CrearOrganigrama({
             set_crear_organigrama_is_active(true);
           }}
         >
-          CREAR ORGANIGRAMA
+          CREAR
+        </Button>
+        <Button
+          variant="outlined"
+          startIcon={<AssignmentTurnedInIcon />}
+          onClick={() => {
+            set_elegir_organigrama_actual_is_active(true);
+          }}
+        >
+          ELEGIR ACTUAL
         </Button>
       </Stack>
       <Grid item>
@@ -184,10 +199,14 @@ export function CrearOrganigrama({
           />
         </Box>
       </Grid>
-      <CrearOrganigramaDialogForm
+      <DialogCrearOrganigrama
         is_modal_active={crear_organigrama_is_active}
         set_is_modal_active={set_crear_organigrama_is_active}
         set_position_tab_organigrama={set_position_tab_organigrama}
+      />
+      <DialogElegirOrganigramaActual
+        is_modal_active={elegir_organigrama_actual_is_active}
+        set_is_modal_active={set_elegir_organigrama_actual_is_active}
       />
     </>
   );
