@@ -8,9 +8,9 @@ export const MaterialVegetalRoutes: React.FC = () => {
   return (
     
     <Routes>
-      <Route path="siembra-semilla" element={<SiembraSemillasScreen/>} />
-      <Route path="ingreso-cuarentena" element={<IngresoCuarentenaScreen/>} />
-      <Route path="levantamiento-cuarentena" element={<LevantamientoCuarentenaScreen/>} />
+      <Route path="siembra_semilla" element={<SiembraSemillasScreen/>} />
+      <Route path="ingreso_cuarentena" element={<IngresoCuarentenaScreen/>} />
+      <Route path="levantamiento_cuarentena" element={<LevantamientoCuarentenaScreen/>} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );

@@ -8,9 +8,9 @@ export const ConfiguracionRoutes: React.FC = () => {
   return (
     
     <Routes>
-      <Route path="administrar-camas-germinacion" element={<AdministracionCamasGerminacionScreen/>} />
-      <Route path="tipificacion-bienes" element={<TipificacionBienesScreen/>} />
-      <Route path="tipos-mezcla" element={<TiposMezclaScreen/>} />
+      <Route path="administrar_camas_germinacion" element={<AdministracionCamasGerminacionScreen/>} />
+      <Route path="tipificacion_bienes" element={<TipificacionBienesScreen/>} />
+      <Route path="tipos_mezcla" element={<TiposMezclaScreen/>} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );

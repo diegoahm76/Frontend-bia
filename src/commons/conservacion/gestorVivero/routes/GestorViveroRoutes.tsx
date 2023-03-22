@@ -10,11 +10,11 @@ export const GestorViveroRoutes: React.FC = () => {
   return (
     
     <Routes>
-      <Route path="administrar-viveros" element={<AdministrarViveroScreen/>} />
-      <Route path="apertura-cierre" element={<AperturaCierreViveroScreen/>} />
+      <Route path="administrar_viveros" element={<AdministrarViveroScreen/>} />
+      <Route path="apertura_cierre" element={<AperturaCierreViveroScreen/>} />
       <Route path="bajas" element={<BajaHerramientaScreen/>} />
       <Route path="cuarentena" element={<CuarentenaViveroScreen/>} />
-      <Route path="recepcion-distribucion" element={<DespachoViveroScreen/>} />
+      <Route path="recepcion_distribucion" element={<DespachoViveroScreen/>} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );

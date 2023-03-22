@@ -157,6 +157,7 @@ const use_editar_organigrama = () => {
       headerName: 'Acciones',
       field: 'editar',
       minWidth: 140,
+      hide: organigram_current.fecha_terminado !== null,
       renderCell: (params: {
         row: {
           orden_nivel: number;
@@ -261,6 +262,7 @@ const use_editar_organigrama = () => {
       field: 'editar',
       minWidth: 140,
       maxWidth: 140,
+      hide: organigram_current.fecha_terminado !== null,
       renderCell: (params: {
         row: {
           unidad_raiz: boolean;
