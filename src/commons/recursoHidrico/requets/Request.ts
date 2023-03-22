@@ -34,7 +34,6 @@ export const llamar_alertas = async () => {
   }
 };
 
-
 // consultar estaciones
 export const consultar_estaciones = async (): Promise<Estaciones[]> => {
   const { data } = await api.get<ResponseServer<Estaciones[]>>('estaciones/consultar-estaciones/');
