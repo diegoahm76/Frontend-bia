@@ -97,6 +97,22 @@ export interface PersonaEstacion {
     nro_celular_notificacion: string | number;
     observacion: string;
 }
+export interface EstacionData {
+    id_estacion: number,
+    temperatura_ambiente: string,
+    humedad_ambiente: string,
+    presion_barometrica: string,
+    Velocidad_Viento: string,
+    direccion_viento: string,
+    precipitacion: string,
+    luminosidad: string,
+    nivel_agua: string,
+    velocidad_agua: string,
+    fecha_registro: string,
+    frecuencia: string,
+}
+
+
 export interface PersonasEstacion {
 
     cod_tipo_documento_id: string;
