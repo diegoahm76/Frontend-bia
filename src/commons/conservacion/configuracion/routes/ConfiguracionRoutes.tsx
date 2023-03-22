@@ -1,5 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
-import { Page404 } from '../../../../screens/404';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { AdministracionCamasGerminacionScreen  } from '../screens/AdministracionCamasGerminacionScreen';
 import { TipificacionBienesScreen  } from '../screens/TipificacionBienesScreen';
 import { TiposMezclaScreen } from '../screens/TiposMezclaScreen';
@@ -9,10 +8,10 @@ export const ConfiguracionRoutes: React.FC = () => {
   return (
     
     <Routes>
-      <Route path="administrar-camas-germinacion" element={<AdministracionCamasGerminacionScreen/>} />
-      <Route path="tipificacion-bienes" element={<TipificacionBienesScreen/>} />
-      <Route path="tipos-mezcla" element={<TiposMezclaScreen/>} />
-      <Route path="/*" element={<Page404 />} />
+      <Route path="administrar_camas_germinacion" element={<AdministracionCamasGerminacionScreen/>} />
+      <Route path="tipificacion_bienes" element={<TipificacionBienesScreen/>} />
+      <Route path="tipos_mezcla" element={<TiposMezclaScreen/>} />
+      <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );
 };

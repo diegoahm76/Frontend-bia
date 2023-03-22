@@ -1,5 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
-import { Page404 } from '../../../../screens/404';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { AdministrarViveroScreen  } from '../screens/AdministrarViveroScreen';
 import { AperturaCierreViveroScreen  } from '../screens/AperturaCierreViveroScreen';
 import { BajaHerramientaScreen,  } from '../screens/BajaHerramientaScreen';
@@ -11,12 +10,12 @@ export const GestorViveroRoutes: React.FC = () => {
   return (
     
     <Routes>
-      <Route path="administrar-viveros" element={<AdministrarViveroScreen/>} />
-      <Route path="apertura-cierre" element={<AperturaCierreViveroScreen/>} />
+      <Route path="administrar_viveros" element={<AdministrarViveroScreen/>} />
+      <Route path="apertura_cierre" element={<AperturaCierreViveroScreen/>} />
       <Route path="bajas" element={<BajaHerramientaScreen/>} />
       <Route path="cuarentena" element={<CuarentenaViveroScreen/>} />
-      <Route path="recepcion-distribucion" element={<DespachoViveroScreen/>} />
-      <Route path="/*" element={<Page404 />} />
+      <Route path="recepcion_distribucion" element={<DespachoViveroScreen/>} />
+      <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );
 };
