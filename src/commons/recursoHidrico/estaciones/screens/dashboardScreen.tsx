@@ -13,9 +13,6 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment';
 
-
-
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DashboardScreen: React.FC = () => {
 
@@ -127,7 +124,7 @@ export const DashboardScreen: React.FC = () => {
         );
 
         console.log(data_success)
-
+        // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         const filtereddata = data_success.filter((datos: EstacionData) =>
             datos.id_estacion === selectdashboards &&
             moment(datos.fecha_registro).isBetween(moment(start_date_string), moment(end_date_string))
@@ -159,7 +156,7 @@ export const DashboardScreen: React.FC = () => {
 
         const formatteddataprecipitacion = formatdataforprecipitacion(filtereddata);
         setqueryprecipitacion(formatteddataprecipitacion);
-        return filtereddata();
+        return filtereddata(data_success);
     };
 
     const options: ChartOptions = {
@@ -302,7 +299,7 @@ export const DashboardScreen: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                <Grid item xs={12}>
+                <Grid item xs={12} spacing={2}>
                     <Controller
                         name="opcDashboard"
                         control={control}
@@ -329,101 +326,213 @@ export const DashboardScreen: React.FC = () => {
                             </FormControl>
                         )}
                     />
+
                     <Typography variant="body1" align="center" hidden={selectdashboards !== 1}>
                         <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
+                        <label>Fecha Inicial</label>
                         <DatePicker
                             selected={start_date}
                             onChange={handle_start_date_change}
                             placeholderText="Fecha inicial"
                         />
-
+                        <label>Fecha Final</label>
                         <DatePicker
                             selected={end_date}
                             onChange={handle_end_date_change}
                             placeholderText="Fecha Final"
                         />
-
+                        <Typography variant="h4" color="primary">
+                            Presión barometrica
+                        </Typography>
                         <Line data={queryestaciones} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Humedad
+                        </Typography>
                         <Line data={queryhumedad} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Dirección del viento
+                        </Typography>
                         <Line data={querydireccion} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Precipitación
+                        </Typography>
                         <Line data={queryprecipitacion} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Luminosidad
+                        </Typography>
                         <Line data={queryluminosidad} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Temperatura
+                        </Typography>
                         <Line data={querytemperatura} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Velocidad del viento
+                        </Typography>
                         <Line data={queryvelocidadviento} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Velocidad dela agua
+                        </Typography>
                         <Line data={queryvelocidadagua} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Nivel del agua
+                        </Typography>
                         <Line data={querynivelagua} options={options} />
                     </Typography>
                     <Typography variant="body1" align="center" hidden={selectdashboards !== 2}>
                         <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
+                        <label>Fecha Inicial</label>
                         <DatePicker
                             selected={start_date}
                             onChange={handle_start_date_change}
                             placeholderText="Fecha inicial"
                         />
+                        <label>Fecha Final</label>
                         <DatePicker
                             selected={end_date}
                             onChange={handle_end_date_change}
                             placeholderText="Fecha Final"
                         />
+                        <Typography variant="h4" color="primary">
+                            Presión barometrica
+                        </Typography>
                         <Line data={queryestaciones} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Humedad
+                        </Typography>
                         <Line data={queryhumedad} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Dirección del viento
+                        </Typography>
                         <Line data={querydireccion} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Precipitación
+                        </Typography>
                         <Line data={queryprecipitacion} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Luminosidad
+                        </Typography>
                         <Line data={queryluminosidad} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Temperatura
+                        </Typography>
                         <Line data={querytemperatura} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Velocidad del viento
+                        </Typography>
                         <Line data={queryvelocidadviento} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Velocidad dela agua
+                        </Typography>
                         <Line data={queryvelocidadagua} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Nivel del agua
+                        </Typography>
                         <Line data={querynivelagua} options={options} />
                     </Typography>
                     <Typography variant="body1" align="center" hidden={selectdashboards !== 3}>
                         <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
+                        <label>Fecha Inicial</label>
                         <DatePicker
                             selected={start_date}
                             onChange={handle_start_date_change}
                             placeholderText="Fecha inicial"
                         />
+                        <label>Fecha Final</label>
                         <DatePicker
                             selected={end_date}
                             onChange={handle_end_date_change}
                             placeholderText="Fecha Final"
                         />
+                        <Typography variant="h4" color="primary">
+                            Presión barometrica
+                        </Typography>
                         <Line data={queryestaciones} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Humedad
+                        </Typography>
                         <Line data={queryhumedad} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Dirección del viento
+                        </Typography>
                         <Line data={querydireccion} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Precipitación
+                        </Typography>
                         <Line data={queryprecipitacion} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Luminosidad
+                        </Typography>
                         <Line data={queryluminosidad} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Temperatura
+                        </Typography>
                         <Line data={querytemperatura} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Velocidad del viento
+                        </Typography>
                         <Line data={queryvelocidadviento} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Velocidad dela agua
+                        </Typography>
                         <Line data={queryvelocidadagua} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Nivel del agua
+                        </Typography>
                         <Line data={querynivelagua} options={options} />
                     </Typography>
                     <Typography variant="body1" align="center" hidden={selectdashboards !== 4}>
                         <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
+                        <label>Fecha Inicial</label>
                         <DatePicker
                             selected={start_date}
                             onChange={handle_start_date_change}
                             placeholderText="Fecha inicial"
                         />
+                        <label>Fecha Final</label>
                         <DatePicker
                             selected={end_date}
                             onChange={handle_end_date_change}
                             placeholderText="Fecha Final"
                         />
+                        <Typography variant="h4" color="primary">
+                            Presión barometrica
+                        </Typography>
                         <Line data={queryestaciones} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Humedad
+                        </Typography>
                         <Line data={queryhumedad} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Dirección del viento
+                        </Typography>
                         <Line data={querydireccion} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Precipitación
+                        </Typography>
                         <Line data={queryprecipitacion} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Luminosidad
+                        </Typography>
                         <Line data={queryluminosidad} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Temperatura
+                        </Typography>
                         <Line data={querytemperatura} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Velocidad del viento
+                        </Typography>
                         <Line data={queryvelocidadviento} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Velocidad dela agua
+                        </Typography>
                         <Line data={queryvelocidadagua} options={options} />
+                        <Typography variant="h4" color="primary">
+                            Nivel del agua
+                        </Typography>
                         <Line data={querynivelagua} options={options} />
                     </Typography>
                 </Grid>
             </Grid>
         </>
-
-
     )
 }
-
