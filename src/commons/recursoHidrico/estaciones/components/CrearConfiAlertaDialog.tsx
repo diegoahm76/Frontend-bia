@@ -4,7 +4,7 @@ import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { control_error } from '../../../../helpers/controlError';
-import { consultar_conf_alerta_persona, control_success, crear_confi_alerta } from '../../requets/Request';
+import { consultar_conf_alerta_persona, control_success_fail, crear_confi_alerta } from '../../requets/Request';
 import { type conf_alarma } from '../interfaces/interfaces';
 
 interface IProps {
@@ -52,109 +52,27 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
     } = useForm();
 
     const on_sumbit_alerta: SubmitHandler<FieldValues> = (data): void => {
-
         const nueva_alerta = {
-
-            nombre_variable_alarma: data.nombre_variable_alarma,
-            mensaje_alarma_maximo: data.mensaje_alarma_maximo,
-            mensaje_alarma_minimo: data.mensaje_alarma_minimo,
-            mensaje_no_alarma: data.mensaje_no_alarma,
-            frecuencia_alarma: data.frecuencia_alarma,
+          nombre_variable_alarma: data.nombre_variable_alarma,
+          mensaje_alarma_maximo: data.mensaje_alarma_maximo,
+          mensaje_alarma_minimo: data.mensaje_alarma_minimo,
+          mensaje_no_alarma: data.mensaje_no_alarma,
+          frecuencia_alarma: data.frecuencia_alarma,
         };
-        if (conf_alert_person.length > 0) {
-            console.log("Paso")
-            const alerta = conf_alert_person.find((alert: conf_alarma) => alert.nombre_variable_alarma === 'TMP');
-            if (alerta !== undefined && alerta.nombre_variable_alarma === 'TMP') {
-                control_success('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
-            } else {
-                void crear_confi_alerta(nueva_alerta);
-                set_is_modal_active(!is_modal_active);
-            }
+      
+        const variable_seleccionada = data.nombre_variable_alarma;
+        const alerta_existente = conf_alert_person.find(
+          (alert: conf_alarma) => alert.nombre_variable_alarma === variable_seleccionada
+        );
+      
+        if (alerta_existente != null) {
+            control_success_fail('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
+        } else {
+          void crear_confi_alerta(nueva_alerta);
+          set_is_modal_active(!is_modal_active);
         }
-        if (conf_alert_person.length > 0) {
-            console.log("Paso")
-            const alerta = conf_alert_person.find((alert: conf_alarma) => alert.nombre_variable_alarma === 'HUR');
-            if (alerta !== undefined && alerta.nombre_variable_alarma === 'HUR') {
-                control_success('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
-            } else {
-                void crear_confi_alerta(nueva_alerta);
-                set_is_modal_active(!is_modal_active);
-            }
-        }
-        if (conf_alert_person.length > 0) {
-            console.log("Paso")
-            const alerta = conf_alert_person.find((alert: conf_alarma) => alert.nombre_variable_alarma === 'PRB');
-            if (alerta !== undefined && alerta.nombre_variable_alarma === 'PRB') {
-                control_success('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
-            } else {
-                void crear_confi_alerta(nueva_alerta);
-                set_is_modal_active(!is_modal_active);
-            }
-        }
-        if (conf_alert_person.length > 0) {
-            console.log("Paso")
-            const alerta = conf_alert_person.find((alert: conf_alarma) => alert.nombre_variable_alarma === 'VDV');
-            if (alerta !== undefined && alerta.nombre_variable_alarma === 'VDV') {
-                control_success('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
-            } else {
-                void crear_confi_alerta(nueva_alerta);
-                set_is_modal_active(!is_modal_active);
-            }
-        }
-        if (conf_alert_person.length > 0) {
-            console.log("Paso")
-            const alerta = conf_alert_person.find((alert: conf_alarma) => alert.nombre_variable_alarma === 'DDV');
-            if (alerta !== undefined && alerta.nombre_variable_alarma === 'DDV') {
-                control_success('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
-            } else {
-                void crear_confi_alerta(nueva_alerta);
-                set_is_modal_active(!is_modal_active);
-            }
-        }
-        if (conf_alert_person.length > 0) {
-            console.log("Paso")
-            const alerta = conf_alert_person.find((alert: conf_alarma) => alert.nombre_variable_alarma === 'PCT');
-            if (alerta !== undefined && alerta.nombre_variable_alarma === 'PCT') {
-                control_success('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
-            } else {
-                void crear_confi_alerta(nueva_alerta);
-                set_is_modal_active(!is_modal_active);
-            }
-        }
-        if (conf_alert_person.length > 0) {
-            console.log("Paso")
-            const alerta = conf_alert_person.find((alert: conf_alarma) => alert.nombre_variable_alarma === 'LMN');
-            if (alerta !== undefined && alerta.nombre_variable_alarma === 'LMN') {
-                control_success('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
-            } else {
-                void crear_confi_alerta(nueva_alerta);
-                set_is_modal_active(!is_modal_active);
-            }
-        }
-        if (conf_alert_person.length > 0) {
-            console.log("Paso")
-            const alerta = conf_alert_person.find((alert: conf_alarma) => alert.nombre_variable_alarma === 'VDA');
-            if (alerta !== undefined && alerta.nombre_variable_alarma === 'VDA') {
-                control_success('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
-            } else {
-                void crear_confi_alerta(nueva_alerta);
-                set_is_modal_active(!is_modal_active);
-            }
-        }
-        if (conf_alert_person.length > 0) {
-            console.log("Paso")
-            const alerta = conf_alert_person.find((alert: conf_alarma) => alert.nombre_variable_alarma === 'NDA');
-            if (alerta !== undefined && alerta.nombre_variable_alarma === 'NDA') {
-                control_success('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
-            } else {
-                void crear_confi_alerta(nueva_alerta);
-                set_is_modal_active(!is_modal_active);
-            }
-        }
-        // void crear_confi_alerta(nueva_alerta);
-        // set_is_modal_active(!is_modal_active);
-    };
-
+      }
+      
     const tipo_estacion = [
         {
             value: 'TMP',

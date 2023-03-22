@@ -23,6 +23,18 @@ export const control_success = (message: ToastContent): any =>
     theme: 'light'
   });
 
+  export const control_success_fail = (message: ToastContent): any =>
+  toast.error(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light'
+  });
+
 // llamar alerta
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const llamar_alertas = async () => {
