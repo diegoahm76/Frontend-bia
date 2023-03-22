@@ -1,5 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type IObjNursery, type INursery } from '../../interfaces/vivero';
+import {
+    type IObjNursery,
+    type INursery
+  } from '../../interfaces/vivero';
 
 const initial_state_current_nursery = {
   id_vivero: null,
