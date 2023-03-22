@@ -75,6 +75,7 @@ export interface Parametros {
     velocidad_agua_min: number,
 }
 export interface IEstacionEstaciones {
+
     nombre_estacion: string,
     cod_tipo_estacion: string,
     latitud: number,
@@ -150,4 +151,25 @@ export interface EditarPersona {
     nro_celular_notificacion: string;
     observacion: string;
 }
+export interface ParametrosEditar {
 
+    frecuencia_solicitud_datos: number | string,
+    temperatura_ambiente_max: number | string,
+    temperatura_ambiente_min: number | string,
+    humedad_ambiente_max: number | string,
+    humedad_ambiente_min: number | string,
+    presion_barometrica_max: number | string,
+    presion_barometrica_min: number | string,
+    velocidad_viento_max: number | string,
+    velocidad_viento_min: number | string,
+    direccion_viento_max: number | string,
+    direccion_viento_min: number | string,
+    precipitacion_max: number | string,
+    precipitacion_min: number | string,
+    luminosidad_max: number | string,
+    luminosidad_min: number | string,
+    nivel_agua_max: number | string,
+    nivel_agua_min: number | string,
+    velocidad_agua_max: number | string,
+    velocidad_agua_min: number | string,
+}

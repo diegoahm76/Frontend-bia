@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/naming-convention */
+
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, TextField } from '@mui/material';
 import type React from 'react';
-import { type Dispatch, type SetStateAction } from 'react';
+import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import { type EditarPersona } from '../interfaces/interfaces';
 import { control_success, editar_persona } from '../../requets/Request';
@@ -18,25 +18,20 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, usuario_editado, set_usuario_editado, }) => {
 
-  const default_values = {
-
-    primer_nombre: '',
-    segundo_nombre: '',
-    primer_apellido: '',
-    segundo_apellido: '',
-    entidad: '',
-    cargo: '',
-    email_notificacion: '',
-    nro_celular_notificacion: '',
-    observacion: '',
-  }
-
   const {
     register,
     reset,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     handleSubmit,
     formState: { errors },
   } = useForm<EditarPersona>();
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (is_modal_active && usuario_editado) {
+      reset(usuario_editado);
+    }
+  }, [is_modal_active, usuario_editado, reset]);
 
   const handle_close = (): void => {
     set_is_modal_active(false);
@@ -64,6 +59,7 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
       control_error(error);
     }
   };
+
   return (
     <Dialog
       open={is_modal_active}
