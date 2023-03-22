@@ -96,6 +96,8 @@ export const use_register = (): ReisterHook => {
     acepta_notificacion_sms: false,
     acepta_notificacion_email: false,
     acepta_tratamiento_datos: false,
+    nombre_de_usuario: '',
+    password: '',
   });
 
   const handle_change_checkbox = (

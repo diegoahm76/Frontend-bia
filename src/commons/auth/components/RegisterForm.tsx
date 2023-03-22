@@ -29,7 +29,7 @@ import { useForm } from 'react-hook-form';
 import { type IPerson } from '../interfaces';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
-// import { crear_persona_natural } from '../request/authRequest';
+import { crear_persona_natural_and_user } from '../request/authRequest';
 
 type keys_object =
   | 'tipo_persona'
@@ -200,7 +200,7 @@ export const RegisterForm: React.FC = () => {
 
   useEffect(() => {
     if (watch('estado_civil') !== undefined) {
-      set_estado_civil(watch('estado_civil'));
+      set_estado_civil(watch('estado_civil') as string);
     }
   }, [watch('estado_civil')]);
 
@@ -265,175 +265,16 @@ export const RegisterForm: React.FC = () => {
     set_is_saving(true);
     try {
       console.log(data);
-      // if (data.tipo_persona === 'N') {
-      //   const response = await crear_persona_natural(data_register);
-      //   console.log(response);
-      // } else {
-      //   // await clienteAxios.get(
-      //   //   `personas/get-personas-naturales-by-document/${createPersonaModel.tipo_documento}/${createPersonaModel.numero_documento}/`
-      //   // );
-      //   // try {
-      //   // } catch (error) {
-      //   //   // ERROR AL CREAR PERSONAS NATURAlES
-      //   //   console.error(error);
-      //   //   // Swal.fire({
-      //   //   //   title:
-      //   //   //     'No existe un representante legal registrado con el documento ingresado',
-      //   //   //   text: '¿Quiere crear una persona natural?',
-      //   //   //   icon: 'info',
-      //   //   //   showCancelButton: true,
-      //   //   //   confirmButtonColor: '#3BA9E0',
-      //   //   //   cancelButtonColor: '#6c757d',
-      //   //   //   confirmButtonText: 'Si',
-      //   //   //   cancelButtonText: 'No',
-      //   //   // }).then((result) => {
-      //   //   //   if (result.isConfirmed) {
-      //   //   //     handleChangeTypePerson({ label: 'Natural', value: 'N' });
-      //   //   //     setFormValues({
-      //   //   //       ...formValues,
-      //   //   //       tipo_persona: { label: 'Natural', value: 'N' },
-      //   //   //     });
-      //   //   //   }
-      //   //   // });
-      //   //   set_is_saving(false);
-      //   //   return error as AxiosError;
-      //   // }
-      //   // try {
-      //   //   await clienteAxios.post('personas/persona-juridica/create/', persona);
-      //   //   // Swal.fire({
-      //   //   //   title: 'Registrado como persona juridica',
-      //   //   //   text: '¿Desea registrarse como usuario?',
-      //   //   //   icon: 'success',
-      //   //   //   showCancelButton: true,
-      //   //   //   confirmButtonColor: '#3BA9E0',
-      //   //   //   cancelButtonColor: '#6c757d',
-      //   //   //   confirmButtonText: 'Si',
-      //   //   //   cancelButtonText: 'No',
-      //   //   // }).then((result) => {
-      //   //   //   if (result.isConfirmed) {
-      //   //   //     navigate('/registeruser');
-      //   //   //   } else {
-      //   //   //     resetValues();
-      //   //   //   }
-      //   //   // });
-      //   // } catch (err: any) {
-      //   //   if (
-      //   //     err.response?.data?.email &&
-      //   //     err.response?.data?.numero_documento
-      //   //   ) {
-      //   //     // Swal.fire({
-      //   //     //   title: 'Este documento y correo ya estan relacionados',
-      //   //     //   text: '¿Desea registrarse como usuario?',
-      //   //     //   icon: 'warning',
-      //   //     //   showCancelButton: true,
-      //   //     //   confirmButtonColor: '#3BA9E0',
-      //   //     //   cancelButtonColor: '#6c757d',
-      //   //     //   confirmButtonText: 'Si',
-      //   //     //   cancelButtonText: 'No',
-      //   //     // }).then((result) => {
-      //   //     //   if (result.isConfirmed) {
-      //   //     //     navigate('/registeruser');
-      //   //     //   }
-      //   //     // });
-      //   //   } else if (err.response?.data?.non_field_errors) {
-      //   //     // Swal.fire({
-      //   //     //   title: 'Este documento ya esta relacionado',
-      //   //     //   text: '¿Desea registrarse como usuario?',
-      //   //     //   icon: 'warning',
-      //   //     //   showCancelButton: true,
-      //   //     //   confirmButtonColor: '#3BA9E0',
-      //   //     //   cancelButtonColor: '#6c757d',
-      //   //     //   confirmButtonText: 'Si',
-      //   //     //   cancelButtonText: 'No',
-      //   //     // }).then((result) => {
-      //   //     //   if (result.isConfirmed) {
-      //   //     //     navigate('/registeruser');
-      //   //     //   }
-      //   //     // });
-      //   //   } else if (err.response?.data?.numero_documento) {
-      //   //     // Swal.fire({
-      //   //     //   title: 'Este documento ya existe',
-      //   //     //   text: '¿Desea registrarse como usuario?',
-      //   //     //   icon: 'warning',
-      //   //     //   showCancelButton: true,
-      //   //     //   confirmButtonColor: '#3BA9E0',
-      //   //     //   cancelButtonColor: '#6c757d',
-      //   //     //   confirmButtonText: 'Si',
-      //   //     //   cancelButtonText: 'No',
-      //   //     // }).then((result) => {
-      //   //     //   if (result.isConfirmed) {
-      //   //     //     navigate('/registeruser');
-      //   //     //   }
-      //   //     // });
-      //   //   } else if (err.response?.data?.email) {
-      //   //     // Swal.fire({
-      //   //     //   title: 'Este correo electronico ya existe',
-      //   //     //   text: 'Verifica tus datos',
-      //   //     //   icon: 'info',
-      //   //     //   confirmButtonColor: '#3BA9E0',
-      //   //     //   cancelButtonColor: '#6c757d',
-      //   //     //   confirmButtonText: 'Aceptar',
-      //   //     // });
-      //   //   } else {
-      //   //     console.log(err);
-      //   //   }
-      //   // }
-      // }
-
-      // Creamos el usuario
-
-      // const user = {
-      //   email: createPersonaModel.email,
-      //   nombre_de_usuario: createPersonaModel.nombreDeUsuario,
-      //   persona: data.data.id_persona,
-      //   password: createPersonaModel.password,
-      //   id_usuario_creador: null,
-      //   tipo_usuario: 'E',
-      //   redirect_url: process.env.NODE_ENV === 'production' ? 'https://macareniafrontdevelop.netlify.app/#/login' : 'http://localhost:3000/#/login',
-      // };
-      // const config2 = {
-      //   headers: {
-      //     'Content-type': 'application/json',
-      //   },
-      // };
-      // await clienteAxios.post('users/register-externo/', user, config2);
-
-      // Swal.fire({
-      //   title: 'Usuario registrado correctamente',
-      //   text: 'Revise su bandeja de correo electronico para confirmar el registro',
-      //   icon: 'success',
-      //   confirmButtonColor: '#3BA9E0',
-      //   cancelButtonColor: '#6c757d',
-      //   confirmButtonText: 'Continuar',
-      // }).then((result) => {
-      //   if (result.isConfirmed) {
-      //     navigate('/login');
-      //   }
-      // });
-      // Swal.fire({
-      //   title: 'Error de registro',
-      //   text: 'Error al registrar usuario',
-      //   icon: 'error',
-      //   showCancelButton: true,
-      //   confirmButtonColor: '#3BA9E0',
-      //   cancelButtonColor: '#6c757d',
-      //   confirmButtonText: 'Si',
-      //   cancelButtonText: 'No',
-      // });
+      if (data.tipo_persona === 'N') {
+        const response = await crear_persona_natural_and_user(data_register);
+        console.log(response);
+      } else {
+        console.log('Creando persona juridica');
+      }
     } catch (error) {
       //* Manejo de errores por datos repetidos en la DB (email y numero documento)
       console.log(error);
       set_is_saving(false);
-      // Swal.fire({
-      //   title: 'Este documento y correo ya estan relacionados',
-      //   text: err.response?.data.detail,
-      //   icon: 'warning',
-      //   showCancelButton: true,
-      //   confirmButtonColor: '#3BA9E0',
-      //   cancelButtonColor: '#6c757d',
-      //   confirmButtonText: 'Si',
-      //   cancelButtonText: 'No',
-      // })
     } finally {
       set_is_saving(false);
     }
