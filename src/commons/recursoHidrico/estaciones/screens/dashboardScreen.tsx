@@ -19,9 +19,7 @@ import moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DashboardScreen: React.FC = () => {
 
-    const [selectdashboards, set_select_dashboards] = useState({
-        opc_dashboards: 0,
-    });
+    const [selectdashboards, set_select_dashboards] = useState(0);
     const {
         control,
     } = useForm();
@@ -97,31 +95,43 @@ export const DashboardScreen: React.FC = () => {
     });
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [start_date, setstartdate] = useState<Date | null>(null);
-    const [end_date, setenddate] = useState<Date | null>(null);
+    const [start_date, set_start_date] = useState<Date | null>(new Date());
+    const [end_date, set_end_date] = useState<Date | null>(new Date());
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
     const handle_start_date_change = (date: Date | null) => {
-        setstartdate(date);
+        const start_date_string = date ? date.toISOString().slice(0, 10) : '';
+        console.log(start_date_string);
+        set_start_date(date)
+        return start_date_string
     };
+
+    const handle_end_date_change = (date: Date | null) => {
+        const end_date_string = date ? date.toISOString().slice(0, 10) : '';
+        console.log(end_date_string);
+        set_end_date(date)
+        return end_date_string
+    };
+
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const handle_end_date_change = (date: Date | null) => {
-        setenddate(date);
-    };
     const get_datos_estaciones = async (): Promise<EstacionData[]> => {
+
         // primera solicitud para filtrar por fechas
-        const { data: filtered_data } = await api.get(
-            `estaciones/datos/consultar-datos-fecha/${moment(start_date).format('YYYY-MM-DD')}/${moment(end_date).format('YYYY-MM-DD')}`
-        );
-        console.log(filtered_data);
-
-        const filtereddata = filtered_data.filter((datos: EstacionData) =>
-            datos.id_estacion === selectdashboards.opc_dashboards &&
-            moment(datos.fecha_registro).isBetween(moment(start_date), moment(end_date), null, '[]')
+        const start_date_string = handle_end_date_change(start_date)
+        const end_date_string = handle_end_date_change(end_date)
+        console.log(start_date_string);
+        console.log(end_date_string);
+        const { data: { data: data_success } } = await api.get(
+            `estaciones/datos/consultar-datos-fecha/${start_date_string}/${end_date_string}`
         );
 
-        console.log(filtereddata);
+        console.log(data_success)
+
+        const filtereddata = data_success.filter((datos: EstacionData) =>
+            datos.id_estacion === selectdashboards &&
+            moment(datos.fecha_registro).isBetween(moment(start_date_string), moment(end_date_string))
+        );
 
         const formatteddata = formatdataforchart(filtereddata);
         setqueryestaciones(formatteddata);
@@ -149,8 +159,9 @@ export const DashboardScreen: React.FC = () => {
 
         const formatteddataprecipitacion = formatdataforprecipitacion(filtereddata);
         setqueryprecipitacion(formatteddataprecipitacion);
-        return (filtered_data)
+        return filtereddata();
     };
+
     const options: ChartOptions = {
         plugins: {
             title: {
@@ -176,11 +187,11 @@ export const DashboardScreen: React.FC = () => {
 
     useEffect(() => {
         void get_datos_estaciones();
-    }, [selectdashboards.opc_dashboards]);
+    }, [end_date]);
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforchart = (data: EstacionData[]) => {
-        const labels = data.map((item) => item.fecha_registro);
+        const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Presion",
             data: data.map((item) => item.presion_barometrica),
@@ -191,7 +202,7 @@ export const DashboardScreen: React.FC = () => {
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdatafortemperatura = (data: EstacionData[]) => {
-        const labels = data.map((item) => item.fecha_registro);
+        const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Temperatura",
             data: data.map((item) => item.temperatura_ambiente),
@@ -202,7 +213,7 @@ export const DashboardScreen: React.FC = () => {
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforluminosidad = (data: EstacionData[]) => {
-        const labels = data.map((item) => item.fecha_registro);
+        const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Lux",
             data: data.map((item) => item.luminosidad),
@@ -213,7 +224,7 @@ export const DashboardScreen: React.FC = () => {
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdatafornivelagua = (data: EstacionData[]) => {
-        const labels = data.map((item) => item.fecha_registro);
+        const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Nivel [m]",
             data: data.map((item) => item.nivel_agua),
@@ -224,7 +235,7 @@ export const DashboardScreen: React.FC = () => {
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforvelocidadagua = (data: EstacionData[]) => {
-        const labels = data.map((item) => item.fecha_registro);
+        const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Velocidad m/s",
             data: data.map((item) => item.velocidad_agua),
@@ -235,7 +246,7 @@ export const DashboardScreen: React.FC = () => {
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforvelocidadviento = (data: EstacionData[]) => {
-        const labels = data.map((item) => item.fecha_registro);
+        const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Velocidad viento",
             data: data.map((item) => item.Velocidad_Viento),
@@ -246,7 +257,7 @@ export const DashboardScreen: React.FC = () => {
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforhumedad = (data: EstacionData[]) => {
-        const labels = data.map((item) => item.fecha_registro);
+        const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "% Humedad",
             data: data.map((item) => item.humedad_ambiente),
@@ -257,7 +268,7 @@ export const DashboardScreen: React.FC = () => {
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatatafordireccion = (data: EstacionData[]) => {
-        const labels = data.map((item) => item.fecha_registro);
+        const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Direccion viento",
             data: data.map((item) => item.direccion_viento),
@@ -268,7 +279,7 @@ export const DashboardScreen: React.FC = () => {
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforprecipitacion = (data: EstacionData[]) => {
-        const labels = data.map((item) => item.fecha_registro);
+        const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Precipitacion",
             data: data.map((item) => item.precipitacion),
@@ -306,10 +317,7 @@ export const DashboardScreen: React.FC = () => {
                                             <Select
                                                 {...field}
                                                 onChange={(e) => {
-                                                    set_select_dashboards({
-                                                        ...selectdashboards,
-                                                        opc_dashboards: e.value,
-                                                    });
+                                                    set_select_dashboards(e.value);
                                                 }
                                                 }
                                                 options={opc_dashboards}
@@ -321,14 +329,15 @@ export const DashboardScreen: React.FC = () => {
                             </FormControl>
                         )}
                     />
-                    <Typography variant="body1" hidden={selectdashboards.opc_dashboards !== 1}>
+                    <Typography variant="body1" align="center" hidden={selectdashboards !== 1}>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
+                        <DatePicker
+                            selected={start_date}
+                            onChange={handle_start_date_change}
+                            placeholderText="Fecha inicial"
+                        />
 
                         <DatePicker
-                            selected={start_date}
-                            onChange={handle_start_date_change}
-                            placeholderText="Fecha inicial"
-                        />
-                        <DatePicker
                             selected={end_date}
                             onChange={handle_end_date_change}
                             placeholderText="Fecha Final"
@@ -344,7 +353,8 @@ export const DashboardScreen: React.FC = () => {
                         <Line data={queryvelocidadagua} options={options} />
                         <Line data={querynivelagua} options={options} />
                     </Typography>
-                    <Typography variant="body1" hidden={selectdashboards.opc_dashboards !== 2}>
+                    <Typography variant="body1" align="center" hidden={selectdashboards !== 2}>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
                         <DatePicker
                             selected={start_date}
                             onChange={handle_start_date_change}
@@ -365,7 +375,8 @@ export const DashboardScreen: React.FC = () => {
                         <Line data={queryvelocidadagua} options={options} />
                         <Line data={querynivelagua} options={options} />
                     </Typography>
-                    <Typography variant="body1" hidden={selectdashboards.opc_dashboards !== 3}>
+                    <Typography variant="body1" align="center" hidden={selectdashboards !== 3}>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
                         <DatePicker
                             selected={start_date}
                             onChange={handle_start_date_change}
@@ -386,7 +397,8 @@ export const DashboardScreen: React.FC = () => {
                         <Line data={queryvelocidadagua} options={options} />
                         <Line data={querynivelagua} options={options} />
                     </Typography>
-                    <Typography variant="body1" hidden={selectdashboards.opc_dashboards !== 4}>
+                    <Typography variant="body1" align="center" hidden={selectdashboards !== 4}>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
                         <DatePicker
                             selected={start_date}
                             onChange={handle_start_date_change}
@@ -410,6 +422,7 @@ export const DashboardScreen: React.FC = () => {
                 </Grid>
             </Grid>
         </>
+
 
     )
 }

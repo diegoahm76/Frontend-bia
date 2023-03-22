@@ -188,9 +188,9 @@ const use_editar_organigrama = () => {
             className={`${
               // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
               params.row.orden_nivel !==
-                levels_organigram[levels_organigram.length - 1].orden_nivel &&
+              levels_organigram[levels_organigram.length - 1].orden_nivel &&
               'd-none'
-            }`}
+              }`}
             style={{ border: 'none', background: 'none' }}
             type="button"
             title="Eliminar"
@@ -303,10 +303,10 @@ const use_editar_organigrama = () => {
                   label:
                     params.row.cod_agrupacion_documental != null
                       ? options_agrupacion_d.filter(
-                          (agrupacion) =>
-                            agrupacion.value ===
-                            params.row.cod_agrupacion_documental
-                        )[0].label
+                        (agrupacion) =>
+                          agrupacion.value ===
+                          params.row.cod_agrupacion_documental
+                      )[0].label
                       : '',
                   value: params.row.cod_agrupacion_documental,
                   isDisabled: false,
@@ -401,19 +401,19 @@ const use_editar_organigrama = () => {
     if (datos_unidades.nivel_unidad != null) {
       set_option_unidad_padre(
         unity_organigram.map((item) =>
-          item.id_nivel_organigrama < datos_unidades!.nivel_unidad!.value!
+          item.id_nivel_organigrama < Number(datos_unidades!.nivel_unidad!.value!)
             ? {
-                label: item.nombre,
-                value: item.codigo,
-                id_nivel_organigrama: item.id_nivel_organigrama,
-                isDisabled: false,
-              }
+              label: item.nombre,
+              value: item.codigo,
+              id_nivel_organigrama: item.id_nivel_organigrama,
+              isDisabled: false,
+            }
             : {
-                label: item.nombre,
-                value: item.codigo,
-                id_nivel_organigrama: item.id_nivel_organigrama,
-                isDisabled: true,
-              }
+              label: item.nombre,
+              value: item.codigo,
+              id_nivel_organigrama: item.id_nivel_organigrama,
+              isDisabled: true,
+            }
         )
       );
       set_value_unidades('nivelPadre', {
