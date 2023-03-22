@@ -85,11 +85,11 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
         frecuencia_alarma: data.frecuencia_alarma,
 
       };
-      await editar_conf_alarma(alerta_editado.id_persona, datos_estacion);
+      await editar_conf_alarma(alerta_editado.id_confi_alerta_persona, datos_estacion);
       set_alerta_editado(null);
       set_is_modal_active(false);
       control_success('La persona se actualizó correctamente')
-    } catch (error) {
+    } catch (error) { 
       control_error(error);
     }
   };

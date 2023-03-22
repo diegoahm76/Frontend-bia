@@ -102,6 +102,11 @@ export const crear_confi_alerta = async (configuracion: CrearAlerta): Promise<an
 };
 
 // eliminar persona
+export const eliminar_estacion = async (idEstacion: number): Promise<any> => {
+  return await api.delete(`estaciones/eliminar-estaciones/${idEstacion}`);
+};
+
+// eliminar persona
 export const eliminar_usuario = async (idPersona: number): Promise<any> => {
   return await api.delete(`estaciones/personas/eliminar-persona/${idPersona}`);
 };
@@ -112,8 +117,8 @@ export const eliminar_conf_alerta_persona = async (idconfAlerta: number): Promis
 };
 
 // editar estacion
-export const editar_estacion = async (idEstacion: number, datos_estacion: IEstacionEstaciones): Promise<any> => {
-  const response = await api.put(`estaciones/actualizar-estaciones/${idEstacion}/`, datos_estacion);
+export const editar_estacion = async (idEstaion: number, datos_estacion: IEstacionEstaciones): Promise<any> => {
+  const response = await api.put(`estaciones/actualizar-estaciones/${idEstaion}/`, datos_estacion);
   return response.data;
 };
 

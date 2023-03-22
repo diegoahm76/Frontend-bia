@@ -25,7 +25,7 @@ export const ConfiguracionAlarma: React.FC = () => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'id_confi_alerta_persona', headerName: 'NÚMERO', width: 140 },
+    { field: 'id_confi_alerta_persona', headerName: 'NÚMERO ALERTA', width: 140 },
     { field: 'nombre_variable_alarma', headerName: 'NOMBRE VARIABLE', width: 170 },
     { field: 'mensaje_alarma_minimo', headerName: 'MENSAJE MINIMO', width: 170 },
     { field: 'mensaje_no_alarma', headerName: 'MENSAJE MAXIMO', width: 170 },
