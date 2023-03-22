@@ -1,10 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
-import { OrganigramaRoutes } from '../commons/gestorDocumental/organigrama/routes/OrganigramaRoutes';
-import { CcdRoutes } from '../commons/gestorDocumental/ccd/routes/CcdRoutes';
-import { TcaRoutes } from '../commons/gestorDocumental/tca/routes/TcaRoutes';
-import { TrdRoutes } from '../commons/gestorDocumental/trd/routes/TrdRoutes';
+import { GestorDocumentalRoutes } from '../commons/gestorDocumental/routes/GestorDocumentalRoutes';
 import { MainLayout } from '../layouts/MainLayout';
 import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
 import { ConservacionRoutes } from '../commons/conservacion/routes/ConservacionRoutes';
@@ -20,19 +17,17 @@ export const ProtectedRoutes: React.FC = () => {
         <Route path="home/*" element={<HomeRoutes />} />
         {/* Seguridad */}
         <Route path="seguridad/*" element={<SeguridadRoutes />} />
-        {/* conservacion */}
-        <Route path="conservacion/*" element={<ConservacionRoutes />} />
         {/* Gestor documental */}
-        <Route path="gestor_documental/*">
-          <Route path="organigrama/*" element={<OrganigramaRoutes />} />
-          <Route path="ccd/*" element={<CcdRoutes />} />
-          <Route path="trd/*" element={<TrdRoutes />} />
-          <Route path="tca/*" element={<TcaRoutes />} />
-        </Route>
-        
-        {/* Recurso Hidrico */}        
+        <Route
+          path="gestor_documental/*"
+          element={<GestorDocumentalRoutes />}
+        />
+        {/* Almacen */}
+        <Route path="almacen/*" element={<AlmacenRoutes />} />
+        {/* Conservación */}
+        <Route path="conservacion/*" element={<ConservacionRoutes />} />
+        {/* Recurso Hidrico */}
         <Route path="recurso_hidrico/*" element={<RecursoHidricoRoutes />} />
-        
         {/* Almacen */}
         <Route path="almacen/*" element={<AlmacenRoutes />} />
         {/* Recaudo */}
