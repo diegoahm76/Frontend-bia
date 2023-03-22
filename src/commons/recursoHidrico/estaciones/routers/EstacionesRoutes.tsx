@@ -27,8 +27,10 @@ export const EstacionesRoutes: React.FC = () => {
 
       {/* Geolocalizacion Estaciones */}
       <Route path="usuarios/*" element={<UsuariosScreen />} />
+
       {/* Dashboard Estaciones */}
       <Route path="dashboard/*" element={<DashboardScreen />} />
+      
       {/* Historial */}
       <Route path="historial/*" element={<HistorialDatos />} />
 
