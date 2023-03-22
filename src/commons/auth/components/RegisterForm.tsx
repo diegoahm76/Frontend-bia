@@ -408,6 +408,7 @@ export const RegisterForm: React.FC = () => {
           <Grid item xs={12} sm={6}>
             <FormControl
               fullWidth
+              size="small"
               error={errors.tipo_persona?.type === 'required'}
             >
               {loading ? (
@@ -449,6 +450,7 @@ export const RegisterForm: React.FC = () => {
           <Grid item xs={12} sm={6}>
             <FormControl
               fullWidth
+              size="small"
               error={errors.tipo_documento?.type === 'required'}
             >
               {loading ? (
@@ -503,7 +505,7 @@ export const RegisterForm: React.FC = () => {
               </Grid>
             </>
           )}
-          {tipo_persona !== '' ? (
+          {tipo_persona !== '' && (
             <>
               {is_search ? (
                 <Grid item xs={12}>
@@ -522,6 +524,7 @@ export const RegisterForm: React.FC = () => {
                   fullWidth
                   label="Número de documento"
                   type="number"
+                  size="small"
                   inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                   error={errors.numero_documento?.type === 'required'}
                   helperText={
@@ -553,6 +556,7 @@ export const RegisterForm: React.FC = () => {
                   <Grid item xs={12} sm={6}>
                     <TextField
                       fullWidth
+                      size="small"
                       error={errors.nombre_comercial?.type === 'required'}
                       helperText={
                         errors.nombre_comercial?.type === 'required'
@@ -574,6 +578,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Primer nombre"
                   error={errors.primer_nombre?.type === 'required'}
                   value={data_register.primer_nombre}
@@ -589,6 +594,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Segundo nombre"
                   value={data_register.segundo_nombre}
                   {...register('segundo_nombre')}
@@ -599,6 +605,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Primer apellido"
                   value={data_register.primer_apellido}
                   error={errors.primer_apellido?.type === 'required'}
@@ -616,6 +623,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   value={data_register.segundo_apellido}
                   label="Segundo apellido"
                   {...register('segundo_apellido')}
@@ -633,6 +641,7 @@ export const RegisterForm: React.FC = () => {
                     renderInput={(params) => (
                       <TextField
                         fullWidth
+                        size="small"
                         {...params}
                         {...register('fecha_nacimiento', {
                           required: true,
@@ -657,6 +666,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="E-mail"
                   error={errors.email?.type === 'required' || error_email}
                   type="email"
@@ -677,6 +687,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Confirme su e-mail"
                   error={
                     errors.confirmar_email?.type === 'required' || error_email
@@ -699,6 +710,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Celular"
                   value={data_register.telefono_celular}
                   error={errors.telefono_celular?.type === 'required'}
@@ -716,6 +728,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Confirme su celular"
                   error={errors.confirmar_celular?.type === 'required'}
                   helperText={
@@ -737,6 +750,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Nombre de usuario"
                   error={errors.nombre_de_usuario?.type === 'required'}
                   helperText={
@@ -753,6 +767,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Contraseña"
                   {...register('password', {
                     required: true,
@@ -771,6 +786,7 @@ export const RegisterForm: React.FC = () => {
               <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
+                  size="small"
                   label="Repita la contraseña"
                   error={
                     errors.confirmar_password?.type === 'required' ||
@@ -804,21 +820,19 @@ export const RegisterForm: React.FC = () => {
                   </LoadingButton>
                 </Grid>
               </Grid>
-              <Grid item justifyContent="center" container>
-                <Button
-                  fullWidth
-                  sx={{ textTransform: 'none', textAlign: 'center' }}
-                  href="/auth/login"
-                >
-                  <Typography sx={{ color: 'black' }}>
-                    Iniciar sesión
-                  </Typography>
-                </Button>
-              </Grid>
             </>
-          ) : (
-            <></>
           )}
+          <Grid item justifyContent="center" container>
+            <Grid item xs={12} sm={6}>
+              <Button
+                fullWidth
+                sx={{ textTransform: 'none', textAlign: 'center' }}
+                href="#/auth/login"
+              >
+                <Typography sx={{ color: 'black' }}>Iniciar sesión</Typography>
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </form>
     </>

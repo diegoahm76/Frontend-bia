@@ -26,7 +26,7 @@ export interface ResponseAuth {
 
 export interface IUserInfo {
   userinfo: UserData;
-  permisos: Permiso[];
+  permisos: Permisos[];
   representante_legal: any[];
   user_sesion: string;
   status: 'checking' | 'not-authenticated' | 'authenticated';
@@ -34,12 +34,6 @@ export interface IUserInfo {
   open_dialog: boolean;
   entorno: 'C' | 'L';
   dialog_representante: boolean;
-}
-
-export interface Permiso {
-  id_permiso_modulo_rol: number;
-  id_rol_id: number;
-  id_permiso_modulo_id: number;
 }
 
 export interface UserData {
@@ -59,12 +53,9 @@ export interface Tokens {
 }
 
 export interface AuthHook {
-  get_permissions_by_rol: (param: number) => Promise<void>;
   set_is_captcha_valid: Dispatch<SetStateAction<boolean>>;
   set_open: Dispatch<SetStateAction<boolean>>;
   is_captcha_valid: boolean;
-  is_loading: boolean;
-  roles: UserRol[];
   open: boolean;
   reintentos?: number;
 }
@@ -155,9 +146,10 @@ export interface AuthSlice {
   auth: IUserInfo;
 }
 
-export interface Permissions {
+export interface Permisos {
   subsistema: string;
   desc_subsistema: string;
+  expanded: boolean;
   modulos: Modulo[];
 }
 
@@ -167,10 +159,10 @@ export interface Modulo {
   descripcion: string;
   ruta_formulario: string;
   nombre_icono: string;
-  permisos: Permisos;
+  permisos: Acciones;
 }
 
-export interface Permisos {
+export interface Acciones {
   actualizar?: boolean;
   consultar: boolean;
   ejecutar?: boolean;
