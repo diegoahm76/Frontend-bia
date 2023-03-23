@@ -8,6 +8,7 @@ import {
   AdministradorDeEstaciones,
   UsuariosScreen,
   DashboardScreen,
+  ReportesScreen
 } from '../screens';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -33,6 +34,9 @@ export const EstacionesRoutes: React.FC = () => {
       
       {/* Historial */}
       <Route path="historial/*" element={<HistorialDatos />} />
+
+      {/* Reportes Estaciones */}
+      <Route path="reportes/*" element={<ReportesScreen />} />
 
       <Route path="/*" element={<Page404 />} />
     </Routes>

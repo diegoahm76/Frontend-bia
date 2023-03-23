@@ -3,6 +3,7 @@ export interface Estaciones {
     fecha_modificacion: null | string,
     nombre_estacion: string,
     cod_tipo_estacion: string,
+    cod_municipio: string,
     latitud: number,
     longitud: number,
     indicaciones_ubicacion: null | string,
@@ -53,7 +54,9 @@ export interface conf_alarma {
 }
 export interface Parametros {
 
+    id_parametro_referencia: number,
     id_estacion: number,
+    fecha_modificacion: string | null,
     frecuencia_solicitud_datos: number,
     temperatura_ambiente_max: number,
     temperatura_ambiente_min: number,
