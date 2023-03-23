@@ -1,121 +1,102 @@
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+
 import AddIcon from '@mui/icons-material/Add';
-import SaveIcon from '@mui/icons-material/Save';
+
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { api } from '../../../../api/axios';
-import { Divider, Grid, Typography } from '@mui/material';
-import { control_error } from '../../../../helpers/controlError';
 
-const columns: GridColDef[] = [
-  { field: 'id_marca"', headerName: 'ID Marca', width: 200 },
-  { field: 'nombre', headerName: 'Nombre', width: 200 },
-  { field: 'acciones', headerName: 'Acciones', width: 200 },
-];
-interface Marca {
-  id_marca: number;
-  nombre: string;
-  activo: boolean;
-  item_ya_usado: boolean;
-}
+import { Box, Grid, Stack, Chip } from '@mui/material';
+import CrearMarcaModal from './modales/CrearMarcaModal';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { get_marca_service } from '../store/thunks/MarcaMedidaPorcentajeThunks';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearMarcaForm: React.FC = () => {
-  const [open, set_open] = useState(false);  
 
- const handle_click_open = (): void => {
-    set_open(true);
-  };
-  const handle_close = (): void => {
-    set_open(false);
-  };
+  const dispatch = useAppDispatch();
+  const { marca } = useAppSelector((state) => state.marca); 
+ 
+  const [add_marca_is_active, set_add_marca_is_active] =
+  useState<boolean>(false);
+const columns: GridColDef[] = [
+  { field: 'id_marca', headerName: 'ID', width: 200 },
+  { field: 'nombre', headerName: 'Nombre', width: 200 },
+  {field: 'activo', headerName: '¿Activo?', width: 100,
+    renderCell: (params) => {
+      return params.row.activo === true ? (
+        <Chip size="small" label="Sí" color="success" variant="outlined" />
+      ) : (
+        <Chip size="small" label="No" color="error" variant="outlined" />
+      );
+    },
+  },
+  {
+    field: 'item_ya_usado',
+    headerName: '¿Usado?',
+    width: 100,
+    renderCell: (params) => {
+      return params.row.item_ya_usado === true ? (
+        <Chip size="small" label="Sí" color="success" variant="outlined" />
+      ) : (
+        <Chip size="small" label="No" color="error" variant="outlined" />
+      );
+    },
+  },
+  { field: 'acciones', headerName: 'Acciones', width: 200 },
 
-  const [marc, set_data_marca] = useState([]);
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const marca = async () => {
-    try {
-      const url = 'almacen/marcas/get-list/';
-      const response = await api.get(url);
-      const marca = response.data.map((marcas: Marca) => ({
-        id_marca: marcas.id_marca,
-        nombre: marcas.nombre,
-        activo: marcas.activo,
-      }));
-      set_data_marca(marca);
-    } catch (e) {
-      console.log(e);
-      control_error(e);
-    }
-  };
+];
   useEffect(() => {
-    void marca();
+    void dispatch(get_marca_service());
   }, []);
+ 
 
   return (
-    <Grid container>
-      <Grid item xs={12}>
-        <Button
-          sx={{ mb: '20px' }}
-          variant="outlined"
-          onClick={handle_click_open}
-          startIcon={<AddIcon />}
-        >
-          Crear
-        </Button>
-        <Dialog open={open} onClose={handle_close}>          
-            <DialogTitle>CREAR MARCA</DialogTitle>
-            <Divider />
-            <DialogContent>
-              <DialogContentText>
-                Ingrese la marca que desea Crear
-              </DialogContentText>
-              <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Marca"
-              type="Any"
-              fullWidth
-              variant="standard"
-            />
-             </DialogContent>
-            <Divider />
-            <DialogActions>
-              <Button variant="outlined" onClick={handle_close}>
-                Cerrar
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                startIcon={<SaveIcon />}
-              >
-                Guardar
-              </Button>
-            </DialogActions>
-          
-        </Dialog>
+    <>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+        
+          <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={() => {
+                set_add_marca_is_active(true);
+              }}
+            >
+              CREAR MARCA
+            </Button>
+          </Stack>
+          <Grid item>
+            <Box sx={{ width: '100%' }}>
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={marca}
+                columns={columns}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => row.id_marca}
+              />
+            </Box>
+          </Grid>
+           <CrearMarcaModal
+            is_modal_active={add_marca_is_active}
+            set_is_modal_active={set_add_marca_is_active}
+          /> 
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        {marc.length > 0 ? (
-          <DataGrid
-            autoHeight
-            rows={marc}
-            columns={columns}
-            getRowId={(row) => row.id_marca}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-          />
-        ) : (
-          <Typography>Cargando...</Typography>
-        )}
-      </Grid>
-    </Grid>
+    </>
   );
 };

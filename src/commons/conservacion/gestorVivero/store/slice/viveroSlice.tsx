@@ -1,15 +1,14 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
     type IObjNursery,
-    type INursery,
-    type IList,
+    type INursery
   } from '../../interfaces/vivero';
 
-  const initial_state_current_nursery = {
+const initial_state_current_nursery = {
   id_vivero: null,
-  nombre: "",
-  cod_municipio: "",
-  direccion: "",
+  nombre: '',
+  cod_municipio: '',
+  direccion: '',
   area_mt2: null,
   area_propagacion_mt2: null,
   tiene_area_produccion: false,
@@ -21,7 +20,7 @@ import {
   fecha_creacion: null,
   en_funcionamiento: true,
   fecha_ultima_apertura: null,
-  justificacion_apertura: "",
+  justificacion_apertura: '',
   fecha_cierre_actual: null,
   justificacion_cierre: null,
   vivero_en_cuarentena: false,
@@ -34,34 +33,23 @@ import {
   id_persona_crea: null,
   id_persona_abre: null,
   id_persona_cierra: null,
-  id_persona_cuarentena: null
+  id_persona_cuarentena: null,
 };
 
 const initial_state: INursery = {
-    nurseries: [],
-    current_nursery: initial_state_current_nursery,
-  };
-  export const nursery_slice = createSlice({
-    name: 'nursery',
-    initialState: initial_state,
-    reducers: {
-    
-      get_nurseries: (
-        state: INursery,
-        action: PayloadAction<IObjNursery[]>
-      ) => {
-        state.nurseries = action.payload;
-      },
-      current_nursery: (
-        state: INursery,
-        action: PayloadAction<IObjNursery>
-      ) => {
-        state.current_nursery = action.payload;
-      },
+  nurseries: [],
+  current_nursery: initial_state_current_nursery,
+};
+export const nursery_slice = createSlice({
+  name: 'nursery',
+  initialState: initial_state,
+  reducers: {
+    get_nurseries: (state: INursery, action: PayloadAction<IObjNursery[]>) => {
+      state.nurseries = action.payload;
     },
-  });
-  export const {
-    get_nurseries,
-    current_nursery,
-  } = nursery_slice.actions;
-  
+    current_nursery: (state: INursery, action: PayloadAction<IObjNursery>) => {
+      state.current_nursery = action.payload;
+    },
+  },
+});
+export const { get_nurseries, current_nursery } = nursery_slice.actions;
