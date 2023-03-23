@@ -46,6 +46,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
     }
     const {
         register,
+        reset,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         handleSubmit,
         formState: { errors },
@@ -53,26 +54,26 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
 
     const on_sumbit_alerta: SubmitHandler<FieldValues> = (data): void => {
         const nueva_alerta = {
-          nombre_variable_alarma: data.nombre_variable_alarma,
-          mensaje_alarma_maximo: data.mensaje_alarma_maximo,
-          mensaje_alarma_minimo: data.mensaje_alarma_minimo,
-          mensaje_no_alarma: data.mensaje_no_alarma,
-          frecuencia_alarma: data.frecuencia_alarma,
+            nombre_variable_alarma: data.nombre_variable_alarma,
+            mensaje_alarma_maximo: data.mensaje_alarma_maximo,
+            mensaje_alarma_minimo: data.mensaje_alarma_minimo,
+            mensaje_no_alarma: data.mensaje_no_alarma,
+            frecuencia_alarma: data.frecuencia_alarma,
         };
-      
+
         const variable_seleccionada = data.nombre_variable_alarma;
         const alerta_existente = conf_alert_person.find(
-          (alert: conf_alarma) => alert.nombre_variable_alarma === variable_seleccionada
+            (alert: conf_alarma) => alert.nombre_variable_alarma === variable_seleccionada
         );
-      
+
         if (alerta_existente != null) {
             control_success_fail('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
         } else {
-          void crear_confi_alerta(nueva_alerta);
-          set_is_modal_active(!is_modal_active);
+            void crear_confi_alerta(nueva_alerta);
+            set_is_modal_active(!is_modal_active);
         }
-      }
-      
+    }
+
     const tipo_estacion = [
         {
             value: 'TMP',
@@ -198,7 +199,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handle_close}>Cancelar</Button>
+                    <Button onClick={() => { reset(); handle_close(); }}>Cancelar</Button>
                     <Button variant="contained" color="primary" onClick={handleSubmit(on_sumbit_alerta)}>Guardar</Button>
                 </DialogActions>
             </Box>

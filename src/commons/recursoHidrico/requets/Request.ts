@@ -46,7 +46,6 @@ export const llamar_alertas = async () => {
   }
 };
 
-
 // consultar estaciones
 export const consultar_estaciones = async (): Promise<Estaciones[]> => {
   const { data } = await api.get<ResponseServer<Estaciones[]>>('estaciones/consultar-estaciones/');
@@ -57,6 +56,17 @@ export const consultar_estaciones = async (): Promise<Estaciones[]> => {
 export const consultar_datos = async (): Promise<Datos[]> => {
   const { data } = await api.get<ResponseServer<Datos[]>>('estaciones/datos/consultar-datos-opt/');
   return data.data
+}
+// consultar datos por id estación
+export const consultar_datos_id = async (id: number | string): Promise<Datos> => {
+  const { data } = await api.get<ResponseServer<Datos>>(`estaciones/datos/consultar-datos-id/${id}/`);
+  return data.data;
+}
+
+// consultar datos por fecha
+export const consultar_datos_fecha = async (fecha_inicial: string, fecha_final: string): Promise<Datos> => {
+  const { data } = await api.get<ResponseServer<Datos>>(`estaciones/datos/consultar-datos-fecha/${fecha_inicial}/${fecha_final}/`);
+  return data.data;
 }
 
 // consultar configuracion alerta personas
