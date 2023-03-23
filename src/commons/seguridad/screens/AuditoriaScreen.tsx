@@ -156,12 +156,22 @@ const AuditoriaScreen = (): JSX.Element => {
     new_date_fin: string
   ) => {
     try {
+      console.log({
+        new_date_ini,
+        new_date_fin,
+        tipo_documento,
+        numero_documento,
+        subsistema,
+        modulo,
+      });
       const { data } = await api.get(
         `auditorias/get-by-query-params/?rango-inicial-fecha=${new_date_ini}&rango-final-fecha=${new_date_fin}&tipo-documento=${tipo_documento.value}&numero-documento=${numero_documento}&modulo=${modulo.value}&subsistema=${subsistema.value}`
       );
+      console.log(data);
       set_auditorias(data.detail);
       void Swal.fire('Correcto', 'Proceso Exitoso', 'success');
     } catch (error: any) {
+      console.log(error);
       void notification_error(error.response.data.detail);
     }
   };
@@ -252,20 +262,20 @@ const AuditoriaScreen = (): JSX.Element => {
                   name="rango_inicial_fecha"
                   control={control}
                   render={({ field }) => (
-                    // <DatePicker
-                    //   {...field}
-                    //   locale="es"
-                    //   showYearDropdown
-                    //   peekNextMonth
-                    //   showMonthDropdown
-                    //   dropdownMode="select"
-                    //   scrollableYearDropdown
-                    //   autoComplete="off"
-                    //   selected={data_screen?.rango_inicial_fecha}
-                    //   className="form-control border border-terciary rounded-pill px-3"
-                    //   maxDate={new Date()}
-                    //   dateFormat="yyyy-MM-dd"
-                    // />
+                    <DatePicker
+                      {...field}
+                      locale="es"
+                      showYearDropdown
+                      peekNextMonth
+                      showMonthDropdown
+                      dropdownMode="select"
+                      scrollableYearDropdown
+                      autoComplete="off"
+                      selected={data_screen?.rango_inicial_fecha}
+                      className="form-control border border-terciary rounded-pill px-3"
+                      maxDate={new Date()}
+                      dateFormat="yyyy-MM-dd"
+                    />
                   )}
                 /> */}
                 {data_screen.rango_inicial_fecha >
@@ -302,20 +312,20 @@ const AuditoriaScreen = (): JSX.Element => {
                   name="rango_final_fecha"
                   control={control}
                   render={({ field }) => (
-                    // <DatePicker
-                    //   {...field}
-                    //   locale="es"
-                    //   showYearDropdown
-                    //   peekNextMonth
-                    //   showMonthDropdown
-                    //   dropdownMode="select"
-                    //   scrollableYearDropdown
-                    //   autoComplete="off"
-                    //   selected={data_screen.rango_final_fecha}
-                    //   className="form-control border border-terciary rounded-pill px-3"
-                    //   maxDate={new Date()}
-                    //   dateFormat="yyyy-MM-dd"
-                    // />
+                    <DatePicker
+                      {...field}
+                      locale="es"
+                      showYearDropdown
+                      peekNextMonth
+                      showMonthDropdown
+                      dropdownMode="select"
+                      scrollableYearDropdown
+                      autoComplete="off"
+                      selected={data_screen.rango_final_fecha}
+                      className="form-control border border-terciary rounded-pill px-3"
+                      maxDate={new Date()}
+                      dateFormat="yyyy-MM-dd"
+                    />
                   )}
                 /> */}
                 {data_screen.rango_inicial_fecha >
