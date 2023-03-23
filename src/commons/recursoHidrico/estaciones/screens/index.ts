@@ -3,7 +3,7 @@ export * from './UsuariosScreen';
 export * from './AlertasScreen';
 export * from './AdministradorDeEstaciones';
 export * from './ReportesScreen'
-export * from './GeolocalizacionScreen';
-export * from './DashboardScreen';
+export * from './geolocalizacionScreen'
+export * from './dashboardScreen'
 
 
