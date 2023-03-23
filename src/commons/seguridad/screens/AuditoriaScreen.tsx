@@ -1,19 +1,14 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
-import {
-  Grid,
-  Box,
-  Typography,
-  Stack,
-  Button,
-  TextField,
-  // TextFieldProps,
-} from '@mui/material';
+import { Grid, Box, Typography, Stack, Button, TextField } from '@mui/material';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
 import Select, { type SingleValue } from 'react-select';
-// import DatePicker from 'react-datepicker';
-// import DatePicker1 from '@mui/x-date-pickers/DatePicker';
+import { type Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import Swal from 'sweetalert2';
 // Components
@@ -24,7 +19,6 @@ import {
   adapter_subsistemas_choices,
 } from '../../auth/adapters/auditorias.adapters';
 import { text_choise_adapter } from '../../auth/adapters/textChoices.adapter';
-import { set_dates_format_revere } from '../adapters/set_date.adapters';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 
 const columns: GridColDef[] = [
@@ -71,8 +65,8 @@ const columns: GridColDef[] = [
 ];
 
 interface IFormValues {
-  rango_inicial_fecha: string | Date;
-  rango_final_fecha: string | Date;
+  rango_inicial_fecha: Dayjs | string | null;
+  rango_final_fecha: Dayjs | string | null;
   rango_actual_fecha: string | Date;
   numero_documento: string;
   tipo_documento: IList;
@@ -88,6 +82,13 @@ export interface IList {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const AuditoriaScreen = (): JSX.Element => {
+  const [rango_inicial_fecha, set_rango_inicial_fecha] = React.useState<
+    Dayjs | string | null
+  >(null);
+
+  const [rango_final_fecha, set_rango_final_fecha] = React.useState<
+    Dayjs | string | null
+  >(null);
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const notification_error = async (message = 'Algo pasó, intente de nuevo') =>
     await Swal.mixin({
@@ -99,16 +100,16 @@ const AuditoriaScreen = (): JSX.Element => {
     }).fire();
 
   const [auditorias, set_auditorias] = useState([]);
-  const [subsistemas_options, set_subsistemas_options] = useState<any>([]);
-  const [tipo_documento_options, set_tipo_documento_options] = useState<any>(
-    []
-  );
-  const [modulos_options, set_modulos_options] = useState<any>([]);
+  const [subsistemas_options, set_subsistemas_options] = useState<IList[]>([]);
+  const [tipo_documento_options, set_tipo_documento_options] = useState<
+    IList[]
+  >([]);
+  const [modulos_options, set_modulos_options] = useState<IList[]>([]);
 
   // inicializar valores del formulario
   const form_values: IFormValues = {
-    rango_inicial_fecha: new Date(),
-    rango_final_fecha: new Date(),
+    rango_inicial_fecha,
+    rango_final_fecha,
     rango_actual_fecha: new Date(),
     numero_documento: '',
     tipo_documento: {
@@ -130,41 +131,30 @@ const AuditoriaScreen = (): JSX.Element => {
     register,
     handleSubmit: handle_submit,
     control,
-    watch,
     setValue: set_value,
     reset,
     formState: { errors },
   } = useForm({ defaultValues: form_values });
 
-  const data_screen: any = watch();
+  // const data_screen: any = watch();
 
   const on_submit: SubmitHandler<IFormValues> = async (data: IFormValues) => {
-    const new_date_ini = set_dates_format_revere(
-      data.rango_inicial_fecha.toLocaleString()
-    );
-    const new_date_fin = set_dates_format_revere(
-      data.rango_final_fecha.toLocaleString()
-    );
-
-    void query_auditorias(data, new_date_ini, new_date_fin);
+    void query_auditorias(data, rango_inicial_fecha, rango_inicial_fecha);
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const query_auditorias = async (
     { tipo_documento, numero_documento, subsistema, modulo }: IFormValues,
-    new_date_ini: string,
-    new_date_fin: string
+    new_date_ini: Dayjs | string | null,
+    new_date_fin: Dayjs | string | null
   ) => {
     try {
       console.log({
-        new_date_ini,
-        new_date_fin,
-        tipo_documento,
-        numero_documento,
-        subsistema,
-        modulo,
+        form_values,
       });
+
       const { data } = await api.get(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `auditorias/get-by-query-params/?rango-inicial-fecha=${new_date_ini}&rango-final-fecha=${new_date_fin}&tipo-documento=${tipo_documento.value}&numero-documento=${numero_documento}&modulo=${modulo.value}&subsistema=${subsistema.value}`
       );
       console.log(data);
@@ -203,6 +193,14 @@ const AuditoriaScreen = (): JSX.Element => {
     void get_info();
   }, []);
 
+  const handle_date_ini_change = (date: Dayjs | string | null): void => {
+    set_rango_inicial_fecha(dayjs(date).format('YYYY-MM-DD'));
+  };
+
+  const handle_date_fin_change = (date: Dayjs | string | null): void => {
+    set_rango_final_fecha(dayjs(date).format('YYYY-MM-DD'));
+  };
+
   return (
     <>
       <Grid
@@ -228,138 +226,40 @@ const AuditoriaScreen = (): JSX.Element => {
             sx={{ mt: '20px' }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
-                {/* <DatePicker1
-                  label="Fecha de nacimiento"
-                  // value={fecha_nacimiento}
-                  // onChange={(newValue) => {
-                  //   set_fecha_nacimiento(newValue);
-                  // }}
-                  renderInput={(
-                    params: JSX.IntrinsicAttributes & TextFieldProps
-                  ) => (
-                    <TextField
-                      fullWidth
-                      size="small"
-                      {...params}
-                      {...register('rango_inicial_fecha', {
-                        required: true,
-                      })}
-                      // onChange={handle_change}
-                      // error={errors.fecha_nacimiento?.type === 'required'}
-                      // helperText={
-                      //   errors.fecha_nacimiento?.type === 'required'
-                      //     ? 'Este campo es obligatorio'
-                      //     : ''
-                      // }
-                    />
-                  )}
-                /> */}
-                <label htmlFor="exampleFormControlInput1">
-                  Fecha de inicio: <span className="text-danger">*</span>
-                </label>
-                {/* <Controller
-                  name="rango_inicial_fecha"
-                  control={control}
-                  render={({ field }) => (
-                    <DatePicker
-                      {...field}
-                      locale="es"
-                      showYearDropdown
-                      peekNextMonth
-                      showMonthDropdown
-                      dropdownMode="select"
-                      scrollableYearDropdown
-                      autoComplete="off"
-                      selected={data_screen?.rango_inicial_fecha}
-                      className="form-control border border-terciary rounded-pill px-3"
-                      maxDate={new Date()}
-                      dateFormat="yyyy-MM-dd"
-                    />
-                  )}
-                /> */}
-                {data_screen.rango_inicial_fecha >
-                data_screen.rango_actual_fecha ? (
-                  <small className="text-center text-danger">
-                    No puede ser mayor que la fecha actual
-                  </small>
-                ) : (
-                  ''
-                )}
-                {errors.rango_inicial_fecha != null && (
-                  <p className="text-danger">Este campo es obligatorio</p>
-                )}
-                {errors.rango_inicial_fecha != null && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      Este campo es obligatorio
-                    </small>
-                  </div>
-                )}
-                {errors.rango_inicial_fecha?.type === 'fechaCorrecta' && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      No puede ser mayor que la fecha actual
-                    </small>
-                  </div>
-                )}
+              <Grid item xs={6}>
+                <Typography> Busqueda por fecha:</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography> Busqueda por Subsistema/Módulo:</Typography>
               </Grid>
               <Grid item xs={12} sm={3}>
-                <label htmlFor="exampleFormControlInput1">
-                  Fecha fin: <span className="text-danger">*</span>
-                </label>
-                {/* <Controller
-                  name="rango_final_fecha"
-                  control={control}
-                  render={({ field }) => (
-                    <DatePicker
-                      {...field}
-                      locale="es"
-                      showYearDropdown
-                      peekNextMonth
-                      showMonthDropdown
-                      dropdownMode="select"
-                      scrollableYearDropdown
-                      autoComplete="off"
-                      selected={data_screen.rango_final_fecha}
-                      className="form-control border border-terciary rounded-pill px-3"
-                      maxDate={new Date()}
-                      dateFormat="yyyy-MM-dd"
-                    />
-                  )}
-                /> */}
-                {data_screen.rango_inicial_fecha >
-                data_screen.rango_final_fecha ? (
-                  <small className="text-center text-danger">
-                    Seleccione una fecha posterior a fecha inicio
-                  </small>
-                ) : (
-                  ''
-                )}
-                {errors.rango_final_fecha != null && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      Este campo es obligatorio
-                    </small>
-                  </div>
-                )}
-                {errors.rango_final_fecha?.type === 'fechaPosterior' && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      Seleccione una fecha igual o posterior a fecha inicio
-                    </small>
-                  </div>
-                )}
-                {errors.rango_final_fecha?.type === 'fechaLimite' && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      No puede haber más de 8 días
-                    </small>
-                  </div>
-                )}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Seleccione una fecha inicial"
+                    value={rango_inicial_fecha}
+                    onChange={handle_date_ini_change}
+                    inputFormat="DD/MM/YYYY"
+                    renderInput={(params) => (
+                      <TextField fullWidth size="small" {...params} />
+                    )}
+                  />
+                </LocalizationProvider>
               </Grid>
               <Grid item xs={12} sm={3}>
-                <label className="form-label">Subsistema:</label>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Seleccione una fecha final"
+                    value={rango_final_fecha}
+                    onChange={handle_date_fin_change}
+                    inputFormat="DD/MM/YYYY"
+                    renderInput={(params) => (
+                      <TextField fullWidth size="small" {...params} />
+                    )}
+                  />
+                </LocalizationProvider>
+              </Grid>
+
+              <Grid item xs={12} sm={3}>
                 <Controller
                   name="subsistema"
                   control={control}
@@ -385,7 +285,36 @@ const AuditoriaScreen = (): JSX.Element => {
                 )}
               </Grid>
               <Grid item xs={12} sm={3}>
-                <label className="form-label">Tipo documento:</label>
+                <Controller
+                  name="modulo"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      value={field.value}
+                      onChange={(option: SingleValue<IList>) => {
+                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                        set_value('modulo', option!);
+                      }}
+                      options={modulos_options}
+                      placeholder="Seleccionar"
+                    />
+                  )}
+                />
+                {errors.modulo !== null && (
+                  <div className="col-12">
+                    <small className="text-center text-danger">
+                      Este campo es obligatorio
+                    </small>
+                  </div>
+                )}
+              </Grid>
+            </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <Typography> Busqueda por documento:</Typography>
+              </Grid>
+              <Grid item xs={12} sm={3}>
                 <Controller
                   name="tipo_documento"
                   control={control}
@@ -412,32 +341,6 @@ const AuditoriaScreen = (): JSX.Element => {
                 )}
               </Grid>
               <Grid item xs={12} sm={3}>
-                <label className="form-label">Madulo:</label>
-                <Controller
-                  name="modulo"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      {...field}
-                      value={field.value}
-                      onChange={(option: SingleValue<IList>) => {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        set_value('modulo', option!);
-                      }}
-                      options={modulos_options}
-                      placeholder="Seleccionar"
-                    />
-                  )}
-                />
-                {errors.modulo !== null && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      Este campo es obligatorio
-                    </small>
-                  </div>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={3}>
                 <TextField
                   margin="dense"
                   variant="outlined"
@@ -455,30 +358,32 @@ const AuditoriaScreen = (): JSX.Element => {
                   {...register('numero_documento', { required: false })}
                 />
               </Grid>
-              <Stack
-                direction="row"
-                spacing={2}
-                sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-              >
-                <Button
-                  type="button"
-                  variant="outlined"
-                  startIcon={<CleanIcon />}
-                  onClick={() => {
-                    reset(form_values);
-                  }}
-                >
-                  LIMPIAR
-                </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  startIcon={<SearchIcon />}
-                >
-                  BUSCAR
-                </Button>
-              </Stack>
             </Grid>
+            <Stack
+              direction="row"
+              spacing={2}
+              justifyContent="flex-end"
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                type="button"
+                variant="outlined"
+                startIcon={<CleanIcon />}
+                onClick={() => {
+                  reset(form_values);
+                }}
+              >
+                LIMPIAR
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                startIcon={<SearchIcon />}
+              >
+                BUSCAR
+              </Button>
+            </Stack>
+
             <DataGrid
               density="compact"
               autoHeight
@@ -487,6 +392,7 @@ const AuditoriaScreen = (): JSX.Element => {
               rows={auditorias}
               pageSize={10}
               rowsPerPageOptions={[10]}
+              getRowId={(row) => row.id_auditoria}
             ></DataGrid>
           </Box>
         </Box>
