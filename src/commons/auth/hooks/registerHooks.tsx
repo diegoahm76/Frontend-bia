@@ -9,7 +9,7 @@ import type {
   Departamentos,
   Municipios,
 } from '../../../interfaces/globalModels';
-import type { IPerson, ReisterHook } from '../interfaces';
+import type { IPerson, keys_object, ReisterHook } from '../interfaces';
 import dayjs, { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import {
@@ -25,79 +25,100 @@ import {
 export const use_register = (): ReisterHook => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { setValue } = useForm();
-  const [loading, set_loading] = useState<boolean>(false);
-  const [tipo_documento_opt, set_tipo_documento_opt] = useState<
-    TipoDocumento[]
+  const [ciudad_expedicion, set_ciudad_expedicion] = useState('');
+  const [ciudad_notificacion_opt, set_ciudad_notificacion_opt] = useState<
+    Municipios[]
   >([]);
-  const [paises_options, set_paises_options] = useState<Paises[]>([]);
-  const [tipo_persona_opt, set_tipo_persona_opt] = useState<TipoPersona[]>([]);
+  const [ciudad_notificacion, set_ciudad_notificacion] = useState('');
+  const [ciudad_residencia, set_ciudad_residencia] = useState('');
+  const [ciudades_opt, set_ciudades_opt] = useState<Municipios[]>([]);
+  const [ciudades_residencia_opt, set_ciudades_residencia_opt] = useState<
+    Municipios[]
+  >([]);
+  const [departamento_expedicion, set_departamento] = useState('');
+  const [departamento_residencia, set_dpto_residencia] = useState('');
   const [departamentos_opt, set_departamentos_opt] = useState<Departamentos[]>(
     []
   );
-  const [ciudades_opt, set_ciudades_opt] = useState<Municipios[]>([]);
-  const [departamento_expedicion, set_departamento] = useState('');
-  const [ciudad_expedicion, set_ciudad_expedicion] = useState('');
-  const [estado_civil, set_estado_civil] = useState('');
-  const [genero_opt, set_genero_opt] = useState<IList[]>([]);
-  const [estado_civil_opt, set_estado_civil_opt] = useState<IList[]>([]);
-  const [requiere_nombre_comercial, set_requiere_nombre_comercial] =
-    useState(false);
-  const [tipo_persona, set_tipo_persona] = useState('');
-  const [genero, set_genero] = useState('');
-  const [pais_nacimiento, set_pais_nacimiento] = useState('');
-  const [tipo_documento, set_tipo_documento] = useState('');
-  const [show_password, set_show_password] = useState(false);
-  const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
+  const [dpto_notifiacion_opt, set_dpto_notifiacion_opt] = useState<
+    Departamentos[]
+  >([]);
+  const [dpto_notifiacion, set_dpto_notifiacion] = useState('');
+  const [dpts_residencia_opt, set_dpto_residencia_opt] = useState<
+    Departamentos[]
+  >([]);
   const [error_email, set_error_email] = useState(false);
-  const [error_phone, set_error_error_phone] = useState(false);
   const [error_password, set_error_password] = useState(false);
+  const [error_phone, set_error_error_phone] = useState(false);
+  const [estado_civil_opt, set_estado_civil_opt] = useState<IList[]>([]);
+  const [estado_civil, set_estado_civil] = useState('');
+  const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
+  const [genero_opt, set_genero_opt] = useState<IList[]>([]);
+  const [genero, set_genero] = useState('');
+  const [has_user, set_has_user] = useState(false);
+  const [is_exists, set_is_exists] = useState(false);
   const [is_saving, set_is_saving] = useState(false);
   const [is_search, set_is_search] = useState(false);
-  const [is_exists, set_is_exists] = useState(false);
-  const [has_user, set_has_user] = useState(false);
+  const [loading, set_loading] = useState<boolean>(false);
   const [message_error_password, set_message_error_password] = useState('');
+  const [pais_nacimiento, set_pais_nacimiento] = useState('');
+  const [pais_notificacion, set_pais_notificacion] = useState('');
+  const [pais_residencia, set_pais_residencia] = useState('');
+  const [paises_options, set_paises_options] = useState<Paises[]>([]);
+  const [requiere_nombre_comercial, set_requiere_nombre_comercial] =
+    useState(false);
+  const [show_password, set_show_password] = useState(false);
+  const [tipo_documento_opt, set_tipo_documento_opt] = useState<
+    TipoDocumento[]
+  >([]);
+  const [tipo_documento, set_tipo_documento] = useState('');
+  const [tipo_persona_opt, set_tipo_persona_opt] = useState<TipoPersona[]>([]);
+  const [tipo_persona, set_tipo_persona] = useState('');
   const [data_register, set_data_register] = useState<IPerson>({
-    tipo_persona: '',
-    tipo_documento: '',
-    numero_documento: '',
-    digito_verificacion: '',
-    nombre_comercial: '',
-    primer_nombre: '',
-    segundo_nombre: '',
-    primer_apellido: '',
-    segundo_apellido: '',
-    fecha_nacimiento: '',
-    email: '',
-    telefono_celular: '',
-    ubicacion_georeferenciada: '',
-    razon_social: '',
-    telefono_celular_empresa: '',
-    direccion_notificaciones: '',
-    representante_legal: '',
+    acepta_notificacion_email: false,
+    acepta_notificacion_sms: false,
+    acepta_tratamiento_datos: false,
+    ciudad_expedicion: '',
+    cod_municipio_laboral_nal: '',
+    cod_municipio_notificacion_nal: '',
     confirmar_celular: '',
     confirmar_email: '',
-    cod_municipio_notificacion_nal: '',
-    departamento_nacimiento: '',
     departamento_expedicion: '',
-    ciudad_expedicion: '',
-    require_nombre_comercial: false,
-    telefono_empresa_2: '',
-    sexo: '',
-    estado_civil: '',
-    pais_nacimiento: '',
-    email_empresarial: '',
-    telefono_fijo_residencial: '',
-    pais_residencia: '',
-    municipio_residencia: '',
-    direccion_residencia: '',
+    departamento_nacimiento: '',
+    departamento_residencia: '',
+    digito_verificacion: '',
     direccion_laboral: '',
+    direccion_notificaciones: '',
     direccion_residencia_ref: '',
-    cod_municipio_laboral_nal: '',
-    acepta_notificacion_sms: false,
-    acepta_notificacion_email: false,
-    acepta_tratamiento_datos: false,
+    direccion_residencia: '',
+    email_empresarial: '',
+    email: '',
+    estado_civil: '',
+    fecha_nacimiento: '',
+    municipio_residencia: '',
+    dpto_notifiacion: '',
+    nombre_comercial: '',
     nombre_de_usuario: '',
+    numero_documento: '',
+    pais_nacimiento: '',
+    pais_residencia: '',
+    pais_notificacion: '',
     password: '',
+    primer_apellido: '',
+    primer_nombre: '',
+    razon_social: '',
+    representante_legal: '',
+    require_nombre_comercial: false,
+    segundo_apellido: '',
+    segundo_nombre: '',
+    sexo: '',
+    telefono_celular_empresa: '',
+    telefono_celular: '',
+    telefono_empresa_2: '',
+    telefono_fijo_residencial: '',
+    tipo_documento: '',
+    tipo_persona: '',
+    ubicacion_georeferenciada: '',
   });
 
   const handle_change_checkbox = (
@@ -161,6 +182,10 @@ export const use_register = (): ReisterHook => {
       if (data !== null && data.numero_documento !== '') {
         if (!data.tiene_usuario) {
           set_data_register({ ...data });
+          for (const key in data) {
+            const temp_key = key as keys_object;
+            setValue(key, data[temp_key]);
+          }
           setValue('numero_documento', data.numero_documento);
           setValue('digito_verificacion', data.digito_verificacion);
           setValue('nombre_comercial', data.nombre_comercial);
@@ -212,7 +237,7 @@ export const use_register = (): ReisterHook => {
     }
   };
 
-  // Obtiene los departamentos acorde al pais
+  // Obtiene los departamentos por pais para el select lugar expedición
   const get_departamentos_por_pais = async (): Promise<void> => {
     set_loading(true);
     try {
@@ -232,6 +257,46 @@ export const use_register = (): ReisterHook => {
   }, [pais_nacimiento]);
 
   useEffect(() => {
+    get_departamentos(pais_residencia)
+      .then(({ data: { data } }) => {
+        set_dpto_residencia_opt(data);
+      })
+      .catch((err) => {
+        control_error(err);
+      });
+  }, [pais_residencia]);
+
+  useEffect(() => {
+    get_ciudades(departamento_residencia)
+      .then(({ data: { data } }) => {
+        set_ciudades_residencia_opt(data);
+      })
+      .catch((err) => {
+        control_error(err);
+      });
+  }, [departamento_residencia]);
+
+  useEffect(() => {
+    get_departamentos(pais_notificacion)
+      .then(({ data: { data } }) => {
+        set_dpto_notifiacion_opt(data);
+      })
+      .catch((err) => {
+        control_error(err);
+      });
+  }, [pais_notificacion]);
+
+  useEffect(() => {
+    get_ciudades(dpto_notifiacion)
+      .then(({ data: { data } }) => {
+        set_ciudad_notificacion_opt(data);
+      })
+      .catch((err) => {
+        control_error(err);
+      });
+  }, [dpto_notifiacion]);
+
+  useEffect(() => {
     void get_ciudades_opt();
   }, [departamento_expedicion]);
 
@@ -240,59 +305,79 @@ export const use_register = (): ReisterHook => {
   }, []);
 
   return {
-    requiere_nombre_comercial,
-    paises_options,
-    tipo_documento_opt,
-    tipo_persona_opt,
-    loading,
-    tipo_persona,
-    tipo_documento,
-    show_password,
-    fecha_nacimiento,
+    ciudad_expedicion,
+    ciudad_notificacion_opt,
+    ciudad_notificacion,
+    ciudad_residencia,
+    ciudades_opt,
+    ciudades_residencia_opt,
+    data_register,
+    departamento_expedicion,
+    departamento_residencia,
+    departamentos_opt,
+    dpto_notifiacion_opt,
+    dpto_notifiacion,
+    dpts_residencia_opt,
     error_email,
     error_password,
-    is_saving,
-    is_search,
-    is_exists,
-    message_error_password,
-    data_register,
     error_phone,
-    has_user,
-    pais_nacimiento,
+    estado_civil_opt,
+    estado_civil,
+    fecha_nacimiento,
     genero_opt,
     genero,
-    estado_civil_opt,
-    departamentos_opt,
-    departamento_expedicion,
-    ciudades_opt,
-    ciudad_expedicion,
-    estado_civil,
-    set_estado_civil,
+    has_user,
+    is_exists,
+    is_saving,
+    is_search,
+    loading,
+    message_error_password,
+    pais_nacimiento,
+    pais_notificacion,
+    pais_residencia,
+    paises_options,
+    requiere_nombre_comercial,
+    show_password,
+    tipo_documento_opt,
+    tipo_documento,
+    tipo_persona_opt,
+    tipo_persona,
+    get_selects_options,
+    handle_change_checkbox,
+    handle_click_show_password,
     set_ciudad_expedicion,
+    set_ciudad_notificacion_opt,
+    set_ciudad_notificacion,
+    set_ciudad_residencia,
     set_ciudades_opt,
+    set_ciudades_residencia_opt,
+    set_data_register,
     set_departamento,
     set_departamentos_opt,
-    set_estado_civil_opt,
-    set_genero,
-    set_genero_opt,
-    set_pais_nacimiento,
-    set_has_user,
-    set_error_error_phone,
-    set_is_exists,
-    set_fecha_nacimiento,
+    set_dpto_notifiacion_opt,
+    set_dpto_notifiacion,
+    set_dpto_residencia_opt,
+    set_dpto_residencia,
     set_error_email,
+    set_error_error_phone,
     set_error_password,
+    set_estado_civil_opt,
+    set_estado_civil,
+    set_fecha_nacimiento,
+    set_genero_opt,
+    set_genero,
+    set_has_user,
+    set_is_exists,
     set_is_saving,
     set_is_search,
     set_message_error_password,
-    set_data_register,
+    set_pais_nacimiento,
+    set_pais_notificacion,
+    set_pais_residencia,
     set_show_password,
-    handle_click_show_password,
-    get_selects_options,
-    handle_change_checkbox,
-    set_tipo_persona,
     set_tipo_documento,
-    validate_password,
+    set_tipo_persona,
     validate_exits,
+    validate_password,
   };
 };

@@ -118,49 +118,96 @@ export interface IObjectSend {
   municipioNotificacion: string | null;
 }
 
+export type keys_object =
+  | 'acepta_notificacion_email'
+  | 'acepta_notificacion_sms'
+  | 'acepta_tratamiento_datos'
+  | 'ciudad_expedicion'
+  | 'cod_municipio_laboral_nal'
+  | 'cod_municipio_notificacion_nal'
+  | 'confirmar_celular'
+  | 'confirmar_email'
+  | 'departamento_expedicion'
+  | 'departamento_nacimiento'
+  | 'departamento_residencia'
+  | 'digito_verificacion'
+  | 'direccion_laboral'
+  | 'direccion_notificaciones'
+  | 'direccion_residencia_ref'
+  | 'direccion_residencia'
+  | 'email_empresarial'
+  | 'email'
+  | 'estado_civil'
+  | 'fecha_nacimiento'
+  | 'municipio_residencia'
+  | 'nombre_comercial'
+  | 'nombre_de_usuario'
+  | 'numero_documento'
+  | 'pais_nacimiento'
+  | 'pais_residencia'
+  | 'password'
+  | 'primer_apellido'
+  | 'primer_nombre'
+  | 'razon_social'
+  | 'representante_legal'
+  | 'require_nombre_comercial'
+  | 'segundo_apellido'
+  | 'segundo_nombre'
+  | 'sexo'
+  | 'telefono_celular_empresa'
+  | 'telefono_celular'
+  | 'telefono_empresa_2'
+  | 'telefono_fijo_residencial'
+  | 'tipo_documento'
+  | 'tipo_persona'
+  | 'ubicacion_georeferenciada';
+
 export interface IPerson {
-  tipo_persona: string;
-  tipo_documento: string;
-  numero_documento: string;
-  digito_verificacion: string | null;
-  nombre_comercial: string | null;
-  primer_nombre: string;
-  segundo_nombre: string | null;
-  primer_apellido: string;
-  segundo_apellido: string | null;
-  fecha_nacimiento: string | number | Date;
-  email: string;
-  confirmar_email: string;
-  telefono_celular: string;
-  confirmar_celular: string;
-  ubicacion_georeferenciada: string;
-  razon_social: string | null;
-  telefono_celular_empresa: string | null;
-  direccion_notificaciones: string;
-  representante_legal: string | null;
-  cod_municipio_notificacion_nal: string | null;
-  nombre_de_usuario?: string;
-  password?: string;
-  confirmar_password?: string;
-  require_nombre_comercial: boolean;
-  telefono_empresa_2: string | null;
-  sexo: string;
-  estado_civil: string | EstadoCivil;
-  pais_nacimiento: string;
-  email_empresarial: string;
-  telefono_fijo_residencial: string | null;
-  pais_residencia: string;
-  municipio_residencia: string;
-  departamento_nacimiento: string;
-  departamento_expedicion: string;
-  ciudad_expedicion: string;
-  direccion_residencia: string;
-  direccion_laboral: string;
-  direccion_residencia_ref: string;
-  cod_municipio_laboral_nal: string;
-  acepta_notificacion_sms: boolean;
   acepta_notificacion_email: boolean;
+  acepta_notificacion_sms: boolean;
   acepta_tratamiento_datos: boolean;
+  ciudad_expedicion: string;
+  cod_municipio_laboral_nal: string;
+  cod_municipio_notificacion_nal: string;
+  confirmar_celular: string;
+  confirmar_email: string;
+  confirmar_password?: string;
+  departamento_expedicion: string;
+  departamento_nacimiento: string;
+  departamento_residencia: string;
+  digito_verificacion: string | null;
+  direccion_laboral: string;
+  direccion_notificaciones: string;
+  direccion_residencia_ref: string;
+  direccion_residencia: string;
+  email_empresarial: string;
+  email: string;
+  estado_civil: string | EstadoCivil;
+  fecha_nacimiento: string | number | Date;
+  municipio_residencia: string;
+  nombre_comercial: string | null;
+  pais_notificacion: string;
+  dpto_notifiacion: string;
+  nombre_de_usuario?: string;
+  numero_documento: string;
+  pais_nacimiento: string;
+  pais_residencia: string;
+  password?: string;
+  primer_apellido: string;
+  primer_nombre: string;
+  razon_social: string | null;
+  representante_legal: string | null;
+  require_nombre_comercial: boolean;
+  segundo_apellido: string | null;
+  segundo_nombre: string | null;
+  sexo: string;
+  telefono_celular_empresa: string | null;
+  telefono_celular: string;
+  telefono_empresa_2: string | null;
+  telefono_fijo_residencial: string | null;
+  tipo_documento: string;
+  tipo_persona: string;
+  ubicacion_georeferenciada: string;
 }
 
 export interface AuthSlice {
@@ -192,60 +239,80 @@ export interface Acciones {
 }
 
 export interface ReisterHook {
-  paises_options: Paises[];
-  tipo_documento_opt: TipoDocumento[];
-  tipo_persona_opt: TipoPersona[];
-  loading: boolean;
-  requiere_nombre_comercial: boolean;
-  tipo_persona: string;
-  tipo_documento: string;
-  show_password: boolean;
-  fecha_nacimiento: Dayjs | null;
+  ciudad_expedicion: string;
+  ciudad_notificacion: string;
+  ciudad_residencia: string;
+  ciudades_opt: Municipios[];
+  ciudades_residencia_opt: Municipios[];
+  ciudad_notificacion_opt: Municipios[];
+  data_register: IPerson;
+  departamento_expedicion: string;
+  departamento_residencia: string;
+  departamentos_opt: Departamentos[];
+  dpto_notifiacion_opt: Departamentos[];
+  dpto_notifiacion: string;
+  dpts_residencia_opt: Departamentos[];
   error_email: boolean;
   error_password: boolean;
-  is_saving: boolean;
-  is_search: boolean;
-  message_error_password: string;
-  data_register: IPerson;
-  is_exists: boolean;
   error_phone: boolean;
-  has_user: boolean;
-  pais_nacimiento: string;
+  estado_civil_opt: IList[];
+  estado_civil: string;
+  fecha_nacimiento: Dayjs | null;
   genero_opt: IList[];
   genero: string;
-  estado_civil_opt: IList[];
-  departamentos_opt: Departamentos[];
-  departamento_expedicion: string;
-  ciudades_opt: Municipios[];
-  ciudad_expedicion: string;
-  estado_civil: string;
-  set_estado_civil: Dispatch<SetStateAction<string>>;
+  has_user: boolean;
+  is_exists: boolean;
+  is_saving: boolean;
+  is_search: boolean;
+  loading: boolean;
+  message_error_password: string;
+  pais_nacimiento: string;
+  pais_notificacion: string;
+  pais_residencia: string;
+  paises_options: Paises[];
+  requiere_nombre_comercial: boolean;
+  show_password: boolean;
+  tipo_documento_opt: TipoDocumento[];
+  tipo_documento: string;
+  tipo_persona_opt: TipoPersona[];
+  tipo_persona: string;
+  get_selects_options: () => Promise<void>;
+  handle_change_checkbox: (event: ChangeEvent<HTMLInputElement>) => void;
+  handle_click_show_password: () => void;
   set_ciudad_expedicion: Dispatch<SetStateAction<string>>;
+  set_ciudad_notificacion_opt: Dispatch<SetStateAction<Municipios[]>>;
+  set_ciudad_notificacion: Dispatch<SetStateAction<string>>;
+  set_ciudad_residencia: Dispatch<SetStateAction<string>>;
   set_ciudades_opt: Dispatch<SetStateAction<Municipios[]>>;
+  set_ciudades_residencia_opt: Dispatch<SetStateAction<Municipios[]>>;
+  set_data_register: Dispatch<SetStateAction<IPerson>>;
   set_departamento: Dispatch<SetStateAction<string>>;
   set_departamentos_opt: Dispatch<SetStateAction<Departamentos[]>>;
-  set_estado_civil_opt: Dispatch<SetStateAction<IList[]>>;
-  set_genero: Dispatch<SetStateAction<string>>;
-  set_genero_opt: Dispatch<SetStateAction<IList[]>>;
-  set_pais_nacimiento: Dispatch<SetStateAction<string>>;
-  set_has_user: Dispatch<SetStateAction<boolean>>;
-  set_error_error_phone: Dispatch<SetStateAction<boolean>>;
-  set_is_exists: Dispatch<SetStateAction<boolean>>;
-  set_fecha_nacimiento: Dispatch<SetStateAction<Dayjs | null>>;
+  set_dpto_notifiacion_opt: Dispatch<SetStateAction<Departamentos[]>>;
+  set_dpto_notifiacion: Dispatch<SetStateAction<string>>;
+  set_dpto_residencia_opt: Dispatch<SetStateAction<Departamentos[]>>;
+  set_dpto_residencia: Dispatch<SetStateAction<string>>;
   set_error_email: Dispatch<SetStateAction<boolean>>;
+  set_error_error_phone: Dispatch<SetStateAction<boolean>>;
   set_error_password: Dispatch<SetStateAction<boolean>>;
+  set_estado_civil_opt: Dispatch<SetStateAction<IList[]>>;
+  set_estado_civil: Dispatch<SetStateAction<string>>;
+  set_fecha_nacimiento: Dispatch<SetStateAction<Dayjs | null>>;
+  set_genero_opt: Dispatch<SetStateAction<IList[]>>;
+  set_genero: Dispatch<SetStateAction<string>>;
+  set_has_user: Dispatch<SetStateAction<boolean>>;
+  set_is_exists: Dispatch<SetStateAction<boolean>>;
   set_is_saving: Dispatch<SetStateAction<boolean>>;
   set_is_search: Dispatch<SetStateAction<boolean>>;
   set_message_error_password: Dispatch<SetStateAction<string>>;
-  set_data_register: Dispatch<SetStateAction<IPerson>>;
-  set_tipo_persona: Dispatch<SetStateAction<string>>;
-  set_tipo_documento: Dispatch<SetStateAction<string>>;
+  set_pais_nacimiento: Dispatch<SetStateAction<string>>;
+  set_pais_notificacion: Dispatch<SetStateAction<string>>;
+  set_pais_residencia: Dispatch<SetStateAction<string>>;
   set_show_password: Dispatch<SetStateAction<boolean>>;
-  get_selects_options: () => Promise<void>;
+  set_tipo_documento: Dispatch<SetStateAction<string>>;
+  set_tipo_persona: Dispatch<SetStateAction<string>>;
   validate_exits: (numero_documento: string) => Promise<void>;
-  handle_click_show_password: () => void;
   validate_password: (string: string) => boolean;
-  handle_change_checkbox: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 export interface InfoPersona extends IPerson {

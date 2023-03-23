@@ -26,33 +26,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { use_register } from '../hooks/registerHooks';
 import { useForm } from 'react-hook-form';
-import { type IPerson } from '../interfaces';
+import type { keys_object, IPerson } from '../interfaces';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { crear_persona_natural_and_user } from '../request/authRequest';
-
-type keys_object =
-  | 'tipo_persona'
-  | 'tipo_documento'
-  | 'numero_documento'
-  | 'digito_verificacion'
-  | 'nombre_comercial'
-  | 'primer_nombre'
-  | 'segundo_nombre'
-  | 'primer_apellido'
-  | 'segundo_apellido'
-  | 'fecha_nacimiento'
-  | 'email'
-  | 'telefono_celular'
-  | 'ubicacion_georeferenciada'
-  | 'razon_social'
-  | 'telefono_celular_empresa'
-  | 'direccion_notificaciones'
-  | 'representante_legal'
-  | 'confirmar_celular'
-  | 'confirmar_email'
-  | 'cod_municipio_notificacion_nal'
-  | 'require_nombre_comercial';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegisterForm: React.FC = () => {
@@ -108,49 +85,63 @@ export const RegisterForm: React.FC = () => {
     },
   });
   const {
-    error_email,
-    tipo_documento_opt,
-    tipo_persona_opt,
-    loading,
-    tipo_documento,
-    tipo_persona,
-    pais_nacimiento,
-    show_password,
-    data_register,
-    is_search,
-    fecha_nacimiento,
-    error_password,
-    message_error_password,
-    is_saving,
-    is_exists,
-    error_phone,
-    has_user,
-    paises_options,
-    genero,
-    genero_opt,
-    departamentos_opt,
-    departamento_expedicion,
-    ciudades_opt,
     ciudad_expedicion,
-    estado_civil,
+    ciudad_residencia,
+    ciudades_opt,
+    data_register,
+    departamento_expedicion,
+    departamento_residencia,
+    departamentos_opt,
+    error_email,
+    error_password,
+    error_phone,
     estado_civil_opt,
-    set_estado_civil,
-    set_genero,
-    set_ciudad_expedicion,
-    set_departamento,
-    set_pais_nacimiento,
-    set_error_error_phone,
-    set_fecha_nacimiento,
-    set_data_register,
-    set_error_email,
+    estado_civil,
+    fecha_nacimiento,
+    genero_opt,
+    genero,
+    has_user,
+    is_exists,
+    is_saving,
+    is_search,
+    loading,
+    message_error_password,
+    pais_nacimiento,
+    pais_notificacion,
+    pais_residencia,
+    paises_options,
+    show_password,
+    tipo_documento_opt,
+    tipo_documento,
+    tipo_persona_opt,
+    tipo_persona,
+    dpto_notifiacion_opt,
+    dpto_notifiacion,
+    ciudad_notificacion_opt,
+    ciudad_notificacion,
+    set_ciudad_notificacion,
+    set_dpto_notifiacion,
     handle_click_show_password,
-    set_tipo_persona,
-    set_tipo_documento,
-    validate_password,
-    set_message_error_password,
+    set_ciudad_expedicion,
+    set_ciudad_residencia,
+    set_data_register,
+    set_departamento,
+    set_dpto_residencia,
+    set_error_email,
+    set_error_error_phone,
     set_error_password,
-    validate_exits,
+    set_estado_civil,
+    set_fecha_nacimiento,
+    set_genero,
     set_is_saving,
+    set_message_error_password,
+    set_pais_nacimiento,
+    set_pais_residencia,
+    set_tipo_documento,
+    set_tipo_persona,
+    validate_exits,
+    validate_password,
+    set_pais_notificacion,
   } = use_register();
   // watchers
   const requiere_nombre_comercial: boolean = watch('require_nombre_comercial');
@@ -179,6 +170,44 @@ export const RegisterForm: React.FC = () => {
       set_ciudad_expedicion(watch('ciudad_expedicion'));
     }
   }, [watch('ciudad_expedicion')]);
+
+  // Datos de residencia
+  useEffect(() => {
+    if (watch('pais_residencia') !== undefined) {
+      set_pais_residencia(watch('pais_residencia'));
+    }
+  }, [watch('pais_residencia')]);
+
+  useEffect(() => {
+    if (watch('departamento_residencia') !== undefined) {
+      set_dpto_residencia(watch('departamento_residencia'));
+    }
+  }, [watch('departamento_residencia')]);
+
+  useEffect(() => {
+    if (watch('municipio_residencia') !== undefined) {
+      set_ciudad_residencia(watch('municipio_residencia'));
+    }
+  }, [watch('municipio_residencia')]);
+
+  // Datos de notificación
+  useEffect(() => {
+    if (watch('pais_notificacion') !== undefined) {
+      set_pais_notificacion(watch('pais_notificacion'));
+    }
+  }, [watch('pais_notificacion')]);
+
+  useEffect(() => {
+    if (watch('dpto_notifiacion') !== undefined) {
+      set_dpto_notifiacion(watch('dpto_notifiacion'));
+    }
+  }, [watch('dpto_notifiacion')]);
+
+  useEffect(() => {
+    if (watch('cod_municipio_notificacion_nal') !== undefined) {
+      set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
+    }
+  }, [watch('cod_municipio_notificacion_nal')]);
 
   useEffect(() => {
     if (watch('tipo_persona') !== undefined) {
@@ -674,6 +703,7 @@ export const RegisterForm: React.FC = () => {
                   )}
                 </FormControl>
               </Grid>
+              {/* Lugar de expedición del documento */}
               <Grid item xs={12}>
                 <Typography variant="subtitle1" fontWeight="bold">
                   Lugar de expedición del documento
@@ -759,10 +789,260 @@ export const RegisterForm: React.FC = () => {
                   )}
                 </FormControl>
               </Grid>
+              {/* Datos de residencia */}
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Datos de residencia
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.pais_residencia?.type === 'required'}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_departamento">
+                        Departamento
+                      </InputLabel>
+                      <Select
+                        labelId="label_departamento"
+                        label="Departamento"
+                        fullWidth
+                        value={pais_residencia}
+                        {...register('pais_residencia', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {departamentos_opt.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.cod_departamento} key={k}>
+                              {e.nombre}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.pais_residencia?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.departamento_residencia?.type === 'required'}
+                  disabled={pais_residencia === '' ?? true}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_pais_residencia">
+                        País de residencia
+                      </InputLabel>
+                      <Select
+                        labelId="label_pais_residencia"
+                        label="País de residencia"
+                        fullWidth
+                        value={departamento_residencia}
+                        {...register('departamento_residencia', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {paises_options.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.cod_pais} key={k}>
+                              {e.nombre}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.departamento_residencia?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.municipio_residencia?.type === 'required'}
+                  disabled={departamento_expedicion === '' ?? true}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_ciudad">Ciudad</InputLabel>
+                      <Select
+                        labelId="label_ciudad"
+                        label="Ciudad"
+                        fullWidth
+                        value={ciudad_residencia}
+                        {...register('municipio_residencia', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {ciudades_opt.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.cod_municipio} key={k}>
+                              {e.nombre}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.municipio_residencia?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
+              {/* Datos de notificación */}
               <Grid item xs={12}>
                 <Typography variant="subtitle1" fontWeight="bold">
                   Datos de notificación
                 </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.pais_notificacion?.type === 'required'}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_pais_notificacion">
+                        País de nacimiento
+                      </InputLabel>
+                      <Select
+                        labelId="label_pais_notificacion"
+                        label="País de notificación"
+                        fullWidth
+                        value={pais_notificacion}
+                        {...register('pais_notificacion', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {paises_options.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.cod_pais} key={k}>
+                              {e.nombre}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.pais_notificacion?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={errors.dpto_notifiacion?.type === 'required'}
+                  disabled={pais_notificacion === '' ?? true}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_departamento_notificacion">
+                        Departamento
+                      </InputLabel>
+                      <Select
+                        labelId="label_departamento_notificacion"
+                        label="Departamento"
+                        fullWidth
+                        value={dpto_notifiacion}
+                        {...register('dpto_notifiacion', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {dpto_notifiacion_opt.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.cod_departamento} key={k}>
+                              {e.nombre}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.dpto_notifiacion?.type === 'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <FormControl
+                  fullWidth
+                  size="small"
+                  error={
+                    errors.cod_municipio_notificacion_nal?.type === 'required'
+                  }
+                  disabled={dpto_notifiacion === '' ?? true}
+                >
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <>
+                      <InputLabel id="label_ciudad">Ciudad</InputLabel>
+                      <Select
+                        labelId="label_ciudad"
+                        label="Ciudad"
+                        fullWidth
+                        value={ciudad_notificacion}
+                        {...register('cod_municipio_notificacion_nal', {
+                          required: true,
+                        })}
+                      >
+                        <MenuItem value="">
+                          <em>Seleccionar opción</em>
+                        </MenuItem>
+                        {ciudad_notificacion_opt.map((e, k: number) => {
+                          return (
+                            <MenuItem value={e.cod_municipio} key={k}>
+                              {e.nombre}
+                            </MenuItem>
+                          );
+                        })}
+                      </Select>
+                      {errors.cod_municipio_notificacion_nal?.type ===
+                        'required' && (
+                        <FormHelperText>Campo Requerido</FormHelperText>
+                      )}
+                    </>
+                  )}
+                </FormControl>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
                 <TextField
