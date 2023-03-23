@@ -3,40 +3,57 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { type Estaciones } from '../interfaces/interfaces';
 import { useEffect, useState } from 'react';
-import { api } from '../../../../api/axios';
 import Grid from '@mui/material/Grid';
+import { consultar_estaciones } from '../../requets/Request';
+import { control_error } from '../../../../helpers/controlError';
 
-const position: L.LatLngExpression = [5.258179477894017, -73.60700306515551];
+// const position: L.LatLngExpression = [5.258179477894017, -73.60700306515551];
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const icono: string = require('../assets/icons/locate.svg').default;
 
 const icon_locate = new L.Icon({
   iconUrl: icono,
-  iconSize: [45, 45],
+  iconSize: [30, 30],
 });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GeolocalizacionScreen: React.FC = () => {
-  const [info, set_info] = useState<Estaciones[]>([]);
-  useEffect(() => {
-    void obtener_posicion();
-  }, []);
+  const [info, set_info] = useState<Estaciones[]>([]);  
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const obtener_posicion = async () => {
-    const { data } = await api.get('/estaciones/consultar-estaciones/');
-    delete data.crs;
-    const pos_maped = data.data.map((estaciones: Estaciones) => ({
-      latitud: estaciones.latitud,
-      longitud: estaciones.longitud,
-    }));
-    set_info(pos_maped);
-    console.log(pos_maped);
+    try{
+      const data = await consultar_estaciones();
+      const pos_maped = data.map((estaciones: Estaciones) => ({
+
+        id_estacion: estaciones.id_estacion,
+        fecha_modificacion: estaciones.fecha_modificacion,
+        nombre_estacion: estaciones.nombre_estacion,
+        cod_tipo_estacion: estaciones.cod_tipo_estacion,
+        cod_municipio: estaciones.cod_municipio,
+        latitud: estaciones.latitud,
+        longitud: estaciones.longitud ,
+        indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
+        fecha_modificacion_coordenadas: estaciones.fecha_modificacion_coordenadas,
+        id_persona_modifica: estaciones.id_persona_modifica    
+        
+      }));
+
+      set_info(pos_maped);
+      console.log('paso', pos_maped);
+
+      } catch (err) {
+      control_error(err);
+    }
   };
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!info.length) return <Grid className="Loading"></Grid>;
+
+  useEffect(() => {
+    void obtener_posicion();
+  }, []);
 
   const markers = info.map((estacion) => (
     <Marker
@@ -45,8 +62,8 @@ export const GeolocalizacionScreen: React.FC = () => {
       icon={icon_locate}
     >
       <Popup>
-        Nombre: {estacion.nombre_estacion}
-        
+        <strong>Nombre: </strong>{estacion.nombre_estacion} <br></br>
+        <strong>Tipo de Estacion: </strong>{estacion.cod_tipo_estacion}
       </Popup>
     </Marker>
   ));
@@ -72,11 +89,11 @@ export const GeolocalizacionScreen: React.FC = () => {
         />
 
         {markers}
-        <Marker position={position} icon={icon_locate}>
+        {/* <Marker position={position} icon={icon_locate}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
-        </Marker>
+        </Marker> */}
       </MapContainer>
     </Grid>
   );
