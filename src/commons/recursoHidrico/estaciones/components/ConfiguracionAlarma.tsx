@@ -18,12 +18,10 @@ export const ConfiguracionAlarma: React.FC = () => {
   const [conf_alert_person, set_conf_alert_person] = useState<conf_alarma[]>([]);
   const [crear_alerta_is_active, set_crear_alerta_is_active] = useState<boolean>(false);
   const [editar_alerta_is_active, set_editar_alerta_is_active] = useState<boolean>(false);
+  const [alerta_editado, set_alerta_editado] = useState(null);
 
   const handle_open_crear_alerta = (): void => {
     set_crear_alerta_is_active(true);
-  }
-  const handle_open_editar_alerta = (): void => {
-    set_editar_alerta_is_active(true);
   }
 
   const columns: GridColDef[] = [
@@ -50,7 +48,11 @@ export const ConfiguracionAlarma: React.FC = () => {
             >
               <EditIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                onClick={handle_open_editar_alerta}
+                onClick={() => {
+                  set_alerta_editado(params.row);
+                  set_editar_alerta_is_active(!editar_alerta_is_active);
+                  console.log("se enviaron los siguientes parametros", params.row);
+                }}
               />
             </Avatar>
           </IconButton>
@@ -184,6 +186,8 @@ export const ConfiguracionAlarma: React.FC = () => {
       <EditarAlertaDialog
         is_modal_active={editar_alerta_is_active}
         set_is_modal_active={set_editar_alerta_is_active}
+        alerta_editado={alerta_editado}
+        set_alerta_editado={set_alerta_editado}
       />
     </Grid>
   );
