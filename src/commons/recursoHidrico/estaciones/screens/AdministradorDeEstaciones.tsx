@@ -17,12 +17,10 @@ export const AdministradorDeEstaciones: React.FC = () => {
     const [list_estaciones, set_estaciones] = useState<Estaciones[]>([]);
     const [crear_estacion_is_active, set_crear_estacion_is_active] = useState<boolean>(false);
     const [editar_estacion_is_active, set_editar_estacion_is_active] = useState<boolean>(false);
+    const [estacion_editado, set_estacion_editado] = useState(null);
 
     const handle_open_crear_estacion = (): void => {
         set_crear_estacion_is_active(true);
-    }
-    const handle_open_editar_estacion = (): void  => {
-        set_editar_estacion_is_active(true);
     }
 
     const columns: GridColDef[] = [
@@ -52,7 +50,11 @@ export const AdministradorDeEstaciones: React.FC = () => {
                         >
                             <EditIcon
                                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                onClick={handle_open_editar_estacion}
+                                onClick={() => {
+                                    set_estacion_editado(params.row);
+                                    set_editar_estacion_is_active(!editar_estacion_is_active);
+                                    console.log("se enviaron los siguientes parametros", params.row);
+                                }}
                             />
                         </Avatar>
                     </IconButton>
@@ -145,6 +147,8 @@ export const AdministradorDeEstaciones: React.FC = () => {
             <EditarEstacionDialog
                 is_modal_active={editar_estacion_is_active}
                 set_is_modal_active={set_editar_estacion_is_active}
+                estacion_editado={estacion_editado}
+                set_estacion_editado={set_estacion_editado}
             />
         </Grid>
     );
