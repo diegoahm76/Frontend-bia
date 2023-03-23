@@ -939,7 +939,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         required
                       />
                     </div>
-                    {errors.nombre && (
+                    {(errors.nombre != null) && (
                       <small className="text-danger">
                         Este campo es obligatorio
                       </small>
@@ -976,7 +976,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                       required
                       disabled
                     />
-                    {errors.padre && (
+                    {(errors.padre != null) && (
                       <small className="text-danger">
                         Este campo es obligatorio
                       </small>
@@ -1003,7 +1003,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         />
                       )}
                     />
-                    {errors.unidadmedida && (
+                    {(errors.unidadmedida != null) && (
                       <small className="text-danger">
                         Este campo es obligatorio
                       </small>
@@ -1021,7 +1021,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         value={bien_edit.stock_minimo}
                         onChange={handle_change}
                       />
-                      {errors.stockminimo && (
+                      {(errors.stockminimo != null) && (
                         <small className="text-danger">
                           Este campo es obligatorio
                         </small>
@@ -1039,7 +1039,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         value={bien_edit.stock_maximo}
                         onChange={handle_change}
                       />
-                      {errors.stockmaximo && (
+                      {(errors.stockmaximo != null) && (
                         <small className="text-danger">
                           Este campo es obligatorio
                         </small>
@@ -1063,7 +1063,7 @@ export const CreacionArticulosFijosForm: React.FC = () => {
                         />
                       )}
                     />
-                    {errors.porcentaje && (
+                    {(errors.porcentaje != null) && (
                       <small className="text-danger">
                         Este campo es obligatorio
                       </small>
