@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from "chart.js";
 import { useEffect, useState } from "react";
-import { Grid, Stack, Typography, FormControl, } from '@mui/material';
+import { Grid, Stack, Typography, FormControl, Button, } from '@mui/material';
 import { api } from "../../../../api/axios";
 import type { EstacionData } from "../interfaces/interfaces";
 import { Title } from '../../../../components/Title';
@@ -11,12 +11,15 @@ import Select from "react-select";
 import type { ChartOptions } from 'chart.js/auto';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import SearchIcon from '@mui/icons-material/Search';
 import moment from 'moment';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DashboardScreen: React.FC = () => {
 
-    const [selectdashboards, set_select_dashboards] = useState(0);
+    const [selectdashboards, set_select_dashboards] = useState({
+        opc_dashboards: 0,
+    })
     const {
         control,
     } = useForm();
@@ -27,6 +30,10 @@ export const DashboardScreen: React.FC = () => {
         { label: 'Estación Ocoa', value: 3 },
         { label: 'Estación Puerto Gaitan', value: 4 },
     ];
+
+
+
+
     const [queryestaciones, setqueryestaciones] = useState<{
         labels: any[];
         datasets: any[];
@@ -95,6 +102,7 @@ export const DashboardScreen: React.FC = () => {
     const [start_date, set_start_date] = useState<Date | null>(new Date());
     const [end_date, set_end_date] = useState<Date | null>(new Date());
 
+    const [dates_selected, set_dates_selected] = useState(false);
 
     const handle_start_date_change = (date: Date | null) => {
         const start_date_string = date ? date.toISOString().slice(0, 10) : '';
@@ -126,7 +134,7 @@ export const DashboardScreen: React.FC = () => {
         console.log(data_success)
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         const filtereddata = data_success.filter((datos: EstacionData) =>
-            datos.id_estacion === selectdashboards &&
+            datos.id_estacion === selectdashboards.opc_dashboards &&
             moment(datos.fecha_registro).isBetween(moment(start_date_string), moment(end_date_string))
         );
 
@@ -170,7 +178,6 @@ export const DashboardScreen: React.FC = () => {
             }
         }
     };
-
     ChartJS.register(
         ArcElement,
         CategoryScale,
@@ -181,7 +188,6 @@ export const DashboardScreen: React.FC = () => {
         Legend,
         Filler,
     );
-
     useEffect(() => {
         void get_datos_estaciones();
     }, [end_date]);
@@ -270,7 +276,7 @@ export const DashboardScreen: React.FC = () => {
             label: "Direccion viento",
             data: data.map((item) => item.direccion_viento),
             borderColor: "rgb(58, 158, 181)",
-            backgroundColor: "rgb(58, 158, 181)",
+            backgroundImage: ``,
         };
         return { labels: labels, datasets: [dataset] };
     };
@@ -314,7 +320,10 @@ export const DashboardScreen: React.FC = () => {
                                             <Select
                                                 {...field}
                                                 onChange={(e) => {
-                                                    set_select_dashboards(e.value);
+                                                    set_select_dashboards({
+                                                        ...selectdashboards,
+                                                        opc_dashboards: e.value,
+                                                    });
                                                 }
                                                 }
                                                 options={opc_dashboards}
@@ -327,209 +336,68 @@ export const DashboardScreen: React.FC = () => {
                         )}
                     />
 
-                    <Typography variant="body1" align="center" hidden={selectdashboards !== 1}>
+                    <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
                         <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
-                        <label>Fecha Inicial</label>
-                        <DatePicker
-                            selected={start_date}
-                            onChange={handle_start_date_change}
-                            placeholderText="Fecha inicial"
-                        />
-                        <label>Fecha Final</label>
-                        <DatePicker
-                            selected={end_date}
-                            onChange={handle_end_date_change}
-                            placeholderText="Fecha Final"
-                        />
-                        <Typography variant="h4" color="primary">
-                            Presión barometrica
+                        <Stack direction="row" spacing={2} alignItems="center">
+                            <label>Fecha Inicial</label>
+
+                            <DatePicker
+                                selected={start_date}
+                                onChange={(date) => {
+                                    handle_start_date_change(date);
+                                    set_dates_selected(false);
+                                }}
+                                placeholderText="Fecha inicial"
+                            />
+                            <label>Fecha Final</label>
+                            <DatePicker
+                                selected={end_date}
+                                onChange={(date) => {
+                                    handle_end_date_change(date);
+                                    set_dates_selected(false);
+                                }}
+                                placeholderText="Fecha Final"
+                            />
+                            <Button variant="contained" type="submit" className="text-capitalize rounded-pill  " onClick={() => set_dates_selected(true)}>Consultar variables<SearchIcon /></Button>
+                        </Stack>
+                        <Typography variant="body1" align="center" hidden={!dates_selected}>
+                            <Typography variant="h4" color="primary">
+                                Presión barometrica
+                            </Typography>
+                            <Line data={queryestaciones} options={options} />
+                            <Typography variant="h4" color="primary">
+                                Humedad
+                            </Typography>
+                            <Line data={queryhumedad} options={options} />
+                            <Typography variant="h4" color="primary">
+                                Dirección del viento
+                            </Typography>
+                            <Line data={querydireccion} options={options} />
+                            <Typography variant="h4" color="primary">
+                                Precipitación
+                            </Typography>
+                            <Line data={queryprecipitacion} options={options} />
+                            <Typography variant="h4" color="primary">
+                                Luminosidad
+                            </Typography>
+                            <Line data={queryluminosidad} options={options} />
+                            <Typography variant="h4" color="primary">
+                                Temperatura
+                            </Typography>
+                            <Line data={querytemperatura} options={options} />
+                            <Typography variant="h4" color="primary">
+                                Velocidad del viento
+                            </Typography>
+                            <Line data={queryvelocidadviento} options={options} />
+                            <Typography variant="h4" color="primary">
+                                Velocidad dela agua
+                            </Typography>
+                            <Line data={queryvelocidadagua} options={options} />
+                            <Typography variant="h4" color="primary">
+                                Nivel del agua
+                            </Typography>
+                            <Line data={querynivelagua} options={options} />
                         </Typography>
-                        <Line data={queryestaciones} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Humedad
-                        </Typography>
-                        <Line data={queryhumedad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Dirección del viento
-                        </Typography>
-                        <Line data={querydireccion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Precipitación
-                        </Typography>
-                        <Line data={queryprecipitacion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Luminosidad
-                        </Typography>
-                        <Line data={queryluminosidad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Temperatura
-                        </Typography>
-                        <Line data={querytemperatura} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad del viento
-                        </Typography>
-                        <Line data={queryvelocidadviento} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad dela agua
-                        </Typography>
-                        <Line data={queryvelocidadagua} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Nivel del agua
-                        </Typography>
-                        <Line data={querynivelagua} options={options} />
-                    </Typography>
-                    <Typography variant="body1" align="center" hidden={selectdashboards !== 2}>
-                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
-                        <label>Fecha Inicial</label>
-                        <DatePicker
-                            selected={start_date}
-                            onChange={handle_start_date_change}
-                            placeholderText="Fecha inicial"
-                        />
-                        <label>Fecha Final</label>
-                        <DatePicker
-                            selected={end_date}
-                            onChange={handle_end_date_change}
-                            placeholderText="Fecha Final"
-                        />
-                        <Typography variant="h4" color="primary">
-                            Presión barometrica
-                        </Typography>
-                        <Line data={queryestaciones} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Humedad
-                        </Typography>
-                        <Line data={queryhumedad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Dirección del viento
-                        </Typography>
-                        <Line data={querydireccion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Precipitación
-                        </Typography>
-                        <Line data={queryprecipitacion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Luminosidad
-                        </Typography>
-                        <Line data={queryluminosidad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Temperatura
-                        </Typography>
-                        <Line data={querytemperatura} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad del viento
-                        </Typography>
-                        <Line data={queryvelocidadviento} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad dela agua
-                        </Typography>
-                        <Line data={queryvelocidadagua} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Nivel del agua
-                        </Typography>
-                        <Line data={querynivelagua} options={options} />
-                    </Typography>
-                    <Typography variant="body1" align="center" hidden={selectdashboards !== 3}>
-                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
-                        <label>Fecha Inicial</label>
-                        <DatePicker
-                            selected={start_date}
-                            onChange={handle_start_date_change}
-                            placeholderText="Fecha inicial"
-                        />
-                        <label>Fecha Final</label>
-                        <DatePicker
-                            selected={end_date}
-                            onChange={handle_end_date_change}
-                            placeholderText="Fecha Final"
-                        />
-                        <Typography variant="h4" color="primary">
-                            Presión barometrica
-                        </Typography>
-                        <Line data={queryestaciones} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Humedad
-                        </Typography>
-                        <Line data={queryhumedad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Dirección del viento
-                        </Typography>
-                        <Line data={querydireccion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Precipitación
-                        </Typography>
-                        <Line data={queryprecipitacion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Luminosidad
-                        </Typography>
-                        <Line data={queryluminosidad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Temperatura
-                        </Typography>
-                        <Line data={querytemperatura} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad del viento
-                        </Typography>
-                        <Line data={queryvelocidadviento} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad dela agua
-                        </Typography>
-                        <Line data={queryvelocidadagua} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Nivel del agua
-                        </Typography>
-                        <Line data={querynivelagua} options={options} />
-                    </Typography>
-                    <Typography variant="body1" align="center" hidden={selectdashboards !== 4}>
-                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
-                        <label>Fecha Inicial</label>
-                        <DatePicker
-                            selected={start_date}
-                            onChange={handle_start_date_change}
-                            placeholderText="Fecha inicial"
-                        />
-                        <label>Fecha Final</label>
-                        <DatePicker
-                            selected={end_date}
-                            onChange={handle_end_date_change}
-                            placeholderText="Fecha Final"
-                        />
-                        <Typography variant="h4" color="primary">
-                            Presión barometrica
-                        </Typography>
-                        <Line data={queryestaciones} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Humedad
-                        </Typography>
-                        <Line data={queryhumedad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Dirección del viento
-                        </Typography>
-                        <Line data={querydireccion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Precipitación
-                        </Typography>
-                        <Line data={queryprecipitacion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Luminosidad
-                        </Typography>
-                        <Line data={queryluminosidad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Temperatura
-                        </Typography>
-                        <Line data={querytemperatura} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad del viento
-                        </Typography>
-                        <Line data={queryvelocidadviento} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad dela agua
-                        </Typography>
-                        <Line data={queryvelocidadagua} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Nivel del agua
-                        </Typography>
-                        <Line data={querynivelagua} options={options} />
                     </Typography>
                 </Grid>
             </Grid>
