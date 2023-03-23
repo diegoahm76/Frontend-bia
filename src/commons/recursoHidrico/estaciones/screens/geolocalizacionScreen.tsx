@@ -6,14 +6,14 @@ import { useEffect, useState } from 'react';
 import { api } from '../../../../api/axios';
 import Grid from '@mui/material/Grid';
 
-const position: L.LatLngExpression = [5.258179477894017, -73.60700306515551];
+// const position: L.LatLngExpression = [5.258179477894017, -73.60700306515551];
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const icono: string = require('../assets/icons/locate.svg').default;
 
 const icon_locate = new L.Icon({
   iconUrl: icono,
-  iconSize: [45, 45],
+  iconSize: [30, 30],
 });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -30,6 +30,8 @@ export const GeolocalizacionScreen: React.FC = () => {
     const pos_maped = data.data.map((estaciones: Estaciones) => ({
       latitud: estaciones.latitud,
       longitud: estaciones.longitud,
+      nombre_estacion: estaciones.nombre_estacion,
+      cod_tipo_estacion: estaciones.cod_tipo_estacion
     }));
     set_info(pos_maped);
     console.log(pos_maped);
@@ -45,8 +47,8 @@ export const GeolocalizacionScreen: React.FC = () => {
       icon={icon_locate}
     >
       <Popup>
-        Nombre: {estacion.nombre_estacion}
-        
+        <strong>Nombre: </strong>{estacion.nombre_estacion} <br></br>
+        <strong>Tipo de Estacion: </strong>{estacion.cod_tipo_estacion}
       </Popup>
     </Marker>
   ));
@@ -72,11 +74,11 @@ export const GeolocalizacionScreen: React.FC = () => {
         />
 
         {markers}
-        <Marker position={position} icon={icon_locate}>
+        {/* <Marker position={position} icon={icon_locate}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
-        </Marker>
+        </Marker> */}
       </MapContainer>
     </Grid>
   );
