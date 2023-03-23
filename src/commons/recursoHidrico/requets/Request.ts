@@ -23,6 +23,18 @@ export const control_success = (message: ToastContent): any =>
     theme: 'light'
   });
 
+  export const control_success_fail = (message: ToastContent): any =>
+  toast.error(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light'
+  });
+
 // llamar alerta
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const llamar_alertas = async () => {
@@ -44,6 +56,17 @@ export const consultar_estaciones = async (): Promise<Estaciones[]> => {
 export const consultar_datos = async (): Promise<Datos[]> => {
   const { data } = await api.get<ResponseServer<Datos[]>>('estaciones/datos/consultar-datos-opt/');
   return data.data
+}
+// consultar datos por id estación
+export const consultar_datos_id = async (id: number | string): Promise<Datos> => {
+  const { data } = await api.get<ResponseServer<Datos>>(`estaciones/datos/consultar-datos-id/${id}/`);
+  return data.data;
+}
+
+// consultar datos por fecha
+export const consultar_datos_fecha = async (fecha_inicial: string, fecha_final: string): Promise<Datos> => {
+  const { data } = await api.get<ResponseServer<Datos>>(`estaciones/datos/consultar-datos-fecha/${fecha_inicial}/${fecha_final}/`);
+  return data.data;
 }
 
 // consultar configuracion alerta personas
@@ -101,6 +124,11 @@ export const crear_confi_alerta = async (configuracion: CrearAlerta): Promise<an
 };
 
 // eliminar persona
+export const eliminar_estacion = async (idEstacion: number): Promise<any> => {
+  return await api.delete(`estaciones/eliminar-estaciones/${idEstacion}`);
+};
+
+// eliminar persona
 export const eliminar_usuario = async (idPersona: number): Promise<any> => {
   return await api.delete(`estaciones/personas/eliminar-persona/${idPersona}`);
 };
@@ -111,8 +139,8 @@ export const eliminar_conf_alerta_persona = async (idconfAlerta: number): Promis
 };
 
 // editar estacion
-export const editar_estacion = async (idEstacion: number, datos_estacion: IEstacionEstaciones): Promise<any> => {
-  const response = await api.put(`estaciones/actualizar-estaciones/${idEstacion}/`, datos_estacion);
+export const editar_estacion = async (idEstaion: number, datos_estacion: IEstacionEstaciones): Promise<any> => {
+  const response = await api.put(`estaciones/actualizar-estaciones/${idEstaion}/`, datos_estacion);
   return response.data;
 };
 
