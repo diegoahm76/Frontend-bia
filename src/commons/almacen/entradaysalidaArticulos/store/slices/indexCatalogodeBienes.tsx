@@ -1,63 +1,93 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
-    type IObjBien,
-    type IBien,
-    type IList,
-  } from '../../interfaces/catalogodebienes';
+  type IObjBien,
+  type IBien,
+  type IMarcas,
+  type IMedidas,
+  type IPorcentajes
+} from '../../interfaces/catalogodebienes';
+import { type INodo } from "../../interfaces/Nodo";
 
-  const initial_state_current_bien = {
-    id_bien: 0,
-    codigo_bien: "",
-    nro_elemento_bien: 0,
-    nombre: "",
-    cod_tipo_bien: "",
-    cod_tipo_activo: "",
-    nivel_jerarquico: 0,
-    nombre_cientifico: "",
-    descripcion: "",
-    doc_identificador_nro: "",
-    cod_metodo_valoracion: 0,
-    cod_tipo_depreciacion: 0,
-    cantidad_vida_util: 0,
-    valor_residual: 0,
-    stock_minimo: 0,
-    stock_maximo: 0,
-    solicitable_vivero: false,
-    tiene_hoja_vida: false,
-    maneja_hoja_vida: false,
-    visible_solicitudes: false,
-    id_marca: 0,
-    id_unidad_medida: 0,
-    id_porcentaje_iva: 0,
-    id_unidad_medida_vida_util: 0,
-    id_bien_padre: null,
+
+const initial_state_current_bien = {
+  id_bien: null,
+  codigo_bien: null,
+  nro_elemento_bien: null,
+  nombre: "",
+  cod_tipo_bien: null,
+  cod_tipo_activo: null,
+  nivel_jerarquico: null,
+  nombre_cientifico: null,
+  descripcion: "",
+  doc_identificador_nro: null,
+  cod_metodo_valoracion: null,
+  cod_tipo_depreciacion: null,
+  cantidad_vida_util: null,
+  valor_residual: null,
+  stock_minimo: null,
+  stock_maximo: null,
+  solicitable_vivero: false,
+  tiene_hoja_vida: false,
+  maneja_hoja_vida: false,
+  visible_solicitudes: false,
+  id_marca: null,
+  id_unidad_medida: null,
+  id_porcentaje_iva: null,
+  id_unidad_medida_vida_util: null,
+  id_bien_padre: null,
 };
 
+
 const initial_state: IBien = {
-    bienes: [],
-    current_bien: initial_state_current_bien,
-  };
-  export const bien_slice = createSlice({
-    name: 'bien',
-    initialState: initial_state,
-    reducers: {
-    
-      get_bienes: (
-        state: IBien,
-        action: PayloadAction<IObjBien[]>
-      ) => {
-        state.bienes = action.payload;
-      },
-      current_bien: (
-        state: IBien,
-        action: PayloadAction<IObjBien>
-      ) => {
-        state.current_bien = action.payload;
-      },
-    },
-  });
-  export const {
-    get_bienes,
-    current_bien,
-  } = bien_slice.actions;
+  nodo: [],
+  bienes: [],
+  current_bien: initial_state_current_bien,
+  marca: [],
+  unidad_medida: [],
+  porcentaje_iva: [],
   
+};
+export const bien_slice = createSlice({
+  name: 'bien',
+  initialState: initial_state,
+  reducers: {
+
+    get_bienes: (
+      state: IBien,
+      action: PayloadAction<INodo[]>
+    ) => {
+      state.nodo = action.payload;
+    },
+    current_bien: (
+      state: IBien,
+      action: PayloadAction<IObjBien>
+    ) => {
+      state.current_bien = action.payload;
+    },
+    get_marks: (
+      state: IBien,
+      action: PayloadAction<IMarcas[]>
+    ) => {
+      state.marca = action.payload;
+    },
+    get_percentages: (
+      state: IBien,
+      action: PayloadAction<IPorcentajes[]>
+    ) => {
+      state.porcentaje_iva = action.payload;
+    },
+    get_unit_measurement: (
+      state: IBien,
+      action: PayloadAction<IMedidas[]>
+    ) => {
+      state.unidad_medida = action.payload;
+    },
+  },
+});
+export const {
+  get_bienes,
+  current_bien,
+  get_marks,
+  get_percentages,
+  get_unit_measurement,
+} = bien_slice.actions;

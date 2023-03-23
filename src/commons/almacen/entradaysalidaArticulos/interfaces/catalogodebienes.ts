@@ -1,9 +1,34 @@
+import { type INodo } from "./Nodo";
+
+
 export interface IBien {
-  //mold_organigram: IDatum[];
+  nodo: INodo[]
   bienes: IObjBien[];
   current_bien: IObjBien;
-  //levels_organigram: IObjLevels[];
-  //unity_organigram: IObjUnitys[];
+  marca: IMarcas[],
+  unidad_medida: IMedidas[],
+  porcentaje_iva: IPorcentajes[],
+}
+
+export interface IMarcas {
+  id_marca: number ;
+  nombre: string;
+  activo: boolean;
+  item_ya_usado: boolean;
+}
+export interface IPorcentajes {
+  id_porcentaje_iva: number ;
+  porcentaje: number;
+  observacion: string;
+}
+export interface IMedidas {
+  id_unidad_medida: number ;
+  nombre: string;
+  abreviatura: string;
+  id_magnitud: number | null;
+  precargado: boolean;
+  activo: boolean;
+  item_ya_usado: boolean;
 }
 
 export interface IList{
@@ -12,30 +37,30 @@ export interface IList{
 }
 
   export interface IObjBien {
-    id_bien: number|null;
-    codigo_bien: string;
-    nro_elemento_bien: number;
+    id_bien?: number|null;
+    codigo_bien: string|null;
+    nro_elemento_bien: number|null;
     nombre: string;
-    cod_tipo_bien: string;
-    cod_tipo_activo: string;
-    nivel_jerarquico: number;
-    nombre_cientifico: string;
+    cod_tipo_bien: string|null;
+    cod_tipo_activo: string|null;
+    nivel_jerarquico: number|null;
+    nombre_cientifico: string|null;
     descripcion: string;
-    doc_identificador_nro: string;
-    cod_metodo_valoracion: number;
-    cod_tipo_depreciacion: number;
-    cantidad_vida_util: number;
-    valor_residual: number;
-    stock_minimo: number;
-    stock_maximo: number;
+    doc_identificador_nro: string|null;
+    cod_metodo_valoracion: number|null;
+    cod_tipo_depreciacion: number|null;
+    cantidad_vida_util: number|null;
+    valor_residual: number|null;
+    stock_minimo: number|null;
+    stock_maximo: number|null;
     solicitable_vivero: boolean;
     tiene_hoja_vida: boolean;
     maneja_hoja_vida: boolean;
     visible_solicitudes: boolean;
-    id_marca?: number;
-    id_unidad_medida?: number;
-    id_porcentaje_iva?: number;
-    id_unidad_medida_vida_util?: number;
+    id_marca?: number|null;
+    id_unidad_medida?: number|null;
+    id_porcentaje_iva?: number|null;
+    id_unidad_medida_vida_util?: number|null;
     id_bien_padre?: number | null;
   }
   

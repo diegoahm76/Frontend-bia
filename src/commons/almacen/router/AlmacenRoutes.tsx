@@ -10,7 +10,7 @@ export const AlmacenRoutes: React.FC = () => {
     <Routes>
       <Route path="configuracion/*" element={<ConfiguracionRoutes />} />
       <Route
-        path="entradaysalidaArticulos/*"
+        path="entrada_salida_articulos/*"
         element={<EntradaysalidArticulosRoutes />}
       />
       <Route
@@ -18,15 +18,7 @@ export const AlmacenRoutes: React.FC = () => {
         element={<ProgramacionManteniento />}
       />
       <Route path="/*" element={<Page404 />} />
-      <Route
-        path="entradaysalidaArticulos/*"
-        element={<EntradaysalidArticulosRoutes />}
-      />
-
-      <Route
-        path="programacion_mantenimiento"
-        element={<ProgramacionManteniento />}
-      />
+      
     </Routes>
   );
 };

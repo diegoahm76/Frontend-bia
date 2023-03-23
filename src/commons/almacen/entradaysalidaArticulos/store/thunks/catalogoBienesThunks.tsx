@@ -1,5 +1,4 @@
 import { type Dispatch } from 'react';
-import { type NavigateFunction } from 'react-router-dom';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
 import {
@@ -9,7 +8,9 @@ import {
 // Slices
 import {
   get_bienes,
-  current_bien
+  get_marks,
+  get_unit_measurement,
+  get_percentages,  
 } from '../slices/indexCatalogodeBienes';
 import { api } from '../../../../../api/axios';
 
@@ -45,8 +46,7 @@ export const get_bienes_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('almacen/bienes/catalogo-bienes/get-list');
-      console.log(data)
-      dispatch(get_bienes(data.data.data));
+      dispatch(get_bienes(data.data));
       return data;
     } catch (error: any) {
       console.log('get_bienes_service');
@@ -58,27 +58,61 @@ export const get_bienes_service = (): any => {
 
 // Agregar bien
 export const add_bien_service: any = (
-  nursery: any,
-  navigate: NavigateFunction
+  bien: any,
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(nursery);
-      const { data } = await api.post(
+      console.log(bien)
+      const { data } = await api.put(
         'almacen/bienes/catalogo-bienes/create/',
-        nursery
+        bien
       );
-
+      console.log(data)
       dispatch(get_bienes_service());
-      dispatch(current_bien(data.detail));
       control_success('El bien se agrego correctamente');
-      // navigate('/gestor_documental/organigrama/editar_organigrama');
       return data;
     } catch (error: any) {
       console.log('add_bien_service');
       control_error(error.response.data.detail);
-      console.log(error.response.data);
-      //     navigate('/gestor_documental/organigrama/crear_organigrama');
+      console.log(error);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener marcas
+export const get_marca_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('almacen/marcas/get-list');
+      dispatch(get_marks(data));
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+// obtener porcentajes
+export const get_porcentaje_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('almacen/porcentajes/get-list');
+      dispatch(get_percentages(data));
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener Medida
+export const get_medida_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('almacen/unidades-medida/get-list/');
+      dispatch(get_unit_measurement(data));
+      return data;
+    } catch (error: any) {
       return error as AxiosError;
     }
   };

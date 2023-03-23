@@ -16,62 +16,60 @@ import {
 import { Title } from '../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import { add_bien_service } from '../store/thunks/catalogoBienesThunks';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../../../hooks';
-import { type IList } from "../interfaces/catalogodebienes";
+import { add_bien_service, get_marca_service, get_medida_service, get_porcentaje_service } from '../store/thunks/catalogoBienesThunks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { type IList, type IObjBien as FormValues} from "../interfaces/catalogodebienes";
 import { api } from "../../../../api/axios";
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
 }
 
-interface FormValues {
-  nombre: string,
-  cod_municipio: string,
-  direccion: string,
-  area_mt2: number,
-  cod_tipo_vivero: string,
-  area_propagacion_mt2: number,
-  tiene_area_produccion: boolean,
-  tiene_areas_pep_sustrato: boolean,
-  tiene_area_embolsado: boolean,
-  cod_origen_recursos_vivero: string,
-  ruta_archivo_creacion: string|null
-}
+
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const CrearViveroDialogForm = ({
+const CrearBienDialogForm = ({
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
-  const initial_options: IList[]=[{
+  const initial_options: IList[] = [{
     label: "",
-    value: "",  
+    value: "",
   }]
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [municipalities, set_municipalities] = useState<IList[]>(initial_options);
-  const [nursery_types, set_nursery_types] = useState(initial_options);
-  const [source_resources, set_source_resources] = useState(initial_options);
-  const [file, set_file] = useState<any>("");
-
-
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { control: control_vivero, handleSubmit: handle_submit } =
+  const [tipo_bien, set_tipo_bien] = useState<IList[]>(initial_options);
+  const [activo_types, set_activo_types] = useState<IList[]>(initial_options);
+  const [metodo_valoracion, set_metodo_valoracion] = useState<IList[]>(initial_options);
+  const [depreciacion_types, set_depreciacion_types] = useState<IList[]>(initial_options);
+  const {marca, unidad_medida, porcentaje_iva, current_bien} = useAppSelector((state) => state.bien);
+  
+  const [tipo_bien_selected, set_tipo_bien_selected] = useState<string>("A");
+  
+  const { control: control_bien, handleSubmit: handle_submit, reset: reset_bien } =
     useForm<FormValues>();
+    const handle_close_add_bien = (): void => {
+      set_is_modal_active(false);
+    };
+  //   const [nursery_types, set_nursery_types] = useState(initial_options);
+  //   const [source_resources, set_source_resources] = useState(initial_options);
+  //   const [file, set_file] = useState<any>("");
 
-  const handle_close_add_nursery = (): void => {
-    set_is_modal_active(false);
-  };
 
-  const on_submit = (data: FormValues): void => {
-    data.ruta_archivo_creacion = file
-    console.log(data)
-    void dispatch(add_nursery_service(data, navigate));
-    handle_close_add_nursery();
-  };
+  //   // eslint-disable-next-line @typescript-eslint/naming-convention
+  //   const { control: control_vivero, handleSubmit: handle_submit } =
+  //     useForm<FormValues>();
+
+  //   const handle_close_add_nursery = (): void => {
+  //     set_is_modal_active(false);
+  //   };
+
+  //   const on_submit = (data: FormValues): void => {
+  //     data.ruta_archivo_creacion = file
+  //     console.log(data)
+  //     void dispatch(add_nursery_service(data, navigate));
+  //     handle_close_add_nursery();
+  //   };
 
   const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -80,367 +78,630 @@ const CrearViveroDialogForm = ({
     }));
     return data_new_format;
   };
-  const on_change_file: any = (e: any) => {
-    console.log(e)
-     if (e.target.files) {
-       if (e.target.files.length > 0) set_file(e.target.files[0])
-     }
-    
-};
+  const on_change_tipo_bien: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+     set_tipo_bien_selected(e.target.value) 
+  };
 
+  const on_submit = (data: FormValues): void => {
+    console.log("submit")
+    data.cod_tipo_bien = tipo_bien_selected
+    data.nivel_jerarquico = 1;
+    console.log(data)
+    void dispatch(add_bien_service(data));
+    handle_close_add_bien();
+  };
   useEffect(() => {
     const get_selects_options: any = async () => {
-        try {
-            const { data: municipalities_no_format} = await api.get("choices/municipios/");
-            const { data: nursery_types_no_format } = await api.get("conservacion/choices/tipo-vivero/");
-            const { data: source_resources_no_format } = await api.get("conservacion/choices/origen-recursos-vivero/");
-            const municipalities_format:IList[] = text_choise_adapter(municipalities_no_format);
-            const nursery_types_format = text_choise_adapter(nursery_types_no_format);
-            const source_resources_format = text_choise_adapter(source_resources_no_format);
-            set_source_resources(source_resources_format);
-            set_nursery_types(nursery_types_format);
-            // const meta: IList[] = [];
-            // municipalities_format.map(({ label, value }) => {
-            //     const num = Number(value);
-
-            //     if (num >= 50000 && num <= 51000) {
-            //         meta.push({ label, value } as IList);
-            //     }
-            // });
-            set_municipalities(municipalities_format);
-        } catch (err) {
-            console.log(err);
-        }
+      try {
+        const { data: tipo_bien_no_format } = await api.get("almacen/choices/tipo-bien/");
+        const tipo_bien_format: IList[] = text_choise_adapter(tipo_bien_no_format);
+        set_tipo_bien(tipo_bien_format);
+        const { data: activo_types_no_format } = await api.get("almacen/choices/tipo-activo/");
+        const activo_types_format: IList[] = text_choise_adapter(activo_types_no_format);
+        set_activo_types(activo_types_format);
+        const { data: metodo_valoracion_no_format } = await api.get("almacen/choices/metodo-valoracion-articulo/");
+        const metodo_valoracion_format: IList[] = text_choise_adapter(metodo_valoracion_no_format);
+        set_metodo_valoracion(metodo_valoracion_format);
+        const { data: depreciacion_types_no_format } = await api.get("almacen/choices/metodo-valoracion-articulo/");
+        const depreciacion_types_format: IList[] = text_choise_adapter(depreciacion_types_no_format);
+        set_depreciacion_types(depreciacion_types_format);
+        
+      } catch (err) {
+        console.log(err);
+      }
     };
     void get_selects_options();
-}, []);
+    void dispatch(get_marca_service());
+    void dispatch(get_porcentaje_service());
+    void dispatch(get_medida_service());
+  }, []);
 
+  useEffect(() => {
+    reset_bien(current_bien);
+  }, [current_bien]);
 
   return (
     <Dialog
       maxWidth="xl"
-      open={is_modal_active}
-      onClose={handle_close_add_nursery}
+       open={is_modal_active}
+       onClose={handle_close_add_bien}
+       fullWidth
     >
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
-        <DialogTitle>Crear vivero</DialogTitle>
+        <DialogTitle>Crear Bien</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-         <Grid container >
-        <Title title="INFORMACION PRINCIPAL"></Title>
-         <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-          <Controller
-            name="nombre"
-            control={control_vivero}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
+          <Grid container >
+          <Title title="Seleccione tipo de bien"></Title>
+            <Grid item xs={12} md={12} margin={1}>
               <TextField
-                margin="dense"
-                fullWidth
-                size="small"
-                label="Nombre"
-                variant="outlined"
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio ingresar un nombre'
-                    : 'Ingrese nombre'
-                }
-              />
-            )}
-          />
-          </Grid>
-         <Grid xs={ 11 } md={ 5 } margin={ 1 }>
+                    margin="dense"
+                    select
+                    size="small"
+                    label="Tipo de bien"
+                    variant="outlined"
+                    defaultValue={tipo_bien_selected}
+                    value={tipo_bien_selected}
+                    onChange={on_change_tipo_bien}
+                    
+                  >
+                    {tipo_bien.map((option: IList) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+               
+            </Grid>
+          <Title title="INFORMACION DEL BIEN"></Title>
 
-          <Controller
-            name="cod_municipio"
-            control={control_vivero}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                select
-                size="small"
-                label="Municipio"
-                variant="outlined"
-                defaultValue={ value }
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio seleccionar municipio'
-                    : 'Seleccione municipio'
-                }
-              >
-                {municipalities.map((option: IList) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-              </TextField>
-            )}
-          />
-          </Grid>
-         <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-          <Controller
-            name="direccion"
-            control={control_vivero}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                size="small"
-                label="Dirección"
-                variant="outlined"
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio ingresar una dirección'
-                    : 'Ingrese dirección'
-                }
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="codigo_bien"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Codigo"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un codigo'
+                        : 'Ingrese codigo'
+                    }
+                  />
+                )}
               />
-            )}
-          />
-          </Grid>
-          <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-          <Controller
-            name="area_mt2"
-            control={control_vivero}
-            defaultValue={0}
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                size="small"
-                label="Area m2"
-                variant="outlined"
-                type="number"
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio ingresar area'
-                    : 'Ingrese area'
-                }
+            </Grid>
+            <Grid item xs={11} md={3} margin={1}>
+              <Controller
+                name="nombre"
+                control={control_bien}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Nombre"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  />
+                )}
               />
-            )}
-          />
-          </Grid>
-          <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-
-          <Controller
-            name="cod_tipo_vivero"
-            control={control_vivero}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                select
-                size="small"
-                label="Tipo vivero"
-                variant="outlined"
-                defaultValue={ value }
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio seleccionar tipo de vivero'
-                    : 'seleccione tipo vivero'
-                }
-              >
-                {nursery_types.map((option: IList) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-              </TextField>
-            )}
-          />
-          </Grid>
-          <Title title="DETALLES VIVERO"></Title>
-          <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-          <Controller
-            name="area_propagacion_mt2"
-            control={control_vivero}
-            defaultValue={0}
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                size="small"
-                label="Area propagacion m2"
-                variant="outlined"
-                type="number"
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio ingresar area'
-                    : 'Ingrese area'
-                }
+            </Grid>
+            {tipo_bien_selected ==="A"?
+            <Grid item xs={11} md={3} margin={1}>
+              <Controller
+                name="cod_tipo_activo"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Tipo activo"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar tipo de activo'
+                        : 'seleccione tipo activo'
+                    }
+                  >
+                    {activo_types.map((option: IList) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
               />
-            )}
-          />
-          </Grid>
-          <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-          <Controller
-            name="tiene_area_produccion"
-            control={control_vivero}
-            defaultValue={true}
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                select
-                size="small"
-                label="¿Area de produccion?"
-                variant="outlined"
-                defaultValue={ value }
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio seleccionar una opción'
-                    : 'Seleccionar opción'
-                }
-              >
-                <MenuItem value="true">SI</MenuItem>
-                <MenuItem value="false">NO</MenuItem>
-              </TextField>
-            )}
-          />
-          </Grid>
-          <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-          <Controller
-            name="tiene_areas_pep_sustrato"
-            control={control_vivero}
-            defaultValue={true}
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                select
-                size="small"
-                label="¿Area preparacion sustrato?"
-                variant="outlined"
-                defaultValue={ value }
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio seleccionar una opción'
-                    : 'Seleccionar opción'
-                }
-              >
-                <MenuItem value="true">SI</MenuItem>
-                <MenuItem value="false">NO</MenuItem>
-              </TextField>
-            )}
-          />
-          </Grid>
-          <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-          <Controller
-            name="tiene_area_embolsado"
-            control={control_vivero}
-            defaultValue={true}
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                select
-                size="small"
-                label="¿Area de embolsado?"
-                variant="outlined"
-                defaultValue={ value }
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio seleccionar una opción'
-                    : 'Seleccionar opción'
-                }
-              >
-                <MenuItem value="true">SI</MenuItem>
-                <MenuItem value="false">NO</MenuItem>
-              </TextField>
-            )}
-          />
-          </Grid>
-          <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-
-          <Controller
-            name="cod_origen_recursos_vivero"
-            control={control_vivero}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                select
-                size="small"
-                label="¿Vivero creado por medio de ?"
-                variant="outlined"
-                defaultValue={ value }
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio seleccionar origen de recursos'
-                    : 'Elija origen recurso'
-                }
-              >
-                {source_resources.map((option: IList) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-              </TextField>
-            )}
-          />
-          </Grid>
-          <Grid xs={ 11 } md={ 5 } margin={ 1 }>
-          
-              <TextField
-                margin="dense"
-                fullWidth
-                size="small"
-                label="archivo"
-                variant="outlined"
-                type="file"
-                onChange={(e) => {on_change_file(e)}}
+            </Grid>
+            :
+            <Grid item xs={11} md={3} margin={1}>
+              <Controller
+                name="cod_metodo_valoracion"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Metodo valoración"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar metodo valoración'
+                        : 'seleccione metodo valoración'
+                    }
+                  >
+                    {metodo_valoracion.map((option: IList) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            }
+            <Grid item xs={11} md={3} margin={1}>
+              
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Carpeta padre"
+                    variant="outlined"
+                  
+                    
+                  />
+                
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="id_unidad_medida"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Unidad de medida"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar unidad de medida'
+                        : 'seleccione unidad de media'
+                    }
+                  >
+                    {unidad_medida.map((option) => (
+                      <MenuItem key={option.id_unidad_medida} value={option.id_unidad_medida}>
+                        {option.nombre}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="id_porcentaje_iva"
+                control={control_bien}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Porcentaje IVA"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar porcentaje de iva'
+                        : 'seleccione porcentaje de iva'
+                    }
+                  >
+                    {porcentaje_iva.map((option) => (
+                      <MenuItem key={option.id_porcentaje_iva} value={option.id_porcentaje_iva}>
+                        {option.porcentaje}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
             
-              />
+
+            {tipo_bien_selected ==="A"?
+            <>
             
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="cod_tipo_depreciacion"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Tipo depreciación"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar tipo de depreciación'
+                        : 'seleccione tipo depreciación'
+                    }
+                  >
+                    {depreciacion_types.map((option: IList) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="id_unidad_medida_vida_util"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Unidad de medida vida util"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar unidad de medida vida util'
+                        : 'seleccione unidad de media vida util'
+                    }
+                  >
+                    {unidad_medida.map((option) => (
+                      <MenuItem key={option.id_unidad_medida} value={option.id_unidad_medida}>
+                        {option.nombre}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="cantidad_vida_util"
+                control={control_bien}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    type="number"
+                    label="Cantidad vida util"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar cantidad vida util'
+                        : 'Ingrese cantidad vida util'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="valor_residual"
+                control={control_bien}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    type="number"
+                    label="Valor residual"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar valor residual'
+                        : 'Ingrese cantidad valor residual'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="id_marca"
+                control={control_bien}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Marca"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar marca'
+                        : 'seleccione marca'
+                    }
+                  >
+                    {marca.map((option) => (
+                      <MenuItem key={option.id_marca} value={option.id_marca}>
+                        {option.nombre}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            </>
+            :
+            <>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="stock_minimo"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    type="number"
+                    label="Stock minimo"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar stock minimo'
+                        : 'Ingrese stock minimo'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+            <Controller
+              name="stock_maximo"
+              control={control_bien}
+              rules={{ required: true }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <TextField
+                  margin="dense"
+                  fullWidth
+                  size="small"
+                  type="number"
+                  label="Stock maximo"
+                  variant="outlined"
+                  value={value}
+                  onChange={onChange}
+                  error={!(error == null)}
+                  helperText={
+                    error != null
+                      ? 'Es obligatorio ingresar stock maximo'
+                      : 'Ingrese stock maximo'
+                  }
+                />
+              )}
+            />
           </Grid>
+          </>
+            }
+            
+            
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="visible_solicitudes"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="¿Visible en solicitudes?"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar una opción'
+                        : 'Seleccionar opción'
+                    }
+                  >
+                    <MenuItem value="true">SI</MenuItem>
+                    <MenuItem value="false">NO</MenuItem>
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="maneja_hoja_vida"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="¿Hoja de vida?"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar una opción'
+                        : 'Seleccionar opción'
+                    }
+                  >
+                    <MenuItem value="true">SI</MenuItem>
+                    <MenuItem value="false">NO</MenuItem>
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={12} margin={1}>
+              <Controller
+                name="descripcion"
+                control={control_bien}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    multiline
+                    rows={4}
+                    size="small"
+                    label="Descripcion"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar descripción'
+                        : 'Ingrese descripción'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+            
+            
+
+
+
           </Grid>
         </DialogContent>
         <Divider />
@@ -452,7 +713,7 @@ const CrearViveroDialogForm = ({
           >
             <Button
               variant="outlined"
-              onClick={handle_close_add_nursery}
+              onClick={handle_close_add_bien}
               startIcon={<CloseIcon />}
             >
               CERRAR
@@ -468,4 +729,4 @@ const CrearViveroDialogForm = ({
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default CrearViveroDialogForm;
+export default CrearBienDialogForm;
