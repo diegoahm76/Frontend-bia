@@ -24,6 +24,9 @@ export interface IPorcentajes {
   id_porcentaje_iva: number | null;
   porcentaje: number;
   observacion: string;
+  registro_precargado: boolean;
+  activo: boolean;
+  item_ya_usado: boolean;
 }
 export interface IMedidasGet {
   medida: IMedidas[];

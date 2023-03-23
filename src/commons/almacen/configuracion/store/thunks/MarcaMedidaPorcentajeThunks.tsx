@@ -17,6 +17,7 @@ import {
 
 } from '../slice/MarcaMedidaPorcentajeSlice';
 import { api } from '../../../../../api/axios';
+import { type IMarcas} from "../../interfaces/MarcaMedidaPorcentaje"
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -88,6 +89,79 @@ export const add_marca_service: any = (
     }
   };
 };
+
+// editar marca 
+
+export const edit_marca_service: any = (
+  marca: any,
+  id: string|number,
+
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `almacen/marcas/update/${id}/`,
+        marca
+      );
+      dispatch(get_marca_service());
+      control_success('La marca se edito correctamente');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      console.log(error.response.data);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// eliminar marca 
+
+export const delete_marca_service: any = (id: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `almacen/marcas/delete/${id}/`
+      );
+      dispatch(get_marca_service());
+      control_success('Se elimino la marca');
+
+      return data;
+    } catch (error: any) {
+      console.log('delete nursery service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// desactivar -activar marca
+
+export const activate_deactivate_marca_service: any = (id: string | number, marca: IMarcas) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      marca.activo = !marca.activo
+      const { data } = await api.put(
+        `almacen/marcas/update/${id}/`,
+        marca
+      );
+      dispatch(get_marca_service());
+      control_success('Se desactivo marca ');
+
+      return data;
+    } catch (error: any) {
+      console.log('activate-deactivate nursery service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+
+
 
 // porcentaje
 
