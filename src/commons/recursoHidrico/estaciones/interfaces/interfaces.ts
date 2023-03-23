@@ -3,6 +3,7 @@ export interface Estaciones {
     fecha_modificacion: null | string,
     nombre_estacion: string,
     cod_tipo_estacion: string,
+    cod_municipio: string,
     latitud: number,
     longitud: number,
     indicaciones_ubicacion: null | string,
@@ -53,7 +54,9 @@ export interface conf_alarma {
 }
 export interface Parametros {
 
+    id_parametro_referencia: number,
     id_estacion: number,
+    fecha_modificacion: string | null,
     frecuencia_solicitud_datos: number,
     temperatura_ambiente_max: number,
     temperatura_ambiente_min: number,
@@ -75,6 +78,7 @@ export interface Parametros {
     velocidad_agua_min: number,
 }
 export interface IEstacionEstaciones {
+
     nombre_estacion: string,
     cod_tipo_estacion: string,
     latitud: number,
@@ -155,4 +159,36 @@ export interface Tipos {
     velocidad_agua_max: number;
     velocidad_agua_min: number;
 }
+export interface EditarPersona {
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+    entidad: string;
+    cargo: string;
+    email_notificacion: string;
+    nro_celular_notificacion: string;
+    observacion: string;
+}
+export interface ParametrosEditar {
 
+    frecuencia_solicitud_datos: number | string,
+    temperatura_ambiente_max: number | string,
+    temperatura_ambiente_min: number | string,
+    humedad_ambiente_max: number | string,
+    humedad_ambiente_min: number | string,
+    presion_barometrica_max: number | string,
+    presion_barometrica_min: number | string,
+    velocidad_viento_max: number | string,
+    velocidad_viento_min: number | string,
+    direccion_viento_max: number | string,
+    direccion_viento_min: number | string,
+    precipitacion_max: number | string,
+    precipitacion_min: number | string,
+    luminosidad_max: number | string,
+    luminosidad_min: number | string,
+    nivel_agua_max: number | string,
+    nivel_agua_min: number | string,
+    velocidad_agua_max: number | string,
+    velocidad_agua_min: number | string,
+}
