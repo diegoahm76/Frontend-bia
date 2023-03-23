@@ -10,10 +10,8 @@ import { EditarParametosReferenciaDialog } from './EditarParametosReferenciaDial
 export const ParametrosReferencia: React.FC = () => {
     const [parametro_referencia, set_data_parametro] = useState<Parametros[]>([]);
     const [editar_parametros_is_active, set_editar_parametros_is_active] = useState<boolean>(false);
+    const [parametro_editado, set_parametro_editado] = useState(null);
 
-    const handle_open_editar_parametros = (): void => {
-        set_editar_parametros_is_active(true);
-    }
     const columns: GridColDef[] = [
         { field: 'id_estacion', headerName: 'ESTACIÓN', width: 140 },
         { field: 'fecha_modificacion', headerName: 'FECHA MODIFICACIÓN', width: 140 },
@@ -60,7 +58,11 @@ export const ParametrosReferencia: React.FC = () => {
                         >
                             <EditIcon
                                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                onClick={handle_open_editar_parametros}
+                                onClick={() => {
+                                    set_parametro_editado(params.row);
+                                    set_editar_parametros_is_active(!editar_parametros_is_active);
+                                    console.log("se enviaron los siguientes parametros", params.row);
+                                }}
                             />
                         </Avatar>
                     </IconButton>
@@ -125,6 +127,8 @@ export const ParametrosReferencia: React.FC = () => {
                 <EditarParametosReferenciaDialog
                     is_modal_active={editar_parametros_is_active}
                     set_is_modal_active={set_editar_parametros_is_active}
+                    parametro_editado={parametro_editado}
+                    set_parametro_editado={set_parametro_editado}
                 />
             </Grid>
         </>

@@ -102,7 +102,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
           onClick={() => {
             enviar_datos(node, false); // crear
           }}
-          disabled={!node.data.crear}
+          disabled={false}
         ></Button>
         <Button 
           type="button"
@@ -112,7 +112,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
           onClick={() => {
             enviar_datos(node, true); // true
           }}
-          disabled={!node.data.editar}
+          disabled={false}
         ></Button>
         <Button
           type="button"
@@ -120,7 +120,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
           className="p-button-danger p-button-outlined"
           title="Eliminar"
           style={{ marginRight: ".5em", color: "black", border: "none" }}
-          disabled={!node.data.eliminar}
+          disabled={false}
           onClick={() => {
             eliminarNodo(node); // true
           }}

@@ -15,7 +15,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import { add_organigrams_service } from '../store/thunks/organigramThunks';
-import { useAppDispatch } from '../../../../hooks/';
+import { useAppDispatch } from '../../../../hooks';
 
 interface IProps {
   is_modal_active: boolean;
@@ -30,7 +30,7 @@ interface FormValues {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const CrearItemOrganigramaModal = ({
+const DialogCrearOrganigrama = ({
   is_modal_active,
   set_is_modal_active,
   set_position_tab_organigrama,
@@ -175,4 +175,4 @@ const CrearItemOrganigramaModal = ({
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default CrearItemOrganigramaModal;
+export default DialogCrearOrganigrama;
