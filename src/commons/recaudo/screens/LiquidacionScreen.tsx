@@ -1,7 +1,11 @@
 import { Box, Button, Grid, IconButton, Stack, TextField, TextareaAutosize } from "@mui/material"
 import { Title } from "../../../components"
-import FindInPageIcon from '@mui/icons-material/FindInPage';
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import FindInPageIcon from '@mui/icons-material/FindInPage';
+import AddIcon from '@mui/icons-material/Add';
+import { useState } from 'react';
+// import CrearViveroDialogForm from "../../conservacion/gestorVivero/componentes/CrearViveroDialogForm";
+import { AddParametroModal } from '../components/modal/AddParametroModal';
 
 const column:GridColDef[] = [
     { 
@@ -54,6 +58,9 @@ const row = [
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionScreen:React.FC = () => {
+
+    const [add_parametro, set_add_parametro] = useState<boolean>(false);
+
   return (
     <>
         <Grid 
@@ -88,9 +95,27 @@ export const LiquidacionScreen:React.FC = () => {
                                 <FindInPageIcon fontSize="inherit" />
                             </IconButton>
                         </Grid>
+                        <Stack
+                            direction="row"
+                            justifyContent="end"
+                            spacing={2}
+                            sx={{ mb: '20px' }}
+                        >
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                startIcon={<AddIcon />}
+                                onClick={() => {
+                                    set_add_parametro(true);
+                                }}
+                            >
+                                Añadir parametro
+                            </Button>
+                        </Stack>
                     </Grid>
                     <Grid container spacing={1}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12}>
                             <DataGrid
                                 density="compact"
                                 autoHeight
@@ -102,7 +127,7 @@ export const LiquidacionScreen:React.FC = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={4}>
                             <TextareaAutosize
-                                style={{ margin: '10px', width: 500, height: 500 }}
+                                style={{ margin: '10px', width: 350, height: 400 }}
                             />
                         </Grid>
                     </Grid>
@@ -127,8 +152,11 @@ export const LiquidacionScreen:React.FC = () => {
                     </Button>
                 </Stack>
             </Grid>
-
         </Grid>
+        <AddParametroModal
+            is_modal_active={add_parametro}
+            set_is_modal_active={set_add_parametro}
+        /> 
     </>
   )
 }
