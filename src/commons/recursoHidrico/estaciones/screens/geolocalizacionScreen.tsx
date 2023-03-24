@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { type Estaciones } from '../interfaces/interfaces';
@@ -20,7 +20,7 @@ const icon_locate = new L.Icon({
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GeolocalizacionScreen: React.FC = () => {
   const [info, set_info] = useState<Estaciones[]>([]);  
-
+  
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const obtener_posicion = async () => {
     try{
@@ -46,27 +46,26 @@ export const GeolocalizacionScreen: React.FC = () => {
       } catch (err) {
       control_error(err);
     }
-  };
-
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!info.length) return <Grid className="Loading"></Grid>;
+  };  
 
   useEffect(() => {
     void obtener_posicion();
   }, []);
 
-  const markers = info.map((estacion) => (
-    <Marker
-      key={estacion.id_estacion}
-      position={[estacion.longitud, estacion.latitud]}
-      icon={icon_locate}
-    >
-      <Popup>
-        <strong>Nombre: </strong>{estacion.nombre_estacion} <br></br>
-        <strong>Tipo de Estacion: </strong>{estacion.cod_tipo_estacion}
-      </Popup>
-    </Marker>
-  ));
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (!info.length) return <Grid className="Loading"></Grid>;  
+
+  const markers = info.map((estacion) => {
+
+     return (
+      <Marker
+        key={estacion.id_estacion}
+        position={[estacion.longitud, estacion.latitud]}
+        icon={icon_locate}
+      >        
+      </Marker>
+    );
+  });
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const firstEstacion = info[0];
