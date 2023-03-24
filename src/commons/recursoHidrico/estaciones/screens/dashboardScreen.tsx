@@ -12,7 +12,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SearchIcon from '@mui/icons-material/Search';
 import moment from 'moment';
-import { control_success } from '../../requets/Request';
+import { control_success, control_success_fail } from '../../requets/Request';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -129,9 +129,8 @@ export const DashboardScreen: React.FC = () => {
         const start_date_string = handle_end_date_change(start_date)
         const end_date_string = handle_end_date_change(end_date)
 
-        if (end_date_string < start_date_string) {
-            control_success("La fecha inicial no puede ser más reciente que la fecha final.")
-        }
+        // if (end_date_string < start_date_string) { }
+
         console.log(start_date_string);
         console.log(end_date_string);
         const { data: { data: data_success } } = await api.get(
@@ -175,7 +174,7 @@ export const DashboardScreen: React.FC = () => {
             console.log("Paso")
             control_success("Se encontraron Datos")
         } else {
-            console.log("Maaalll")
+            control_success_fail("No se encontraron datos")
         }
         return filtereddata(data_success);
     };
