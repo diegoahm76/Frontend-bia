@@ -31,7 +31,7 @@ export interface IObjNursery {
   id_persona_crea: number | null;
   id_persona_abre: number | null;
   id_persona_cierra: number | null;
-  id_persona_cuarentena: number | null;
+  id_persona_cuarentena:  number | null;
 }
 
 export interface IList{
