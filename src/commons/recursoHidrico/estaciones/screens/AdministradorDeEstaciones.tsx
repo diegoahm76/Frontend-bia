@@ -146,7 +146,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
         }
     };
 
-    const confirmar_eliminar_usuario = (idPersona: number): void => {
+    const confirmar_eliminar_usuario = (id_Estacion: number): void => {
         console.log("Paso ", dato.length)
         if (dato.length > 0) {
             console.log("Hay datos")
@@ -167,7 +167,8 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 cancelButtonText: "Cancelar",
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    // await eliminar_estacion(idPersona);
+                    // await eliminar_estacion(id_Estacion);
+                    void estacion()
                     control_success('La estación se eliminó correctamente')
                 }
 
@@ -221,6 +222,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 set_is_modal_active={set_editar_estacion_is_active}
                 estacion_editado={estacion_editado}
                 set_estacion_editado={set_estacion_editado}
+                estacion={estacion}
             />
         </Grid>
     );
