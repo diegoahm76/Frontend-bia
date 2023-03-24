@@ -13,10 +13,11 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   parametro_editado: any;
   set_parametro_editado: Dispatch<SetStateAction<any>>;
+  parametros: () => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, parametro_editado, set_parametro_editado, }) => {
+export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, parametro_editado, set_parametro_editado, parametros,}) => {
 
   const {
     register,
@@ -65,6 +66,7 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
       set_parametro_editado(null);
       set_is_modal_active(false);
       control_success('El parametro se actualizó correctamente')
+      void parametros()
     } catch (error) {
       control_error(error);
     }
