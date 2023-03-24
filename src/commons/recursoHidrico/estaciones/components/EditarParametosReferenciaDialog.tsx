@@ -64,7 +64,7 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
       await editar_parametro(parametro_editado.id_parametro_referencia, datos_parametro);
       set_parametro_editado(null);
       set_is_modal_active(false);
-      control_success('La persona se actualizó correctamente')
+      control_success('El parametro se actualizó correctamente')
     } catch (error) {
       control_error(error);
     }

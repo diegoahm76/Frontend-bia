@@ -96,15 +96,17 @@ export const DashboardScreen: React.FC = () => {
     const [end_date, set_end_date] = useState<Date | null>(new Date());
 
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_start_date_change = (date: Date | null) => {
-        const start_date_string = date ? date.toISOString().slice(0, 10) : '';
+        const start_date_string = (date != null) ? date.toISOString().slice(0, 10) : '';
         console.log(start_date_string);
         set_start_date(date)
         return start_date_string
     };
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_end_date_change = (date: Date | null) => {
-        const end_date_string = date ? date.toISOString().slice(0, 10) : '';
+        const end_date_string = (date != null) ? date.toISOString().slice(0, 10) : '';
         console.log(end_date_string);
         set_end_date(date)
         return end_date_string
@@ -195,7 +197,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdatafortemperatura = (data: EstacionData[]) => {
@@ -206,7 +208,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforluminosidad = (data: EstacionData[]) => {
@@ -217,7 +219,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdatafornivelagua = (data: EstacionData[]) => {
@@ -228,7 +230,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforvelocidadagua = (data: EstacionData[]) => {
@@ -239,7 +241,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforvelocidadviento = (data: EstacionData[]) => {
@@ -250,7 +252,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforhumedad = (data: EstacionData[]) => {
@@ -261,7 +263,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatatafordireccion = (data: EstacionData[]) => {
@@ -272,7 +274,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforprecipitacion = (data: EstacionData[]) => {
@@ -283,7 +285,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
 
     return (
@@ -340,42 +342,24 @@ export const DashboardScreen: React.FC = () => {
                             selected={end_date}
                             onChange={handle_end_date_change}
                             placeholderText="Fecha Final"
-                        />
-                        <Typography variant="h4" color="primary">
-                            Presión barometrica
-                        </Typography>
+                        />                        
+                        <Title title="Presión barometrica" />
                         <Line data={queryestaciones} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Humedad
-                        </Typography>
+                        <Title title="Humedad" /> 
                         <Line data={queryhumedad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Dirección del viento
-                        </Typography>
+                        <Title title="Dirección del viento" />                        
                         <Line data={querydireccion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Precipitación
-                        </Typography>
+                        <Title title="Precipitación" />                        
                         <Line data={queryprecipitacion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Luminosidad
-                        </Typography>
+                        <Title title="Luminosidad" />                        
                         <Line data={queryluminosidad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Temperatura
-                        </Typography>
+                        <Title title="Temperatura" />
                         <Line data={querytemperatura} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad del viento
-                        </Typography>
+                        <Title title="Velocidad del viento" />                        
                         <Line data={queryvelocidadviento} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad dela agua
-                        </Typography>
+                        <Title title="Velocidad del Agua" />                        
                         <Line data={queryvelocidadagua} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Nivel del agua
-                        </Typography>
+                        <Title title="Nivel del Agua" />                        
                         <Line data={querynivelagua} options={options} />
                     </Typography>
                     <Typography variant="body1" align="center" hidden={selectdashboards !== 2}>
@@ -392,41 +376,23 @@ export const DashboardScreen: React.FC = () => {
                             onChange={handle_end_date_change}
                             placeholderText="Fecha Final"
                         />
-                        <Typography variant="h4" color="primary">
-                            Presión barometrica
-                        </Typography>
+                        <Title title="Presión barometrica" />
                         <Line data={queryestaciones} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Humedad
-                        </Typography>
+                        <Title title="Humedad" /> 
                         <Line data={queryhumedad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Dirección del viento
-                        </Typography>
+                        <Title title="Dirección del viento" />  
                         <Line data={querydireccion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Precipitación
-                        </Typography>
+                        <Title title="Precipitación" />                        
                         <Line data={queryprecipitacion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Luminosidad
-                        </Typography>
+                        <Title title="Luminosidad" />                        
                         <Line data={queryluminosidad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Temperatura
-                        </Typography>
+                        <Title title="Temperatura" />
                         <Line data={querytemperatura} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad del viento
-                        </Typography>
+                        <Title title="Velocidad del viento" />                        
                         <Line data={queryvelocidadviento} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad dela agua
-                        </Typography>
+                        <Title title="Velocidad del Agua" />                        
                         <Line data={queryvelocidadagua} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Nivel del agua
-                        </Typography>
+                        <Title title="Nivel del Agua" />  
                         <Line data={querynivelagua} options={options} />
                     </Typography>
                     <Typography variant="body1" align="center" hidden={selectdashboards !== 3}>
@@ -443,41 +409,24 @@ export const DashboardScreen: React.FC = () => {
                             onChange={handle_end_date_change}
                             placeholderText="Fecha Final"
                         />
-                        <Typography variant="h4" color="primary">
-                            Presión barometrica
-                        </Typography>
+                        <Title title="Presión barometrica" />
                         <Line data={queryestaciones} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Humedad
-                        </Typography>
+                        <Title title="Humedad" /> 
                         <Line data={queryhumedad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Dirección del viento
-                        </Typography>
+                        <Title title="Dirección del viento" />  
                         <Line data={querydireccion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Precipitación
-                        </Typography>
+                        <Line data={querydireccion} options={options} />
+                        <Title title="Precipitación" />                        
                         <Line data={queryprecipitacion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Luminosidad
-                        </Typography>
+                        <Title title="Luminosidad" />                        
                         <Line data={queryluminosidad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Temperatura
-                        </Typography>
+                        <Title title="Temperatura" />
                         <Line data={querytemperatura} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad del viento
-                        </Typography>
+                        <Title title="Velocidad del viento" />                        
                         <Line data={queryvelocidadviento} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad dela agua
-                        </Typography>
+                        <Title title="Velocidad del Agua" />                        
                         <Line data={queryvelocidadagua} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Nivel del agua
-                        </Typography>
+                        <Title title="Nivel del Agua" />  
                         <Line data={querynivelagua} options={options} />
                     </Typography>
                     <Typography variant="body1" align="center" hidden={selectdashboards !== 4}>
@@ -494,41 +443,24 @@ export const DashboardScreen: React.FC = () => {
                             onChange={handle_end_date_change}
                             placeholderText="Fecha Final"
                         />
-                        <Typography variant="h4" color="primary">
-                            Presión barometrica
-                        </Typography>
+                        <Title title="Presión barometrica" />
                         <Line data={queryestaciones} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Humedad
-                        </Typography>
+                        <Title title="Humedad" />                        
                         <Line data={queryhumedad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Dirección del viento
-                        </Typography>
+                        <Title title="Dirección del viento" />  
                         <Line data={querydireccion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Precipitación
-                        </Typography>
+                        <Line data={querydireccion} options={options} />
+                        <Title title="Precipitación" />                        
                         <Line data={queryprecipitacion} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Luminosidad
-                        </Typography>
+                        <Title title="Luminosidad" />                        
                         <Line data={queryluminosidad} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Temperatura
-                        </Typography>
+                        <Title title="Temperatura" />
                         <Line data={querytemperatura} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad del viento
-                        </Typography>
+                        <Title title="Velocidad del viento" />                        
                         <Line data={queryvelocidadviento} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Velocidad dela agua
-                        </Typography>
+                        <Title title="Velocidad del Agua" />                        
                         <Line data={queryvelocidadagua} options={options} />
-                        <Typography variant="h4" color="primary">
-                            Nivel del agua
-                        </Typography>
+                        <Title title="Nivel del Agua" />  
                         <Line data={querynivelagua} options={options} />
                     </Typography>
                 </Grid>
