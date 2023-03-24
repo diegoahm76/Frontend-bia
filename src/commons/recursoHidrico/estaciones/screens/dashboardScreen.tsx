@@ -13,6 +13,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SearchIcon from '@mui/icons-material/Search';
 import moment from 'moment';
+import { control_success } from '../../requets/Request';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DashboardScreen: React.FC = () => {
@@ -104,6 +106,7 @@ export const DashboardScreen: React.FC = () => {
 
     const [dates_selected, set_dates_selected] = useState(false);
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_start_date_change = (date: Date | null) => {
         const start_date_string = date ? date.toISOString().slice(0, 10) : '';
         console.log(start_date_string);
@@ -111,6 +114,7 @@ export const DashboardScreen: React.FC = () => {
         return start_date_string
     };
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_end_date_change = (date: Date | null) => {
         const end_date_string = date ? date.toISOString().slice(0, 10) : '';
         console.log(end_date_string);
@@ -164,8 +168,15 @@ export const DashboardScreen: React.FC = () => {
 
         const formatteddataprecipitacion = formatdataforprecipitacion(filtereddata);
         setqueryprecipitacion(formatteddataprecipitacion);
+        if (filtereddata != null) {
+            console.log("Paso")
+            control_success("Se encontraron Datos")
+        } else {
+            console.log("No se encuentran los datosss")
+        }
         return filtereddata(data_success);
     };
+
 
     const options: ChartOptions = {
         plugins: {
@@ -337,9 +348,11 @@ export const DashboardScreen: React.FC = () => {
                     />
 
                     <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
-                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
-                        <Stack direction="row" spacing={2} alignItems="center">
-                            <label>Fecha Inicial</label>
+                        <Title title="Por favor seleccione las fechas para filtrar los dato" ></Title>
+
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+
+                            <label >Fecha Inicial</label>
 
                             <DatePicker
                                 selected={start_date}
@@ -358,44 +371,27 @@ export const DashboardScreen: React.FC = () => {
                                 }}
                                 placeholderText="Fecha Final"
                             />
-                            <Button variant="contained" type="submit" className="text-capitalize rounded-pill  " onClick={() => set_dates_selected(true)}>Consultar variables<SearchIcon /></Button>
+                            <Button variant="contained" type="submit" className="text-capitalize rounded-pill  " fullWidth onClick={() => { set_dates_selected(true); }}>Consultar variables<SearchIcon /></Button>
                         </Stack>
+
                         <Typography variant="body1" align="center" hidden={!dates_selected}>
-                            <Typography variant="h4" color="primary">
-                                Presión barometrica
-                            </Typography>
+                            <Title title="Presión barometrica" ></Title>
                             <Line data={queryestaciones} options={options} />
-                            <Typography variant="h4" color="primary">
-                                Humedad
-                            </Typography>
+                            <Title title="Humedad" ></Title>
                             <Line data={queryhumedad} options={options} />
-                            <Typography variant="h4" color="primary">
-                                Dirección del viento
-                            </Typography>
+                            <Title title="Direccion de Viento" ></Title>
                             <Line data={querydireccion} options={options} />
-                            <Typography variant="h4" color="primary">
-                                Precipitación
-                            </Typography>
+                            <Title title="Precipitación" ></Title>
                             <Line data={queryprecipitacion} options={options} />
-                            <Typography variant="h4" color="primary">
-                                Luminosidad
-                            </Typography>
+                            <Title title="Luminosidad" ></Title>
                             <Line data={queryluminosidad} options={options} />
-                            <Typography variant="h4" color="primary">
-                                Temperatura
-                            </Typography>
+                            <Title title="Temperatura" ></Title>
                             <Line data={querytemperatura} options={options} />
-                            <Typography variant="h4" color="primary">
-                                Velocidad del viento
-                            </Typography>
+                            <Title title="Velocidad del viento" ></Title>
                             <Line data={queryvelocidadviento} options={options} />
-                            <Typography variant="h4" color="primary">
-                                Velocidad dela agua
-                            </Typography>
+                            <Title title="Velocidad del agua" ></Title>
                             <Line data={queryvelocidadagua} options={options} />
-                            <Typography variant="h4" color="primary">
-                                Nivel del agua
-                            </Typography>
+                            <Title title="Nivel del agua" ></Title>
                             <Line data={querynivelagua} options={options} />
                         </Typography>
                     </Typography>
