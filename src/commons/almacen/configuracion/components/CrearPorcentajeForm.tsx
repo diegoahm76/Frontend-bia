@@ -1,126 +1,81 @@
 import { useEffect, useState } from 'react'; // eslint-disable-next-line @typescript-eslint/naming-convention
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
-import SaveIcon from '@mui/icons-material/Save';
-import { Divider, Grid, Typography } from '@mui/material';
-import { api } from '../../../../api/axios';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { control_error } from '../../../../helpers/controlError';
 
-const columns: GridColDef[] = [
-  {
-    field: 'id_porcentaje_iva',
-    headerName: 'ID Porcentaje de Iva',
-    width: 200,
-  },
-  { field: 'porcentaje', headerName: 'Porcentaje', width: 200 },
-  { field: 'observacion', headerName: 'Observación', width: 200 },
-  { field: 'acciones', headerName: 'Acciones', width: 200 },
-];
-interface Porcentaje {
-  id_porcentaje_iva: number;
-  porcentaje: number;
-  observacion: string;
-  acciones: string;
-}
+import { Box, Grid, Stack } from '@mui/material';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { get_porcentaje_service } from '../store/thunks/MarcaMedidaPorcentajeThunks';
+import CrearPorcentajeModal from './modales/CrearPorcentajeModal';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPorcentajeForm: React.FC = () => {
-  const [open, set_open] = useState(false);
+  const dispatch = useAppDispatch();
+  const { porcentaje} = useAppSelector((state) => state.porcentaje); 
+ 
+  const [add_porcentaje_is_active, set_add_porcentaje_is_active] =
+  useState<boolean>(false);
 
-  const handle_click_open = (): void => {
-    set_open(true);
-  };
-  const handle_close = (): void => {
-    set_open(false);
-  };
-  const [porcentaj, set_data_porcentaj] = useState([]);
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const porcentaje = async () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/explicit-function-return-type
-    try {
-      const url = 'almacen/porcentajes/get-list/';
-      const response = await api.get(url);
-      const porcentaje = response.data.map((porcentajes: Porcentaje) => ({
-        id_porcentaje_iva: porcentajes.id_porcentaje_iva,
-        porcentaje: porcentajes.porcentaje,
-        observacion: porcentajes.observacion,
-        acciones: porcentajes.acciones,
-      }));
-      set_data_porcentaj(porcentaje);
-    } catch (e) {
-      console.log(e);
-      control_error(e);
-    }
-  };
+const columns: GridColDef[] = [
+  { field: 'id_porcentaje_iva', headerName: 'ID', width: 80 },
+  { field: 'porcentaje', headerName: 'Porcentaje', width: 80 },
+ { field: 'observacion', headerName: 'Observación', width: 300 },
+  { field: 'acciones', headerName: 'Acciones', width: 100 },
 
-  useEffect(() => {
-    void porcentaje();
+];
+  useEffect(() => { 
+    void dispatch(get_porcentaje_service());
   }, []);
+ 
 
   return (
-    <Grid container>
-      <Grid item xs={12}>
-        <Button
-          sx={{ mb: '20px' }}
-          variant="outlined"
-          onClick={handle_click_open}
-          startIcon={<AddIcon />}
-        >
-          Crear
-        </Button>
-        <Dialog open={open} onClose={handle_close}>
-          <DialogTitle>CREAR PORCENTAJE</DialogTitle>
-          <Divider />
-          <DialogContent>
-            <DialogContentText>
-              Ingrese el porcentaje que desea Crear
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Porcentaje"
-              type="Any"
-              fullWidth
-              variant="standard"
-            />
-          </DialogContent>
-          <Divider />
-          <DialogActions>
-            <Button variant="outlined" onClick={handle_close}>
-              Cerrar
-            </Button>
+    <>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+        
+          <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
             <Button
-              variant="contained"
-              color="primary"
-              startIcon={<SaveIcon />}
+              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={() => {
+                set_add_porcentaje_is_active(true);
+              }}
             >
-              Guardar
+              CREAR PORCENTAJE
             </Button>
-          </DialogActions>
-        </Dialog>
+          </Stack>
+          <Grid item>
+            <Box sx={{ width: '100%' }}>
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={porcentaje}
+                columns={columns}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => row.id_porcentaje_iva}
+              />
+            </Box>
+          </Grid>
+           <CrearPorcentajeModal
+            is_modal_active={add_porcentaje_is_active}
+            set_is_modal_active={set_add_porcentaje_is_active}
+          /> 
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        {porcentaj.length > 0 ? (
-          <DataGrid
-            autoHeight
-            rows={porcentaj}
-            columns={columns}
-            getRowId={(row) => row.id_porcentaje_iva}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-          />
-        ) : (
-          <Typography>Cargando...</Typography>
-        )}
-      </Grid>
-    </Grid>
+    </>
   );
 };
