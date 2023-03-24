@@ -107,7 +107,7 @@ export const DashboardScreen: React.FC = () => {
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_start_date_change = (date: Date | null) => {
-        const start_date_string = date ? date.toISOString().slice(0, 10) : '';
+        const start_date_string = (date != null) ? date.toISOString().slice(0, 10) : '';
         console.log(start_date_string);
         set_start_date(date)
         return start_date_string
@@ -115,7 +115,7 @@ export const DashboardScreen: React.FC = () => {
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_end_date_change = (date: Date | null) => {
-        const end_date_string = date ? date.toISOString().slice(0, 10) : '';
+        const end_date_string = (date != null) ? date.toISOString().slice(0, 10) : '';
         console.log(end_date_string);
         set_end_date(date)
         return end_date_string
@@ -215,7 +215,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdatafortemperatura = (data: EstacionData[]) => {
@@ -226,7 +226,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforluminosidad = (data: EstacionData[]) => {
@@ -237,7 +237,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdatafornivelagua = (data: EstacionData[]) => {
@@ -248,7 +248,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforvelocidadagua = (data: EstacionData[]) => {
@@ -259,7 +259,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforvelocidadviento = (data: EstacionData[]) => {
@@ -270,7 +270,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforhumedad = (data: EstacionData[]) => {
@@ -281,7 +281,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatatafordireccion = (data: EstacionData[]) => {
@@ -292,7 +292,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundImage: ``,
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const formatdataforprecipitacion = (data: EstacionData[]) => {
@@ -303,7 +303,7 @@ export const DashboardScreen: React.FC = () => {
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
-        return { labels: labels, datasets: [dataset] };
+        return { labels, datasets: [dataset] };
     };
 
     return (

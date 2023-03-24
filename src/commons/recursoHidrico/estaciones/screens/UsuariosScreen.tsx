@@ -30,6 +30,8 @@ export const UsuariosScreen: React.FC = () => {
   const [estaciones_options, set_estaciones_options] = useState([]);
   const [loading, set_loading] = useState(false);
   const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<Persona[]>([]);
+  const [usuario_editado, set_usuario_editado] = useState(null);
+
   // const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
 
   const handle_open_crear_persona = (): void => {
@@ -72,11 +74,14 @@ export const UsuariosScreen: React.FC = () => {
             size="small"
             className="btn-tablas"
             onClick={() => {
+              set_usuario_editado(params.row);
               set_is_modal_editar_active(!is_modal_editar_active);
+              console.log("se enviaron los siguientes parametros", params.row);
             }}
           >
             <EditIcon fontSize="small" />
           </IconButton>
+
           <IconButton
             size="small"
             className="btn-tablas"
@@ -301,9 +306,11 @@ export const UsuariosScreen: React.FC = () => {
         set_is_modal_active={set_crear_persona_is_active}
       />
       {<EditarPersonaDialog
-      set_is_modal_active={set_is_modal_editar_active}
-      is_modal_active={is_modal_editar_active}
-    />}
+        set_is_modal_active={set_is_modal_editar_active}
+        is_modal_active={is_modal_editar_active}
+        usuario_editado={usuario_editado}
+        set_usuario_editado={set_usuario_editado}
+      />}
     </>
   )
 };
