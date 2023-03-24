@@ -19,8 +19,8 @@ const icon_locate = new L.Icon({
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GeolocalizacionScreen: React.FC = () => {
-  const [info, set_info] = useState<Estaciones[]>([]);  
-  
+  const [info, set_info] = useState<Estaciones[]>([]); 
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const obtener_posicion = async () => {
     try{
