@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from "chart.js";
 import { useEffect, useState } from "react";
-import { Grid, Stack, Typography, FormControl, Button, } from '@mui/material';
+import { Grid, Stack, Typography, FormControl, Button, TextField, } from '@mui/material';
 import { api } from "../../../../api/axios";
 import type { EstacionData } from "../interfaces/interfaces";
 import { Title } from '../../../../components/Title';
 import { Line } from "react-chartjs-2"
 import { Controller, useForm } from "react-hook-form";
-import Select from "react-select";
 import type { ChartOptions } from 'chart.js/auto';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -129,6 +128,10 @@ export const DashboardScreen: React.FC = () => {
         // primera solicitud para filtrar por fechas
         const start_date_string = handle_end_date_change(start_date)
         const end_date_string = handle_end_date_change(end_date)
+
+        if (end_date_string < start_date_string) {
+            control_success("La fecha inicial no puede ser más reciente que la fecha final.")
+        }
         console.log(start_date_string);
         console.log(end_date_string);
         const { data: { data: data_success } } = await api.get(
@@ -172,7 +175,7 @@ export const DashboardScreen: React.FC = () => {
             console.log("Paso")
             control_success("Se encontraron Datos")
         } else {
-            console.log("No se encuentran los datosss")
+            console.log("Maaalll")
         }
         return filtereddata(data_success);
     };
@@ -317,6 +320,8 @@ export const DashboardScreen: React.FC = () => {
                 }}
             >
                 <Grid item xs={12} spacing={2}>
+
+
                     <Controller
                         name="opcDashboard"
                         control={control}
@@ -328,24 +333,36 @@ export const DashboardScreen: React.FC = () => {
                                         name="opcDashboard"
                                         control={control}
                                         render={({ field }) => (
-                                            <Select
+                                            <TextField
                                                 {...field}
                                                 onChange={(e) => {
                                                     set_select_dashboards({
                                                         ...selectdashboards,
-                                                        opc_dashboards: e.value,
+                                                        opc_dashboards: parseInt(e.target.value)
                                                     });
-                                                }
-                                                }
-                                                options={opc_dashboards}
-                                                placeholder="Seleccionar"
-                                            />
+                                                }}
+                                                select
+                                                variant="outlined"
+                                                label="Estacion"
+                                                defaultValue={"Estacion"}
+                                                value={null}
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                            >
+                                                {opc_dashboards.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
                                         )}
                                     />
                                 </Stack>
                             </FormControl>
                         )}
                     />
+
 
                     <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
                         <Title title="Por favor seleccione las fechas para filtrar los dato" ></Title>
