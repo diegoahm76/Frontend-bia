@@ -164,7 +164,7 @@ export function TipificacionBienesScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12}>
-          <Title title="TIPIFICACION DE BIENES DE VIVERO"></Title>
+          <Title title="Tipificación de bienes de vivero"></Title>
           <Grid item mt={2}>
             <Box sx={{ width: '100%' }}>
               <DataGrid

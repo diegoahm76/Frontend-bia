@@ -129,7 +129,7 @@ export const activate_deactivate_nursery_service: any = (id: string | number) =>
         `conservacion/viveros/desactivar/${id}/`
       );
       dispatch(get_nurseries_service());
-      control_success('Se desactivo el vivero');
+      control_success(data.detail);
 
       return data;
     } catch (error: any) {

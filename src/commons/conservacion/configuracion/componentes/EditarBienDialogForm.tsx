@@ -118,7 +118,7 @@ const EditarBienDialogForm = ({
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
-            <Title title="TIPIFICAr BIEN"></Title>
+            <Title title="Tipificar bien"></Title>
             <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="nombre_cientifico"
