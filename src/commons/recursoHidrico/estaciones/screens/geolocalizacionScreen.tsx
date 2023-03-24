@@ -19,11 +19,11 @@ const icon_locate = new L.Icon({
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GeolocalizacionScreen: React.FC = () => {
-  const [info, set_info] = useState<Estaciones[]>([]);  
+  const [info, set_info] = useState<Estaciones[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const obtener_posicion = async () => {
-    try{
+    try {
       const data = await consultar_estaciones();
       const pos_maped = data.map((estaciones: Estaciones) => ({
 
@@ -33,40 +33,42 @@ export const GeolocalizacionScreen: React.FC = () => {
         cod_tipo_estacion: estaciones.cod_tipo_estacion,
         cod_municipio: estaciones.cod_municipio,
         latitud: estaciones.latitud,
-        longitud: estaciones.longitud ,
+        longitud: estaciones.longitud,
         indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
         fecha_modificacion_coordenadas: estaciones.fecha_modificacion_coordenadas,
-        id_persona_modifica: estaciones.id_persona_modifica    
-        
+        id_persona_modifica: estaciones.id_persona_modifica
+
       }));
 
       set_info(pos_maped);
       console.log('paso', pos_maped);
 
-      } catch (err) {
+    } catch (err) {
       control_error(err);
     }
   };
-
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!info.length) return <Grid className="Loading"></Grid>;
 
   useEffect(() => {
     void obtener_posicion();
   }, []);
 
-  const markers = info.map((estacion) => (
-    <Marker
-      key={estacion.id_estacion}
-      position={[estacion.longitud, estacion.latitud]}
-      icon={icon_locate}
-    >
-      <Popup>
-        <strong>Nombre: </strong>{estacion.nombre_estacion} <br></br>
-        <strong>Tipo de Estacion: </strong>{estacion.cod_tipo_estacion}
-      </Popup>
-    </Marker>
-  ));
+  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+  if (!info.length) return <Grid className="Loading"></Grid>;
+
+  const markers = info.map((estacion) => {
+
+    return (
+      <Marker
+        key={estacion.id_estacion}
+        position={[estacion.longitud, estacion.latitud]}
+        icon={icon_locate}
+      >
+        <Popup>
+          nombre: {estacion.nombre_estacion}
+        </Popup>
+      </Marker>
+    );
+  });
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const firstEstacion = info[0];
