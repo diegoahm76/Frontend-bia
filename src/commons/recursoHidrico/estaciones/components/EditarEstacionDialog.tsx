@@ -13,10 +13,11 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   estacion_editado: any;
   set_estacion_editado: Dispatch<SetStateAction<any>>;
+  estacion: () => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, estacion_editado, set_estacion_editado }) => {
+export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, estacion_editado, set_estacion_editado, estacion }) => {
 
   const {
     register,
@@ -48,11 +49,11 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
         cod_municipio: data.cod_municipio,
         indicaciones_ubicacion: data.indicaciones_ubicacion,
       };
-      console.log("DATOS A LA API", datos_estacion)
       await editar_estacion(estacion_editado.id_estacion, datos_estacion);
       set_estacion_editado(null);
       set_is_modal_active(false);
       control_success('La estación se actualizó correctamente')
+      void estacion()
     } catch (error) {
       control_error(error);
     }
