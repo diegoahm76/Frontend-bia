@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router';
+import { Page404 } from '../../../screens/404';
 import { ConfiguracionRoutes } from '../configuracion/routes/ConfiguracionRoutes';
 import { DistribucionRoutes } from '../distribucion/routes/DistribucionRoutes';
 import { GestorViveroRoutes } from '../gestorVivero/routes/GestorViveroRoutes';
@@ -23,6 +24,7 @@ export const ConservacionRoutes: React.FC = () => {
         path="solicitud-material/*"
         element={<SolicitudMaterialRoutes />}
       />
+      <Route path="/*" element={<Page404 />} />
     </Routes>
   );
 };

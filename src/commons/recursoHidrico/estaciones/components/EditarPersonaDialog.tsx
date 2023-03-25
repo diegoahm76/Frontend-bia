@@ -1,81 +1,68 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, TextField } from '@mui/material';
 import type React from 'react';
-import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { api } from '../../../../api/axios';
-import Select from "react-select";
+import { useEffect, type Dispatch, type SetStateAction } from 'react';
+import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
+import { type EditarPersona } from '../interfaces/interfaces';
+import { control_success, editar_persona } from '../../requets/Request';
+import { control_error } from '../../../../helpers/controlError';
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  usuario_editado: any;
+  set_usuario_editado: Dispatch<SetStateAction<any>>;
+  persona: SubmitHandler<FieldValues>;
+  estaciones_options:any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
+export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, usuario_editado, set_usuario_editado, persona,estaciones_options,}) => {
 
-  const [estaciones_options, set_estaciones_options] = useState([]);
+  const {
+    register,
+    reset,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    handleSubmit,
+    formState: { errors },
+  } = useForm<EditarPersona>();
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (is_modal_active && usuario_editado) {
+      reset(usuario_editado);
+    }
+  }, [is_modal_active, usuario_editado, reset]);
 
   const handle_close = (): void => {
     set_is_modal_active(false);
   }
-  const {
-    control,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    formState: { errors },
-  } = useForm();
 
-  const get_data_initial = async (): Promise<void> => {
+  const on_submit = async (data: EditarPersona): Promise<any> => {
     try {
-      const { data } = await api.get('/estaciones/consultar-estaciones/');
-      const estaciones_maped = data.data.map((estacion: { nombre_estacion: string; id_estacion: number | string; }) => ({
-        label: estacion.nombre_estacion,
-        value: estacion.id_estacion,
-      }));
-      set_estaciones_options(estaciones_maped);
-    } catch (err) {
-      console.log(err);
+      const datos_estacion = {
+
+        primer_nombre: data.primer_nombre,
+        segundo_nombre: data.segundo_nombre,
+        primer_apellido: data.primer_apellido,
+        segundo_apellido: data.segundo_apellido,
+        entidad: data.entidad,
+        cargo: data.cargo,
+        email_notificacion: data.email_notificacion,
+        nro_celular_notificacion: data.nro_celular_notificacion,
+        observacion: data.observacion,
+      };
+      await editar_persona(usuario_editado.id_persona, datos_estacion);
+      set_usuario_editado(null);
+      set_is_modal_active(false);
+      control_success('La persona se actualizó correctamente')
+      persona(estaciones_options.map((estacion: { value: number; }) => estacion.value))
+      console.log("Id estacion", estaciones_options.map((estacion: { value: number; }) => estacion.value))
+    } catch (error) {
+      control_error(error);
     }
   };
-
-  useEffect(() => {
-    void get_data_initial();
-  }, []);
-
-  const tiposdoc = [
-    {
-      value: 'CC',
-      label: 'Cédula de ciudadanía'
-    },
-    {
-      value: 'CE',
-      label: 'Cédula extranjería',
-    },
-    {
-      value: 'TI',
-      label: 'Tarjeta de identidad',
-    },
-    {
-      value: 'RC',
-      label: 'Registro civil',
-    },
-    {
-      value: 'NU',
-      label: 'NUIP'
-    },
-    {
-      value: 'PA',
-      label: 'Pasaporte',
-    },
-    {
-      value: 'PE',
-      label: 'Permiso especial de permanencia',
-    },
-    {
-      value: 'NT',
-      label: 'NIT',
-    },
-  ];
-
 
   return (
     <Dialog
@@ -85,36 +72,8 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
       <DialogTitle>Editar Parte Interesada</DialogTitle>
       <Divider />
       <DialogContent>
-        <form>
+        <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                label="Tipo de Identificación"
-                select
-                fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
-              >
-                {tiposdoc.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Número Identificación"
-                type="number"
-                fullWidth
-                size="small"
-                margin="dense"
-                required
-                autoFocus
-              />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Primer Nombre"
@@ -123,6 +82,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 margin="dense"
                 required
                 autoFocus
+                defaultValue={usuario_editado?.primer_nombre}
+                {...register("primer_nombre", { required: true })}
+                error={Boolean(errors.primer_nombre)}
+                helperText={(errors.primer_nombre != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -133,6 +96,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 margin="dense"
                 required
                 autoFocus
+                defaultValue={usuario_editado?.segundo_nombre}
+                {...register("segundo_nombre", { required: true })}
+                error={Boolean(errors.segundo_nombre)}
+                helperText={(errors.segundo_nombre != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -143,6 +110,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 margin="dense"
                 required
                 autoFocus
+                defaultValue={usuario_editado?.primer_apellido}
+                {...register("primer_apellido", { required: true })}
+                error={Boolean(errors.primer_apellido)}
+                helperText={(errors.primer_apellido != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -153,6 +124,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 margin="dense"
                 required
                 autoFocus
+                defaultValue={usuario_editado?.segundo_apellido}
+                {...register("segundo_apellido", { required: true })}
+                error={Boolean(errors.segundo_apellido)}
+                helperText={(errors.segundo_apellido != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -164,6 +139,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 required
                 autoFocus
                 placeholder="Entidad a la cual pertenece"
+                defaultValue={usuario_editado?.entidad}
+                {...register("entidad", { required: true })}
+                error={Boolean(errors.entidad)}
+                helperText={(errors.entidad != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -174,6 +153,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 margin="dense"
                 required
                 autoFocus
+                defaultValue={usuario_editado?.cargo}
+                {...register("cargo", { required: true })}
+                error={Boolean(errors.cargo)}
+                helperText={(errors.cargo != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -185,6 +168,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 margin="dense"
                 required
                 autoFocus
+                defaultValue={usuario_editado?.email_notificacion}
+                {...register("email_notificacion", { required: true })}
+                error={Boolean(errors.email_notificacion)}
+                helperText={(errors.email_notificacion != null) ? "Este campo es obligatorio" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -196,36 +183,27 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 margin="dense"
                 required
                 autoFocus
+                defaultValue={usuario_editado?.nro_celular_notificacion}
+                {...register("nro_celular_notificacion", { required: true })}
+                error={Boolean(errors.nro_celular_notificacion)}
+                helperText={
+                  (errors.nro_celular_notificacion != null) ? "Este campo es obligatorio" : ""
+                }
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 label="Observación"
-                multiline
                 fullWidth
                 size="small"
                 margin="dense"
                 required
                 autoFocus
+                defaultValue={usuario_editado?.observacion}
+                {...register("observacion", { required: true })}
+                error={Boolean(errors.observacion)}
+                helperText={(errors.observacion != null) ? "Este campo es obligatorio" : ""}
               />
-            </Grid>
-            <Grid item xs={12}>
-              <InputLabel>Estación</InputLabel>
-              <Controller
-                name="estacion"
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <Select
-                    {...field}
-                    options={estaciones_options}
-                    placeholder="Seleccionar"
-                  />
-                )}
-              />
-              {(errors.estacion != null) && (
-                <FormHelperText error>Este campo es obligatorio</FormHelperText>
-              )}
             </Grid>
           </Grid>
           <DialogActions>

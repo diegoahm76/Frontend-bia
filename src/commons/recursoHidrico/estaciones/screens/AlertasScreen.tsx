@@ -5,7 +5,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import {ParametrosReferencia} from '../components/ParametrosReferencia';
-import {ConfiguracionAlarma} from '../components/ConfiguracionAlarma';
+import {ConfiguracionAlarma} from '../components/ConfiguracionAlerta';
 import { Grid } from '@mui/material';
 import  { Title }  from '../../../../components/Title';
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -26,7 +26,7 @@ export const AlertasScreen: React.FC = () => {
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
       }}>
-       <Title title="INFORMCACIÓN GENERAL"></Title>
+       <Title title="Información General"></Title>
         <Box sx={{ width: '100%', typography: 'body1'}}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

@@ -10,9 +10,10 @@ import { api } from '../../../../api/axios';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  persona: SubmitHandler<FieldValues>;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
+export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, persona, }) => {
   const [estaciones_options, set_estaciones_options] = useState([]);
 
   const handle_close = (): void => {
@@ -21,6 +22,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
   const {
     register,
     control,
+    reset,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     handleSubmit,
     formState: { errors },
@@ -41,6 +43,8 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
 
   useEffect(() => {
     void get_data_initial();
+    const datos = get_data_initial();
+    console.log("data inical", datos)
   }, []);
 
   const on_sumbit_persona: SubmitHandler<FieldValues> = (data): void => {
@@ -61,6 +65,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
     };
     void crear_persona(nueva_persona);
     set_is_modal_active(!is_modal_active);
+    persona(nueva_persona.id_estacion)
   };
 
   const tiposdoc = [
@@ -289,7 +294,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
             <Button
               variant="text"
               color="primary"
-              onClick={handle_close}
+              onClick={() => { reset(); handle_close(); }}
             >
               Cancelar
             </Button>

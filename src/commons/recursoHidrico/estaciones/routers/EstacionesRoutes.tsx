@@ -1,11 +1,14 @@
 import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
+import { HistorialDatos } from '../components/HistorialDatos';
 import {
   IndexEstacionesScreen,
   GeolocalizacionScreen,
   AlertasScreen,
   AdministradorDeEstaciones,
   UsuariosScreen,
+  ReportesScreen,
+  DashboardScreen,
 } from '../screens';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -23,8 +26,17 @@ export const EstacionesRoutes: React.FC = () => {
       {/* Estaciones */}
       <Route path="estacion/*" element={<AdministradorDeEstaciones />} />
 
-      {/* Geolocalizacion Estaciones */}
+      {/* Usuarios Estaciones */}
       <Route path="usuarios/*" element={<UsuariosScreen />} />
+
+      {/* Historial Estaciones */}
+      <Route path="historial/*" element={<HistorialDatos />} />
+
+      {/* Geolocalizacion Estaciones */}
+      <Route path="reportes/*" element={<ReportesScreen />} />
+
+      {/* Dashboard Estaciones */}
+      <Route path="dashboard/*" element={<DashboardScreen />} />
 
       <Route path="/*" element={<Page404 />} />
     </Routes>

@@ -1,6 +1,21 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  // baseURL: process.env.REACT_APP_BACKEND_URL,
   baseURL: 'https://backend-bia-beta-production.up.railway.app/api/'
 });
+
+api.interceptors.request.use(
+  async (request) => {
+    try {
+      const token = sessionStorage.getItem('token');
+      if (token !== null) {
+        request.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (e) {}
+
+    return request;
+  },
+  async (error) => {
+    return await Promise.reject(error);
+  }
+);
