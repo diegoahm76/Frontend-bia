@@ -7,7 +7,8 @@ import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { Title } from '../../../../components/Title';
-import { type Datos, type Estaciones } from '../interfaces/interfaces';
+import type {Datos, Estaciones } from '../interfaces/interfaces';
+import type { AxiosError } from 'axios';
 import {
     consultar_estaciones, consultar_datos_id, control_success,
     // eliminar_estacion, 
@@ -21,7 +22,7 @@ import Swal from 'sweetalert2';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministradorDeEstaciones: React.FC = () => {
     const [list_estaciones, set_estaciones] = useState<Estaciones[]>([]);
-    const [dato, set_dato] = useState<Datos[]>([]);
+    const [has_data, set_has_data] = useState(false);
     const [crear_estacion_is_active, set_crear_estacion_is_active] = useState<boolean>(false);
     const [editar_estacion_is_active, set_editar_estacion_is_active] = useState<boolean>(false);
     const [estacion_editado, set_estacion_editado] = useState(null);
@@ -120,40 +121,28 @@ export const AdministradorDeEstaciones: React.FC = () => {
 
     const traer_dato = async (data: { estacion: { value: any; }; }): Promise<any> => {
         try {
-            set_dato([])
             const estacion_id = data.estacion?.value;
-            const estacion = await consultar_datos_id(estacion_id);
-            const ultimo_dato = estacion[estacion.length - 1];
-            const datos = {
-                id_data: ultimo_dato.id_data,
-                fecha_registro: ultimo_dato.fecha_registro,
-                temperatura_ambiente: ultimo_dato.temperatura_ambiente,
-                humedad_ambiente: ultimo_dato.humedad_ambiente,
-                presion_barometrica: ultimo_dato.presion_barometrica,
-                velocidad_viento: ultimo_dato.velocidad_viento,
-                direccion_viento: ultimo_dato.direccion_viento,
-                precipitacion: ultimo_dato.precipitacion,
-                luminosidad: ultimo_dato.luminosidad,
-                nivel_agua: ultimo_dato.nivel_agua,
-                velocidad_agua: ultimo_dato.velocidad_agua,
-                id_estacion: ultimo_dato.id_estacion,
-            };
-            console.log("Paso");
-            console.log("Datos", [datos]);
-            set_dato([datos])
+            const estacion = await consultar_datos_id(estacion_id).then((res: Datos[]) => {
+                return res
+            }).catch( (err: AxiosError) => {
+                if(err.status === 404){
+                    set_has_data(false)
+                }
+                throw err
+            });
+            if(estacion.length > 0 ){
+                set_has_data(true)
+            } else {
+                set_has_data(false)
+            }
+            
         } catch (err) {
             control_error(err);
         }
     };
 
     const confirmar_eliminar_usuario = (id_Estacion: number): void => {
-        console.log("Paso ", dato.length)
-        if (dato.length > 0) {
-            console.log("Hay datos")
-        } else {
-            console.log("No hay datos")
-        }
-        if (dato.length > 0) {
+        if (has_data) {
             control_success_fail("La estación no se puede eliminar porque contiene datos")
         } else {
             void Swal.fire({
@@ -170,8 +159,9 @@ export const AdministradorDeEstaciones: React.FC = () => {
                     // await eliminar_estacion(id_Estacion);
                     void estacion()
                     control_success('La estación se eliminó correctamente')
+                } else {
+                    set_has_data(false)
                 }
-
             });
         }
     };
