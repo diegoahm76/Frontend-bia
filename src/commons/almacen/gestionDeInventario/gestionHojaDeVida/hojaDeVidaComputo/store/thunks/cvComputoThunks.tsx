@@ -5,7 +5,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 // Interfaces
-import {   get_cv_computers, get_cv_maintenance } from '../../store/slices/indexCvComputo';
+import {   get_cv_articles, get_cv_computers, get_cv_maintenance } from '../../store/slices/indexCvComputo';
 import { type Dispatch } from 'react';
 
 
@@ -52,44 +52,20 @@ export const get_cv_maintenance_service = (id_articulo: number) => {
 
 // // // Obtener Artculo por nombre o codigo
 
-// // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-// export const get_cv_article_all_service = (serial: string, nombre: string, cod_tipo_activo: any) =>{
-//     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-//     const element_modal_id = document.getElementById("modal-article-id")!;
-//     return async (
-//         dispatch: Dispatch<any>,
-//         getState: any
-//       ): Promise<AxiosResponse | AxiosError> => {
-      
-//         try {
-//             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-//             const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=${cod_tipo_activo}&nombre=${nombre}&doc_identificador_nro=${serial}`);
-//             dispatch(get_cv_articles(data.Elementos));
-//             void Swal.fire({
-//                 target: element_modal_id,
-//                 position: "center",
-//                 icon: "success",
-//                 title: data.detail,
-//                 showConfirmButton: true,
-//                 confirmButtonText: 'Aceptar',
-//                 timer: 2000,
-//             });
-//             return data;
-//         } catch (error: any) {
-//             control_error(error.response.data.detail);
-//            void Swal.fire({
-//                 target: element_modal_id,
-//                 position: "center",
-//                 icon: "error",
-//                 title: error.response.data.detail,
-//                 showConfirmButton: true,
-//                 confirmButtonText: 'Aceptar',
-//                 timer: 2000,
-//             });
-//             return error as AxiosError;
-//         }
-//     };
-// };
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const get_cv_article_all_service: any = () =>{
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=Com`);
+            dispatch(get_cv_articles(data.Elementos));
+            return data;
+        } catch (error: any) {
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
 
 // Obtener Hoja de Vida PC
 export const get_cv_computers_service = (id: any) => {
