@@ -128,6 +128,7 @@ export type keys_object =
   | 'direccion_notificaciones'
   | 'direccion_residencia_ref'
   | 'direccion_residencia'
+  | 'dpto_notifiacion'
   | 'email_empresarial'
   | 'email'
   | 'estado_civil'

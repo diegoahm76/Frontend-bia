@@ -126,6 +126,8 @@ export const RegisterForm: React.FC = () => {
     dpto_notifiacion,
     ciudad_notificacion_opt,
     ciudad_notificacion,
+    dpts_residencia_opt,
+    ciudades_residencia_opt,
     set_ciudad_notificacion,
     set_dpto_notifiacion,
     handle_click_show_password,
@@ -329,8 +331,9 @@ export const RegisterForm: React.FC = () => {
   const [active_step, set_active_step] = useState(0);
 
   const handle_next = (): void => {
+    set_active_step((prevActiveStep) => prevActiveStep + 1);
     if (isValid) {
-      set_active_step((prevActiveStep) => prevActiveStep + 1);
+      console.log(isValid);
     }
   };
 
@@ -348,22 +351,21 @@ export const RegisterForm: React.FC = () => {
       <Grid item xs={12} sm={6} md={4}>
         <CustomSelect
           onChange={on_change}
-          label="Departamento"
-          name="departamento_residencia"
-          value={departamento_residencia}
-          options={departamentos_opt}
+          label="País de residencia"
+          name="pais_residencia"
+          value={pais_residencia}
+          options={paises_options}
           loading={loading}
-          disabled={false}
           required={true}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
         <CustomSelect
           onChange={on_change}
-          label="País de residencia"
-          name="pais_residencia"
-          value={pais_residencia}
-          options={paises_options}
+          label="Departamento"
+          name="departamento_residencia"
+          value={departamento_residencia}
+          options={dpts_residencia_opt}
           loading={loading}
           disabled={pais_residencia === '' ?? true}
           required={true}
@@ -375,9 +377,9 @@ export const RegisterForm: React.FC = () => {
           label="Ciudad"
           name="municipio_residencia"
           value={ciudad_residencia}
-          options={ciudades_opt}
+          options={ciudades_residencia_opt}
           loading={loading}
-          disabled={departamento_expedicion === '' ?? true}
+          disabled={departamento_residencia === '' ?? true}
           required={true}
         />
       </Grid>
@@ -403,7 +405,7 @@ export const RegisterForm: React.FC = () => {
         <CustomSelect
           onChange={on_change}
           label="Departamento"
-          name="pais_notificacion"
+          name="dpto_notifiacion"
           value={dpto_notifiacion}
           options={dpto_notifiacion_opt}
           loading={loading}

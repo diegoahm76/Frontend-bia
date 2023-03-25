@@ -226,7 +226,7 @@ export const use_register = (): ReisterHook => {
     try {
       const {
         data: { data },
-      } = await get_ciudades(departamento_expedicion);
+      } = await get_ciudades(departamento);
 
       switch (type) {
         case 'inicial':
@@ -288,16 +288,20 @@ export const use_register = (): ReisterHook => {
   }, [pais_residencia]);
 
   useEffect(() => {
+    void get_departamentos_por_pais('notificacion', pais_notificacion);
+  }, [pais_notificacion]);
+
+  useEffect(() => {
+    void get_ciudades_opt('inicial', departamento_expedicion);
+  }, [departamento_expedicion]);
+
+  useEffect(() => {
     void get_ciudades_opt('residencia', departamento_residencia);
   }, [departamento_residencia]);
 
   useEffect(() => {
     void get_ciudades_opt('notificacion', dpto_notifiacion);
   }, [dpto_notifiacion]);
-
-  useEffect(() => {
-    void get_ciudades_opt('inicial', departamento_expedicion);
-  }, [departamento_expedicion]);
 
   useEffect(() => {
     void get_selects_options();
