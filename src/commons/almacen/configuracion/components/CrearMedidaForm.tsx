@@ -1,121 +1,78 @@
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
-import SaveIcon from '@mui/icons-material/Save';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { api } from '../../../../api/axios';
-import { Divider, Grid, Typography } from '@mui/material';
-import { control_error } from '../../../../helpers/controlError';
+import { Box, Grid, Stack } from '@mui/material';
 
-const columns: GridColDef[] = [
-  { field: 'id_unidad_medida', headerName: 'Id Unidad de Medida', width: 200 },
-  { field: 'nombre', headerName: 'Nombre', width: 200 },
-  { field: 'abreviatura', headerName: 'Abreviatura', width: 200 },
-  { field: 'id_magnitud', headerName: 'Id Magnitud', width: 200 },
-];
-interface Medida {
-  id_unidad_medida: number;
-  nombre: string;
-  abreviatura: string;
-  id_magnitud: number;
-}
+import { get_medida_service } from '../store/thunks/MarcaMedidaPorcentajeThunks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import CrearMedidaModal from './modales/CrearMedidaModal';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearMedidaForm: React.FC = () => {
-  const [open, set_open] = useState(false);
 
-  const handle_click_open = (): void => {
-    set_open(true);
-  };
-  const handle_close = (): void => {
-    set_open(false);
-  };
-  const [medi, set_data_medi] = useState([]);
+  const dispatch = useAppDispatch();
+  const { medida } = useAppSelector((state) => state.medida); 
+ 
+  const [add_medida_is_active, set_add_medida_is_active] =
+  useState<boolean>(false);
 
-  const medida = async (): Promise<void> => {
-    try {
-      const url = 'almacen/unidades-medida/get-list/';
-      const response = await api.get(url);
-      const medida = response.data.map((medidas: Medida) => ({
-        id_unidad_medida: medidas.id_unidad_medida,
-        nombre: medidas.id_unidad_medida,
-        abreviatura: medidas.abreviatura,
-        id_magnitud: medidas.id_magnitud,
-      }));
-      set_data_medi(medida);
-    } catch (e) {
-      console.log(e);
-      control_error(e);
-    }
-  };
+const columns: GridColDef[] = [
+  { field: 'id_unidad_medida', headerName: 'ID', width: 100 },
+  { field: 'nombre', headerName: 'Nombre', width: 200 },
+  { field: 'abreviatura', headerName: 'Abreviatura', width: 200 },
+   { field: 'acciones', headerName: 'Acciones', width: 200 },
+
+];
   useEffect(() => {
-    void medida();
+    void dispatch(get_medida_service());
   }, []);
-
+ 
   return (
-    <Grid container>
-      <Grid item xs={12}>
-        <Button
-          sx={{ mb: '20px' }}
-          variant="outlined"
-          onClick={handle_click_open}
-          startIcon={<AddIcon />}
-        >
-          Crear
-        </Button>
-        <Dialog open={open} onClose={handle_close}>
-          <DialogTitle>CREAR MEDIDA</DialogTitle>
-          <Divider />
-          <DialogContent>
-            <DialogContentText>
-              Ingrese la medida que desea Crear
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Medida"
-              type="Any"
-              fullWidth
-              variant="standard"
-            />
-          </DialogContent>
-          <Divider />
-          <DialogActions>
-            <Button variant="outlined" onClick={handle_close}>
-              Cerrar
-            </Button>
+    <>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>        
+          <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
             <Button
-              variant="contained"
-              color="primary"
-              startIcon={<SaveIcon />}
-              onClick={handle_close}
+              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={() => {
+                set_add_medida_is_active(true);
+              }}
             >
-              Guardar
+              CREAR MEDIDA
             </Button>
-          </DialogActions>
-        </Dialog>
+          </Stack>
+          <Grid item>
+            <Box sx={{ width: '100%' }}>
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={medida}
+                columns={columns}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => row.id_unidad_medida}
+              />
+            </Box>
+          </Grid>
+           <CrearMedidaModal
+            is_modal_active={add_medida_is_active}
+            set_is_modal_active={set_add_medida_is_active}
+          /> 
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        {medi.length > 0 ? (
-          <DataGrid
-            autoHeight
-            rows={medi}
-            columns={columns}
-            getRowId={(row) => row.id_unidad_medida}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-          />
-        ) : (
-          <Typography>Cargando...</Typography>
-        )}
-      </Grid>
-    </Grid>
+    </>
   );
 };

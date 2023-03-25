@@ -132,6 +132,7 @@ export const ParametrosReferencia: React.FC = () => {
                     set_is_modal_active={set_editar_parametros_is_active}
                     parametro_editado={parametro_editado}
                     set_parametro_editado={set_parametro_editado}
+                    parametros = {parametros}
                 />
             </Grid>
         </>

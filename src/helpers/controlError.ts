@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 export const control_error = (error: any | unknown): void => {
   console.error(error);
-  toast(error, {
+  toast(error.toString(), {
     position: 'bottom-right',
     autoClose: 3000,
     hideProgressBar: false,
@@ -10,6 +10,6 @@ export const control_error = (error: any | unknown): void => {
     draggable: true,
     progress: undefined,
     theme: 'colored',
-    type: 'error',
+    type: 'error'
   });
 };

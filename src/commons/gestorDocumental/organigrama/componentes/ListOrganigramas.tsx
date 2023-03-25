@@ -194,7 +194,6 @@ export function ListOrganigramas({
             columns={columns}
             pageSize={10}
             rowsPerPageOptions={[10]}
-            experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) => row.id_organigrama}
           />
         </Box>
