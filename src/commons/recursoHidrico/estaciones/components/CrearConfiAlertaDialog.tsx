@@ -10,15 +10,14 @@ import { type conf_alarma } from '../interfaces/interfaces';
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    confi_alerta_persona:() => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, confi_alerta_persona }) => {
+export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
 
     const [conf_alert_person, set_conf_alert_person] = useState<conf_alarma[]>([]);
 
-    const confi_alerta_persona_crear = async (): Promise<void> => {
+    const confi_alerta_persona = async (): Promise<void> => {
         try {
             const response = await consultar_conf_alerta_persona();
             const conf = response.map((con_alerta: conf_alarma) => ({
@@ -38,7 +37,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
     };
 
     useEffect(() => {
-        void confi_alerta_persona_crear()
+        void confi_alerta_persona()
     }, []);
 
 
@@ -68,10 +67,9 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
         );
 
         if (alerta_existente != null) {
-            control_success_fail('La alerta ya existe, por lo tanto edita el mensaje en la editar')
+            control_success_fail('La alerta ya existe, por lo tanto edita el mensaje en la opcion acciones')
         } else {
             void crear_confi_alerta(nueva_alerta);
-            void confi_alerta_persona()
             set_is_modal_active(!is_modal_active);
         }
     }

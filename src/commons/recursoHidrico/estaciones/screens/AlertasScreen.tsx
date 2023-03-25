@@ -26,7 +26,7 @@ export const AlertasScreen: React.FC = () => {
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
       }}>
-       <Title title="Información General"></Title>
+       <Title title="INFORMCACIÓN GENERAL"></Title>
         <Box sx={{ width: '100%', typography: 'body1'}}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>

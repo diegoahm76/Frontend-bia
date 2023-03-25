@@ -10,6 +10,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
 import { CuadroComparacion } from '../components/CuadroComparacion';
+// import { ChartRecaudo } from '../chart/ChartRecaudo';
 import { ChartComponent } from '../chart/ChartComponent';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -211,7 +212,7 @@ export const RecaudoScreen: React.FC = () => {
 
           <Divider />
 
-          {/* CHART COMPONENT */}
+          {/* TODO */}
           <ChartComponent />
 
         </Box>
