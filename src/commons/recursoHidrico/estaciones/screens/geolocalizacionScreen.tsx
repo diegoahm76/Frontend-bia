@@ -99,18 +99,17 @@ export const GeolocalizacionScreen: React.FC = () => {
         }}
       >
         <Popup >
-          Estacion: {estacion.nombre_estacion} <br/>
+          Estacion: {estacion.nombre_estacion} <br/><br/>
           Latitud: {estacion.latitud} <br/>
-          Latitud: {estacion.longitud} <br/>
+          Longitud: {estacion.longitud} <br/><br/>
           {dato.length > 0 ? (
             <div>
-              <div>Temperatura: {dato[0].fecha_registro}</div>
+              <div>Fecha: {dato[0].fecha_registro}</div>
               <div>Temperatura: {dato[0].temperatura_ambiente}</div>
               <div>Humedad: {dato[0].humedad_ambiente}</div>
               <div>Presión: {dato[0].presion_barometrica}</div>
               <div>Velocidad de viento: {dato[0].velocidad_viento}</div>
               <div>Dirección del viento: {dato[0].direccion_viento}</div>
-
               <div>Precipitación: {dato[0].precipitacion}</div>
               <div>Luminosidad: {dato[0].luminosidad}</div>
               <div>Nivel de agua: {dato[0].nivel_agua}</div>
