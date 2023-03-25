@@ -7,10 +7,11 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { Title } from '../../../../components/Title';
 import { type Estaciones } from '../interfaces/interfaces';
-import { consultar_estaciones } from '../../requets/Request';
+import { consultar_estaciones, control_success, eliminar_estacion } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { CrearEstacionDialog } from '../components/CrearEstacionDialog';
 import { EditarEstacionDialog } from '../components/EditarEstacionDialog';
+import Swal from 'sweetalert2';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministradorDeEstaciones: React.FC = () => {
@@ -58,7 +59,9 @@ export const AdministradorDeEstaciones: React.FC = () => {
                             />
                         </Avatar>
                     </IconButton>
-                    <IconButton>
+                    <IconButton
+                        onClick={() => { confirmar_eliminar_usuario(params.row.id_persona); }}
+                    >
                         <Avatar
                             sx={{
                                 width: 24,
@@ -86,6 +89,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 fecha_modificacion: estaciones.fecha_modificacion,
                 nombre_estacion: estaciones.nombre_estacion,
                 cod_tipo_estacion: estaciones.cod_tipo_estacion,
+                cod_municipio: estaciones.cod_municipio,
                 latitud: estaciones.latitud,
                 longitud: estaciones.longitud,
                 indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
@@ -103,6 +107,24 @@ export const AdministradorDeEstaciones: React.FC = () => {
     useEffect(() => {
         void estacion()
     }, []);
+
+    const confirmar_eliminar_usuario = (idPersona: number): void => {
+        void Swal.fire({
+            title: "Estas seguro?",
+            text: "Va a eliminar un usuario",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, elminar!",
+            cancelButtonText: "Cancelar",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                await eliminar_estacion(idPersona);
+                control_success('La estación se eliminó correctamente')
+            }
+        });
+    };
 
     return (
         <Grid container spacing={2}

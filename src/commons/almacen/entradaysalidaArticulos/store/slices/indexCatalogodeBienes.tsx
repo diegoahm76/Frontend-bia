@@ -1,6 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
-  type IObjBien,
   type IBien,
   type IMarcas,
   type IMedidas,
@@ -9,7 +8,7 @@ import {
 import { type INodo } from "../../interfaces/Nodo";
 
 
-const initial_state_current_bien = {
+export const initial_state_current_bien = {
   id_bien: null,
   codigo_bien: null,
   nro_elemento_bien: null,
@@ -36,10 +35,26 @@ const initial_state_current_bien = {
   id_unidad_medida_vida_util: null,
   id_bien_padre: null,
 };
+const initial_state_data ={
+  nombre: "",
+  codigo: "",
+  acciones: "",
+  id_nodo: null,
+  crear: false,
+  editar: false,
+  eliminar: false,
+  bien: initial_state_current_bien,
+}
+export const initial_state_current_nodo = {
+  key: "",
+  data: initial_state_data,
+  children: []
+}
 
 
 const initial_state: IBien = {
   nodo: [],
+  current_nodo: initial_state_current_nodo,
   bienes: [],
   current_bien: initial_state_current_bien,
   marca: [],
@@ -60,9 +75,9 @@ export const bien_slice = createSlice({
     },
     current_bien: (
       state: IBien,
-      action: PayloadAction<IObjBien>
+      action: PayloadAction<INodo>
     ) => {
-      state.current_bien = action.payload;
+      state.current_nodo= action.payload;
     },
     get_marks: (
       state: IBien,
