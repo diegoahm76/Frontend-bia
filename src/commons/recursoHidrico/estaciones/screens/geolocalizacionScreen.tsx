@@ -47,7 +47,7 @@ export const GeolocalizacionScreen: React.FC = () => {
     } catch (err) {
       control_error(err);
     }
-  };
+  };  
 
   useEffect(() => {
     void obtener_posicion();
@@ -82,9 +82,10 @@ export const GeolocalizacionScreen: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!info.length) return <Grid className="Loading"></Grid>;
+  if (!info.length) return <Grid className="Loading"></Grid>;  
 
   const markers = info.map((estacion) => {
+
     return (
       <Marker
         key={estacion.id_estacion}

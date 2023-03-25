@@ -2,11 +2,12 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, InputAdornment, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
-import { AcUnit } from '@mui/icons-material';
+
 import { useForm } from 'react-hook-form';
 import { type ParametrosEditar } from '../interfaces/interfaces';
 import { control_success, editar_parametro } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
+import { AirplanemodeActive, AirplanemodeInactive, Bloodtype, BloodtypeOutlined, Compress, Expand, FlightLand, FlightTakeoff, Grain, KitesurfingRounded, Lightbulb, LightbulbOutlined, PoolRounded, Thunderstorm, WaterOutlined, WavesRounded, WbSunny, WbSunnyOutlined } from '@mui/icons-material';
 
 interface IProps {
   is_modal_active: boolean;
@@ -113,7 +114,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("temperatura_ambiente_max", { required: true })}
                 error={Boolean(errors.temperatura_ambiente_max)}
                 helperText={(errors.temperatura_ambiente_max != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <WbSunny />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -132,7 +139,7 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <AcUnit />
+                      <WbSunnyOutlined />
                     </InputAdornment>
                   )
                 }}
@@ -151,7 +158,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("humedad_ambiente_max", { required: true })}
                 error={Boolean(errors.humedad_ambiente_max)}
                 helperText={(errors.humedad_ambiente_max != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Bloodtype />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -167,7 +180,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("humedad_ambiente_min", { required: true })}
                 error={Boolean(errors.humedad_ambiente_min)}
                 helperText={(errors.humedad_ambiente_min != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <BloodtypeOutlined />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -183,7 +202,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("presion_barometrica_max", { required: true })}
                 error={Boolean(errors.presion_barometrica_max)}
                 helperText={(errors.presion_barometrica_max != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Expand />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -199,7 +224,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("presion_barometrica_min", { required: true })}
                 error={Boolean(errors.presion_barometrica_min)}
                 helperText={(errors.presion_barometrica_min != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Compress />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -215,7 +246,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("velocidad_viento_max", { required: true })}
                 error={Boolean(errors.velocidad_viento_max)}
                 helperText={(errors.velocidad_viento_max != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <AirplanemodeActive />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -231,7 +268,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("velocidad_viento_min", { required: true })}
                 error={Boolean(errors.velocidad_viento_min)}
                 helperText={(errors.velocidad_viento_min != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <AirplanemodeInactive />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -247,7 +290,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("direccion_viento_max", { required: true })}
                 error={Boolean(errors.direccion_viento_max)}
                 helperText={(errors.direccion_viento_max != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <FlightTakeoff />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -263,7 +312,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("direccion_viento_min", { required: true })}
                 error={Boolean(errors.direccion_viento_min)}
                 helperText={(errors.direccion_viento_min != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <FlightLand />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -279,7 +334,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("precipitacion_max", { required: true })}
                 error={Boolean(errors.precipitacion_max)}
                 helperText={(errors.precipitacion_max != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Thunderstorm />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -295,7 +356,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("precipitacion_min", { required: true })}
                 error={Boolean(errors.precipitacion_min)}
                 helperText={(errors.precipitacion_min != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Grain />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -311,7 +378,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("luminosidad_max", { required: true })}
                 error={Boolean(errors.luminosidad_max)}
                 helperText={(errors.luminosidad_max != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <Lightbulb />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -327,7 +400,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("luminosidad_min", { required: true })}
                 error={Boolean(errors.luminosidad_min)}
                 helperText={(errors.luminosidad_min != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <LightbulbOutlined />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -343,7 +422,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("nivel_agua_max", { required: true })}
                 error={Boolean(errors.nivel_agua_max)}
                 helperText={(errors.nivel_agua_max != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <WavesRounded />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -359,7 +444,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("nivel_agua_min", { required: true })}
                 error={Boolean(errors.nivel_agua_min)}
                 helperText={(errors.nivel_agua_min != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <WaterOutlined />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -375,7 +466,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("velocidad_agua_max", { required: true })}
                 error={Boolean(errors.velocidad_agua_max)}
                 helperText={(errors.velocidad_agua_max != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <KitesurfingRounded />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6} >
@@ -391,7 +488,13 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 {...register("velocidad_agua_min", { required: true })}
                 error={Boolean(errors.velocidad_agua_min)}
                 helperText={(errors.velocidad_agua_min != null) ? "Este campo es obligatorio" : ""}
-
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <PoolRounded />
+                    </InputAdornment>
+                  )
+                }}
               />
             </Grid>
           </Grid>
