@@ -27,9 +27,11 @@ import { EditarPersonaDialog } from '../components/EditarPersonaDialog';
 export const UsuariosScreen: React.FC = () => {
   const [crear_persona_is_active, set_crear_persona_is_active] = useState<boolean>(false);
   const [is_modal_editar_active, set_is_modal_editar_active] = useState(false);
-  const [estaciones_options, set_estaciones_options] = useState([]);
+  const [estaciones_options, set_estaciones_options] = useState<any[]>([]);
   const [loading, set_loading] = useState(false);
   const [estaciones_meteologicas, set_estaciones_meteologicas] = useState<Persona[]>([]);
+  const [usuario_editado, set_usuario_editado] = useState(null);
+
   // const [data_reportes, set_data_reportes] = useState<Estaciones[]>([]);
 
   const handle_open_crear_persona = (): void => {
@@ -72,11 +74,14 @@ export const UsuariosScreen: React.FC = () => {
             size="small"
             className="btn-tablas"
             onClick={() => {
+              set_usuario_editado(params.row);
               set_is_modal_editar_active(!is_modal_editar_active);
+              console.log("se enviaron los siguientes parametros", params.row);
             }}
           >
             <EditIcon fontSize="small" />
           </IconButton>
+
           <IconButton
             size="small"
             className="btn-tablas"
@@ -120,6 +125,7 @@ export const UsuariosScreen: React.FC = () => {
   const on_submit_filtrar: SubmitHandler<FieldValues> = async (data) => {
     try {
       set_loading(true);
+      set_estaciones_meteologicas([])
       const estacion_id = data.estacion?.value;
       const estacion = await consultar_estaciones_id(estacion_id);
       const personas = estacion.personas.map((persona) => ({
@@ -164,6 +170,7 @@ export const UsuariosScreen: React.FC = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         await eliminar_usuario(idPersona);
+        on_submit_filtrar(estaciones_options.map((estacion) => estacion.value))
         control_success('La persona se eliminó correctamente')
       }
     });
@@ -299,11 +306,16 @@ export const UsuariosScreen: React.FC = () => {
       <NuevoUsuarioModal
         is_modal_active={crear_persona_is_active}
         set_is_modal_active={set_crear_persona_is_active}
+        persona={on_submit_filtrar}
       />
       {<EditarPersonaDialog
-      set_is_modal_active={set_is_modal_editar_active}
-      is_modal_active={is_modal_editar_active}
-    />}
+        set_is_modal_active={set_is_modal_editar_active}
+        is_modal_active={is_modal_editar_active}
+        usuario_editado={usuario_editado}
+        set_usuario_editado={set_usuario_editado}
+        persona={on_submit_filtrar}
+        estaciones_options={estaciones_options}
+      />}
     </>
   )
 };

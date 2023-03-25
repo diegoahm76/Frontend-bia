@@ -9,7 +9,7 @@ import {
 // Slices
 import {
   get_nurseries,
-  current_nursery
+  // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
 
@@ -44,7 +44,7 @@ const control_success = (message: ToastContent) =>
 export const get_nurseries_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio/apertura-cierre');
+      const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio');
       console.log(data)
       dispatch(get_nurseries(data.data));
       return data;
@@ -63,22 +63,78 @@ export const add_nursery_service: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(nursery);
       const { data } = await api.post(
         'conservacion/viveros/create/',
         nursery
       );
-
       dispatch(get_nurseries_service());
-      dispatch(current_nursery(data.detail));
       control_success('El vivero se agrego correctamente');
-      // navigate('/gestor_documental/organigrama/editar_organigrama');
       return data;
     } catch (error: any) {
-      console.log('add_nursery_service');
       control_error(error.response.data.detail);
       console.log(error.response.data);
-      //     navigate('/gestor_documental/organigrama/crear_organigrama');
+      return error as AxiosError;
+    }
+  };
+};
+
+// Editar Vivero
+export const edit_nursery_service: any = (
+  nursery: any,
+  id: string|number,
+
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `conservacion/viveros/update/${id}/`,
+        nursery
+      );
+      dispatch(get_nurseries_service());
+      control_success('El vivero se edito correctamente');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      console.log(error.response.data);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Borrar vivero
+export const delete_nursery_service: any = (id: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `conservacion/viveros/delete/${id}/`
+      );
+      dispatch(get_nurseries_service());
+      control_success('Se elimino el vivero');
+
+      return data;
+    } catch (error: any) {
+      console.log('delete nursery service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Desactivar - activar vivero
+export const activate_deactivate_nursery_service: any = (id: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `conservacion/viveros/desactivar/${id}/`
+      );
+      dispatch(get_nurseries_service());
+      control_success(data.detail);
+
+      return data;
+    } catch (error: any) {
+      console.log('activate-deactivate nursery service');
+      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };

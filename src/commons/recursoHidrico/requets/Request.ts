@@ -2,7 +2,7 @@ import { toast, type ToastContent } from "react-toastify";
 import { api } from "../../../api/axios";
 import { control_error } from "../../../helpers/controlError";
 import { type ResponseServer } from "../../../interfaces/globalModels";
-import { type Parametros, type conf_alarma, type Datos, type Estaciones, type EstacionesDetalle, type IEstacionEstaciones, type PersonaEstacion, type CrearAlerta } from "../estaciones/interfaces/interfaces";
+import { type Parametros, type conf_alarma, type Datos, type Estaciones, type EstacionesDetalle, type IEstacionEstaciones, type PersonaEstacion, type CrearAlerta, type EditarPersona, type ParametrosEditar, } from "../estaciones/interfaces/interfaces";
 import axios from 'axios';
 
 export const alertas = axios.create({
@@ -13,6 +13,18 @@ export const alertas = axios.create({
 
 export const control_success = (message: ToastContent): any =>
   toast.success(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light'
+  });
+
+export const control_success_fail = (message: ToastContent): any =>
+  toast.error(message, {
     position: 'bottom-right',
     autoClose: 3000,
     hideProgressBar: false,
@@ -34,7 +46,6 @@ export const llamar_alertas = async () => {
   }
 };
 
-
 // consultar estaciones
 export const consultar_estaciones = async (): Promise<Estaciones[]> => {
   const { data } = await api.get<ResponseServer<Estaciones[]>>('estaciones/consultar-estaciones/');
@@ -45,6 +56,17 @@ export const consultar_estaciones = async (): Promise<Estaciones[]> => {
 export const consultar_datos = async (): Promise<Datos[]> => {
   const { data } = await api.get<ResponseServer<Datos[]>>('estaciones/datos/consultar-datos-opt/');
   return data.data
+}
+// consultar datos por id estación
+export const consultar_datos_id = async (id: number | string): Promise<Datos[]> => {
+  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id/${id}/`);
+  return data;
+}
+
+// consultar datos por fecha
+export const consultar_datos_fecha = async (fecha_inicial: string, fecha_final: string): Promise<Datos> => {
+  const { data } = await api.get<ResponseServer<Datos>>(`estaciones/datos/consultar-datos-fecha/${fecha_inicial}/${fecha_final}/`);
+  return data.data;
 }
 
 // consultar configuracion alerta personas
@@ -102,6 +124,11 @@ export const crear_confi_alerta = async (configuracion: CrearAlerta): Promise<an
 };
 
 // eliminar persona
+export const eliminar_estacion = async (idEstacion: number): Promise<any> => {
+  return await api.delete(`estaciones/eliminar-estaciones/${idEstacion}`);
+};
+
+// eliminar persona
 export const eliminar_usuario = async (idPersona: number): Promise<any> => {
   return await api.delete(`estaciones/personas/eliminar-persona/${idPersona}`);
 };
@@ -112,14 +139,29 @@ export const eliminar_conf_alerta_persona = async (idconfAlerta: number): Promis
 };
 
 // editar estacion
-export const editar_estacion = async (estacion: number, datos_estacion: IEstacionEstaciones): Promise<any> => {
-  try {
-    const response = await api.put(`estaciones/actualizar-estaciones/${estacion}`, datos_estacion);
-    return response.data;
-  } catch (error) {
-    throw new Error('No se pudo actualizar la estación. Por favor, inténtalo de nuevo más tarde.');
-  }
+export const editar_estacion = async (idEstaion: number, datos_estacion: IEstacionEstaciones): Promise<any> => {
+  const response = await api.put(`estaciones/actualizar-estaciones/${idEstaion}/`, datos_estacion);
+  return response.data;
 };
+
+// editar persona
+export const editar_persona = async (idPeronsa: number, datos_persona: EditarPersona): Promise<any> => {
+  const response = await api.put(`estaciones/personas/actualizar-persona/${idPeronsa}/`, datos_persona);
+  return response.data;
+};
+
+// editar parametros de referencia
+export const editar_parametro = async (idParametro: number, datos_parametro: ParametrosEditar): Promise<any> => {
+  const response = await api.put(`estaciones/parametros/actualizar-parametro/${idParametro}/`, datos_parametro);
+  return response.data;
+};
+
+// editar parametros de referencia
+export const editar_conf_alarma = async (idalarma: number, datos_alarma: CrearAlerta): Promise<any> => {
+  const response = await api.put(`estaciones/configuracion/alertas/actualizar-configuracion-alerta/${idalarma}/`, datos_alarma);
+  return response.data;
+};
+
 
 
 

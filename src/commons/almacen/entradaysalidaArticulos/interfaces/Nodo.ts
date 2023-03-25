@@ -1,11 +1,11 @@
-import { type IBienes } from "./catalogodebienes";
+import { type IBien } from "./catalogodebienes";
 export interface INodo {
     key: string;
     data: data;
     children?: INodo[]
   }
 
-  interface data{
+  export interface data{
     nombre: string;
     codigo: string;
     acciones?: string;
@@ -13,5 +13,5 @@ export interface INodo {
     crear?: boolean;
     editar?: boolean;
     eliminar?: boolean;
-    bien?: IBienes;
+    bienes?: IBien;
   }

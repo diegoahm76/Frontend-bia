@@ -1,17 +1,45 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
-import { type Dispatch, type SetStateAction } from 'react';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { crear_confi_alerta } from '../../requets/Request';
+import { control_error } from '../../../../helpers/controlError';
+import { consultar_conf_alerta_persona, control_success_fail, crear_confi_alerta } from '../../requets/Request';
+import { type conf_alarma } from '../interfaces/interfaces';
 
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+    confi_alerta_persona:() => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
+export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, confi_alerta_persona }) => {
+
+    const [conf_alert_person, set_conf_alert_person] = useState<conf_alarma[]>([]);
+
+    const confi_alerta_persona_crear = async (): Promise<void> => {
+        try {
+            const response = await consultar_conf_alerta_persona();
+            const conf = response.map((con_alerta: conf_alarma) => ({
+                id_confi_alerta_persona: con_alerta.id_confi_alerta_persona,
+                nombre_variable_alarma: con_alerta.nombre_variable_alarma,
+                mensaje_alarma_maximo: con_alerta.mensaje_alarma_maximo,
+                mensaje_alarma_minimo: con_alerta.mensaje_alarma_minimo,
+                mensaje_no_alarma: con_alerta.mensaje_no_alarma,
+                frecuencia_alarma: con_alerta.frecuencia_alarma,
+
+            }))
+
+            set_conf_alert_person(conf);
+        } catch (err) {
+            control_error(err)
+        }
+    };
+
+    useEffect(() => {
+        void confi_alerta_persona_crear()
+    }, []);
 
 
     const handle_close = (): void => {
@@ -19,15 +47,14 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
     }
     const {
         register,
+        reset,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         handleSubmit,
         formState: { errors },
     } = useForm();
 
     const on_sumbit_alerta: SubmitHandler<FieldValues> = (data): void => {
-
         const nueva_alerta = {
-
             nombre_variable_alarma: data.nombre_variable_alarma,
             mensaje_alarma_maximo: data.mensaje_alarma_maximo,
             mensaje_alarma_minimo: data.mensaje_alarma_minimo,
@@ -35,9 +62,19 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
             frecuencia_alarma: data.frecuencia_alarma,
         };
 
-        void crear_confi_alerta(nueva_alerta);
-        set_is_modal_active(!is_modal_active);
-    };
+        const variable_seleccionada = data.nombre_variable_alarma;
+        const alerta_existente = conf_alert_person.find(
+            (alert: conf_alarma) => alert.nombre_variable_alarma === variable_seleccionada
+        );
+
+        if (alerta_existente != null) {
+            control_success_fail('La alerta ya existe, por lo tanto edita el mensaje en la editar')
+        } else {
+            void crear_confi_alerta(nueva_alerta);
+            void confi_alerta_persona()
+            set_is_modal_active(!is_modal_active);
+        }
+    }
 
     const tipo_estacion = [
         {
@@ -164,7 +201,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handle_close}>Cancelar</Button>
+                    <Button onClick={() => { reset(); handle_close(); }}>Cancelar</Button>
                     <Button variant="contained" color="primary" onClick={handleSubmit(on_sumbit_alerta)}>Guardar</Button>
                 </DialogActions>
             </Box>

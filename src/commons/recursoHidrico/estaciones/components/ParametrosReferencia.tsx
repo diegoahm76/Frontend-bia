@@ -10,12 +10,11 @@ import { EditarParametosReferenciaDialog } from './EditarParametosReferenciaDial
 export const ParametrosReferencia: React.FC = () => {
     const [parametro_referencia, set_data_parametro] = useState<Parametros[]>([]);
     const [editar_parametros_is_active, set_editar_parametros_is_active] = useState<boolean>(false);
+    const [parametro_editado, set_parametro_editado] = useState(null);
 
-    const handle_open_editar_parametros = (): void => {
-        set_editar_parametros_is_active(true);
-    }
     const columns: GridColDef[] = [
         { field: 'id_estacion', headerName: 'ESTACIÓN', width: 140 },
+        { field: 'id_parametro_referencia', headerName: 'No. PARAMETRO', width: 140 },
         { field: 'fecha_modificacion', headerName: 'FECHA MODIFICACIÓN', width: 140 },
         { field: 'frecuencia_solicitud_datos', headerName: 'FRECUENCIA', width: 140 },
 
@@ -60,7 +59,11 @@ export const ParametrosReferencia: React.FC = () => {
                         >
                             <EditIcon
                                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                onClick={handle_open_editar_parametros}
+                                onClick={() => {
+                                    set_parametro_editado(params.row);
+                                    set_editar_parametros_is_active(!editar_parametros_is_active);
+                                    console.log("se enviaron los siguientes parametros", params.row);
+                                }}
                             />
                         </Avatar>
                     </IconButton>
@@ -74,7 +77,9 @@ export const ParametrosReferencia: React.FC = () => {
             const response = await consultar_parametros_referencia();
             const parametros = response.map((parametro: Parametros) => ({
 
+                id_parametro_referencia: parametro.id_parametro_referencia,
                 id_estacion: parametro.id_estacion,
+                fecha_modificacion: parametro.fecha_modificacion,
                 frecuencia_solicitud_datos: parametro.frecuencia_solicitud_datos,
                 temperatura_ambiente_max: parametro.temperatura_ambiente_max,
                 temperatura_ambiente_min: parametro.temperatura_ambiente_min,
@@ -125,6 +130,9 @@ export const ParametrosReferencia: React.FC = () => {
                 <EditarParametosReferenciaDialog
                     is_modal_active={editar_parametros_is_active}
                     set_is_modal_active={set_editar_parametros_is_active}
+                    parametro_editado={parametro_editado}
+                    set_parametro_editado={set_parametro_editado}
+                    parametros = {parametros}
                 />
             </Grid>
         </>
