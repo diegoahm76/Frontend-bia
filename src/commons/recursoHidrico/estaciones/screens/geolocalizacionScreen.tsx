@@ -1,10 +1,10 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { type Estaciones } from '../interfaces/interfaces';
+import { type Datos, type Estaciones } from '../interfaces/interfaces';
 import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
-import { consultar_estaciones } from '../../requets/Request';
+import { consultar_datos_id, consultar_estaciones } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 
 // const position: L.LatLngExpression = [5.258179477894017, -73.60700306515551];
@@ -20,6 +20,7 @@ const icon_locate = new L.Icon({
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GeolocalizacionScreen: React.FC = () => {
   const [info, set_info] = useState<Estaciones[]>([]);
+  const [dato, set_dato] = useState<Datos[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const obtener_posicion = async () => {
@@ -52,19 +53,72 @@ export const GeolocalizacionScreen: React.FC = () => {
     void obtener_posicion();
   }, []);
 
+  const traer_dato = async (data: { estacion: { value: any; }; }): Promise<any> => {
+    try {
+      set_dato([])
+      const estacion_id = data.estacion?.value;
+      const estacion = await consultar_datos_id(estacion_id);
+      const ultimo_dato = estacion[estacion.length - 1];
+      const datos = {
+        id_data: ultimo_dato.id_data,
+        fecha_registro: ultimo_dato.fecha_registro,
+        temperatura_ambiente: ultimo_dato.temperatura_ambiente,
+        humedad_ambiente: ultimo_dato.humedad_ambiente,
+        presion_barometrica: ultimo_dato.presion_barometrica,
+        velocidad_viento: ultimo_dato.velocidad_viento,
+        direccion_viento: ultimo_dato.direccion_viento,
+        precipitacion: ultimo_dato.precipitacion,
+        luminosidad: ultimo_dato.luminosidad,
+        nivel_agua: ultimo_dato.nivel_agua,
+        velocidad_agua: ultimo_dato.velocidad_agua,
+        id_estacion: ultimo_dato.id_estacion,
+      };
+      console.log("Paso");
+      console.log("Datos", [datos]);
+      set_dato([datos])
+    } catch (err) {
+      control_error(err);
+    }
+  };
+
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!info.length) return <Grid className="Loading"></Grid>;
 
   const markers = info.map((estacion) => {
-
     return (
       <Marker
         key={estacion.id_estacion}
         position={[estacion.longitud, estacion.latitud]}
         icon={icon_locate}
+        eventHandlers={{
+          click: () => {
+            void traer_dato({ estacion: { value: estacion.id_estacion } });
+            console.log('marker clicked')
+          },
+        }}
       >
-        <Popup>
-          nombre: {estacion.nombre_estacion}
+        <Popup >
+          Estacion: {estacion.nombre_estacion} <br/>
+          Latitud: {estacion.latitud} <br/>
+          Latitud: {estacion.longitud} <br/>
+          {dato.length > 0 ? (
+            <div>
+              <div>Temperatura: {dato[0].fecha_registro}</div>
+              <div>Temperatura: {dato[0].temperatura_ambiente}</div>
+              <div>Humedad: {dato[0].humedad_ambiente}</div>
+              <div>Presión: {dato[0].presion_barometrica}</div>
+              <div>Velocidad de viento: {dato[0].velocidad_viento}</div>
+              <div>Dirección del viento: {dato[0].direccion_viento}</div>
+
+              <div>Precipitación: {dato[0].precipitacion}</div>
+              <div>Luminosidad: {dato[0].luminosidad}</div>
+              <div>Nivel de agua: {dato[0].nivel_agua}</div>
+              <div>Velocidad del agua: {dato[0].velocidad_agua}</div>
+              
+            </div>
+          ) : (
+            <div>No hay datos disponibles</div>
+          )}
         </Popup>
       </Marker>
     );
