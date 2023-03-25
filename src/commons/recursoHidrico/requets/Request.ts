@@ -23,7 +23,7 @@ export const control_success = (message: ToastContent): any =>
     theme: 'light'
   });
 
-  export const control_success_fail = (message: ToastContent): any =>
+export const control_success_fail = (message: ToastContent): any =>
   toast.error(message, {
     position: 'bottom-right',
     autoClose: 3000,
@@ -59,7 +59,7 @@ export const consultar_datos = async (): Promise<Datos[]> => {
 }
 // consultar datos por id estación
 export const consultar_datos_id = async (id: number | string): Promise<Datos> => {
-  const { data } = await api.get<ResponseServer<Datos>>(`estaciones/datos/consultar-datos-id/${id}`);
+  const { data } = await api.get<ResponseServer<Datos>>(`estaciones/datos/consultar-datos-id/${id}/`);
   return data.data;
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -6,8 +7,12 @@ import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { Title } from '../../../../components/Title';
-import { type Estaciones } from '../interfaces/interfaces';
-import { consultar_estaciones, control_success, eliminar_estacion } from '../../requets/Request';
+import { type Datos, type Estaciones } from '../interfaces/interfaces';
+import {
+    consultar_estaciones, consultar_datos_id, control_success,
+    // eliminar_estacion, 
+    control_success_fail
+} from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { CrearEstacionDialog } from '../components/CrearEstacionDialog';
 import { EditarEstacionDialog } from '../components/EditarEstacionDialog';
@@ -16,6 +21,7 @@ import Swal from 'sweetalert2';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministradorDeEstaciones: React.FC = () => {
     const [list_estaciones, set_estaciones] = useState<Estaciones[]>([]);
+    const [dato, set_dato] = useState<Datos[]>([]);
     const [crear_estacion_is_active, set_crear_estacion_is_active] = useState<boolean>(false);
     const [editar_estacion_is_active, set_editar_estacion_is_active] = useState<boolean>(false);
     const [estacion_editado, set_estacion_editado] = useState(null);
@@ -60,7 +66,10 @@ export const AdministradorDeEstaciones: React.FC = () => {
                         </Avatar>
                     </IconButton>
                     <IconButton
-                        onClick={() => { confirmar_eliminar_usuario(params.row.id_persona); }}
+                        onClick={() => {
+                            confirmar_eliminar_usuario(params.row.id_estacion);
+                            void traer_dato({ estacion: { value: params.row.id_estacion } })
+                        }}
                     >
                         <Avatar
                             sx={{
@@ -82,6 +91,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
     ];
     const estacion = async (): Promise<void> => {
         try {
+            set_estaciones([]);
             const response = await consultar_estaciones();
             const new_estacion = response.map((estaciones: Estaciones) => ({
 
@@ -108,22 +118,62 @@ export const AdministradorDeEstaciones: React.FC = () => {
         void estacion()
     }, []);
 
-    const confirmar_eliminar_usuario = (idPersona: number): void => {
-        void Swal.fire({
-            title: "Estas seguro?",
-            text: "Va a eliminar un usuario",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Si, elminar!",
-            cancelButtonText: "Cancelar",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                await eliminar_estacion(idPersona);
-                control_success('La estación se eliminó correctamente')
-            }
-        });
+    const traer_dato = async (data: { estacion: { value: any; }; }): Promise<any> => {
+        try {
+            set_dato([])
+            const estacion_id = data.estacion?.value;
+            const estacion = await consultar_datos_id(estacion_id);
+            const ultimo_dato = estacion[estacion.length - 1];
+            const datos = {
+                id_data: ultimo_dato.id_data,
+                fecha_registro: ultimo_dato.fecha_registro,
+                temperatura_ambiente: ultimo_dato.temperatura_ambiente,
+                humedad_ambiente: ultimo_dato.humedad_ambiente,
+                presion_barometrica: ultimo_dato.presion_barometrica,
+                velocidad_viento: ultimo_dato.velocidad_viento,
+                direccion_viento: ultimo_dato.direccion_viento,
+                precipitacion: ultimo_dato.precipitacion,
+                luminosidad: ultimo_dato.luminosidad,
+                nivel_agua: ultimo_dato.nivel_agua,
+                velocidad_agua: ultimo_dato.velocidad_agua,
+                id_estacion: ultimo_dato.id_estacion,
+            };
+            console.log("Paso");
+            console.log("Datos", [datos]);
+            set_dato([datos])
+        } catch (err) {
+            control_error(err);
+        }
+    };
+
+    const confirmar_eliminar_usuario = (id_Estacion: number): void => {
+        console.log("Paso ", dato.length)
+        if (dato.length > 0) {
+            console.log("Hay datos")
+        } else {
+            console.log("No hay datos")
+        }
+        if (dato.length > 0) {
+            control_success_fail("La estación no se puede eliminar porque contiene datos")
+        } else {
+            void Swal.fire({
+                title: "Estas seguro?",
+                text: "Va a eliminar un usuario",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Si, elminar!",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    // await eliminar_estacion(id_Estacion);
+                    void estacion()
+                    control_success('La estación se eliminó correctamente')
+                }
+
+            });
+        }
     };
 
     return (
@@ -165,12 +215,14 @@ export const AdministradorDeEstaciones: React.FC = () => {
             <CrearEstacionDialog
                 is_modal_active={crear_estacion_is_active}
                 set_is_modal_active={set_crear_estacion_is_active}
+                estacion={estacion}
             />
             <EditarEstacionDialog
                 is_modal_active={editar_estacion_is_active}
                 set_is_modal_active={set_editar_estacion_is_active}
                 estacion_editado={estacion_editado}
                 set_estacion_editado={set_estacion_editado}
+                estacion={estacion}
             />
         </Grid>
     );

@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { type Estaciones } from '../interfaces/interfaces';
@@ -23,7 +23,7 @@ export const GeolocalizacionScreen: React.FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const obtener_posicion = async () => {
-    try{
+    try {
       const data = await consultar_estaciones();
       const pos_maped = data.map((estaciones: Estaciones) => ({
 
@@ -33,17 +33,17 @@ export const GeolocalizacionScreen: React.FC = () => {
         cod_tipo_estacion: estaciones.cod_tipo_estacion,
         cod_municipio: estaciones.cod_municipio,
         latitud: estaciones.latitud,
-        longitud: estaciones.longitud ,
+        longitud: estaciones.longitud,
         indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
         fecha_modificacion_coordenadas: estaciones.fecha_modificacion_coordenadas,
-        id_persona_modifica: estaciones.id_persona_modifica    
-        
+        id_persona_modifica: estaciones.id_persona_modifica
+
       }));
 
       set_info(pos_maped);
       console.log('paso', pos_maped);
 
-      } catch (err) {
+    } catch (err) {
       control_error(err);
     }
   };  
@@ -62,7 +62,10 @@ export const GeolocalizacionScreen: React.FC = () => {
         key={estacion.id_estacion}
         position={[estacion.longitud, estacion.latitud]}
         icon={icon_locate}
-      >        
+      >
+        <Popup>
+          nombre: {estacion.nombre_estacion}
+        </Popup>
       </Marker>
     );
   });

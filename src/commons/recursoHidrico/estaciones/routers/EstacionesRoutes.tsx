@@ -32,7 +32,7 @@ export const EstacionesRoutes: React.FC = () => {
       {/* Historial Estaciones */}
       <Route path="historial/*" element={<HistorialDatos />} />
 
-      {/* Reportes Estaciones */}
+      {/* Geolocalizacion Estaciones */}
       <Route path="reportes/*" element={<ReportesScreen />} />
 
       {/* Dashboard Estaciones */}
