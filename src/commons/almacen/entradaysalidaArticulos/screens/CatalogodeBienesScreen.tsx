@@ -121,6 +121,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
         <CrearBienDialogForm
           is_modal_active={add_bien_is_active}
           set_is_modal_active={set_add_bien_is_active}
+          action={""}
         />
       </Grid>
     </>
