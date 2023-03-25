@@ -1,8 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
-import { Grid, Box, Typography, Stack, Button, TextField } from '@mui/material';
+import {
+  Grid,
+  Box,
+  Typography,
+  Stack,
+  Button,
+  IconButton,
+  TextField,
+  FormLabel,
+  FormControl,
+  // FormGroup,
+  FormControlLabel,
+  // FormHelperText,
+  Checkbox,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
+import FilterListIcon from '@mui/icons-material/FilterList';
+
 import Select, { type SingleValue } from 'react-select';
 import { type Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
@@ -82,13 +100,29 @@ export interface IList {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const AuditoriaScreen = (): JSX.Element => {
+  const [anchor_el, set_anchor_el] = React.useState<null | HTMLElement>(null);
+  const open_menu_filter = Boolean(anchor_el);
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_click_menu_filter = (event: React.MouseEvent<HTMLElement>) => {
+    set_anchor_el(event.currentTarget);
+  };
+  const handle_close_menu_filter = (): void => {
+    set_anchor_el(null);
+  };
+  const [checkbox_selection, set_checkbox_selection] = React.useState({
+    tipo_documento_filter: false,
+    subsistema_modulo_filter: false,
+  });
+  const { tipo_documento_filter, subsistema_modulo_filter } =
+    checkbox_selection;
   const [rango_inicial_fecha, set_rango_inicial_fecha] = React.useState<
     Dayjs | string | null
   >(null);
-
   const [rango_final_fecha, set_rango_final_fecha] = React.useState<
     Dayjs | string | null
   >(null);
+  const [nombre_usuario_auditoria, set_nombre_usuario_auditoria] =
+    React.useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const notification_error = async (message = 'Algo pasó, intente de nuevo') =>
     await Swal.mixin({
@@ -139,7 +173,19 @@ const AuditoriaScreen = (): JSX.Element => {
   // const data_screen: any = watch();
 
   const on_submit: SubmitHandler<IFormValues> = async (data: IFormValues) => {
-    void query_auditorias(data, rango_inicial_fecha, rango_inicial_fecha);
+    void query_auditorias(data, rango_inicial_fecha, rango_final_fecha);
+  };
+
+  const reset_data = (): void => {
+    set_rango_inicial_fecha(null);
+    set_rango_final_fecha(null);
+    set_nombre_usuario_auditoria(null);
+    set_auditorias([]);
+    set_checkbox_selection({
+      tipo_documento_filter: false,
+      subsistema_modulo_filter: false,
+    });
+    reset(form_values);
   };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -149,21 +195,35 @@ const AuditoriaScreen = (): JSX.Element => {
     new_date_fin: Dayjs | string | null
   ) => {
     try {
-      console.log({
-        form_values,
-      });
-
       const { data } = await api.get(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `auditorias/get-by-query-params/?rango-inicial-fecha=${new_date_ini}&rango-final-fecha=${new_date_fin}&tipo-documento=${tipo_documento.value}&numero-documento=${numero_documento}&modulo=${modulo.value}&subsistema=${subsistema.value}`
       );
-      console.log(data);
+      if (tipo_documento_filter) {
+        set_nombre_usuario_auditoria(
+          data.detail
+            .map((item: any) => item.nombre_completo)
+            .filter(
+              (nombre: any, index: any, array: string | any[]) =>
+                array.indexOf(nombre) === index
+            )
+        );
+      }
       set_auditorias(data.detail);
-      void Swal.fire('Correcto', 'Proceso Exitoso', 'success');
+      // void Swal.fire('Correcto', 'Proceso Exitoso', 'success');
     } catch (error: any) {
-      console.log(error);
       void notification_error(error.response.data.detail);
     }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_change_checkbox = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    set_checkbox_selection({
+      ...checkbox_selection,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   useEffect(() => {
@@ -175,6 +235,8 @@ const AuditoriaScreen = (): JSX.Element => {
         const { data: tipo_documentos_no_format } = await api.get(
           'choices/tipo-documento/'
         );
+        console.log(data_subsistemas);
+        console.log(data_modulos);
 
         const subsistemas_adapted =
           adapter_subsistemas_choices(data_subsistemas);
@@ -192,6 +254,40 @@ const AuditoriaScreen = (): JSX.Element => {
     };
     void get_info();
   }, []);
+
+  useEffect(() => {
+    if (!tipo_documento_filter) {
+      console.log(form_values);
+      set_value('numero_documento', '');
+      set_value('tipo_documento', { label: '', value: '' });
+      set_nombre_usuario_auditoria(null);
+      void query_auditorias(
+        form_values,
+        rango_inicial_fecha,
+        rango_final_fecha
+      );
+    }
+    console.log(form_values);
+  }, [tipo_documento_filter]);
+
+  useEffect(() => {
+    if (!subsistema_modulo_filter) {
+      console.log(form_values);
+      void query_auditorias(
+        form_values,
+        rango_inicial_fecha,
+        rango_final_fecha
+      );
+    }
+    console.log(form_values);
+  }, [subsistema_modulo_filter]);
+
+  useEffect(() => {
+    console.log(rango_inicial_fecha, rango_final_fecha);
+  }, [rango_inicial_fecha]);
+  useEffect(() => {
+    console.log(rango_inicial_fecha, rango_final_fecha);
+  }, [rango_final_fecha]);
 
   const handle_date_ini_change = (date: Dayjs | string | null): void => {
     set_rango_inicial_fecha(dayjs(date).format('YYYY-MM-DD'));
@@ -218,24 +314,18 @@ const AuditoriaScreen = (): JSX.Element => {
         </Typography>
 
         <Box sx={{ width: '100%', typography: 'body1' }}>
-          <Title title="INFORMACIÓN GENERAL" />
+          <Title title="Información General" />
           <Box
             component="form"
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onSubmit={handle_submit(on_submit)}
             sx={{ mt: '20px' }}
           >
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Typography> Busqueda por fecha:</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography> Busqueda por Subsistema/Módulo:</Typography>
-              </Grid>
+            <Grid container spacing={2} sx={{ mb: '5px' }}>
               <Grid item xs={12} sm={3}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    label="Seleccione una fecha inicial"
+                    label="Desde la fecha"
                     value={rango_inicial_fecha}
                     onChange={handle_date_ini_change}
                     inputFormat="DD/MM/YYYY"
@@ -248,7 +338,7 @@ const AuditoriaScreen = (): JSX.Element => {
               <Grid item xs={12} sm={3}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    label="Seleccione una fecha final"
+                    label="Hasta la fecha"
                     value={rango_final_fecha}
                     onChange={handle_date_fin_change}
                     inputFormat="DD/MM/YYYY"
@@ -258,107 +348,193 @@ const AuditoriaScreen = (): JSX.Element => {
                   />
                 </LocalizationProvider>
               </Grid>
+              {
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                rango_inicial_fecha && rango_final_fecha && (
+                  <Grid item sm={1}>
+                    <IconButton
+                      onClick={handle_click_menu_filter}
+                      size="small"
+                      sx={{ ml: 2 }}
+                      aria-controls={
+                        open_menu_filter ? 'account-menu' : undefined
+                      }
+                      aria-haspopup="true"
+                      aria-expanded={open_menu_filter ? 'true' : undefined}
+                    >
+                      <FilterListIcon />
+                    </IconButton>
+                    <Menu
+                      anchorEl={anchor_el}
+                      id="account-menu"
+                      open={open_menu_filter}
+                      onClose={handle_close_menu_filter}
+                      onClick={handle_close_menu_filter}
+                      PaperProps={{
+                        elevation: 0,
+                        sx: {
+                          overflow: 'visible',
+                          filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                          mt: 1.5,
+                          '& .MuiAvatar-root': {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                          },
+                          '&:before': {
+                            content: '""',
+                            display: 'block',
+                            position: 'absolute',
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: 'background.paper',
+                            transform: 'translateY(-50%) rotate(45deg)',
+                            zIndex: 0,
+                          },
+                        },
+                      }}
+                      transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    >
+                      <MenuItem onClick={handle_close_menu_filter}>
+                        <FormControl
+                          sx={{ m: 3 }}
+                          component="fieldset"
+                          variant="standard"
+                        >
+                          <FormLabel component="legend">Buscar por:</FormLabel>
 
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="subsistema"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      {...field}
-                      value={field.value}
-                      onChange={(option: SingleValue<IList>) => {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        set_value('subsistema', option!);
-                      }}
-                      options={subsistemas_options}
-                      placeholder="Seleccionar"
-                    />
-                  )}
-                />
-                {errors.subsistema != null && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      Este campo es obligatorio
-                    </small>
-                  </div>
-                )}
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="modulo"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      {...field}
-                      value={field.value}
-                      onChange={(option: SingleValue<IList>) => {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        set_value('modulo', option!);
-                      }}
-                      options={modulos_options}
-                      placeholder="Seleccionar"
-                    />
-                  )}
-                />
-                {errors.modulo !== null && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      Este campo es obligatorio
-                    </small>
-                  </div>
-                )}
-              </Grid>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={tipo_documento_filter}
+                                onChange={handle_change_checkbox}
+                                name="tipo_documento_filter"
+                              />
+                            }
+                            label="Tipo de documento"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={subsistema_modulo_filter}
+                                onChange={handle_change_checkbox}
+                                name="subsistema_modulo_filter"
+                              />
+                            }
+                            label="Subsistema/Módulo"
+                          />
+                        </FormControl>
+                      </MenuItem>
+                    </Menu>
+                  </Grid>
+                )
+              }
             </Grid>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Typography> Busqueda por documento:</Typography>
+            {tipo_documento_filter && (
+              <Grid container spacing={2} sx={{ mt: '0' }}>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="tipo_documento"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onChange={(option: SingleValue<IList>) => {
+                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                          set_value('tipo_documento', option!);
+                        }}
+                        name="tipo_documento"
+                        options={tipo_documento_options}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    margin="dense"
+                    variant="outlined"
+                    fullWidth
+                    label="Número de documento"
+                    type="number"
+                    size="small"
+                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                    error={errors.numero_documento?.type === 'required'}
+                    helperText={
+                      errors.numero_documento?.type === 'required'
+                        ? 'Este campo es obligatorio'
+                        : ''
+                    }
+                    {...register('numero_documento', { required: false })}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    margin="dense"
+                    variant="outlined"
+                    fullWidth
+                    defaultValue={nombre_usuario_auditoria}
+                    label={nombre_usuario_auditoria}
+                    type="number"
+                    size="small"
+                    disabled
+                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={3}>
-                <Controller
-                  name="tipo_documento"
-                  control={control}
-                  render={({ field }) => (
-                    <Select
-                      {...field}
-                      value={field.value}
-                      onChange={(option: SingleValue<IList>) => {
-                        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                        set_value('tipo_documento', option!);
-                      }}
-                      name="tipo_documento"
-                      options={tipo_documento_options}
-                      placeholder="Seleccionar"
-                    />
+            )}
+            {subsistema_modulo_filter && (
+              <Grid container spacing={2} sx={{ mt: '0' }}>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="subsistema"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onChange={(option: SingleValue<IList>) => {
+                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                          set_value('subsistema', option!);
+                        }}
+                        options={subsistemas_options}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                  {errors.subsistema != null && (
+                    <div className="col-12">
+                      <small className="text-center text-danger">
+                        Este campo es obligatorio
+                      </small>
+                    </div>
                   )}
-                />
-                {errors.subsistema != null && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      Este campo es obligatorio
-                    </small>
-                  </div>
-                )}
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Controller
+                    name="modulo"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        value={field.value}
+                        onChange={(option: SingleValue<IList>) => {
+                          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                          set_value('modulo', option!);
+                        }}
+                        options={modulos_options}
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                </Grid>
               </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  margin="dense"
-                  variant="outlined"
-                  fullWidth
-                  label="Número de documento"
-                  type="number"
-                  size="small"
-                  inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                  error={errors.numero_documento?.type === 'required'}
-                  helperText={
-                    errors.numero_documento?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  {...register('numero_documento', { required: false })}
-                />
-              </Grid>
-            </Grid>
+            )}
             <Stack
               direction="row"
               spacing={2}
@@ -370,7 +546,7 @@ const AuditoriaScreen = (): JSX.Element => {
                 variant="outlined"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  reset(form_values);
+                  reset_data();
                 }}
               >
                 LIMPIAR
