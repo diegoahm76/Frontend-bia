@@ -1,13 +1,6 @@
 import type { Dayjs } from 'dayjs';
 import type { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import type {
-  IList,
-  Paises,
-  TipoDocumento,
-  TipoPersona,
-  Departamentos,
-  Municipios
-} from '../../../interfaces/globalModels';
+import type { IList } from '../../../interfaces/globalModels';
 
 export interface UserRol {
   id_rol: number;
@@ -144,6 +137,7 @@ export type keys_object =
   | 'nombre_de_usuario'
   | 'numero_documento'
   | 'pais_nacimiento'
+  | 'pais_notificacion'
   | 'pais_residencia'
   | 'password'
   | 'primer_apellido'
@@ -180,6 +174,7 @@ export interface IPerson {
   direccion_notificaciones: string;
   direccion_residencia_ref: string;
   direccion_residencia: string;
+  complemeto_direccion: string;
   email_empresarial: string;
   email: string;
   estado_civil: string | EstadoCivil;
@@ -242,16 +237,16 @@ export interface ReisterHook {
   ciudad_expedicion: string;
   ciudad_notificacion: string;
   ciudad_residencia: string;
-  ciudades_opt: Municipios[];
-  ciudades_residencia_opt: Municipios[];
-  ciudad_notificacion_opt: Municipios[];
+  ciudades_opt: IList[];
+  ciudades_residencia_opt: IList[];
+  ciudad_notificacion_opt: IList[];
   data_register: IPerson;
   departamento_expedicion: string;
   departamento_residencia: string;
-  departamentos_opt: Departamentos[];
-  dpto_notifiacion_opt: Departamentos[];
+  departamentos_opt: IList[];
+  dpto_notifiacion_opt: IList[];
   dpto_notifiacion: string;
-  dpts_residencia_opt: Departamentos[];
+  dpts_residencia_opt: IList[];
   error_email: boolean;
   error_password: boolean;
   error_phone: boolean;
@@ -269,28 +264,28 @@ export interface ReisterHook {
   pais_nacimiento: string;
   pais_notificacion: string;
   pais_residencia: string;
-  paises_options: Paises[];
+  paises_options: IList[];
   requiere_nombre_comercial: boolean;
   show_password: boolean;
-  tipo_documento_opt: TipoDocumento[];
+  tipo_documento_opt: IList[];
   tipo_documento: string;
-  tipo_persona_opt: TipoPersona[];
+  tipo_persona_opt: IList[];
   tipo_persona: string;
   get_selects_options: () => Promise<void>;
   handle_change_checkbox: (event: ChangeEvent<HTMLInputElement>) => void;
   handle_click_show_password: () => void;
   set_ciudad_expedicion: Dispatch<SetStateAction<string>>;
-  set_ciudad_notificacion_opt: Dispatch<SetStateAction<Municipios[]>>;
+  set_ciudad_notificacion_opt: Dispatch<SetStateAction<IList[]>>;
   set_ciudad_notificacion: Dispatch<SetStateAction<string>>;
   set_ciudad_residencia: Dispatch<SetStateAction<string>>;
-  set_ciudades_opt: Dispatch<SetStateAction<Municipios[]>>;
-  set_ciudades_residencia_opt: Dispatch<SetStateAction<Municipios[]>>;
+  set_ciudades_opt: Dispatch<SetStateAction<IList[]>>;
+  set_ciudades_residencia_opt: Dispatch<SetStateAction<IList[]>>;
   set_data_register: Dispatch<SetStateAction<IPerson>>;
   set_departamento: Dispatch<SetStateAction<string>>;
-  set_departamentos_opt: Dispatch<SetStateAction<Departamentos[]>>;
-  set_dpto_notifiacion_opt: Dispatch<SetStateAction<Departamentos[]>>;
+  set_departamentos_opt: Dispatch<SetStateAction<IList[]>>;
+  set_dpto_notifiacion_opt: Dispatch<SetStateAction<IList[]>>;
   set_dpto_notifiacion: Dispatch<SetStateAction<string>>;
-  set_dpto_residencia_opt: Dispatch<SetStateAction<Departamentos[]>>;
+  set_dpto_residencia_opt: Dispatch<SetStateAction<IList[]>>;
   set_dpto_residencia: Dispatch<SetStateAction<string>>;
   set_error_email: Dispatch<SetStateAction<boolean>>;
   set_error_error_phone: Dispatch<SetStateAction<boolean>>;

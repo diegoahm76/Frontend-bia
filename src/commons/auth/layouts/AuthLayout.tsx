@@ -35,7 +35,7 @@ export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
             borderRadius: 5,
           }}
         >
-          <Card sx={{ borderRadius: 5 }}>
+          <Card sx={{ borderRadius: 5, padding: 2 }}>
             <CardContent>
               <Grid
                 item

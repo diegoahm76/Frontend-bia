@@ -1,14 +1,7 @@
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
 import { get_person_by_document } from '../request/authRequest';
-import type {
-  TipoPersona,
-  Paises,
-  TipoDocumento,
-  IList,
-  Departamentos,
-  Municipios,
-} from '../../../interfaces/globalModels';
+import type { IList } from '../../../interfaces/globalModels';
 import type { IPerson, keys_object, ReisterHook } from '../interfaces';
 import dayjs, { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
@@ -22,31 +15,29 @@ import {
   get_tipo_persona,
 } from '../../../request/getRequest';
 
+type options = 'inicial' | 'residencia' | 'notificacion';
+
 export const use_register = (): ReisterHook => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { setValue } = useForm();
   const [ciudad_expedicion, set_ciudad_expedicion] = useState('');
   const [ciudad_notificacion_opt, set_ciudad_notificacion_opt] = useState<
-    Municipios[]
+    IList[]
   >([]);
   const [ciudad_notificacion, set_ciudad_notificacion] = useState('');
   const [ciudad_residencia, set_ciudad_residencia] = useState('');
-  const [ciudades_opt, set_ciudades_opt] = useState<Municipios[]>([]);
+  const [ciudades_opt, set_ciudades_opt] = useState<IList[]>([]);
   const [ciudades_residencia_opt, set_ciudades_residencia_opt] = useState<
-    Municipios[]
+    IList[]
   >([]);
   const [departamento_expedicion, set_departamento] = useState('');
   const [departamento_residencia, set_dpto_residencia] = useState('');
-  const [departamentos_opt, set_departamentos_opt] = useState<Departamentos[]>(
+  const [departamentos_opt, set_departamentos_opt] = useState<IList[]>([]);
+  const [dpto_notifiacion_opt, set_dpto_notifiacion_opt] = useState<IList[]>(
     []
   );
-  const [dpto_notifiacion_opt, set_dpto_notifiacion_opt] = useState<
-    Departamentos[]
-  >([]);
   const [dpto_notifiacion, set_dpto_notifiacion] = useState('');
-  const [dpts_residencia_opt, set_dpto_residencia_opt] = useState<
-    Departamentos[]
-  >([]);
+  const [dpts_residencia_opt, set_dpto_residencia_opt] = useState<IList[]>([]);
   const [error_email, set_error_email] = useState(false);
   const [error_password, set_error_password] = useState(false);
   const [error_phone, set_error_error_phone] = useState(false);
@@ -64,15 +55,13 @@ export const use_register = (): ReisterHook => {
   const [pais_nacimiento, set_pais_nacimiento] = useState('');
   const [pais_notificacion, set_pais_notificacion] = useState('');
   const [pais_residencia, set_pais_residencia] = useState('');
-  const [paises_options, set_paises_options] = useState<Paises[]>([]);
+  const [paises_options, set_paises_options] = useState<IList[]>([]);
   const [requiere_nombre_comercial, set_requiere_nombre_comercial] =
     useState(false);
   const [show_password, set_show_password] = useState(false);
-  const [tipo_documento_opt, set_tipo_documento_opt] = useState<
-    TipoDocumento[]
-  >([]);
+  const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
   const [tipo_documento, set_tipo_documento] = useState('');
-  const [tipo_persona_opt, set_tipo_persona_opt] = useState<TipoPersona[]>([]);
+  const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
   const [tipo_persona, set_tipo_persona] = useState('');
   const [data_register, set_data_register] = useState<IPerson>({
     acepta_notificacion_email: false,
@@ -91,6 +80,7 @@ export const use_register = (): ReisterHook => {
     direccion_notificaciones: '',
     direccion_residencia_ref: '',
     direccion_residencia: '',
+    complemeto_direccion: '',
     email_empresarial: '',
     email: '',
     estado_civil: '',
@@ -157,6 +147,11 @@ export const use_register = (): ReisterHook => {
     }
   };
 
+  // Valida el que el password cumpla con los requerimientos
+  // Minimo 6 caracteres
+  // 1 Mayuscula
+  // 1 Numero
+  // 1 Caracter extrano
   const validate_password = (password: string): boolean => {
     const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
     if (regex.test(password) && password.length > 5) {
@@ -178,8 +173,8 @@ export const use_register = (): ReisterHook => {
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
-      // TODO => MODIFICAR VALIDACION CUANDO OSCAR MODIFIQUE LOS SERVICIOS
-      if (data !== null && data.numero_documento !== '') {
+
+      if (data !== null && data !== undefined) {
         if (!data.tiene_usuario) {
           set_data_register({ ...data });
           for (const key in data) {
@@ -223,13 +218,29 @@ export const use_register = (): ReisterHook => {
     }
   };
 
-  const get_ciudades_opt = async (): Promise<void> => {
+  const get_ciudades_opt = async (
+    type: options = 'inicial',
+    departamento: string
+  ): Promise<void> => {
     set_loading(true);
     try {
       const {
         data: { data },
       } = await get_ciudades(departamento_expedicion);
-      set_ciudades_opt(data);
+
+      switch (type) {
+        case 'inicial':
+          set_ciudades_opt(data);
+          break;
+
+        case 'residencia':
+          set_ciudades_residencia_opt(data);
+          break;
+
+        case 'notificacion':
+          set_ciudad_notificacion_opt(data);
+          break;
+      }
     } catch (error) {
       control_error(error);
     } finally {
@@ -238,13 +249,29 @@ export const use_register = (): ReisterHook => {
   };
 
   // Obtiene los departamentos por pais para el select lugar expedición
-  const get_departamentos_por_pais = async (): Promise<void> => {
+  const get_departamentos_por_pais = async (
+    type: options = 'inicial',
+    pais: string
+  ): Promise<void> => {
     set_loading(true);
     try {
       const {
-        data: { data: departamentos },
-      } = await get_departamentos(pais_nacimiento);
-      set_departamentos_opt(departamentos);
+        data: { data },
+      } = await get_departamentos(pais);
+
+      switch (type) {
+        case 'inicial':
+          set_departamentos_opt(data);
+          break;
+
+        case 'residencia':
+          set_dpto_residencia_opt(data);
+          break;
+
+        case 'notificacion':
+          set_dpto_notifiacion_opt(data);
+          break;
+      }
     } catch (error) {
       control_error(error);
     } finally {
@@ -253,51 +280,23 @@ export const use_register = (): ReisterHook => {
   };
 
   useEffect(() => {
-    void get_departamentos_por_pais();
+    void get_departamentos_por_pais('inicial', pais_nacimiento);
   }, [pais_nacimiento]);
 
   useEffect(() => {
-    get_departamentos(pais_residencia)
-      .then(({ data: { data } }) => {
-        set_dpto_residencia_opt(data);
-      })
-      .catch((err) => {
-        control_error(err);
-      });
+    void get_departamentos_por_pais('residencia', pais_residencia);
   }, [pais_residencia]);
 
   useEffect(() => {
-    get_ciudades(departamento_residencia)
-      .then(({ data: { data } }) => {
-        set_ciudades_residencia_opt(data);
-      })
-      .catch((err) => {
-        control_error(err);
-      });
+    void get_ciudades_opt('residencia', departamento_residencia);
   }, [departamento_residencia]);
 
   useEffect(() => {
-    get_departamentos(pais_notificacion)
-      .then(({ data: { data } }) => {
-        set_dpto_notifiacion_opt(data);
-      })
-      .catch((err) => {
-        control_error(err);
-      });
-  }, [pais_notificacion]);
-
-  useEffect(() => {
-    get_ciudades(dpto_notifiacion)
-      .then(({ data: { data } }) => {
-        set_ciudad_notificacion_opt(data);
-      })
-      .catch((err) => {
-        control_error(err);
-      });
+    void get_ciudades_opt('notificacion', dpto_notifiacion);
   }, [dpto_notifiacion]);
 
   useEffect(() => {
-    void get_ciudades_opt();
+    void get_ciudades_opt('inicial', departamento_expedicion);
   }, [departamento_expedicion]);
 
   useEffect(() => {
