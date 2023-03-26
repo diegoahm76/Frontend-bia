@@ -60,7 +60,7 @@ const columns: GridColDef[] = [
   { field: 'acciones', headerName: 'Acciones', width: 300,
   renderCell: (params) => (
     <>
-    
+    {params.row.item_ya_usado?null:
       <Tooltip title="Editar">
         <IconButton
           onClick={() => {
@@ -86,6 +86,7 @@ const columns: GridColDef[] = [
           </Avatar>
         </IconButton>
       </Tooltip>
+  }
       <Tooltip title={params.row.activo ? "Desactivar" : "Activar"}>
         <IconButton
           onClick={() => {
@@ -114,7 +115,7 @@ const columns: GridColDef[] = [
           </Avatar>
         </IconButton>
       </Tooltip>
-  
+        {params.row.item_ya_usado?null:
         <Tooltip title="Eliminar">
           <IconButton
             onClick={() => {
@@ -137,7 +138,7 @@ const columns: GridColDef[] = [
             </Avatar>
           </IconButton>
         </Tooltip>
-              
+  }
     </>
   ),
 },
