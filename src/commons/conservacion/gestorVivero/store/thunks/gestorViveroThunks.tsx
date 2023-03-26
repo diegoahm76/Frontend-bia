@@ -40,7 +40,7 @@ const control_success = (message: ToastContent) =>
   });
 
 
-// Obtener Organigrama
+// Obtener viveros
 export const get_nurseries_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -140,4 +140,57 @@ export const activate_deactivate_nursery_service: any = (id: string | number) =>
   };
 };
 
+// abrir-cerrar vivero
+export const closing_nursery_service: any = (
+  nursery: any,
+  id: string|number,
+
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(nursery)
+      const { data } = await api.put(
+        `conservacion/viveros/abrir-cerrar/${id}/`,
+        nursery
+      );
+      dispatch(get_nurseries_service());
+      if(nursery.accion === "Abrir"){
+        control_success('Se realizo la apertura del vivero');
+      } else{
+        control_success('Se realizo el cierre del vivero');
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      console.log(error);
+      return error as AxiosError;
+    }
+  };
+};
+
+// cuarentena vivero
+export const quarantine_nursery_service: any = (
+  nursery: any,
+  id: string|number,
+
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(nursery)
+      const { data } = await api.put(
+        `conservacion/viveros/cuarentena/${id}/`,
+        nursery
+      );
+      dispatch(get_nurseries_service());
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      console.log(error);
+      return error as AxiosError;
+    }
+  };
+};
 

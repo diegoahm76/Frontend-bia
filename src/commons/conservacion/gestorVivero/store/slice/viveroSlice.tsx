@@ -50,6 +50,9 @@ export const nursery_slice = createSlice({
     current_nursery: (state: INursery, action: PayloadAction<IObjNursery>) => {
       state.current_nursery = action.payload;
     },
+    get_nurseries_closing: (state: INursery, action: PayloadAction<IObjNursery[]>) => {
+      state.nurseries = action.payload;
+    },
   },
 });
-export const { get_nurseries, current_nursery } = nursery_slice.actions;
+export const { get_nurseries, current_nursery, get_nurseries_closing } = nursery_slice.actions;

@@ -3,6 +3,7 @@ export interface INursery {
   current_nursery: IObjNursery;
 }
 export interface IObjNursery {
+  action?: string |null,
   id_vivero: number | null;
   nombre: string | null;
   cod_municipio: string | null;
