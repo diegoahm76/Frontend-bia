@@ -164,6 +164,10 @@ export function AdministrarViveroScreen(): JSX.Element {
                 dispatch(current_nursery(params.row));
                 set_action("detail")
                 set_add_nursery_is_active(true)
+                // console.log("editar "+ params.row)
+                // navigate(
+                //   '/dashboard/gestor-documental/organigrama/editar-organigrama'
+                // );
               }}
             >
               <Avatar

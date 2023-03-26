@@ -25,11 +25,11 @@ export const ConfiguracionAlarma: React.FC = () => {
   }
 
   const columns: GridColDef[] = [
-    { field: 'id_confi_alerta_persona', headerName: 'NÚMERO ALERTA', width: 140 },
+    { field: 'id_confi_alerta_persona', headerName: 'NÚMERO', width: 140 },
     { field: 'nombre_variable_alarma', headerName: 'NOMBRE VARIABLE', width: 170 },
     { field: 'mensaje_alarma_minimo', headerName: 'MENSAJE MINIMO', width: 170 },
     { field: 'mensaje_no_alarma', headerName: 'MENSAJE MAXIMO', width: 170 },
-    { field: 'frecuencia_alarma', headerName: 'FRECUENCIA ALARMA', width: 170 },
+    { field: 'frecuencia_alarma', headerName: 'DREACUENCIA ALARMA', width: 170 },
     {
       field: 'ACCIONES',
       headerName: 'Aciones',
@@ -65,8 +65,7 @@ export const ConfiguracionAlarma: React.FC = () => {
                 border: '2px solid',
               }}
               variant="rounded"
-              onClick={() => {confirmar_eliminar_alarma(params.row.id_confi_alerta_persona);
-              console.log("id enviada",params.row.id_confi_alerta_persona) }}
+              onClick={() => { confirmar_eliminar_alarma(params.row.id_confi_alerta_persona); }}
             >
               <DeleteIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
@@ -82,7 +81,6 @@ export const ConfiguracionAlarma: React.FC = () => {
     try {
       const response = await consultar_conf_alerta_persona();
       const conf = response.map((con_alerta: conf_alarma) => ({
-
         id_confi_alerta_persona: con_alerta.id_confi_alerta_persona,
         nombre_variable_alarma: con_alerta.nombre_variable_alarma,
         mensaje_alarma_maximo: con_alerta.mensaje_alarma_maximo,
@@ -102,7 +100,7 @@ export const ConfiguracionAlarma: React.FC = () => {
     void confi_alerta_persona()
   }, []);
 
-  const confirmar_eliminar_alarma = (idPersona: number): void => {
+  const confirmar_eliminar_alarma = (id_confi_alerta_persona: number): void => {
     void Swal.fire({
       title: "Estas seguro?",
       text: "Va a eliminar un usuario",
@@ -114,8 +112,8 @@ export const ConfiguracionAlarma: React.FC = () => {
       cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await eliminar_conf_alerta_persona(idPersona);
-        control_success('La alerta se eliminó correctamente')
+        await eliminar_conf_alerta_persona(id_confi_alerta_persona);
+        control_success('La configuración alerta persona se eliminó correctamente')
       }
     });
   };

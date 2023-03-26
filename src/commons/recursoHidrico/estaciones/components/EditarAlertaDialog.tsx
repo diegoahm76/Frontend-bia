@@ -76,7 +76,7 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
 
   const on_submit = async (data: CrearAlerta): Promise<any> => {
     try {
-      const datos_confi = {
+      const datos_estacion = {
 
         nombre_variable_alarma: data.nombre_variable_alarma,
         mensaje_alarma_maximo: data.mensaje_alarma_maximo,
@@ -85,11 +85,11 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
         frecuencia_alarma: data.frecuencia_alarma,
 
       };
-      await editar_conf_alarma(alerta_editado.id_confi_alerta_persona, datos_confi);
+      await editar_conf_alarma(alerta_editado.id_persona, datos_estacion);
       set_alerta_editado(null);
       set_is_modal_active(false);
-      control_success('La configuración se actualizó correctamente')
-    } catch (error) { 
+      control_success('La persona se actualizó correctamente')
+    } catch (error) {
       control_error(error);
     }
   };
@@ -164,7 +164,7 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
         </DialogContent>
         <DialogActions>
           <Button onClick={handle_close}>Cancelar</Button>
-          <Button variant="contained" color="primary" type='submit'>Actualizar</Button>
+          <Button variant="contained" color="primary">Actualizar</Button>
         </DialogActions>
       </form>
     </Dialog>

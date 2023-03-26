@@ -5,7 +5,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import {ParametrosReferencia} from '../components/ParametrosReferencia';
-import {ConfiguracionAlarma} from '../components/ConfiguracionAlerta';
+import {ConfiguracionAlarma} from '../components/ConfiguracionAlarma';
 import { Grid } from '@mui/material';
 import  { Title }  from '../../../../components/Title';
 // eslint-disable-next-line @typescript-eslint/naming-convention

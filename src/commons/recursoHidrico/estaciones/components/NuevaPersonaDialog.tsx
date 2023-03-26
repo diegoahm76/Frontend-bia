@@ -21,7 +21,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
   const {
     register,
     control,
-    reset,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     handleSubmit,
     formState: { errors },
@@ -292,7 +291,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
             <Button
               variant="text"
               color="primary"
-              onClick={() => { reset(); handle_close(); }}
+              onClick={handle_close}
             >
               Cancelar
             </Button>

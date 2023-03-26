@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import Select from 'react-select/dist/declarations/src/Select';
 import { control_error } from '../../../../helpers/controlError';
-import { control_success, editar_estacion } from '../../requets/Request';
+import { consultar_estaciones, control_success, editar_estacion } from '../../requets/Request';
 import { type IEstacionEstaciones } from '../interfaces/interfaces';
 
 interface IProps {
@@ -45,14 +47,13 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
         cod_tipo_estacion: data.cod_tipo_estacion,
         latitud: data.latitud,
         longitud: data.longitud,
-        cod_municipio: data.cod_municipio,
+        cod_municipio: data.latitud,
         indicaciones_ubicacion: data.indicaciones_ubicacion,
       };
-      console.log("DATOS A LA API", datos_estacion)
-      await editar_estacion(estacion_editado.id_estacion, datos_estacion);
+      await editar_estacion(estacion_editado.id_persona, datos_estacion);
       set_estacion_editado(null);
       set_is_modal_active(false);
-      control_success('La estación se actualizó correctamente')
+      control_success('La persona se actualizó correctamente')
     } catch (error) {
       control_error(error);
     }
@@ -175,7 +176,7 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
         </DialogContent>
         <DialogActions>
           <Button onClick={handle_close}>Cancelar</Button>
-          <Button variant="contained" color="primary" type='submit' >Actualizar</Button>
+          <Button variant="contained" color="primary" >Actualizar</Button>
         </DialogActions>
       </form>
     </Dialog>
