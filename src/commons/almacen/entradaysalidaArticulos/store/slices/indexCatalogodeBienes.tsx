@@ -45,6 +45,7 @@ const initial_state_data ={
   eliminar: false,
   bien: initial_state_current_bien,
 }
+
 export const initial_state_current_nodo = {
   key: "",
   data: initial_state_data,

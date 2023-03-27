@@ -1,4 +1,9 @@
 import { useEffect, useState } from 'react';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import EngineeringIcon from '@mui/icons-material/Engineering';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import EditIcon from '@mui/icons-material/Edit';
+
 // import { useNavigate } from 'react-router-dom';
 // Componentes de Material UI
 import {
@@ -9,12 +14,12 @@ import {
   Avatar,
   Chip,
   Tooltip,
+  DialogTitle,
+
 } from '@mui/material';
 // Icons de Material UI
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import AddIcon from '@mui/icons-material/Add';
-// import VisibilityIcon from '@mui/icons-material/Visibility';
-import EditIcon from '@mui/icons-material/Edit';
+
 
 // import LockIcon from '@mui/icons-material/Lock';
 // import BlockIcon from '@mui/icons-material/Block';
@@ -22,15 +27,17 @@ import EditIcon from '@mui/icons-material/Edit';
 // import BusinessIcon from '@mui/icons-material/Business';
 // import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
 // import DeleteIcon from '@mui/icons-material/Delete';
- import ArticleIcon from '@mui/icons-material/Article';
+
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 // Componentes personalizados
 import { Title } from '../../../../../../components/Title';
 // // Hooks
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 // Thunks
-import { get_cv_article_all_service } from '../store/thunks/cvComputoThunks';
+import { get_computers_all_service } from '../store/thunks/cvComputoThunks';
 import CrearCvComputoForm from '../components/CrearCvComputoForm';
+// // Slices
+import { current_computer } from '../store/slices/indexCvComputo';
 
 
 // import CrearViveroDialogForm from '../../../../../conservacion/gestorVivero/componentes/CrearViveroDialogForm';
@@ -44,7 +51,8 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
   // const navigate = useNavigate();
   const dispatch = useAppDispatch();
  // const  [action] = useState<string>("create");
-  const { cv_articles } = useAppSelector((state) => state.cv);
+  const { computers } = useAppSelector((state) => state.cv);
+  const  [action, set_action ] = useState<string>("create");
   const [add_cv_com_is_active, set_add_cv_com_is_active] =
     useState<boolean>(false);
 
@@ -63,7 +71,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
     {
       field: 'tiene_hoja_vida',
       headerName: '¿Hoja de vida?',
-      width: 100,
+      width: 120,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.tiene_hoja_vida ? (
@@ -77,7 +85,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
     {
       field: 'cod_tipo_activo',
       headerName: 'Tipo Activo',
-      width: 200,
+      width: 50,
     },
     {
       field: 'estado',
@@ -92,7 +100,32 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
       width: 300,
       renderCell: (params) => (
         <>
-        <Tooltip title="Detalle">
+        {params.row.tiene_hoja_vida?
+        <Tooltip title="Editar">
+        <IconButton
+          onClick={() => {
+            dispatch(current_computer(params.row));
+            set_action("create")
+            set_add_cv_com_is_active(true)
+          }}
+        >
+          <Avatar
+            sx={{
+              width: 24,
+              height: 24,
+              background: '#fff',
+              border: '2px solid',
+            }}
+            variant="rounded"
+          >
+            <EditIcon
+              sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+            />
+
+          </Avatar>
+        </IconButton>
+      </Tooltip>:
+        <Tooltip title="Crear hoja de vida">
             <IconButton
               onClick={() => {
                 
@@ -108,14 +141,15 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
                 }}
                 variant="rounded"
               >
-                <ArticleIcon
+                <NoteAddIcon 
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
 
               </Avatar>
             </IconButton>
           </Tooltip>
-          <Tooltip title="Editar">
+          }
+          <Tooltip title="Programar mantenimiento">
             <IconButton
               onClick={() => {
             
@@ -130,25 +164,47 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
                 }}
                 variant="rounded"
               >
-                <EditIcon
+                <EngineeringIcon
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
 
               </Avatar>
             </IconButton>
           </Tooltip>
-         
+          <Tooltip title="Asignaciones">
+            <IconButton
+              onClick={() => {
+            
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <AssignmentIndIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },
   ];
 
   useEffect(() => {
-    void dispatch(get_cv_article_all_service());
+    void dispatch(get_computers_all_service());
   }, []);
 
   return (
     <>
+    
       <Grid
         container
         sx={{
@@ -161,14 +217,16 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Activos computo - Hojas de vida"></Title>
+        <DialogTitle>Activos</DialogTitle>
+        
+          <Title title="Computadores"></Title>
          
           <Grid item>
             <Box sx={{ width: '100%' }}>
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={cv_articles}
+                rows={computers}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
@@ -179,7 +237,8 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           </Grid>
           <CrearCvComputoForm
             is_modal_active={add_cv_com_is_active}
-            set_is_modal_active={set_add_cv_com_is_active} title={''}           // action = {action}       
+            set_is_modal_active={set_add_cv_com_is_active} 
+            action = {action}       
           />
         </Grid>
       </Grid>

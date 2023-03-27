@@ -140,15 +140,26 @@ export const delete_marca_service: any = (id: string | number) => {
 // desactivar -activar marca
 
 export const activate_deactivate_marca_service: any = (id: string | number, marca: IMarcas) => {
+
+  const form_data = {
+    
+    nombre: marca.nombre,
+    activo: !marca.activo,
+
+  }
   return async (dispatch: Dispatch<any>) => {
     try {
       
       const { data } = await api.put(
         `almacen/marcas/update/${id}/`,
-        marca
+        form_data
       );
       dispatch(get_marca_service());
-      control_success('Se desactivó la marca ');
+      form_data.activo?
+      
+      control_success('Se activo la marca correctamente '):
+      control_success('Se desactivo la marca correctamente');
+    
 
       return data;
     } catch (error: any) {
@@ -259,8 +270,10 @@ export const delete_porcentaje_service: any = (id: string | number) => {
 
 export const activate_deactivate_porcentaje_service: any = (id: string | number, porcentaje: IPorcentajes) => {
 
-  const form_data = { 
+  const form_data = {
     
+    porcentaje: porcentaje.porcentaje,
+    observacion: porcentaje.observacion,
     activo: !porcentaje.activo,
 
   }
@@ -279,7 +292,7 @@ export const activate_deactivate_porcentaje_service: any = (id: string | number,
       form_data.activo?
       
       control_success('Se activo el porcentaje correctamente '):
-      control_success('Se desactivo el porcentaje correctamente a ');
+      control_success('Se desactivo el porcentaje correctamente');
   
       return data;
     } catch (error: any) {

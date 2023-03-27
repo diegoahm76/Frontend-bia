@@ -5,7 +5,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 // Interfaces
-import {   get_cv_articles, get_cv_computers, get_cv_maintenance } from '../../store/slices/indexCvComputo';
+import {   get_computers, get_cv_computer,  } from '../../store/slices/indexCvComputo';
 import { type Dispatch } from 'react';
 
 
@@ -36,29 +36,30 @@ const control_success = (message: ToastContent) =>
   });
 
 // Obtener Mantenimientos
-export const get_cv_maintenance_service = (id_articulo: number) => {
-    return async (dispatch:Dispatch<any>) => {
-        try {
-            const { data } = await api.get(`almacen/mantenimientos/programados/get-five-list/${id_articulo}/`);
-            dispatch(get_cv_maintenance(data.data));
-            return data;
-        } catch (error: any) {
-            console.log('get_cv_maintenance_service');
-            control_error(error.response.data.detail);
-            return error as AxiosError;
-        }
-    };
-};
+// export const get_cv_maintenance_service = (id_articulo: number) => {
+//     return async (dispatch:Dispatch<any>) => {
+//         try {
+//             const { data } = await api.get(`almacen/mantenimientos/programados/get-five-list/${id_articulo}/`);
+//             dispatch(get_cv_maintenance(data.data));
+//             return data;
+//         } catch (error: any) {
+//             console.log('get_cv_maintenance_service');
+//             control_error(error.response.data.detail);
+//             return error as AxiosError;
+//         }
+//     };
+// };
 
 // // // Obtener Artculo por nombre o codigo
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const get_cv_article_all_service: any = () =>{
+export const get_computers_all_service: any = () =>{
     return async (dispatch: Dispatch<any>) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=Com`);
-            dispatch(get_cv_articles(data.Elementos));
+            console.log(data)
+            dispatch(get_computers(data.Elementos));
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -68,13 +69,12 @@ export const get_cv_article_all_service: any = () =>{
 };
 
 // Obtener Hoja de Vida PC
-export const get_cv_computers_service = (id: any) => {
+export const get_cv_computer_service = (id: any) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nro-identificador/?cod_tipo_activo=Com&doc_identificador_nro=${id}`);
-            dispatch(get_cv_computers(data.Elementos));
-            control_success('El bien se agrego correctamente');
+            const { data } = await api.get(`almacen/hoja-de-vida/computadores/get-by-id-bien/${id}/`);
+            dispatch(get_cv_computer(data.Elementos));
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -84,12 +84,12 @@ export const get_cv_computers_service = (id: any) => {
 };
 
 // Crear Hoja de Vida PC
-export const create_cv_computers_service = (formdata: any) => {
+export const create_cv_computers_service: any = (formdata: any) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.post('almacen/hoja-de-vida/computadores/create/', formdata);
             control_success('La hoja de vida se creo correctamente');
-            dispatch(get_cv_computers(null));
+            dispatch(get_computers_all_service());
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -116,7 +116,7 @@ export const update_cv_computers_service = (id: string, file: any) => {
         formdata.append('ruta_imagen_foto', file);
         try {
             const { data } = await api.put(`almacen/hoja-de-vida/computadores/update/${id}/`, formdata);
-            dispatch(get_cv_computers_service(id));
+            dispatch(get_cv_computer_service(id));
             control_success('La hoja de vida se actualizó correctamente');
             return data;
         } catch (error: any) {
@@ -130,7 +130,7 @@ export const delete_cv_computers_service = (id: string) => {
     return async (dispatch: Dispatch<any>) =>{
         try {
             const { data } = await api.delete(`almacen/hoja-de-vida/computadores/delete/${id}/`);
-            dispatch(get_cv_computers_service(id));
+            dispatch(get_cv_computer_service(id));
             control_success('La hoja de vida se eliminó correctamente');
             return data;
         } catch (error: any) {

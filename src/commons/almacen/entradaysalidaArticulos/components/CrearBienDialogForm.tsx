@@ -40,14 +40,14 @@ const CrearBienDialogForm = ({
     value: "",
   }]
   const dispatch = useAppDispatch();
-  const [tipo_bien, set_tipo_bien] = useState<IList[]>(initial_options);
+
   const [activo_types, set_activo_types] = useState<IList[]>(initial_options);
+  const [tipo_bien, set_tipo_bien] = useState<IList[]>(initial_options);
   const [metodo_valoracion, set_metodo_valoracion] = useState<IList[]>(initial_options);
   const [depreciacion_types, set_depreciacion_types] = useState<IList[]>(initial_options);
   const {marca, unidad_medida, porcentaje_iva, current_nodo} = useAppSelector((state) => state.bien);
   
   const [tipo_bien_selected, set_tipo_bien_selected] = useState<string|null|undefined>("A");
- 
   const { control: control_bien, handleSubmit: handle_submit, reset: reset_bien } =
     useForm<FormValues>();
     const handle_close_add_bien = (): void => {
@@ -96,6 +96,7 @@ const CrearBienDialogForm = ({
       data.nivel_jerarquico = 1
     }
     data.cod_tipo_bien = tipo_bien_selected
+   
     console.log(data)
     void dispatch(add_bien_service(data));
     handle_close_add_bien();
@@ -146,7 +147,7 @@ const CrearBienDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
-        <DialogTitle>Crear Bien</DialogTitle>
+        <DialogTitle>Crear bien</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container >

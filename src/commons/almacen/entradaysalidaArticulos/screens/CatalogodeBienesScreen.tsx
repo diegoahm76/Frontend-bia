@@ -3,6 +3,7 @@ import { Column } from "primereact/column";
 import { TreeTable } from "primereact/treetable";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 // // Hooks
 // import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // Thunks
@@ -15,16 +16,19 @@ import { Title } from "../../../../components";
 import CrearBienDialogForm from "../components/CrearBienDialogForm";
 import { get_bienes_service } from "../store/thunks/catalogoBienesThunks";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
+import { initial_state_current_nodo, current_bien } from "../store/slices/indexCatalogodeBienes";
+import { type INodo } from "../interfaces/Nodo";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const CatalogodeBienesScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [add_bien_is_active, set_add_bien_is_active] = useState<boolean>(false);
   const { nodo } = useAppSelector((state) => state.bien);
+  const  [action, set_action ] = useState<string>("create");
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const action_template = (
-    node: { data: { crear: any; editar: any; eliminar: any } },
+    node: INodo,
     Column: any
   ) => {
     return (
@@ -34,6 +38,11 @@ export const CatalogodeBienesScreen: React.FC = () => {
           startIcon={<AddIcon />}
           title="Agregar"
           style={{ marginRight: ".5em", color: "black", border: "none" }}
+          onClick={() => {
+            dispatch(current_bien(node));
+            set_action("create_sub")
+            set_add_bien_is_active(true)
+          }}
           disabled={false}
         ></Button>
         <Button
@@ -45,7 +54,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
         ></Button>
         <Button
           type="button"
-          startIcon={<AddIcon />}
+          startIcon={<DeleteIcon />}
           className="p-button-danger p-button-outlined"
           title="Eliminar"
           style={{ marginRight: ".5em", color: "black", border: "none" }}
@@ -78,6 +87,8 @@ export const CatalogodeBienesScreen: React.FC = () => {
               variant="outlined"
               startIcon={<AddIcon style={{ fontSize: "20px" }} />}
               onClick={() => {
+                dispatch(current_bien(initial_state_current_nodo));
+                set_action("create")
                 set_add_bien_is_active(true);
               }}
               type="button"
@@ -121,7 +132,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
         <CrearBienDialogForm
           is_modal_active={add_bien_is_active}
           set_is_modal_active={set_add_bien_is_active}
-          action={""}
+          action = {action}
         />
       </Grid>
     </>

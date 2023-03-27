@@ -63,6 +63,6 @@ export interface IList{
     id_porcentaje_iva?: number|null;
     id_unidad_medida_vida_util?: number|null;
     id_bien_padre?: number | null;
-    nombre_padre?:string|null,
+    nombre_padre?: string|null,
   }
   
