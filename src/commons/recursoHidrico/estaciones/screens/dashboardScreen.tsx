@@ -122,6 +122,8 @@ export const DashboardScreen: React.FC = () => {
     };
 
 
+
+
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const get_datos_estaciones = async (): Promise<EstacionData[]> => {
 
@@ -129,10 +131,9 @@ export const DashboardScreen: React.FC = () => {
         const start_date_string = handle_end_date_change(start_date)
         const end_date_string = handle_end_date_change(end_date)
 
-        // if (end_date_string < start_date_string) { }
-
         console.log(start_date_string);
         console.log(end_date_string);
+        if (end_date_string < start_date_string) { control_success_fail("La fecha inicial no puede ser mas reciente que la fecha final") }
         const { data: { data: data_success } } = await api.get(
             `estaciones/datos/consultar-datos-fecha/${start_date_string}/${end_date_string}`
         );
@@ -176,8 +177,11 @@ export const DashboardScreen: React.FC = () => {
         } else {
             control_success_fail("No se encontraron datos")
         }
+
         return filtereddata(data_success);
+
     };
+
 
 
     const options: ChartOptions = {
