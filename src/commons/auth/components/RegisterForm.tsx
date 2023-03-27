@@ -38,6 +38,11 @@ import { CustomSelect } from './CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { control_error } from '../../../helpers/controlError';
 
+interface PropsStep {
+  label: string;
+  component: JSX.Element;
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegisterForm: React.FC = () => {
   const {
@@ -155,6 +160,7 @@ export const RegisterForm: React.FC = () => {
   const [direccion_notificacion, set_direccion_notificacion] = useState('');
   const [type_direction, set_type_direction] = useState('');
   const [active_step, set_active_step] = useState(0);
+  const [error_step, set_error_step] = useState(false);
 
   // watchers
   const email = watch('email');
@@ -179,10 +185,10 @@ export const RegisterForm: React.FC = () => {
   }, [watch('departamento_expedicion')]);
 
   useEffect(() => {
-    if (watch('ciudad_expedicion') !== undefined) {
-      set_ciudad_expedicion(watch('ciudad_expedicion'));
+    if (watch('cod_municipio_expedicion_id') !== undefined) {
+      set_ciudad_expedicion(watch('cod_municipio_expedicion_id'));
     }
-  }, [watch('ciudad_expedicion')]);
+  }, [watch('cod_municipio_expedicion_id')]);
 
   // Datos de residencia
   useEffect(() => {
@@ -328,24 +334,34 @@ export const RegisterForm: React.FC = () => {
     set_value_form(e.target.name, e.target.value);
   };
 
+  const on_change_checkbox = (e: SelectChangeEvent<string>): void => {
+    set_value_form(e.target.name, e.target.value);
+  };
+
   // Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
     set_value_form(e.target.name, e.target.value);
   };
 
   const on_submit = handle_submit(async (data) => {
-    set_is_saving(true);
-    try {
-      if (data.tipo_persona === 'N') {
-        const response = await crear_persona_natural_and_user(data_register);
-        console.log(response);
-      } else {
-        console.log('Creando persona juridica');
+    if (!is_valid) {
+      set_error_step(true);
+      return;
+    }
+    if (active_step === 4) {
+      set_is_saving(true);
+      try {
+        if (data.tipo_persona === 'N') {
+          const response = await crear_persona_natural_and_user(data_register);
+          console.log(response);
+        } else {
+          console.log('Creando persona juridica');
+        }
+      } catch (error) {
+        control_error(error);
+      } finally {
+        set_is_saving(false);
       }
-    } catch (error) {
-      control_error(error);
-    } finally {
-      set_is_saving(false);
     }
   });
 
@@ -501,16 +517,8 @@ export const RegisterForm: React.FC = () => {
           fullWidth
           size="small"
           label="Complemento dirección"
-          error={errors.complemeto_direccion?.type === 'required'}
           value={data_register.complemeto_direccion}
-          helperText={
-            errors.complemeto_direccion?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('complemeto_direccion', {
-            required: true,
-          })}
+          {...register('complemeto_direccion')}
           onChange={handle_change}
         />
       </Grid>
@@ -605,7 +613,9 @@ export const RegisterForm: React.FC = () => {
             control={
               <Checkbox
                 size="small"
+                value={data_register.acepta_notificacion_email}
                 {...register('acepta_notificacion_email')}
+                onChange={on_change_checkbox}
               />
             }
           />
@@ -616,7 +626,12 @@ export const RegisterForm: React.FC = () => {
           <FormControlLabel
             label="¿Autoriza notifiaciones informativas a través de mensajes de texto?"
             control={
-              <Checkbox size="small" {...register('acepta_notificacion_sms')} />
+              <Checkbox
+                size="small"
+                value={data_register.acepta_notificacion_sms}
+                {...register('acepta_notificacion_sms')}
+                onChange={on_change_checkbox}
+              />
             }
           />
         </FormGroup>
@@ -628,7 +643,9 @@ export const RegisterForm: React.FC = () => {
             control={
               <Checkbox
                 size="small"
+                value={data_register.acepta_tratamiento_datos}
                 {...register('acepta_tratamiento_datos')}
+                onChange={on_change_checkbox}
               />
             }
           />
@@ -800,6 +817,7 @@ export const RegisterForm: React.FC = () => {
             {...register('numero_documento', {
               required: true,
             })}
+            onChange={handle_change}
           />
         )}
       </Grid>
@@ -1018,7 +1036,7 @@ export const RegisterForm: React.FC = () => {
             <CustomSelect
               onChange={on_change}
               label="Ciudad"
-              name="ciudad_expedicion"
+              name="cod_municipio_expedicion_id"
               value={ciudad_expedicion}
               options={ciudades_opt}
               loading={loading}
@@ -1030,11 +1048,6 @@ export const RegisterForm: React.FC = () => {
       )}
     </>
   );
-
-  interface PropsStep {
-    label: string;
-    component: JSX.Element;
-  }
 
   const steps: PropsStep[] = [
     {
@@ -1059,6 +1072,10 @@ export const RegisterForm: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    console.log();
+  }, []);
+
   return (
     <>
       <form
@@ -1072,7 +1089,7 @@ export const RegisterForm: React.FC = () => {
         <Stepper activeStep={active_step} orientation="vertical">
           {steps.map((step, index) => (
             <Step key={step.label}>
-              <StepLabel error={!is_valid}>{step.label}</StepLabel>
+              <StepLabel error={error_step}>{step.label}</StepLabel>
               <StepContent>
                 <Grid container spacing={2} mt={0.1}>
                   {step.component}

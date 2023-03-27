@@ -156,7 +156,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
     set_value_form(e.target.name, e.target.value);
   };
 
-  const handle_close_busqueda_avanzada = (): void => {
+  const clear_data_form = (): void => {
     set_data_direction({
       ubicacion: '',
       via_principal: '',
@@ -181,10 +181,11 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
 
   const on_submit = handle_submit(() => {
     onChange(direccion_estandarizada, type);
+    clear_data_form();
   });
 
   return (
-    <Dialog maxWidth="lg" open={open} onClose={handle_close_busqueda_avanzada}>
+    <Dialog maxWidth="lg" open={open} onClose={clear_data_form}>
       <form
         onSubmit={(e) => {
           void on_submit(e);

@@ -115,7 +115,7 @@ export type keys_object =
   | 'acepta_notificacion_email'
   | 'acepta_notificacion_sms'
   | 'acepta_tratamiento_datos'
-  | 'ciudad_expedicion'
+  | 'cod_municipio_expedicion_id'
   | 'cod_municipio_laboral_nal'
   | 'cod_municipio_notificacion_nal'
   | 'confirmar_celular'
@@ -161,7 +161,7 @@ export interface IPerson {
   acepta_notificacion_email: boolean;
   acepta_notificacion_sms: boolean;
   acepta_tratamiento_datos: boolean;
-  ciudad_expedicion: string;
+  cod_municipio_expedicion_id: string;
   cod_municipio_laboral_nal: string;
   cod_municipio_notificacion_nal: string;
   confirmar_celular: string;
@@ -315,23 +315,22 @@ export interface InfoPersona extends IPerson {
   id_persona: number;
   nombre_unidad_organizacional_actual: string;
   tiene_usuario: boolean;
-  fecha_asignacion_unidad: null;
-  es_unidad_organizacional_actual: null;
-  cod_naturaleza_empresa: null;
-  direccion_notificacion_referencia: null;
+  fecha_asignacion_unidad: null | number;
+  es_unidad_organizacional_actual: null | number;
+  cod_naturaleza_empresa: null | number;
+  direccion_notificacion_referencia: null | number;
   fecha_cambio_representante_legal: string;
-  fecha_inicio_cargo_rep_legal: null;
+  fecha_inicio_cargo_rep_legal: null | number;
   fecha_inicio_cargo_actual: string;
-  fecha_a_finalizar_cargo_actual: null;
-  observaciones_vinculacion_cargo_actual: null;
+  fecha_a_finalizar_cargo_actual: null | number;
+  observaciones_vinculacion_cargo_actual: null | number;
   fecha_ultim_actualizacion_autorizaciones: string;
   fecha_creacion: string;
   fecha_ultim_actualiz_diferente_crea: string;
-  id_cargo: null;
+  id_cargo: null | number;
   id_unidad_organizacional_actual: number;
-  cod_municipio_expedicion_id: null;
-  id_persona_crea: null;
-  id_persona_ultim_actualiz_diferente_crea: null;
+  id_persona_crea: null | number;
+  id_persona_ultim_actualiz_diferente_crea: null | number;
 }
 
 export interface EstadoCivil {
