@@ -204,6 +204,7 @@ export interface IPerson {
   tipo_documento: string;
   tipo_persona: string;
   ubicacion_georeferenciada: string;
+  redirect_url: string;
 }
 
 export interface AuthSlice {
@@ -340,4 +341,9 @@ export interface EstadoCivil {
   activo: boolean;
   item_ya_usado: boolean;
   cod_tipo_documento?: string;
+}
+
+export interface UserCreate {
+  detail: string;
+  success: boolean;
 }

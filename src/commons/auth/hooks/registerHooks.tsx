@@ -109,6 +109,7 @@ export const use_register = (): ReisterHook => {
     tipo_documento: '',
     tipo_persona: '',
     ubicacion_georeferenciada: 'sin_gps',
+    redirect_url: 'https://macareniafrontendevelopv2.netlify.app/#/auth/login',
   });
 
   const handle_change_checkbox = (
