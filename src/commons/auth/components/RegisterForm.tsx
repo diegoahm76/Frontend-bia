@@ -39,7 +39,6 @@ import { DialogGeneradorDeDirecciones } from '../../../components/DialogGenerado
 import { control_error } from '../../../helpers/controlError';
 import { type Dayjs } from 'dayjs';
 import { control_success } from '../../recursoHidrico/requets/Request';
-import { redirect } from 'react-router';
 import type { AxiosError } from 'axios';
 
 interface PropsStep {
@@ -380,7 +379,7 @@ export const RegisterForm: React.FC = () => {
           console.log('Creando persona juridica');
         }
 
-        redirect('auth/login');
+        window.location.href = '#/app/auth/login';
       } catch (error) {
         const temp_error = error as AxiosError;
         const resp = temp_error.response?.data as UserCreate;
