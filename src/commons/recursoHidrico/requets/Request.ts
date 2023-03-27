@@ -59,8 +59,8 @@ export const consultar_datos = async (): Promise<Datos[]> => {
 }
 // consultar datos por id estación
 export const consultar_datos_id = async (id: number | string): Promise<Datos[]> => {
-  const { data } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id/${id}/`);
-  return data.data;
+  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id/${id}/`);
+  return data;
 }
 
 // consultar datos por fecha

@@ -2,8 +2,19 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
   type IObjBien,
   type IBien,
+  type IObjMixture,
+  type IMedidas,
+
 } from '../../interfaces/configuracion';
 
+const initial_state_current_mixture = {
+  id_mezcla: null,
+  unidad_medida: "",
+  nombre: "",
+  item_activo: true,
+  item_ya_usado: false,
+  id_unidad_medida: null
+}
 
 const initial_state_current_bien = {
   id_bien: null,
@@ -35,17 +46,17 @@ const initial_state_current_bien = {
   id_bien_padre: null,
 };
 
-
 const initial_state: IBien = {
-
   bienes: [],
   current_bien: initial_state_current_bien,
+  mixtures: [],
+  current_mixture: initial_state_current_mixture,
+  unidad_medida: [],
 };
 export const configuracion_slice = createSlice({
   name: 'configuracion',
   initialState: initial_state,
   reducers: {
-
     get_bienes: (
       state: IBien,
       action: PayloadAction<IObjBien[]>
@@ -58,9 +69,30 @@ export const configuracion_slice = createSlice({
     ) => {
       state.current_bien = action.payload;
     },
+    get_mixtures: (
+      state: IBien,
+      action: PayloadAction<IObjMixture[]>
+    ) => {
+      state.mixtures = action.payload;
+    },
+    current_mixture: (
+      state: IBien,
+      action: PayloadAction<IObjMixture>
+    ) => {
+      state.current_mixture = action.payload;
+    },
+    get_unit_measurement: (
+      state: IBien,
+      action: PayloadAction<IMedidas[]>
+    ) => {
+      state.unidad_medida = action.payload;
+    },
   },
 });
 export const {
   get_bienes,
   current_bien,
+  get_mixtures,
+  current_mixture,
+  get_unit_measurement,
 } = configuracion_slice.actions;
