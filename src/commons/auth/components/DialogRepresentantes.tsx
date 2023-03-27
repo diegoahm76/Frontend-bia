@@ -10,7 +10,6 @@ import {
   Typography,
   ListItemIcon,
 } from '@mui/material';
-import FolderIcon from '@mui/icons-material/Folder';
 import {
   close_dialog_representado,
   set_authenticated,
@@ -63,15 +62,31 @@ export const DialogRepresentantes: React.FC = () => {
               <ListItemText primary="Nombre propio" />
             </ListItemButton>
           </ListItem>
-          <ListItem sx={{ width: 300 }}>
-            <ListItemIcon>
-              <FolderIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Elemento de prueba"
-              secondary="Asi se vera el resto de opciones diponibles"
-              sx={{ textOverflow: 'ellipsis', wordWrap: 'break-word' }}
-            />
+          <ListItem disableGutters alignItems="center">
+            <ListItemButton
+              autoFocus
+              onClick={() => {
+                select_representado('Nombre propio');
+              }}
+            >
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="En representación de una empresa" />
+            </ListItemButton>
+          </ListItem>
+          <ListItem disableGutters alignItems="center">
+            <ListItemButton
+              autoFocus
+              onClick={() => {
+                select_representado('Nombre propio');
+              }}
+            >
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary="En representación de una persona" />
+            </ListItemButton>
           </ListItem>
         </List>
       </Dialog>
