@@ -13,31 +13,26 @@ import {
   Grid,
   MenuItem
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import { add_medida_service, edit_medida_service} from '../../store/thunks/MarcaMedidaPorcentajeThunks';
+import { add_medida_service} from '../../store/thunks/MarcaMedidaPorcentajeThunks';
  import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks/';
+import { useAppDispatch } from '../../../../../hooks/';
 import { type IList } from '../../interfaces/MarcaMedidaPorcentaje';
 import { api } from '../../../../../api/axios';
-
 // import { type IList } from "../interfaces/marca";
 
 interface IProps {
-  action: string,
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
 }
 
 interface FormValues {
-        id_unidad_medida: number | null;
+        id_medida: number | null;
         nombre: string;
         abreviatura: string;
         id_magnitud: number | null;
-        precargado: boolean,
-        activo: boolean,
-        item_ya_usado: boolean,
    
 
       }
@@ -49,7 +44,6 @@ interface FormValues {
       ];
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const CrearMedidaModal = ({
-  action,
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
@@ -57,71 +51,49 @@ const CrearMedidaModal = ({
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const {medida_seleccionada} = useAppSelector((state) => state.medida);
-  const [magnitudes, set_magnitudes] = useState(initial_options);
-  const { control: control_medida, handleSubmit: handle_submit, reset: reset_medida } =  useForm<FormValues>();
-
+  const [magnitudes, set_magnitudes] =
+    useState<IList[]>(initial_options);
  // eslint-disable-next-line @typescript-eslint/naming-convention
-  
+  const { control: control_medida, handleSubmit: handle_submit } =
+    useForm<FormValues>();
+
   const handle_close_add_medida = (): void => {
     set_is_modal_active(false);
   };
   
-
-  useEffect(() => {
-    reset_medida(medida_seleccionada);
-    console.log(medida_seleccionada);
-  }, [medida_seleccionada] );
-
-  const on_submit =(data:FormValues): void => {
-    const form_data: any = new FormData();
-    form_data.append('id_unidad_medida', data.id_unidad_medida);
-    form_data.append('nombre', data.nombre);
-    form_data.append('abreviatura',data.abreviatura);
-    form_data.append('id_magnitud', data.id_magnitud);
-    form_data.append('activo', data.activo);
-    form_data.append('item_ya_usado', data.item_ya_usado);
-void dispatch (add_medida_service(form_data, navigate));
-handle_close_add_medida();
- };
-  const on_submit_edit =(data: FormValues): void => {
-    const form_data: any = new FormData();
-    form_data.append('nombre', data.nombre);
-    form_data.append('abreviatura',data.abreviatura);
-    form_data.append('id_magnitud', data.id_magnitud);
-
-    void dispatch (edit_medida_service(data, medida_seleccionada.id_unidad_medida, navigate));
-    handle_close_add_medida ();
-  }
-    const text_choise_adapter: any = (dataArray: string[]) => {
+  const on_submit = (data: FormValues): void => {
+  
+    void dispatch(add_medida_service(data, navigate));
+    handle_close_add_medida();
+  };
+  const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
       label: dataOld[1],
       value: dataOld[0],
     }));
-    return data_new_format; 
-  }
-    
+    return data_new_format;
+  };
+
   useEffect(() => {
     const get_selects_options: any = async () => {
-      try {       
-        const { data: magnitud_no_format } = await api.get(
-          'almacen/choices/magnitudes/'
-        );
-             
-        const magnitud_format = text_choise_adapter(
-          magnitud_no_format
-        );
-        set_magnitudes(magnitud_format);
-       
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    try {
+      const { data: magnitudes_no_format } = await api.get(
+        'almacen/choices/magnitudes/'
+      );
+      console.log(magnitudes_no_format)
+      const magnitudes_format: IList[] = text_choise_adapter(
+        magnitudes_no_format
+      );
+      set_magnitudes(magnitudes_format);
+    }
+    catch (err) {
+      console.log(err);
+  }
+
+};
     void get_selects_options();
   }, []);
 
-  
-  
   return (
     <Dialog
       maxWidth="xl"
@@ -131,9 +103,9 @@ handle_close_add_medida();
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={action=== "create"? handle_submit(on_submit):handle_submit(on_submit_edit)}
+       onSubmit={handle_submit(on_submit)}
       >
-        <DialogTitle>{action==="create"? "Crear medida": action==="detail"? "Detalle Medida": "Editar Medida" }</DialogTitle>
+        <DialogTitle>Crear Medida</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
          <Grid container >
@@ -155,8 +127,8 @@ handle_close_add_medida();
                 error={!(error == null)}
                 helperText={
                   error != null
-                    ? 'Es obligatorio ingresar una unidad de medida'
-                    : 'Ingrese unidad de medida'
+                    ? 'Es obligatorio ingresar un nombre'
+                    : 'Ingrese nombre'
                 }
               />
             )}
@@ -224,7 +196,14 @@ handle_close_add_medida();
           </Grid>
           </Grid>
         </DialogContent>
-               <Divider />
+        
+
+
+
+
+
+
+        <Divider />
         <DialogActions>
           <Stack
             direction="row"
@@ -238,17 +217,10 @@ handle_close_add_medida();
             >
               CERRAR
             </Button>
-            {action === "create"?
             <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
               GUARDAR
-            </Button>:
-            action === "edit"?
-            <Button type="submit" variant="contained" startIcon={<EditIcon />}>
-              EDITAR
-            </Button>:
-            null
-            }
-           </Stack>
+            </Button>
+          </Stack>
         </DialogActions>
       </Box>
     </Dialog>

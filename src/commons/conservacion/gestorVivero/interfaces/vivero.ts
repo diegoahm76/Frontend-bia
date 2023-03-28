@@ -2,7 +2,6 @@ export interface INursery {
   nurseries: IObjNursery[];
   current_nursery: IObjNursery;
 }
-<<<<<<< HEAD
 export interface IObjNursery {
   action?: string |null,
   id_vivero: number | null;
@@ -35,10 +34,8 @@ export interface IObjNursery {
   id_persona_cierra: number | null;
   id_persona_cuarentena:  number | null;
 }
-=======
->>>>>>> LorenaMartinez
 
-export interface IList {
-  value: string | number;
-  label: string | number;
+export interface IList{
+  value: string|number,
+  label: string|number
 }
