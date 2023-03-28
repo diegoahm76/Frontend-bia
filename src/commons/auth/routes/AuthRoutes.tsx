@@ -1,8 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 import { LoginScreen, RegisterScreen } from '../screens';
 import { RecuperarContraseñaScreen } from '../screens/RecuperarContraseñaScreen';
-import { CambiarContraseñaScreen } from '../screens/CambiarContraseñaScreen';
 import { DesbloqueoDeUsuarioScreen } from '../screens/DesbloqueoDeUsuarioScreen';
+import { ConfirmarCuentaScreen } from '../screens/ConfirmarCuentaScreen';
+import { CambiarContrasenaScreen } from '../screens/CambiarContrasenaScreen';
 
 import { Page404 } from '../../../screens/404';
 
@@ -17,11 +18,13 @@ export const AuthRoutes: React.FC = () => {
         path="/recuperar_contrasena"
         element={<RecuperarContraseñaScreen />}
       />
-      <Route path="/cambiar_contrasena" element={<CambiarContraseñaScreen />} />
+      <Route path="/cambiar_contrasena" element={<CambiarContrasenaScreen />} />
       <Route
         path="/desbloqueo_usuario"
         element={<DesbloqueoDeUsuarioScreen />}
       />
+      <Route path="/activacion_cuenta" element={<ConfirmarCuentaScreen />} />
+
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );
