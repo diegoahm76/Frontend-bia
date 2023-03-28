@@ -30,7 +30,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { use_register } from '../hooks/registerHooks';
 import { useForm } from 'react-hook-form';
-import type { keys_object, IPerson, UserCreate } from '../interfaces';
+import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { crear_persona_natural_and_user } from '../request/authRequest';
@@ -54,7 +54,7 @@ export const RegisterForm: React.FC = () => {
     setValue: set_value,
     formState: { errors, isValid: is_valid },
     watch,
-  } = useForm<IPerson>({
+  } = useForm<DataRegistePortal>({
     defaultValues: {
       acepta_notificacion_email: false,
       acepta_notificacion_sms: false,
@@ -1068,7 +1068,7 @@ export const RegisterForm: React.FC = () => {
 
   const steps: PropsStep[] = [
     {
-      label: 'Datos personales',
+      label: 'Datos básicos',
       component: DatosPersonales,
     },
     {
