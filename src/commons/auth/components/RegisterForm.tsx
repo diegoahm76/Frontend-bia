@@ -21,7 +21,6 @@ import {
   Step,
   StepLabel,
   StepContent,
-  Paper,
   type SelectChangeEvent,
 } from '@mui/material';
 
@@ -36,59 +35,63 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { crear_persona_natural_and_user } from '../request/authRequest';
 import { CustomSelect } from './CustomSelect';
+import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
+import { control_error } from '../../../helpers/controlError';
+
+interface PropsStep {
+  label: string;
+  component: JSX.Element;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegisterForm: React.FC = () => {
   const {
     register,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    handleSubmit,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    setValue,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    formState: { errors, isValid },
+    handleSubmit: handle_submit,
+    setValue: set_value,
+    formState: { errors, isValid: is_valid },
     watch,
   } = useForm<IPerson>({
     defaultValues: {
-      tipo_persona: '',
-      tipo_documento: '',
-      numero_documento: '',
-      digito_verificacion: '',
-      nombre_comercial: '',
-      primer_nombre: '',
-      segundo_nombre: '',
-      primer_apellido: '',
-      segundo_apellido: '',
-      fecha_nacimiento: '',
-      email: '',
-      confirmar_email: '',
-      telefono_celular: '',
-      confirmar_celular: '',
-      ubicacion_georeferenciada: '',
-      razon_social: '',
-      telefono_celular_empresa: '',
-      direccion_notificaciones: '',
-      representante_legal: '',
-      cod_municipio_notificacion_nal: '',
-      nombre_de_usuario: '',
-      password: '',
-      confirmar_password: '',
-      require_nombre_comercial: false,
-      telefono_empresa_2: '',
-      sexo: '',
-      estado_civil: '',
-      pais_nacimiento: '',
-      email_empresarial: '',
-      telefono_fijo_residencial: '',
-      pais_residencia: '',
-      municipio_residencia: '',
-      direccion_residencia: '',
-      direccion_laboral: '',
-      direccion_residencia_ref: '',
-      cod_municipio_laboral_nal: '',
-      acepta_notificacion_sms: false,
       acepta_notificacion_email: false,
+      acepta_notificacion_sms: false,
       acepta_tratamiento_datos: false,
+      cod_municipio_laboral_nal: '',
+      cod_municipio_notificacion_nal: '',
+      confirmar_celular: '',
+      confirmar_email: '',
+      confirmar_password: '',
+      digito_verificacion: '',
+      direccion_laboral: '',
+      direccion_notificaciones: '',
+      direccion_residencia_ref: '',
+      direccion_residencia: '',
+      email_empresarial: '',
+      email: '',
+      estado_civil: '',
+      fecha_nacimiento: '',
+      municipio_residencia: '',
+      nombre_comercial: '',
+      nombre_de_usuario: '',
+      numero_documento: '',
+      pais_nacimiento: '',
+      pais_residencia: '',
+      password: '',
+      primer_apellido: '',
+      primer_nombre: '',
+      razon_social: '',
+      representante_legal: '',
+      require_nombre_comercial: false,
+      segundo_apellido: '',
+      segundo_nombre: '',
+      sexo: '',
+      telefono_celular_empresa: '',
+      telefono_celular: '',
+      telefono_empresa_2: '',
+      telefono_fijo_residencial: '',
+      tipo_documento: '',
+      tipo_persona: '',
+      ubicacion_georeferenciada: '',
     },
   });
   const {
@@ -152,6 +155,13 @@ export const RegisterForm: React.FC = () => {
     validate_password,
     set_pais_notificacion,
   } = use_register();
+  const [is_modal_active, open_modal] = useState(false);
+  const [direccion, set_direccion] = useState('');
+  const [direccion_notificacion, set_direccion_notificacion] = useState('');
+  const [type_direction, set_type_direction] = useState('');
+  const [active_step, set_active_step] = useState(0);
+  const [error_step, set_error_step] = useState(false);
+
   // watchers
   const email = watch('email');
   const confirmar_email = watch('confirmar_email');
@@ -175,10 +185,10 @@ export const RegisterForm: React.FC = () => {
   }, [watch('departamento_expedicion')]);
 
   useEffect(() => {
-    if (watch('ciudad_expedicion') !== undefined) {
-      set_ciudad_expedicion(watch('ciudad_expedicion'));
+    if (watch('cod_municipio_expedicion_id') !== undefined) {
+      set_ciudad_expedicion(watch('cod_municipio_expedicion_id'));
     }
-  }, [watch('ciudad_expedicion')]);
+  }, [watch('cod_municipio_expedicion_id')]);
 
   // Datos de residencia
   useEffect(() => {
@@ -244,7 +254,7 @@ export const RegisterForm: React.FC = () => {
 
   useEffect(() => {
     if (tipo_persona === 'J') {
-      setValue('tipo_documento', 'NT');
+      set_value('tipo_documento', 'NT');
       set_tipo_documento('NT');
     } else {
       set_tipo_documento('');
@@ -291,16 +301,40 @@ export const RegisterForm: React.FC = () => {
     set_error_password(false);
   }, [password, confirmar_password]);
 
+  const set_value_direction = (value: string, type: string): void => {
+    // direccion_laboral
+    // direccion_notificaciones
+    // direccion_residencia_ref
+    // direccion_residencia
+    switch (type_direction) {
+      case 'residencia':
+        set_direccion(value);
+        set_value_form('direccion_residencia', value);
+
+        break;
+      case 'notificacion':
+        set_direccion_notificacion(value);
+        set_value_form('direccion_notificaciones', value);
+
+        break;
+    }
+    open_modal(false);
+  };
+
   const set_value_form = (name: string, value: string): void => {
     set_data_register({
       ...data_register,
       [name]: value,
     });
-    setValue(name as keys_object, value);
+    set_value(name as keys_object, value);
   };
 
   // Se usa para escuchar los cambios de valor del componente CustomSelect
   const on_change = (e: SelectChangeEvent<string>): void => {
+    set_value_form(e.target.name, e.target.value);
+  };
+
+  const on_change_checkbox = (e: SelectChangeEvent<string>): void => {
     set_value_form(e.target.name, e.target.value);
   };
 
@@ -309,40 +343,36 @@ export const RegisterForm: React.FC = () => {
     set_value_form(e.target.name, e.target.value);
   };
 
-  const on_submit = handleSubmit(async (data) => {
-    set_is_saving(true);
-    try {
-      console.log(data);
-      if (data.tipo_persona === 'N') {
-        const response = await crear_persona_natural_and_user(data_register);
-        console.log(response);
-      } else {
-        console.log('Creando persona juridica');
+  const on_submit = handle_submit(async (data) => {
+    if (!is_valid) {
+      set_error_step(true);
+      return;
+    }
+    if (active_step === 4) {
+      set_is_saving(true);
+      try {
+        if (data.tipo_persona === 'N') {
+          const response = await crear_persona_natural_and_user(data_register);
+          console.log(response);
+        } else {
+          console.log('Creando persona juridica');
+        }
+      } catch (error) {
+        control_error(error);
+      } finally {
+        set_is_saving(false);
       }
-    } catch (error) {
-      //* Manejo de errores por datos repetidos en la DB (email y numero documento)
-      console.log(error);
-      set_is_saving(false);
-    } finally {
-      set_is_saving(false);
     }
   });
 
-  const [active_step, set_active_step] = useState(0);
-
   const handle_next = (): void => {
-    set_active_step((prevActiveStep) => prevActiveStep + 1);
-    if (isValid) {
-      console.log(isValid);
+    if (active_step !== 4) {
+      set_active_step((prevActiveStep) => prevActiveStep + 1);
     }
   };
 
   const handle_back = (): void => {
     set_active_step((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handle_reset = (): void => {
-    set_active_step(0);
   };
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -382,6 +412,34 @@ export const RegisterForm: React.FC = () => {
           disabled={departamento_residencia === '' ?? true}
           required={true}
         />
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <TextField
+          size="small"
+          label="Direccion"
+          disabled
+          error={errors.direccion_residencia?.type === 'required'}
+          helperText={
+            errors.direccion_residencia?.type === 'required'
+              ? 'Este campo es obligatorio'
+              : ''
+          }
+          {...register('direccion_residencia', {
+            required: true,
+          })}
+          value={direccion}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            open_modal(true);
+            set_type_direction('residencia');
+          }}
+        >
+          Generar dirección
+        </Button>
       </Grid>
     </>
   );
@@ -427,12 +485,10 @@ export const RegisterForm: React.FC = () => {
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
         <TextField
-          disabled={is_exists}
-          fullWidth
           size="small"
-          label="Dirección"
+          label="Direccion"
+          disabled
           error={errors.direccion_notificaciones?.type === 'required'}
-          value={data_register.direccion_notificaciones}
           helperText={
             errors.direccion_notificaciones?.type === 'required'
               ? 'Este campo es obligatorio'
@@ -441,8 +497,19 @@ export const RegisterForm: React.FC = () => {
           {...register('direccion_notificaciones', {
             required: true,
           })}
-          onChange={handle_change}
+          value={direccion_notificacion}
         />
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <Button
+          variant="contained"
+          onClick={() => {
+            open_modal(true);
+            set_type_direction('notificacion');
+          }}
+        >
+          Generar dirección
+        </Button>
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
         <TextField
@@ -450,16 +517,8 @@ export const RegisterForm: React.FC = () => {
           fullWidth
           size="small"
           label="Complemento dirección"
-          error={errors.complemeto_direccion?.type === 'required'}
           value={data_register.complemeto_direccion}
-          helperText={
-            errors.complemeto_direccion?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('complemeto_direccion', {
-            required: true,
-          })}
+          {...register('complemeto_direccion')}
           onChange={handle_change}
         />
       </Grid>
@@ -554,7 +613,9 @@ export const RegisterForm: React.FC = () => {
             control={
               <Checkbox
                 size="small"
+                value={data_register.acepta_notificacion_email}
                 {...register('acepta_notificacion_email')}
+                onChange={on_change_checkbox}
               />
             }
           />
@@ -565,7 +626,12 @@ export const RegisterForm: React.FC = () => {
           <FormControlLabel
             label="¿Autoriza notifiaciones informativas a través de mensajes de texto?"
             control={
-              <Checkbox size="small" {...register('acepta_notificacion_sms')} />
+              <Checkbox
+                size="small"
+                value={data_register.acepta_notificacion_sms}
+                {...register('acepta_notificacion_sms')}
+                onChange={on_change_checkbox}
+              />
             }
           />
         </FormGroup>
@@ -577,7 +643,9 @@ export const RegisterForm: React.FC = () => {
             control={
               <Checkbox
                 size="small"
+                value={data_register.acepta_tratamiento_datos}
                 {...register('acepta_tratamiento_datos')}
+                onChange={on_change_checkbox}
               />
             }
           />
@@ -749,6 +817,7 @@ export const RegisterForm: React.FC = () => {
             {...register('numero_documento', {
               required: true,
             })}
+            onChange={handle_change}
           />
         )}
       </Grid>
@@ -880,6 +949,12 @@ export const RegisterForm: React.FC = () => {
                 label="Fecha de nacimiento"
                 value={fecha_nacimiento}
                 onChange={(newValue) => {
+                  const date = `${
+                    fecha_nacimiento?.get('M').toString() as string
+                  }/${fecha_nacimiento?.get('D').toString() as string}/${
+                    fecha_nacimiento?.get('y').toString() as string
+                  }`;
+                  set_value('fecha_nacimiento', date);
                   set_fecha_nacimiento(newValue);
                 }}
                 renderInput={(params) => (
@@ -961,7 +1036,7 @@ export const RegisterForm: React.FC = () => {
             <CustomSelect
               onChange={on_change}
               label="Ciudad"
-              name="ciudad_expedicion"
+              name="cod_municipio_expedicion_id"
               value={ciudad_expedicion}
               options={ciudades_opt}
               loading={loading}
@@ -973,11 +1048,6 @@ export const RegisterForm: React.FC = () => {
       )}
     </>
   );
-
-  interface PropsStep {
-    label: string;
-    component: JSX.Element;
-  }
 
   const steps: PropsStep[] = [
     {
@@ -1002,6 +1072,10 @@ export const RegisterForm: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    console.log();
+  }, []);
+
   return (
     <>
       <form
@@ -1015,7 +1089,7 @@ export const RegisterForm: React.FC = () => {
         <Stepper activeStep={active_step} orientation="vertical">
           {steps.map((step, index) => (
             <Step key={step.label}>
-              <StepLabel>{step.label}</StepLabel>
+              <StepLabel error={error_step}>{step.label}</StepLabel>
               <StepContent>
                 <Grid container spacing={2} mt={0.1}>
                   {step.component}
@@ -1082,16 +1156,13 @@ export const RegisterForm: React.FC = () => {
             </Step>
           ))}
         </Stepper>
-
-        {active_step === steps.length && (
-          <Paper square elevation={0} sx={{ p: 3 }}>
-            <Typography>All steps completed - you&apos;re finished</Typography>
-            <Button onClick={handle_reset} sx={{ mt: 1, mr: 1 }}>
-              Reset
-            </Button>
-          </Paper>
-        )}
       </form>
+      <DialogGeneradorDeDirecciones
+        open={is_modal_active}
+        openDialog={open_modal}
+        onChange={set_value_direction}
+        type={type_direction}
+      />
     </>
   );
 };
