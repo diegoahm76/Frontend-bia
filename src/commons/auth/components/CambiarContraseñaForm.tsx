@@ -81,10 +81,7 @@ export const CambiarContraseña: React.FC = () => {
       );
       control_success('Contraseña cambiada correctamente');
       console.log(data_reset_password);
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (data_reset_password.is_confirmed) {
-        navigate('/auth/login');
-      }
+      navigate('/auth/login');
     } catch (err: any) {
       console.log(err);
       control_error(err?.response.data.detail);
