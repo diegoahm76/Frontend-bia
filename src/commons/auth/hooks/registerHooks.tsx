@@ -67,7 +67,7 @@ export const use_register = (): ReisterHook => {
     acepta_notificacion_email: false,
     acepta_notificacion_sms: false,
     acepta_tratamiento_datos: false,
-    ciudad_expedicion: '',
+    cod_municipio_expedicion_id: '',
     cod_municipio_laboral_nal: '',
     cod_municipio_notificacion_nal: '',
     confirmar_celular: '',
@@ -108,7 +108,7 @@ export const use_register = (): ReisterHook => {
     telefono_fijo_residencial: '',
     tipo_documento: '',
     tipo_persona: '',
-    ubicacion_georeferenciada: '',
+    ubicacion_georeferenciada: 'sin_gps',
   });
 
   const handle_change_checkbox = (
