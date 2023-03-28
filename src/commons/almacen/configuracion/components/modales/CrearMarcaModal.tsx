@@ -1,4 +1,4 @@
-import { useEffect, type Dispatch, type SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   TextField,
@@ -15,17 +15,14 @@ import {
 
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import EditIcon from '@mui/icons-material/Edit';
-import { add_marca_service, edit_marca_service} from '../../store/thunks/MarcaMedidaPorcentajeThunks';
+import { add_marca_service} from '../../store/thunks/MarcaMedidaPorcentajeThunks';
  import { useNavigate } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks/';
-
+import { useAppDispatch } from '../../../../../hooks/';
+// import { type IList } from "../interfaces/marca";
 
 interface IProps {
-  action: string;
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-
 }
 
 interface FormValues {
@@ -38,48 +35,28 @@ interface FormValues {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const CrearMarcaModal = ({
-  action,
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
  
-  
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
  // eslint-disable-next-line @typescript-eslint/naming-convention
- const {marca_seleccionada} = useAppSelector((state) => state.marca);
-  const { control: control_marca, handleSubmit: handle_submit, reset: reset_marca } =  useForm<FormValues>();
+  const { control: control_marca, handleSubmit: handle_submit } =
+    useForm<FormValues>();
 
   const handle_close_add_marca = (): void => {
     set_is_modal_active(false);
   };
-  useEffect(() => {
-    reset_marca(marca_seleccionada);
-    console.log(marca_seleccionada);
-  }, [marca_seleccionada] );
-
-  const on_submit = (data: FormValues): void => {
-    const form_data: any = new FormData();
-    form_data.append('id_marca', data.id_marca);
-    form_data.append('nombre', data.nombre);
-    form_data.append('activo', data.activo);
-    form_data.append('item_ya_usado', data.item_ya_usado);
-      
-   void dispatch(add_marca_service(form_data, navigate));
-   handle_close_add_marca();
-  };
-
-  const on_submit_edit = (data: FormValues): void => {
-    const form_data:any = new FormData();
-
-    form_data.append('nombre', data.nombre);
   
-    void dispatch(edit_marca_service(form_data, marca_seleccionada.id_marca, navigate));
+  const on_submit = (data: FormValues): void => {
+  
+    void dispatch(add_marca_service(data, navigate));
     handle_close_add_marca();
-
-  }
+  };
  
+
   return (
     <Dialog
       maxWidth="xl"
@@ -89,9 +66,9 @@ const CrearMarcaModal = ({
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-       onSubmit={action=== "create"? handle_submit(on_submit):handle_submit(on_submit_edit)}
+       onSubmit={handle_submit(on_submit)}
       >
-         <DialogTitle>{action==="create"? "Crear marca": action==="detail"? "Detalle Marca": "Editar Marca" }</DialogTitle>
+        <DialogTitle>Crear marca</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
          <Grid container >
@@ -137,17 +114,10 @@ const CrearMarcaModal = ({
             >
               CERRAR
             </Button>
-            {action === "create"?
             <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
               GUARDAR
-            </Button>:
-            action === "edit"?
-            <Button type="submit" variant="contained" startIcon={<EditIcon />}>
-              EDITAR
-            </Button>:
-            null
-            }
-           </Stack>
+            </Button>
+          </Stack>
         </DialogActions>
       </Box>
     </Dialog>

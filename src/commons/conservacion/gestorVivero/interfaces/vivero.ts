@@ -2,15 +2,10 @@ export interface INursery {
   nurseries: IObjNursery[];
   current_nursery: IObjNursery;
 }
-
-export interface IList {
-  value: string | number;
-  label: string | number;
-}
-
 export interface IObjNursery {
+  action?: string |null,
   id_vivero: number | null;
-  nombre: string | null;
+  nombre: string;
   cod_municipio: string | null;
   direccion: string | null;
   area_mt2: number | null;
@@ -37,5 +32,10 @@ export interface IObjNursery {
   id_persona_crea: number | null;
   id_persona_abre: number | null;
   id_persona_cierra: number | null;
-  id_persona_cuarentena: number | null;
+  id_persona_cuarentena:  number | null;
+}
+
+export interface IList{
+  value: string|number,
+  label: string|number
 }

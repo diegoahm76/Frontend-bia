@@ -50,12 +50,11 @@ const initial_state: IMarcaGet= {
 
 
   const initial_state_porcentaje_seleccionado: IPorcentajes = {
+ 
     id_porcentaje_iva: 0,
     porcentaje: 0,
     observacion: "",
-    registro_precargado: false,
-    activo: false,
-    item_ya_usado: false
+ 
   }
 
  

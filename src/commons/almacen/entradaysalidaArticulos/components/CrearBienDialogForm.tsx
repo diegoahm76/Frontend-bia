@@ -21,7 +21,6 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IList, type IObjBien as FormValues} from "../interfaces/catalogodebienes";
 import { api } from "../../../../api/axios";
 interface IProps {
-  action: string,
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
 }
@@ -31,7 +30,6 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const CrearBienDialogForm = ({
-  action,
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
@@ -40,21 +38,19 @@ const CrearBienDialogForm = ({
     value: "",
   }]
   const dispatch = useAppDispatch();
-
-  const [activo_types, set_activo_types] = useState<IList[]>(initial_options);
   const [tipo_bien, set_tipo_bien] = useState<IList[]>(initial_options);
+  const [activo_types, set_activo_types] = useState<IList[]>(initial_options);
   const [metodo_valoracion, set_metodo_valoracion] = useState<IList[]>(initial_options);
   const [depreciacion_types, set_depreciacion_types] = useState<IList[]>(initial_options);
-  const {marca, unidad_medida, porcentaje_iva, current_nodo} = useAppSelector((state) => state.bien);
+  const {marca, unidad_medida, porcentaje_iva, current_bien} = useAppSelector((state) => state.bien);
   
-  const [tipo_bien_selected, set_tipo_bien_selected] = useState<string|null|undefined>("A");
+  const [tipo_bien_selected, set_tipo_bien_selected] = useState<string>("A");
+  
   const { control: control_bien, handleSubmit: handle_submit, reset: reset_bien } =
     useForm<FormValues>();
     const handle_close_add_bien = (): void => {
       set_is_modal_active(false);
     };
-
- 
   //   const [nursery_types, set_nursery_types] = useState(initial_options);
   //   const [source_resources, set_source_resources] = useState(initial_options);
   //   const [file, set_file] = useState<any>("");
@@ -87,16 +83,9 @@ const CrearBienDialogForm = ({
   };
 
   const on_submit = (data: FormValues): void => {
-    if(action==="create_sub"){
-      data.id_bien = null;
-      data.nivel_jerarquico = current_nodo.data.bien?.nivel_jerarquico != null? current_nodo.data.bien.nivel_jerarquico + 1 : 1;
-      data.id_bien_padre = current_nodo.data.bien?.id_bien != null? current_nodo.data.bien.id_bien : null
-      data.nombre_padre = current_nodo.data.bien?.nombre != null? current_nodo.data.bien.nombre : null
-    } else if(action==="create"){
-      data.nivel_jerarquico = 1
-    }
+    console.log("submit")
     data.cod_tipo_bien = tipo_bien_selected
-   
+    data.nivel_jerarquico = 1;
     console.log(data)
     void dispatch(add_bien_service(data));
     handle_close_add_bien();
@@ -126,14 +115,10 @@ const CrearBienDialogForm = ({
     void dispatch(get_porcentaje_service());
     void dispatch(get_medida_service());
   }, []);
+
   useEffect(() => {
-    
-    reset_bien(current_nodo.data.bien);
-    console.log(current_nodo.data.bien)
-    if(action === "create_sub"){
-      set_tipo_bien_selected(current_nodo.data.bien?.cod_tipo_bien) 
-    }
-  }, [current_nodo]);
+    reset_bien(current_bien);
+  }, [current_bien]);
 
   return (
     <Dialog
@@ -147,7 +132,7 @@ const CrearBienDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
-        <DialogTitle>Crear bien</DialogTitle>
+        <DialogTitle>Crear Bien</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container >
@@ -159,6 +144,7 @@ const CrearBienDialogForm = ({
                     size="small"
                     label="Tipo de bien"
                     variant="outlined"
+                    defaultValue={tipo_bien_selected}
                     value={tipo_bien_selected}
                     onChange={on_change_tipo_bien}
                     
@@ -228,7 +214,7 @@ const CrearBienDialogForm = ({
                 )}
               />
             </Grid>
-            {(tipo_bien_selected ) === "A"?
+            {tipo_bien_selected ==="A"?
             <Grid item xs={11} md={3} margin={1}>
               <Controller
                 name="cod_tipo_activo"
@@ -309,8 +295,6 @@ const CrearBienDialogForm = ({
                     size="small"
                     label="Carpeta padre"
                     variant="outlined"
-                    value={action=== "create_sub"? current_nodo.data.bien?.nombre:""}
-                    disabled
                   
                     
                   />
@@ -389,7 +373,7 @@ const CrearBienDialogForm = ({
             </Grid>
             
 
-            {(tipo_bien_selected ) === "A"?
+            {tipo_bien_selected ==="A"?
             <>
             
             <Grid item xs={11} md={2} margin={1}>
