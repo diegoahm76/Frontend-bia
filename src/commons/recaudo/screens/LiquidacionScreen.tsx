@@ -17,7 +17,6 @@ import {
 import { Title } from "../../../components"
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useState } from 'react';
-import { AddParametroModal } from '../components/modal/AddParametroModal';
 import { PruebasLiquidacionModal } from "../components/modal/PruebasLiquidacionModal";
 import FindInPageIcon from '@mui/icons-material/FindInPage';
 import AddIcon from '@mui/icons-material/Add';
@@ -281,10 +280,6 @@ export const LiquidacionScreen:React.FC = () => {
                 </Stack>
             </Grid>
         </Grid>
-        <AddParametroModal
-            is_modal_active={add_parametro}
-            set_is_modal_active={set_add_parametro}
-        />
         <PruebasLiquidacionModal
             is_modal_active={modal_pruebas}
             set_is_modal_active={set_modal_pruebas}
