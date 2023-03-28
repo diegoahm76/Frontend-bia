@@ -124,7 +124,7 @@ const columns: GridColDef[] = [
         <Tooltip title="Eliminar">
           <IconButton
             onClick={() => {
-              dispatch(delete_porcentaje_service(params.row.id_marca));
+              dispatch(delete_porcentaje_service(params.row.id_porcentaje_iva));
             }}
           >
             <Avatar

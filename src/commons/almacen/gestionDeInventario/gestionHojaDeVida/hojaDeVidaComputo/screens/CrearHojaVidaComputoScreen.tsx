@@ -237,7 +237,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           </Grid>
           <CrearCvComputoForm
             is_modal_active={add_cv_com_is_active}
-            set_is_modal_active={set_add_cv_com_is_active} 
+          //  set_is_modal_active={set_add_cv_com_is_active} 
             action = {action}       
           />
         </Grid>
