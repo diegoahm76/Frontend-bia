@@ -4,10 +4,10 @@ import { type IList } from '../interfaces/globalModels';
 // Dato de entrada [["N","Natural"],["J","Juridica"]]
 // Dato de salida [{label: "Natural", value: "N"},[label: "Juridica", value: "J"]]
 export const select_adapter = (data: [[string, string]]): IList[] => {
-  return data.map(([codigo, nombre]: any) => {
+  return data.map(([value, label]: any) => {
     return {
-      label: nombre,
-      value: codigo
+      label,
+      value
     };
   });
 };
