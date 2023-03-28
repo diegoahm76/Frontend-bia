@@ -84,7 +84,7 @@ export function ListOrganigramas({
       valueFormatter: (params) => {
         // eslint-disable-next-line no-extra-boolean-cast
         if (!Boolean(params.value)) {
-          return '-'; // o cualquier otro valor predeterminado que desee mostrar
+          return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
         }
         const date = new Date(params.value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
@@ -97,7 +97,7 @@ export function ListOrganigramas({
       valueFormatter: (params) => {
         // eslint-disable-next-line no-extra-boolean-cast
         if (!Boolean(params.value)) {
-          return '-'; // o cualquier otro valor predeterminado que desee mostrar
+          return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
         }
         const date = new Date(params.value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
@@ -108,8 +108,8 @@ export function ListOrganigramas({
       headerName: 'Fecha retiro',
       width: 150,
       valueFormatter: (params) => {
-        if (params.value === null) {
-          return '-'; // o cualquier otro valor predeterminado que desee mostrar
+        if (params.value === '') {
+          return 'N/A'; // o cualquier otro valor predeterminado que desee mostrar
         }
         const date = new Date(params.value);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
