@@ -10,10 +10,9 @@ import { api } from '../../../../api/axios';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  persona: SubmitHandler<FieldValues>;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, persona, }) => {
+export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
   const [estaciones_options, set_estaciones_options] = useState([]);
 
   const handle_close = (): void => {
@@ -65,7 +64,6 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
     };
     void crear_persona(nueva_persona);
     set_is_modal_active(!is_modal_active);
-    persona(nueva_persona.id_estacion)
   };
 
   const tiposdoc = [

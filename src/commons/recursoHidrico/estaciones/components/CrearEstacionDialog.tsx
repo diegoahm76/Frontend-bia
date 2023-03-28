@@ -8,11 +8,10 @@ import { crear_estacion } from '../../requets/Request';
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    estacion: () => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, estacion }) => {
+export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active }) => {
 
 
     const handle_close = (): void => {
@@ -40,7 +39,6 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
 
         void crear_estacion(nueva_estacion);
         set_is_modal_active(!is_modal_active);
-        void estacion()
     };
 
     const tipo_estacion = [
