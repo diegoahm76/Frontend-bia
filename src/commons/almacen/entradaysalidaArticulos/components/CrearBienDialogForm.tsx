@@ -89,6 +89,7 @@ const CrearBienDialogForm = ({
   const on_submit = (data: FormValues): void => {
     if(action==="create_sub"){
       data.id_bien = null;
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
       data.nivel_jerarquico = current_nodo.data.bien?.nivel_jerarquico != null? current_nodo.data.bien.nivel_jerarquico + 1 : 1;
       data.id_bien_padre = current_nodo.data.bien?.id_bien != null? current_nodo.data.bien.id_bien : null
       data.nombre_padre = current_nodo.data.bien?.nombre != null? current_nodo.data.bien.nombre : null
