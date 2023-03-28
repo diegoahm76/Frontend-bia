@@ -45,7 +45,7 @@ const data_values: DataUser = {
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RecuperarContraseña: React.FC = () => {
+export const RecuperarContrasena: React.FC = () => {
   const [display_medio_recuperacion, set_display_medio_recuperacion] =
     React.useState(false);
 
