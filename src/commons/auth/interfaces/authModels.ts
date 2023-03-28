@@ -77,35 +77,6 @@ export interface IAuth {
   confirmacionEmail: boolean;
   confirmacionCelular: boolean;
 }
-export interface IRegister {
-  tipo_persona: string;
-  tipoDocumento: any;
-  numero_documento: string;
-  razonSocial: string;
-  dv: string;
-  primerNombre: string;
-  segundoNombre: string;
-  primerApellido: string;
-  segundoApellido: string;
-  fechaNacimiento: any;
-  ubicacion_georeferenciada: string;
-  pais_residencia: string;
-  municipio: string;
-  pais_nacimiento: string;
-  sexo: string;
-  eMail: string;
-  cEmail: string;
-  cod_pais_nacionalidad_empresa: string;
-  celular: string;
-  cCelular: string;
-  nombreComercial: string;
-  acepta_notificacion_sms: boolean;
-  acepta_notificacion_email: boolean;
-  acepta_tratamiento_datos: boolean;
-  direccionNotificacion: string;
-  municipioNotificacion: any;
-}
-
 export interface IObjectSend {
   paisNotificacion: any;
   municipioNotificacion: string | null;
@@ -155,15 +126,21 @@ export type keys_object =
   | 'telefono_fijo_residencial'
   | 'tipo_documento'
   | 'tipo_persona'
+  | 'cod_naturaleza_empresa'
   | 'ubicacion_georeferenciada';
 
-export interface IPerson {
+export interface DataRegistePortal {
   acepta_notificacion_email: boolean;
   acepta_notificacion_sms: boolean;
   acepta_tratamiento_datos: boolean;
   cod_municipio_expedicion_id: string;
   cod_municipio_laboral_nal: string;
   cod_municipio_notificacion_nal: string;
+  cod_pais_nacionalidad_empresa: string;
+  cod_naturaleza_empresa: string;
+  direccion_notificacion_referencia: string;
+  fecha_inicio_cargo_rep_legal: string;
+  telefono_empresa: string;
   confirmar_celular: string;
   confirmar_email: string;
   confirmar_password?: string;
@@ -204,6 +181,7 @@ export interface IPerson {
   tipo_documento: string;
   tipo_persona: string;
   ubicacion_georeferenciada: string;
+  redirect_url: string;
 }
 
 export interface AuthSlice {
@@ -241,7 +219,7 @@ export interface ReisterHook {
   ciudades_opt: IList[];
   ciudades_residencia_opt: IList[];
   ciudad_notificacion_opt: IList[];
-  data_register: IPerson;
+  data_register: DataRegistePortal;
   departamento_expedicion: string;
   departamento_residencia: string;
   departamentos_opt: IList[];
@@ -281,7 +259,7 @@ export interface ReisterHook {
   set_ciudad_residencia: Dispatch<SetStateAction<string>>;
   set_ciudades_opt: Dispatch<SetStateAction<IList[]>>;
   set_ciudades_residencia_opt: Dispatch<SetStateAction<IList[]>>;
-  set_data_register: Dispatch<SetStateAction<IPerson>>;
+  set_data_register: Dispatch<SetStateAction<DataRegistePortal>>;
   set_departamento: Dispatch<SetStateAction<string>>;
   set_departamentos_opt: Dispatch<SetStateAction<IList[]>>;
   set_dpto_notifiacion_opt: Dispatch<SetStateAction<IList[]>>;
@@ -311,26 +289,26 @@ export interface ReisterHook {
   validate_password: (string: string) => boolean;
 }
 
-export interface InfoPersona extends IPerson {
+export interface InfoPersona extends DataRegistePortal {
   id_persona: number;
   nombre_unidad_organizacional_actual: string;
   tiene_usuario: boolean;
-  fecha_asignacion_unidad: null | number;
-  es_unidad_organizacional_actual: null | number;
-  cod_naturaleza_empresa: null | number;
-  direccion_notificacion_referencia: null | number;
+  fecha_asignacion_unidad: string;
+  es_unidad_organizacional_actual: string;
+  cod_naturaleza_empresa: string;
+  direccion_notificacion_referencia: string;
   fecha_cambio_representante_legal: string;
-  fecha_inicio_cargo_rep_legal: null | number;
+  fecha_inicio_cargo_rep_legal: string;
   fecha_inicio_cargo_actual: string;
-  fecha_a_finalizar_cargo_actual: null | number;
-  observaciones_vinculacion_cargo_actual: null | number;
+  fecha_a_finalizar_cargo_actual: string;
+  observaciones_vinculacion_cargo_actual: string;
   fecha_ultim_actualizacion_autorizaciones: string;
   fecha_creacion: string;
   fecha_ultim_actualiz_diferente_crea: string;
-  id_cargo: null | number;
+  id_cargo: string;
   id_unidad_organizacional_actual: number;
-  id_persona_crea: null | number;
-  id_persona_ultim_actualiz_diferente_crea: null | number;
+  id_persona_crea: string;
+  id_persona_ultim_actualiz_diferente_crea: string;
 }
 
 export interface EstadoCivil {
@@ -340,4 +318,9 @@ export interface EstadoCivil {
   activo: boolean;
   item_ya_usado: boolean;
   cod_tipo_documento?: string;
+}
+
+export interface UserCreate {
+  detail: string;
+  success: boolean;
 }

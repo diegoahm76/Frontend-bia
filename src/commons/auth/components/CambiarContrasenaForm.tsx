@@ -46,7 +46,7 @@ const default_values = {
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CambiarContraseña: React.FC = () => {
+export const CambiarContrasena: React.FC = () => {
   const navigate = useNavigate();
   const token = params.get('?token');
   const uidb64 = params.get('uidb64');

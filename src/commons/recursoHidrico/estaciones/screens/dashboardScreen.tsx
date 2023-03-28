@@ -12,7 +12,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import SearchIcon from '@mui/icons-material/Search';
 import moment from 'moment';
-import { control_success } from '../../requets/Request';
+import { control_success, control_success_fail } from '../../requets/Request';
+import es from "date-fns/locale/es";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -122,6 +123,8 @@ export const DashboardScreen: React.FC = () => {
     };
 
 
+
+
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const get_datos_estaciones = async (): Promise<EstacionData[]> => {
 
@@ -129,11 +132,9 @@ export const DashboardScreen: React.FC = () => {
         const start_date_string = handle_end_date_change(start_date)
         const end_date_string = handle_end_date_change(end_date)
 
-        if (end_date_string < start_date_string) {
-            control_success("La fecha inicial no puede ser más reciente que la fecha final.")
-        }
         console.log(start_date_string);
         console.log(end_date_string);
+        if (end_date_string < start_date_string) { control_success_fail("La fecha inicial no puede ser mas reciente que la fecha final") }
         const { data: { data: data_success } } = await api.get(
             `estaciones/datos/consultar-datos-fecha/${start_date_string}/${end_date_string}`
         );
@@ -175,10 +176,13 @@ export const DashboardScreen: React.FC = () => {
             console.log("Paso")
             control_success("Se encontraron Datos")
         } else {
-            console.log("Maaalll")
+            control_success_fail("No se encontraron datos")
         }
+
         return filtereddata(data_success);
+
     };
+
 
 
     const options: ChartOptions = {
@@ -213,7 +217,7 @@ export const DashboardScreen: React.FC = () => {
             label: "Presion",
             data: data.map((item) => item.presion_barometrica),
             borderColor: "rgb(58, 158, 181)",
-            backgroundColor: "rgb(58, 158, 181)",
+            backgroundColor: "rgb(58, 158, 181)"
         };
         return { labels, datasets: [dataset] };
     };
@@ -365,7 +369,7 @@ export const DashboardScreen: React.FC = () => {
 
 
                     <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
-                        <Title title="Por favor seleccione las fechas para filtrar los dato" ></Title>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
 
                         <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
 
@@ -378,9 +382,11 @@ export const DashboardScreen: React.FC = () => {
                                     set_dates_selected(false);
                                 }}
                                 placeholderText="Fecha inicial"
+                                locale={es}
                             />
                             <label>Fecha Final</label>
                             <DatePicker
+                                locale={es}
                                 selected={end_date}
                                 onChange={(date) => {
                                     handle_end_date_change(date);
