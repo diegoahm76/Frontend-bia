@@ -13,6 +13,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import SearchIcon from '@mui/icons-material/Search';
 import moment from 'moment';
 import { control_success, control_success_fail } from '../../requets/Request';
+import es from "date-fns/locale/es";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -216,7 +217,7 @@ export const DashboardScreen: React.FC = () => {
             label: "Presion",
             data: data.map((item) => item.presion_barometrica),
             borderColor: "rgb(58, 158, 181)",
-            backgroundColor: "rgb(58, 158, 181)",
+            backgroundColor: "rgb(58, 158, 181)"
         };
         return { labels, datasets: [dataset] };
     };
@@ -368,7 +369,7 @@ export const DashboardScreen: React.FC = () => {
 
 
                     <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
-                        <Title title="Por favor seleccione las fechas para filtrar los dato" ></Title>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
 
                         <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
 
@@ -381,9 +382,11 @@ export const DashboardScreen: React.FC = () => {
                                     set_dates_selected(false);
                                 }}
                                 placeholderText="Fecha inicial"
+                                locale={es}
                             />
                             <label>Fecha Final</label>
                             <DatePicker
+                                locale={es}
                                 selected={end_date}
                                 onChange={(date) => {
                                     handle_end_date_change(date);
