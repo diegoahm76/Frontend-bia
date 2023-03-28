@@ -12,11 +12,10 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   alerta_editado: any;
   set_alerta_editado: Dispatch<SetStateAction<any>>;
-  confi_alerta_persona:() => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, alerta_editado, set_alerta_editado, confi_alerta_persona, }) => {
+export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, alerta_editado, set_alerta_editado, }) => {
 
   const {
     register,
@@ -90,7 +89,6 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
       set_alerta_editado(null);
       set_is_modal_active(false);
       control_success('La configuración se actualizó correctamente')
-      void confi_alerta_persona()
     } catch (error) { 
       control_error(error);
     }

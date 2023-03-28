@@ -209,7 +209,11 @@ export function AdministrarViveroScreen(): JSX.Element {
           <Tooltip title={params.row.activo ? "Desactivar" : "Activar"}>
             <IconButton
               onClick={() => {
-                dispatch(activate_deactivate_nursery_service(params.row.id_vivero));
+                dispatch(activate_deactivate_nursery_service(params.row.id_vivero));// true -> activar false -> desactivar
+                // console.log("editar "+ params.row)
+                // navigate(
+                //   '/dashboard/gestor-documental/organigrama/editar-organigrama'
+                // );
               }}
             >
               <Avatar
@@ -359,7 +363,7 @@ export function AdministrarViveroScreen(): JSX.Element {
                 set_add_nursery_is_active(true);
               }}
             >
-              Crear vivero
+              CREAR VIVERO
             </Button>
           </Stack>
           <Grid item>

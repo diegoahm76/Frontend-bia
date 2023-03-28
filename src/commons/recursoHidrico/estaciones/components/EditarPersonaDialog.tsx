@@ -3,7 +3,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
-import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { type EditarPersona } from '../interfaces/interfaces';
 import { control_success, editar_persona } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
@@ -13,12 +13,10 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   usuario_editado: any;
   set_usuario_editado: Dispatch<SetStateAction<any>>;
-  persona: SubmitHandler<FieldValues>;
-  estaciones_options:any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, usuario_editado, set_usuario_editado, persona,estaciones_options,}) => {
+export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, usuario_editado, set_usuario_editado, }) => {
 
   const {
     register,
@@ -57,8 +55,6 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
       set_usuario_editado(null);
       set_is_modal_active(false);
       control_success('La persona se actualizó correctamente')
-      persona(estaciones_options.map((estacion: { value: number; }) => estacion.value))
-      console.log("Id estacion", estaciones_options.map((estacion: { value: number; }) => estacion.value))
     } catch (error) {
       control_error(error);
     }
