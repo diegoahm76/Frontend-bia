@@ -19,9 +19,9 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import BlockIcon from '@mui/icons-material/Block';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-import DeleteIcon from '@mui/icons-material/Delete';
 import BusinessIcon from '@mui/icons-material/Business';
 import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 // Componentes personalizados
@@ -31,7 +31,6 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // Thunks
 import { activate_deactivate_nursery_service, delete_nursery_service, get_nurseries_service } from '../store/thunks/gestorViveroThunks';
 import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
-import AperturaCierreCuarentenaVivero from '../componentes/AperturaCierreCuarentenaVivero';
 // // Slices
 import { current_nursery } from '../store/slice/viveroSlice';
 
@@ -75,9 +74,6 @@ export function AdministrarViveroScreen(): JSX.Element {
   const { nurseries } = useAppSelector((state) => state.nursery);
   const [add_nursery_is_active, set_add_nursery_is_active] =
     useState<boolean>(false);
-
-  const [closing_nursery_is_active, set_closing_nursery_is_active] =
-  useState<boolean>(false);
 
   const columns: GridColDef[] = [
     { field: 'id_vivero', headerName: 'ID', width: 20 },
@@ -247,8 +243,10 @@ export function AdministrarViveroScreen(): JSX.Element {
                 <IconButton
                   onClick={() => {
                     dispatch(current_nursery(params.row));
-                    set_action(params.row.en_funcionamiento ? "Cerrar" : "Abrir")
-                    set_closing_nursery_is_active(true);
+                    // console.log("editar "+ params.row)
+                    // navigate(
+                    //   '/dashboard/gestor-documental/organigrama/editar-organigrama'
+                    // );
                   }}
                 >
                   <Avatar
@@ -272,12 +270,14 @@ export function AdministrarViveroScreen(): JSX.Element {
                   </Avatar>
                 </IconButton>
               </Tooltip>
-              <Tooltip title={params.row.vivero_en_cuarentena ? "Finalizar cuarentena" : "Iniciar cuarentena"}>
+              <Tooltip title={params.row.vivero_en_cuarentena ? "Quitar cuarentena" : "Poner en cuarentena"}>
                 <IconButton
                   onClick={() => {
                     dispatch(current_nursery(params.row));
-                    set_action(params.row.vivero_en_cuarentena ? "no_cuarentena" : "cuarentena")
-                    set_closing_nursery_is_active(true);
+                    // console.log("editar "+ params.row)
+                    // navigate(
+                    //   '/dashboard/gestor-documental/organigrama/editar-organigrama'
+                    // );
                   }}
                 >
                   <Avatar
@@ -383,11 +383,6 @@ export function AdministrarViveroScreen(): JSX.Element {
           <CrearViveroDialogForm
             is_modal_active={add_nursery_is_active}
             set_is_modal_active={set_add_nursery_is_active}
-            action = {action}
-          />
-          <AperturaCierreCuarentenaVivero
-            is_modal_active={closing_nursery_is_active}
-            set_is_modal_active={set_closing_nursery_is_active}
             action = {action}
           />
         </Grid>

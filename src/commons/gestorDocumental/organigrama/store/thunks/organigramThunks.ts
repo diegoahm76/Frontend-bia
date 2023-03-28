@@ -69,12 +69,12 @@ export const get_mold_organigrams_service: any = (id: string | number) => {
 // Obtener Organigrama
 export const get_organigrams_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
-    console.log(api);
     try {
       const { data } = await api.get('almacen/organigrama/get/');
       dispatch(get_organigrams(data.Organigramas));
       return data;
     } catch (error: any) {
+      console.log('get_organigrams_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

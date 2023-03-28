@@ -3,13 +3,15 @@ import type {
   ResponseAuth,
   LoginUser,
   IUserInfo,
-  InfoPersona,
-  Permisos,
-  IPerson
+  Persona,
+  Permisos
 } from '../interfaces/authModels';
-import type {
-  ResponseServer,
-  ResponseThunks
+import {
+  type Paises,
+  type TipoDocumento,
+  type TipoPersona,
+  type ResponseServer,
+  type ResponseThunks
 } from '../../../interfaces/globalModels';
 import { type AxiosResponse, type AxiosError } from 'axios';
 import { control_error } from '../../../helpers/controlError';
@@ -68,17 +70,31 @@ export const permissions_request = async (
   }
 };
 
-export const get_person_by_document = async (
-  tipo_documento: string,
-  numero_documento: string
-): Promise<AxiosResponse<ResponseServer<InfoPersona | null>>> => {
-  return await api.get(
-    `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
+export const get_tipo_persona = async (): Promise<
+  AxiosResponse<ResponseServer<TipoPersona[]>>
+> => {
+  return await api.get<ResponseServer<TipoPersona[]>>('listas/tipo-persona/');
+};
+
+export const get_tipo_documento = async (): Promise<
+  AxiosResponse<ResponseServer<TipoDocumento[]>>
+> => {
+  return await api.get<ResponseServer<TipoDocumento[]>>(
+    'listas/tipo-documento/'
   );
 };
 
-export const crear_persona_natural_and_user = async (
-  data: IPerson
-): Promise<ResponseServer<any>> => {
-  return await api.post('personas/persona-natural-and-usuario/create/', data);
+export const get_paises = async (): Promise<
+  AxiosResponse<ResponseServer<Paises[]>>
+> => {
+  return await api.get<ResponseServer<Paises[]>>('listas/paises/');
+};
+
+export const get_person_by_document = async (
+  tipo_documento: string,
+  numero_documento: string
+): Promise<AxiosResponse<ResponseServer<Persona>>> => {
+  return await api.get(
+    `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
+  );
 };

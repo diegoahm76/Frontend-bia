@@ -167,7 +167,7 @@ const CrearViveroDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={action==="create"? handle_submit(on_submit):handle_submit(on_submit_edit)}
       >
-        <DialogTitle>{action==="create"? "Crear vivero": action==="detail"? "Detalle vivero": "Editar vivero" }</DialogTitle>
+        <DialogTitle>{action==="create"? "Crear vivero": action==="detail"? "Detalle Vivero": "Editar vivero" }</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>

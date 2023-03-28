@@ -8,7 +8,7 @@ export const OrganigramaRoutes: React.FC = () => {
     <Routes>
       <Route path="crear/*" element={<OrganigramaScreen />} />
       <Route
-        path="cambio_organigrama_actual/*"
+        path="cambio_de_organigrama_actual/*"
         element={<OrganigramaScreen />}
       />
       <Route path="/*" element={<Page404 />} />

@@ -34,7 +34,7 @@ export const checking_authentication: (
 
     const { tokens } = data?.userinfo as UserData;
 
-    sessionStorage.setItem('token', tokens.access);
+    sessionStorage.setItem('token', tokens.access)
     // Se establece el token en el header de las peticiones
     api.interceptors.request.use(
       (config) => {
@@ -47,19 +47,19 @@ export const checking_authentication: (
     );
 
     // Validamos el tipo de persona y usario para mostrar u ocultar el dialog de entornos
-    if (data?.userinfo.tipo_persona === 'J') {
-      dispatch(get_persmisions_user(data?.userinfo.id_usuario, 'C'));
-      dispatch(set_authenticated());
-    } else if (
-      (data?.userinfo.tipo_persona === 'N' &&
-        data?.userinfo.tipo_usuario === 'I') ||
+    if (
+      data?.userinfo.tipo_persona === 'J' ||
       (data?.userinfo.tipo_persona === 'N' &&
         data?.userinfo.tipo_usuario === 'E')
     ) {
+      dispatch(get_persmisions_user(data?.userinfo.id_usuario, 'C'));
+      dispatch(set_authenticated());
+    } else if (
+      data?.userinfo.tipo_persona === 'N' &&
+      data?.userinfo.tipo_usuario === 'I'
+    ) {
       // para este caso mostramos el dialog
       dispatch(open_dialog_entorno());
-
-      // Agregar validacion de N y E, debe mostrar dialog de seleccion de representante sin seleccion de entorno
     }
 
     // Enviamos los datos del usuario al store del login
