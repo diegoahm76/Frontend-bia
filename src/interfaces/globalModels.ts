@@ -52,3 +52,42 @@ export interface PropsSelect<T> {
   required?: boolean;
   onChange: (e: SelectChangeEvent<string>) => void;
 }
+
+export interface Direccion {
+  via_principal: string;
+  numero_o_nombre_via: string;
+  letras_via_principal: string;
+  prefijo_bis: string;
+  letra_prefijo: string;
+  cuadrante: string;
+  via_secundaria: string;
+  numero_o_nombre_via_secundaria: string;
+  letras_via_secundaria: string;
+  sufijo_bis: string;
+  letra_sufijo: string;
+  cuadrante_secundaria: string;
+  barrio: string;
+  nombre: string;
+  complemento: string;
+  ubicacion: string;
+  direccion_estandarizada: string;
+}
+
+export type keys_direccion =
+  | 'via_principal'
+  | 'numero_o_nombre_via'
+  | 'letras_via_principal'
+  | 'prefijo_bis'
+  | 'letra_prefijo'
+  | 'cuadrante'
+  | 'via_secundaria'
+  | 'numero_o_nombre_via_secundaria'
+  | 'letras_via_secundaria'
+  | 'sufijo_bis'
+  | 'letra_sufijo'
+  | 'cuadrante_secundaria'
+  | 'barrio'
+  | 'nombre'
+  | 'complemento'
+  | 'direccion_estandarizada'
+  | 'ubicacion';

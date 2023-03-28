@@ -25,6 +25,7 @@ import { use_form } from '../../../hooks/useForm';
 import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
 import { DialogEntorno } from './DialogEntorno';
+import { DialogRepresentantes } from './DialogRepresentantes';
 
 interface AuthSlice {
   auth: IUserInfo;
@@ -163,7 +164,7 @@ export const LoginForm: React.FC = () => {
             </LoadingButton>
           </Grid>
           <Grid item sx={{ pt: '10px !important' }}>
-            <Link className="no-decoration" to="#">
+            <Link className="no-decoration" to="/auth/recuperar_contrasena">
               <Typography sx={{ textAlign: 'center', mb: '20px' }}>
                 ¿Olvidó su contraseña?
               </Typography>
@@ -228,6 +229,7 @@ export const LoginForm: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
+      <DialogRepresentantes />
       <DialogEntorno />
     </form>
   );
