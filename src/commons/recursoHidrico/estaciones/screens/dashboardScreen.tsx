@@ -1,22 +1,26 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from "chart.js";
 import { useEffect, useState } from "react";
-import { Grid, Stack, Typography, FormControl, } from '@mui/material';
+import { Grid, Stack, Typography, FormControl, Button, TextField, } from '@mui/material';
 import { api } from "../../../../api/axios";
 import type { EstacionData } from "../interfaces/interfaces";
 import { Title } from '../../../../components/Title';
 import { Line } from "react-chartjs-2"
 import { Controller, useForm } from "react-hook-form";
-import Select from "react-select";
 import type { ChartOptions } from 'chart.js/auto';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import SearchIcon from '@mui/icons-material/Search';
 import moment from 'moment';
+import { control_success } from '../../requets/Request';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DashboardScreen: React.FC = () => {
 
-    const [selectdashboards, set_select_dashboards] = useState(0);
+    const [selectdashboards, set_select_dashboards] = useState({
+        opc_dashboards: 0,
+    })
     const {
         control,
     } = useForm();
@@ -27,6 +31,10 @@ export const DashboardScreen: React.FC = () => {
         { label: 'Estación Ocoa', value: 3 },
         { label: 'Estación Puerto Gaitan', value: 4 },
     ];
+
+
+
+
     const [queryestaciones, setqueryestaciones] = useState<{
         labels: any[];
         datasets: any[];
@@ -95,6 +103,7 @@ export const DashboardScreen: React.FC = () => {
     const [start_date, set_start_date] = useState<Date | null>(new Date());
     const [end_date, set_end_date] = useState<Date | null>(new Date());
 
+    const [dates_selected, set_dates_selected] = useState(false);
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_start_date_change = (date: Date | null) => {
@@ -119,6 +128,10 @@ export const DashboardScreen: React.FC = () => {
         // primera solicitud para filtrar por fechas
         const start_date_string = handle_end_date_change(start_date)
         const end_date_string = handle_end_date_change(end_date)
+
+        if (end_date_string < start_date_string) {
+            control_success("La fecha inicial no puede ser más reciente que la fecha final.")
+        }
         console.log(start_date_string);
         console.log(end_date_string);
         const { data: { data: data_success } } = await api.get(
@@ -128,7 +141,7 @@ export const DashboardScreen: React.FC = () => {
         console.log(data_success)
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         const filtereddata = data_success.filter((datos: EstacionData) =>
-            datos.id_estacion === selectdashboards &&
+            datos.id_estacion === selectdashboards.opc_dashboards &&
             moment(datos.fecha_registro).isBetween(moment(start_date_string), moment(end_date_string))
         );
 
@@ -158,8 +171,15 @@ export const DashboardScreen: React.FC = () => {
 
         const formatteddataprecipitacion = formatdataforprecipitacion(filtereddata);
         setqueryprecipitacion(formatteddataprecipitacion);
+        if (filtereddata != null) {
+            console.log("Paso")
+            control_success("Se encontraron Datos")
+        } else {
+            console.log("Maaalll")
+        }
         return filtereddata(data_success);
     };
+
 
     const options: ChartOptions = {
         plugins: {
@@ -172,7 +192,6 @@ export const DashboardScreen: React.FC = () => {
             }
         }
     };
-
     ChartJS.register(
         ArcElement,
         CategoryScale,
@@ -183,7 +202,6 @@ export const DashboardScreen: React.FC = () => {
         Legend,
         Filler,
     );
-
     useEffect(() => {
         void get_datos_estaciones();
     }, [end_date]);
@@ -272,7 +290,7 @@ export const DashboardScreen: React.FC = () => {
             label: "Direccion viento",
             data: data.map((item) => item.direccion_viento),
             borderColor: "rgb(58, 158, 181)",
-            backgroundColor: "rgb(58, 158, 181)",
+            backgroundImage: ``,
         };
         return { labels, datasets: [dataset] };
     };
@@ -302,6 +320,8 @@ export const DashboardScreen: React.FC = () => {
                 }}
             >
                 <Grid item xs={12} spacing={2}>
+
+
                     <Controller
                         name="opcDashboard"
                         control={control}
@@ -313,15 +333,29 @@ export const DashboardScreen: React.FC = () => {
                                         name="opcDashboard"
                                         control={control}
                                         render={({ field }) => (
-                                            <Select
+                                            <TextField
                                                 {...field}
                                                 onChange={(e) => {
-                                                    set_select_dashboards(e.value);
-                                                }
-                                                }
-                                                options={opc_dashboards}
-                                                placeholder="Seleccionar"
-                                            />
+                                                    set_select_dashboards({
+                                                        ...selectdashboards,
+                                                        opc_dashboards: parseInt(e.target.value)
+                                                    });
+                                                }}
+                                                select
+                                                variant="outlined"
+                                                label="Estacion"
+                                                defaultValue={"Estacion"}
+                                                value={null}
+                                                SelectProps={{
+                                                    native: true,
+                                                }}
+                                            >
+                                                {opc_dashboards.map((option) => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </TextField>
                                         )}
                                     />
                                 </Stack>
@@ -329,139 +363,54 @@ export const DashboardScreen: React.FC = () => {
                         )}
                     />
 
-                    <Typography variant="body1" align="center" hidden={selectdashboards !== 1}>
-                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
-                        <label>Fecha Inicial</label>
-                        <DatePicker
-                            selected={start_date}
-                            onChange={handle_start_date_change}
-                            placeholderText="Fecha inicial"
-                        />
-                        <label>Fecha Final</label>
-                        <DatePicker
-                            selected={end_date}
-                            onChange={handle_end_date_change}
-                            placeholderText="Fecha Final"
-                        />                        
-                        <Title title="Presión barometrica" />
-                        <Line data={queryestaciones} options={options} />
-                        <Title title="Humedad" /> 
-                        <Line data={queryhumedad} options={options} />
-                        <Title title="Dirección del viento" />                        
-                        <Line data={querydireccion} options={options} />
-                        <Title title="Precipitación" />                        
-                        <Line data={queryprecipitacion} options={options} />
-                        <Title title="Luminosidad" />                        
-                        <Line data={queryluminosidad} options={options} />
-                        <Title title="Temperatura" />
-                        <Line data={querytemperatura} options={options} />
-                        <Title title="Velocidad del viento" />                        
-                        <Line data={queryvelocidadviento} options={options} />
-                        <Title title="Velocidad del Agua" />                        
-                        <Line data={queryvelocidadagua} options={options} />
-                        <Title title="Nivel del Agua" />                        
-                        <Line data={querynivelagua} options={options} />
-                    </Typography>
-                    <Typography variant="body1" align="center" hidden={selectdashboards !== 2}>
-                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
-                        <label>Fecha Inicial</label>
-                        <DatePicker
-                            selected={start_date}
-                            onChange={handle_start_date_change}
-                            placeholderText="Fecha inicial"
-                        />
-                        <label>Fecha Final</label>
-                        <DatePicker
-                            selected={end_date}
-                            onChange={handle_end_date_change}
-                            placeholderText="Fecha Final"
-                        />
-                        <Title title="Presión barometrica" />
-                        <Line data={queryestaciones} options={options} />
-                        <Title title="Humedad" /> 
-                        <Line data={queryhumedad} options={options} />
-                        <Title title="Dirección del viento" />  
-                        <Line data={querydireccion} options={options} />
-                        <Title title="Precipitación" />                        
-                        <Line data={queryprecipitacion} options={options} />
-                        <Title title="Luminosidad" />                        
-                        <Line data={queryluminosidad} options={options} />
-                        <Title title="Temperatura" />
-                        <Line data={querytemperatura} options={options} />
-                        <Title title="Velocidad del viento" />                        
-                        <Line data={queryvelocidadviento} options={options} />
-                        <Title title="Velocidad del Agua" />                        
-                        <Line data={queryvelocidadagua} options={options} />
-                        <Title title="Nivel del Agua" />  
-                        <Line data={querynivelagua} options={options} />
-                    </Typography>
-                    <Typography variant="body1" align="center" hidden={selectdashboards !== 3}>
-                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
-                        <label>Fecha Inicial</label>
-                        <DatePicker
-                            selected={start_date}
-                            onChange={handle_start_date_change}
-                            placeholderText="Fecha inicial"
-                        />
-                        <label>Fecha Final</label>
-                        <DatePicker
-                            selected={end_date}
-                            onChange={handle_end_date_change}
-                            placeholderText="Fecha Final"
-                        />
-                        <Title title="Presión barometrica" />
-                        <Line data={queryestaciones} options={options} />
-                        <Title title="Humedad" /> 
-                        <Line data={queryhumedad} options={options} />
-                        <Title title="Dirección del viento" />  
-                        <Line data={querydireccion} options={options} />
-                        <Line data={querydireccion} options={options} />
-                        <Title title="Precipitación" />                        
-                        <Line data={queryprecipitacion} options={options} />
-                        <Title title="Luminosidad" />                        
-                        <Line data={queryluminosidad} options={options} />
-                        <Title title="Temperatura" />
-                        <Line data={querytemperatura} options={options} />
-                        <Title title="Velocidad del viento" />                        
-                        <Line data={queryvelocidadviento} options={options} />
-                        <Title title="Velocidad del Agua" />                        
-                        <Line data={queryvelocidadagua} options={options} />
-                        <Title title="Nivel del Agua" />  
-                        <Line data={querynivelagua} options={options} />
-                    </Typography>
-                    <Typography variant="body1" align="center" hidden={selectdashboards !== 4}>
-                        <Title title="Por favor seleccione las fechas para filtrar los datos"></Title>
-                        <label>Fecha Inicial</label>
-                        <DatePicker
-                            selected={start_date}
-                            onChange={handle_start_date_change}
-                            placeholderText="Fecha inicial"
-                        />
-                        <label>Fecha Final</label>
-                        <DatePicker
-                            selected={end_date}
-                            onChange={handle_end_date_change}
-                            placeholderText="Fecha Final"
-                        />
-                        <Title title="Presión barometrica" />
-                        <Line data={queryestaciones} options={options} />
-                        <Title title="Humedad" />                        
-                        <Line data={queryhumedad} options={options} />
-                        <Title title="Dirección del viento" />  
-                        <Line data={querydireccion} options={options} />
-                        <Line data={querydireccion} options={options} />
-                        <Title title="Precipitación" />                        
-                        <Line data={queryprecipitacion} options={options} />
-                        <Title title="Luminosidad" />                        
-                        <Line data={queryluminosidad} options={options} />
-                        <Title title="Temperatura" />
-                        <Line data={querytemperatura} options={options} />
-                        <Title title="Velocidad del viento" />                        
-                        <Line data={queryvelocidadviento} options={options} />
-                        <Title title="Velocidad del Agua" />                        
-                        <Line data={queryvelocidadagua} options={options} />
-                        <Title title="Nivel del Agua" />  
-                        <Line data={querynivelagua} options={options} />
+
+                    <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
+                        <Title title="Por favor seleccione las fechas para filtrar los dato" ></Title>
+
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+
+                            <label >Fecha Inicial</label>
+
+                            <DatePicker
+                                selected={start_date}
+                                onChange={(date) => {
+                                    handle_start_date_change(date);
+                                    set_dates_selected(false);
+                                }}
+                                placeholderText="Fecha inicial"
+                            />
+                            <label>Fecha Final</label>
+                            <DatePicker
+                                selected={end_date}
+                                onChange={(date) => {
+                                    handle_end_date_change(date);
+                                    set_dates_selected(false);
+                                }}
+                                placeholderText="Fecha Final"
+                            />
+                            <Button variant="contained" type="submit" className="text-capitalize rounded-pill  " fullWidth onClick={() => { set_dates_selected(true); }}>Consultar variables<SearchIcon /></Button>
+                        </Stack>
+
+                        <Typography variant="body1" align="center" hidden={!dates_selected}>
+                            <Title title="Presión barometrica" ></Title>
+                            <Line data={queryestaciones} options={options} />
+                            <Title title="Humedad" ></Title>
+                            <Line data={queryhumedad} options={options} />
+                            <Title title="Direccion de Viento" ></Title>
+                            <Line data={querydireccion} options={options} />
+                            <Title title="Precipitación" ></Title>
+                            <Line data={queryprecipitacion} options={options} />
+                            <Title title="Luminosidad" ></Title>
+                            <Line data={queryluminosidad} options={options} />
+                            <Title title="Temperatura" ></Title>
+                            <Line data={querytemperatura} options={options} />
+                            <Title title="Velocidad del viento" ></Title>
+                            <Line data={queryvelocidadviento} options={options} />
+                            <Title title="Velocidad del agua" ></Title>
+                            <Line data={queryvelocidadagua} options={options} />
+                            <Title title="Nivel del agua" ></Title>
+                            <Line data={querynivelagua} options={options} />
+                        </Typography>
                     </Typography>
                 </Grid>
             </Grid>
