@@ -17,6 +17,7 @@ import {
 
 } from '../slice/MarcaMedidaPorcentajeSlice';
 import { api } from '../../../../../api/axios';
+import { type IMedidas, type IMarcas, type IPorcentajes} from "../../interfaces/MarcaMedidaPorcentaje"
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -89,6 +90,91 @@ export const add_marca_service: any = (
   };
 };
 
+// editar marca 
+
+export const edit_marca_service: any = (
+  marca: any,
+  id: string|number,
+
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `almacen/marcas/update/${id}/`,
+        marca
+      );
+      dispatch(get_marca_service());
+      control_success('La marca se edito correctamente');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      console.log(error.response.data);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+// eliminar marca 
+
+export const delete_marca_service: any = (id: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `almacen/marcas/delete/${id}/`
+      );
+      dispatch(get_marca_service());
+      control_success('Se elimino la marca');
+
+      return data;
+    } catch (error: any) {
+      console.log('delete nursery service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// desactivar -activar marca
+
+export const activate_deactivate_marca_service: any = (id: string | number, marca: IMarcas) => {
+
+  const form_data = {
+    
+    nombre: marca.nombre,
+    activo: !marca.activo,
+
+  }
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      
+      const { data } = await api.put(
+        `almacen/marcas/update/${id}/`,
+        form_data
+      );
+      dispatch(get_marca_service());
+      form_data.activo?
+      
+      control_success('Se activo la marca correctamente '):
+      control_success('Se desactivo la marca correctamente');
+    
+
+      return data;
+    } catch (error: any) {
+      console.log('activate-deactivate nursery service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+
+
+
 // porcentaje
 
 // Obtener Porcentaje
@@ -134,6 +220,91 @@ export const add_porcentaje_service: any = (
     }
   };
 };
+
+// editar porcentaje
+
+export const edit_porcentaje_service: any = (
+  porcentaje: any,
+  id: string|number,
+
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `almacen/porcentajes/update/${id}/`,
+       porcentaje
+      );
+      dispatch(get_porcentaje_service());
+      control_success('El porcentaje se edito correctamente');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      console.log(error.response.data);
+      return error as AxiosError;
+    }
+  };
+};
+
+// eliminar porcentaje
+
+export const delete_porcentaje_service: any = (id: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `almacen/porcentajes/delete/${id}/`
+      );
+      dispatch(get_porcentaje_service());
+      control_success('Se eliminó el porcentaje correctamente');
+
+      return data;
+    } catch (error: any) {
+      console.log('delete porentaje service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// desactivar -activar porcentaje
+
+export const activate_deactivate_porcentaje_service: any = (id: string | number, porcentaje: IPorcentajes) => {
+
+  const form_data = {
+    
+    porcentaje: porcentaje.porcentaje,
+    observacion: porcentaje.observacion,
+    activo: !porcentaje.activo,
+
+  }
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      
+
+      const { data } = await api.put(
+
+        `almacen/porcentajes/update/${id}/`,
+      form_data
+      );
+
+      console.log(data)
+      dispatch(get_porcentaje_service());
+      form_data.activo?
+      
+      control_success('Se activo el porcentaje correctamente '):
+      control_success('Se desactivo el porcentaje correctamente');
+  
+      return data;
+    } catch (error: any) {
+      console.log('activate-deactivate nursery service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
 
 // Medida
 
@@ -182,5 +353,82 @@ export const add_medida_service: any = (
   };
 };
 
+// editar medida
+
+export const edit_medida_service: any = (
+  medida: any,
+  id: string|number,
+
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `almacen/unidades-medida/update/${id}/`,
+        medida
+      );
+      console.log(data)
+      dispatch(get_medida_service());
+      control_success('La medida se editó correctamente');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      console.log(error.response.data);
+      return error as AxiosError;
+    }
+  };
+};
+
+// eliminar medida
+
+export const delete_medida_service: any = (id: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(
+        `almacen/unidades-medida/delete/${id}/`
+      );
+      dispatch(get_medida_service());
+      control_success('Se eliminó la medida correctamente');
+
+      return data;
+    } catch (error: any) {
+      console.log('delete nursery service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 
+// desactivar -activar marca
+
+export const activate_deactivate_medida_service: any = (id: string | number, medida: IMedidas ) => {
+
+  const form_data = { 
+    nombre: medida.nombre,
+    abreviatura: medida.abreviatura,
+    id_magnitud: medida.id_magnitud,
+    activo: !medida.activo,
+
+  }
+
+  return async (dispatch: Dispatch<any>) => {
+    try {
+     
+      const { data } = await api.put(
+        `almacen/unidades-medida/update/${id}/`,
+       form_data
+      );
+      dispatch(get_medida_service());
+      form_data.activo?
+      control_success('Se activo la unidad de medida '):
+      control_success('Se desactivo la unidad de medida ');
+
+      return data;
+    } catch (error: any) {
+      console.log('activate-deactivate nursery service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
