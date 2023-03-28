@@ -5,25 +5,37 @@ import { Title } from '../../../../components/Title';
 import jsPDF from 'jspdf';
 import { Button, Grid, Typography, Stack } from '@mui/material';
 import { api } from '../../../../api/axios';
+// import type { EstacionData } from "../interfaces/interfaces";
 
 // import macarenia from '../../';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ReportesScreen: React.FC = () => {
   const [fecha_inicial, set_fecha_inicial] = useState('');
 
+  // const [selectdashboards, set_select_dashboards] = useState({
+  //   opc_dashboards: 0,
+  // })
+  // const opc_dashboards = [
+  //   { label: 'Estación Guamal', value: 1 },
+  //   { label: 'Estación Guayuriba', value: 2 },
+  //   { label: 'Estación Ocoa', value: 3 },
+  //   { label: 'Estación Puerto Gaitan', value: 4 },
+  // ];
   const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>) => {
     set_fecha_inicial(event.target.value);
   }
 
   const fetch_data = async (): Promise<any> => {
     const response = await api.get(`https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${fecha_inicial}`);
-    return response.data;
+
+    // const filtereddata = response.filter((datos: EstacionData) =>
+    //   datos.id_estacion === selectdashboards.opc_dashboards)
+    return (response.data);
   }
 
 
   const generate_pdf = (data: any): void => {
 
-    // Cargar la imagen
 
     // eslint-disable-next-line new-cap
     const doc: jsPDF = new jsPDF();
@@ -97,37 +109,37 @@ export const ReportesScreen: React.FC = () => {
     const title_width = doc.getTextWidth(title);
     const x_pos = (doc.internal.pageSize.width - title_width) / 2;
     doc.addImage(image_data, 160, 10, 40, 15)
-    doc.addImage(image_data2, img_x, img_y, img_width, img_height);
-    doc.setFont("Arial", "bold");
-    doc.text(title, x_pos, 30); // coloca el título a 30 unidades desde el borde superior de la página
-    doc.text(`La temperatura promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${temp_avg.toFixed(2)} °C`, 10, 40);
-    doc.text(`La temperatura mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${temp_min.toFixed(2)} °C`, 10, 50);
-    doc.text(`La temperatura maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${temp_max.toFixed(2)} °C`, 10, 60);
+    doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(title, x_pos, 30);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La temperatura promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${temp_avg.toFixed(2)} °C`, 20, 50);
+    doc.text(`La temperatura mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${temp_min.toFixed(2)} °C`, 20, 60);
+    doc.text(`La temperatura maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${temp_max.toFixed(2)} °C`, 20, 70);
 
-    doc.text(`La humedad promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${hum_avg.toFixed(2)} %`, 10, 70);
-    doc.text(`La humedad mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${hum_min.toFixed(2)} %`, 10, 80);
-    doc.text(`La humedad maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${hum_max.toFixed(2)} %`, 10, 90);
+    doc.text(`La humedad promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${hum_avg.toFixed(2)} %`, 20, 80);
+    doc.text(`La humedad mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${hum_min.toFixed(2)} %`, 20, 90);
+    doc.text(`La humedad maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${hum_max.toFixed(2)} %`, 20, 100);
 
-    doc.text(`El nivel de agua promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${nivel_avg.toFixed(2)} m`, 10, 100);
-    doc.text(`El nivel de agua minimo que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${nivel_min.toFixed(2)} m`, 10, 110);
-    doc.text(`El nivel de agua maximo que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${nivel_max.toFixed(2)} m`, 10, 120);
+    doc.text(`El nivel de agua promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${nivel_avg.toFixed(2)} m`, 20, 110);
+    doc.text(`El nivel de agua minimo que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${nivel_min.toFixed(2)} m`, 20, 120);
+    doc.text(`El nivel de agua maximo que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${nivel_max.toFixed(2)} m`, 20, 130);
 
-    doc.text(`La velocidad del agua promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${velocidad_avg.toFixed(2)} m/s`, 10, 130);
-    doc.text(`La velocidad del agua mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${velocidad_min.toFixed(2)} m/s`, 10, 140);
-    doc.text(`La velocidad del agua maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${velocidad_max.toFixed(2)} m/s`, 10, 150);
+    doc.text(`La velocidad del agua promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${velocidad_avg.toFixed(2)} m/s`, 20, 140);
+    doc.text(`La velocidad del agua mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${velocidad_min.toFixed(2)} m/s`, 20, 150);
+    doc.text(`La velocidad del agua maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${velocidad_max.toFixed(2)} m/s`, 20, 160);
 
-    doc.text(`La presión del aire promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${presion_avg.toFixed(2)} Hpa`, 10, 160);
-    doc.text(`La presión del aire mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${presion_min.toFixed(2)} Hpa`, 10, 170);
-    doc.text(`La presión del aire maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${presion_max.toFixed(2)} Hpa`, 10, 180);
+    doc.text(`La presión del aire promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${presion_avg.toFixed(2)} Hpa`, 20, 170);
+    doc.text(`La presión del aire mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${presion_min.toFixed(2)} Hpa`, 20, 180);
+    doc.text(`La presión del aire maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${presion_max.toFixed(2)} Hpa`, 20, 190);
 
-    doc.text(`La luminosidad promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${luminosidad_avg.toFixed(2)} Lux`, 10, 190);
-    doc.text(`La luminosidad mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de${luminosidad_min.toFixed(2)} Lux`, 10, 200);
-    doc.text(`La luminosidad maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${luminosidad_max.toFixed(2)} Lux`, 10, 210);
+    doc.text(`La luminosidad promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${luminosidad_avg.toFixed(2)} Lux`, 20, 200);
+    doc.text(`La luminosidad mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de${luminosidad_min.toFixed(2)} Lux`, 20, 210);
+    doc.text(`La luminosidad maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${luminosidad_max.toFixed(2)} Lux`, 20, 220);
 
-    doc.text(`La precipitación promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${precipitacion_avg.toFixed(2)} mm`, 10, 220);
-    doc.text(`La precipitación mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${precipitacion_min.toFixed(2)} mm`, 10, 230);
-    doc.text(`La precipitación maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${precipitacion_max.toFixed(2)} mm`, 10, 240)
-      ;
+    doc.text(`La precipitación promedio que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${precipitacion_avg.toFixed(2)} mm`, 20, 230);
+    doc.text(`La precipitación mínima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${precipitacion_min.toFixed(2)} mm`, 20, 240);
+    doc.text(`La precipitación maxima que se presento en el mes ${fecha_inicial.slice(5, 7)} del ${fecha_inicial.slice(0, 4)} fue de ${precipitacion_max.toFixed(2)} mm`, 20, 250);
 
 
 
