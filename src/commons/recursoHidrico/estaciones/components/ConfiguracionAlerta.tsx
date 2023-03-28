@@ -116,6 +116,7 @@ export const ConfiguracionAlarma: React.FC = () => {
       if (result.isConfirmed) {
         await eliminar_conf_alerta_persona(idPersona);
         control_success('La alerta se eliminó correctamente')
+        void confi_alerta_persona()
       }
     });
   };
@@ -183,13 +184,15 @@ export const ConfiguracionAlarma: React.FC = () => {
       </Grid>
       <CrearConfiAlertaDialog
         is_modal_active={crear_alerta_is_active}
-        set_is_modal_active={set_crear_alerta_is_active}
+        set_is_modal_active={set_crear_alerta_is_active} 
+        confi_alerta_persona = {confi_alerta_persona}
       />
       <EditarAlertaDialog
         is_modal_active={editar_alerta_is_active}
         set_is_modal_active={set_editar_alerta_is_active}
         alerta_editado={alerta_editado}
         set_alerta_editado={set_alerta_editado}
+        confi_alerta_persona = {confi_alerta_persona}
       />
     </Grid>
   );

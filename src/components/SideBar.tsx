@@ -13,6 +13,9 @@ import {
   Collapse,
   Avatar,
   Icon,
+  Grid,
+  CircularProgress,
+  Typography,
 } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -31,6 +34,7 @@ interface Props {
 export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   const dispatch = useDispatch();
   const [open, set_open] = useState(false);
+  const [is_loading, set_is_loading] = useState(true);
   const { userinfo, permisos: permisos_store } = useSelector(
     (state: AuthSlice) => state.auth
   );
@@ -68,7 +72,10 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
     window !== undefined ? () => window().document.body : undefined;
 
   useEffect(() => {
-    set_permisos(permisos_store);
+    setTimeout(() => {
+      set_permisos(permisos_store);
+      set_is_loading(false);
+    }, 2000);
   }, [permisos_store]);
 
   const conten_drawer = (
@@ -144,41 +151,61 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         </Collapse>
       </List>
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      {permisos_store.length > 0
-        ? permisos.map((e, k) => {
-            return (
-              <List sx={{ margin: '0 20px', color: 'secondary.main' }} key={k}>
-                <ListItemButton
-                  onClick={() => {
-                    open_collapse(e, k);
-                  }}
-                >
-                  <ListItemText primary={e.desc_subsistema} />
-                  {e.expanded ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
+      {!is_loading ? (
+        permisos.map((e, k) => {
+          return (
+            <List sx={{ margin: '0 20px', color: 'secondary.main' }} key={k}>
+              <ListItemButton
+                onClick={() => {
+                  open_collapse(e, k);
+                }}
+              >
+                <ListItemText primary={e.desc_subsistema} />
+                {e.expanded ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
 
-                <Collapse timeout="auto" unmountOnExit in={e.expanded}>
-                  <List component="div" disablePadding>
-                    {e.modulos.map((m, km) => {
-                      return (
-                        <ListItemButton
-                          sx={{ pl: 4 }}
-                          key={km}
-                          href={m.ruta_formulario}
-                        >
-                          <ListItemIcon sx={{ minWidth: '25px' }}>
-                            <Icon sx={{ fontSize: '10px' }}>circle</Icon>
-                          </ListItemIcon>
-                          <ListItemText primary={m.nombre_modulo} />
-                        </ListItemButton>
-                      );
-                    })}
-                  </List>
-                </Collapse>
-              </List>
-            );
-          })
-        : 'Cargando...'}
+              <Collapse timeout="auto" unmountOnExit in={e.expanded}>
+                <List component="div" disablePadding>
+                  {e.modulos.map((m, km) => {
+                    return (
+                      <ListItemButton
+                        sx={{ pl: 4 }}
+                        key={km}
+                        href={m.ruta_formulario}
+                      >
+                        <ListItemIcon sx={{ minWidth: '25px' }}>
+                          <Icon sx={{ fontSize: '10px' }}>circle</Icon>
+                        </ListItemIcon>
+                        <ListItemText primary={m.nombre_modulo} />
+                      </ListItemButton>
+                    );
+                  })}
+                </List>
+              </Collapse>
+            </List>
+          );
+        })
+      ) : (
+        <>
+          <Grid
+            container
+            alignContent="center"
+            justifyContent="center"
+            sx={{
+              height: 'calc(100% - 170px)',
+            }}
+          >
+            <Grid item xs={12} container justifyContent="center" padding={5}>
+              <CircularProgress />
+            </Grid>
+            <Grid item xs={12} padding={5}>
+              <Typography textAlign="center">
+                Cargando permisos, por favor espere...
+              </Typography>
+            </Grid>
+          </Grid>
+        </>
+      )}
     </Box>
   );
 
