@@ -163,7 +163,7 @@ export const LoginForm: React.FC = () => {
             </LoadingButton>
           </Grid>
           <Grid item sx={{ pt: '10px !important' }}>
-            <Link className="no-decoration" to="/auth/recuperar_contrasena">
+            <Link className="no-decoration" to="#">
               <Typography sx={{ textAlign: 'center', mb: '20px' }}>
                 ¿Olvidó su contraseña?
               </Typography>
