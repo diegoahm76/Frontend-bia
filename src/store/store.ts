@@ -39,6 +39,7 @@ const app_reducers = combineReducers({
   medida: medida_slice.reducer,
   bien: bien_slice.reducer,
   configuracion: configuracion_slice.reducer,
+  cv: cv_computo_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
