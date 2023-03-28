@@ -80,5 +80,5 @@ export const get_person_by_document = async (
 export const crear_persona_natural_and_user = async (
   data: IPerson
 ): Promise<ResponseServer<any>> => {
-  return await api.post('personas/persona-natural-and-usuario/create/', data);
+  return await api.post('personas/persona-natural-and-usuario/create', data);
 };

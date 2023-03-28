@@ -8,9 +8,9 @@ import {
   Typography,
 } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
-
+// import { LoadingButton } from '@mui/lab';
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RecuperarContrasena: React.FC = () => {
+export const RecuperarContraseña: React.FC = () => {
   return (
     <>
       <Grid item>

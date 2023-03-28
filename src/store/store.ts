@@ -7,6 +7,7 @@ import { auth_slice } from "../commons/auth/store/authSlice";
 import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
 import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
 import { bien_slice } from "../commons/almacen/entradaysalidaArticulos/store/slices/indexCatalogodeBienes";
+import { cv_computo_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo";
 import { organigrama_slice } from "../commons/gestorDocumental/organigrama/store/slices/organigramSlice";
 import { ccd_slice } from "../commons/gestorDocumental/ccd/store/slices/ccdSlice";
 import { series_slice } from "../commons/gestorDocumental/ccd/store/slices/seriesSlice";
@@ -38,6 +39,7 @@ const app_reducers = combineReducers({
   medida: medida_slice.reducer,
   bien: bien_slice.reducer,
   configuracion: configuracion_slice.reducer,
+  cv: cv_computo_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

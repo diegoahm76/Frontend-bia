@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Controller, type SubmitHandler, useForm } from 'react-hook-form';
-import Select, { type SingleValue } from 'react-select';
 import {
   Grid,
   Box,
@@ -11,23 +10,25 @@ import {
   TextField,
   FormLabel,
   FormControl,
+  // FormGroup,
   FormControlLabel,
+  // FormHelperText,
   Checkbox,
   Menu,
   MenuItem,
 } from '@mui/material';
-import LoadingButton from '@mui/lab/LoadingButton';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
 
+import Select, { type SingleValue } from 'react-select';
 import { type Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import { toast, type ToastContent } from 'react-toastify';
+import Swal from 'sweetalert2';
 // Components
 import { api } from '../../../api/axios';
 import { Title } from '../../../components/Title';
@@ -37,19 +38,6 @@ import {
 } from '../../auth/adapters/auditorias.adapters';
 import { text_choise_adapter } from '../../auth/adapters/textChoices.adapter';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
 
 const columns: GridColDef[] = [
   {
@@ -112,7 +100,6 @@ export interface IList {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const AuditoriaScreen = (): JSX.Element => {
-  const [loading_button, set_loading_button] = React.useState(false);
   const [anchor_el, set_anchor_el] = React.useState<null | HTMLElement>(null);
   const open_menu_filter = Boolean(anchor_el);
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -136,6 +123,15 @@ const AuditoriaScreen = (): JSX.Element => {
   >(null);
   const [nombre_usuario_auditoria, set_nombre_usuario_auditoria] =
     React.useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const notification_error = async (message = 'Algo pasó, intente de nuevo') =>
+    await Swal.mixin({
+      position: 'center',
+      icon: 'error',
+      title: message,
+      showConfirmButton: true,
+      confirmButtonText: 'Aceptar',
+    }).fire();
 
   const [auditorias, set_auditorias] = useState([]);
   const [subsistemas_options, set_subsistemas_options] = useState<IList[]>([]);
@@ -174,8 +170,9 @@ const AuditoriaScreen = (): JSX.Element => {
     formState: { errors },
   } = useForm({ defaultValues: form_values });
 
+  // const data_screen: any = watch();
+
   const on_submit: SubmitHandler<IFormValues> = async (data: IFormValues) => {
-    set_loading_button(!loading_button);
     void query_auditorias(data, rango_inicial_fecha, rango_final_fecha);
   };
 
@@ -213,11 +210,9 @@ const AuditoriaScreen = (): JSX.Element => {
         );
       }
       set_auditorias(data.detail);
-      set_loading_button(false);
       // void Swal.fire('Correcto', 'Proceso Exitoso', 'success');
     } catch (error: any) {
-      set_loading_button(false);
-      void control_error(error.response.data.detail);
+      void notification_error(error.response.data.detail);
     }
   };
 
@@ -229,22 +224,6 @@ const AuditoriaScreen = (): JSX.Element => {
       ...checkbox_selection,
       [event.target.name]: event.target.checked,
     });
-    if (!tipo_documento_filter) {
-      set_value('numero_documento', '');
-      set_value('tipo_documento', { label: '', value: '' });
-      set_nombre_usuario_auditoria(null);
-      void query_auditorias(
-        form_values,
-        rango_inicial_fecha,
-        rango_final_fecha
-      );
-    } else if (!subsistema_modulo_filter) {
-      void query_auditorias(
-        form_values,
-        rango_inicial_fecha,
-        rango_final_fecha
-      );
-    }
   };
 
   useEffect(() => {
@@ -275,6 +254,40 @@ const AuditoriaScreen = (): JSX.Element => {
     };
     void get_info();
   }, []);
+
+  useEffect(() => {
+    if (!tipo_documento_filter) {
+      console.log(form_values);
+      set_value('numero_documento', '');
+      set_value('tipo_documento', { label: '', value: '' });
+      set_nombre_usuario_auditoria(null);
+      void query_auditorias(
+        form_values,
+        rango_inicial_fecha,
+        rango_final_fecha
+      );
+    }
+    console.log(form_values);
+  }, [tipo_documento_filter]);
+
+  useEffect(() => {
+    if (!subsistema_modulo_filter) {
+      console.log(form_values);
+      void query_auditorias(
+        form_values,
+        rango_inicial_fecha,
+        rango_final_fecha
+      );
+    }
+    console.log(form_values);
+  }, [subsistema_modulo_filter]);
+
+  useEffect(() => {
+    console.log(rango_inicial_fecha, rango_final_fecha);
+  }, [rango_inicial_fecha]);
+  useEffect(() => {
+    console.log(rango_inicial_fecha, rango_final_fecha);
+  }, [rango_final_fecha]);
 
   const handle_date_ini_change = (date: Dayjs | string | null): void => {
     set_rango_inicial_fecha(dayjs(date).format('YYYY-MM-DD'));
@@ -317,23 +330,7 @@ const AuditoriaScreen = (): JSX.Element => {
                     onChange={handle_date_ini_change}
                     inputFormat="DD/MM/YYYY"
                     renderInput={(params) => (
-                      <TextField
-                        required
-                        fullWidth
-                        size="small"
-                        {...params}
-                        error={Boolean(
-                          rango_inicial_fecha !== null &&
-                            rango_final_fecha !== null &&
-                            rango_inicial_fecha > rango_final_fecha
-                        )}
-                        helperText={
-                          rango_inicial_fecha !== null &&
-                          rango_final_fecha !== null &&
-                          rango_inicial_fecha > rango_final_fecha &&
-                          'Fecha inicial no puede ser mayor a la fecha final'
-                        }
-                      />
+                      <TextField fullWidth size="small" {...params} />
                     )}
                   />
                 </LocalizationProvider>
@@ -346,29 +343,7 @@ const AuditoriaScreen = (): JSX.Element => {
                     onChange={handle_date_fin_change}
                     inputFormat="DD/MM/YYYY"
                     renderInput={(params) => (
-                      <TextField
-                        required
-                        fullWidth
-                        size="small"
-                        {...params}
-                        error={Boolean(
-                          rango_inicial_fecha !== null &&
-                            rango_final_fecha !== null &&
-                            (rango_final_fecha < rango_inicial_fecha ||
-                              rango_final_fecha === rango_inicial_fecha)
-                        )}
-                        helperText={
-                          (rango_inicial_fecha !== null &&
-                            rango_final_fecha !== null &&
-                            rango_final_fecha < rango_inicial_fecha &&
-                            'Fecha final no puede ser menor a la fecha inicial'
-                              .length > 0) ||
-                          (rango_inicial_fecha !== null &&
-                            rango_final_fecha !== null &&
-                            rango_final_fecha === rango_inicial_fecha &&
-                            'Las fechas no pueden ser iguales')
-                        }
-                      />
+                      <TextField fullWidth size="small" {...params} />
                     )}
                   />
                 </LocalizationProvider>
@@ -576,22 +551,13 @@ const AuditoriaScreen = (): JSX.Element => {
               >
                 LIMPIAR
               </Button>
-              {/* <Button
+              <Button
                 type="submit"
                 variant="contained"
                 startIcon={<SearchIcon />}
               >
                 BUSCAR
-              </Button> */}
-              <LoadingButton
-                type="submit"
-                loading={loading_button}
-                loadingPosition="start"
-                startIcon={<SearchIcon />}
-                variant="contained"
-              >
-                BUSCANDO
-              </LoadingButton>
+              </Button>
             </Stack>
 
             <DataGrid
