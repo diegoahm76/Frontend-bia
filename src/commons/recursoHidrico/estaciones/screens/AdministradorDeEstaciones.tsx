@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -6,8 +7,13 @@ import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { Title } from '../../../../components/Title';
-import { type Estaciones } from '../interfaces/interfaces';
-import { consultar_estaciones, control_success, eliminar_estacion } from '../../requets/Request';
+import type {Datos, Estaciones } from '../interfaces/interfaces';
+import type { AxiosError } from 'axios';
+import {
+    consultar_estaciones, consultar_datos_id, control_success,
+    // eliminar_estacion, 
+    control_success_fail
+} from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { CrearEstacionDialog } from '../components/CrearEstacionDialog';
 import { EditarEstacionDialog } from '../components/EditarEstacionDialog';
@@ -16,6 +22,7 @@ import Swal from 'sweetalert2';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministradorDeEstaciones: React.FC = () => {
     const [list_estaciones, set_estaciones] = useState<Estaciones[]>([]);
+    const [has_data, set_has_data] = useState(false);
     const [crear_estacion_is_active, set_crear_estacion_is_active] = useState<boolean>(false);
     const [editar_estacion_is_active, set_editar_estacion_is_active] = useState<boolean>(false);
     const [estacion_editado, set_estacion_editado] = useState(null);
@@ -60,7 +67,10 @@ export const AdministradorDeEstaciones: React.FC = () => {
                         </Avatar>
                     </IconButton>
                     <IconButton
-                        onClick={() => { confirmar_eliminar_usuario(params.row.id_persona); }}
+                        onClick={() => {
+                            confirmar_eliminar_usuario(params.row.id_estacion);
+                            void traer_dato({ estacion: { value: params.row.id_estacion } })
+                        }}
                     >
                         <Avatar
                             sx={{
@@ -82,6 +92,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
     ];
     const estacion = async (): Promise<void> => {
         try {
+            set_estaciones([]);
             const response = await consultar_estaciones();
             const new_estacion = response.map((estaciones: Estaciones) => ({
 
@@ -108,22 +119,51 @@ export const AdministradorDeEstaciones: React.FC = () => {
         void estacion()
     }, []);
 
-    const confirmar_eliminar_usuario = (idPersona: number): void => {
-        void Swal.fire({
-            title: "Estas seguro?",
-            text: "Va a eliminar un usuario",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Si, elminar!",
-            cancelButtonText: "Cancelar",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                await eliminar_estacion(idPersona);
-                control_success('La estación se eliminó correctamente')
+    const traer_dato = async (data: { estacion: { value: any; }; }): Promise<any> => {
+        try {
+            const estacion_id = data.estacion?.value;
+            const estacion = await consultar_datos_id(estacion_id).then((res: Datos[]) => {
+                return res
+            }).catch( (err: AxiosError) => {
+                if(err.status === 404){
+                    set_has_data(false)
+                }
+                throw err
+            });
+            if(estacion.length > 0 ){
+                set_has_data(true)
+            } else {
+                set_has_data(false)
             }
-        });
+            
+        } catch (err) {
+            control_error(err);
+        }
+    };
+
+    const confirmar_eliminar_usuario = (id_Estacion: number): void => {
+        if (has_data) {
+            control_success_fail("La estación no se puede eliminar porque contiene datos")
+        } else {
+            void Swal.fire({
+                title: "Estas seguro?",
+                text: "Va a eliminar un usuario",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Si, elminar!",
+                cancelButtonText: "Cancelar",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    // await eliminar_estacion(id_Estacion);
+                    void estacion()
+                    control_success('La estación se eliminó correctamente')
+                } else {
+                    set_has_data(false)
+                }
+            });
+        }
     };
 
     return (
@@ -165,12 +205,14 @@ export const AdministradorDeEstaciones: React.FC = () => {
             <CrearEstacionDialog
                 is_modal_active={crear_estacion_is_active}
                 set_is_modal_active={set_crear_estacion_is_active}
+                estacion={estacion}
             />
             <EditarEstacionDialog
                 is_modal_active={editar_estacion_is_active}
                 set_is_modal_active={set_editar_estacion_is_active}
                 estacion_editado={estacion_editado}
                 set_estacion_editado={set_estacion_editado}
+                estacion={estacion}
             />
         </Grid>
     );
