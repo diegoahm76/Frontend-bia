@@ -19,9 +19,9 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import BlockIcon from '@mui/icons-material/Block';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 import BusinessIcon from '@mui/icons-material/Business';
 import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
-import DeleteIcon from '@mui/icons-material/Delete';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 // Componentes personalizados
@@ -164,10 +164,6 @@ export function AdministrarViveroScreen(): JSX.Element {
                 dispatch(current_nursery(params.row));
                 set_action("detail")
                 set_add_nursery_is_active(true)
-                // console.log("editar "+ params.row)
-                // navigate(
-                //   '/dashboard/gestor-documental/organigrama/editar-organigrama'
-                // );
               }}
             >
               <Avatar
