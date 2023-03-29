@@ -2,15 +2,15 @@ import { type SyntheticEvent, useState } from 'react';
 import { Box, Grid, Typography, Tab } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { useAppSelector } from '../../../hooks';
-import { FormAdminPersonas } from '../components/FormAdminPersonas';
-import { ListPersonas } from '../components/ListPersonas';
+import { FormAdminRoles } from '../components/FormAdminRoles';
+import { ListRoles } from '../components/ListRoles';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
 export const RolesScreen: React.FC = () => {
-  const [position_tab, set_position_tab_admin_personas] = useState('1');
+  const [position_tab, set_position_tab_admin_roles] = useState('1');
   const { organigram_current } = useAppSelector((state) => state.organigram);
   const handle_change = (event: SyntheticEvent, newValue: string): void => {
-    set_position_tab_admin_personas(newValue);
+    set_position_tab_admin_roles(newValue);
   };
 
   return (
@@ -31,12 +31,12 @@ export const RolesScreen: React.FC = () => {
         <TabContext value={position_tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handle_change} aria-label="lab API tabs example">
-              <Tab label="Usuarios" value="1" />
+              <Tab label="Roles" value="1" />
               <Tab
                 label={
                   organigram_current.fecha_terminado !== null
-                    ? 'Usuarios'
-                    : 'Editar usuarios'
+                    ? 'Crear roles'
+                    : 'Editar roles'
                 }
                 // disabled={position_tab === '1' && true}
                 value="2"
@@ -44,13 +44,13 @@ export const RolesScreen: React.FC = () => {
             </TabList>
           </Box>
           <TabPanel value="1" sx={{ p: '20px 0' }}>
-            <ListPersonas
-              set_position_tab_admin_personas={set_position_tab_admin_personas}
+            <ListRoles
+              set_position_tab_admin_roles={set_position_tab_admin_roles}
             />
           </TabPanel>
           <TabPanel value="2" sx={{ p: '20px 0' }}>
-            <FormAdminPersonas
-              set_position_tab_admin_personas={set_position_tab_admin_personas}
+            <FormAdminRoles
+              set_position_tab_admin_roles={set_position_tab_admin_roles}
             />
           </TabPanel>
         </TabContext>

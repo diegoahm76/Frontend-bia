@@ -15,12 +15,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 
 interface IProps {
-  set_position_tab_admin_personas: Dispatch<SetStateAction<string>>;
+  set_position_tab_admin_roles: Dispatch<SetStateAction<string>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function ListRoles({
-  set_position_tab_admin_personas,
+  set_position_tab_admin_roles,
 }: IProps): JSX.Element {
   const rows = [
     {
