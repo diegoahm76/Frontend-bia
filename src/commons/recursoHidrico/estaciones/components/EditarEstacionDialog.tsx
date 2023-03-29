@@ -6,7 +6,7 @@ import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import { control_error } from '../../../../helpers/controlError';
 import { control_success, editar_estacion } from '../../requets/Request';
-import { type IEstacionEstaciones } from '../interfaces/interfaces';
+import { municipios_meta, type IEstacionEstaciones } from '../interfaces/interfaces';
 
 interface IProps {
   is_modal_active: boolean;
@@ -146,6 +146,7 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
             <Grid item xs={12}>
               <TextField
                 label="Municipio"
+                select
                 type="text"
                 fullWidth
                 size="small"
@@ -156,7 +157,13 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
                 {...register("cod_municipio", { required: true })}
                 error={Boolean(errors.cod_municipio)}
                 helperText={(errors.cod_municipio != null) ? "Este campo es obligatorio" : ""}
-              />
+              >
+                {municipios_meta.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid item xs={12}>
               <TextField
