@@ -5,7 +5,8 @@ import type {
   IUserInfo,
   InfoPersona,
   Permisos,
-  IPerson
+  DataRegistePortal,
+  UserCreate
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -78,7 +79,13 @@ export const get_person_by_document = async (
 };
 
 export const crear_persona_natural_and_user = async (
-  data: IPerson
+  data: DataRegistePortal
+): Promise<AxiosResponse<UserCreate>> => {
+  return await api.post('personas/persona-natural-and-usuario/create/', data);
+};
+
+export const verify_account = async (
+  token: string
 ): Promise<ResponseServer<any>> => {
-  return await api.post('personas/persona-natural-and-usuario/create', data);
+  return await api.get(`users/verify/?token=${token}`);
 };

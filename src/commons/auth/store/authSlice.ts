@@ -43,6 +43,8 @@ export const auth_slice = createSlice({
       state.representante_legal = [];
       state.status = 'not-authenticated';
       state.error_message = payload.error_message ?? '';
+      state.dialog_representante = false;
+      state.open_dialog = false;
     },
     checking_credentials: (state) => {
       state.status = 'checking';
