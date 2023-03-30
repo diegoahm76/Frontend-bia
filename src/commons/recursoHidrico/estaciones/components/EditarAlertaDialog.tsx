@@ -12,10 +12,11 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   alerta_editado: any;
   set_alerta_editado: Dispatch<SetStateAction<any>>;
+  confi_alerta_persona:() => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, alerta_editado, set_alerta_editado, }) => {
+export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, alerta_editado, set_alerta_editado, confi_alerta_persona, }) => {
 
   const {
     register,
@@ -76,7 +77,7 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
 
   const on_submit = async (data: CrearAlerta): Promise<any> => {
     try {
-      const datos_estacion = {
+      const datos_confi = {
 
         nombre_variable_alarma: data.nombre_variable_alarma,
         mensaje_alarma_maximo: data.mensaje_alarma_maximo,
@@ -85,11 +86,12 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
         frecuencia_alarma: data.frecuencia_alarma,
 
       };
-      await editar_conf_alarma(alerta_editado.id_persona, datos_estacion);
+      await editar_conf_alarma(alerta_editado.id_confi_alerta_persona, datos_confi);
       set_alerta_editado(null);
       set_is_modal_active(false);
-      control_success('La persona se actualizó correctamente')
-    } catch (error) {
+      control_success('La configuración se actualizó correctamente')
+      void confi_alerta_persona()
+    } catch (error) { 
       control_error(error);
     }
   };
@@ -164,7 +166,7 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
         </DialogContent>
         <DialogActions>
           <Button onClick={handle_close}>Cancelar</Button>
-          <Button variant="contained" color="primary">Actualizar</Button>
+          <Button variant="contained" color="primary" type='submit'>Actualizar</Button>
         </DialogActions>
       </form>
     </Dialog>

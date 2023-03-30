@@ -64,8 +64,6 @@ const columns: GridColDef[] = [
     },
   },
   {field: 'abreviatura', headerName: 'Abreviatura',  width: 100,},
-  {field: 'id_magnitud', headerName: 'Magnitud',  width: 100,},
-
 
   { field: 'acciones', headerName: 'Acciones', width: 300,
   renderCell: (params) => (

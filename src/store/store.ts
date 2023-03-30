@@ -5,6 +5,7 @@ import { persistReducer } from "redux-persist";
 import { layout_slice } from "./layoutSlice";
 import { auth_slice } from "../commons/auth/store/authSlice";
 import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
+import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
 import { bien_slice } from "../commons/almacen/entradaysalidaArticulos/store/slices/indexCatalogodeBienes";
 import { cv_computo_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo";
 import { organigrama_slice } from "../commons/gestorDocumental/organigrama/store/slices/organigramSlice";
@@ -37,6 +38,7 @@ const app_reducers = combineReducers({
   porcentaje: porcentajes_slice.reducer,
   medida: medida_slice.reducer,
   bien: bien_slice.reducer,
+  configuracion: configuracion_slice.reducer,
   cv: cv_computo_slice.reducer,
 });
 
