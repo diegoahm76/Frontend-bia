@@ -11,6 +11,7 @@ import {
   InputLabel,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 
 import { type IUserInfo } from '../interfaces/authModels';
@@ -25,6 +26,7 @@ import { use_form } from '../../../hooks/useForm';
 import { checking_authentication } from '../store';
 import { LoadingButton } from '@mui/lab';
 import { DialogEntorno } from './DialogEntorno';
+import { DialogRepresentantes } from './DialogRepresentantes';
 
 interface AuthSlice {
   auth: IUserInfo;
@@ -32,6 +34,7 @@ interface AuthSlice {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LoginForm: React.FC = () => {
+  const theme = useTheme();
   const { set_is_captcha_valid, is_captcha_valid } = use_rol();
   const dispatch = useDispatch();
   const { status, error_message } = useSelector(
@@ -74,8 +77,8 @@ export const LoginForm: React.FC = () => {
   return (
     <form onSubmit={on_submit}>
       <Grid container justifyContent={'column'} spacing={2}>
-        <Grid item xs={12} sm={12} md={6}>
-          <Grid item>
+        <Grid item xs={12} sm={12} md={6} container spacing={2}>
+          <Grid item xs={12}>
             <TextField
               required
               fullWidth
@@ -86,7 +89,7 @@ export const LoginForm: React.FC = () => {
               onChange={on_input_change}
             />
           </Grid>
-          <Grid item sx={{ pt: '10px !important' }}>
+          <Grid item xs={12}>
             <FormControl size="small" fullWidth>
               <InputLabel htmlFor="outlined-adornment-password">
                 Contraseña *
@@ -113,8 +116,8 @@ export const LoginForm: React.FC = () => {
               />
             </FormControl>
           </Grid>
-          {is_error ? (
-            <Grid item sx={{ pt: '10px !important' }}>
+          {is_error && (
+            <Grid item xs={12}>
               <Alert
                 severity="error"
                 onClose={() => {
@@ -124,15 +127,17 @@ export const LoginForm: React.FC = () => {
                 {error_message}
               </Alert>
             </Grid>
-          ) : (
-            ''
           )}
           <Grid
             item
             container
             justifyContent="center"
-            sx={{ pt: '10px !important' }}
             xs={12}
+            sx={{
+              [theme.breakpoints.only('sm')]: {
+                height: '83px',
+              },
+            }}
           >
             <ReCaptcha
               className="g-recaptcha"
@@ -149,7 +154,7 @@ export const LoginForm: React.FC = () => {
               }}
             />
           </Grid>
-          <Grid item justifyContent="center" sx={{ pt: '10px !important' }}>
+          <Grid item justifyContent="center" xs={12}>
             <LoadingButton
               type="submit"
               variant="contained"
@@ -162,7 +167,30 @@ export const LoginForm: React.FC = () => {
               Iniciar Sesión
             </LoadingButton>
           </Grid>
-          <Grid item sx={{ pt: '10px !important' }}>
+          <Grid
+            item
+            justifyContent="center"
+            xs={12}
+            sx={{
+              display: 'none ',
+              [theme.breakpoints.only('sm')]: {
+                display: 'block !important',
+              },
+            }}
+          >
+            <Button
+              type="button"
+              variant="outlined"
+              fullWidth
+              color="primary"
+              style={{ fontSize: '.9rem' }}
+            >
+              <Link className="no-decoration" to="/auth/register">
+                Regístrese
+              </Link>
+            </Button>
+          </Grid>
+          <Grid item xs={12}>
             <Link className="no-decoration" to="/auth/recuperar_contrasena">
               <Typography sx={{ textAlign: 'center', mb: '20px' }}>
                 ¿Olvidó su contraseña?
@@ -228,6 +256,7 @@ export const LoginForm: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
+      <DialogRepresentantes />
       <DialogEntorno />
     </form>
   );

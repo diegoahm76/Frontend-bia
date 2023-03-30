@@ -2,8 +2,8 @@ import { CircularProgress, Grid } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { control_error } from '../../../../helpers/controlError';
-import { consultar_datos } from '../../requets/Request';
-import { type Datos } from '../interfaces/interfaces';
+import { consultar_datos_gaitan_paginado } from '../../requets/Request';
+import type{ Datos } from '../interfaces/interfaces';
 
 const columns: GridColDef[] = [
     { field: 'fecha_registro', headerName: 'FECHA REGISTRO', width: 170 },
@@ -20,14 +20,14 @@ const columns: GridColDef[] = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const HistorialDatos: React.FC = () => {
+export const HistorialDatosGaitan: React.FC = () => {
     const [dato, set_dato] = useState<Datos[]>([]);
 
     const historial_datos = async (): Promise<void> => {
         try {
-            const response = await consultar_datos();
+            const response = await consultar_datos_gaitan_paginado();
             const list_datos = response.map((dato: Datos) => ({
-
+              
                 id_data: dato.id_data,
                 fecha_registro: dato.fecha_registro,
                 temperatura_ambiente: dato.temperatura_ambiente,
@@ -42,8 +42,9 @@ export const HistorialDatos: React.FC = () => {
                 id_estacion: dato.id_estacion,
 
             }))
-
+            console.log("Lista de datos", list_datos)
             set_dato(list_datos);
+            console.log(list_datos)
         } catch (err) {
             control_error(err)
         }
