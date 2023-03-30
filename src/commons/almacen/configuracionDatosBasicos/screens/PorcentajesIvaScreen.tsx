@@ -6,7 +6,7 @@ export function PorcentajesIvaScreen(): JSX.Element {
 
     return (
       <>
-      <h1>Procentajes iva</h1>
+      <h1>Porcentajes iva</h1>
       </>
     );
   }
