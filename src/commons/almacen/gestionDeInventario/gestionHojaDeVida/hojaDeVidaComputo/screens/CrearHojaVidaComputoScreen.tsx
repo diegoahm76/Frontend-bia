@@ -40,17 +40,17 @@ import CrearCvComputoForm from '../components/CrearCvComputoForm';
 import { current_computer } from '../store/slices/indexCvComputo';
 
 
-// import CrearViveroDialogForm from '../../../../../conservacion/gestorVivero/componentes/CrearViveroDialogForm';
+//  import CrearViveroDialogForm from '../../../../../conservacion/gestorVivero/componentes/CrearViveroDialogForm';
 // import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
-// // Slices
+// // // Slices
 // import { current_nursery } from '../store/slice/indexCvComputo';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaComputoScreen(): JSX.Element {
-  // const navigate = useNavigate();
+ // const navigate = useNavigate();
   const dispatch = useAppDispatch();
- // const  [action] = useState<string>("create");
+  // const  [action] = useState<string>("create");
   const { computers } = useAppSelector((state) => state.cv);
   const  [action, set_action ] = useState<string>("create");
   const [add_cv_com_is_active, set_add_cv_com_is_active] =
@@ -237,7 +237,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           </Grid>
           <CrearCvComputoForm
             is_modal_active={add_cv_com_is_active}
-          //  set_is_modal_active={set_add_cv_com_is_active} 
+           set_is_modal_active={set_add_cv_com_is_active} 
             action = {action}       
           />
         </Grid>

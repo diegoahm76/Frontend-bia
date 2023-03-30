@@ -119,3 +119,70 @@ export const get_medida_service = (): any => {
 };
 
 
+
+// eliminar
+
+
+
+// Eliminar nodo
+export const delete_nodo_service = (id: number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(`almacen/bienes/catalogo-bienes/delete/${id}`);
+      control_success('El nodo se eliminó correctamente');
+      dispatch(get_bienes_service()); // actualizamos la lista de bienes
+      return data;
+    } catch (error: any) {
+      console.log('eliminar_nodo_service');
+      control_error(error.response.data.detail);
+      console.log(error);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// Eliminar bien
+// export const delete_bien_service = (id_bien: number): any => {
+//   return async (dispatch: Dispatch<any>) => {
+//     try {
+//       const { data } = await api.delete(
+//         `almacen/bienes/catalogo-bienes/delete/${id_bien}/`
+//       );
+//       dispatch(get_bienes_service());
+//       control_success('El bien se eliminó correctamente');
+//       return data;
+//     } catch (error: any) {
+//       console.log('eliminar_bien_service');
+//       control_error(error.response.data.detail);
+//       console.log(error);
+//       return error as AxiosError;
+//     }
+//   };
+// };
+
+
+
+
+
+
+// export const delete_bien: any = (bien: any) => {
+//   return async (dispatch: Dispatch<any>) => {
+//    try {
+//      await api.delete(`almacen/bienes/catalogo-bienes/delete/${nodo.data.id_nodo}`);
+//     dispatch(add_bien_service());
+//     control_success('se elimino bien');
+//     return data;
+//    } catch(error:any) {
+//     console.log('delete');
+//     control_error(error.response.data.detail);
+//     return error as AxiosError;
+//    }
+
+//    }
+//   }
+
+
+
+    
+
