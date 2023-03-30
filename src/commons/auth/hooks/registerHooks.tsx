@@ -64,6 +64,9 @@ export const use_register = (): ReisterHook => {
     useState(false);
   const [show_password, set_show_password] = useState(false);
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
+  const [tipo_documento_opt_all, set_tipo_documento_opt_all] = useState<
+    IList[]
+  >([]);
   const [tipo_documento, set_tipo_documento] = useState('');
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
   const [tipo_persona, set_tipo_persona] = useState('');
@@ -134,17 +137,18 @@ export const use_register = (): ReisterHook => {
       const {
         data: { data: res_paises },
       } = await get_paises();
-      set_paises_options(res_paises);
+      set_paises_options(res_paises ?? []);
 
       const {
         data: { data: res_tipo_persona },
       } = await get_tipo_persona();
-      set_tipo_persona_opt(res_tipo_persona);
+      set_tipo_persona_opt(res_tipo_persona ?? []);
 
       const {
         data: { data: res_tipo_documento },
       } = await get_tipo_documento();
-      set_tipo_documento_opt(res_tipo_documento);
+      set_tipo_documento_opt(res_tipo_documento ?? []);
+      set_tipo_documento_opt_all(res_tipo_documento ?? []);
 
       const generos = await get_generos();
       set_genero_opt(generos);
@@ -241,15 +245,15 @@ export const use_register = (): ReisterHook => {
 
       switch (type) {
         case 'inicial':
-          set_ciudades_opt(data);
+          set_ciudades_opt(data ?? []);
           break;
 
         case 'residencia':
-          set_ciudades_residencia_opt(data);
+          set_ciudades_residencia_opt(data ?? []);
           break;
 
         case 'notificacion':
-          set_ciudad_notificacion_opt(data);
+          set_ciudad_notificacion_opt(data ?? []);
           break;
       }
     } catch (error) {
@@ -272,15 +276,15 @@ export const use_register = (): ReisterHook => {
 
       switch (type) {
         case 'inicial':
-          set_departamentos_opt(data);
+          set_departamentos_opt(data ?? []);
           break;
 
         case 'residencia':
-          set_dpto_residencia_opt(data);
+          set_dpto_residencia_opt(data ?? []);
           break;
 
         case 'notificacion':
-          set_dpto_notifiacion_opt(data);
+          set_dpto_notifiacion_opt(data ?? []);
           break;
       }
     } catch (error) {
@@ -314,6 +318,15 @@ export const use_register = (): ReisterHook => {
     void get_ciudades_opt('notificacion', dpto_notifiacion);
   }, [dpto_notifiacion]);
 
+  useEffect(() => {
+    if (tipo_persona === 'N') {
+      set_tipo_documento_opt(
+        tipo_documento_opt_all.filter((e) => e.value !== 'NT')
+      );
+    } else {
+      set_tipo_documento_opt(tipo_documento_opt_all);
+    }
+  }, [tipo_persona]);
   useEffect(() => {
     void get_selects_options();
   }, []);

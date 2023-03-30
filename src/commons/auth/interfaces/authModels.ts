@@ -324,3 +324,12 @@ export interface UserCreate {
   detail: string;
   success: boolean;
 }
+
+export interface DataUnlockUser {
+  nombre_de_usuario: string;
+  numero_documento: string;
+  telefono_celular: string;
+  email: string;
+  fecha_nacimiento: string;
+  redirect_url: string;
+}

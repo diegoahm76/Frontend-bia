@@ -23,23 +23,22 @@ import {
   StepContent,
   type SelectChangeEvent,
 } from '@mui/material';
-
 import { LoadingButton } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { use_register } from '../hooks/registerHooks';
 import { useForm } from 'react-hook-form';
-import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import Visibility from '@mui/icons-material/Visibility';
 import { crear_persona_natural_and_user } from '../request/authRequest';
 import { CustomSelect } from './CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { control_error } from '../../../helpers/controlError';
-import { type Dayjs } from 'dayjs';
 import { control_success } from '../../recursoHidrico/requets/Request';
+import { type Dayjs } from 'dayjs';
+import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
 import type { AxiosError } from 'axios';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
 
 interface PropsStep {
   label: string;

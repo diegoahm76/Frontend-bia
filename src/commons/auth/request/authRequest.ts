@@ -6,7 +6,8 @@ import type {
   InfoPersona,
   Permisos,
   DataRegistePortal,
-  UserCreate
+  UserCreate,
+  DataUnlockUser
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -82,6 +83,12 @@ export const crear_persona_natural_and_user = async (
   data: DataRegistePortal
 ): Promise<AxiosResponse<UserCreate>> => {
   return await api.post('personas/persona-natural-and-usuario/create/', data);
+};
+
+export const desbloquer_usuario = async (
+  desbloqueoModel: DataUnlockUser
+): Promise<any> => {
+  return await api.post('users/unblock/', desbloqueoModel);
 };
 
 export const verify_account = async (
