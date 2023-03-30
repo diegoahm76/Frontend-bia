@@ -4,7 +4,6 @@ import {
   Box,
   Grid,
   TextField,
-  MenuItem,
   FormControlLabel,
   Checkbox,
   Accordion,
@@ -25,25 +24,6 @@ export const FormAdminRoles = ({
 }: IProps): JSX.Element => {
   const [expanded, set_expanded] = React.useState<string | false>(false);
   const [checked, set_checked] = React.useState([true, false]);
-
-  const tipos_documentos = [
-    {
-      value: '1',
-      label: 'Test',
-    },
-    {
-      value: 'EUR',
-      label: 'Test',
-    },
-    {
-      value: 'BTC',
-      label: '฿',
-    },
-    {
-      value: 'JPY',
-      label: '¥',
-    },
-  ];
 
   const handle_change =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -97,51 +77,20 @@ export const FormAdminRoles = ({
               <Grid item xs={12} sm={3}>
                 <TextField
                   name="tipoUnidad"
-                  select
-                  label="País de residencia"
-                  defaultValue="Seleccione"
+                  label="Nombre del rol"
                   size="small"
                   fullWidth
-                >
-                  {tipos_documentos.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
                   name="tipoUnidad"
-                  select
-                  label="Departamento de residencia"
-                  defaultValue="Seleccione"
+                  label="Descripción"
                   size="small"
                   fullWidth
-                >
-                  {tipos_documentos.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                />
               </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  name="tipoUnidad"
-                  select
-                  label="Departamento de residencia"
-                  defaultValue="Seleccione"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_documentos.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+              <Grid item xs={12} sm={3}></Grid>
               <Grid item xs={12} sm={3}></Grid>
             </Grid>
           </Box>
@@ -160,14 +109,11 @@ export const FormAdminRoles = ({
               <Typography sx={{ width: '33%', flexShrink: 0 }}>
                 Seguridad
               </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>
-                I am an accordion
-              </Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Typography>
                 <FormControlLabel
-                  label="Parent"
+                  label="Auditoria"
                   control={
                     <Checkbox
                       checked={checked[0] && checked[1]}
