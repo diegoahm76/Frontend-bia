@@ -14,7 +14,7 @@ import Button from "@mui/material/Button";
 import { Grid, Stack, Box } from "@mui/material";
 import { Title } from "../../../../components";
 import CrearBienDialogForm from "../components/CrearBienDialogForm";
-import { get_bienes_service } from "../store/thunks/catalogoBienesThunks";
+import { get_bienes_service} from "../store/thunks/catalogoBienesThunks";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { initial_state_current_nodo, current_bien } from "../store/slices/indexCatalogodeBienes";
 import { type INodo } from "../interfaces/Nodo";
@@ -25,6 +25,8 @@ export const CatalogodeBienesScreen: React.FC = () => {
   const [add_bien_is_active, set_add_bien_is_active] = useState<boolean>(false);
   const { nodo } = useAppSelector((state) => state.bien);
   const  [action, set_action ] = useState<string>("create");
+ 
+
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const action_template = (
@@ -54,9 +56,11 @@ export const CatalogodeBienesScreen: React.FC = () => {
         ></Button>
         <Button
           type="button"
+          
           startIcon={<DeleteIcon />}
           className="p-button-danger p-button-outlined"
           title="Eliminar"
+          
           style={{ marginRight: ".5em", color: "black", border: "none" }}
           disabled={false}
         ></Button>

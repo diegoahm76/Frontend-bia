@@ -8,20 +8,20 @@ import {
   Grid,
   TextField,
 } from "@mui/material";
-// import { useEffect, type Dispatch, type SetStateAction } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { Title } from "../../../../../../components/Title";
-//  import { type IComputers, type ICvcomputers as FormValues } from '../interfaces/CvComputo';
+ import { type IComputers, type ICvcomputers as FormValues } from '../interfaces/CvComputo';
 // import SaveIcon from '@mui/icons-material/Save';
 // import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from "@mui/icons-material/Close";
 // import {  useNavigate } from "react-router";
-// import { useAppDispatch, useAppSelector } from "../../../../../../hooks/hooks";
-// import { create_cv_computers_service } from "../store/thunks/cvComputoThunks";
-// import { Controller, useForm } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "../../../../../../hooks/hooks";
+import { create_cv_computers_service } from "../store/thunks/cvComputoThunks";
+import {  useForm } from "react-hook-form";
 
 interface IProps {
   is_modal_active: boolean;
-  // set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   action: string;
 }
 
@@ -29,44 +29,42 @@ interface IProps {
 const CrearCvComputoForm = ({
   action,
   is_modal_active,
-}: // set_is_modal_active,
+  set_is_modal_active,
+}: 
 IProps) => {
-  // const { current_computer } = useAppSelector((state) => state.cv);
+  const { current_computer } = useAppSelector((state) => state.cv);
 
   const handle_close_cv_com_is_active = (): void => {
-    // set_is_modal_active(false);
+   set_is_modal_active(false);
   };
 
   // const [file, set_file] = useState<any>(null);
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
 
-  // const { control: control_computo, handleSubmit: handle_submit, reset: reset_computer } =
-  //  useForm<IComputers>();
-  // useEffect(() => {
-  //   reset_computer(current_computer);
-  // }, [current_computer]);
+  const { control: control_computo, handleSubmit: handle_submit, reset: reset_computer } =
+   useForm<IComputers>();
+  useEffect(() => {
+    reset_computer(current_computer);
+  }, [current_computer]);
 
-  // const on_submit = (data: FormValues): void => {
-  //   const formdata = new FormData();
-  //   formdata.append("sistema_operativo", data.sistema_operativo);
-  //   formdata.append("suite_ofimatica", data.suite_ofimatica);
-  //   formdata.append("antivirus", data.antivirus);
-  //   formdata.append("color", data.color);
-  //   formdata.append("tipo_de_equipo", data.tipo_de_equipo);
-  //   formdata.append("tipo_almacenamiento", data.tipo_almacenamiento);
-  //   formdata.append("capacidad_almacenamiento", data.capacidad_almacenamiento);
-  //   formdata.append("procesador", data.procesador);
-  //   formdata.append("memoria_ram", data.memoria_ram);
-  //   formdata.append(
-  //     "observaciones_adicionales",
-  //     data.observaciones_adicionales
-  //   );
-  //   formdata.append("otras_aplicaciones", data.otras_aplicaciones);
-  //   formdata.append("id_articulo", current_computer.id_bien.toString());
-  //   // formdata.append('ruta_imagen_foto', file === null ? '' : file);
+  const on_submit = (data: FormValues): void => {
+    const formdata = new FormData();
+    formdata.append("sistema_operativo", data.sistema_operativo);
+    formdata.append("suite_ofimatica", data.suite_ofimatica);
+    formdata.append("antivirus", data.antivirus);
+    formdata.append("color", data.color);
+    formdata.append("tipo_de_equipo", data.tipo_de_equipo);
+    formdata.append("tipo_almacenamiento", data.tipo_almacenamiento);
+    formdata.append("capacidad_almacenamiento", data.capacidad_almacenamiento);
+    formdata.append("procesador", data.procesador);
+    formdata.append("memoria_ram", data.memoria_ram);
+    formdata.append("observaciones_adicionales", data.observaciones_adicionales );
+    formdata.append("otras_aplicaciones", data.otras_aplicaciones);
+    formdata.append("id_articulo", current_computer.id_bien.toString());
+    // formdata.append('ruta_imagen_foto', file === null ? '' : file);
 
-  //   dispatch(create_cv_computers_service(formdata));
-  // };
+    dispatch(create_cv_computers_service(formdata));
+  };
 
   // const on_change_file: any = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   set_file(e.target.files!=null?e.target.files[0]:"")
@@ -81,7 +79,7 @@ IProps) => {
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        // onSubmit={action==="create"? handle_submit(on_submit):handle_submit(on_submit_edit)}
+       // onSubmit={action==="create"? handle_submit(on_submit):handle_submit(on_submit_edit)}
       >
         <DialogTitle>
           {action === "create"
