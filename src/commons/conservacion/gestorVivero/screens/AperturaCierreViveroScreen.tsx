@@ -2,17 +2,21 @@
 import { useEffect, useState } from 'react';
 import { Autocomplete, Box, Button, Grid, TextField, Stack, Chip } from "@mui/material";
 import { Title } from "../../../../components";
-import { get_nurseries_closing_service, closing_nursery_service } from '../store/thunks/gestorViveroThunks';
+import { get_nurseries_closing_service, closing_nursery_service, get_nursery_service } from '../store/thunks/gestorViveroThunks';
 // // Hooks
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IObjNursery } from "../interfaces/vivero";
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import { Controller, useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AperturaCierreViveroScreen(): JSX.Element {
   const { nurseries, current_nursery } = useAppSelector((state) => state.nursery);
+  const { id } = useParams();
   const dispatch = useAppDispatch();
 
   const [action, set_action] = useState<string>("");
@@ -22,37 +26,44 @@ export function AperturaCierreViveroScreen(): JSX.Element {
     useForm<IObjNursery>();
 
   const on_submit = (data: IObjNursery): void => {
-
-    const form_data = {
-      accion: action,
-      justificacion_apertura: action === "Abrir" ? data.justificacion_apertura : null,
-      justificacion_cierre: action === "Abrir" ? null : data.justificacion_cierre,
-      en_funcionamiento: action === "Abrir",
-      item_ya_usado: action === "Abrir" ? true : data.item_ya_usado
-    }
+    if(action === "Abrir"){
+      const form_data = {
+        accion: action,
+        justificacion_apertura: data.justificacion_apertura,
+        fecha_cierre_actual: null,
+        en_funcionamiento: true,
+        item_ya_usado: true,
+      }
+      void dispatch(closing_nursery_service(form_data, data.id_vivero));
+    } else{
+      const form_data = {
+        accion: action,
+        justificacion_cierre: data.justificacion_cierre,
+        fecha_cierre_actual: null,
+        en_funcionamiento: false,
+        item_ya_usado: data.item_ya_usado
+      }
     void dispatch(closing_nursery_service(form_data, data.id_vivero));
-    set_nursery({...data, 
-      justificacion_apertura: "",
-      justificacion_cierre: "",
-      en_funcionamiento: form_data.en_funcionamiento,
-      item_ya_usado: form_data.item_ya_usado
-    })
-
-
+    }
   };
 
   useEffect(() => {
     void dispatch(get_nurseries_closing_service());
-    set_nursery(current_nursery)
+    if(id !== null){
+      void dispatch(get_nursery_service(id))
+    } else(
+      set_nursery(current_nursery)
+    )
   }, []);
 
   useEffect(() => {
-    set_nursery(current_nursery)
+    set_nursery({...current_nursery, justificacion_apertura:"", justificacion_cierre:""})
+    console.log(current_nursery)
   }, [current_nursery]);
 
   useEffect(() => {
+    reset_nursery({...nursery, justificacion_apertura:"", justificacion_cierre:""});
     set_action(nursery.id_vivero===null ? "": nursery.en_funcionamiento?"Cerrar" : "Abrir")
-    reset_nursery(nursery);
   }, [nursery]);
 
   const nurseries_closing = {
@@ -101,13 +112,13 @@ export function AperturaCierreViveroScreen(): JSX.Element {
           : action === "Cerrar" ? 
           <Chip label="El vivero se encuentra abierto" color="success" variant="outlined" /> 
           : 
-          <Chip label="Seleccione vivero" color="warning" variant="outlined" />
+          null
           }
           
-          
+          {action === "Abrir" ? 
             <Grid item xs={11} md={12} marginTop={2} marginX={1}>
               <Controller
-                name={action === "Abrir" ? "justificacion_cierre" :"justificacion_apertura"}
+                name={"justificacion_apertura"}
                 control={control_vivero}
                 defaultValue=""
                 rules={{ required: true }}
@@ -121,9 +132,8 @@ export function AperturaCierreViveroScreen(): JSX.Element {
                     multiline
                     rows={4}
                     size="small"
-                    label={action === "Abrir" ? "Justificación de apertura" : action === "Cerrar" ? "Justificación de cierre" : "Justificación"}
+                    label={"Justificación de apertura"}
                     variant="outlined"
-                    disabled={action===""}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -136,6 +146,39 @@ export function AperturaCierreViveroScreen(): JSX.Element {
                 )}
               />
             </Grid>
+            : action === "Cerrar" ?
+            <Grid item xs={11} md={12} marginTop={2} marginX={1}>
+            <Controller
+              name={"justificacion_cierre"}
+              control={control_vivero}
+              defaultValue=""
+              rules={{ required: true }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <TextField
+                  margin="dense"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  size="small"
+                  label={"Justificación de cierre"}
+                  variant="outlined"
+                  value={value}
+                  onChange={onChange}
+                  error={!(error == null)}
+                  helperText={
+                    error != null
+                      ? 'Es obligatorio ingresar justificación'
+                      : 'Ingrese justificación'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          :null
+          }
             <Stack
               direction="row"
               spacing={2}

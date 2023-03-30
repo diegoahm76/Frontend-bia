@@ -8,7 +8,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  get_nurseries, get_nurseries_closing,
+  current_nursery, get_nurseries, get_nurseries_closing,
   // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
@@ -140,6 +140,22 @@ export const activate_deactivate_nursery_service: any = (id: string | number) =>
   };
 };
 
+// Obtener vivero por id
+export const get_nursery_service: any = (id: string | number)  => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/viveros/get-by-id/${id}/`);
+      console.log(data)
+      dispatch(current_nursery(data));
+      return data;
+    } catch (error: any) {
+      console.log('get_nursery_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtener viveros cierre
 export const get_nurseries_closing_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -170,7 +186,7 @@ export const closing_nursery_service: any = (
         `conservacion/viveros/abrir-cerrar/${id}/`,
         nursery
       );
-      dispatch(get_nurseries_closing_service());
+      dispatch(get_nursery_service(id));
       if(nursery.accion === "Abrir"){
         control_success('Se realizo la apertura del vivero');
       } else{
