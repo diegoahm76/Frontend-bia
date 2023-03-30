@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
-import { HistorialDatos } from '../components/HistorialDatos';
 import {
   IndexEstacionesScreen,
   GeolocalizacionScreen,
@@ -10,6 +9,7 @@ import {
   ReportesScreen,
   DashboardScreen,
 } from '../screens';
+import { HistorialDatos } from '../screens/HistorialScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstacionesRoutes: React.FC = () => {
