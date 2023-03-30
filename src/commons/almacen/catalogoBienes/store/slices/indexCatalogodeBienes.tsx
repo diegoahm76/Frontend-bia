@@ -39,7 +39,7 @@ const initial_state_data ={
   nombre: "",
   codigo: "",
   acciones: "",
-  id_nodo: null,
+  id_nodo: 0,
   crear: false,
   editar: false,
   eliminar: false,
