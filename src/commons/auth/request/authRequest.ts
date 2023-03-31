@@ -13,7 +13,7 @@ import type {
   ResponseServer,
   ResponseThunks
 } from '../../../interfaces/globalModels';
-import { type AxiosResponse, type AxiosError } from 'axios';
+import type { AxiosResponse, AxiosError } from 'axios';
 import { control_error } from '../../../helpers/controlError';
 
 export const login_post = async (
@@ -29,6 +29,7 @@ export const login_post = async (
       data: { ...userinfo }
     };
   } catch (error: any) {
+    const { response } = error as AxiosError;
     console.error(error);
     const {
       response: { data }
@@ -36,7 +37,8 @@ export const login_post = async (
 
     return {
       ok: false,
-      error_message: data.detail
+      error_message: data.detail,
+      is_blocked: response?.status === 403
     };
   }
 };

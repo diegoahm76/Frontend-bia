@@ -23,7 +23,8 @@ const initial_state: IUserInfo = {
   error_message: '',
   open_dialog: false,
   dialog_representante: false,
-  entorno: 'C'
+  entorno: 'C',
+  is_blocked: false
 };
 
 export const auth_slice = createSlice({
@@ -35,6 +36,7 @@ export const auth_slice = createSlice({
       state.user_sesion = payload.user_sesion;
       state.permisos = payload.permisos;
       state.representante_legal = payload.representante_legal;
+      state.error_message = '';
     },
     logout: (state, { payload }) => {
       state.user_sesion = '';
@@ -45,9 +47,12 @@ export const auth_slice = createSlice({
       state.error_message = payload.error_message ?? '';
       state.dialog_representante = false;
       state.open_dialog = false;
+      state.is_blocked = payload.is_blocked === true;
     },
     checking_credentials: (state) => {
       state.status = 'checking';
+      state.error_message = '';
+      state.is_blocked = false;
     },
     open_dialog_entorno: (state) => {
       state.open_dialog = true;

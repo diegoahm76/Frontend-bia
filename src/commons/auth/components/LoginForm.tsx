@@ -37,7 +37,7 @@ export const LoginForm: React.FC = () => {
   const theme = useTheme();
   const { set_is_captcha_valid, is_captcha_valid } = use_rol();
   const dispatch = useDispatch();
-  const { status, error_message } = useSelector(
+  const { status, error_message, is_blocked } = useSelector(
     (state: AuthSlice) => state.auth
   );
   const is_authenticating = useMemo(() => status === 'checking', [status]);
@@ -71,7 +71,11 @@ export const LoginForm: React.FC = () => {
   }, [is_captcha_valid]);
 
   useEffect(() => {
-    set_is_error(!is_error);
+    if (error_message !== '') {
+      set_is_error(true);
+    } else {
+      set_is_error(false);
+    }
   }, [error_message]);
 
   return (
@@ -124,7 +128,18 @@ export const LoginForm: React.FC = () => {
                   set_is_error(false);
                 }}
               >
-                {error_message}
+                {is_blocked ? (
+                  <>
+                    <Typography textAlign="center">
+                      Contraseña erronea. Este usuario ha sido bloqueado por
+                      seguridad &nbsp;
+                      <Link to="/auth/desbloqueo_usuario">Desbloquear</Link>
+                    </Typography>
+                  </>
+                ) : (
+                  error_message
+                )}
+                {}
               </Alert>
             </Grid>
           )}

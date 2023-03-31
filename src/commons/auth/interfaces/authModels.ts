@@ -30,6 +30,7 @@ export interface IUserInfo {
   open_dialog: boolean;
   entorno: 'C' | 'L';
   dialog_representante: boolean;
+  is_blocked: boolean;
 }
 
 export interface UserData {
