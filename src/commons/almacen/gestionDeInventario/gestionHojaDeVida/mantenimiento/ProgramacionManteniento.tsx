@@ -1,11 +1,11 @@
 import { Grid } from '@mui/material';
-import { Title } from '../../../../../../components/Title';
-import { ArticuloComponent } from '../components/ArticuloComponent';
-import { DetallesComponent } from '../components/DetallesComponent';
-import { MantenimientoComponent } from '../components/MantenimientoComponent';
-import { FechasComponent } from '../components/FechasComponent';
-import { KilometrajeComponent } from '../components/KilometrajeComponent';
-import { PrevisualizacionComponent } from '../components/PrevisualizacionComponent';
+import { Title } from '../../../../../components';
+import { ArticuloComponent } from './components/ArticuloComponent';
+import { DetallesComponent } from './components/DetallesComponent';
+import { MantenimientoComponent } from './components/MantenimientoComponent';
+import { FechasComponent } from './components/FechasComponent';
+import { KilometrajeComponent } from './components/KilometrajeComponent';
+import { PrevisualizacionComponent } from './components/PrevisualizacionComponent';
 // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
