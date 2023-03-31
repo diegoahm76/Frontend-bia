@@ -183,7 +183,7 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
         </DialogContent>
         <DialogActions>
           <Button onClick={handle_close}>Cancelar</Button>
-          <Button variant="contained" color="primary" type='submit' >Actualizar</Button>
+          <Button variant="contained" color="primary" type='submit' >ACTUALIZAR</Button>
         </DialogActions>
       </form>
     </Dialog>
