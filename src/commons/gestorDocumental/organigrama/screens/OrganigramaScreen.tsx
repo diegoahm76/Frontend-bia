@@ -49,6 +49,7 @@ export const OrganigramaScreen: React.FC = () => {
               />
             </TabList>
           </Box>
+
           <TabPanel value="1" sx={{ p: '20px 0' }}>
             <ListOrganigramas
               set_position_tab_organigrama={set_position_tab_organigrama}

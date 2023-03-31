@@ -2,7 +2,7 @@ import { toast, type ToastContent } from "react-toastify";
 import { api } from "../../../api/axios";
 import { control_error } from "../../../helpers/controlError";
 import { type ResponseServer } from "../../../interfaces/globalModels";
-import { type Parametros, type conf_alarma, type Datos, type Estaciones, type EstacionesDetalle, type IEstacionEstaciones, type PersonaEstacion, type CrearAlerta, type EditarPersona, type ParametrosEditar, } from "../estaciones/interfaces/interfaces";
+import type { Parametros, conf_alarma, Datos, Estaciones, EstacionesDetalle, IEstacionEstaciones, PersonaEstacion, CrearAlerta, EditarPersona, ParametrosEditar, Tipos_Paginado, } from "../estaciones/interfaces/interfaces";
 import axios from 'axios';
 
 export const alertas = axios.create({
@@ -56,6 +56,24 @@ export const consultar_estaciones = async (): Promise<Estaciones[]> => {
 export const consultar_datos = async (): Promise<Datos[]> => {
   const { data } = await api.get<ResponseServer<Datos[]>>('estaciones/datos/consultar-datos-opt/');
   return data.data
+}
+// consultar datos guamal paginado
+export const consultar_datos_guamal_paginado = async (pagina: number = 1): Promise<Datos[]> => {
+  const { data } = await api.get<Tipos_Paginado>(`estaciones/datos/consultar-pagina-guamal/?page=${pagina}`);
+  return data.results
+}
+// consultar datos ocoa pagi
+export const consultar_datos_ocoa_paginado = async (pagina: number = 1): Promise<Datos[]> => {
+  const { data } = await api.get<Tipos_Paginado>(`estaciones/datos/consultar-pagina-ocoa/?page=${pagina}`);
+  return data.results
+}
+export const consultar_datos_guayuriba_paginado = async (pagina: number = 1): Promise<Datos[]> => {
+  const { data } = await api.get<Tipos_Paginado>(`estaciones/datos/consultar-pagina-guayuriba/?page=${pagina}`);
+  return data.results
+}
+export const consultar_datos_gaitan_paginado = async (pagina: number = 1): Promise<Datos[]> => {
+  const { data } = await api.get<Tipos_Paginado>(`estaciones/datos/consultar-pagina-gaitan/?page=${pagina}`);
+  return data.results
 }
 // consultar datos por id estación
 export const consultar_datos_id = async (id: number | string): Promise<Datos[]> => {
