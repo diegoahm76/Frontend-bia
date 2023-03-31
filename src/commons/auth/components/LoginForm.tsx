@@ -23,7 +23,7 @@ import ReCaptcha from 'react-google-recaptcha';
 
 import { use_rol } from '../hooks/LoginHooks';
 import { use_form } from '../../../hooks/useForm';
-import { checking_authentication } from '../store';
+import { checking_authentication, logout } from '../store';
 import { LoadingButton } from '@mui/lab';
 import { DialogEntorno } from './DialogEntorno';
 import { DialogRepresentantes } from './DialogRepresentantes';
@@ -61,6 +61,10 @@ export const LoginForm: React.FC = () => {
     event.preventDefault();
     dispatch(checking_authentication(nombre_de_usuario, password));
   };
+
+  useEffect(() => {
+    dispatch(logout(''));
+  }, []);
 
   useEffect(() => {
     if (is_captcha_valid) {
@@ -139,7 +143,6 @@ export const LoginForm: React.FC = () => {
                 ) : (
                   error_message
                 )}
-                {}
               </Alert>
             </Grid>
           )}

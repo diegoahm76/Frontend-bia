@@ -36,7 +36,6 @@ export const auth_slice = createSlice({
       state.user_sesion = payload.user_sesion;
       state.permisos = payload.permisos;
       state.representante_legal = payload.representante_legal;
-      state.error_message = '';
     },
     logout: (state, { payload }) => {
       state.user_sesion = '';

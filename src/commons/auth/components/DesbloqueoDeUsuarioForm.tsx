@@ -272,12 +272,14 @@ export const DesbloqueodeUsuario: React.FC = () => {
           <Grid item xs={12} justifyContent="center" container spacing={2}>
             <Grid item xs={12} md={6}>
               <LoadingButton
-                type="submit"
                 variant="outlined"
                 fullWidth
                 color="warning"
                 loading={is_loading}
                 disabled={is_loading}
+                onClick={() => {
+                  window.location.href = '#/auth/login';
+                }}
               >
                 Iniciar sesión
               </LoadingButton>
