@@ -14,7 +14,6 @@ export const ParametrosReferencia: React.FC = () => {
 
     const columns: GridColDef[] = [
         { field: 'id_estacion', headerName: 'ESTACIÓN', width: 140 },
-        { field: 'id_parametro_referencia', headerName: 'No. PARAMETRO', width: 140 },
         { field: 'fecha_modificacion', headerName: 'FECHA MODIFICACIÓN', width: 140 },
         { field: 'frecuencia_solicitud_datos', headerName: 'FRECUENCIA', width: 140 },
 
@@ -77,9 +76,7 @@ export const ParametrosReferencia: React.FC = () => {
             const response = await consultar_parametros_referencia();
             const parametros = response.map((parametro: Parametros) => ({
 
-                id_parametro_referencia: parametro.id_parametro_referencia,
                 id_estacion: parametro.id_estacion,
-                fecha_modificacion: parametro.fecha_modificacion,
                 frecuencia_solicitud_datos: parametro.frecuencia_solicitud_datos,
                 temperatura_ambiente_max: parametro.temperatura_ambiente_max,
                 temperatura_ambiente_min: parametro.temperatura_ambiente_min,

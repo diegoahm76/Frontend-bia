@@ -1,7 +1,7 @@
 import { Box, Grid, Typography, Divider, List, ListItem } from '@mui/material';
 import { Title } from '../../../components';
-import { LinearWithValueLabel } from '../hooks/LinearProgressWithLabel';
-import { CuadroInformacion } from '../components/CuadroInformacion';
+import { LinearWithValueLabel } from '../components/datos/LinearProgress/LinearProgressWithLabel';
+import { CuadroInformacion } from '../components/datos/CuadroInformacion';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
@@ -9,7 +9,7 @@ import AssignmentReturnedIcon from '@mui/icons-material/AssignmentReturned';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import EqualizerIcon from '@mui/icons-material/Equalizer';
-import { CuadroComparacion } from '../components/CuadroComparacion';
+import { CuadroComparacion } from '../components/datos/CuadroComparacion';
 import { ChartComponent } from '../chart/ChartComponent';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
