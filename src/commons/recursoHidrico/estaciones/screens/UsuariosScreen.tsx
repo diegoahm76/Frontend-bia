@@ -236,21 +236,24 @@ export const UsuariosScreen: React.FC = () => {
                     </FormHelperText>
                   )}
                 </FormControl>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  disabled={loading}
-                  className="text-capitalize rounded-pill  "
-                  startIcon={
-                    loading ? (
-                      <CircularProgress size={20} />
-                    ) : (
-                      <SearchIcon />
-                    )
-                  }
-                >
-                  {loading ? "Cargando..." : ""}
-                </Button>
+                <FormControl fullWidth>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    disabled={loading}
+                    className="search-button text-capitalize rounded-pill"
+                    startIcon={
+                      loading
+                        ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                        : <SearchIcon />
+                    }
+                    aria-label="Buscar "
+                    size="large"
+                  >
+                    Buscar
+                    {loading ? '' : ""}
+                  </Button>
+                </FormControl>
               </Stack>
             </Grid>
           </form>
