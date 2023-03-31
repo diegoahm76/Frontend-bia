@@ -41,12 +41,14 @@ IProps) => {
   // const [file, set_file] = useState<any>(null);
   const dispatch = useAppDispatch();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { control: control_computo, handleSubmit: handle_submit, reset: reset_computer } =
    useForm<IComputers>();
   useEffect(() => {
     reset_computer(current_computer);
   }, [current_computer]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const on_submit = (data: FormValues): void => {
     const formdata = new FormData();
     formdata.append("sistema_operativo", data.sistema_operativo);
