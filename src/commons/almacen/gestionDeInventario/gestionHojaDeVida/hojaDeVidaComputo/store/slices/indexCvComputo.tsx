@@ -50,7 +50,7 @@ const initial_state_current_cv_computer = {
   estado: "",
   marca: "",
   nombre: "",
-  id_marca: null
+  id_marca: 0,
 }
 
 const initial_state: Icv = {

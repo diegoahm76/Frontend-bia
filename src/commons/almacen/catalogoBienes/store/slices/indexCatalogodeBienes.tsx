@@ -39,7 +39,7 @@ const initial_state_data ={
   nombre: "",
   codigo: "",
   acciones: "",
-  id_nodo: null,
+  id_nodo: 0,
   crear: false,
   editar: false,
   eliminar: false,
@@ -54,6 +54,7 @@ export const initial_state_current_nodo = {
 
 
 const initial_state: IBien = {
+  code_bien: "",
   nodo: [],
   current_nodo: initial_state_current_nodo,
   bienes: [],
@@ -80,6 +81,12 @@ export const bien_slice = createSlice({
     ) => {
       state.current_nodo= action.payload;
     },
+    get_code_bien: (
+      state: IBien,
+      action: PayloadAction<string|null|undefined>
+    ) => {
+      state.code_bien = action.payload;
+    },
     get_marks: (
       state: IBien,
       action: PayloadAction<IMarcas[]>
@@ -103,6 +110,7 @@ export const bien_slice = createSlice({
 export const {
   get_bienes,
   current_bien,
+  get_code_bien,
   get_marks,
   get_percentages,
   get_unit_measurement,

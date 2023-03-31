@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import { Page404 } from "../../../screens/404";
 import { ConfiguracionRoutes } from "../configuracion/routes/ConfiguracionRoutes";
 import { EntradaysalidArticulosRoutes } from "../catalogoBienes/routes/EntradaysalidaArticulosRoutes";
-import { GestionDeInventarioRoutes } from "../gestionDeInventario/routes/GestionDeInventarioRoutes";
 import { EntradaBienesAlmacenRoutes } from "../entradaDeAlmacen/routes/EntradaAlmacenRoutes";
 import { RegistroSolicitudesAlmacenRoutes } from "../registroSolicitudesAlmacen/routes/RegistroSolicitudesAlmacenRoutes";
 import { ReportesIndicadoresAnaliticaRoutes } from "../reportesIndicadoresAnalitca/routes/ReportesIndicadoresAnaliticaRoutes";
@@ -19,10 +18,6 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="entrada_salida_articulos/*"
         element={<EntradaysalidArticulosRoutes />}
-      />
-      <Route
-        path="gestion_inventario/*"
-        element={<GestionDeInventarioRoutes />}
       />
       <Route
         path="entrada_almacen/*"

@@ -16,7 +16,7 @@ import {
 import { Title } from '../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import { add_bien_service, get_marca_service, get_medida_service, get_porcentaje_service } from '../store/thunks/catalogoBienesThunks';
+import { add_bien_service, get_code_bien_service, get_marca_service, get_medida_service, get_porcentaje_service } from '../store/thunks/catalogoBienesThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IList, type IObjBien as FormValues} from "../interfaces/catalogodebienes";
 import { api } from "../../../../api/axios";
@@ -45,7 +45,7 @@ const CrearBienDialogForm = ({
   const [tipo_bien, set_tipo_bien] = useState<IList[]>(initial_options);
   const [metodo_valoracion, set_metodo_valoracion] = useState<IList[]>(initial_options);
   const [depreciacion_types, set_depreciacion_types] = useState<IList[]>(initial_options);
-  const {marca, unidad_medida, porcentaje_iva, current_nodo} = useAppSelector((state) => state.bien);
+  const {marca, unidad_medida, porcentaje_iva, current_nodo, code_bien} = useAppSelector((state) => state.bien);
   
   const [tipo_bien_selected, set_tipo_bien_selected] = useState<string|null|undefined>("A");
   const { control: control_bien, handleSubmit: handle_submit, reset: reset_bien } =
@@ -89,8 +89,7 @@ const CrearBienDialogForm = ({
   const on_submit = (data: FormValues): void => {
     if(action==="create_sub"){
       data.id_bien = null;
-      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-      data.nivel_jerarquico = current_nodo.data.bien?.nivel_jerarquico != null? current_nodo.data.bien.nivel_jerarquico + 1 : 1;
+      data.nivel_jerarquico = current_nodo.data.bien?.nivel_jerarquico != null? Number(current_nodo.data.bien.nivel_jerarquico) + 1 : 1;
       data.id_bien_padre = current_nodo.data.bien?.id_bien != null? current_nodo.data.bien.id_bien : null
       data.nombre_padre = current_nodo.data.bien?.nombre != null? current_nodo.data.bien.nombre : null
     } else if(action==="create"){
@@ -129,12 +128,21 @@ const CrearBienDialogForm = ({
   }, []);
   useEffect(() => {
     
-    reset_bien(current_nodo.data.bien);
-    console.log(current_nodo.data.bien)
     if(action === "create_sub"){
+    void dispatch(get_code_bien_service(current_nodo.data.bien?.codigo_bien))
+    
       set_tipo_bien_selected(current_nodo.data.bien?.cod_tipo_bien) 
+
+      reset_bien(current_nodo.data.bien);
+    
     }
   }, [current_nodo]);
+
+  useEffect(() => {
+    reset_bien({...current_nodo.data.bien, codigo_bien:code_bien});
+    
+  }, [code_bien]);
+  
 
   return (
     <Dialog
@@ -191,6 +199,7 @@ const CrearBienDialogForm = ({
                     variant="outlined"
                     value={value}
                     onChange={onChange}
+                    disabled
                     error={!(error == null)}
                     helperText={
                       error != null
@@ -205,7 +214,6 @@ const CrearBienDialogForm = ({
               <Controller
                 name="nombre"
                 control={control_bien}
-                defaultValue=""
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
@@ -246,7 +254,6 @@ const CrearBienDialogForm = ({
                     size="small"
                     label="Tipo activo"
                     variant="outlined"
-                    defaultValue={value}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -282,7 +289,6 @@ const CrearBienDialogForm = ({
                     size="small"
                     label="Metodo valoración"
                     variant="outlined"
-                    defaultValue={value}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -333,7 +339,6 @@ const CrearBienDialogForm = ({
                     size="small"
                     label="Unidad de medida"
                     variant="outlined"
-                    defaultValue={value}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -356,7 +361,6 @@ const CrearBienDialogForm = ({
               <Controller
                 name="id_porcentaje_iva"
                 control={control_bien}
-                defaultValue={0}
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
