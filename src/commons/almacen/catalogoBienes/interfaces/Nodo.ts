@@ -9,7 +9,7 @@ export interface INodo {
     nombre: string;
     codigo: string;
     acciones?: string;
-    id_nodo: number|null;
+    id_nodo: number;
     crear?: boolean;
     editar?: boolean;
     eliminar?: boolean;
