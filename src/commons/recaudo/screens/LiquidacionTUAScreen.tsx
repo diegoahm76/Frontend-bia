@@ -146,7 +146,7 @@ export const LiquidacionTUAScreen:React.FC = () => {
       >
         <Grid item xs={12}>
           <Title title="LIQUIDACIÓN TUA"></Title>
-          <Stack 
+          <Stack
             direction="row"
             spacing={2}
             sx={{ m: '20px 0' }}
