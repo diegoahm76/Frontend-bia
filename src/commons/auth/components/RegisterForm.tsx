@@ -30,13 +30,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { use_register } from '../hooks/registerHooks';
 import { useForm } from 'react-hook-form';
-import type { keys_object, IPerson } from '../interfaces';
+import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { crear_persona_natural_and_user } from '../request/authRequest';
 import { CustomSelect } from './CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { control_error } from '../../../helpers/controlError';
+import { type Dayjs } from 'dayjs';
+import { control_success } from '../../recursoHidrico/requets/Request';
+import type { AxiosError } from 'axios';
 
 interface PropsStep {
   label: string;
@@ -51,7 +54,7 @@ export const RegisterForm: React.FC = () => {
     setValue: set_value,
     formState: { errors, isValid: is_valid },
     watch,
-  } = useForm<IPerson>({
+  } = useForm<DataRegistePortal>({
     defaultValues: {
       acepta_notificacion_email: false,
       acepta_notificacion_sms: false,
@@ -321,6 +324,7 @@ export const RegisterForm: React.FC = () => {
     open_modal(false);
   };
 
+  // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
     set_data_register({
       ...data_register,
@@ -329,13 +333,30 @@ export const RegisterForm: React.FC = () => {
     set_value(name as keys_object, value);
   };
 
+  // establece la fecha de nacimiento
+  const on_change_birt_day = (value: Dayjs | null): void => {
+    const month = fecha_nacimiento?.get('M').toString() as string;
+    const day = fecha_nacimiento?.get('D').toString() as string;
+    const year = fecha_nacimiento?.get('y').toString() as string;
+    const date = `${year}-${month}-${day}`;
+    console.log(date);
+    console.log(value);
+    set_value('fecha_nacimiento', date);
+    set_value_form('fecha_nacimiento', date);
+    set_fecha_nacimiento(value);
+  };
+
   // Se usa para escuchar los cambios de valor del componente CustomSelect
   const on_change = (e: SelectChangeEvent<string>): void => {
     set_value_form(e.target.name, e.target.value);
   };
 
-  const on_change_checkbox = (e: SelectChangeEvent<string>): void => {
-    set_value_form(e.target.name, e.target.value);
+  const on_change_checkbox = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_data_register({
+      ...data_register,
+      [e.target.name]: e.target.checked,
+    });
+    set_value(e.target.name as keys_object, e.target.checked);
   };
 
   // Cambio inputs
@@ -352,13 +373,17 @@ export const RegisterForm: React.FC = () => {
       set_is_saving(true);
       try {
         if (data.tipo_persona === 'N') {
-          const response = await crear_persona_natural_and_user(data_register);
-          console.log(response);
+          const { data } = await crear_persona_natural_and_user(data_register);
+          control_success(data.detail);
         } else {
           console.log('Creando persona juridica');
         }
+
+        window.location.href = '#/app/auth/login';
       } catch (error) {
-        control_error(error);
+        const temp_error = error as AxiosError;
+        const resp = temp_error.response?.data as UserCreate;
+        control_error(resp.detail);
       } finally {
         set_is_saving(false);
       }
@@ -948,15 +973,7 @@ export const RegisterForm: React.FC = () => {
                 disabled={is_exists}
                 label="Fecha de nacimiento"
                 value={fecha_nacimiento}
-                onChange={(newValue) => {
-                  const date = `${
-                    fecha_nacimiento?.get('M').toString() as string
-                  }/${fecha_nacimiento?.get('D').toString() as string}/${
-                    fecha_nacimiento?.get('y').toString() as string
-                  }`;
-                  set_value('fecha_nacimiento', date);
-                  set_fecha_nacimiento(newValue);
-                }}
+                onChange={on_change_birt_day}
                 renderInput={(params) => (
                   <TextField
                     fullWidth
@@ -1051,7 +1068,7 @@ export const RegisterForm: React.FC = () => {
 
   const steps: PropsStep[] = [
     {
-      label: 'Datos personales',
+      label: 'Datos básicos',
       component: DatosPersonales,
     },
     {

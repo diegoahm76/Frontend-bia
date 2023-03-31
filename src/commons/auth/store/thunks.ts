@@ -7,6 +7,7 @@ import {
   login,
   logout,
   open_dialog_entorno,
+  open_dialog_representado,
   set_authenticated,
   set_permissions
 } from './authSlice';
@@ -51,15 +52,18 @@ export const checking_authentication: (
       dispatch(get_persmisions_user(data?.userinfo.id_usuario, 'C'));
       dispatch(set_authenticated());
     } else if (
-      (data?.userinfo.tipo_persona === 'N' &&
-        data?.userinfo.tipo_usuario === 'I') ||
-      (data?.userinfo.tipo_persona === 'N' &&
-        data?.userinfo.tipo_usuario === 'E')
+      data?.userinfo.tipo_persona === 'N' &&
+      data?.userinfo.tipo_usuario === 'I'
     ) {
       // para este caso mostramos el dialog
       dispatch(open_dialog_entorno());
 
       // Agregar validacion de N y E, debe mostrar dialog de seleccion de representante sin seleccion de entorno
+    } else if (
+      data?.userinfo.tipo_persona === 'N' &&
+      data?.userinfo.tipo_usuario === 'E'
+    ) {
+      dispatch(open_dialog_representado());
     }
 
     // Enviamos los datos del usuario al store del login

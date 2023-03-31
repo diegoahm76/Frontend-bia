@@ -97,6 +97,7 @@ export const EditarOrganigrama = ({
   };
 
   useEffect(() => {
+    console.log(organigram_current.fecha_terminado);
     if (organigram_current.id_organigrama === null) {
       set_position_tab_organigrama('1');
     }
@@ -234,7 +235,7 @@ export const EditarOrganigrama = ({
       </Grid>
 
       <Grid item xs={12} sx={{ m: '20px 0' }}>
-        <Title title="NIVELES ORGANIZACIONALES" />
+        <Title title="Niveles organizacionales" />
         <Box sx={{ mt: '20px' }}>
           <Grid container spacing={2}>
             {organigram_current.fecha_terminado === null && (
@@ -313,7 +314,7 @@ export const EditarOrganigrama = ({
       </Grid>
 
       <Grid item xs={12}>
-        <Title title="UNIDADES ORGANIZACIONALES" />
+        <Title title="Unidades organizacionales" />
         <Box sx={{ mt: '20px' }}>
           {organigram_current.fecha_terminado === null && (
             <Box
@@ -401,6 +402,9 @@ export const EditarOrganigrama = ({
                       />
                     )}
                   />
+                  <Typography className="label_selects">
+                    Tipo de unidad{' '}
+                  </Typography>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <Controller
@@ -420,6 +424,9 @@ export const EditarOrganigrama = ({
                       />
                     )}
                   />
+                  <Typography className="label_selects">
+                    Nivel unidad
+                  </Typography>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <Controller
@@ -436,6 +443,7 @@ export const EditarOrganigrama = ({
                       />
                     )}
                   />
+                  <Typography className="label_selects">Unidad raiz</Typography>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <Controller
@@ -453,6 +461,9 @@ export const EditarOrganigrama = ({
                       />
                     )}
                   />
+                  <Typography className="label_selects">
+                    Agrupación documental{' '}
+                  </Typography>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <Controller
@@ -470,6 +481,7 @@ export const EditarOrganigrama = ({
                       />
                     )}
                   />
+                  <Typography className="label_selects">Nivel padre</Typography>
                 </Grid>
               </Grid>
               <Stack

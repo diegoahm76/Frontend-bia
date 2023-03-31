@@ -3,6 +3,7 @@ import { type INodo } from "./Nodo";
 
 export interface IBien {
   nodo: INodo[]
+  current_nodo: INodo,
   bienes: IObjBien[];
   current_bien: IObjBien;
   marca: IMarcas[],
@@ -41,7 +42,7 @@ export interface IList{
     codigo_bien: string|null;
     nro_elemento_bien: number|null;
     nombre: string;
-    cod_tipo_bien: string|null;
+    cod_tipo_bien?: string|null;
     cod_tipo_activo: string|null;
     nivel_jerarquico: number|null;
     nombre_cientifico: string|null;
@@ -62,5 +63,6 @@ export interface IList{
     id_porcentaje_iva?: number|null;
     id_unidad_medida_vida_util?: number|null;
     id_bien_padre?: number | null;
+    nombre_padre?: string|null,
   }
   

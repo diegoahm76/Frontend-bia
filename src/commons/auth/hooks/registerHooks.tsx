@@ -2,7 +2,11 @@ import { type ChangeEvent, useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
 import { get_person_by_document } from '../request/authRequest';
 import type { IList } from '../../../interfaces/globalModels';
-import type { IPerson, keys_object, ReisterHook } from '../interfaces';
+import type {
+  DataRegistePortal,
+  keys_object,
+  ReisterHook,
+} from '../interfaces';
 import dayjs, { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import {
@@ -63,7 +67,12 @@ export const use_register = (): ReisterHook => {
   const [tipo_documento, set_tipo_documento] = useState('');
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
   const [tipo_persona, set_tipo_persona] = useState('');
-  const [data_register, set_data_register] = useState<IPerson>({
+  const [data_register, set_data_register] = useState<DataRegistePortal>({
+    cod_naturaleza_empresa: '',
+    cod_pais_nacionalidad_empresa: '',
+    telefono_empresa: '',
+    fecha_inicio_cargo_rep_legal: '',
+    direccion_notificacion_referencia: '',
     acepta_notificacion_email: false,
     acepta_notificacion_sms: false,
     acepta_tratamiento_datos: false,
@@ -109,6 +118,8 @@ export const use_register = (): ReisterHook => {
     tipo_documento: '',
     tipo_persona: '',
     ubicacion_georeferenciada: 'sin_gps',
+    redirect_url:
+      'https://macareniafrontendevelopv2.netlify.app/#/auth/activacion_cuenta',
   });
 
   const handle_change_checkbox = (
