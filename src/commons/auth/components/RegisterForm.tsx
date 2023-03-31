@@ -39,6 +39,7 @@ import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
 import type { AxiosError } from 'axios';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
+import { validate_password } from '../../../helpers/ValidateFormatPassword';
 
 interface PropsStep {
   label: string;
@@ -154,7 +155,6 @@ export const RegisterForm: React.FC = () => {
     set_tipo_documento,
     set_tipo_persona,
     validate_exits,
-    validate_password,
     set_pais_notificacion,
   } = use_register();
   const [is_modal_active, open_modal] = useState(false);

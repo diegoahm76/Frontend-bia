@@ -287,7 +287,6 @@ export interface ReisterHook {
   set_tipo_documento: Dispatch<SetStateAction<string>>;
   set_tipo_persona: Dispatch<SetStateAction<string>>;
   validate_exits: (numero_documento: string) => Promise<void>;
-  validate_password: (string: string) => boolean;
 }
 
 export interface InfoPersona extends DataRegistePortal {

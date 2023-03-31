@@ -162,20 +162,6 @@ export const use_register = (): ReisterHook => {
     }
   };
 
-  // Valida el que el password cumpla con los requerimientos
-  // Minimo 6 caracteres
-  // 1 Mayuscula
-  // 1 Numero
-  // 1 Caracter extrano
-  const validate_password = (password: string): boolean => {
-    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
-    if (regex.test(password) && password.length > 5) {
-      return true;
-    } else {
-      return false;
-    }
-  };
-
   const handle_click_show_password = (): void => {
     set_show_password((show) => !show);
   };
@@ -405,6 +391,5 @@ export const use_register = (): ReisterHook => {
     set_tipo_documento,
     set_tipo_persona,
     validate_exits,
-    validate_password,
   };
 };
