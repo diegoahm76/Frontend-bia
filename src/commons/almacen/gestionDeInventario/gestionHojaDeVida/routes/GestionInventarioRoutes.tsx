@@ -6,7 +6,7 @@ import { CrearHojaVidaComputoScreen } from "../hojaDeVidaComputo/screens/CrearHo
 export const GestionInventarioRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="cv_computo/" element={<CrearHojaVidaComputoScreen />} />
+      <Route path="cv_computo/*" element={<CrearHojaVidaComputoScreen />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );
