@@ -35,14 +35,14 @@ export const AdministradorDeEstaciones: React.FC = () => {
         { field: 'id_estacion', headerName: 'NÚMERO', width: 140 },
         { field: 'fecha_modificacion', headerName: 'FECHA MOD.', width: 170 },
         { field: 'nombre_estacion', headerName: 'NOMBRE', width: 170 },
-        { field: 'cod_tipo_estacion', headerName: 'COD. ETSACIÓN', width: 170 },
+        { field: 'cod_tipo_estacion', headerName: 'COD. ESTACIÓN', width: 170 },
         { field: 'latitud', headerName: 'LATITUD', width: 170 },
         { field: 'longitud', headerName: 'LONGITUD', width: 170 },
         { field: 'indicaciones_ubicacion', headerName: 'INDICACIONES', width: 170 },
         { field: 'fecha_modificacion_coordenadas', headerName: 'FECHA MOD. COORDENADAS', width: 170 },
         {
             field: 'ACCIONES',
-            headerName: 'Aciones',
+            headerName: 'ACCIONES',
             width: 200,
             renderCell: (params) => (
                 <>
