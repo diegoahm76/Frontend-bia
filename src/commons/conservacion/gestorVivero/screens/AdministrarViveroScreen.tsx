@@ -31,7 +31,6 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // Thunks
 import { activate_deactivate_nursery_service, delete_nursery_service, get_nurseries_service } from '../store/thunks/gestorViveroThunks';
 import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
-import AperturaCierreCuarentenaVivero from '../componentes/AperturaCierreCuarentenaVivero';
 // // Slices
 import { current_nursery } from '../store/slice/viveroSlice';
 
@@ -75,8 +74,7 @@ export function AdministrarViveroScreen(): JSX.Element {
   const [add_nursery_is_active, set_add_nursery_is_active] =
     useState<boolean>(false);
 
-  const [closing_nursery_is_active, set_closing_nursery_is_active] =
-  useState<boolean>(false);
+
 
   const columns: GridColDef[] = [
     { field: 'id_vivero', headerName: 'ID', width: 20 },
@@ -378,11 +376,6 @@ export function AdministrarViveroScreen(): JSX.Element {
           <CrearViveroDialogForm
             is_modal_active={add_nursery_is_active}
             set_is_modal_active={set_add_nursery_is_active}
-            action = {action}
-          />
-          <AperturaCierreCuarentenaVivero
-            is_modal_active={closing_nursery_is_active}
-            set_is_modal_active={set_closing_nursery_is_active}
             action = {action}
           />
         </Grid>
