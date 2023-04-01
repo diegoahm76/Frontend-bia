@@ -49,7 +49,7 @@ export function AperturaCierreViveroScreen(): JSX.Element {
 
   useEffect(() => {
     void dispatch(get_nurseries_closing_service());
-    if(id !== null){
+    if(id !== null && id !== undefined ){
       void dispatch(get_nursery_service(id))
     } else(
       set_nursery(current_nursery)

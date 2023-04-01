@@ -8,7 +8,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  current_nursery, get_nurseries, get_nurseries_closing,
+  current_nursery, get_nurseries, get_nurseries_closing, get_nurseries_quarantine,
   // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
@@ -144,10 +144,11 @@ export const activate_deactivate_nursery_service: any = (id: string | number) =>
 export const get_nursery_service: any = (id: string | number)  => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/viveros/get-by-id/${id}/`);
+      if(id !== undefined)
+      {const { data } = await api.get(`conservacion/viveros/get-by-id/${id}/`);
       console.log(data)
       dispatch(current_nursery(data));
-      return data;
+      return data;}
     } catch (error: any) {
       console.log('get_nursery_service');
       control_error(error.response.data.detail);
@@ -163,6 +164,22 @@ export const get_nurseries_closing_service = (): any => {
       const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio');
       console.log(data)
       dispatch(get_nurseries_closing(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_nursery_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener viveros cuarentena
+export const get_nurseries_quarantine_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('/api/conservacion/viveros/get-by-nombre-municipio/cuarentena');
+      console.log(data)
+      dispatch(get_nurseries_quarantine(data.data));
       return data;
     } catch (error: any) {
       console.log('get_nursery_service');
@@ -215,7 +232,7 @@ export const quarantine_nursery_service: any = (
         `conservacion/viveros/cuarentena/${id}/`,
         nursery
       );
-      dispatch(get_nurseries_service());
+      dispatch(get_nursery_service(id));
       control_success(data.detail);
       return data;
     } catch (error: any) {

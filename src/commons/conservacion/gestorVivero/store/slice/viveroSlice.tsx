@@ -53,6 +53,9 @@ export const nursery_slice = createSlice({
     get_nurseries_closing: (state: INursery, action: PayloadAction<IObjNursery[]>) => {
       state.nurseries = action.payload;
     },
+    get_nurseries_quarantine: (state: INursery, action: PayloadAction<IObjNursery[]>) => {
+      state.nurseries = action.payload;
+    },
   },
 });
-export const { get_nurseries, current_nursery, get_nurseries_closing } = nursery_slice.actions;
+export const { get_nurseries, current_nursery, get_nurseries_closing, get_nurseries_quarantine } = nursery_slice.actions;

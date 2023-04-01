@@ -69,7 +69,6 @@ const initial_state_current_nursery = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdministrarViveroScreen(): JSX.Element {
-  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const  [action, set_action ] = useState<string>("create");
   const { nurseries } = useAppSelector((state) => state.nursery);
@@ -237,15 +236,14 @@ export function AdministrarViveroScreen(): JSX.Element {
               </Avatar>
             </IconButton>
           </Tooltip>
-          {params.row.activo === true ?
+
+          {params.row.activo === true && params.row.id_viverista_actual?
             <>
               <Tooltip title={params.row.en_funcionamiento ? "Cerrar" : "Abrir"}>
+               
                 <IconButton
-                  onClick={() => {
-                    dispatch(current_nursery(params.row));
-                    set_action(params.row.en_funcionamiento ? "Cerrar" : "Abrir")
-                    set_closing_nursery_is_active(true);
-                  }}
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                  href= {`#/app/conservacion/gestor_vivero/apertura_cierre/${params.row.id_vivero}/`}
                 >
                   <Avatar
                     sx={{
@@ -267,14 +265,14 @@ export function AdministrarViveroScreen(): JSX.Element {
 
                   </Avatar>
                 </IconButton>
+                
               </Tooltip>
+              {((params.row.fecha_ultima_apertura !== null || params.row.fecha_ultima_apertura !== "") && params.row.en_funcionamiento === true ) ?
+
               <Tooltip title={params.row.vivero_en_cuarentena ? "Finalizar cuarentena" : "Iniciar cuarentena"}>
                 <IconButton
-                  onClick={() => {
-                    dispatch(current_nursery(params.row));
-                    set_action(params.row.vivero_en_cuarentena ? "no_cuarentena" : "cuarentena")
-                    set_closing_nursery_is_active(true);
-                  }}
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                  href= {`#/app/conservacion/gestor_vivero/cuarentena/${params.row.id_vivero}/`}
                 >
                   <Avatar
                     sx={{
@@ -297,6 +295,7 @@ export function AdministrarViveroScreen(): JSX.Element {
                   </Avatar>
                 </IconButton>
               </Tooltip>
+              :null}
             </>
             : null
           }
