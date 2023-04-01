@@ -17,7 +17,7 @@ import {
 import { Title } from "../../../components"
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useState } from 'react';
-import { PruebasLiquidacionModal } from "../components/modal/PruebasLiquidacionModal";
+import { PruebasLiquidacionModal } from "../components/constructorLiquidador/modal/PruebasLiquidacionModal";
 import FindInPageIcon from '@mui/icons-material/FindInPage';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
