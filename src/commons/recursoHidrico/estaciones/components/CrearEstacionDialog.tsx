@@ -21,7 +21,6 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
     }
     const {
         register,
-        reset,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         handleSubmit,
         formState: { errors },
@@ -175,7 +174,7 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => { reset(); handle_close(); }}>Cancelar</Button>
+                    <Button onClick={handle_close}>Cancelar</Button>
                     <Button variant="contained" color="primary" onClick={handleSubmit(on_sumbit_estacion)}>Guardar</Button>
                 </DialogActions>
             </Box>

@@ -10,7 +10,7 @@ export interface IList {
 
 export interface IObjNursery {
   id_vivero: number | null;
-  nombre: string | null;
+  nombre: string ;
   cod_municipio: string | null;
   direccion: string | null;
   area_mt2: number | null;

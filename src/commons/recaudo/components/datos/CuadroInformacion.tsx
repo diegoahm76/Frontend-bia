@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import { type Props } from '../interfaces/Props';
+import { type Props } from '../../interfaces/Props';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
