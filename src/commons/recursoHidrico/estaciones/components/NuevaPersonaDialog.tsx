@@ -76,7 +76,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
     void crear_persona(nueva_persona);
     set_is_modal_active(!is_modal_active);
     persona(nueva_persona.id_estacion);
-    reset();
+    // reset();
   };
 
   const tiposdoc = [
