@@ -40,6 +40,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
         { field: 'longitud', headerName: 'LONGITUD', width: 170 },
         { field: 'indicaciones_ubicacion', headerName: 'INDICACIONES', width: 170 },
         { field: 'fecha_modificacion_coordenadas', headerName: 'FECHA MOD. COORDENADAS', width: 170 },
+        { field: 'nombre_persona_modifica', headerName: 'PERSONA MODIFICA', width: 200 },
         {
             field: 'ACCIONES',
             headerName: 'ACCIONES',
@@ -105,7 +106,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 longitud: estaciones.longitud,
                 indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
                 fecha_modificacion_coordenadas: estaciones.fecha_modificacion_coordenadas,
-                id_persona_modifica: estaciones.id_persona_modifica,
+                nombre_persona_modifica: estaciones.nombre_persona_modifica,
 
             }))
 

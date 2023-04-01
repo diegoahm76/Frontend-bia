@@ -37,7 +37,7 @@ export const GeolocalizacionScreen: React.FC = () => {
         longitud: estaciones.longitud,
         indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
         fecha_modificacion_coordenadas: estaciones.fecha_modificacion_coordenadas,
-        id_persona_modifica: estaciones.id_persona_modifica
+        nombre_persona_modifica: estaciones.nombre_persona_modifica
 
       }));
 
