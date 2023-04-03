@@ -5,8 +5,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { type conf_alarma } from '../interfaces/interfaces';
-import { consultar_conf_alerta_persona, control_success, eliminar_conf_alerta_persona, 
+import type { conf_alarma } from '../interfaces/interfaces';
+import {
+  consultar_conf_alerta_persona, control_success, eliminar_conf_alerta_persona,
   // llamar_alertas 
 } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
@@ -67,8 +68,10 @@ export const ConfiguracionAlarma: React.FC = () => {
                 border: '2px solid',
               }}
               variant="rounded"
-              onClick={() => {confirmar_eliminar_alarma(params.row.id_confi_alerta_persona);
-              console.log("id enviada",params.row.id_confi_alerta_persona) }}
+              onClick={() => {
+                confirmar_eliminar_alarma(params.row.id_confi_alerta_persona);
+                console.log("id enviada", params.row.id_confi_alerta_persona)
+              }}
             >
               <DeleteIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
@@ -79,7 +82,7 @@ export const ConfiguracionAlarma: React.FC = () => {
       ),
     },
   ];
-
+  
   const confi_alerta_persona = async (): Promise<void> => {
     try {
       const response = await consultar_conf_alerta_persona();
@@ -101,7 +104,7 @@ export const ConfiguracionAlarma: React.FC = () => {
   };
 
   useEffect(() => {
-    void confi_alerta_persona()
+    void confi_alerta_persona();
   }, []);
 
   const confirmar_eliminar_alarma = (idPersona: number): void => {
@@ -186,15 +189,15 @@ export const ConfiguracionAlarma: React.FC = () => {
       </Grid>
       <CrearConfiAlertaDialog
         is_modal_active={crear_alerta_is_active}
-        set_is_modal_active={set_crear_alerta_is_active} 
-        confi_alerta_persona = {confi_alerta_persona}
+        set_is_modal_active={set_crear_alerta_is_active}
+        confi_alerta_persona={confi_alerta_persona}
       />
       <EditarAlertaDialog
         is_modal_active={editar_alerta_is_active}
         set_is_modal_active={set_editar_alerta_is_active}
         alerta_editado={alerta_editado}
         set_alerta_editado={set_alerta_editado}
-        confi_alerta_persona = {confi_alerta_persona}
+        confi_alerta_persona={confi_alerta_persona}
       />
     </Grid>
   );

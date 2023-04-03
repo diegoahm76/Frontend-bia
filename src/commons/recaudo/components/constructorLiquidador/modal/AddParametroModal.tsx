@@ -16,7 +16,7 @@ import {
     Button
 } from '@mui/material';
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { Title } from '../../../../components';
+import { Title } from '../../../../../components';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 

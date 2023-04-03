@@ -14,7 +14,7 @@ import Button from "@mui/material/Button";
 import { Grid, Stack, Box } from "@mui/material";
 import { Title } from "../../../../components";
 import CrearBienDialogForm from "../components/CrearBienDialogForm";
-import { get_bienes_service} from "../store/thunks/catalogoBienesThunks";
+import { get_bienes_service, delete_nodo_service} from "../store/thunks/catalogoBienesThunks";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { initial_state_current_nodo, current_bien } from "../store/slices/indexCatalogodeBienes";
 import { type INodo } from "../interfaces/Nodo";
@@ -35,6 +35,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
   ) => {
     return (
       <>
+      {node.data.crear?
         <Button
           type="button"
           startIcon={<AddIcon />}
@@ -45,25 +46,33 @@ export const CatalogodeBienesScreen: React.FC = () => {
             set_action("create_sub")
             set_add_bien_is_active(true)
           }}
-          disabled={false}
-        ></Button>
+          disabled={!node.data.crear}
+        ></Button>:null}
+        {node.data.editar?
         <Button
           type="button"
           startIcon={<EditIcon />}
           title="Editar"
           style={{ marginRight: ".5em", color: "black", border: "none" }}
-          disabled={false}
-        ></Button>
+          disabled={!node.data.editar}
+          onClick={() => {
+            dispatch(current_bien(node));
+            set_action("create_sub")
+            set_add_bien_is_active(true)
+          }}
+        ></Button>:null}
+        {node.data.eliminar?
         <Button
           type="button"
-          
           startIcon={<DeleteIcon />}
           className="p-button-danger p-button-outlined"
           title="Eliminar"
-          
+          onClick={() => {
+            dispatch(delete_nodo_service(node.data.id_nodo));
+          }}
           style={{ marginRight: ".5em", color: "black", border: "none" }}
-          disabled={false}
-        ></Button>
+          disabled={!node.data.eliminar}
+        ></Button>:null}
       </>
     );
   };

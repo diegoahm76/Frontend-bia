@@ -3,7 +3,7 @@ import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement,
 import { useEffect, useState } from "react";
 import { Grid, Stack, Typography, FormControl, Button, TextField, } from '@mui/material';
 import { api } from "../../../../api/axios";
-import type { EstacionData } from "../interfaces/interfaces";
+import type { Datos } from "../interfaces/interfaces";
 import { Title } from '../../../../components/Title';
 import { Line } from "react-chartjs-2"
 import { Controller, useForm } from "react-hook-form";
@@ -126,7 +126,7 @@ export const DashboardScreen: React.FC = () => {
 
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const get_datos_estaciones = async (): Promise<EstacionData[]> => {
+    const get_datos_estaciones = async (): Promise<Datos[]> => {
 
         // primera solicitud para filtrar por fechas
         const start_date_string = handle_end_date_change(start_date)
@@ -141,7 +141,7 @@ export const DashboardScreen: React.FC = () => {
 
         console.log(data_success)
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-        const filtereddata = data_success.filter((datos: EstacionData) =>
+        const filtereddata = data_success.filter((datos: Datos) =>
             datos.id_estacion === selectdashboards.opc_dashboards &&
             moment(datos.fecha_registro).isBetween(moment(start_date_string), moment(end_date_string))
         );
@@ -211,7 +211,7 @@ export const DashboardScreen: React.FC = () => {
     }, [end_date]);
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const formatdataforchart = (data: EstacionData[]) => {
+    const formatdataforchart = (data: Datos[]) => {
         const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Presion",
@@ -222,7 +222,7 @@ export const DashboardScreen: React.FC = () => {
         return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const formatdatafortemperatura = (data: EstacionData[]) => {
+    const formatdatafortemperatura = (data: Datos[]) => {
         const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Temperatura",
@@ -233,7 +233,7 @@ export const DashboardScreen: React.FC = () => {
         return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const formatdataforluminosidad = (data: EstacionData[]) => {
+    const formatdataforluminosidad = (data: Datos[]) => {
         const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Lux",
@@ -244,7 +244,7 @@ export const DashboardScreen: React.FC = () => {
         return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const formatdatafornivelagua = (data: EstacionData[]) => {
+    const formatdatafornivelagua = (data: Datos[]) => {
         const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Nivel [m]",
@@ -255,7 +255,7 @@ export const DashboardScreen: React.FC = () => {
         return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const formatdataforvelocidadagua = (data: EstacionData[]) => {
+    const formatdataforvelocidadagua = (data: Datos[]) => {
         const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Velocidad m/s",
@@ -266,18 +266,18 @@ export const DashboardScreen: React.FC = () => {
         return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const formatdataforvelocidadviento = (data: EstacionData[]) => {
+    const formatdataforvelocidadviento = (data: Datos[]) => {
         const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Velocidad viento",
-            data: data.map((item) => item.Velocidad_Viento),
+            data: data.map((item) => item.velocidad_viento),
             borderColor: "rgb(58, 158, 181)",
             backgroundColor: "rgb(58, 158, 181)",
         };
         return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const formatdataforhumedad = (data: EstacionData[]) => {
+    const formatdataforhumedad = (data: Datos[]) => {
         const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "% Humedad",
@@ -288,7 +288,7 @@ export const DashboardScreen: React.FC = () => {
         return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const formatatafordireccion = (data: EstacionData[]) => {
+    const formatatafordireccion = (data: Datos[]) => {
         const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Direccion viento",
@@ -299,7 +299,7 @@ export const DashboardScreen: React.FC = () => {
         return { labels, datasets: [dataset] };
     };
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const formatdataforprecipitacion = (data: EstacionData[]) => {
+    const formatdataforprecipitacion = (data: Datos[]) => {
         const labels = data.map((item) => item.fecha_registro.toString().slice(0, 10));
         const dataset = {
             label: "Precipitacion",

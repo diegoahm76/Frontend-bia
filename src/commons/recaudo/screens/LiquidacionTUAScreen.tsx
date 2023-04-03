@@ -1,7 +1,7 @@
 // import AddIcon from '@mui/icons-material/Add';
 import { DataGrid ,type GridColDef } from "@mui/x-data-grid"
 import { Grid, Box, Stack, TextField, Button } from "@mui/material";
-import { Title } from '../../../../components/Title';
+import { Title } from '../../../components/Title';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionTUAScreen:React.FC = () => {
@@ -146,7 +146,7 @@ export const LiquidacionTUAScreen:React.FC = () => {
       >
         <Grid item xs={12}>
           <Title title="LIQUIDACIÓN TUA"></Title>
-          <Stack 
+          <Stack
             direction="row"
             spacing={2}
             sx={{ m: '20px 0' }}

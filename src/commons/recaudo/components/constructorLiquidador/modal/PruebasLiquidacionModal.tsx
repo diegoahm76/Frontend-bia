@@ -14,7 +14,8 @@ import {
     Select, 
     type SelectChangeEvent, 
     Stack,
-    TextField, 
+    TextField,
+    Typography, 
 } from "@mui/material"
 import {
     useState,
@@ -88,6 +89,15 @@ export const PruebasLiquidacionModal:React.FC<IProps> = ({ is_modal_active, set_
                         </Select>
                     </FormControl>
                 </Grid>
+            </Grid>
+            <Grid 
+                container 
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}
+            >
+                <Typography variant="h4">$256.000</Typography>
             </Grid>
         </DialogContent>
         <Divider />

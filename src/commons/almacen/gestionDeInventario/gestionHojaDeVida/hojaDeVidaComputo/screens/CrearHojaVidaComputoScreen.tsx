@@ -38,6 +38,7 @@ import { get_computers_all_service } from '../store/thunks/cvComputoThunks';
 import CrearCvComputoForm from '../components/CrearCvComputoForm';
 // // Slices
 import { current_computer } from '../store/slices/indexCvComputo';
+// import { ProgramacionManteniento } from '../../mantenimiento/ProgramacionManteniento';
 
 
 //  import CrearViveroDialogForm from '../../../../../conservacion/gestorVivero/componentes/CrearViveroDialogForm';
@@ -240,6 +241,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
            set_is_modal_active={set_add_cv_com_is_active} 
             action = {action}       
           />
+           
         </Grid>
       </Grid>
     </>
