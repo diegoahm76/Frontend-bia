@@ -39,18 +39,6 @@ export const SuperUserScreen = ({ onClose }: { onClose: () => void }): JSX.Eleme
   const numero_documento = watch('numero_documento');
 
 
-
-
-  // Función para actualizar el estado de nuevoSuperUsuario cuando se escriba en el campo de número de identificación
-  // const handleNumeroIdentificacionChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-  //   setNuevoSuperUsuario((prevState) => ({
-  //     ...prevState,
-  //     numeroIdentificacion: event.target.value,
-  //   }));
-  //   // Aquí puedes agregar una llamada a una API o a una función que busque el nombre de la persona correspondiente al número de identificación ingresado
-  // };
-
-
   // Función para seleccionar el nuevo superusuario
   const handleSeleccionarNuevoSuperUsuario = (): void => {
     // Aquí puedes agregar una validación para asegurarte de que el usuario tiene el rol de superusuario
