@@ -12,7 +12,7 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   alerta_editado: any;
   set_alerta_editado: Dispatch<SetStateAction<any>>;
-  confi_alerta_persona:() => Promise<void>
+  confi_alerta_persona: () => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -52,7 +52,8 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
       set_is_modal_active(false);
       control_success('La configuración se actualizó correctamente')
       void confi_alerta_persona()
-    } catch (error) { 
+      reset();
+    } catch (error) {
       control_error(error);
     }
   };
@@ -109,7 +110,10 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handle_close}>Cancelar</Button>
+          <Button onClick={() => {
+            handle_close();
+            reset();
+          }}>Cancelar</Button>
           <Button variant="contained" color="primary" type='submit'>Actualizar</Button>
         </DialogActions>
       </form>

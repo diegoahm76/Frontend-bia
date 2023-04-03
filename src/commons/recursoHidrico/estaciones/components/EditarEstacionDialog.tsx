@@ -54,6 +54,7 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
       set_is_modal_active(false);
       control_success('La estación se actualizó correctamente')
       void estacion()
+      reset();
     } catch (error) {
       control_error(error);
     }
@@ -192,7 +193,10 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handle_close}>Cancelar</Button>
+          <Button onClick={() => {
+            handle_close();
+            reset();
+          }}>Cancelar</Button>
           <Button variant="contained" color="primary" type='submit' >ACTUALIZAR</Button>
         </DialogActions>
       </form>

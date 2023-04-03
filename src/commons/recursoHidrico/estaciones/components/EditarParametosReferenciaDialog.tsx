@@ -68,6 +68,7 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
       set_is_modal_active(false);
       control_success('El parametro se actualizó correctamente')
       void parametros()
+      reset()
     } catch (error) {
       control_error(error);
     }
@@ -524,7 +525,10 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
             <Button
               variant="text"
               color="primary"
-              onClick={handle_close}
+              onClick={() => {
+                handle_close();
+                reset();
+            }}
             >
               Cancelar
             </Button>
