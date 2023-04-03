@@ -38,7 +38,7 @@ export const GeolocalizacionScreen: React.FC = () => {
         fecha_modificacion: estaciones.fecha_modificacion,
         nombre_estacion: estaciones.nombre_estacion,
         cod_tipo_estacion: estaciones.cod_tipo_estacion,
-        // cod_municipio: estaciones.cod_municipio,
+        cod_municipio: estaciones.cod_municipio,
         latitud: estaciones.latitud,
         longitud: estaciones.longitud,
         indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
@@ -110,8 +110,9 @@ export const GeolocalizacionScreen: React.FC = () => {
 
         {dato.length > 0 ? (
           <Box
-          >          
-
+          > 
+          Estación: {estacion.nombre_estacion} <br />          
+          Tipo: {estacion.cod_tipo_estacion} <br />
           Latitud: {estacion.latitud} <br />
           Longitud: {estacion.longitud} <br /><br />  
             <div>Fecha: {dato[0].fecha_registro}</div>

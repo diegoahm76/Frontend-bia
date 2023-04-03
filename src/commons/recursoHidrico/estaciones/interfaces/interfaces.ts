@@ -10,6 +10,7 @@ export interface Estaciones {
     fecha_modificacion: null | string,
     nombre_estacion: string,
     cod_tipo_estacion: string,
+    cod_municipio: string | number,
     latitud: number,
     longitud: number,
     indicaciones_ubicacion: null | string,
