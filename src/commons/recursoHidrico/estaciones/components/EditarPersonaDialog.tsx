@@ -65,6 +65,7 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
       set_is_modal_active(false);
       control_success('La persona se actualizó correctamente')
       persona(estaciones_options.map((estacion: { value: number; }) => estacion.value))
+      reset();
       // console.log("Id estacion", estaciones_options.map((estacion: { value: number; }) => estacion.value))
     } catch (error) {
       control_error(error);
@@ -309,7 +310,10 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
             <Button
               variant="text"
               color="primary"
-              onClick={handle_close}
+              onClick={() => {
+                handle_close();
+                reset();
+            }}
             >
               Cancelar
             </Button>
