@@ -206,20 +206,18 @@ export const UsuariosScreen: React.FC = () => {
           >
             <Title title="PARTES INTERESADAS"></Title>
           </Grid>
-          <Typography sx={{mt: '10px'}}>
-                  Estación: 
-                </Typography>
-          <form className="row" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
-            <Grid item xs={12} sm={4} >
+          <Typography sx={{ mt: '10px' }}>
+            Estación:
+          </Typography>
+          <Box component="form" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
+            <Grid item xs={12}>
               <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
-                
+
                 <FormControl fullWidth>
                   <Controller
                     name="estacion"
                     control={control_filtrar}
-                    rules={{
-                      required: true,
-                    }}
+                    rules={{ required: true }}
                     render={({ field }) => (
                       <Select
                         {...field}
@@ -228,7 +226,7 @@ export const UsuariosScreen: React.FC = () => {
                       />
                     )}
                   />
-                  {(errors_filtrar.estacion != null) && (
+                  {errors_filtrar.estacion != null && (
                     <FormHelperText error>
                       Seleccione una estación para continuar
                     </FormHelperText>
@@ -252,9 +250,19 @@ export const UsuariosScreen: React.FC = () => {
                     {loading ? '' : ""}
                   </Button>
                 </FormControl>
+                <FormControl fullWidth>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={handle_open_crear_persona}
+                    startIcon={<AddIcon />}
+                  >
+                    Agregar
+                  </Button>
+                </FormControl>
               </Stack>
             </Grid>
-          </form>
+          </Box>
           {estaciones_meteologicas.length > 0 && (
             <>
               <Grid
@@ -277,14 +285,6 @@ export const UsuariosScreen: React.FC = () => {
               >
                 <Title title="INFORMACIÓN GENERAL"></Title>
               </Grid>
-              <Button
-                variant="outlined"
-                sx={{ m: '20px 0' }}
-                onClick={handle_open_crear_persona}
-                startIcon={<AddIcon />}
-              >
-                Agregar
-              </Button>
               <Grid item>
                 <Box>
                   <DataGrid
