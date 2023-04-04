@@ -1,18 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React from "react";
-
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type Props = {
     text: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const HelloWorld = ({ text }: Props): JSX.Element =>{
+export const HelloWorld: React.FC<Props> = ({ text }: Props) =>{
     return (
         <h1>{text}</h1>
     );
 }
-
-
-
-
