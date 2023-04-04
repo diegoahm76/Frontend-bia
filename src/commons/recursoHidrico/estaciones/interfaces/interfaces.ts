@@ -1,10 +1,3 @@
-export interface Tipos_Paginado {
-    count:    number;
-    next:     string;
-    previous: string;
-    results:  Datos[];
-}
-
 export interface Estaciones {
     id_estacion: number | string,
     fecha_modificacion: null | string,
