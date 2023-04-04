@@ -35,7 +35,7 @@ export const HistorialDatos: React.FC = () => {
                 <Tab label="Historial Alertas" value="2" />
               </TabList>
             </Box>
-            <TabPanel value="1">
+            <TabPanel value="1" sx={{p: '15px  0'}}>
               <HistorialDeDatos />
             </TabPanel>
             <TabPanel value="2">
