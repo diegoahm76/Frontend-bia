@@ -17,7 +17,7 @@ import {
 import { Title } from "../../../components"
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { useState } from 'react';
-import { PruebasLiquidacionModal } from "../components/modal/PruebasLiquidacionModal";
+// import { PruebasLiquidacionModal } from "../components/modal/PruebasLiquidacionModal";
 import FindInPageIcon from '@mui/icons-material/FindInPage';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
@@ -281,10 +281,10 @@ export const LiquidacionScreen:React.FC = () => {
             </Grid>
         </Grid>
         
-        <PruebasLiquidacionModal
+        {/* <PruebasLiquidacionModal
             is_modal_active={modal_pruebas}
             set_is_modal_active={set_modal_pruebas}
-        />
+        /> */}
     </>
   )
 }
