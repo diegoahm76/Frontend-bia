@@ -52,6 +52,7 @@ export const DashboardScreen: React.FC = () => {
         { title: 'Velocidad del viento', chart_id: "velocidad-viento", data: [], value: 6 },
         { title: 'Dirección del viento', chart_id: "direccion-viento", data: [], value: 7 },
         { title: 'Precipitación', chart_id: "precipitacion", data: [], value: 8 },
+        { title: 'Presión barometrica', chart_id: "presion", data: [], value: 9 },
     ]);
     const set_variables_select = {
         options: opc_variables,
@@ -118,6 +119,7 @@ export const DashboardScreen: React.FC = () => {
         const data_velocidad_viento: number[][] = []
         const data_direccion_viento: number[][] = []
         const data_precipitacion: number[][] = []
+        const data_presion: number[][] = []
         data.forEach((item) => {
             data_temperatura.push([new Date(item.fecha_registro).getTime(), Number(item.temperatura_ambiente)])
             data_humedad.push([new Date(item.fecha_registro).getTime(), Number(item.humedad_ambiente)])
@@ -127,6 +129,7 @@ export const DashboardScreen: React.FC = () => {
             data_velocidad_viento.push([new Date(item.fecha_registro).getTime(), Number(item.velocidad_viento)])
             data_direccion_viento.push([new Date(item.fecha_registro).getTime(), Number(item.direccion_viento)])
             data_precipitacion.push([new Date(item.fecha_registro).getTime(), Number(item.precipitacion)])
+            data_presion.push([new Date(item.fecha_registro).getTime(), Number(item.presion_barometrica)])
             
         })
         console.log(data_temperatura)
@@ -139,7 +142,8 @@ export const DashboardScreen: React.FC = () => {
                             item.value === 5 ? data_aux.push({ ...item, data: data_nivel_agua }) :
                                 item.value === 6 ? data_aux.push({ ...item, data: data_velocidad_viento }) :
                                     item.value === 7 ? data_aux.push({ ...item, data: data_direccion_viento }) :
-                                        data_aux.push({ ...item, data: data_precipitacion })
+                                        item.value === 8 ? data_aux.push({ ...item, data: data_precipitacion }) :
+                                            data_aux.push({ ...item, data: data_presion })
 
         })
         set_opc_variables(data_aux)
