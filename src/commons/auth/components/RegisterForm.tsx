@@ -63,6 +63,11 @@ export const RegisterForm: React.FC = () => {
       tipo_documento: '',
       tipo_persona: '',
       ubicacion_georeferenciada: '',
+      cod_naturaleza_empresa: '',
+      cod_pais_nacionalidad_empresa: '',
+      telefono_empresa: '',
+      fecha_inicio_cargo_rep_legal: '',
+      redirect_url: '',
     },
   });
   const {

@@ -128,6 +128,7 @@ export type keys_object =
   | 'tipo_documento'
   | 'tipo_persona'
   | 'cod_naturaleza_empresa'
+  | 'cod_pais_nacionalidad_empresa'
   | 'ubicacion_georeferenciada';
 
 export interface DataRegistePortal {
