@@ -68,7 +68,16 @@ export const use_register = (): ReisterHook => {
     IList[]
   >([]);
   const [tipo_documento, set_tipo_documento] = useState('');
-  const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
+  const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([
+    {
+      value: 'N',
+      label: 'Natural',
+    },
+    {
+      value: 'J',
+      label: 'Juridica',
+    },
+  ]);
   const [tipo_persona, set_tipo_persona] = useState('');
   const [data_register, set_data_register] = useState<DataRegistePortal>({
     cod_naturaleza_empresa: '',
@@ -314,7 +323,7 @@ export const use_register = (): ReisterHook => {
     }
   }, [tipo_persona]);
   useEffect(() => {
-    void get_selects_options();
+    // void get_selects_options();
   }, []);
 
   return {
