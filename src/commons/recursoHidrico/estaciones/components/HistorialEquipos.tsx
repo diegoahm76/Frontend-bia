@@ -7,29 +7,24 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import esLocale from 'dayjs/locale/es'; // si deseas cambiar el idioma a español
-import type { HistorialAlerta } from '../interfaces/interfaces';
+import type { Equipo } from '../interfaces/interfaces';
 import { api } from '../../../../api/axios';
 import SearchIcon from '@mui/icons-material/Search';
 import { useForm, Controller } from 'react-hook-form';
-import { consultar_historial_alertas } from '../../requets/Request';
+import { consultar_historial_equipo } from '../../requets/Request';
 import Select from "react-select";
 import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
 
 const columns: GridColDef[] = [
-    { field: 'id_historial_alarma_enviada_estacion', headerName: 'NÚMERO', width: 170 },
-    { field: 'nombre_estacion', headerName: 'ESTACIÓN ', width: 170 },
-    { field: 'id_persona_estacion', headerName: 'PERSONA ', width: 170 },
-    { field: 'fecha_hora_envio', headerName: 'FECHA', width: 170 },
-    { field: 'mensaje_enviado', headerName: 'MENSAJE', width: 300 },
-    { field: 'dir_email_enviado', headerName: 'EMAIL', width: 170 },
-    { field: 'nro_celular_enviado', headerName: 'TÉLEFONO', width: 170 },
-
+    { field: 'id_alerta_equipo_estacion', headerName: 'NÚMERO', width: 200 },
+    { field: 'nombre_estacion', headerName: 'ESTACIÓN ', width: 200 },
+    { field: 'descripcion', headerName: 'DESCRIPCIÓN ', width: 400 },
+    { field: 'fecha_generacion', headerName: 'FECHA', width: 200 }
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const HistorialAlertas: React.FC = () => {
-
+export const HistorialEquipos: React.FC = () => {
     const {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         handleSubmit,
@@ -40,7 +35,7 @@ export const HistorialAlertas: React.FC = () => {
     const [loading, set_loading] = useState(false);
     const [estaciones_options, set_estaciones_options] = useState([]);
     const [selected_date, set_selected_date] = useState<Date | null>(new Date());
-    const [dato, set_dato] = useState<HistorialAlerta[]>([]);
+    const [dato, set_dato] = useState<Equipo[]>([]);
 
     const get_data_initial = async (): Promise<void> => {
         try {
@@ -74,15 +69,12 @@ export const HistorialAlertas: React.FC = () => {
             const estacion_id = data.estacion.value;
             const fecha = dayjs(selected_date).format('YYYY-MM');
             console.log("fecha", fecha)
-            const estacion = await consultar_historial_alertas(estacion_id, fecha);
+            const estacion = await consultar_historial_equipo(estacion_id, fecha);
             const datos_mapeados = estacion.map((dato) => ({
-                id_historial_alarma_enviada_estacion: dato.id_historial_alarma_enviada_estacion,
+                id_alerta_equipo_estacion: dato.id_alerta_equipo_estacion,
                 nombre_estacion: dato.nombre_estacion,
-                id_persona_estacion: dato.id_persona_estacion,
-                fecha_hora_envio: dato.fecha_hora_envio,
-                mensaje_enviado: dato.mensaje_enviado,
-                dir_email_enviado: dato.dir_email_enviado,
-                nro_celular_enviado: dato.nro_celular_enviado,
+                descripcion: dato.descripcion,
+                fecha_generacion: dato.fecha_generacion,
             }));
             set_dato(datos_mapeados); // guardar el valor en el estado
             set_loading(false);

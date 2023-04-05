@@ -44,6 +44,21 @@ export interface Datos {
     velocidad_agua: number,
     id_estacion: number,
 }
+export interface Equipo {
+    id_alerta_equipo_estacion: number,
+    nombre_estacion: string,
+    descripcion: string,
+    fecha_generacion: string | Date,
+}
+export interface HistorialAlerta{
+    id_historial_alarma_enviada_estacion: number
+    nombre_estacion: string,
+    id_persona_estacion: string | number,
+    fecha_hora_envio: string | Date,
+    mensaje_enviado: string,
+    dir_email_enviado: string,
+    nro_celular_enviado: string | number,
+}
 export interface conf_alarma {
     id_confi_alerta_persona: number,
     nombre_variable_alarma: string,
