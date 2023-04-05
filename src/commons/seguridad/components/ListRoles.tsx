@@ -1,11 +1,12 @@
-import { api } from '../../../api/axios';
-import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import { type Dispatch, type SetStateAction, useEffect } from 'react';
 // Componentes de Material UI
 import { Grid, Box, IconButton, Avatar } from '@mui/material';
 // Icons de Material UI
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { TablaGeneral } from '../../../components/TablaGeneral';
-import { get_permisos_adapter_general } from '../../auth/adapters/roles.adapters';
+import EditIcon from '@mui/icons-material/Edit';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { get_roles } from '../store/thunks';
+import { useDispatch, useSelector } from 'react-redux';
+import { type IRolesInfo } from '../interfaces/seguridadModels';
 
 interface IProps {
   set_position_tab_admin_roles: Dispatch<SetStateAction<string>>;
@@ -15,75 +16,41 @@ interface IProps {
 export function ListRoles({
   set_position_tab_admin_roles,
 }: IProps): JSX.Element {
-  const [roles, set_roles] = useState([]);
-  const [permisos, set_permisos] = useState([]);
-  // const [form_values, set_form_values] = useState({
-  //   nombreRol: '',
-  //   permisosRol: [],
-  //   descripcionRol: '',
-  // });
-  // const [is_visible, set_is_visible] = useState(false);
-
-  // const accessToken = getTokenAccessLocalStorage();
-  // const config = getConfigAuthBearer(accessToken);
-
-  const get_roles_list = async (): Promise<void> => {
-    try {
-      const { data } = await api.get('roles/get-list');
-      console.log(permisos);
-      set_roles(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const get_roles_permisos = async () => {
-    try {
-      const { data: data_permisos } = await api.get(
-        'permisos/permisos-modulos/get-list/'
-      );
-      const permisos_format = get_permisos_adapter_general(data_permisos);
-      console.log('format general', permisos_format);
-      set_permisos(permisos_format);
-      // console.log(permisos);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const roles = useSelector((state: IRolesInfo) => state.roles);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    void get_roles_list();
-    void get_roles_permisos();
+    dispatch(get_roles());
+    console.log(roles);
   }, []);
 
-  const columns = [
+  const columns: GridColDef[] = [
     {
-      header: 'Tipo de documento',
+      headerName: 'ID',
       field: 'id_rol',
-      minWidth: 200,
-      visible: true,
+      minWidth: 150,
+      // visible: true,
     },
     {
-      header: 'Número de documento',
+      headerName: 'Nombre',
+      field: 'nombre_rol',
+      minWidth: 300,
+      // visible: true,
+    },
+    {
+      headerName: 'Descripción',
+      field: 'descripcion_rol',
+      minWidth: 300,
+      // visible: true,
+    },
+    {
+      headerName: 'Estado',
       field: 'Rol_sistema',
       minWidth: 150,
-      visible: true,
+      // visible: true,
     },
     {
-      header: 'Primer nombre',
-      field: 'descripcion_rol',
-      minWidth: 100,
-      visible: true,
-    },
-    {
-      header: 'Primer apellido',
-      field: 'nombre_rol',
-      minWidth: 100,
-      visible: true,
-    },
-    {
-      header: 'Acciones',
+      headerName: 'Acciones',
       field: 'accion',
       renderCell: (params: any) => (
         <>
@@ -102,7 +69,7 @@ export function ListRoles({
               }}
               variant="rounded"
             >
-              <VisibilityIcon
+              <EditIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -116,14 +83,19 @@ export function ListRoles({
     <>
       <Grid item>
         <Box sx={{ width: '100%' }}>
-          <TablaGeneral
-            showButtonExport
-            tittle={'Roles'}
-            columns={columns}
-            rowsData={roles}
-            staticscroll={true}
-            stylescroll={'780px'}
-          />
+          {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={roles}
+              columns={columns}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+              getRowId={(row) => row.id_rol}
+            />
+          }
         </Box>
       </Grid>
     </>

@@ -14,17 +14,13 @@ export const roles_request = async () => {
   try {
     const {
       data
-    } = await api.get<ResponseServer<Roles[]>>('roles/get-list');
-      console.log(data);
-   
+    } = await api.get<ResponseServer<Roles[]>>('roles/get-list/');
+    return data;
   } catch (error: any) {
     const { response } = error as AxiosError<AxiosResponse>;
 
     const { data } = response as unknown as ResponseThunks;
-
     control_error(data.detail);
-
-    
   }
 };
 

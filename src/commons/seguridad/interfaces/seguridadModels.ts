@@ -1,8 +1,8 @@
 export interface Roles {
-  id_rol: string;
+  id_rol: number;
   nombre_rol: string;
   descripcion_rol: string;
-  Rol_sistema: string;
+  Rol_sistema: boolean;
 }
 
 export interface IRolesInfo {

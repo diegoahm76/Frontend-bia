@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import clienteAxios from '../../../api/axios';
 import { type IRolesInfo } from '../interfaces/seguridadModels';
 
 const initial_state: IRolesInfo = {
@@ -11,7 +10,9 @@ export const seguridad_slice = createSlice({
   initialState: initial_state,
   reducers: {    
     set_roles: (state, { payload }) => {
+      console.log('payload', payload)
       state.roles = payload;
+      console.log('state', state.roles)
     },
   }
 });
