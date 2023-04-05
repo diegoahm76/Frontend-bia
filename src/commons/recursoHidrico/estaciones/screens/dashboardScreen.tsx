@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-boolean-literal-compare */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Chart as ChartJS, ArcElement, CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler } from "chart.js";
 import { useEffect, useState } from "react";
-import { Grid, Stack, Typography, FormControl, Button, TextField, } from '@mui/material';
+import { Grid, Stack, Typography, Button, Select, MenuItem, FormControl, FormHelperText, CircularProgress, InputLabel, Box } from '@mui/material';
+// import { type TextFieldProps } from '@material-ui/core/TextField';
 import { api } from "../../../../api/axios";
 import type { EstacionData } from "../interfaces/interfaces";
 import { Title } from '../../../../components/Title';
@@ -23,8 +25,15 @@ export const DashboardScreen: React.FC = () => {
         opc_dashboards: 0,
     })
     const {
-        control,
+        control: control_filtrar,
+        formState: { errors: errors_filtro },
     } = useForm();
+
+    const {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        formState: { errors },
+    } = useForm();
+    const [loading, set_loading] = useState(false);
 
     const opc_dashboards = [
         { label: 'Estación Guamal', value: 1 },
@@ -32,10 +41,6 @@ export const DashboardScreen: React.FC = () => {
         { label: 'Estación Ocoa', value: 3 },
         { label: 'Estación Puerto Gaitan', value: 4 },
     ];
-
-
-
-
     const [queryestaciones, setqueryestaciones] = useState<{
         labels: any[];
         datasets: any[];
@@ -104,7 +109,7 @@ export const DashboardScreen: React.FC = () => {
     const [start_date, set_start_date] = useState<Date | null>(new Date());
     const [end_date, set_end_date] = useState<Date | null>(new Date());
 
-    const [dates_selected, set_dates_selected] = useState(false);
+
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_start_date_change = (date: Date | null) => {
@@ -122,9 +127,6 @@ export const DashboardScreen: React.FC = () => {
         return end_date_string
     };
 
-
-
-
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const get_datos_estaciones = async (): Promise<EstacionData[]> => {
 
@@ -136,10 +138,12 @@ export const DashboardScreen: React.FC = () => {
         console.log(end_date_string);
         if (end_date_string < start_date_string) { control_success_fail("La fecha inicial no puede ser mas reciente que la fecha final") }
         const { data: { data: data_success } } = await api.get(
-            `estaciones/datos/consultar-datos-fecha/${start_date_string}/${end_date_string}`
+            `estaciones/datos/consultar-datos-fecha/${selectdashboards.opc_dashboards}/${start_date_string}/${end_date_string}/`,
         );
-
         console.log(data_success)
+        console.log(selectdashboards.opc_dashboards)
+        console.log(start_date_string)
+        console.log(end_date_string)
         // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
         const filtereddata = data_success.filter((datos: EstacionData) =>
             datos.id_estacion === selectdashboards.opc_dashboards &&
@@ -174,11 +178,12 @@ export const DashboardScreen: React.FC = () => {
         setqueryprecipitacion(formatteddataprecipitacion);
         if (filtereddata != null) {
             console.log("Paso")
+            set_loading(true);
             control_success("Se encontraron Datos")
         } else {
             control_success_fail("No se encontraron datos")
+            set_loading(false);
         }
-
         return filtereddata(data_success);
 
     };
@@ -322,51 +327,61 @@ export const DashboardScreen: React.FC = () => {
                     mb: '20px',
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
+
             >
+                <Title title="Monitoreo de las estaciones" ></Title>
+
                 <Grid item xs={12} spacing={2}>
 
-
-                    <Controller
-                        name="opcDashboard"
-                        control={control}
-                        render={({ field }) => (
-                            <FormControl fullWidth>
-                                <Title title="Comportamiento de las variables" />
-                                <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
-                                    <Controller
-                                        name="opcDashboard"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <TextField
+                    <Box mb={2} style={{ marginTop: '20px' }}>
+                        <FormControl
+                            fullWidth
+                            size="small"
+                            error={Boolean(errors_filtro.estacion)}
+                            disabled={false}
+                        >
+                            <>
+                                <InputLabel id={`label_estacion`}>Estación</InputLabel>
+                                <Controller
+                                    name="estacion"
+                                    control={control_filtrar}
+                                    defaultValue=""
+                                    rules={{ required: true }}
+                                    render={({ field }) => (
+                                        <>
+                                            <Select
+                                                labelId={`label_estacion`}
+                                                fullWidth
+                                                size="small"
+                                                label="Seleccione la estación"
                                                 {...field}
                                                 onChange={(e) => {
+                                                    field.onChange(e);
                                                     set_select_dashboards({
                                                         ...selectdashboards,
-                                                        opc_dashboards: parseInt(e.target.value)
+                                                        opc_dashboards: parseInt(e.target.value),
                                                     });
                                                 }}
-                                                select
-                                                variant="outlined"
-                                                label="Estacion"
-                                                defaultValue={"Estacion"}
-                                                value={null}
-                                                SelectProps={{
-                                                    native: true,
-                                                }}
                                             >
-                                                {opc_dashboards.map((option) => (
-                                                    <option key={option.value} value={option.value}>
-                                                        {option.label}
-                                                    </option>
-                                                ))}
-                                            </TextField>
-                                        )}
-                                    />
-                                </Stack>
-                            </FormControl>
-                        )}
-                    />
-
+                                                {opc_dashboards.map((option, k: number) => {
+                                                    return (
+                                                        <MenuItem value={option.value} key={k}>
+                                                            {option.label}
+                                                        </MenuItem>
+                                                    );
+                                                })}
+                                            </Select>
+                                            {Boolean(errors_filtro.estacion) && (
+                                                <FormHelperText error>
+                                                    Seleccione una estación para continuar
+                                                </FormHelperText>
+                                            )}
+                                        </>
+                                    )}
+                                />
+                            </>
+                        </FormControl>
+                    </Box>
 
                     <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
                         <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
@@ -374,49 +389,88 @@ export const DashboardScreen: React.FC = () => {
                         <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
 
                             <label >Fecha Inicial</label>
-
                             <DatePicker
+
+                                locale={es}
                                 selected={start_date}
                                 onChange={(date) => {
                                     handle_start_date_change(date);
-                                    set_dates_selected(false);
+
                                 }}
-                                placeholderText="Fecha inicial"
-                                locale={es}
+                                placeholderText="Fecha Inicial"
+                            // renderInput={(start_date_string) => (
+                            //     <TextField
+                            //         fullWidth
+                            //         size="small"
+                            //         {...start_date_string}
+                            //         inputProps={{ className: 'MuiOutlinedInput-input' }} // Agregar la clase CSS MuiOutlinedInput-input
+                            //     />
+                            // )}
                             />
-                            <label>Fecha Final</label>
+                            <label >Fecha Final</label>
                             <DatePicker
+
                                 locale={es}
                                 selected={end_date}
                                 onChange={(date) => {
                                     handle_end_date_change(date);
-                                    set_dates_selected(false);
+
                                 }}
                                 placeholderText="Fecha Final"
+                            // renderInput={(end_date_string) => (
+                            //     <TextField
+                            //         fullWidth
+                            //         size="small"
+                            //         {...end_date_string}
+                            //         inputProps={{ className: 'MuiOutlinedInput-input' }} // Agregar la clase CSS MuiOutlinedInput-input
+                            //     />
+                            // )}
+
                             />
-                            <Button variant="contained" type="submit" className="text-capitalize rounded-pill  " fullWidth onClick={() => { set_dates_selected(true); }}>Consultar variables<SearchIcon /></Button>
+
+                            <Button
+                                variant="contained"
+                                type="submit"
+                                disabled={loading}
+                                fullWidth // Mover esta prop fuera del componente
+                                className="text-capitalize rounded-pill"
+                                onClick={() => {
+                                    loading ? (
+                                        <CircularProgress size={20} />
+                                    ) : (
+                                        <SearchIcon />
+                                    )
+                                }} // Mover esta prop fuera del componente
+                            >
+                                Consultar variables
+                            </Button>
+
                         </Stack>
 
-                        <Typography variant="body1" align="center" hidden={!dates_selected}>
-                            <Title title="Presión barometrica" ></Title>
-                            <Line data={queryestaciones} options={options} />
-                            <Title title="Humedad" ></Title>
-                            <Line data={queryhumedad} options={options} />
-                            <Title title="Direccion de Viento" ></Title>
-                            <Line data={querydireccion} options={options} />
-                            <Title title="Precipitación" ></Title>
-                            <Line data={queryprecipitacion} options={options} />
-                            <Title title="Luminosidad" ></Title>
-                            <Line data={queryluminosidad} options={options} />
-                            <Title title="Temperatura" ></Title>
-                            <Line data={querytemperatura} options={options} />
-                            <Title title="Velocidad del viento" ></Title>
-                            <Line data={queryvelocidadviento} options={options} />
-                            <Title title="Velocidad del agua" ></Title>
-                            <Line data={queryvelocidadagua} options={options} />
-                            <Title title="Nivel del agua" ></Title>
-                            <Line data={querynivelagua} options={options} />
+                        <Typography variant="body1" align="center" hidden={!loading}>
+                            <>
+                                <Title title="Presión barometrica" />
+                                <Line data={queryestaciones} options={options} />
+                                <Title title="Humedad" />
+                                <Line data={queryhumedad} options={options} />
+                                <Title title="Direccion de Viento" />
+                                <Line data={querydireccion} options={options} />
+                                <Title title="Precipitación" />
+                                <Line data={queryprecipitacion} options={options} />
+                                <Title title="Luminosidad" />
+                                <Line data={queryluminosidad} options={options} />
+                                <Title title="Temperatura" />
+                                <Line data={querytemperatura} options={options} />
+                                <Title title="Velocidad del viento" />
+                                <Line data={queryvelocidadviento} options={options} />
+                                <Title title="Velocidad del agua" />
+                                <Line data={queryvelocidadagua} options={options} />
+                                <Title title="Nivel del agua" />
+                                <Line data={querynivelagua} options={options} />
+                            </>
                         </Typography>
+
+
                     </Typography>
                 </Grid>
             </Grid>
