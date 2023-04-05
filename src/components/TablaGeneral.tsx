@@ -349,7 +349,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
   };
 
   // Para calcular cuantos registros tiene la tabla
-  const total_records = filtered_data.length;
+  const total_records = props.rowsData.length;
   const options_count = Math.ceil(total_records / 10);
   const rows_per_page_options = [];
   for (let i = 0; i < options_count; i++) {
@@ -402,9 +402,10 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
         reorderableRows
         paginator
         rows={10}
+        totalRecords={total_records}
         rowsPerPageOptions={rows_per_page_options}
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
-        currentPageReportTemplate="Mostrando {first} - {last} de {total_records} registros"
+        currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} registros"
         scrollable={props.staticscroll}
         scrollHeight={props.stylescroll}
       >
@@ -434,7 +435,6 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
 
 /** 
  
- * @param:
  ** en la pantalla donde llame le componente debe llamarlo con los siguientes parametros
 *! importa el modulo
  * @param: const columns = [

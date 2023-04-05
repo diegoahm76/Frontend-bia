@@ -42,6 +42,7 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
         void crear_estacion(nueva_estacion);
         set_is_modal_active(!is_modal_active);
         void estacion()
+        reset();
     };
 
     const tipo_estacion = [
@@ -73,9 +74,15 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                                 margin="dense"
                                 required
                                 autoFocus
-                                {...register("nombre_estacion", { required: true })}
+                                {...register("nombre_estacion", {
+                                    required: true,
+                                    pattern: /^[a-zA-Z\s]{3,30}$/
+                                })}
                                 error={Boolean(errors.nombre_estacion)}
-                                helperText={(errors.nombre_estacion != null) ? "Este campo es obligatorio" : ""}
+                                helperText={
+                                    (errors.nombre_estacion?.type === "required") ? "Este campo es obligatorio" :
+                                        (errors.nombre_estacion?.type === "pattern") ? "El nombre debe tener de 3 a 30 caracteres y solo letras mayúsculas o minúsculas" : ""
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -150,20 +157,29 @@ export const CrearEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                         <Grid item xs={12}>
                             <TextField
                                 label="Indicaciones de Ubicación"
+                                multiline
                                 fullWidth
                                 size="small"
                                 margin="dense"
                                 required
                                 autoFocus
-                                {...register("indicaciones_ubicacion", { required: true })}
+                                {...register("indicaciones_ubicacion", {
+                                    required: true,
+                                    maxLength: 250
+                                })}
+                                inputProps={{ maxLength: 250 }}
                                 error={Boolean(errors.indicaciones_ubicacion)}
                                 helperText={(errors.indicaciones_ubicacion != null) ? "Este campo es obligatorio" : ""}
                             />
+
                         </Grid>
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => { reset(); handle_close(); }}>Cancelar</Button>
+                    <Button onClick={() => {
+                        handle_close();
+                        reset();
+                    }}>Cancelar</Button>
                     <Button variant="contained" color="primary" onClick={handleSubmit(on_sumbit_estacion)}>Guardar</Button>
                 </DialogActions>
             </Box>
