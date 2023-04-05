@@ -54,6 +54,7 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
       set_is_modal_active(false);
       control_success('La estación se actualizó correctamente')
       void estacion()
+      reset();
     } catch (error) {
       control_error(error);
     }
@@ -87,9 +88,15 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
                 required
                 autoFocus
                 defaultValue={estacion_editado?.nombre_estacion}
-                {...register("nombre_estacion", { required: true })}
+                {...register("nombre_estacion", {
+                  required: true,
+                  pattern: /^[a-zA-Z\s]{3,30}$/
+                })}
                 error={Boolean(errors.nombre_estacion)}
-                helperText={(errors.nombre_estacion != null) ? "Este campo es obligatorio" : ""}
+                helperText={
+                  (errors.nombre_estacion?.type === "required") ? "Este campo es obligatorio" :
+                    (errors.nombre_estacion?.type === "pattern") ? "El nombre debe tener de 3 a 30 caracteres y solo letras mayúsculas o minúsculas" : ""
+                }
               />
             </Grid>
             <Grid item xs={12}>
@@ -174,7 +181,11 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
                 required
                 autoFocus
                 defaultValue={estacion_editado?.indicaciones_ubicacion}
-                {...register("indicaciones_ubicacion", { required: true })}
+                {...register("indicaciones_ubicacion", {
+                  required: true,
+                  maxLength: 250
+                })}
+                inputProps={{ maxLength: 250 }}
                 error={Boolean(errors.indicaciones_ubicacion)}
                 helperText={(errors.indicaciones_ubicacion != null) ? "Este campo es obligatorio" : ""}
               />
@@ -182,8 +193,11 @@ export const EditarEstacionDialog: React.FC<IProps> = ({ is_modal_active, set_is
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handle_close}>Cancelar</Button>
-          <Button variant="contained" color="primary" type='submit' >Actualizar</Button>
+          <Button onClick={() => {
+            handle_close();
+            reset();
+          }}>Cancelar</Button>
+          <Button variant="contained" color="primary" type='submit' >ACTUALIZAR</Button>
         </DialogActions>
       </form>
     </Dialog>

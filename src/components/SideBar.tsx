@@ -24,7 +24,7 @@ import { open_drawer_desktop, open_drawer_mobile } from '../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
 import type { AuthSlice, Permisos } from '../commons/auth/interfaces';
 import { logout } from '../commons/auth/store';
-
+import { SuperUserScreen } from '../commons/seguridad/screens/SuperUserScreen';
 interface Props {
   window?: () => Window;
   drawer_width: number;
@@ -34,6 +34,7 @@ interface Props {
 export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   const dispatch = useDispatch();
   const [open, set_open] = useState(false);
+  const [dialog_open, set_dialog_open] = useState(false);
   const [is_loading, set_is_loading] = useState(true);
   const { userinfo, permisos: permisos_store } = useSelector(
     (state: AuthSlice) => state.auth
@@ -61,6 +62,13 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   const handle_click = (): void => {
     set_open(!open);
   };
+  const handle_click_delegar_super = (): void => {
+    set_dialog_open(true);
+  };
+  const handle_close_dialog_user = (): void => {
+    set_dialog_open(false);
+  };
+ 
 
   const open_collapse = (obj: Permisos, key: number): void => {
     const temp_permisos = [...permisos];
@@ -130,12 +138,18 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
               </ListItemIcon>
               <ListItemText primary="Starred" />
             </ListItemButton>
-            <ListItemButton sx={{ pl: 4 }}>
+
+            {/* Validamos si es superusuario */}
+            {!userinfo.is_superuser &&(
+            <ListItemButton sx={{ pl: 4 }} onClick={handle_click_delegar_super}>
               <ListItemIcon>
                 <CircleIcon sx={{ color: 'secondary.main', height: '10px' }} />
               </ListItemIcon>
-              <ListItemText primary="Starred" />
-            </ListItemButton>
+              <ListItemText primary="Delegacion de Super Usuario" />
+            </ListItemButton> 
+            )
+            }
+            {dialog_open && <SuperUserScreen onClose={handle_close_dialog_user} />}
             <ListItemButton
               sx={{ pl: 4 }}
               onClick={() => {
