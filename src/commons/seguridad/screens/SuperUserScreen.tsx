@@ -2,7 +2,7 @@
 // import type React from 'react';
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { Typography, TextField, Button, Box, Dialog, IconButton, InputLabel, Select, MenuItem, Skeleton } from '@mui/material';
+import { Typography, TextField, Button, Box, Dialog, IconButton, InputLabel, Select, MenuItem } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { control_error } from '../../../helpers/controlError';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,14 +10,18 @@ import type { AuthSlice } from '../../auth/interfaces';
 import SearchIcon from '@mui/icons-material/Search';
 import Grid from '@material-ui/core/Grid';
 import { useTheme } from '@mui/material/styles';
+import Alert from '@mui/material/Alert';
 import { change_super_user, get_person_by_documents } from '../request/authRequest';
 // import { CustomSelect } from '../../auth/components/CustomSelect';
 
 export const SuperUserScreen = ({ onClose }: { onClose: () => void }): JSX.Element => {
 
   // Aquí puedes definir estados y funciones necesarias para el componente
+  // const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
   const { tipo_documento_opt, tipo_documento, set_tipo_documento } = change_super_user();
-  const [loading, set_loading] = useState(false);
+  // const [loading, set_loading] = useState(false);
   const { userinfo } = useSelector(
     (state: AuthSlice) => state.auth
   );
@@ -42,56 +46,71 @@ export const SuperUserScreen = ({ onClose }: { onClose: () => void }): JSX.Eleme
   // Función para seleccionar el nuevo superusuario
   const handleSeleccionarNuevoSuperUsuario = (): void => {
     // Aquí puedes agregar una validación para asegurarte de que el usuario tiene el rol de superusuario
-    setSuperUsuarioActual(nuevoSuperUsuario.nombre);
-    setNuevoSuperUsuario({
-      tipoDocumento: '',
-      numeroIdentificacion: '',
-      nombre: '',
-    });
-    handleClose();
+    //   setSuperUsuarioActual(nuevoSuperUsuario.nombre);
+    //   setNuevoSuperUsuario({
+    //     tipoDocumento: '',
+    //     numeroIdentificacion: '',
+    //     nombre: '',
+    //   });
+    //   handleClose();
   };
   // Función para buscar el nuevo superusuario
-  const handleSearchSuperUsuario = (tipo_documento:string,numero_documento: string): void => {
-    console.log(tipo_documento,numero_documento)
-    set_loading(true);
+  const handleSearchSuperUsuario = (tipo_documento: string, numero_documento: string): void => {
+
+    // if (!hasSubmitted) {
+    //   setIsSubmitting(true);
+    //   setHasSubmitted(true);
+    // Aquí puedes hacer la solicitud al servidor
+    console.log('9876543210');
+    // set_loading(true);
     get_person_by_documents(tipo_documento, numero_documento)
-    .then(({ data: { data } }) => {
-      if (data !== null && data !== undefined) {
-        // Aquí puedes agregar una validación para asegurarte de que el usuario tiene el rol de superusuario
-        setSuperUsuarioActual(nuevoSuperUsuario.nombre);
-        setNuevoSuperUsuario({
-          tipoDocumento: tipo_documento,
-          numeroIdentificacion: numero_documento,
-          nombre: data.nombre_unidad_organizacional_actual,
-        });
-      } else {
-        console.log(data)
-      }
-    })
-    .catch((error) => {
-      control_error(error);
-    })
-    .finally(() => {
-      set_loading(false);
-    });
+      .then(({ data: { data } }) => {
+        if (data !== null && data !== undefined) {
+          // Aquí puedes agregar una validación para asegurarte de que el usuario tiene el rol de superusuario
+          setSuperUsuarioActual(userinfo.nombre_de_usuario);
+          setNuevoSuperUsuario({
+            tipoDocumento: tipo_documento,
+            numeroIdentificacion: numero_documento,
+            nombre: data.nombre_completo,
+          });
+        } else {
+
+          setErrorMessage('No se encontraron resultados');
+          setShowErrorAlert(true);
+          setTimeout(() => {
+            setShowErrorAlert(false);
+          }, 5000); // Oculta la alerta después de 5 segundos
+        }
+      })
+      .catch((error) => {
+        control_error(error);
+      })
+      .finally(() => {
+        // set_loading(false);
+
+      });
+    // }
+
+
   };
+
   const handleClose = (): void => {
     console.log('onClose called');
     onClose();
   };
 
   useEffect(() => {
-    if (watch('tipo_documento') !== undefined) {
-      set_tipo_documento(watch('tipo_documento'));
+    if (tipo_documento !== undefined) {
+      set_tipo_documento(tipo_documento);
     }
-  }, [watch('tipo_documento')]);
+  }, [tipo_documento]);
 
   // Consultamos si el usuario existe
-  useEffect(() => {
-    if (numero_documento !== undefined && numero_documento !== '') {
-      void get_person_by_documents(tipo_documento, numero_documento);
-    }
-  }, [tipo_documento, numero_documento]);
+  // useEffect(() => {
+  //   if (numero_documento !== undefined && numero_documento !== '') {
+  //     void get_person_by_documents(tipo_documento, numero_documento);
+  //   }
+  // }, [tipo_documento, numero_documento]);
 
   return (
 
@@ -146,69 +165,64 @@ export const SuperUserScreen = ({ onClose }: { onClose: () => void }): JSX.Eleme
           </Select>
         </Box>
 
-        {/* <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
-            Número de identificación
+
+        <Grid item xs={12} sm={6} md={4}>
+
+          <Typography variant="subtitle1" sx={{ mb: 1, color: "#000000" }}>
+            Numero Documento
           </Typography>
           <TextField
-            label="Número de identificación"
-            variant="outlined"
-            sx={{
-              boxShadow: "1px 1px 5px 1px rgba(0, 0, 0, 0.2)",
-              border: "1px solid rgba(0, 0, 0, 0.2)"
-            }}
-            value={nuevoSuperUsuario.numeroIdentificacion}
+            fullWidth
+
+            type="number"
+            size="small"
+            disabled={false}
+
+            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+            error={errors.numero_documento?.type === 'required'}
+            helperText={
+              errors.numero_documento?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : ''
+            }
+            {...register('numero_documento', {
+              required: true,
+            })}
 
           />
-        </Box> */}
-        <Grid item xs={12} sm={6} md={4}>
-          {loading ? (
-            <Skeleton variant="rectangular" width="100%" height={45} />
-          ) : (
-            <TextField
-              fullWidth
-              label="Número de documento *"
-              type="number"
-              size="small"
-              disabled={false}
-          
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-              error={errors.numero_documento?.type === 'required'}
-              helperText={
-                errors.numero_documento?.type === 'required'
-                  ? 'Este campo es obligatorio'
-                  : ''
-              }
-              {...register('numero_documento', {
-                required: true,
-              })}
 
-            />
-          )}
         </Grid>
         <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
-          <Typography variant="subtitle1" sx={{ mb: 1 }}>
+          <Typography variant="subtitle1" sx={{ mb: 1, color: "#000000" }}>
             Nombre
           </Typography>
           <TextField
-            label="Nombre"
+
             variant="outlined"
             sx={{
               boxShadow: "1px 1px 5px 1px rgba(0, 0, 0, 0.2)",
-              border: "1px solid rgba(0, 0, 0, 0.2)"
+              border: "1px solid rgba(0, 0, 0, 0.2)",
             }}
             value={nuevoSuperUsuario.nombre}
-            disabled
+
           />
+          {showErrorAlert && (
+  <Alert severity="error" onClose={() => { setShowErrorAlert(false); }}>
+    {errorMessage}
+  </Alert>
+)}
         </Box>
+
+
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Grid container spacing={1} alignItems="flex-end">
             <Grid item>
-              <Button 
-             onClick={() => {
-              handleSearchSuperUsuario(nuevoSuperUsuario.tipoDocumento, numero_documento);
-            }}
-                      sx={{ bgcolor: 'white', color: 'black', mr: 1 }}>
+              <Button
+                // disabled={isSubmitting}
+                onClick={() => {
+                  handleSearchSuperUsuario(nuevoSuperUsuario.tipoDocumento, numero_documento);
+                }}
+                sx={{ bgcolor: 'white', color: 'black', mr: 1 }}>
                 <IconButton color={theme.palette.mode === 'light' ? 'primary' : 'inherit'} sx={{ p: 1 }}>
                   <SearchIcon />
                 </IconButton>
