@@ -69,32 +69,6 @@ export const ReportesScreen: React.FC = () => {
     return (response.data);
 
   }
-  const obtener_posicion = async () => {
-    try {
-      const data = await consultar_estaciones();
-      const pos_maped = data.map((estaciones: Estaciones) => ({
-
-        id_estacion: estaciones.id_estacion,
-        fecha_modificacion: estaciones.fecha_modificacion,
-        nombre_estacion: estaciones.nombre_estacion,
-        cod_tipo_estacion: estaciones.cod_tipo_estacion,
-        cod_municipio: estaciones.cod_municipio,
-        latitud: estaciones.latitud,
-        longitud: estaciones.longitud,
-        indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
-        fecha_modificacion_coordenadas: estaciones.fecha_modificacion_coordenadas,
-        id_persona_modifica: estaciones.id_persona_modifica
-
-      }));
-
-      set_info(pos_maped);
-      console.log('paso', pos_maped);
-
-    } catch (err) {
-      control_error(err);
-    }
-  };
-
 
   const fetch_data_2 = async (): Promise<{ data: any, unique_days: { [key: string]: boolean } }> => {
     set_loading(true);
@@ -140,8 +114,6 @@ export const ReportesScreen: React.FC = () => {
     formState: { errors: errors_filtro },
   } = useForm();
   const generate_pdf_2 = (data: any, unique_days: { [key: string]: boolean }): void => {
-
-    const luminosidad = data.data.map((item: any) => parseFloat(item.luminosidad));
     // eslint-disable-next-line new-cap
     const doc: jsPDF = new jsPDF();
 
@@ -169,8 +141,11 @@ export const ReportesScreen: React.FC = () => {
     doc.text(title, x_pos, 30);
     const fecha = dayjs(fecha_inicial).locale('es').format('MMMM [de] YYYY')
     doc.setFont("Arial", "normal"); // establece la fuente en Arial
-    doc.text(`En el mes de ${fecha} la estación hidrometerologica ubicada en la coordenada`, 30, 50);
+    doc.text(`En el mes de ${fecha} la estación hidrometerologica ubicada en la coordenada presento `, 30, 50);
+    doc.text(`las siguientes variaciones`, 30, 60);
     doc.setFont("Arial", "normal");
+    //const unavailable_days = Object.keys(unique_days).filter(day => !unique_days[day]);
+    // const available_days = Object.keys(unique_days).filter(day => unique_days[day]);
     const get_available_days = (unique_days: { [key: string]: boolean }): string[] => {
       const available_days: string[] = [];
 
@@ -184,31 +159,38 @@ export const ReportesScreen: React.FC = () => {
 
       return available_days;
     }
-    const get_date_range = (available_days: string[]): { start: string, end: string, all: string } => {
+    const get_date_range = (available_days: string[]): { start: string, end: string } => {
       const start_date = dayjs(available_days[0]);
       const end_date = dayjs(available_days[available_days.length - 1]);
 
-      const date_range = [];
-      let current_date = start_date;
-      while (current_date.isBefore(end_date, 'day')) {
-        date_range.push(current_date.format('DD'));
-        current_date = current_date.add(1, 'day');
-      }
-      date_range.push(end_date.format('DD'));
-
       return {
-        start: date_range[0],
-        end: date_range[date_range.length - 1],
-        all: date_range.join(', ') // nueva propiedad que contiene todos los días en el rango de fechas
+        start: start_date.format('DD'),
+        end: end_date.format('DD')
       };
     }
-
     const available_days = get_available_days(unique_days);
     const date_range = get_date_range(available_days);
-
-    doc.text(`Se recibieron datos del sensor de la estación en los siguientes días:`, 30, 60);
-    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 70);
-    doc.text(`Todos los días en el rango de fechas: ${date_range.all}`, 30, 80); // nuevo bloque de texto que muestra todos los días
+    doc.text(`Se recibieron datos del sensor de temperatura de la estación en los siguientes días:`, 30, 70);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 80);
+    doc.text(`A excepción de los días`, 30, 90);
+    doc.text(`Se recibieron datos del sensor de humedad de la estación en los siguientes días:`, 30, 100);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 110);
+    doc.text(`A excepción de los días`, 30, 120);
+    doc.text(`Se recibieron datos del sensor de presion de aire de la estación en los siguientes días:`, 30, 130);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 140);
+    doc.text(`A excepción de los días`, 30, 150);
+    doc.text(`Se recibieron datos del sensor de nivel de agua de la estación en los siguientes días:`, 30, 160);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 170);
+    doc.text(`A excepción de los días`, 30, 180);
+    doc.text(`Se recibieron datos del sensor de velocidad del viento de la estación en los siguientes días:`, 30, 190);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 200);
+    doc.text(`A excepción de los días`, 30, 210);
+    doc.text(`Se recibieron datos del sensor de luminosidad de la estación en los siguientes días:`, 30, 220);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 230);
+    doc.text(`A excepción de los días`, 30, 240);
+    doc.text(`Se recibieron datos del sensor de dirección de viento de la estación en los siguientes días:`, 30, 250);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 260);
+    doc.text(`A excepción de los días`, 30, 270);
 
     doc.save('reporte_mensual.pdf');
   }

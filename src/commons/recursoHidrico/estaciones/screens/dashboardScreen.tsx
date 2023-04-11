@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-boolean-literal-compare */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useEffect, useState } from "react";
 import { Grid, Stack, Typography, FormControl, TextField, Autocomplete, } from '@mui/material';
@@ -30,15 +29,8 @@ export const DashboardScreen: React.FC = () => {
         opc_dashboards: 1,
     })
     const {
-        control: control_filtrar,
-        formState: { errors: errors_filtro },
+        control,
     } = useForm();
-
-    const {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        formState: { errors },
-    } = useForm();
-    const [loading, set_loading] = useState(false);
 
     const opc_dashboards = [
         { label: 'Estación Guamal', value: 1 },
@@ -97,7 +89,6 @@ export const DashboardScreen: React.FC = () => {
             formatdataforchart(data.data);
         } else {
             control_success_fail("No se encontraron datos")
-            set_loading(false);
         }
 
         return data.data;
@@ -172,40 +163,36 @@ export const DashboardScreen: React.FC = () => {
                     mb: '20px',
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
-
             >
-                <Title title="Monitoreo de las estaciones" ></Title>
-
                 <Grid item xs={12} spacing={2}>
 
-                    <Box mb={2} style={{ marginTop: '20px' }}>
-                        <FormControl
-                            fullWidth
-                            size="small"
-                            error={Boolean(errors_filtro.estacion)}
-                            disabled={false}
-                        >
-                            <>
-                                <InputLabel id={`label_estacion`}>Estación</InputLabel>
-                                <Controller
-                                    name="estacion"
-                                    control={control_filtrar}
-                                    defaultValue=""
-                                    rules={{ required: true }}
-                                    render={({ field }) => (
-                                        <>
-                                            <Select
-                                                labelId={`label_estacion`}
-                                                fullWidth
-                                                size="small"
-                                                label="Seleccione la estación"
+
+                    <Controller
+                        name="opcDashboard"
+                        control={control}
+                        render={({ field }) => (
+                            <FormControl fullWidth>
+                                <Title title="Comportamiento de las variables" />
+                                <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
+                                    <Controller
+                                        name="opcDashboard"
+                                        control={control}
+                                        render={({ field }) => (
+                                            <TextField
                                                 {...field}
                                                 onChange={(e) => {
-                                                    field.onChange(e);
                                                     set_select_dashboards({
                                                         ...selectdashboards,
-                                                        opc_dashboards: parseInt(e.target.value),
+                                                        opc_dashboards: parseInt(e.target.value)
                                                     });
+                                                }}
+                                                select
+                                                variant="outlined"
+                                                label="Estacion"
+                                                defaultValue={"Estacion"}
+                                                value={null}
+                                                SelectProps={{
+                                                    native: true,
                                                 }}
                                             >
                                                 {opc_dashboards.map((option) => (
@@ -216,77 +203,63 @@ export const DashboardScreen: React.FC = () => {
                                             </TextField>
                                         )}
                                     />
-                                        </Stack>
-                                </FormControl>
+                                </Stack>
+                            </FormControl>
                         )}
                     />
 
-                                <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
-                                    <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
+                    <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
 
-                                    <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
 
-                                        <label >Fecha Inicial</label>
+                            <label >Fecha Inicial</label>
 
-                                        <DatePicker
-                                            selected={start_date}
-                                            onChange={(date) => {
-                                                handle_start_date_change(date);
-                                            }}
-                                            placeholderText="Fecha inicial"
-                                            locale={es}
-                                        />
-                                        <label>Fecha Final</label>
-                                        <DatePicker
-                                            locale={es}
-                                            selected={end_date}
-                                            onChange={(date) => {
-                                                handle_end_date_change(date);
-                                            }}
-                                            placeholderText="Fecha Final"
-                                        />
+                            <DatePicker
+                                selected={start_date}
+                                onChange={(date) => {
+                                    handle_start_date_change(date);
+                                }}
+                                placeholderText="Fecha inicial"
+                                locale={es}
+                            />
+                            <label>Fecha Final</label>
+                            <DatePicker
+                                locale={es}
+                                selected={end_date}
+                                onChange={(date) => {
+                                    handle_end_date_change(date);
+                                }}
+                                placeholderText="Fecha Final"
+                            />
 
-                                    </Stack>
-                                    <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
-                                        <Grid item xs={11} md={3} margin={2} >
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+                            <Grid item xs={11} md={3} margin={2} >
 
-                                            <Autocomplete
-                                                {...set_variables_select}
-                                                id="controlled-demo"
-                                                value={variable_selected}
-                                                onChange={(event: any, newValue: any) => {
-                                                    set_variable_selected(newValue);
-                                                }}
-                                                renderInput={(params) => (
-                                                    <TextField {...params} label="Seleccione variable" variant="standard" />
-                                                )}
-                                            />
-                                        </Grid>
-                                    </Stack>
-
-                                    <Typography variant="body1" align="center" hidden={!dates_selected}>
-                                        <Title title="Presión barometrica" ></Title>
-                                        <Line data={queryestaciones} options={options} />
-                                        <Title title="Humedad" ></Title>
-                                        <Line data={queryhumedad} options={options} />
-                                        <Title title="Direccion de Viento" ></Title>
-                                        <Line data={querydireccion} options={options} />
-                                        <Title title="Precipitación" ></Title>
-                                        <Line data={queryprecipitacion} options={options} />
-                                        <Title title="Luminosidad" ></Title>
-                                        <Line data={queryluminosidad} options={options} />
-                                        <Title title="Temperatura" ></Title>
-                                        <Line data={querytemperatura} options={options} />
-                                        <Title title="Velocidad del viento" ></Title>
-                                        <Line data={queryvelocidadviento} options={options} />
-                                        <Title title="Velocidad del agua" ></Title>
-                                        <Line data={queryvelocidadagua} options={options} />
-                                        <Title title="Nivel del agua" ></Title>
-                                        <Line data={querynivelagua} options={options} />
-                                    </Typography>
-                                </Typography>
+                                <Autocomplete
+                                    {...set_variables_select}
+                                    id="controlled-demo"
+                                    value={variable_selected}
+                                    onChange={(event: any, newValue: any) => {
+                                        set_variable_selected(newValue);
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Seleccione variable" variant="standard" />
+                                    )}
+                                />
                             </Grid>
-                        </Grid>
-                    </>
-                    )
+                        </Stack>
+
+
+                        <Typography variant="body1" align="center">
+
+                            <Title title={variable_selected.title} ></Title>
+                            <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
+                        </Typography>
+                    </Typography>
+                </Grid>
+            </Grid>
+        </>
+    )
 }
