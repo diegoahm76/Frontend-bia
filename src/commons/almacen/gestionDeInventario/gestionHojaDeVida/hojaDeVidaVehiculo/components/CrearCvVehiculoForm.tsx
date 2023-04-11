@@ -1,32 +1,20 @@
-/* eslint-disable no-restricted-syntax */
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid,
-  MenuItem,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, Stack, TextField, } from "@mui/material";
 import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
 import { useEffect, type Dispatch, type SetStateAction, useState } from "react";
 import { Title } from "../../../../../../components/Title";
-import { type IList, type ICvcomputers as FormValues } from '../interfaces/CvComputo';
+import { type IcvVehicles as FormValues, type IList } from '../interfaces/CvVehiculo';
 // import SaveIcon from '@mui/icons-material/Save';
 // import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from "@mui/icons-material/Close";
 // import {  useNavigate } from "react-router";
 import { useAppDispatch, useAppSelector } from "../../../../../../hooks/hooks";
-import { create_cv_computers_service, get_marca_service } from "../store/thunks/cvComputoThunks";
+// import { create_cv_computers_service, get_marca_service } from "../store/thunks/cvComputoThunks";
 import { Controller, useForm } from "react-hook-form";
 import { api } from "../../../../../../api/axios";
 import { text_choise_adapter } from "../../../../../auth/adapters/textChoices.adapter";
-import { useNavigate } from "react-router-dom";
+import { get_marca_service } from "../store/thunks/cvVehiclesThunks";
+
 
 interface IProps {
   is_modal_active: boolean;
@@ -35,7 +23,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const CrearCvComputoForm = ({
+const CrearCvVehiculoForm = ({
   action,
   is_modal_active,
   set_is_modal_active,
@@ -46,61 +34,71 @@ const CrearCvComputoForm = ({
     label: "",
     value: "",
   }]
-  const navigate = useNavigate();
+
+
   const dispatch = useAppDispatch();
+  const [tipo_combustible, set_tipo_combustible] = useState(initial_options);
+  const [tipo_vehiculo, set_tipo_vehiculo] = useState(initial_options);
+  const { marcas } = useAppSelector((state) => state.cve);
+  const { current_vehicle, current_cv_vehicle } = useAppSelector((state) => state.cve);
 
-  const [state, set_state] = useState(initial_options);
-  const { marcas } = useAppSelector((state) => state.cv);
-  const { current_computer, current_cv_computer } = useAppSelector((state) => state.cv);
-
-  const handle_close_cv_com_is_active = (): void => {
+  const handle_close_cv_veh_is_active = (): void => {
     set_is_modal_active(false);
   };
 
   // const [file, set_file] = useState<any>(null);
 
-
-  const { control: control_computo, handleSubmit: handle_submit, reset: reset_computer } =
+  const { control: control_vehiculo, handleSubmit: handle_submit, reset: reset_vehicle } =
     useForm<FormValues>();
   useEffect(() => {
-    reset_computer(current_cv_computer);
-  }, [current_computer]);
+    reset_vehicle(current_cv_vehicle);
+  }, [current_vehicle]);
 
   const on_submit = (data: FormValues): void => {
-    const form_data:any = new FormData();
-    form_data.append("sistema_operativo", data.sistema_operativo);
-    form_data.append("suite_ofimatica", data.suite_ofimatica);
-    form_data.append("antivirus", data.antivirus);
-    form_data.append("color", data.color);
-    form_data.append("tipo_de_equipo", data.tipo_de_equipo);
-    form_data.append("tipo_almacenamiento", data.tipo_almacenamiento);
-    form_data.append("capacidad_almacenamiento", data.capacidad_almacenamiento);
-    form_data.append("procesador", data.procesador);
-    form_data.append("memoria_ram", data.memoria_ram);
-    form_data.append("estado", data.estado);
-    form_data.append("observaciones_adicionales", data.observaciones_adicionales);
-    form_data.append("otras_aplicaciones", data.otras_aplicaciones);
-    form_data.append("id_marca", data.id_marca.toString());
-    form_data.append("id_articulo", current_computer.id_bien.toString());
-    // form_data.append('ruta_imagen_foto', file === null ? '' : file);
+    const formdata = new FormData();
+    formdata.append("cod_tipo_vehiculo", data.cod_tipo_vehiculo);
+    formdata.append("tiene_platon", data.tiene_platon.toString());
+    formdata.append("capacidad_pasajeros", data.capacidad_pasajeros.toString());
+    formdata.append("color", data.color);
+    formdata.append("linea", data.linea);
+    formdata.append("tipo_combustible", data.tipo_combustible.toString());
+    formdata.append("es_arrendado", data.es_arrendado.toString());
+    formdata.append("ultimo_kilometraje", data.ultimo_kilometraje.toString());
+    formdata.append("fecha_adquisicion", data.fecha_adquisicion.toString());
+    formdata.append("numero_motor", data.numero_motor);
+    formdata.append("numero_chasis", data.numero_chasis);
+    formdata.append("cilindraje", data.cilindraje.toString());
+    formdata.append("transmision", data.transmision);
+    formdata.append("dimension_llantas", data.dimension_llantas.toString());
+    formdata.append("capacidad_extintor", data.capacidad_extintor.toString());
+    formdata.append("tarjeta_operacion", data.tarjeta_operacion);
+    formdata.append("observaciones_adicionales", data.observaciones_adicionales);
+    formdata.append("es_agendable", data.es_agendable.toString());
+    formdata.append("fecha_circulacion", data.fecha_circulacion.toString());
+    formdata.append("id_articulo", data.id_articulo.toString());
+    formdata.append("doc_identificador_nro", data.doc_identificador_nro.toString())
+    formdata.append("codigo_bien", data.codigo_bien);
+    // formdata.append("modelo", data.modelo);
+    formdata.append("tipo_vehiculo", data.tipo_vehiculo);
+    formdata.append("id_marca", data.id_marca.toString());
+    // formdata.append("id_articulo", current_computer.id_bien.toString());
+    // formdata.append('ruta_imagen_foto', file === null ? '' : file);
 
-    void dispatch(create_cv_computers_service(form_data, navigate));
-    handle_close_cv_com_is_active();
+    // dispatch(create_cv_computers_service(formdata));
   };
   useEffect(() => {
     const get_selects_options: any = async () => {
       try {
-        const { data: state_no_format } = await api.get(
-          'almacen/choices/estados-articulo/'
-        );
-        const state_format = text_choise_adapter(
-          state_no_format
-        );
-        set_state(state_format)
+        const { data: tipo_combustible_no_format } = await api.get('almacen/choices/tipo-combustible');
+        const tipo_combustible_format = text_choise_adapter(tipo_combustible_no_format);
+        set_tipo_combustible(tipo_combustible_format)
+
+        const { data: tipo_vehiculo_no_format } = await api.get('almacen/choices/tipo-vehiculo/');
+        const tipo_vehiculo_format = text_choise_adapter(tipo_vehiculo_no_format);
+        set_tipo_vehiculo(tipo_vehiculo_format)
       } catch (err) {
         console.log(err)
       }
-
 
     };
     void get_selects_options();
@@ -108,16 +106,15 @@ const CrearCvComputoForm = ({
 
   }, [])
 
-
   // const on_change_file: any = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   set_file(e.target.files!=null?e.target.files[0]:"")
   // };
 
   return (
     <Dialog
-      maxWidth="xl"
+      maxWidth="md"
       open={is_modal_active}
-      onClose={handle_close_cv_com_is_active}
+      onClose={handle_close_cv_veh_is_active}
     >
       <Box
         component="form"
@@ -135,14 +132,13 @@ const CrearCvComputoForm = ({
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid item xs={12}>
-            <Title title="Especificaciones físicas" />
             <Grid container spacing={2}>
 
               <Grid item xs={11} md={5} margin={1}>
                 <Controller
-                  name="id_marca"
-                  control={control_computo}
-                  defaultValue={0}
+                  name="codigo_bien"
+                  control={control_vehiculo}
+                  defaultValue="{0}"
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
@@ -153,33 +149,22 @@ const CrearCvComputoForm = ({
                       fullWidth
                       select
                       size="small"
-                      label="Marca"
+                      label="Código"
                       variant="outlined"
                       disabled={action !== "create"}
                       value={value}
                       onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
-                      }
-                    >
-                      {marcas.map((option) => (
-                        <MenuItem key={option.id_marca} value={option.id_marca}>
-                          {option.nombre}
-                        </MenuItem>
-                      ))}
+                      error={!(error == null)}>
+
                     </TextField>
 
                   )}
                 />
               </Grid>
-
               <Grid item xs={11} md={5} margin={1}>
                 <Controller
-                  name="estado"
-                  control={control_computo}
+                  name="tipo_vehiculo"
+                  control={control_vehiculo}
                   defaultValue=""
                   rules={{ required: true }}
                   render={({
@@ -191,7 +176,7 @@ const CrearCvComputoForm = ({
                       select
                       fullWidth
                       size="small"
-                      label="Estado"
+                      label="Tipo vehículo"
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -202,7 +187,7 @@ const CrearCvComputoForm = ({
                           : 'Ingrese nombre'
                       }
                     >
-                      {state.map((option: IList) => (
+                      {tipo_vehiculo.map((option: IList) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>
@@ -211,11 +196,53 @@ const CrearCvComputoForm = ({
                   )}
                 />
               </Grid>
-              <Grid item xs={11} md={5} margin={1}>
+
+
+              <DialogContent sx={{ mb: '0px' }}>
+                <Grid item xs={12}>
+                  <Title title="Especificaciones" />
+                  <Grid item xs={11} md={5} margin={1}>
+                    <Controller
+                      name="id_marca"
+                      control={control_vehiculo}
+                      defaultValue={0}
+                      rules={{ required: true }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          margin="dense"
+                          fullWidth
+                          select
+                          size="small"
+                          label="Marca"
+                          variant="outlined"
+                          disabled={action !== "create"}
+                          value={value}
+                          onChange={onChange}
+                          error={!(error == null)}
+                          helperText={
+                            error != null
+                              ? 'Es obligatorio ingresar un nombre'
+                              : 'Ingrese nombre'
+                          }
+                        >
+                          {marcas.map((option) => (
+                            <MenuItem key={option.id_marca} value={option.id_marca}>
+                              {option.nombre}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+
+                      )}
+                    />
+                  </Grid>
+                  {/* <Grid item xs={11} md={5} margin={1}>
                 <Controller
-                  name="color"
-                  control={control_computo}
-                  defaultValue=""
+                  name="modelo"
+                  control={control_vehiculo}
+                  defaultValue= ""
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
@@ -223,11 +250,11 @@ const CrearCvComputoForm = ({
                   }) => (
                     <TextField
                       margin="dense"
+                      select
                       fullWidth
                       size="small"
-                      label="Color"
+                      label="Modelo"
                       variant="outlined"
-                      disabled={action !== "create"}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -236,49 +263,97 @@ const CrearCvComputoForm = ({
                           ? 'Es obligatorio ingresar un nombre'
                           : 'Ingrese nombre'
                       }
-                    />
+                    >
+                    </TextField>
                   )}
                 />
-              </Grid>
-              <Grid item xs={11} md={5} margin={1}>
-                <Controller
-                  name="tipo_de_equipo"
-                  control={control_computo}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      size="small"
-                      label="Tipo de equipo"
-                      helperText="Portatil, Tablet, All-in-on"
-                      variant="outlined"
-                      disabled={action !== "create"}
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
+              </Grid> */}
+
+
+                  <Grid item xs={11} md={5} margin={1}>
+                    <Controller
+                      name="tipo_combustible"
+                      control={control_vehiculo}
+                      defaultValue=""
+                      rules={{ required: true }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          margin="dense"
+                          fullWidth
+                          select
+                          size="small"
+                          label="Tipo de combustible"
+                          variant="outlined"
+                          disabled={action !== "create"}
+                          value={value}
+                          onChange={onChange}
+                          error={!(error == null)}
+                          helperText={
+                            error != null
+                              ? 'Es obligatorio ingresar un nombre'
+                              : 'Ingrese nombre'
+                          }
+                        >
+                          {tipo_combustible.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+
+                      )}
                     />
-                  )}
-                />
-              </Grid>
+                  </Grid>
+
+
+                  <Grid item xs={11} md={5} margin={1}>
+                    <Controller
+                      name="color"
+                      control={control_vehiculo}
+                      defaultValue=""
+                      rules={{ required: true }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error },
+                      }) => (
+                        <TextField
+                          margin="dense"
+                          fullWidth
+                          size="small"
+                          label="Color"
+                          variant="outlined"
+                          disabled={action !== "create"}
+                          value={value}
+                          onChange={onChange}
+                          error={!(error == null)}
+                          helperText={
+                            error != null
+                              ? 'Es obligatorio ingresar un nombre'
+                              : 'Ingrese nombre'
+                          }
+                        />
+                      )}
+                    />
+                  </Grid>
+
+                </Grid>
+              </DialogContent>
             </Grid>
           </Grid>
-
         </DialogContent>
         <Grid>
           <DialogContent sx={{ mb: '0px' }}>
             <Grid item xs={12}>
-              <Title title="Especificaciones técnicas" />
+              <Title title="Información adicional" />
               <Grid container spacing={2} sx={{ mt: "20px" }}>
 
                 <Grid item xs={11} md={5} margin={1}>
                   <Controller
-                    name="capacidad_almacenamiento"
-                    control={control_computo}
+                    name="numero_motor"
+                    control={control_vehiculo}
                     defaultValue=""
                     rules={{ required: true }}
                     render={({
@@ -289,7 +364,7 @@ const CrearCvComputoForm = ({
                         margin="dense"
                         fullWidth
                         size="small"
-                        label="Capacidad de almacenamiento"
+                        label="Número del motor"
                         variant="outlined"
                         disabled={action !== "create"}
                         value={value}
@@ -307,8 +382,8 @@ const CrearCvComputoForm = ({
 
                 <Grid item xs={11} md={5} margin={1}>
                   <Controller
-                    name="procesador"
-                    control={control_computo}
+                    name="transmision"
+                    control={control_vehiculo}
                     defaultValue=""
                     rules={{ required: true }}
                     render={({
@@ -319,7 +394,7 @@ const CrearCvComputoForm = ({
                         margin="dense"
                         fullWidth
                         size="small"
-                        label="Procesador"
+                        label="Transmición"
                         variant="outlined"
                         disabled={action !== "create"}
                         value={value}
@@ -337,9 +412,9 @@ const CrearCvComputoForm = ({
 
                 <Grid item xs={11} md={5} margin={1}>
                   <Controller
-                    name="memoria_ram"
-                    control={control_computo}
-                    defaultValue=""
+                    name="cilindraje"
+                    control={control_vehiculo}
+                    defaultValue={0}
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
@@ -349,7 +424,7 @@ const CrearCvComputoForm = ({
                         margin="dense"
                         fullWidth
                         size="small"
-                        label="Memoria RAM"
+                        label="Cilindraje"
                         variant="outlined"
                         disabled={action !== "create"}
                         value={value}
@@ -365,12 +440,11 @@ const CrearCvComputoForm = ({
                   />
                 </Grid>
 
-
                 <Grid item xs={11} md={5} margin={1}>
                   <Controller
-                    name="tipo_almacenamiento"
-                    control={control_computo}
-                    defaultValue=""
+                    name="dimension_llantas"
+                    control={control_vehiculo}
+                    defaultValue={0}
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
@@ -380,8 +454,33 @@ const CrearCvComputoForm = ({
                         margin="dense"
                         fullWidth
                         size="small"
-                        label=" Tipo de almacenamiento"
-                        helperText="PDisco Duro, SSD, NVME"
+                        label=" Dimensiones de las llantas"
+                        variant="outlined"
+                        disabled={action !== "create"}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+
+                      />
+                    )}
+                  />
+                </Grid>
+
+                <Grid item xs={11} md={5} margin={1}>
+                  <Controller
+                    name="capacidad_extintor"
+                    control={control_vehiculo}
+                    defaultValue={0}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        label="Capacidad del extintor"
                         variant="outlined"
                         disabled={action !== "create"}
                         value={value}
@@ -398,12 +497,12 @@ const CrearCvComputoForm = ({
           </DialogContent>
           <DialogContent sx={{ mb: '0px' }}>
             <Grid item xs={12}>
-              <Title title="Caracteristicas" />
+              <Title title="Control de documentación" />
               <Grid container spacing={2} sx={{ mt: "20px" }}>
                 <Grid item xs={11} md={5} margin={1}>
                   <Controller
-                    name="suite_ofimatica"
-                    control={control_computo}
+                    name="tarjeta_operacion"
+                    control={control_vehiculo}
                     defaultValue=""
                     rules={{ required: true }}
                     render={({
@@ -414,7 +513,7 @@ const CrearCvComputoForm = ({
                         margin="dense"
                         fullWidth
                         size="small"
-                        label="Suit ofimatica"
+                        label="Tarjeta de operación"
                         variant="outlined"
                         disabled={action !== "create"}
                         value={value}
@@ -431,65 +530,36 @@ const CrearCvComputoForm = ({
 
                 </Grid>
 
-                <Grid item xs={11} md={5} margin={1}>
-                  <Controller
-                    name="antivirus"
-                    control={control_computo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Antivirus"
-                        variant="outlined"
-                        disabled={action !== "create"}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
+                {/* <Grid item xs={11} md={5} margin={1}>
+                <Controller
+                  name="soat"
+                  control={control_vehiculo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Antivirus"
+                      variant="outlined"
+                      disabled = {action !== "create"}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio ingresar un nombre'
+                          : 'Ingrese nombre'
+                      }
+                    />
+                  )}
+                />
+              </Grid> */}
 
-                <Grid item xs={11} md={5} margin={1}>
-                  <Controller
-                    name="otras_aplicaciones"
-                    control={control_computo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Otras aplicaciones"
-                        variant="outlined"
-                        disabled={action !== "create"}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
 
 
               </Grid>
@@ -504,7 +574,7 @@ const CrearCvComputoForm = ({
             >
               <Button
                 variant="outlined"
-                onClick={handle_close_cv_com_is_active}
+                onClick={handle_close_cv_veh_is_active}
                 startIcon={<CloseIcon />}
               >
                 CERRAR
@@ -522,12 +592,11 @@ const CrearCvComputoForm = ({
             </Stack>
           </DialogActions>
 
-
-
         </Grid>
       </Box>
     </Dialog>
   );
 };
 
-export default CrearCvComputoForm;
+// eslint-disable-next-line no-restricted-syntax
+export default CrearCvVehiculoForm;
