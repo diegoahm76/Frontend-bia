@@ -11,9 +11,9 @@ export const GestorViveroRoutes: React.FC = () => {
     
     <Routes>
       <Route path="administrar_viveros" element={<AdministrarViveroScreen/>} />
-      <Route path="apertura_cierre" element={<AperturaCierreViveroScreen/>} />
+      <Route path="apertura_cierre/:id?" element={<AperturaCierreViveroScreen/>} />
       <Route path="bajas" element={<BajaHerramientaScreen/>} />
-      <Route path="cuarentena" element={<CuarentenaViveroScreen/>} />
+      <Route path="cuarentena/:id?" element={<CuarentenaViveroScreen/>} />
       <Route path="recepcion_distribucion" element={<DespachoViveroScreen/>} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>

@@ -2,7 +2,7 @@ import { toast, type ToastContent } from "react-toastify";
 import { api } from "../../../api/axios";
 import { control_error } from "../../../helpers/controlError";
 import { type ResponseServer } from "../../../interfaces/globalModels";
-import type { Parametros, conf_alarma, Datos, Estaciones, EstacionesDetalle, IEstacionEstaciones, PersonaEstacion, CrearAlerta, EditarPersona, ParametrosEditar, Tipos_Paginado, } from "../estaciones/interfaces/interfaces";
+import type { Parametros, conf_alarma, Datos, Estaciones, EstacionesDetalle, IEstacionEstaciones, PersonaEstacion, CrearAlerta, EditarPersona, ParametrosEditar, } from "../estaciones/interfaces/interfaces";
 import axios from 'axios';
 
 export const alertas = axios.create({
@@ -51,39 +51,17 @@ export const consultar_estaciones = async (): Promise<Estaciones[]> => {
   const { data } = await api.get<ResponseServer<Estaciones[]>>('estaciones/consultar-estaciones/');
   return data.data
 }
-
-// consultar datos 
-export const consultar_datos = async (): Promise<Datos[]> => {
-  const { data } = await api.get<ResponseServer<Datos[]>>('estaciones/datos/consultar-datos-opt/');
-  return data.data
-}
-// consultar datos guamal paginado
-export const consultar_datos_guamal_paginado = async (pagina: number = 1): Promise<Datos[]> => {
-  const { data } = await api.get<Tipos_Paginado>(`estaciones/datos/consultar-pagina-guamal/?page=${pagina}`);
-  return data.results
-}
-// consultar datos ocoa pagi
-export const consultar_datos_ocoa_paginado = async (pagina: number = 1): Promise<Datos[]> => {
-  const { data } = await api.get<Tipos_Paginado>(`estaciones/datos/consultar-pagina-ocoa/?page=${pagina}`);
-  return data.results
-}
-export const consultar_datos_guayuriba_paginado = async (pagina: number = 1): Promise<Datos[]> => {
-  const { data } = await api.get<Tipos_Paginado>(`estaciones/datos/consultar-pagina-guayuriba/?page=${pagina}`);
-  return data.results
-}
-export const consultar_datos_gaitan_paginado = async (pagina: number = 1): Promise<Datos[]> => {
-  const { data } = await api.get<Tipos_Paginado>(`estaciones/datos/consultar-pagina-gaitan/?page=${pagina}`);
-  return data.results
-}
 // consultar datos por id estación
 export const consultar_datos_id = async (id: number | string): Promise<Datos[]> => {
   const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id/${id}/`);
   return data;
 }
 
+
 // consultar datos por fecha
-export const consultar_datos_fecha = async (fecha_inicial: string, fecha_final: string): Promise<Datos> => {
-  const { data } = await api.get<ResponseServer<Datos>>(`estaciones/datos/consultar-datos-fecha/${fecha_inicial}/${fecha_final}/`);
+export const consultar_datos_mes = async (id: number, fecha: string| Date | null): Promise<Datos[]> => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const { data } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-reporte/${id}/${fecha}/`);
   return data.data;
 }
 
@@ -128,7 +106,6 @@ export const crear_persona = async (Peronsa: PersonaEstacion): Promise<any> => {
       control_error(error)
     });
 };
-
 
 export const crear_confi_alerta = async (configuracion: CrearAlerta): Promise<any> => {
   await api
