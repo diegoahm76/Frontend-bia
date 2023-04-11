@@ -1,7 +1,7 @@
 import { api } from '../../../api/axios';
 import type {
 Roles
-} from '../interfaces/seguridadModels';
+} from '../interfaces';
 import type {
   ResponseServer,
   ResponseThunks

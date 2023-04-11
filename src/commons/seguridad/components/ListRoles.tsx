@@ -6,7 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { get_roles } from '../store/thunks';
 import { useDispatch, useSelector } from 'react-redux';
-import { type IRolesInfo } from '../interfaces/seguridadModels';
+import { type IRolesInfo } from '../interfaces';
 
 interface IProps {
   set_position_tab_admin_roles: Dispatch<SetStateAction<string>>;

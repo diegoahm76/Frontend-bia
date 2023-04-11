@@ -199,7 +199,7 @@ export const LoginForm: React.FC = () => {
               type="button"
               variant="outlined"
               fullWidth
-              color="primary"
+              color={theme.palette.mode === 'light' ? 'primary' : 'inherit'}
               style={{ fontSize: '.9rem' }}
             >
               <Link className="no-decoration" to="/auth/register">
