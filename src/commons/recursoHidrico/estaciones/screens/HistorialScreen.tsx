@@ -8,6 +8,7 @@ import { Grid } from '@mui/material';
 import  { Title }  from '../../../../components/Title';
 import { HistorialAlertas } from '../components/HistorialAlertas';
 import { HistorialDeDatos } from '../components/HistorialDeDatos';
+import { HistorialEquipos } from '../components/HistorialEquipos';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const HistorialDatos: React.FC = () => {
     const [value, set_value] = useState('1');
@@ -33,13 +34,17 @@ export const HistorialDatos: React.FC = () => {
               <TabList onChange={handle_change} aria-label="lab API tabs example">
                 <Tab label="Historial Datos" value="1" />
                 <Tab label="Historial Alertas" value="2" />
+                <Tab label="Historial Equipos" value="3" />
               </TabList>
             </Box>
-            <TabPanel value="1">
+            <TabPanel value="1" sx={{p: '15px  0'}}>
               <HistorialDeDatos />
             </TabPanel>
-            <TabPanel value="2">
+            <TabPanel value="2" sx={{p: '15px  0'}}>
               <HistorialAlertas/>
+            </TabPanel>
+            <TabPanel value="3" sx={{p: '15px  0'}}>
+              <HistorialEquipos/>
             </TabPanel>
           </TabContext>
         </Box>

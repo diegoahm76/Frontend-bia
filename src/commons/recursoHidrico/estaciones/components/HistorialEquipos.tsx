@@ -7,31 +7,24 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import esLocale from 'dayjs/locale/es'; // si deseas cambiar el idioma a español
-import type { Datos } from '../interfaces/interfaces';
+import type { Equipo } from '../interfaces/interfaces';
 import { api } from '../../../../api/axios';
 import SearchIcon from '@mui/icons-material/Search';
 import { useForm, Controller } from 'react-hook-form';
-import { consultar_datos_mes } from '../../requets/Request';
+import { consultar_historial_equipo } from '../../requets/Request';
 import Select from "react-select";
 import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
 
 const columns: GridColDef[] = [
-    { field: 'fecha_registro', headerName: 'FECHA REGISTRO', width: 170 },
-    { field: 'temperatura_ambiente', headerName: 'TEMPERATURA ', width: 170 },
-    { field: 'humedad_ambiente', headerName: 'HUMEDAD ', width: 170 },
-    { field: 'presion_barometrica', headerName: 'PRESIÓN BAROMETRICA', width: 170 },
-    { field: 'velocidad_viento', headerName: 'VEL. VIENTO', width: 140 },
-    { field: 'direccion_viento', headerName: 'DIR. VIENTO', width: 170 },
-    { field: 'precipitacion', headerName: 'PRECIPITACIÓN', width: 170 },
-    { field: 'luminosidad', headerName: 'LUMINOSIDAD', width: 170 },
-    { field: 'nivel_agua', headerName: 'NIVEL AGUA', width: 170 },
-    { field: 'velocidad_agua', headerName: 'VEL. AGUA', width: 170 },
-    { field: 'id_estacion', headerName: 'NÚMERO ESTACIÓN', width: 170 },
+    { field: 'id_alerta_equipo_estacion', headerName: 'NÚMERO', width: 200 },
+    { field: 'nombre_estacion', headerName: 'ESTACIÓN ', width: 200 },
+    { field: 'descripcion', headerName: 'DESCRIPCIÓN ', width: 400 },
+    { field: 'fecha_generacion', headerName: 'FECHA', width: 200 }
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const HistorialDeDatos: React.FC = () => {
+export const HistorialEquipos: React.FC = () => {
     const {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         handleSubmit,
@@ -42,7 +35,7 @@ export const HistorialDeDatos: React.FC = () => {
     const [loading, set_loading] = useState(false);
     const [estaciones_options, set_estaciones_options] = useState([]);
     const [selected_date, set_selected_date] = useState<Date | null>(new Date());
-    const [dato, set_dato] = useState<Datos[]>([]);
+    const [dato, set_dato] = useState<Equipo[]>([]);
 
     const get_data_initial = async (): Promise<void> => {
         try {
@@ -76,20 +69,12 @@ export const HistorialDeDatos: React.FC = () => {
             const estacion_id = data.estacion.value;
             const fecha = dayjs(selected_date).format('YYYY-MM');
             console.log("fecha", fecha)
-            const estacion = await consultar_datos_mes(estacion_id, fecha);
+            const estacion = await consultar_historial_equipo(estacion_id, fecha);
             const datos_mapeados = estacion.map((dato) => ({
-                id_data: dato.id_data,
-                fecha_registro: dato.fecha_registro,
-                temperatura_ambiente: dato.temperatura_ambiente,
-                humedad_ambiente: dato.humedad_ambiente,
-                presion_barometrica: dato.presion_barometrica,
-                velocidad_viento: dato.velocidad_viento,
-                direccion_viento: dato.direccion_viento,
-                precipitacion: dato.precipitacion,
-                luminosidad: dato.luminosidad,
-                nivel_agua: dato.nivel_agua,
-                velocidad_agua: dato.velocidad_agua,
-                id_estacion: dato.id_estacion,
+                id_alerta_equipo_estacion: dato.id_alerta_equipo_estacion,
+                nombre_estacion: dato.nombre_estacion,
+                descripcion: dato.descripcion,
+                fecha_generacion: dato.fecha_generacion,
             }));
             set_dato(datos_mapeados); // guardar el valor en el estado
             set_loading(false);
@@ -166,13 +151,13 @@ export const HistorialDeDatos: React.FC = () => {
             </Box>
             {dato.length > 0 ? (
                 <>
-                    <Title title="HISTORIAL DE DATOS "></Title>
+                    <Title title="HISTORIAL DE ALERTAS EQUIPO ESTACIÓN "></Title>
                     <Box sx={{ mt: '20px' }}>
                         <DataGrid
                             autoHeight
                             rows={dato}
                             columns={columns}
-                            getRowId={(row) => row.id_data}
+                            getRowId={(row) => row.id_alerta_equipo_estacion}
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                         />

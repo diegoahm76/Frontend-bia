@@ -20,7 +20,6 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import ReCaptcha from 'react-google-recaptcha';
-
 import { use_rol } from '../hooks/LoginHooks';
 import { use_form } from '../../../hooks/useForm';
 import { checking_authentication } from '../store';
@@ -159,7 +158,7 @@ export const LoginForm: React.FC = () => {
               type="submit"
               variant="contained"
               fullWidth
-              color="success"
+              color={theme.palette.mode === 'light' ? 'success' : 'inherit'} 
               loading={is_authenticating}
               disabled={disable}
               style={{ fontSize: '.9rem' }}
