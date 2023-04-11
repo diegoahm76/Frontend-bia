@@ -1,20 +1,14 @@
-export interface Tipos_Paginado {
-    count:    number;
-    next:     string;
-    previous: string;
-    results:  Datos[];
-}
-
 export interface Estaciones {
     id_estacion: number | string,
     fecha_modificacion: null | string,
     nombre_estacion: string,
     cod_tipo_estacion: string,
+    cod_municipio: string | number,
     latitud: number,
     longitud: number,
     indicaciones_ubicacion: null | string,
     fecha_modificacion_coordenadas: null | string,
-    id_persona_modifica: null | number
+    nombre_persona_modifica: string | null,
 }
 export interface EstacionesDetalle {
     id_estacion: number | string,
@@ -23,7 +17,7 @@ export interface EstacionesDetalle {
 }
 export interface Persona {
 
-    id_persona: number | string;
+    id_persona: number;
     cod_tipo_documento_id: string;
     numero_documento_id: string | number;
     primer_nombre: string;
@@ -60,7 +54,9 @@ export interface conf_alarma {
 }
 export interface Parametros {
 
-    id_estacion: number,
+    id_parametro_referencia: number,
+    nombre_estacion: string,
+    fecha_modificacion: string | null,
     frecuencia_solicitud_datos: number,
     temperatura_ambiente_max: number,
     temperatura_ambiente_min: number,
@@ -80,6 +76,7 @@ export interface Parametros {
     nivel_agua_min: number,
     velocidad_agua_max: number,
     velocidad_agua_min: number,
+    nombre_persona_modifica: string | null,
 }
 export interface IEstacionEstaciones {
 
@@ -120,7 +117,6 @@ export interface PersonasEstacion {
     estacion: any
 }
 export interface CrearAlerta {
-    nombre_variable_alarma: string;
     mensaje_alarma_maximo: string;
     mensaje_alarma_minimo: string;
     mensaje_no_alarma: string;
