@@ -60,6 +60,7 @@ const CrearCvVehiculoForm = ({
     formdata.append("tiene_platon", data.tiene_platon.toString());
     formdata.append("capacidad_pasajeros", data.capacidad_pasajeros.toString());
     formdata.append("color", data.color);
+    formdata.append("es_arrendado", data.es_arrendado.toString());
     formdata.append("linea", data.linea);
     formdata.append("tipo_combustible", data.tipo_combustible.toString());
     formdata.append("es_arrendado", data.es_arrendado.toString());
@@ -67,6 +68,7 @@ const CrearCvVehiculoForm = ({
     formdata.append("fecha_adquisicion", data.fecha_adquisicion.toString());
     formdata.append("numero_motor", data.numero_motor);
     formdata.append("numero_chasis", data.numero_chasis);
+    formdata.append("ultimo_kilometraje", data.ultimo_kilometraje.toString());
     formdata.append("cilindraje", data.cilindraje.toString());
     formdata.append("transmision", data.transmision);
     formdata.append("dimension_llantas", data.dimension_llantas.toString());
@@ -126,445 +128,420 @@ const CrearCvVehiculoForm = ({
             ? "Crear hoja de vida"
             : action === "detail"
               ? "Detalle  Hoja de vida"
-              : "Editar vivero"}
+              : "Editar hoja de vida"}
         </DialogTitle>
 
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid item xs={12}>
-            <Grid container spacing={2}>
+          <Grid container spacing={2}>
+            <Grid item xs={5} md={5} >
+              <Controller
+                name="doc_identificador_nro"
+                control={control_vehiculo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Placa vehículo"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}>
 
-              <Grid item xs={11} md={5} margin={1}>
-                <Controller
-                  name="codigo_bien"
-                  control={control_vehiculo}
-                  defaultValue="{0}"
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      select
-                      size="small"
-                      label="Código"
-                      variant="outlined"
-                      disabled={action !== "create"}
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}>
+                  </TextField>
 
-                    </TextField>
+                )}
+              />
+            </Grid>
 
-                  )}
-                />
-              </Grid>
-              <Grid item xs={11} md={5} margin={1}>
-                <Controller
-                  name="tipo_vehiculo"
-                  control={control_vehiculo}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      select
-                      fullWidth
-                      size="small"
-                      label="Tipo vehículo"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
-                      }
-                    >
-                      {tipo_vehiculo.map((option: IList) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                />
-              </Grid>
+            <Grid item xs={5} md={5}>
+              <Controller
+                name="codigo_bien"
+                control={control_vehiculo}
+                defaultValue="{0}"
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Código"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}>
 
+                  </TextField>
 
-              <DialogContent sx={{ mb: '0px' }}>
-                <Grid item xs={12}>
-                  <Title title="Especificaciones" />
-                  <Grid item xs={11} md={5} margin={1}>
-                    <Controller
-                      name="id_marca"
-                      control={control_vehiculo}
-                      defaultValue={0}
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          select
-                          size="small"
-                          label="Marca"
-                          variant="outlined"
-                          disabled={action !== "create"}
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio ingresar un nombre'
-                              : 'Ingrese nombre'
-                          }
-                        >
-                          {marcas.map((option) => (
-                            <MenuItem key={option.id_marca} value={option.id_marca}>
-                              {option.nombre}
-                            </MenuItem>
-                          ))}
-                        </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={5} md={5} >
+              <Controller
+                name="tipo_vehiculo"
+                control={control_vehiculo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    select
+                    fullWidth
+                    size="small"
+                    label="Tipo vehículo"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  >
+                    {tipo_vehiculo.map((option: IList) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
 
-                      )}
-                    />
-                  </Grid>
-                  {/* <Grid item xs={11} md={5} margin={1}>
-                <Controller
-                  name="modelo"
-                  control={control_vehiculo}
-                  defaultValue= ""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      select
-                      fullWidth
-                      size="small"
-                      label="Modelo"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
-                      }
-                    >
-                    </TextField>
-                  )}
-                />
-              </Grid> */}
+            <Grid item xs={5} md={5} >
+              <Controller
+                name="es_arrendado"
+                control={control_vehiculo}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    select
+                    fullWidth
+                    size="small"
+                    label="Es arrendado"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  >
+                    <MenuItem value="true">SI</MenuItem>
+                    <MenuItem value="false">NO</MenuItem>
+                  </TextField>
+                )}
+              />
+            </Grid>
 
 
-                  <Grid item xs={11} md={5} margin={1}>
-                    <Controller
-                      name="tipo_combustible"
-                      control={control_vehiculo}
-                      defaultValue=""
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          select
-                          size="small"
-                          label="Tipo de combustible"
-                          variant="outlined"
-                          disabled={action !== "create"}
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio ingresar un nombre'
-                              : 'Ingrese nombre'
-                          }
-                        >
-                          {tipo_combustible.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-
-                      )}
-                    />
-                  </Grid>
 
 
-                  <Grid item xs={11} md={5} margin={1}>
-                    <Controller
-                      name="color"
-                      control={control_vehiculo}
-                      defaultValue=""
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          size="small"
-                          label="Color"
-                          variant="outlined"
-                          disabled={action !== "create"}
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio ingresar un nombre'
-                              : 'Ingrese nombre'
-                          }
-                        />
-                      )}
-                    />
-                  </Grid>
 
-                </Grid>
-              </DialogContent>
+            <Title title="ESPECIFICACIONES" />
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="id_marca"
+                control={control_vehiculo}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Marca"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  >
+                    {marcas.map((option) => (
+                      <MenuItem key={option.id_marca} value={option.id_marca}>
+                        {option.nombre}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="tipo_combustible"
+                control={control_vehiculo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Tipo de combustible"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  >
+                    {tipo_combustible.map((option) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+
+                )}
+              />
+            </Grid>
+
+
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="color"
+                control={control_vehiculo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Color"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+
+
+            <Title title="INFORMACIÓN ADICIONAL" />
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="numero_motor"
+                control={control_vehiculo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Número del motor"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="ultimo_kilometraje"
+                control={control_vehiculo}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Ultimo kilometraje"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio este campo'
+                        : 'Ingrese ultimo kilometraje'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="cilindraje"
+                control={control_vehiculo}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Cilindraje"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="dimension_llantas"
+                control={control_vehiculo}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label=" Dimensiones de las llantas"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+
+                  />
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={3}>
+              <Controller
+                name="capacidad_extintor"
+                control={control_vehiculo}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Capacidad del extintor"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+
+                  />
+                )}
+              />
+            </Grid>
+
+            <Title title="CONTROL DE DOCUMENTACIÓN" />
+            <Grid item xs={11} md={5} spacing={2}>
+              <Controller
+                name="tarjeta_operacion"
+                control={control_vehiculo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Tarjeta de operación"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  />
+                )}
+              />
+
             </Grid>
           </Grid>
-        </DialogContent>
-        <Grid>
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid item xs={12}>
-              <Title title="Información adicional" />
-              <Grid container spacing={2} sx={{ mt: "20px" }}>
-
-                <Grid item xs={11} md={5} margin={1}>
-                  <Controller
-                    name="numero_motor"
-                    control={control_vehiculo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Número del motor"
-                        variant="outlined"
-                        disabled={action !== "create"}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={11} md={5} margin={1}>
-                  <Controller
-                    name="transmision"
-                    control={control_vehiculo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Transmición"
-                        variant="outlined"
-                        disabled={action !== "create"}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={11} md={5} margin={1}>
-                  <Controller
-                    name="cilindraje"
-                    control={control_vehiculo}
-                    defaultValue={0}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Cilindraje"
-                        variant="outlined"
-                        disabled={action !== "create"}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={11} md={5} margin={1}>
-                  <Controller
-                    name="dimension_llantas"
-                    control={control_vehiculo}
-                    defaultValue={0}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label=" Dimensiones de las llantas"
-                        variant="outlined"
-                        disabled={action !== "create"}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={11} md={5} margin={1}>
-                  <Controller
-                    name="capacidad_extintor"
-                    control={control_vehiculo}
-                    defaultValue={0}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Capacidad del extintor"
-                        variant="outlined"
-                        disabled={action !== "create"}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-
-                      />
-                    )}
-                  />
-                </Grid>
-
-              </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid item xs={12}>
-              <Title title="Control de documentación" />
-              <Grid container spacing={2} sx={{ mt: "20px" }}>
-                <Grid item xs={11} md={5} margin={1}>
-                  <Controller
-                    name="tarjeta_operacion"
-                    control={control_vehiculo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Tarjeta de operación"
-                        variant="outlined"
-                        disabled={action !== "create"}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
-                        }
-                      />
-                    )}
-                  />
-
-                </Grid>
-
-                {/* <Grid item xs={11} md={5} margin={1}>
-                <Controller
-                  name="soat"
-                  control={control_vehiculo}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      size="small"
-                      label="Antivirus"
-                      variant="outlined"
-                      disabled = {action !== "create"}
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
-                      }
-                    />
-                  )}
-                />
-              </Grid> */}
-
-
-
-              </Grid>
-            </Grid>
-          </DialogContent>
 
           <DialogActions>
             <Stack
@@ -592,7 +569,8 @@ const CrearCvVehiculoForm = ({
             </Stack>
           </DialogActions>
 
-        </Grid>
+
+        </DialogContent>
       </Box>
     </Dialog>
   );

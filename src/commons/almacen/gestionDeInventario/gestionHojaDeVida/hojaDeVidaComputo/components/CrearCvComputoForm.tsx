@@ -67,7 +67,7 @@ const CrearCvComputoForm = ({
   }, [current_computer]);
 
   const on_submit = (data: FormValues): void => {
-    const form_data:any = new FormData();
+    const form_data: any = new FormData();
     form_data.append("sistema_operativo", data.sistema_operativo);
     form_data.append("suite_ofimatica", data.suite_ofimatica);
     form_data.append("antivirus", data.antivirus);
@@ -78,6 +78,7 @@ const CrearCvComputoForm = ({
     form_data.append("procesador", data.procesador);
     form_data.append("memoria_ram", data.memoria_ram);
     form_data.append("estado", data.estado);
+    form_data.append("doc_identificador_nro", data.doc_identificador_nro)
     form_data.append("observaciones_adicionales", data.observaciones_adicionales);
     form_data.append("otras_aplicaciones", data.otras_aplicaciones);
     form_data.append("id_marca", data.id_marca.toString());
@@ -115,7 +116,7 @@ const CrearCvComputoForm = ({
 
   return (
     <Dialog
-      maxWidth="xl"
+      maxWidth="md"
       open={is_modal_active}
       onClose={handle_close_cv_com_is_active}
     >
@@ -129,153 +130,182 @@ const CrearCvComputoForm = ({
             ? "Crear hoja de vida"
             : action === "detail"
               ? "Detalle  Hoja de vida"
-              : "Editar vivero"}
+              : "Editar hoja de "}
         </DialogTitle>
 
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid item xs={12}>
-            <Title title="Especificaciones físicas" />
-            <Grid container spacing={2}>
 
-              <Grid item xs={11} md={5} margin={1}>
-                <Controller
-                  name="id_marca"
-                  control={control_computo}
-                  defaultValue={0}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      select
-                      size="small"
-                      label="Marca"
-                      variant="outlined"
-                      disabled={action !== "create"}
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
-                      }
-                    >
-                      {marcas.map((option) => (
-                        <MenuItem key={option.id_marca} value={option.id_marca}>
-                          {option.nombre}
-                        </MenuItem>
-                      ))}
-                    </TextField>
+          <Grid container spacing={2}>
+            <Title title="ESPECIFICACIONES FÍSICAS" />
 
-                  )}
-                />
-              </Grid>
 
-              <Grid item xs={11} md={5} margin={1}>
-                <Controller
-                  name="estado"
-                  control={control_computo}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      select
-                      fullWidth
-                      size="small"
-                      label="Estado"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
-                      }
-                    >
-                      {state.map((option: IList) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={11} md={5} margin={1}>
-                <Controller
-                  name="color"
-                  control={control_computo}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      size="small"
-                      label="Color"
-                      variant="outlined"
-                      disabled={action !== "create"}
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
-                      }
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={11} md={5} margin={1}>
-                <Controller
-                  name="tipo_de_equipo"
-                  control={control_computo}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      size="small"
-                      label="Tipo de equipo"
-                      helperText="Portatil, Tablet, All-in-on"
-                      variant="outlined"
-                      disabled={action !== "create"}
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                    />
-                  )}
-                />
-              </Grid>
+            <Grid item xs={12} sm={3}>
+              <Controller
+                name="id_marca"
+                control={control_computo}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Marca"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar la marca'
+                        : 'Ingrese marca'
+                    }
+                  >
+                    {marcas.map((option) => (
+                      <MenuItem key={option.id_marca} value={option.id_marca}>
+                        {option.nombre}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+
+                )}
+              />
             </Grid>
-          </Grid>
+            <Grid item xs={12} sm={3}>
+              <Controller
+                name="doc_identificador_nro"
+                control={control_computo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Serie"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar la serie'
+                        : 'Ingrese serie'
+                    }
+                  >
 
-        </DialogContent>
-        <Grid>
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid item xs={12}>
-              <Title title="Especificaciones técnicas" />
-              <Grid container spacing={2} sx={{ mt: "20px" }}>
+                  </TextField>
 
-                <Grid item xs={11} md={5} margin={1}>
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="estado"
+                control={control_computo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    select
+                    fullWidth
+                    size="small"
+                    label="Estado"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar el estado del equipo'
+                        : 'Ingrese el estado'
+                    }
+                  >
+                    {state.map((option: IList) => (
+                      <MenuItem key={option.value} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="color"
+                control={control_computo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Color"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar el color'
+                        : 'Ingrese color'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="tipo_de_equipo"
+                control={control_computo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Tipo de equipo"
+                    helperText="Portatil, Tablet, All-in-on"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                  />
+                )}
+              />
+            </Grid>
+
+            <DialogContent sx={{ mb: '0px' }}>
+              <Grid container spacing={2} >
+                <Title title="ESPECIFICACIONES TÉCNICAS" />
+
+
+                <Grid item xs={11} sm={3} >
                   <Controller
                     name="capacidad_almacenamiento"
                     control={control_computo}
@@ -297,15 +327,15 @@ const CrearCvComputoForm = ({
                         error={!(error == null)}
                         helperText={
                           error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
+                            ? 'Es obligatorio ingresar la capacidad de almacenamiento'
+                            : ''
                         }
                       />
                     )}
                   />
                 </Grid>
 
-                <Grid item xs={11} md={5} margin={1}>
+                <Grid item xs={11} sm={3} >
                   <Controller
                     name="procesador"
                     control={control_computo}
@@ -327,15 +357,15 @@ const CrearCvComputoForm = ({
                         error={!(error == null)}
                         helperText={
                           error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
+                            ? ''
+                            : ''
                         }
                       />
                     )}
                   />
                 </Grid>
 
-                <Grid item xs={11} md={5} margin={1}>
+                <Grid item xs={11} sm={3} >
                   <Controller
                     name="memoria_ram"
                     control={control_computo}
@@ -357,8 +387,8 @@ const CrearCvComputoForm = ({
                         error={!(error == null)}
                         helperText={
                           error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
+                            ? ''
+                            : ''
                         }
                       />
                     )}
@@ -366,7 +396,7 @@ const CrearCvComputoForm = ({
                 </Grid>
 
 
-                <Grid item xs={11} md={5} margin={1}>
+                <Grid item xs={11} sm={3} >
                   <Controller
                     name="tipo_almacenamiento"
                     control={control_computo}
@@ -393,14 +423,16 @@ const CrearCvComputoForm = ({
                   />
                 </Grid>
 
+
+
               </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogContent sx={{ mb: '0px' }}>
-            <Grid item xs={12}>
-              <Title title="Caracteristicas" />
-              <Grid container spacing={2} sx={{ mt: "20px" }}>
-                <Grid item xs={11} md={5} margin={1}>
+
+            </DialogContent>
+            <DialogContent sx={{ mb: '0px' }}>
+              <Grid container spacing={2} >
+                <Title title="CARACTERÍSTICAS" />
+
+                <Grid item xs={11} sm={3}>
                   <Controller
                     name="suite_ofimatica"
                     control={control_computo}
@@ -422,8 +454,8 @@ const CrearCvComputoForm = ({
                         error={!(error == null)}
                         helperText={
                           error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
+                            ? ''
+                            : ''
                         }
                       />
                     )}
@@ -431,7 +463,7 @@ const CrearCvComputoForm = ({
 
                 </Grid>
 
-                <Grid item xs={11} md={5} margin={1}>
+                <Grid item xs={11} sm={3} >
                   <Controller
                     name="antivirus"
                     control={control_computo}
@@ -453,15 +485,15 @@ const CrearCvComputoForm = ({
                         error={!(error == null)}
                         helperText={
                           error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
+                            ? ''
+                            : ''
                         }
                       />
                     )}
                   />
                 </Grid>
 
-                <Grid item xs={11} md={5} margin={1}>
+                <Grid item xs={11} sm={3} >
                   <Controller
                     name="otras_aplicaciones"
                     control={control_computo}
@@ -483,48 +515,50 @@ const CrearCvComputoForm = ({
                         error={!(error == null)}
                         helperText={
                           error != null
-                            ? 'Es obligatorio ingresar un nombre'
-                            : 'Ingrese nombre'
+                            ? ''
+                            : ''
                         }
                       />
                     )}
                   />
                 </Grid>
-
-
               </Grid>
-            </Grid>
-          </DialogContent>
+            </DialogContent>
 
-          <DialogActions>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+
+          </Grid>
+
+        </DialogContent>
+
+        <DialogActions>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+          >
+            <Button
+              variant="outlined"
+              onClick={handle_close_cv_com_is_active}
+              startIcon={<CloseIcon />}
             >
-              <Button
-                variant="outlined"
-                onClick={handle_close_cv_com_is_active}
-                startIcon={<CloseIcon />}
-              >
-                CERRAR
-              </Button>
-              {action === "create" ?
-                <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
-                  GUARDAR
+              CERRAR
+            </Button>
+            {action === "create" ?
+              <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+                GUARDAR
+              </Button> :
+              action === "edit" ?
+                <Button type="submit" variant="contained" startIcon={<EditIcon />}>
+                  EDITAR
                 </Button> :
-                action === "edit" ?
-                  <Button type="submit" variant="contained" startIcon={<EditIcon />}>
-                    EDITAR
-                  </Button> :
-                  null
-              }
-            </Stack>
-          </DialogActions>
+                null
+            }
+          </Stack>
+        </DialogActions>
 
 
 
-        </Grid>
+
       </Box>
     </Dialog>
   );
