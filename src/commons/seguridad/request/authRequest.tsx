@@ -9,7 +9,8 @@ import {
 // import { control_error } from '../../../helpers/controlError';
 import type { IList,ResponseServer } from '../../../interfaces/globalModels';
 import { control_error } from '../../../helpers/controlError';
-import type {DelegarSuper,InfoPersonal } from '../interfaces/SeguridadModels'
+import type { DelegarSuper, InfoPersonal } from '../interfaces';
+
 
 export const change_super_user = (): DelegarSuper  => {
 

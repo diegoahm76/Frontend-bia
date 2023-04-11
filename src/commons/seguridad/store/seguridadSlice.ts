@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { type IRolesInfo } from '../interfaces/seguridadModels';
+import { type IRolesInfo } from '../interfaces';
 
 const initial_state: IRolesInfo = {
   roles: [],

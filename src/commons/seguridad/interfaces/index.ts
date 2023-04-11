@@ -1,1 +1,1 @@
-export * from './seguridadModels';
+export * from './SeguridadModels';

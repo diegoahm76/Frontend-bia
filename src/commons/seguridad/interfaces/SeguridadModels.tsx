@@ -1,4 +1,4 @@
-import {  type Dispatch, type SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import type { IList } from '../../../interfaces/globalModels';
 
 export interface DelegarSuper {
@@ -43,3 +43,15 @@ export interface DelegarSuper {
     // id_persona_crea: string;
     // id_persona_ultim_actualiz_diferente_crea: string;
   }
+
+  export interface Roles {
+    id_rol: number;
+    nombre_rol: string;
+    descripcion_rol: string;
+    Rol_sistema: boolean;
+  }
+  
+  export interface IRolesInfo {
+    roles: Roles[];
+  }
+  
