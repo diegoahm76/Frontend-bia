@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
@@ -12,7 +12,7 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   alerta_editado: any;
   set_alerta_editado: Dispatch<SetStateAction<any>>;
-  confi_alerta_persona:() => Promise<void>
+  confi_alerta_persona: () => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -36,50 +36,11 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
   const handle_close = (): void => {
     set_is_modal_active(false);
   }
-  const tipo_estacion = [
-    {
-      value: 'TMP',
-      label: 'Temperatura'
-    },
-    {
-      value: 'HUR',
-      label: 'Humedad',
-    },
-    {
-      value: 'PRB',
-      label: 'Presion barometrica'
-    },
-    {
-      value: 'VDV',
-      label: 'Velocidad del viento',
-    },
-    {
-      value: 'DDV',
-      label: 'Direccion del viento'
-    },
-    {
-      value: 'PCT',
-      label: 'Precipitacion',
-    },
-    {
-      value: 'LMN',
-      label: 'Luminosidad'
-    },
-    {
-      value: 'NDA',
-      label: 'Nivel del agua',
-    },
-    {
-      value: 'VDA',
-      label: 'velocidad del agua',
-    },
-  ]
 
   const on_submit = async (data: CrearAlerta): Promise<any> => {
     try {
       const datos_confi = {
 
-        nombre_variable_alarma: data.nombre_variable_alarma,
         mensaje_alarma_maximo: data.mensaje_alarma_maximo,
         mensaje_alarma_minimo: data.mensaje_alarma_minimo,
         mensaje_no_alarma: data.mensaje_no_alarma,
@@ -91,7 +52,8 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
       set_is_modal_active(false);
       control_success('La configuración se actualizó correctamente')
       void confi_alerta_persona()
-    } catch (error) { 
+      reset();
+    } catch (error) {
       control_error(error);
     }
   };
@@ -104,23 +66,6 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                label="Nombre Variable"
-                select
-                fullWidth
-                defaultValue={alerta_editado?.nombre_variable_alarma}
-                {...register("nombre_variable_alarma", { required: true })}
-                error={Boolean(errors.nombre_variable_alarma)}
-                helperText={(errors.nombre_variable_alarma != null) ? "Este campo es obligatorio" : ""}
-              >
-                {tipo_estacion.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 label="Mensaje Maximo"
@@ -165,7 +110,10 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handle_close}>Cancelar</Button>
+          <Button onClick={() => {
+            handle_close();
+            reset();
+          }}>Cancelar</Button>
           <Button variant="contained" color="primary" type='submit'>Actualizar</Button>
         </DialogActions>
       </form>

@@ -19,7 +19,7 @@ export const checking_authentication: (
   return async (dispatch: Dispatch<any>) => {
     dispatch(checking_credentials());
 
-    const { ok, data, error_message } = await login_post({
+    const { ok, data, error_message, is_blocked } = await login_post({
       nombre_de_usuario,
       password
     });
@@ -29,7 +29,7 @@ export const checking_authentication: (
     }
 
     if (!ok) {
-      dispatch(logout({ error_message }));
+      dispatch(logout({ error_message, is_blocked }));
       return;
     }
 

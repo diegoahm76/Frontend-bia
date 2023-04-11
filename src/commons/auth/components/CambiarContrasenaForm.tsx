@@ -2,38 +2,17 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 import { api } from '../../../api/axios';
 import { Button, Grid, Box, TextField, Typography } from '@mui/material';
-import { type SubmitHandler, useForm } from 'react-hook-form';
-import { toast, type ToastContent } from 'react-toastify';
+import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import { type AxiosError } from 'axios';
+import {
+  control_success,
+  control_error,
+  validate_password,
+} from '../../../helpers';
+import '../css/index.css';
 
 const params = new URLSearchParams(window.location.search);
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
 
 interface IDefaultValuesUpdatePassword {
   password: string;
@@ -50,55 +29,60 @@ export const CambiarContrasena: React.FC = () => {
   const navigate = useNavigate();
   const token = params.get('?token');
   const uidb64 = params.get('uidb64');
-  // const token_valido = params.get('?token-valid');
-  const [is_diferent_passwords, set_is_diferent_passwords] =
-    useState<boolean>(false);
-
   const {
     register,
     handleSubmit: handle_submit,
-    // formState: { errors },
+    formState: { errors },
+    watch,
   } = useForm<IDefaultValuesUpdatePassword>({ defaultValues: default_values });
+  const [message_error, set_message_error_password] = useState('');
+  const [is_error_password, set_error_password] = useState(false);
 
-  const on_submit_new_password: SubmitHandler<
-    IDefaultValuesUpdatePassword
-  > = async (data: IDefaultValuesUpdatePassword) => {
-    if (data.password !== data.password2) {
-      set_is_diferent_passwords(true);
+  const password = watch('password');
+  const password2 = watch('password2');
+
+  useEffect(() => {
+    if (password !== password2) {
+      set_message_error_password('Las contraseñas no son iguales');
+      set_error_password(true);
       return;
     }
-    set_is_diferent_passwords(false);
-    const axios_body = {
-      password: data.password,
-      token,
-      uidb64,
-    };
-    console.log(axios_body);
-    try {
-      const { data: data_reset_password } = await api.patch(
-        'users/pasword-reset-complete',
-        axios_body
-      );
-      control_success('Contraseña cambiada correctamente');
-      console.log(data_reset_password);
-      navigate('/auth/login');
-    } catch (err: any) {
-      console.log(err);
-      control_error(err?.response.data.detail);
-      return err as AxiosError;
+
+    if (password !== undefined && password !== '') {
+      if (!validate_password(password)) {
+        set_error_password(true);
+        set_message_error_password(
+          'La contraseña no cumple con el formato requerido'
+        );
+        return;
+      }
     }
-  };
+    set_error_password(false);
+  }, [password, password2]);
+
+  const on_submit_new_password = handle_submit(
+    async (data: IDefaultValuesUpdatePassword) => {
+      try {
+        const axios_body = {
+          password: data.password,
+          token,
+          uidb64,
+        };
+        await api.patch('users/pasword-reset-complete', axios_body);
+        control_success('Contraseña cambiada correctamente');
+        navigate('/auth/login');
+      } catch (err: any) {
+        control_error(err?.response.data.detail);
+        return err as AxiosError;
+      }
+    }
+  );
 
   useEffect(() => {}, []);
 
   return (
     <>
       <Grid item>
-        {/* {token_valido !== null ? (
-          <Chip size="small" label="Sí" color="success" variant="outlined" />
-        ) : (
-          <Chip size="small" label="No" color="error" variant="outlined" />
-        )} */}
         <Typography
           textAlign="center"
           variant={'body2'}
@@ -110,46 +94,55 @@ export const CambiarContrasena: React.FC = () => {
       </Grid>
       <Box
         component="form"
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={handle_submit(on_submit_new_password)}
+        onSubmit={(e) => {
+          void on_submit_new_password(e);
+        }}
       >
-        <Grid item>
-          <TextField
-            label="Nueva contraseña"
-            variant="standard"
-            fullWidth
-            error={is_diferent_passwords}
-            helperText={
-              is_diferent_passwords && 'Las contraseñas deben coincidir'
-            }
-            {...register('password', {
-              required: {
-                value: true,
-                message: 'El campo es requerido',
-              },
-              minLength: {
-                value: 6,
-                message: 'La contraseña debe tener 6 carácteres mínimio',
-              },
-            })}
-          />
-          <TextField
-            label="Confirme su contraseña"
-            variant="standard"
-            fullWidth
-            {...register('password2', {
-              required: {
-                value: true,
-                message: 'El campo es requerido',
-              },
-              minLength: {
-                value: 6,
-                message: 'La contraseña debe tener 6 carácteres mínimio',
-              },
-            })}
-          />
-
-          <Grid item justifyContent="center" container>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <p className="title">
+              La contraseña debe cumplir con el siguiente formato:
+            </p>
+            <ul className="formatoPassowrd">
+              <li>Debe contener mínimo 6 caracteres</li>
+              <li>Debe contener 1 Caracter en Mayúscula</li>
+              <li>Debe contener 1 Caracter numérico</li>
+              <li>Debe contener 1 Caracter simbólico (*,-,_,%...)</li>
+            </ul>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Nueva contraseña"
+              variant="standard"
+              fullWidth
+              error={is_error_password || errors.password?.type === 'required'}
+              helperText={message_error}
+              {...register('password', {
+                required: true,
+                minLength: {
+                  value: 8,
+                  message: 'La contraseña debe tener 6 carácteres mínimio',
+                },
+              })}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Confirme su contraseña"
+              variant="standard"
+              fullWidth
+              error={is_error_password || errors.password2?.type === 'required'}
+              helperText={message_error}
+              {...register('password2', {
+                required: true,
+                minLength: {
+                  value: 8,
+                  message: 'La contraseña debe tener 6 carácteres mínimio',
+                },
+              })}
+            />
+          </Grid>
+          <Grid item xs={12} justifyContent="center" container>
             <Button
               sx={{ mt: '20px' }}
               fullWidth
@@ -158,18 +151,14 @@ export const CambiarContrasena: React.FC = () => {
               size="small"
               color="success"
               disableElevation
-              // loading={}
-              // disabled={disable}
               style={{ fontSize: '.9rem' }}
             >
               Enviar
             </Button>
           </Grid>
-          <Grid item sx={{ pt: '10px !important' }}>
+          <Grid item xs={12} justifyContent="center" container>
             <Link className="no-decoration" to="/auth/login">
-              <Typography sx={{ textAlign: 'center', mb: '20px' }}>
-                Iniciar sesión
-              </Typography>
+              <Typography textAlign="center">Iniciar sesión</Typography>
             </Link>
           </Grid>
         </Grid>
