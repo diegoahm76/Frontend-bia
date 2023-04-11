@@ -7,7 +7,8 @@ import type {
   Permisos,
   DataRegistePortal,
   UserCreate,
-  DataUnlockUser
+  DataUnlockUser,
+  InfoPersonaComplete
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -79,6 +80,12 @@ export const get_person_by_document = async (
   return await api.get(
     `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
   );
+};
+
+export const get_info_person_by_document = async (
+  id_persona: number
+): Promise<AxiosResponse<ResponseServer<InfoPersonaComplete>>> => {
+  return await api.get(`/personas/get-by-id/${id_persona}/`);
 };
 
 export const crear_persona_natural_and_user = async (

@@ -99,7 +99,6 @@ export const RegisterForm: React.FC = () => {
   }, [watch('tipo_persona')]);
 
   useEffect(() => {
-    console.log(watch('tipo_documento'));
     if (watch('tipo_documento') !== undefined) {
       set_tipo_documento(watch('tipo_documento'));
     }
