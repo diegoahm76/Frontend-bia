@@ -29,6 +29,7 @@ import { current_bien } from '../store/slice/configuracionSlice';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function TipificacionBienesScreen(): JSX.Element {
   // const navigate = useNavigate();
+  
   const dispatch = useAppDispatch();
   const  [action, set_action ] = useState<string>("create");
   const { bienes } = useAppSelector((state) => state.configuracion);

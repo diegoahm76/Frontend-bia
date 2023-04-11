@@ -4,20 +4,21 @@ import { get_person_by_document } from '../request/authRequest';
 import type { IList } from '../../../interfaces/globalModels';
 import type {
   DataRegistePortal,
-  keys_object,
+  // keys_object,
   ReisterHook,
 } from '../interfaces';
-import dayjs, { type Dayjs } from 'dayjs';
+import { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import {
   get_ciudades,
   get_departamentos,
   get_estado_civil,
   get_generos,
+  get_naturaleza_emp,
   get_paises,
   get_tipo_documento,
   get_tipo_persona,
-} from '../../../request/getRequest';
+} from '../../../request/';
 
 type options = 'inicial' | 'residencia' | 'notificacion';
 
@@ -30,6 +31,7 @@ export const use_register = (): ReisterHook => {
   >([]);
   const [ciudad_notificacion, set_ciudad_notificacion] = useState('');
   const [ciudad_residencia, set_ciudad_residencia] = useState('');
+  const [nombre_representante, set_nombre_representante] = useState('');
   const [ciudades_opt, set_ciudades_opt] = useState<IList[]>([]);
   const [ciudades_residencia_opt, set_ciudades_residencia_opt] = useState<
     IList[]
@@ -41,6 +43,8 @@ export const use_register = (): ReisterHook => {
     []
   );
   const [dpto_notifiacion, set_dpto_notifiacion] = useState('');
+  const [naturaleza_emp, set_naturaleza_emp] = useState('');
+  const [nacionalidad_emp, set_nacionalidad_emp] = useState('');
   const [dpts_residencia_opt, set_dpto_residencia_opt] = useState<IList[]>([]);
   const [error_email, set_error_email] = useState(false);
   const [error_password, set_error_password] = useState(false);
@@ -48,7 +52,9 @@ export const use_register = (): ReisterHook => {
   const [estado_civil_opt, set_estado_civil_opt] = useState<IList[]>([]);
   const [estado_civil, set_estado_civil] = useState('');
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
+  const [fecha_rep_legal, set_fecha_rep_legal] = useState<Dayjs | null>(null);
   const [genero_opt, set_genero_opt] = useState<IList[]>([]);
+  const [naturaleza_emp_opt, set_naturaleza_emp_opt] = useState<IList[]>([]);
   const [genero, set_genero] = useState('');
   const [has_user, set_has_user] = useState(false);
   const [is_exists, set_is_exists] = useState(false);
@@ -57,6 +63,7 @@ export const use_register = (): ReisterHook => {
   const [loading, set_loading] = useState<boolean>(false);
   const [message_error_password, set_message_error_password] = useState('');
   const [pais_nacimiento, set_pais_nacimiento] = useState('');
+  const [tipo_documento_rep, set_tipo_documento_rep] = useState('');
   const [pais_notificacion, set_pais_notificacion] = useState('');
   const [pais_residencia, set_pais_residencia] = useState('');
   const [paises_options, set_paises_options] = useState<IList[]>([]);
@@ -68,16 +75,7 @@ export const use_register = (): ReisterHook => {
     IList[]
   >([]);
   const [tipo_documento, set_tipo_documento] = useState('');
-  const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([
-    {
-      value: 'N',
-      label: 'Natural',
-    },
-    {
-      value: 'J',
-      label: 'Juridica',
-    },
-  ]);
+  const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
   const [tipo_persona, set_tipo_persona] = useState('');
   const [data_register, set_data_register] = useState<DataRegistePortal>({
     cod_naturaleza_empresa: '',
@@ -118,7 +116,14 @@ export const use_register = (): ReisterHook => {
     primer_apellido: '',
     primer_nombre: '',
     razon_social: '',
+    tipo_documento_rep: '',
+    numero_documento_rep: '',
     representante_legal: '',
+    nombre_rep: '',
+    celular_rep: '',
+    direccion_rep: '',
+    ciudad_rep: '',
+    email_rep: '',
     require_nombre_comercial: false,
     segundo_apellido: '',
     segundo_nombre: '',
@@ -133,6 +138,7 @@ export const use_register = (): ReisterHook => {
     redirect_url:
       'https://macareniafrontendevelopv2.netlify.app/#/auth/activacion_cuenta',
   });
+  const [message_no_person, set_message_no_person] = useState('');
 
   const handle_change_checkbox = (
     event: ChangeEvent<HTMLInputElement>
@@ -162,8 +168,15 @@ export const use_register = (): ReisterHook => {
       const generos = await get_generos();
       set_genero_opt(generos);
 
-      const estado_civil = await get_estado_civil();
+      const {
+        data: { data: estado_civil },
+      } = await get_estado_civil();
       set_estado_civil_opt(estado_civil);
+
+      const {
+        data: { data: naturaleza },
+      } = await get_naturaleza_emp();
+      set_naturaleza_emp_opt(naturaleza);
     } catch (err) {
       control_error(err);
     } finally {
@@ -177,7 +190,6 @@ export const use_register = (): ReisterHook => {
 
   // Valida si la persona a registrar ya esta registrada en el sistema
   const validate_exits = async (numero_documento: string): Promise<void> => {
-    // console.log(getValues());
     set_is_search(true);
     try {
       const {
@@ -186,31 +198,14 @@ export const use_register = (): ReisterHook => {
 
       if (data !== null && data !== undefined) {
         if (!data.tiene_usuario) {
-          set_data_register({ ...data });
-          for (const key in data) {
-            const temp_key = key as keys_object;
-            setValue(key, data[temp_key]);
-          }
-          setValue('numero_documento', data.numero_documento);
-          setValue('digito_verificacion', data.digito_verificacion);
-          setValue('nombre_comercial', data.nombre_comercial);
-          setValue('primer_nombre', data.primer_nombre);
-          setValue('segundo_nombre', data.segundo_nombre);
-          setValue('primer_apellido', data.primer_apellido);
-          setValue('segundo_apellido', data.segundo_apellido);
-          setValue('fecha_nacimiento', data.fecha_nacimiento);
-          setValue('email', data.email);
-          setValue('confirmar_email', data.email);
-          setValue('telefono_celular', data.telefono_celular);
-          setValue('razon_social', data.razon_social);
-          setValue('telefono_celular_empresa', data.telefono_celular_empresa);
-          setValue('direccion_notificaciones', data.direccion_notificaciones);
-          setValue('representante_legal', data.representante_legal);
-          setValue(
-            'cod_municipio_notificacion_nal',
-            data.cod_municipio_notificacion_nal
-          );
-          set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
+          // set_data_register({ ...info_person });
+          // for (const key in data) {
+          //   const temp_key = key as keys_object;
+          //   setValue(key, data[temp_key]);
+          // }
+          // setValue('numero_documento', data.numero_documento);
+
+          // set_fecha_nacimiento(dayjs(info_person.fecha_nacimiento));
           set_is_exists(true);
           return;
         } else {
@@ -221,6 +216,44 @@ export const use_register = (): ReisterHook => {
         set_has_user(false);
         set_is_exists(false);
       }
+    } catch (error) {
+      control_error(error);
+    } finally {
+      set_is_search(false);
+    }
+  };
+
+  const validate_exits_representante = async (
+    numero_documento: string
+  ): Promise<void> => {
+    set_is_search(true);
+    set_message_no_person('');
+    try {
+      const {
+        data: { data },
+      } = await get_person_by_document(tipo_documento_rep, numero_documento);
+
+      if (data !== null && data !== undefined) {
+        if (data.id_persona !== 0) {
+          set_data_register({
+            ...data_register,
+            tipo_documento_rep: data.tipo_documento,
+            numero_documento_rep: data.numero_documento,
+            nombre_rep: data.nombre_completo,
+          });
+          set_nombre_representante(data.nombre_completo);
+          setValue('tipo_documento_rep', data.tipo_documento);
+          setValue('numero_documento_rep', data.numero_documento);
+          setValue('nombre_rep', data.nombre_completo);
+          return;
+        } else {
+          set_is_exists(true);
+          return;
+        }
+      }
+      set_message_no_person(
+        'No existe ninguna persona registrada con esta cédula'
+      );
     } catch (error) {
       control_error(error);
     } finally {
@@ -323,7 +356,7 @@ export const use_register = (): ReisterHook => {
     }
   }, [tipo_persona]);
   useEffect(() => {
-    // void get_selects_options();
+    void get_selects_options();
   }, []);
 
   return {
@@ -364,6 +397,20 @@ export const use_register = (): ReisterHook => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
+    naturaleza_emp_opt,
+    naturaleza_emp,
+    nacionalidad_emp,
+    tipo_documento_rep,
+    message_no_person,
+    nombre_representante,
+    fecha_rep_legal,
+    set_fecha_rep_legal,
+    set_nombre_representante,
+    set_message_no_person,
+    validate_exits_representante,
+    set_tipo_documento_rep,
+    set_nacionalidad_emp,
+    set_naturaleza_emp,
     get_selects_options,
     handle_change_checkbox,
     handle_click_show_password,

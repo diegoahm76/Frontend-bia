@@ -8,6 +8,10 @@ import { HashRouter } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistStore } from 'redux-persist';
 import 'react-toastify/dist/ReactToastify.css';
+// import "primereact/resources/themes/bootstrap4-dark-purple/theme.css";     
+import "primereact/resources/themes/lara-light-indigo/theme.css";   
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";     
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
