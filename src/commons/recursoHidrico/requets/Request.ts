@@ -53,7 +53,7 @@ export const consultar_estaciones = async (): Promise<Estaciones[]> => {
 }
 // consultar datos por id estación
 export const consultar_datos_id = async (id: number | string): Promise<Datos[]> => {
-  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id/${id}/`);
+  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id-primeros/${id}/`);
   return data;
 }
 
