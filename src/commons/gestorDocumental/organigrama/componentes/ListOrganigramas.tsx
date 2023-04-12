@@ -12,15 +12,18 @@ import {
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedInOutlined';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/VisibilityOutlined';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import EditIcon from '@mui/icons-material/EditOutlined';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 // Hooks
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // Thunks
 import { get_organigrams_service } from '../store/thunks/organigramThunks';
+// Dialogs
 import DialogCrearOrganigrama from './DialogCrearOrganigrama';
 import DialogElegirOrganigramaActual from './DialogElegirOrganigramaActual';
+import DialogDelegarOrganigrama from './DialogDelegarOrganigrama';
 // Slices
 import { current_organigram } from '../store/slices/organigramSlice';
 
@@ -40,6 +43,8 @@ export function ListOrganigramas({
     elegir_organigrama_actual_is_active,
     set_elegir_organigrama_actual_is_active,
   ] = useState<boolean>(false);
+  const [delegar_organigrama_is_active, set_delegar_organigrama_is_active] =
+    useState<boolean>(false);
 
   const columns: GridColDef[] = [
     { field: 'id_organigrama', headerName: 'ID', width: 20 },
@@ -154,6 +159,26 @@ export function ListOrganigramas({
               )}
             </Avatar>
           </IconButton>
+          <IconButton
+            onClick={() => {
+              dispatch(current_organigram(params.row));
+              set_delegar_organigrama_is_active(true);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <ManageAccountsOutlinedIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
         </>
       ),
     },
@@ -206,6 +231,10 @@ export function ListOrganigramas({
       <DialogElegirOrganigramaActual
         is_modal_active={elegir_organigrama_actual_is_active}
         set_is_modal_active={set_elegir_organigrama_actual_is_active}
+      />
+      <DialogDelegarOrganigrama
+        is_modal_active={delegar_organigrama_is_active}
+        set_is_modal_active={set_delegar_organigrama_is_active}
       />
     </>
   );

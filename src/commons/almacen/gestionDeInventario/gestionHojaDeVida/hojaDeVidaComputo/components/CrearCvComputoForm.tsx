@@ -60,12 +60,14 @@ const CrearCvComputoForm = ({
   // const [file, set_file] = useState<any>(null);
 
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { control: control_computo, handleSubmit: handle_submit, reset: reset_computer } =
     useForm<FormValues>();
   useEffect(() => {
     reset_computer(current_cv_computer);
   }, [current_computer]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const on_submit = (data: FormValues): void => {
     const form_data: any = new FormData();
     form_data.append("sistema_operativo", data.sistema_operativo);

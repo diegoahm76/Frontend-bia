@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { Title } from '../../../../../components/Title';
+import { Title } from '../../../../../components';
 import { ArticuloComponent } from './components/ArticuloComponent';
 import { DetallesComponent } from './components/DetallesComponent';
 import { MantenimientoComponent } from './components/MantenimientoComponent';
@@ -12,7 +12,7 @@ import { PrevisualizacionComponent } from './components/PrevisualizacionComponen
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ProgramacionManteniento:React.FC = () => {
+export const ProgramacionMantenientoScreen:React.FC = () => {
 
     return (
         <>

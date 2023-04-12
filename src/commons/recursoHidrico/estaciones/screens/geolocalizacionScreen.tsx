@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { consultar_datos_id, consultar_estaciones } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
+import { Box, Divider, Typography } from '@mui/material';
 
 // const position: L.LatLngExpression = [5.258179477894017, -73.60700306515551];
 
@@ -16,6 +17,11 @@ const icon_locate = new L.Icon({
   iconUrl: icono,
   iconSize: [30, 30],
 });
+
+const map_style = {
+  height: "90vh",
+  width: "90vw"
+};
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GeolocalizacionScreen: React.FC = () => {
@@ -32,12 +38,12 @@ export const GeolocalizacionScreen: React.FC = () => {
         fecha_modificacion: estaciones.fecha_modificacion,
         nombre_estacion: estaciones.nombre_estacion,
         cod_tipo_estacion: estaciones.cod_tipo_estacion,
-        // cod_municipio: estaciones.cod_municipio,
+        cod_municipio: estaciones.cod_municipio,
         latitud: estaciones.latitud,
         longitud: estaciones.longitud,
         indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
         fecha_modificacion_coordenadas: estaciones.fecha_modificacion_coordenadas,
-        id_persona_modifica: estaciones.id_persona_modifica
+        nombre_persona_modifica: estaciones.nombre_persona_modifica
 
       }));
 
@@ -84,45 +90,49 @@ export const GeolocalizacionScreen: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
   if (!info.length) return <Grid className="Loading"></Grid>;  
 
-  const markers = info.map((estacion) => {
+  const markers = info.map((estacion) => (
+    <Marker
+      key={estacion.id_estacion}
+      position={[estacion.longitud, estacion.latitud]}
+      icon={icon_locate}
+      eventHandlers={{
+        click: () => {
+          void traer_dato({ estacion: { value: estacion.id_estacion } });
+          console.log('marker clicked');
+        },
+      }}
+    >
+      <Popup>
+        <Typography text-align="center">
+          <strong>Estacion: </strong> {estacion.nombre_estacion} 
+        </Typography>
+        <Divider className="divider2" sx={{ m: '10px 0' }} />
 
-    return (
-      <Marker
-        key={estacion.id_estacion}
-        position={[estacion.longitud, estacion.latitud]}
-        icon={icon_locate}
-        eventHandlers={{
-          click: () => {
-            void traer_dato({ estacion: { value: estacion.id_estacion } });
-            console.log('marker clicked')
-          },
-        }}
-      >
-        <Popup >
-          Estacion: {estacion.nombre_estacion} <br/><br/>
-          Latitud: {estacion.latitud} <br/>
-          Longitud: {estacion.longitud} <br/><br/>
-          {dato.length > 0 ? (
-            <div>
-              <div>Fecha: {dato[0].fecha_registro}</div>
-              <div>Temperatura: {dato[0].temperatura_ambiente}</div>
-              <div>Humedad: {dato[0].humedad_ambiente}</div>
-              <div>Presión: {dato[0].presion_barometrica}</div>
-              <div>Velocidad de viento: {dato[0].velocidad_viento}</div>
-              <div>Dirección del viento: {dato[0].direccion_viento}</div>
-              <div>Precipitación: {dato[0].precipitacion}</div>
-              <div>Luminosidad: {dato[0].luminosidad}</div>
-              <div>Nivel de agua: {dato[0].nivel_agua}</div>
-              <div>Velocidad del agua: {dato[0].velocidad_agua}</div>
-              
-            </div>
-          ) : (
-            <div>No hay datos disponibles</div>
-          )}
-        </Popup>
-      </Marker>
-    );
-  });
+        {dato.length > 0 ? (
+          <Box
+          > 
+          Estación: {estacion.nombre_estacion} <br />          
+          Tipo: {estacion.cod_tipo_estacion} <br />
+          Latitud: {estacion.latitud} <br />
+          Longitud: {estacion.longitud} <br /><br />  
+            <div>Fecha: {dato[0].fecha_registro}</div>
+            <div>Temperatura: {dato[0].temperatura_ambiente}</div>
+            <div>Humedad: {dato[0].humedad_ambiente}</div>
+            <div>Presión: {dato[0].presion_barometrica}</div>
+            <div>Velocidad de viento: {dato[0].velocidad_viento}</div>
+            <div>Dirección del viento: {dato[0].direccion_viento}</div>
+            <div>Precipitación: {dato[0].precipitacion}</div>
+            <div>Luminosidad: {dato[0].luminosidad}</div>
+            <div>Nivel de agua: {dato[0].nivel_agua}</div>
+            <div>Velocidad del agua: {dato[0].velocidad_agua}</div>
+
+          </Box>
+        ) : (
+          <div>No hay datos disponibles</div>
+        )}
+      </Popup>
+    </Marker>
+  ));
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const firstEstacion = info[0];
@@ -132,25 +142,27 @@ export const GeolocalizacionScreen: React.FC = () => {
   ];
 
   return (
-    <Grid>
-      <MapContainer
-        center={center}
-        zoom={8}
-        style={{ height: '500px' }}
-        scrollWheelZoom={true}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-        />
+    <Grid item>
+      <Box sx={{ width: '100%'}}>
+        <MapContainer
+          center={center}
+          zoom={8}
+          style={map_style}
+          scrollWheelZoom={true}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+          />
 
-        {markers}
-        {/* <Marker position={position} icon={icon_locate}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker> */}
-      </MapContainer>
+          {markers}
+          {/* <Marker position={position} icon={icon_locate}>
+            <Popup>
+              A pretty CSS3 popup. <br /> Easily customizable.
+            </Popup>
+          </Marker> */}
+        </MapContainer>
+      </Box>
     </Grid>
   );
 };

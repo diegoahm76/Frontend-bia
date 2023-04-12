@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Grid, Box, Stack, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import { Grid, Box, Stack, Button, FormControl, FormHelperText, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
@@ -40,32 +40,32 @@ export const UsuariosScreen: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      headerName: "Estacion",
+      headerName: "ESTACIÓN",
       field: "nombre_estacion",
       minWidth: 140,
       editable: true,
     },
     {
-      headerName: "Tipo de documento",
+      headerName: "TIPO DOC.",
       field: "cod_tipo_documento_id",
       minWidth: 140,
       editable: true,
     },
     {
-      headerName: "Identificacion",
+      headerName: "IDENTIFICACIÓN",
       field: "numero_documento_id",
       minWidth: 140,
       editable: true,
     },
-    { headerName: "Primer Nombre", field: "primer_nombre", minWidth: 140 },
-    { headerName: "Primer Apellido", field: "primer_apellido", minWidth: 140 },
-    { headerName: "Entidad", field: "entidad", minWidth: 140 },
-    { headerName: "Cargo", field: "cargo", minWidth: 140 },
-    { headerName: "Email", field: "email_notificacion", minWidth: 140 },
-    { headerName: "Celular", field: "nro_celular_notificacion", minWidth: 140 },
-    { headerName: "Observacion", field: "observacion", minWidth: 140 },
+    { headerName: "PRIMER NOMBRE", field: "primer_nombre", minWidth: 140 },
+    { headerName: "PRIMER APELLIDO", field: "primer_apellido", minWidth: 140 },
+    { headerName: "ENTIDAD", field: "entidad", minWidth: 140 },
+    { headerName: "CARGO", field: "cargo", minWidth: 140 },
+    { headerName: "EMAIL", field: "email_notificacion", minWidth: 140 },
+    { headerName: "CELULAR", field: "nro_celular_notificacion", minWidth: 140 },
+    { headerName: "OBSERVACIÓN", field: "observacion", minWidth: 140 },
     {
-      headerName: "Acciones",
+      headerName: "ACCIONES",
       field: "acciones",
       minWidth: 140,
       renderCell: (params) => (
@@ -76,7 +76,6 @@ export const UsuariosScreen: React.FC = () => {
             onClick={() => {
               set_usuario_editado(params.row);
               set_is_modal_editar_active(!is_modal_editar_active);
-              console.log("se enviaron los siguientes parametros", params.row);
             }}
           >
             <EditIcon fontSize="small" />
@@ -207,20 +206,18 @@ export const UsuariosScreen: React.FC = () => {
           >
             <Title title="PARTES INTERESADAS"></Title>
           </Grid>
-          <form className="row" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
-            {/* <form className='row'> */}
-            <Grid item xs={12} sm={4}>
-              <Stack sx={{ m: '20px 0' }} direction="row" spacing={2}>
+          <Typography sx={{ mt: '10px' }}>
+            Estación:
+          </Typography>
+          <Box component="form" onSubmit={handle_submit_filtrar(on_submit_filtrar)}>
+            <Grid item xs={12}>
+              <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
+
                 <FormControl fullWidth>
-                  <InputLabel>
-                    <span style={{ color: "red" }}></span>
-                  </InputLabel>
                   <Controller
                     name="estacion"
                     control={control_filtrar}
-                    rules={{
-                      required: true,
-                    }}
+                    rules={{ required: true }}
                     render={({ field }) => (
                       <Select
                         {...field}
@@ -229,31 +226,43 @@ export const UsuariosScreen: React.FC = () => {
                       />
                     )}
                   />
-                  {(errors_filtrar.estacion != null) && (
+                  {errors_filtrar.estacion != null && (
                     <FormHelperText error>
                       Seleccione una estación para continuar
-
                     </FormHelperText>
                   )}
                 </FormControl>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  disabled={loading}
-                  className="text-capitalize rounded-pill  "
-                  startIcon={
-                    loading ? (
-                      <CircularProgress size={20} />
-                    ) : (
-                      <SearchIcon />
-                    )
-                  }
-                >
-                  {loading ? "Cargando..." : ""}
-                </Button>
+                <FormControl fullWidth>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    disabled={loading}
+                    className="search-button text-capitalize rounded-pill"
+                    startIcon={
+                      loading
+                        ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                        : <SearchIcon />
+                    }
+                    aria-label="Buscar "
+                    size="large"
+                  >
+                    Buscar
+                    {loading ? '' : ""}
+                  </Button>
+                </FormControl>
+                <FormControl fullWidth>
+                  <Button
+                    variant="outlined"
+                    size="large"
+                    onClick={handle_open_crear_persona}
+                    startIcon={<AddIcon />}
+                  >
+                    Agregar
+                  </Button>
+                </FormControl>
               </Stack>
             </Grid>
-          </form>
+          </Box>
           {estaciones_meteologicas.length > 0 && (
             <>
               <Grid
@@ -276,14 +285,6 @@ export const UsuariosScreen: React.FC = () => {
               >
                 <Title title="INFORMACIÓN GENERAL"></Title>
               </Grid>
-              <Button
-                variant="outlined"
-                sx={{ m: '20px 0' }}
-                onClick={handle_open_crear_persona}
-                startIcon={<AddIcon />}
-              >
-                Agregar
-              </Button>
               <Grid item>
                 <Box>
                   <DataGrid
