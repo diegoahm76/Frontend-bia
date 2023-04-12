@@ -13,6 +13,8 @@ import {
   AccordionSummary,
   Typography,
   Card,
+  Alert,
+  AlertTitle,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SaveIcon from '@mui/icons-material/Save';
@@ -61,19 +63,21 @@ export const FormAdminRoles = ({
   const [is_create, set_is_create] = useState('');
   const [form_values, set_form_values] = useState({
     nombre_rol: '',
-    permisosRol: [],
     descripcion_rol: '',
+    permisosRol: [],
   });
   const [permisos, set_permisos] = React.useState([]);
 
   const {
     register: register_rol_permiso,
-    // watch: watch_permiso,
+    watch: watch_permiso,
     // reset: reset_permiso,
     // control: control_rol_permiso,
     handleSubmit: handle_submit_rol_permiso,
     // formState: { errors: errors_rol_permiso },
   } = useForm();
+
+  console.log(watch_permiso('permisosRol'));
 
   const handle_change =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -111,6 +115,7 @@ export const FormAdminRoles = ({
   };
 
   const on_submit_rol_permiso = async (data: any): Promise<void> => {
+    console.log(data);
     if (is_create === 'crear') {
       const rol_create = {
         nombre_rol: data.nombre_rol,
@@ -177,7 +182,7 @@ export const FormAdminRoles = ({
     <>
       <Grid item xs={12}>
         <Title title="LUGAR DE RESIDENCIA" />
-        <Box sx={{ m: '20px 0' }}>
+        <Box sx={{ mt: '20px' }}>
           <Box
             component="form"
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -205,90 +210,120 @@ export const FormAdminRoles = ({
               <Grid item xs={12} sm={3}></Grid>
               <Grid item xs={12} sm={3}></Grid>
             </Grid>
+            <Box sx={{ mt: '20px' }}>
+              {permisos.map((subsistema: any, index) => (
+                <>
+                  <Accordion
+                    key={subsistema.subsistema}
+                    elevation={5}
+                    expanded={expanded === `panel${index + 1}`}
+                    onChange={handle_change(`panel${index + 1}`)}
+                  >
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1bh-content"
+                      id="panel1bh-header"
+                    >
+                      <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                        {subsistema.desc_subsistema}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Grid container direction="row" spacing={3}>
+                        {subsistema.modulos.map((modulo: any): any => (
+                          <>
+                            <Grid item xs={12} sm={6}>
+                              <Card sx={{ p: '10px' }}>
+                                <Box sx={{ flexDirection: 'column' }}>
+                                  {Object.keys(modulo.permisos).length > 0 ? (
+                                    <Typography>
+                                      <FormControlLabel
+                                        label={modulo.nombre_modulo}
+                                        control={
+                                          <Checkbox
+                                            key={modulo.id_modulo}
+                                            checked={
+                                              checked[index] &&
+                                              checked[index + 1]
+                                            }
+                                            indeterminate={
+                                              checked[index] !==
+                                              checked[index + 1]
+                                            }
+                                            onChange={handle_change_1}
+                                          />
+                                        }
+                                      />
+                                    </Typography>
+                                  ) : (
+                                    <Typography sx={{ p: '0 0 10px 10px' }}>
+                                      {modulo.nombre_modulo}
+                                    </Typography>
+                                  )}
+
+                                  {Object.keys(modulo.permisos).length > 0 ? (
+                                    Object.keys(modulo.permisos).map(
+                                      (permiso: any, index) => (
+                                        <FormControlLabel
+                                          key={modulo.permisos[permiso].id}
+                                          labelPlacement="top"
+                                          label={permiso}
+                                          control={
+                                            <Checkbox
+                                              {...register_rol_permiso(
+                                                'permisosRol'
+                                              )}
+                                              checked={
+                                                modulo.permisos[permiso].value
+                                              }
+                                              onChange={(event) => {
+                                                handle_change_2(
+                                                  event,
+                                                  modulo.permisos[permiso].id
+                                                );
+                                                set_form_values(form_values);
+                                              }}
+                                            />
+                                          }
+                                        />
+                                      )
+                                    )
+                                  ) : (
+                                    <Box>
+                                      <Alert severity="info">
+                                        <AlertTitle>Info</AlertTitle>
+                                        Sin acciones disponibles
+                                      </Alert>
+                                    </Box>
+                                  )}
+                                </Box>
+                              </Card>
+                            </Grid>
+                          </>
+                        ))}
+                      </Grid>
+                    </AccordionDetails>
+                  </Accordion>
+                </>
+              ))}
+            </Box>
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mt: '20px' }}
+            >
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                startIcon={<SaveIcon />}
+              >
+                CREAR
+              </Button>
+            </Stack>
           </Box>
         </Box>
-
-        <Box sx={{ m: '20px 0' }}>
-          {permisos.map((subsistema: any, index) => (
-            <>
-              <Accordion
-                key={subsistema.subsistema}
-                elevation={5}
-                expanded={expanded === `panel${index + 1}`}
-                onChange={handle_change(`panel${index + 1}`)}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1bh-content"
-                  id="panel1bh-header"
-                >
-                  <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                    {subsistema.desc_subsistema}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Grid container direction="row" spacing={3}>
-                    {subsistema.modulos.map((modulo: any): any => (
-                      <>
-                        <Grid item xs={12} sm={6}>
-                          <Card sx={{ p: '10px' }}>
-                            <Typography>
-                              <FormControlLabel
-                                label={modulo.nombre_modulo}
-                                control={
-                                  <Checkbox
-                                    key={modulo.id_modulo}
-                                    checked={
-                                      checked[index] && checked[index + 1]
-                                    }
-                                    indeterminate={
-                                      checked[index] !== checked[index + 1]
-                                    }
-                                    onChange={handle_change_1}
-                                  />
-                                }
-                              />
-                              <Box sx={{ flexDirection: 'column' }}>
-                                {Object.keys(modulo.permisos).map(
-                                  (permiso, index) => (
-                                    <FormControlLabel
-                                      key={index}
-                                      labelPlacement="top"
-                                      label={permiso}
-                                      control={
-                                        <Checkbox
-                                          checked={checked[index]}
-                                          onChange={(event) => {
-                                            handle_change_2(event, index + 1);
-                                            set_form_values(form_values);
-                                          }}
-                                        />
-                                      }
-                                    />
-                                  )
-                                )}
-                              </Box>
-                            </Typography>
-                          </Card>
-                        </Grid>
-                      </>
-                    ))}
-                  </Grid>
-                </AccordionDetails>
-              </Accordion>
-            </>
-          ))}
-        </Box>
-        <Stack
-          direction="row"
-          justifyContent="flex-end"
-          spacing={2}
-          sx={{ m: '20px 0' }}
-        >
-          <Button variant="contained" color="primary" startIcon={<SaveIcon />}>
-            CREAR
-          </Button>
-        </Stack>
       </Grid>
     </>
   );
