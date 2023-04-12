@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react'; // eslint-disable-next-line @typescript-eslint/naming-convention
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';

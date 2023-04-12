@@ -35,10 +35,6 @@ export const AlmacenRoutes: React.FC = () => {
         path="configuracion_datos_basicos/*"
         element={<ConfiguracionDatosBasicosRoutes />}
       />
-      {/* <Route
-        path="programacion_mantenimiento"
-        element={<ProgramacionManteniento />}
-      /> */}
       <Route
         path="gestion_inventario/*"
         element={<GestionInventarioRoutes />}
