@@ -22,72 +22,27 @@ export const RegisterForm: React.FC = () => {
     setValue: set_value,
     formState: { errors },
     watch,
-  } = useForm<DataRegistePortal>({
-    defaultValues: {
-      acepta_notificacion_email: false,
-      acepta_notificacion_sms: false,
-      acepta_tratamiento_datos: false,
-      cod_municipio_laboral_nal: '',
-      cod_municipio_notificacion_nal: '',
-      confirmar_celular: '',
-      confirmar_email: '',
-      confirmar_password: '',
-      digito_verificacion: '',
-      direccion_laboral: '',
-      direccion_notificaciones: '',
-      direccion_residencia_ref: '',
-      direccion_residencia: '',
-      email_empresarial: '',
-      email: '',
-      estado_civil: '',
-      fecha_nacimiento: '',
-      municipio_residencia: '',
-      nombre_comercial: '',
-      nombre_de_usuario: '',
-      numero_documento: '',
-      pais_nacimiento: '',
-      pais_residencia: '',
-      password: '',
-      primer_apellido: '',
-      primer_nombre: '',
-      razon_social: '',
-      representante_legal: '',
-      require_nombre_comercial: false,
-      segundo_apellido: '',
-      segundo_nombre: '',
-      sexo: '',
-      telefono_celular_empresa: '',
-      telefono_celular: '',
-      telefono_empresa_2: '',
-      telefono_fijo_residencial: '',
-      tipo_documento: '',
-      tipo_persona: '',
-      ubicacion_georeferenciada: '',
-      cod_naturaleza_empresa: '',
-      cod_pais_nacionalidad_empresa: '',
-      telefono_empresa: '',
-      fecha_inicio_cargo_rep_legal: '',
-      redirect_url: '',
-    },
-  });
+  } = useForm<DataRegistePortal>();
   const {
+    data_register,
+    is_search,
+    loading,
+    tipo_documento_opt,
+    tipo_documento,
+    tipo_persona_opt,
     tipo_persona,
+    set_data_register,
+    set_numero_documento,
     set_tipo_documento,
     set_tipo_persona,
     validate_exits,
-    is_search,
-    tipo_persona_opt,
-    loading,
-    tipo_documento,
-    tipo_documento_opt,
-    set_data_register,
-    data_register,
   } = use_register();
   const numero_documento = watch('numero_documento');
 
   // Consultamos si el usuario existe
   useEffect(() => {
     if (numero_documento !== undefined && numero_documento !== '') {
+      set_numero_documento(numero_documento);
       void validate_exits(numero_documento);
     }
   }, [numero_documento]);
@@ -148,6 +103,7 @@ export const RegisterForm: React.FC = () => {
             loading={loading}
             disabled={false}
             required={true}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -160,6 +116,7 @@ export const RegisterForm: React.FC = () => {
             loading={loading}
             disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
             required={true}
+            errors={errors}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -199,7 +156,9 @@ export const RegisterForm: React.FC = () => {
         )}
       </Grid>
       {tipo_persona === 'N' && <RegisterPersonaNatural />}
-      {tipo_persona === 'J' && <RegisterPersonaJuridica />}
+      {tipo_persona === 'J' && (
+        <RegisterPersonaJuridica numero_documento={numero_documento} />
+      )}
     </>
   );
 };

@@ -144,6 +144,7 @@ export const DesbloqueodeUsuario: React.FC = () => {
               options={tipo_documento_opt}
               loading={is_loading}
               required={true}
+              errors={errors}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
