@@ -48,6 +48,7 @@ interface Props {
   numero_documento: string;
   tipo_documento: string;
   tipo_persona: string;
+  has_user: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -55,6 +56,7 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
   numero_documento,
   tipo_documento,
   tipo_persona,
+  has_user,
 }: Props) => {
   const {
     register,
@@ -68,7 +70,6 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
     error_email,
     error_password,
     error_phone,
-    has_user,
     is_exists,
     is_saving,
     paises_options,

@@ -31,6 +31,7 @@ export const RegisterForm: React.FC = () => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
+    has_user,
     set_data_register,
     set_numero_documento,
     set_tipo_documento,
@@ -154,12 +155,27 @@ export const RegisterForm: React.FC = () => {
             </Grid>
           </Grid>
         )}
+        {has_user && (
+          <Grid item xs={12}>
+            <Grid container justifyContent="center" textAlign="center">
+              <Alert icon={false} severity="error">
+                <Typography>
+                  Lo sentimos, este documento ya tiene un usuario, puede iniciar
+                  sesión con su usuario y contraseña, si ha olvidado sus datos
+                  de acceso, dirigase al inicio de sesión y haga click en
+                  ¿Olvidó su contraseña?
+                </Typography>
+              </Alert>
+            </Grid>
+          </Grid>
+        )}
       </Grid>
       {tipo_persona === 'N' && (
         <RegisterPersonaNatural
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
+          has_user={has_user}
         />
       )}
       {tipo_persona === 'J' && (
@@ -167,6 +183,7 @@ export const RegisterForm: React.FC = () => {
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
+          has_user={has_user}
         />
       )}
     </>

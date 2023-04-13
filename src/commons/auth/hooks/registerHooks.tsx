@@ -195,6 +195,8 @@ export const use_register = (): ReisterHook => {
   const validate_exits = async (numero_documento: string): Promise<void> => {
     set_is_search(true);
     try {
+      set_has_user(false);
+      set_is_exists(false);
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
@@ -214,7 +216,6 @@ export const use_register = (): ReisterHook => {
           set_is_exists(true);
           return;
         } else {
-          console.log('tiene usuario');
           set_has_user(true);
           return;
         }
