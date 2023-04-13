@@ -3,24 +3,20 @@
 import { useState } from 'react';
 import { Title } from '../../../../components/Title';
 import jsPDF from 'jspdf';
-import { Button, Grid, Typography, Stack, Select, FormControl, MenuItem, FormHelperText, Box, InputLabel, CircularProgress } from '@mui/material';
+import { TextField , Button, Grid, Typography, Stack, Select, FormControl, MenuItem, FormHelperText, Box, InputLabel, CircularProgress } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { api } from '../../../../api/axios';
 import "react-datepicker/dist/react-datepicker.css";
-import { TextField } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import esLocale from 'dayjs/locale/es'; // si deseas cambiar el idioma a español
-import dayjs from 'dayjs';
-import 'dayjs/locale/es'; // importar el idioma español
-import { consultar_estaciones } from '../../requets/Request';
-import { Estaciones } from '../interfaces/interfaces';
-import { control_error } from '../../../../helpers/controlError';
+import dayjs from 'dayjs';// importar el idioma español
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ReportesScreen: React.FC = () => {
 
-  const [info, set_info] = useState<Estaciones[]>([]);
+
   const [select_reporte, set_select_reporte] = useState({
     opciones_reportes: 0,
   });
@@ -48,6 +44,7 @@ export const ReportesScreen: React.FC = () => {
   const handle_input_change = (date: Date | null) => {
     set_fecha_inicial(date)
   };
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'long',
@@ -70,7 +67,7 @@ export const ReportesScreen: React.FC = () => {
 
   }
 
-  const fetch_data_2 = async (): Promise<{ data: any, unique_days: { [key: string]: boolean } }> => {
+  const fetch_data_2 = async (): Promise<{ data: any, unique_days: Record<string, boolean> }> => {
     set_loading(true);
     const fecha = dayjs(fecha_inicial).format("YYYY-MM");
     const response = await api.get(
@@ -82,7 +79,7 @@ export const ReportesScreen: React.FC = () => {
     const month = dayjs(fecha_inicial).month();
     const num_days = new Date(year, month + 1, 0).getDate();
 
-    const unique_days: { [key: string]: boolean } = {};
+    const unique_days: Record<string, boolean> = {};
     for (let i = 1; i <= num_days; i++) {
       const date_str = dayjs().set('year', year).set('month', month).set('date', i).format("YYYY-MM-DD");
       unique_days[date_str] = false;
@@ -101,8 +98,7 @@ export const ReportesScreen: React.FC = () => {
       }
     }
 
-    // verificar si hay datos en todos los días únicos del mes
-    const all_days_have_data = Object.values(unique_days).indexOf(false) === -1;
+    
 
     set_loading(false);
     return { data: response.data, unique_days };
@@ -113,11 +109,11 @@ export const ReportesScreen: React.FC = () => {
     control: control_filtrar,
     formState: { errors: errors_filtro },
   } = useForm();
-  const generate_pdf_2 = (data: any, unique_days: { [key: string]: boolean }): void => {
+  const generate_pdf_2 = (data: any, unique_days: Record<string, boolean>): void => {
     // eslint-disable-next-line new-cap
     const doc: jsPDF = new jsPDF();
 
-    //Establecer la fuente y tamaño de letra
+    // Establecer la fuente y tamaño de letra
     const font_props = {
       size: 12
     };
@@ -134,7 +130,7 @@ export const ReportesScreen: React.FC = () => {
     const title = `CERTIFICADO MENSUAL DE LA ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
     const title_width = doc.getTextWidth(title);
     const x_pos = (doc.internal.pageSize.width - title_width) / 2;
-    const options = { month: 'long', year: 'numeric' };
+    // const options = { month: 'long', year: 'numeric' };
     doc.addImage(image_data, 160, 5, 40, 15)
     doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
@@ -144,12 +140,13 @@ export const ReportesScreen: React.FC = () => {
     doc.text(`En el mes de ${fecha} la estación hidrometerologica ubicada en la coordenada presento `, 30, 50);
     doc.text(`las siguientes variaciones`, 30, 60);
     doc.setFont("Arial", "normal");
-    //const unavailable_days = Object.keys(unique_days).filter(day => !unique_days[day]);
+    // const unavailable_days = Object.keys(unique_days).filter(day => !unique_days[day]);
     // const available_days = Object.keys(unique_days).filter(day => unique_days[day]);
-    const get_available_days = (unique_days: { [key: string]: boolean }): string[] => {
+    const get_available_days = (unique_days: Record<string, boolean>): string[] => {
       const available_days: string[] = [];
 
-      for (let day in unique_days) {
+      for (const day in unique_days) {
+        // eslint-disable-next-line no-prototype-builtins
         if (unique_days.hasOwnProperty(day)) {
           if (unique_days[day]) {
             available_days.push(day);
@@ -311,7 +308,7 @@ export const ReportesScreen: React.FC = () => {
     doc.text(`La luminosidad promedio que se presento en el mes ${fecha} fue de ${luminosidad_avg.toFixed(2)} Lux`, 30, 250);
     doc.text(`La luminosidad mínima que se presento en el mes ${fecha} fue de${luminosidad_min.toFixed(2)} Lux`, 30, 260);
     doc.text(`La luminosidad maxima que se presento en el mes ${fecha} fue de ${luminosidad_max.toFixed(2)} Lux`, 30, 270);
-    doc.addPage() //Salto de pagina
+    doc.addPage() // Salto de pagina
     doc.addImage(image_data, 160, 5, 40, 15)
     doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
