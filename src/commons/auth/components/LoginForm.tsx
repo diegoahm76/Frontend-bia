@@ -199,7 +199,7 @@ export const LoginForm: React.FC = () => {
               type="button"
               variant="outlined"
               fullWidth
-              color="primary"
+              color={theme.palette.mode === 'light' ? 'primary' : 'inherit'}
               style={{ fontSize: '.9rem' }}
             >
               <Link className="no-decoration" to="/auth/register">
@@ -238,7 +238,7 @@ export const LoginForm: React.FC = () => {
           >
             <Typography sx={{ fontSize: '17px' }}>Bienvenido</Typography>
             <Typography sx={{ fontSize: '13px', textAlign: 'justify' }}>
-              Este es nuestro portal de trámites en lineá un sistema fácil de
+              Este es nuestro portal de trámites en linea un sistema fácil de
               usar, ágil y sencillo para el control general de solicitudes y
               requerimientos ambientales en el departamento del Meta.
             </Typography>

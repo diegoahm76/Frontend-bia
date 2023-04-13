@@ -17,9 +17,10 @@ import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
 
 const columns: GridColDef[] = [
-    { field: 'id_alerta_equipo_estacion', headerName: 'NÚMERO', width: 200 },
+    { field: 'id_alerta_equipo_estacion', headerName: 'NÚMERO', width: 100 },
     { field: 'nombre_estacion', headerName: 'ESTACIÓN ', width: 200 },
     { field: 'descripcion', headerName: 'DESCRIPCIÓN ', width: 400 },
+    { field: 'nombre_variable', headerName: 'NOMBRE VARIABLE', width: 200 },
     { field: 'fecha_generacion', headerName: 'FECHA', width: 200 }
 ];
 
@@ -74,8 +75,10 @@ export const HistorialEquipos: React.FC = () => {
                 id_alerta_equipo_estacion: dato.id_alerta_equipo_estacion,
                 nombre_estacion: dato.nombre_estacion,
                 descripcion: dato.descripcion,
+                nombre_variable: dato.nombre_variable,
                 fecha_generacion: dato.fecha_generacion,
             }));
+            console.log("Datos encontrados", datos_mapeados)
             set_dato(datos_mapeados); // guardar el valor en el estado
             set_loading(false);
         } catch (err) {

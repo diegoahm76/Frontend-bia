@@ -20,7 +20,8 @@ export const CustomSelect = ({
   disabled = false,
   required = false,
   onChange,
-}: PropsSelect<keys_object>): JSX.Element => {
+}: // errors,
+PropsSelect<keys_object>): JSX.Element => {
   const {
     register,
     formState: { errors },
