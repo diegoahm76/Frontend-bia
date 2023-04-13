@@ -48,6 +48,7 @@ export interface Equipo {
     id_alerta_equipo_estacion: number,
     nombre_estacion: string,
     descripcion: string,
+    nombre_variable: string,
     fecha_generacion: string | Date,
 }
 export interface HistorialAlerta {

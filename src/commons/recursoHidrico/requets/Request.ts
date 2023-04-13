@@ -53,7 +53,7 @@ export const consultar_estaciones = async (): Promise<Estaciones[]> => {
 }
 // consultar datos por id estación
 export const consultar_datos_id = async (id: number | string): Promise<Datos[]> => {
-  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id/${id}/`);
+  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id-primeros/${id}/`);
   return data;
 }
 
@@ -167,7 +167,7 @@ export const consultar_historial_equipo = async (id: number, fecha: string| Date
 // consultar historial equipo
 export const consultar_historial_alertas = async (id: number, fecha: string| Date | null): Promise<HistorialAlerta[]> => {
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const { data } = await api.get<ResponseServer<HistorialAlerta[]>>(`estaciones/historial/consultar-historial-equipo/${id}/${fecha}/`);
+  const { data } = await api.get<ResponseServer<HistorialAlerta[]>>(`estaciones/historial/consultar-historial-alertas/${id}/${fecha}/`);
   return data.data;
 }
 
