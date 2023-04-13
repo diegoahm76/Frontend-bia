@@ -124,15 +124,14 @@ export const ReportesScreen: React.FC = () => {
     const title = `CERTIFICADO MENSUAL DE LA ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
     const title_width = doc.getTextWidth(title);
     const x_pos = (doc.internal.pageSize.width - title_width) / 2;
-    const options = { month: 'long', year: 'numeric' };
     doc.addImage(image_data, 160, 5, 40, 15)
     doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
     doc.text(title, x_pos, 30);
     const fecha = dayjs(fecha_inicial).locale('es').format('MMMM [de] YYYY')
     doc.setFont("Arial", "normal"); // establece la fuente en Arial
-    doc.text(`En el mes de ${fecha} la estación hidrometerologica ubicada en la coordenada presento `, 30, 50);
-    doc.text(`las siguientes variaciones`, 30, 60);
+    doc.text(`En el mes de ${fecha} la ${selected_station?.label ?? 'Ninguna estación seleccionada'} `, 30, 50);
+    doc.text(`presento las siguientes variaciones`, 30, 60);
     doc.setFont("Arial", "normal");
 
     const unavailable_days = Object.keys(unique_days).filter(day => !unique_days[day])
