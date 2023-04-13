@@ -1,17 +1,21 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useEffect, useState } from "react";
-import { Grid, Stack, Typography, FormControl, TextField, Autocomplete, } from '@mui/material';
+import { Grid, Stack, Typography, MenuItem, Autocomplete, Box } from '@mui/material';
 import { api } from "../../../../api/axios";
 import type { Datos } from "../interfaces/interfaces";
 import { Title } from '../../../../components/Title';
 import { Controller, useForm } from "react-hook-form";
-import DatePicker from "react-datepicker";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import "react-datepicker/dist/react-datepicker.css";
-// import moment from 'moment';
 import { control_success, control_success_fail } from '../../requets/Request';
-import es from "date-fns/locale/es";
+import esLocale from 'dayjs/locale/es';
 import ChartData from "../components/ChartData";
-// import { DataChart } from "../components/DataChart";
+import "react-datepicker/dist/react-datepicker.css";
+import dayjs from 'dayjs';
+import { TextField } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 
 interface Variables {
     title: string,
@@ -21,27 +25,22 @@ interface Variables {
 }
 
 
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DashboardScreen: React.FC = () => {
 
 
     const [selectdashboards, set_select_dashboards] = useState({
-        opc_dashboards: 1,
+        opc_dashboards: "0"
     })
-    const {
-        control,
-    } = useForm();
 
     const opc_dashboards = [
-        { label: 'Estación Guamal', value: 1 },
-        { label: 'Estación Guayuriba', value: 2 },
-        { label: 'Estación Ocoa', value: 3 },
-        { label: 'Estación Puerto Gaitan', value: 4 },
+        { label: 'Estación Guamal', value: "1" },
+        { label: 'Estación Guayuriba', value: "2" },
+        { label: 'Estación Ocoa', value: "3" },
+        { label: 'Estación Puerto Gaitan', value: "4" },
     ];
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [start_date, set_start_date] = useState<Date | null>(null);
-    const [end_date, set_end_date] = useState<Date | null>(null);
 
     const [opc_variables, set_opc_variables] = useState<Variables[]>([
         { title: 'Temperatura', chart_id: "temperatura", data: [], value: 1 },
@@ -61,27 +60,35 @@ export const DashboardScreen: React.FC = () => {
 
     const [variable_selected, set_variable_selected] = useState<Variables>({ title: 'Temperatura', chart_id: "temperatura", data: [], value: 1 });
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
+    const [start_date, set_start_date] = useState<Date | null>(new Date());
+
+    const [end_date, set_end_date] = useState<Date | null>(new Date());
+
+
     const handle_start_date_change = (date: Date | null) => {
-        const start_date_string = (date != null) ? date.toISOString().slice(0, 10) : '';
-        console.log(start_date_string);
         set_start_date(date)
-        return start_date_string
     };
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
     const handle_end_date_change = (date: Date | null) => {
-        const end_date_string = (date != null) ? date.toISOString().slice(0, 10) : '';
-        console.log(end_date_string);
         set_end_date(date)
-        return end_date_string
     };
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const get_datos_estaciones = async (): Promise<Datos[]> => {
+    const options: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    };
+    const {
+        control: control_filtrar,
+        formState: { errors: errors_filtro },
+    } = useForm();
+    const get_datos_estaciones = async (): Promise<any> => {
 
-        console.log("consultado...")
+        const fecha_1 = dayjs(start_date).format('YYYY-MM-DD')
+        const fecha_2 = dayjs(end_date).format('YYYY-MM-DD')
         const { data } = await api.get(
-            `estaciones/datos/consultar-datos-fecha/${selectdashboards.opc_dashboards}/${(start_date != null) ? start_date.toISOString().slice(0, 10) : ''}/${(end_date != null) ? end_date.toISOString().slice(0, 10) : ''}`
+            `estaciones/datos/consultar-datos-fecha/${fecha_1}/${fecha_2}`
         );
         console.log("fin consulta")
         if ("data" in data) {
@@ -166,72 +173,290 @@ export const DashboardScreen: React.FC = () => {
             >
                 <Grid item xs={12} spacing={2}>
 
+                    <Title title="Comportamiento de las variables" />
+                    <Box mb={2} style={{ marginTop: '20px' }}>
+                        <Controller
+                            name="opcDashboard"
+                            control={control_filtrar}
+                            defaultValue={""}
+                            rules={{ required: true }}
+                            render={({ field: { onChange, value } }) => (
+                                <TextField
+                                    margin="dense"
+                                    fullWidth
+                                    select
+                                    size="small"
+                                    label="Estación"
+                                    variant="outlined"
+                                    defaultValue={value}
+                                    value={value}
+                                    onChange={(event) => {
+                                        const selectedValue = event.target.value;
+                                        set_select_dashboards({ opc_dashboards: selectedValue });
+                                        onChange(selectedValue, event);
+                                    }}
+                                >
+                                    {opc_dashboards.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
 
-                    <Controller
-                        name="opcDashboard"
-                        control={control}
-                        render={({ field }) => (
-                            <FormControl fullWidth>
-                                <Title title="Comportamiento de las variables" />
-                                <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
-                                    <Controller
-                                        name="opcDashboard"
-                                        control={control}
-                                        render={({ field }) => (
-                                            <TextField
-                                                {...field}
-                                                onChange={(e) => {
-                                                    set_select_dashboards({
-                                                        ...selectdashboards,
-                                                        opc_dashboards: parseInt(e.target.value)
-                                                    });
-                                                }}
-                                                select
-                                                variant="outlined"
-                                                label="Estacion"
-                                                defaultValue={"Estacion"}
-                                                value={null}
-                                                SelectProps={{
-                                                    native: true,
-                                                }}
-                                            >
-                                                {opc_dashboards.map((option) => (
-                                                    <option key={option.value} value={option.value}>
-                                                        {option.label}
-                                                    </option>
-                                                ))}
-                                            </TextField>
-                                        )}
-                                    />
-                                </Stack>
-                            </FormControl>
-                        )}
-                    />
+                            )}
+                        />
+                    </Box>
 
-                    <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards === 0}>
+                    <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "1"}>
                         <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
 
                         <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
 
                             <label >Fecha Inicial</label>
-
-                            <DatePicker
-                                selected={start_date}
-                                onChange={(date) => {
-                                    handle_start_date_change(date);
-                                }}
-                                placeholderText="Fecha inicial"
-                                locale={es}
-                            />
+                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                <DatePicker
+                                    label="Desde la fecha"
+                                    inputFormat="YYYY/MM/DD"
+                                    openTo="day"
+                                    views={['year', 'month', 'day']}
+                                    value={start_date}
+                                    onChange={handle_start_date_change}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </LocalizationProvider>
                             <label>Fecha Final</label>
-                            <DatePicker
-                                locale={es}
-                                selected={end_date}
-                                onChange={(date) => {
-                                    handle_end_date_change(date);
-                                }}
-                                placeholderText="Fecha Final"
-                            />
+                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                <DatePicker
+                                    label="Hasta la fecha"
+                                    inputFormat="YYYY/MM/DD"
+                                    openTo="day"
+                                    views={['year', 'month', 'day']}
+                                    value={end_date}
+                                    onChange={handle_end_date_change}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </LocalizationProvider>
+
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+                            <Grid item xs={11} md={3} margin={2} >
+
+                                <Autocomplete
+                                    {...set_variables_select}
+                                    id="controlled-demo"
+                                    value={variable_selected}
+                                    onChange={(event: any, newValue: any) => {
+                                        set_variable_selected(newValue);
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Seleccione variable" variant="standard" />
+                                    )}
+                                />
+                            </Grid>
+                        </Stack>
+
+
+                        <Typography variant="body1" align="center">
+
+                            <Title title={variable_selected.title} ></Title>
+                            <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
+                        </Typography>
+                    </Typography>
+                    <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "2"}>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
+
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+
+                            <label >Fecha Inicial</label>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                <DatePicker
+                                    label="Desde la fecha"
+                                    inputFormat="YYYY/MM/DD"
+                                    openTo="day"
+                                    views={['year', 'month', 'day']}
+                                    value={start_date}
+                                    onChange={handle_start_date_change}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </LocalizationProvider>
+                            <label>Fecha Final</label>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                <DatePicker
+                                    label="Hasta la fecha"
+                                    inputFormat="YYYY/MM/DD"
+                                    openTo="day"
+                                    views={['year', 'month', 'day']}
+                                    value={end_date}
+                                    onChange={handle_end_date_change}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </LocalizationProvider>
+
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+                            <Grid item xs={11} md={3} margin={2} >
+
+                                <Autocomplete
+                                    {...set_variables_select}
+                                    id="controlled-demo"
+                                    value={variable_selected}
+                                    onChange={(event: any, newValue: any) => {
+                                        set_variable_selected(newValue);
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Seleccione variable" variant="standard" />
+                                    )}
+                                />
+                            </Grid>
+                        </Stack>
+
+
+                        <Typography variant="body1" align="center">
+
+                            <Title title={variable_selected.title} ></Title>
+                            <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
+                        </Typography>
+                    </Typography>
+                    <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "3"}>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
+
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+
+                            <label >Fecha Inicial</label>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                <DatePicker
+                                    label="Desde la fecha"
+                                    inputFormat="YYYY/MM/DD"
+                                    openTo="day"
+                                    views={['year', 'month', 'day']}
+                                    value={start_date}
+                                    onChange={handle_start_date_change}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </LocalizationProvider>
+                            <label>Fecha Final</label>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                <DatePicker
+                                    label="Hasta la fecha"
+                                    inputFormat="YYYY/MM/DD"
+                                    openTo="day"
+                                    views={['year', 'month', 'day']}
+                                    value={end_date}
+                                    onChange={handle_end_date_change}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </LocalizationProvider>
+
+                        </Stack>
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+                            <Grid item xs={11} md={3} margin={2} >
+
+                                <Autocomplete
+                                    {...set_variables_select}
+                                    id="controlled-demo"
+                                    value={variable_selected}
+                                    onChange={(event: any, newValue: any) => {
+                                        set_variable_selected(newValue);
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField {...params} label="Seleccione variable" variant="standard" />
+                                    )}
+                                />
+                            </Grid>
+                        </Stack>
+
+
+                        <Typography variant="body1" align="center">
+
+                            <Title title={variable_selected.title} ></Title>
+                            <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
+                        </Typography>
+                    </Typography>
+                    <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "4"}>
+                        <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
+
+                        <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+
+                            <label >Fecha Inicial</label>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                <DatePicker
+                                    label="Desde la fecha"
+                                    inputFormat="YYYY/MM/DD"
+                                    openTo="day"
+                                    views={['year', 'month', 'day']}
+                                    value={start_date}
+                                    onChange={handle_start_date_change}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </LocalizationProvider>
+                            <label>Fecha Final</label>
+                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                <DatePicker
+                                    label="Hasta la fecha"
+                                    inputFormat="YYYY/MM/DD"
+                                    openTo="day"
+                                    views={['year', 'month', 'day']}
+                                    value={end_date}
+                                    onChange={handle_end_date_change}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            required
+                                            fullWidth
+                                            size="small"
+                                            {...params}
+                                        />
+                                    )}
+                                />
+                            </LocalizationProvider>
 
                         </Stack>
                         <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >

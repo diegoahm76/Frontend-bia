@@ -50,7 +50,7 @@ export interface Equipo {
     descripcion: string,
     fecha_generacion: string | Date,
 }
-export interface HistorialAlerta{
+export interface HistorialAlerta {
     id_historial_alarma_enviada_estacion: number
     nombre_estacion: string,
     id_persona_estacion: string | number,
@@ -137,6 +137,7 @@ export interface CrearAlerta {
     mensaje_no_alarma: string;
     frecuencia_alarma: number;
 }
+
 export interface Tipos {
     frecuencia_solicitud_datos: number;
     temperatura_ambiente_max: number;
