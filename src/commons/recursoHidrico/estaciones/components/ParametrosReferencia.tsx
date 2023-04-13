@@ -45,7 +45,7 @@ export const ParametrosReferencia: React.FC = () => {
 
         {
             field: 'acciones',
-            headerName: 'Aciones',
+            headerName: 'ACCIONES',
             width: 200,
             renderCell: (params) => (
                 <>
