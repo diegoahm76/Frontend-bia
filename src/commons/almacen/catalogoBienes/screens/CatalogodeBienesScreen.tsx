@@ -51,10 +51,9 @@ export const CatalogodeBienesScreen: React.FC = () => {
         {node.data.editar?
         <Button
           type="button"
-          startIcon={<EditIcon />}
+          startIcon={<EditIcon sx={{ color: 'primary.main', width: '18px', height: '18px' }} />}
           title="Editar"
-          style={{ marginRight: ".5em", color: "black", border: "none" }}
-          disabled={!node.data.editar}
+           disabled={!node.data.editar}
           onClick={() => {
             dispatch(current_bien(node));
             set_action("create_sub")
@@ -64,14 +63,15 @@ export const CatalogodeBienesScreen: React.FC = () => {
         {node.data.eliminar?
         <Button
           type="button"
-          startIcon={<DeleteIcon />}
+          startIcon={<DeleteIcon sx={{ color: 'primary.main', width: '18px', height: '18px' }} />}
           className="p-button-danger p-button-outlined"
           title="Eliminar"
           onClick={() => {
             dispatch(delete_nodo_service(node.data.id_nodo));
-          }}
-          style={{ marginRight: ".5em", color: "black", border: "none" }}
+          }}          
+          
           disabled={!node.data.eliminar}
+          
         ></Button>:null}
       </>
     );
@@ -98,15 +98,13 @@ export const CatalogodeBienesScreen: React.FC = () => {
           <Stack direction="row" spacing={2} sx={{ m: "20px 0" }}>
             <Button
               variant="outlined"
-              startIcon={<AddIcon style={{ fontSize: "20px" }} />}
+              startIcon={<AddIcon />}
               onClick={() => {
                 dispatch(current_bien(initial_state_current_nodo));
                 set_action("create")
                 set_add_bien_is_active(true);
               }}
-              type="button"
-              title="Agregar"
-              color="inherit"
+          
             >
               Crear Carpeta Padre
             </Button>
