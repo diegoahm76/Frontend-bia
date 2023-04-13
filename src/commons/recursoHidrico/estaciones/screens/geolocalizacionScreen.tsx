@@ -1,12 +1,13 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { type Datos, type Estaciones } from '../interfaces/interfaces';
+import type { DatosMigracion, Datos, Estaciones } from '../interfaces/interfaces';
 import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
-import { consultar_datos_id, consultar_estaciones } from '../../requets/Request';
+import { consultar_datos_id, consultar_datos_id_migracion, consultar_estaciones } from '../../requets/Request'
 import { control_error } from '../../../../helpers/controlError';
 import { Box, Divider, Typography } from '@mui/material';
+import type { AxiosError } from 'axios';
 
 // const position: L.LatLngExpression = [5.258179477894017, -73.60700306515551];
 
@@ -27,6 +28,7 @@ const map_style = {
 export const GeolocalizacionScreen: React.FC = () => {
   const [info, set_info] = useState<Estaciones[]>([]);
   const [dato, set_dato] = useState<Datos[]>([]);
+  const [dato_migracion, set_dato_migracion] = useState<DatosMigracion[]>([]);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const obtener_posicion = async () => {
@@ -50,11 +52,19 @@ export const GeolocalizacionScreen: React.FC = () => {
       set_info(pos_maped);
       console.log('paso', pos_maped);
 
-    } catch (err) {
-      control_error(err);
-    }
-  };  
-
+    } catch (err: unknown) {
+      const temp_error = err as AxiosError
+      console.log("Error", temp_error)
+      if (temp_error.response?.status === 404) {
+        control_error("No se encontraron estaciones");
+        console.log("No hay datos");
+        set_dato([]);
+      } else {
+        // Otro error, mostrar mensaje de error genérico
+        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+      }
+    };
+  }
   useEffect(() => {
     void obtener_posicion();
   }, []);
@@ -82,13 +92,64 @@ export const GeolocalizacionScreen: React.FC = () => {
       console.log("Paso");
       console.log("Datos", [datos]);
       set_dato([datos])
-    } catch (err) {
-      control_error(err);
-    }
+    } catch (err: unknown) {
+      const temp_error = err as AxiosError
+      console.log("Error", temp_error.response?.status)
+      if (temp_error.response?.status === 404) {
+        control_error("No se encontraron datos para esta estación");
+        console.log("No hay datos");
+        set_dato([]);
+      } else {
+        // Otro error, mostrar mensaje de error genérico
+        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+      }
+    };
   };
-
+  const traer_dato_migracion = async (data: { estacion: { value: any; }; }): Promise<any> => {
+    try {
+      set_dato([])
+      const estacion_id = data.estacion?.value;
+      const estacion = await consultar_datos_id_migracion(estacion_id);
+      const ultimo_dato = estacion[estacion.length - 1];
+      const datos = {
+        id_migracion_estacion: ultimo_dato.id_migracion_estacion,
+        id_estacion: ultimo_dato.id_estacion,
+        nombre: ultimo_dato.nombre,
+        fecha: ultimo_dato.fecha,
+        temperatura: ultimo_dato.temperatura,
+        temperatura_max: ultimo_dato.temperatura_max,
+        temperatura_min: ultimo_dato.temperatura_min,
+        humedad_relativa: ultimo_dato.humedad_relativa,
+        punto_de_rocio: ultimo_dato.punto_de_rocio,
+        presion_atm_abs: ultimo_dato.presion_atm_abs,
+        presion_atm_rel: ultimo_dato.presion_atm_rel,
+        intensidad: ultimo_dato.intensidad,
+        precipitacion: ultimo_dato.precipitacion,
+        nivel_agua: ultimo_dato.nivel_agua,
+        nivel_agua_max: ultimo_dato.nivel_agua_max,
+        nivel_agua_min: ultimo_dato.nivel_agua_min,
+        velocidad_rio: ultimo_dato.velocidad_rio,
+        caudal: ultimo_dato.caudal,
+        voltaje: ultimo_dato.voltaje
+      };
+      console.log("Paso");
+      console.log("Datos", [datos]);
+      set_dato_migracion([datos]);
+    } catch (err: unknown) {
+      const temp_error = err as AxiosError
+      console.log("Error", temp_error.response?.status)
+      if (temp_error.response?.status === 404) {
+        control_error("No se encontraron datos para esta estación");
+        console.log("No hay datos");
+        set_dato([]);
+      } else {
+        // Otro error, mostrar mensaje de error genérico
+        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+      }
+    };
+  };
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-  if (!info.length) return <Grid className="Loading"></Grid>;  
+  if (!info.length) return <Grid className="Loading"></Grid>;
 
   const markers = info.map((estacion) => (
     <Marker
@@ -97,38 +158,68 @@ export const GeolocalizacionScreen: React.FC = () => {
       icon={icon_locate}
       eventHandlers={{
         click: () => {
-          void traer_dato({ estacion: { value: estacion.id_estacion } });
+          set_dato([]);
+          set_dato_migracion([]);
+          const id_estacion_saleccionada = { estacion: { value: estacion.id_estacion } }
+          console.log("Id Estacion", id_estacion_saleccionada.estacion.value)
+          if (id_estacion_saleccionada.estacion.value === 1 || id_estacion_saleccionada.estacion.value === 2 || id_estacion_saleccionada.estacion.value === 3 || id_estacion_saleccionada.estacion.value === 4) {
+            void traer_dato({ estacion: { value: estacion.id_estacion } });
+            return
+          }
+          void traer_dato_migracion({ estacion: { value: estacion.id_estacion } });
+
           console.log('marker clicked');
         },
       }}
     >
       <Popup>
         <Typography text-align="center">
-          <strong>Estacion: </strong> {estacion.nombre_estacion} 
+          <strong>Estacion: {estacion.nombre_estacion}</strong>
         </Typography>
         <Divider className="divider2" sx={{ m: '10px 0' }} />
 
         {dato.length > 0 ? (
           <Box
-          > 
-          Estación: {estacion.nombre_estacion} <br />          
-          Tipo: {estacion.cod_tipo_estacion} <br />
-          Latitud: {estacion.latitud} <br />
-          Longitud: {estacion.longitud} <br /><br />  
+          >
+            Tipo: {estacion.cod_tipo_estacion} <br />
+            Latitud: {estacion.latitud} <br />
+            Longitud: {estacion.longitud} <br /><br />
             <div>Fecha: {dato[0].fecha_registro}</div>
-            <div>Temperatura: {dato[0].temperatura_ambiente}</div>
-            <div>Humedad: {dato[0].humedad_ambiente}</div>
-            <div>Presión: {dato[0].presion_barometrica}</div>
-            <div>Velocidad de viento: {dato[0].velocidad_viento}</div>
-            <div>Dirección del viento: {dato[0].direccion_viento}</div>
-            <div>Precipitación: {dato[0].precipitacion}</div>
-            <div>Luminosidad: {dato[0].luminosidad}</div>
-            <div>Nivel de agua: {dato[0].nivel_agua}</div>
-            <div>Velocidad del agua: {dato[0].velocidad_agua}</div>
+            <div>Temperatura: {dato[0].temperatura_ambiente} °C </div>
+            <div>Humedad: {dato[0].humedad_ambiente} %RH</div>
+            <div>Presión atmosferica: {dato[0].presion_barometrica} hPa</div>
+            <div>Velocidad de viento: {dato[0].velocidad_viento} m/s</div>
+            <div>Dirección del viento: {dato[0].direccion_viento} °</div>
+            <div>Precipitación: {dato[0].precipitacion} mm</div>
+            <div>Luminosidad: {dato[0].luminosidad} kLux </div>
+            <div>Nivel de agua: {dato[0].nivel_agua} m</div>
+            <div>Velocidad del agua: {dato[0].velocidad_agua} m/s</div>
 
           </Box>
         ) : (
-          <div>No hay datos disponibles</div>
+          ''
+        )}
+        {dato_migracion.length > 0 ? (
+          <Box
+          >
+            Tipo: {estacion.cod_tipo_estacion} <br />
+            Latitud: {estacion.latitud} <br />
+            Longitud: {estacion.longitud} <br /><br />
+            <div>Temperatura: {dato_migracion[0].temperatura} °C</div>
+            <div>Fecha: {dato_migracion[0].fecha}</div>
+            <div>Humedad: {dato_migracion[0].humedad_relativa} %</div>
+            <div>Punto de Rocio: {dato_migracion[0].punto_de_rocio} °C</div>
+            <div>Presión ABS: {dato_migracion[0].presion_atm_abs} Hpa</div>
+            <div>Presión rel: {dato_migracion[0].presion_atm_rel} Hpa</div>
+            <div>Intensidad: {dato_migracion[0].intensidad} mm</div>
+            <div>Precipitación: {dato_migracion[0].precipitacion} mm</div>
+            <div>Nivel de agua: {dato_migracion[0].nivel_agua} m</div>
+            <div>Velocidad del rio: {dato_migracion[0].velocidad_rio} m/s</div>
+            <div>Caudal: {dato_migracion[0].caudal} m3/s</div>
+            <div>Voltaje: {dato_migracion[0].voltaje} V</div>
+          </Box>
+        ) : (
+          ''
         )}
       </Popup>
     </Marker>
@@ -143,7 +234,7 @@ export const GeolocalizacionScreen: React.FC = () => {
 
   return (
     <Grid item>
-      <Box sx={{ width: '100%'}}>
+      <Box sx={{ width: '100%' }}>
         <MapContainer
           center={center}
           zoom={8}

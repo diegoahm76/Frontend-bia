@@ -15,6 +15,7 @@ import { consultar_historial_alertas } from '../../requets/Request';
 import Select from "react-select";
 import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
+import type { AxiosError } from 'axios';
 
 const columns: GridColDef[] = [
     { field: 'id_historial_alarma_enviada_estacion', headerName: 'NÚMERO', width: 170 },
@@ -52,10 +53,18 @@ export const HistorialAlertas: React.FC = () => {
             }));
             set_estaciones_options(estaciones_maped);
             set_loading(false);
-        } catch (err) {
-            control_error(err);
-            set_loading(false);
-        }
+        } catch (err: unknown) {
+            const temp_error = err as AxiosError
+            console.log("Error", temp_error.response?.status)
+            if (temp_error.response?.status === 404) {
+                control_error("No se encontraron estaciones");
+                console.log("No hay datos");
+                set_dato([]);
+            } else {
+                // Otro error, mostrar mensaje de error genérico
+                control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+            }
+        };
     };
 
     useEffect(() => {
@@ -87,11 +96,19 @@ export const HistorialAlertas: React.FC = () => {
             console.log("datos", datos_mapeados)
             set_dato(datos_mapeados); // guardar el valor en el estado
             set_loading(false);
-        } catch (err) {
-            console.log("Excepción en traer_dato:", err);
-            control_error(err);
+        } catch (err: unknown) {
             set_loading(false);
-        }
+            const temp_error = err as AxiosError
+            console.log("Error", temp_error.response?.status)
+            if (temp_error.response?.status === 404) {
+                control_error("No se encontraron alertas enviadas para esta fecha");
+                console.log("No hay datos");
+                set_dato([]);
+            } else {
+                // Otro error, mostrar mensaje de error genérico
+                control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+            }
+        };
     };
 
     return (
