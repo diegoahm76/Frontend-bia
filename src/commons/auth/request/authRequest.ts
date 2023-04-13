@@ -94,6 +94,12 @@ export const crear_persona_natural_and_user = async (
   return await api.post('personas/persona-natural-and-usuario/create/', data);
 };
 
+export const crear_persona_juridica_and_user = async (
+  data: DataRegistePortal
+): Promise<AxiosResponse<UserCreate>> => {
+  return await api.post('personas/persona-juridica-and-usuario/create/', data);
+};
+
 export const desbloquer_usuario = async (
   desbloqueoModel: DataUnlockUser
 ): Promise<any> => {

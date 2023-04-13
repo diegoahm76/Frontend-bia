@@ -103,7 +103,7 @@ export const RegisterForm: React.FC = () => {
             loading={loading}
             disabled={false}
             required={true}
-            errors={errors}
+            // errors={errors}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -116,7 +116,7 @@ export const RegisterForm: React.FC = () => {
             loading={loading}
             disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
             required={true}
-            errors={errors}
+            // errors={errors}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -157,7 +157,11 @@ export const RegisterForm: React.FC = () => {
       </Grid>
       {tipo_persona === 'N' && <RegisterPersonaNatural />}
       {tipo_persona === 'J' && (
-        <RegisterPersonaJuridica numero_documento={numero_documento} />
+        <RegisterPersonaJuridica
+          numero_documento={numero_documento}
+          tipo_persona={tipo_persona}
+          tipo_documento={tipo_documento}
+        />
       )}
     </>
   );

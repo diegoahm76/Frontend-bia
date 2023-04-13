@@ -185,7 +185,7 @@ export interface DataRegistePortal {
   primer_apellido: string;
   primer_nombre: string;
   razon_social: string | null;
-  representante_legal: string | null;
+  representante_legal: number | null;
   require_nombre_comercial: boolean;
   segundo_apellido: string | null;
   segundo_nombre: string | null;
@@ -274,6 +274,8 @@ export interface ReisterHook {
   tipo_documento: string;
   tipo_persona_opt: IList[];
   tipo_persona: string;
+  documento_rep: string;
+  set_documento_rep: Dispatch<SetStateAction<string>>;
   get_selects_options: () => Promise<void>;
   handle_change_checkbox: (event: ChangeEvent<HTMLInputElement>) => void;
   handle_click_show_password: () => void;

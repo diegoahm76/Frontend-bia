@@ -32,7 +32,7 @@ import { CustomSelect } from './CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../recursoHidrico/requets/Request';
-import { type Dayjs } from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
 import type { AxiosError } from 'axios';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -87,7 +87,7 @@ export const RegisterPersonaNatural: React.FC = () => {
       primer_apellido: '',
       primer_nombre: '',
       razon_social: '',
-      representante_legal: '',
+      representante_legal: 0,
       require_nombre_comercial: false,
       segundo_apellido: '',
       segundo_nombre: '',
@@ -325,12 +325,7 @@ export const RegisterPersonaNatural: React.FC = () => {
 
   // establece la fecha de nacimiento
   const on_change_birt_day = (value: Dayjs | null): void => {
-    const month = fecha_nacimiento?.get('M').toString() as string;
-    const day = fecha_nacimiento?.get('D').toString() as string;
-    const year = fecha_nacimiento?.get('y').toString() as string;
-    const date = `${year}-${month}-${day}`;
-    console.log(date);
-    console.log(value);
+    const date = dayjs(value).format('YYYY-MM-DD');
     set_value('fecha_nacimiento', date);
     set_value_form('fecha_nacimiento', date);
     set_fecha_nacimiento(value);
@@ -402,7 +397,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           options={paises_options}
           loading={loading}
           required={true}
-          errors={errors}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -415,7 +409,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={pais_residencia === '' ?? true}
           required={true}
-          errors={errors}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -428,7 +421,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={departamento_residencia === '' ?? true}
           required={true}
-          errors={errors}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -475,7 +467,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
-          errors={errors}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -488,7 +479,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={pais_notificacion === '' ?? true}
           required={true}
-          errors={errors}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -501,7 +491,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={dpto_notifiacion === '' ?? true}
           required={true}
-          errors={errors}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -926,7 +915,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
-          errors={errors}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -939,7 +927,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
-          errors={errors}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -952,7 +939,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
-          errors={errors}
         />
       </Grid>
       {/* Lugar de expedición del documento */}
@@ -972,7 +958,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
-          errors={errors}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -985,7 +970,6 @@ export const RegisterPersonaNatural: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
-          errors={errors}
         />
       </Grid>
     </>

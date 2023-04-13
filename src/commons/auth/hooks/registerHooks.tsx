@@ -33,6 +33,7 @@ export const use_register = (): ReisterHook => {
   const [ciudad_notificacion, set_ciudad_notificacion] = useState('');
   const [ciudad_residencia, set_ciudad_residencia] = useState('');
   const [nombre_representante, set_nombre_representante] = useState('');
+  const [documento_rep, set_documento_rep] = useState('');
   const [ciudades_opt, set_ciudades_opt] = useState<IList[]>([]);
   const [ciudades_residencia_opt, set_ciudades_residencia_opt] = useState<
     IList[]
@@ -119,7 +120,7 @@ export const use_register = (): ReisterHook => {
     razon_social: '',
     tipo_documento_rep: '',
     numero_documento_rep: '',
-    representante_legal: '',
+    representante_legal: null,
     nombre_rep: '',
     celular_rep: '',
     direccion_rep: '',
@@ -241,6 +242,7 @@ export const use_register = (): ReisterHook => {
             tipo_documento_rep: data.tipo_documento,
             numero_documento_rep: data.numero_documento,
             nombre_rep: data.nombre_completo,
+            representante_legal: data.id_persona,
           });
           set_nombre_representante(data.nombre_completo);
           setValue('tipo_documento_rep', data.tipo_documento);
@@ -411,6 +413,8 @@ export const use_register = (): ReisterHook => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
+    documento_rep,
+    set_documento_rep,
     get_selects_options,
     handle_change_checkbox,
     handle_click_show_password,
