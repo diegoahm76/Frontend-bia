@@ -84,6 +84,7 @@ export const HistorialAlertas: React.FC = () => {
                 dir_email_enviado: dato.dir_email_enviado,
                 nro_celular_enviado: dato.nro_celular_enviado,
             }));
+            console.log("datos", datos_mapeados)
             set_dato(datos_mapeados); // guardar el valor en el estado
             set_loading(false);
         } catch (err) {
@@ -165,7 +166,7 @@ export const HistorialAlertas: React.FC = () => {
                             autoHeight
                             rows={dato}
                             columns={columns}
-                            getRowId={(row) => row.id_alerta_equipo_estacion}
+                            getRowId={(row) => row.id_historial_alarma_enviada_estacion}
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                         />
