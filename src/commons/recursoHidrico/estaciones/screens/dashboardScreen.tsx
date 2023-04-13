@@ -130,7 +130,7 @@ export const DashboardScreen: React.FC = () => {
             data_direccion_viento.push([new Date(item.fecha_registro).getTime(), Number(item.direccion_viento)])
             data_precipitacion.push([new Date(item.fecha_registro).getTime(), Number(item.precipitacion)])
             data_presion.push([new Date(item.fecha_registro).getTime(), Number(item.presion_barometrica)])
-            
+
         })
         console.log(data_temperatura)
         const data_aux: Variables[] = []
