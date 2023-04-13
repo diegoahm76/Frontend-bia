@@ -731,7 +731,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const DatosPersonales = (
     <>
-      {/* TODO => Validar si es obligatorio o no, acorde al tipo de persona */}
       <Grid item xs={12} sm={6} md={4}>
         <TextField
           fullWidth
@@ -743,9 +742,7 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
               ? 'Este campo es obligatorio'
               : ''
           }
-          {...register('digito_verificacion', {
-            required: tipo_persona === 'J',
-          })}
+          {...register('digito_verificacion')}
           onChange={handle_change}
         />
       </Grid>
@@ -760,9 +757,7 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
               ? 'Este campo es obligatorio'
               : ''
           }
-          {...register('nombre_comercial', {
-            required: tipo_persona === 'J',
-          })}
+          {...register('nombre_comercial')}
           onChange={handle_change}
         />
       </Grid>
@@ -794,7 +789,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
           {...register('segundo_nombre')}
           onChange={handle_change}
         />
-        {}
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
         <TextField

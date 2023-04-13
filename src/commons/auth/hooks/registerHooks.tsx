@@ -6,6 +6,7 @@ import type {
   DataRegistePortal,
   // keys_object,
   ReisterHook,
+  keys_object,
 } from '../interfaces';
 import { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
@@ -200,17 +201,20 @@ export const use_register = (): ReisterHook => {
 
       if (data !== null && data !== undefined) {
         if (!data.tiene_usuario) {
-          // set_data_register({ ...info_person });
-          // for (const key in data) {
-          //   const temp_key = key as keys_object;
-          //   setValue(key, data[temp_key]);
-          // }
-          // setValue('numero_documento', data.numero_documento);
-
-          // set_fecha_nacimiento(dayjs(info_person.fecha_nacimiento));
+          set_data_register({ ...data_register, ...data });
+          for (const key in data) {
+            const temp_key = key as keys_object;
+            if (data_register[temp_key] !== undefined) {
+              console.log(temp_key);
+              console.log(temp_key);
+              // setValue(key, data[temp_key]);
+            }
+          }
+          setValue('numero_documento', data.numero_documento);
           set_is_exists(true);
           return;
         } else {
+          console.log('tiene usuario');
           set_has_user(true);
           return;
         }
@@ -362,12 +366,6 @@ export const use_register = (): ReisterHook => {
   useEffect(() => {
     void get_selects_options();
   }, []);
-
-  useEffect(() => {
-    console.log(data_register.tipo_documento);
-    console.log(data_register.tipo_persona);
-    console.log(data_register.numero_documento);
-  }, [data_register]);
 
   return {
     ciudad_expedicion,
