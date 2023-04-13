@@ -2,7 +2,7 @@ import { toast, type ToastContent } from "react-toastify";
 import { api } from "../../../api/axios";
 import { control_error } from "../../../helpers/controlError";
 import { type ResponseServer } from "../../../interfaces/globalModels";
-import type { Parametros, conf_alarma, Datos, Estaciones, EstacionesDetalle, IEstacionEstaciones, PersonaEstacion, CrearAlerta, EditarPersona, ParametrosEditar, } from "../estaciones/interfaces/interfaces";
+import type { Parametros, conf_alarma, Datos, Estaciones, EstacionesDetalle, IEstacionEstaciones, PersonaEstacion, CrearAlerta, EditarPersona, ParametrosEditar, Equipo, HistorialAlerta, } from "../estaciones/interfaces/interfaces";
 import axios from 'axios';
 
 export const alertas = axios.create({
@@ -53,7 +53,7 @@ export const consultar_estaciones = async (): Promise<Estaciones[]> => {
 }
 // consultar datos por id estación
 export const consultar_datos_id = async (id: number | string): Promise<Datos[]> => {
-  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id/${id}/`);
+  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id-primeros/${id}/`);
   return data;
 }
 
@@ -157,6 +157,19 @@ export const editar_conf_alarma = async (idalarma: number, datos_alarma: CrearAl
   return response.data;
 };
 
+// consultar historial equipo
+export const consultar_historial_equipo = async (id: number, fecha: string| Date | null): Promise<Equipo[]> => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const { data } = await api.get<ResponseServer<Equipo[]>>(`estaciones/historial/consultar-historial-equipo/${id}/${fecha}/`);
+  return data.data;
+}
+
+// consultar historial equipo
+export const consultar_historial_alertas = async (id: number, fecha: string| Date | null): Promise<HistorialAlerta[]> => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const { data } = await api.get<ResponseServer<HistorialAlerta[]>>(`estaciones/historial/consultar-historial-alertas/${id}/${fecha}/`);
+  return data.data;
+}
 
 
 

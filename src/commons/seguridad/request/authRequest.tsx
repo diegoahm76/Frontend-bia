@@ -47,5 +47,6 @@ export const get_person_by_documents = async (
 ): Promise<AxiosResponse<ResponseServer<InfoPersonal | null>>> => {
   return await api.get(
     `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
+    // `users/get-user-by-nombre-de-usuario/?nombre_de_usuario=NomprePrueba`
   );
 };

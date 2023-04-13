@@ -110,7 +110,7 @@ export const ConfiguracionAlarma: React.FC = () => {
   const confirmar_eliminar_alarma = (idPersona: number): void => {
     void Swal.fire({
       title: "Estas seguro?",
-      text: "Va a eliminar un usuario",
+      text: "Va a eliminar una alarma",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",

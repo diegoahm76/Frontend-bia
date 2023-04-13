@@ -20,10 +20,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import ReCaptcha from 'react-google-recaptcha';
-
 import { use_rol } from '../hooks/LoginHooks';
 import { use_form } from '../../../hooks/useForm';
-import { checking_authentication } from '../store';
+import { checking_authentication, logout } from '../store';
 import { LoadingButton } from '@mui/lab';
 import { DialogEntorno } from './DialogEntorno';
 import { DialogRepresentantes } from './DialogRepresentantes';
@@ -37,7 +36,7 @@ export const LoginForm: React.FC = () => {
   const theme = useTheme();
   const { set_is_captcha_valid, is_captcha_valid } = use_rol();
   const dispatch = useDispatch();
-  const { status, error_message } = useSelector(
+  const { status, error_message, is_blocked } = useSelector(
     (state: AuthSlice) => state.auth
   );
   const is_authenticating = useMemo(() => status === 'checking', [status]);
@@ -63,6 +62,10 @@ export const LoginForm: React.FC = () => {
   };
 
   useEffect(() => {
+    dispatch(logout(''));
+  }, []);
+
+  useEffect(() => {
     if (is_captcha_valid) {
       set_disale(false);
     } else {
@@ -71,7 +74,11 @@ export const LoginForm: React.FC = () => {
   }, [is_captcha_valid]);
 
   useEffect(() => {
-    set_is_error(!is_error);
+    if (error_message !== '') {
+      set_is_error(true);
+    } else {
+      set_is_error(false);
+    }
   }, [error_message]);
 
   return (
@@ -124,7 +131,17 @@ export const LoginForm: React.FC = () => {
                   set_is_error(false);
                 }}
               >
-                {error_message}
+                {is_blocked ? (
+                  <>
+                    <Typography textAlign="center">
+                      Contraseña erronea. Este usuario ha sido bloqueado por
+                      seguridad &nbsp;
+                      <Link to="/auth/desbloqueo_usuario">Desbloquear</Link>
+                    </Typography>
+                  </>
+                ) : (
+                  error_message
+                )}
               </Alert>
             </Grid>
           )}
@@ -159,7 +176,7 @@ export const LoginForm: React.FC = () => {
               type="submit"
               variant="contained"
               fullWidth
-              color="success"
+              color={theme.palette.mode === 'light' ? 'success' : 'inherit'} 
               loading={is_authenticating}
               disabled={disable}
               style={{ fontSize: '.9rem' }}
@@ -182,7 +199,7 @@ export const LoginForm: React.FC = () => {
               type="button"
               variant="outlined"
               fullWidth
-              color="primary"
+              color={theme.palette.mode === 'light' ? 'primary' : 'inherit'}
               style={{ fontSize: '.9rem' }}
             >
               <Link className="no-decoration" to="/auth/register">
@@ -221,7 +238,7 @@ export const LoginForm: React.FC = () => {
           >
             <Typography sx={{ fontSize: '17px' }}>Bienvenido</Typography>
             <Typography sx={{ fontSize: '13px', textAlign: 'justify' }}>
-              Este es nuestro portal de trámites en lineá un sistema fácil de
+              Este es nuestro portal de trámites en linea un sistema fácil de
               usar, ágil y sencillo para el control general de solicitudes y
               requerimientos ambientales en el departamento del Meta.
             </Typography>
