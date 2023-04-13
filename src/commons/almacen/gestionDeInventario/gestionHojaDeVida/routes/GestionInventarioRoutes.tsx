@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { Page404 } from "../../../../../screens/404";
 import { CrearHojaVidaComputoScreen } from "../hojaDeVidaComputo/screens/CrearHojaVidaComputoScreen";
 import { ProgramacionMantenientoVehiculosScreen } from "../mantenimiento/components/MantenimientoVehiculos/ProgramacionManteniento";
+import { CrearHojaVidaVehiculoScreen } from "../hojaDeVidaVehiculo/screens/CrearHojaVidaVehiculoScreen";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionInventarioRoutes: React.FC = () => {
@@ -9,6 +10,7 @@ export const GestionInventarioRoutes: React.FC = () => {
     <Routes>
       <Route path="cv_computo/*" element={<CrearHojaVidaComputoScreen />} />
       <Route path="programacion_mantenimiento_vehiculos/*" element={<ProgramacionMantenientoVehiculosScreen />} />
+      <Route path="cv_vehiculo/*" element={<CrearHojaVidaVehiculoScreen />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );

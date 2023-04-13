@@ -30,6 +30,7 @@ export interface IUserInfo {
   open_dialog: boolean;
   entorno: 'C' | 'L';
   dialog_representante: boolean;
+  is_blocked: boolean;
 }
 
 export interface UserData {
@@ -127,6 +128,14 @@ export type keys_object =
   | 'tipo_documento'
   | 'tipo_persona'
   | 'cod_naturaleza_empresa'
+  | 'cod_pais_nacionalidad_empresa'
+  | 'tipo_documento_rep'
+  | 'numero_documento_rep'
+  | 'nombre_rep'
+  | 'celular_rep'
+  | 'direccion_rep'
+  | 'ciudad_rep'
+  | 'email_rep'
   | 'ubicacion_georeferenciada';
 
 export interface DataRegistePortal {
@@ -142,6 +151,13 @@ export interface DataRegistePortal {
   fecha_inicio_cargo_rep_legal: string;
   telefono_empresa: string;
   confirmar_celular: string;
+  tipo_documento_rep: string;
+  numero_documento_rep: string;
+  nombre_rep: string;
+  celular_rep: string;
+  direccion_rep: string;
+  ciudad_rep: string;
+  email_rep: string;
   confirmar_email: string;
   confirmar_password?: string;
   departamento_expedicion: string;
@@ -169,7 +185,7 @@ export interface DataRegistePortal {
   primer_apellido: string;
   primer_nombre: string;
   razon_social: string | null;
-  representante_legal: string | null;
+  representante_legal: number | null;
   require_nombre_comercial: boolean;
   segundo_apellido: string | null;
   segundo_nombre: string | null;
@@ -214,11 +230,11 @@ export interface Acciones {
 
 export interface ReisterHook {
   ciudad_expedicion: string;
+  ciudad_notificacion_opt: IList[];
   ciudad_notificacion: string;
   ciudad_residencia: string;
   ciudades_opt: IList[];
   ciudades_residencia_opt: IList[];
-  ciudad_notificacion_opt: IList[];
   data_register: DataRegistePortal;
   departamento_expedicion: string;
   departamento_residencia: string;
@@ -232,6 +248,7 @@ export interface ReisterHook {
   estado_civil_opt: IList[];
   estado_civil: string;
   fecha_nacimiento: Dayjs | null;
+  fecha_rep_legal: Dayjs | null;
   genero_opt: IList[];
   genero: string;
   has_user: boolean;
@@ -240,6 +257,12 @@ export interface ReisterHook {
   is_search: boolean;
   loading: boolean;
   message_error_password: string;
+  message_no_person: string;
+  nacionalidad_emp: string;
+  naturaleza_emp_opt: IList[];
+  naturaleza_emp: string;
+  nombre_representante: string;
+  numero_documento: string;
   pais_nacimiento: string;
   pais_notificacion: string;
   pais_residencia: string;
@@ -247,9 +270,12 @@ export interface ReisterHook {
   requiere_nombre_comercial: boolean;
   show_password: boolean;
   tipo_documento_opt: IList[];
+  tipo_documento_rep: string;
   tipo_documento: string;
   tipo_persona_opt: IList[];
   tipo_persona: string;
+  documento_rep: string;
+  set_documento_rep: Dispatch<SetStateAction<string>>;
   get_selects_options: () => Promise<void>;
   handle_change_checkbox: (event: ChangeEvent<HTMLInputElement>) => void;
   handle_click_show_password: () => void;
@@ -272,6 +298,7 @@ export interface ReisterHook {
   set_estado_civil_opt: Dispatch<SetStateAction<IList[]>>;
   set_estado_civil: Dispatch<SetStateAction<string>>;
   set_fecha_nacimiento: Dispatch<SetStateAction<Dayjs | null>>;
+  set_fecha_rep_legal: Dispatch<SetStateAction<Dayjs | null>>;
   set_genero_opt: Dispatch<SetStateAction<IList[]>>;
   set_genero: Dispatch<SetStateAction<string>>;
   set_has_user: Dispatch<SetStateAction<boolean>>;
@@ -279,36 +306,93 @@ export interface ReisterHook {
   set_is_saving: Dispatch<SetStateAction<boolean>>;
   set_is_search: Dispatch<SetStateAction<boolean>>;
   set_message_error_password: Dispatch<SetStateAction<string>>;
+  set_message_no_person: Dispatch<SetStateAction<string>>;
+  set_nacionalidad_emp: Dispatch<SetStateAction<string>>;
+  set_naturaleza_emp: Dispatch<SetStateAction<string>>;
+  set_nombre_representante: Dispatch<SetStateAction<string>>;
+  set_numero_documento: Dispatch<SetStateAction<string>>;
   set_pais_nacimiento: Dispatch<SetStateAction<string>>;
   set_pais_notificacion: Dispatch<SetStateAction<string>>;
   set_pais_residencia: Dispatch<SetStateAction<string>>;
   set_show_password: Dispatch<SetStateAction<boolean>>;
+  set_tipo_documento_rep: Dispatch<SetStateAction<string>>;
   set_tipo_documento: Dispatch<SetStateAction<string>>;
   set_tipo_persona: Dispatch<SetStateAction<string>>;
+  validate_exits_representante: (numero_documento: string) => Promise<void>;
   validate_exits: (numero_documento: string) => Promise<void>;
-  validate_password: (string: string) => boolean;
 }
 
-export interface InfoPersona extends DataRegistePortal {
+export interface InfoPersona {
   id_persona: number;
-  nombre_unidad_organizacional_actual: string;
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  nombre_completo: string;
+  razon_social: string;
+  nombre_comercial: string;
   tiene_usuario: boolean;
-  fecha_asignacion_unidad: string;
-  es_unidad_organizacional_actual: string;
-  cod_naturaleza_empresa: string;
-  direccion_notificacion_referencia: string;
-  fecha_cambio_representante_legal: string;
-  fecha_inicio_cargo_rep_legal: string;
-  fecha_inicio_cargo_actual: string;
-  fecha_a_finalizar_cargo_actual: string;
-  observaciones_vinculacion_cargo_actual: string;
-  fecha_ultim_actualizacion_autorizaciones: string;
+}
+
+export interface InfoPersonaComplete {
+  id_persona: number;
+  tipo_documento: EstadoCivil;
+  estado_civil: EstadoCivil;
+  representante_legal: string | null;
+  nombre_unidad_organizacional_actual: string | null;
+  tiene_usuario: boolean;
+  tipo_persona: string;
+  numero_documento: string;
+  digito_verificacion: string | null;
+  primer_nombre: string;
+  segundo_nombre: string | null;
+  primer_apellido: string;
+  segundo_apellido: string | null;
+  nombre_comercial: string | null;
+  razon_social: string;
+  pais_residencia: string | null;
+  municipio_residencia: string | null;
+  direccion_residencia: string | null;
+  direccion_residencia_ref: string | null;
+  ubicacion_georeferenciada: string;
+  direccion_laboral: string | null;
+  direccion_notificaciones: string | null;
+  pais_nacimiento: string | null;
+  fecha_nacimiento: string;
+  sexo: string | null;
+  fecha_asignacion_unidad: string | null;
+  es_unidad_organizacional_actual: string | null;
+  email: string;
+  email_empresarial: string;
+  telefono_fijo_residencial: string;
+  telefono_celular: string | null;
+  telefono_empresa: string | null;
+  cod_municipio_laboral_nal: string | null;
+  cod_municipio_notificacion_nal: string | null;
+  telefono_celular_empresa: string | null;
+  telefono_empresa_2: string | null;
+  cod_pais_nacionalidad_empresa: string | null;
+  acepta_notificacion_sms: boolean;
+  acepta_notificacion_email: boolean;
+  acepta_tratamiento_datos: boolean;
+  cod_naturaleza_empresa: string | null;
+  direccion_notificacion_referencia: string | null;
+  fecha_cambio_representante_legal: string | null;
+  fecha_inicio_cargo_rep_legal: string | null;
+  fecha_inicio_cargo_actual: string | null;
+  fecha_a_finalizar_cargo_actual: string | null;
+  observaciones_vinculacion_cargo_actual: string | null;
+  fecha_ultim_actualizacion_autorizaciones: string | null;
   fecha_creacion: string;
-  fecha_ultim_actualiz_diferente_crea: string;
-  id_cargo: string;
-  id_unidad_organizacional_actual: number;
-  id_persona_crea: string;
-  id_persona_ultim_actualiz_diferente_crea: string;
+  fecha_ultim_actualiz_diferente_crea: string | null;
+  id_cargo: string | null;
+  id_unidad_organizacional_actual: string | null;
+  cod_municipio_expedicion_id: string | null;
+  id_persona_crea: string | null;
+  id_persona_ultim_actualiz_diferente_crea: string | null;
 }
 
 export interface EstadoCivil {
@@ -323,4 +407,13 @@ export interface EstadoCivil {
 export interface UserCreate {
   detail: string;
   success: boolean;
+}
+
+export interface DataUnlockUser {
+  nombre_de_usuario: string;
+  numero_documento: string;
+  telefono_celular: string;
+  email: string;
+  fecha_nacimiento: string;
+  redirect_url: string;
 }

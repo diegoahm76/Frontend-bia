@@ -157,6 +157,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
   };
 
   const clear_data_form = (): void => {
+    console.log('first');
     set_data_direction({
       ubicacion: '',
       via_principal: '',
@@ -176,6 +177,23 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
       complemento: '',
       direccion_estandarizada: '',
     });
+    set_value('ubicacion', '');
+    set_value('via_principal', '');
+    set_value('numero_o_nombre_via', '');
+    set_value('letras_via_principal', '');
+    set_value('prefijo_bis', '');
+    set_value('letra_prefijo', '');
+    set_value('cuadrante', '');
+    set_value('via_secundaria', '');
+    set_value('numero_o_nombre_via_secundaria', '');
+    set_value('letras_via_secundaria', '');
+    set_value('sufijo_bis', '');
+    set_value('letra_sufijo', '');
+    set_value('cuadrante_secundaria', '');
+    set_value('barrio', '');
+    set_value('nombre', '');
+    set_value('complemento', '');
+    set_value('direccion_estandarizada', '');
     openDialog(false);
   };
 

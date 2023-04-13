@@ -1,9 +1,11 @@
-import { type SelectChangeEvent } from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material';
+// import type { FieldErrors, FieldValues } from 'react-hook-form';
 
 export interface ResponseThunks<T = any | null> {
   ok: boolean;
   data?: T;
   error_message?: string;
+  is_blocked?: boolean;
 }
 
 export interface ResponseServer<T> {
@@ -50,6 +52,7 @@ export interface PropsSelect<T> {
   loading: boolean;
   disabled?: boolean;
   required?: boolean;
+  // errors: FieldErrors<FieldValues>;
   onChange: (e: SelectChangeEvent<string>) => void;
 }
 

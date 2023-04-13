@@ -101,99 +101,73 @@ export const HistorialDeDatos: React.FC = () => {
     };
 
     return (
-        <Grid container spacing={2}
-            sx={{
-                position: 'relative',
-                background: '#FAFAFA',
-                borderRadius: '15px',
-                p: '20px',
-                mb: '20px',
-                boxShadow: '0px 3px 6px #042F4A26',
-            }}>
-            <Grid item xs={12}>
-                <Box component="form" onSubmit={handleSubmit(submit_historial_datos)}>
-                    <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
-                        <FormControl fullWidth>
-                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                <DatePicker
-                                    label="Mes"
-                                    inputFormat="YYYY/MM"
-                                    openTo="month"
-                                    views={['year', 'month']}
-                                    value={selected_date}
-                                    onChange={handle_date_change}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            required
-                                            fullWidth
-                                            size="small"
-                                            {...params}
-                                        />
-                                    )}
-                                />
-                            </LocalizationProvider>
-                        </FormControl>
-                        <FormControl fullWidth>
-                            <Controller
-                                name="estacion"
-                                control={control_filtrar}
-                                rules={{ required: true }}
-                                render={({ field }) => (
-                                    <Select
-                                        {...field}
-                                        options={estaciones_options}
-                                        placeholder="Seleccionar"
+
+        <Grid item xs={12}>
+            <Box component="form" onSubmit={handleSubmit(submit_historial_datos)}>
+                <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
+                    <FormControl fullWidth>
+                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                            <DatePicker
+                                label="Mes"
+                                inputFormat="YYYY/MM"
+                                openTo="month"
+                                views={['year', 'month']}
+                                value={selected_date}
+                                onChange={handle_date_change}
+                                renderInput={(params) => (
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        size="small"
+                                        {...params}
                                     />
                                 )}
                             />
-                            {errors_filtrar.estacion != null && (
-                                <FormHelperText error>
-                                    Seleccione una estación para continuar
-                                </FormHelperText>
+                        </LocalizationProvider>
+                    </FormControl>
+                    <FormControl fullWidth>
+                        <Controller
+                            name="estacion"
+                            control={control_filtrar}
+                            rules={{ required: true }}
+                            render={({ field }) => (
+                                <Select
+                                    {...field}
+                                    options={estaciones_options}
+                                    placeholder="Seleccionar"
+                                />
                             )}
-                        </FormControl>
-                        <FormControl fullWidth>
-                            <Button
-                                variant="contained"
-                                type="submit"
-                                disabled={loading}
-                                className="search-button text-capitalize rounded-pill"
-                                startIcon={
-                                    loading
-                                        ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                        : <SearchIcon />
-                                }
-                                aria-label="Buscar "
-                                size="large"
-                            >
-                                Buscar
-                                {loading ? '' : ""}
-                            </Button>
-                        </FormControl>
-                    </Stack>
-                </Box>
-                {dato.length > 0 ? (
-                    <>
-                        <Grid
-                            item
-
-                            className={`border px-4 text-white fs-5 p-1`}
-                            sx={{
-                                display: 'grid',
-                                background:
-                                    'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-                                width: '100%',
-                                height: '40px',
-
-                                borderRadius: '10px',
-                                pl: '20px',
-                                fontSize: '17px',
-                                fontWeight: 'bold',
-                                alignContent: 'center',
-                            }}
+                        />
+                        {errors_filtrar.estacion != null && (
+                            <FormHelperText error>
+                                Seleccione una estación para continuar
+                            </FormHelperText>
+                        )}
+                    </FormControl>
+                    <FormControl fullWidth>
+                        <Button
+                            variant="contained"
+                            type="submit"
+                            disabled={loading}
+                            className="search-button text-capitalize rounded-pill"
+                            startIcon={
+                                loading
+                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                                    : <SearchIcon />
+                            }
+                            aria-label="Buscar "
+                            size="large"
                         >
-                            <Title title="HISTORIAL "></Title>
-                        </Grid>
+                            Buscar
+                            {loading ? '' : ""}
+                        </Button>
+                    </FormControl>
+                </Stack>
+            </Box>
+            {dato.length > 0 ? (
+                <>
+                    <Title title="HISTORIAL DE DATOS "></Title>
+                    <Box sx={{ mt: '20px' }}>
                         <DataGrid
                             autoHeight
                             rows={dato}
@@ -202,10 +176,11 @@ export const HistorialDeDatos: React.FC = () => {
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                         />
-                    </>
-                ) : ""}
+                    </Box>
+                </>
+            ) : ""}
 
-            </Grid>
         </Grid>
+
     );
 }      
