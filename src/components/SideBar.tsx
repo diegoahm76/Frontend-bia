@@ -140,7 +140,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             </ListItemButton>
 
             {/* Validamos si es superusuario */}
-            {!userinfo.is_superuser &&(
+            {userinfo.is_superuser &&(
             <ListItemButton sx={{ pl: 4 }} onClick={handle_click_delegar_super}>
               <ListItemIcon>
                 <CircleIcon sx={{ color: 'secondary.main', height: '10px' }} />

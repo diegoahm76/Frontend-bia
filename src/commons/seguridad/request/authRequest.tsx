@@ -9,7 +9,8 @@ import {
 // import { control_error } from '../../../helpers/controlError';
 import type { IList,ResponseServer } from '../../../interfaces/globalModels';
 import { control_error } from '../../../helpers/controlError';
-import type {DelegarSuper,InfoPersonal } from '../interfaces/SeguridadModels'
+import type { DelegarSuper, InfoPersonal } from '../interfaces';
+
 
 export const change_super_user = (): DelegarSuper  => {
 
@@ -57,5 +58,6 @@ export const get_person_by_documents = async (
 ): Promise<AxiosResponse<ResponseServer<InfoPersonal | null>>> => {
   return await api.get(
     `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
+    // `users/get-user-by-nombre-de-usuario/?nombre_de_usuario=NomprePrueba`
   );
 };

@@ -46,7 +46,16 @@ export const get_generos = async (): Promise<IList[]> => {
   return select_adapter(data);
 };
 
-export const get_estado_civil = async (): Promise<IList[]> => {
-  const { data } = await api.get<[[string, string]]>(`choices/estado-civil/`);
-  return select_adapter(data);
+export const get_estado_civil = async (): Promise<
+  AxiosResponse<ResponseServer<IList[]>>
+> => {
+  return await api.get<ResponseServer<IList[]>>(`listas/estado-civil/`);
+};
+
+export const get_naturaleza_emp = async (): Promise<
+  AxiosResponse<ResponseServer<IList[]>>
+> => {
+  return await api.get<ResponseServer<IList[]>>(
+    `listas/cod-naturaleza-empresa/`
+  );
 };

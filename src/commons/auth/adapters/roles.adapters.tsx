@@ -21,3 +21,13 @@ export const get_permisos_rol_post = (id_rol: any, permisos: any): any => {
   }));
   return permisos_por_rol_adapted;
 };
+
+export const get_permisos_adapter_general = (permisos: any): any => {
+  const permisos_adapted = permisos.filter(
+    (permiso: { id_modulo: { subsistema: any } }) =>
+      permiso.id_modulo.subsistema === 'TRSV'
+  );
+
+  console.log(permisos_adapted);
+  return permisos_adapted;
+};

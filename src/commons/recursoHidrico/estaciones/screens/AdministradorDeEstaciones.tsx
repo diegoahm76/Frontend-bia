@@ -154,7 +154,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
     const confirmar_eliminar_usuario = (id_Estacion: number): void => {
         void Swal.fire({
             title: "Estas seguro?",
-            text: "Va a eliminar un usuario",
+            text: "Va a eliminar una estación",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",

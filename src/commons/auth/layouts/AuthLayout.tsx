@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, Divider, Grid } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 
@@ -8,7 +9,38 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
   const { pathname } = useLocation();
-  const mode = pathname === '/auth/register' ? 'register' : 'login';
+  const [extent, set_extend] = useState({
+    sm: 6,
+    md: 6,
+    lg: 6,
+  });
+
+  useEffect(() => {
+    switch (pathname) {
+      case '/auth/register':
+        set_extend({
+          sm: 10,
+          md: 10,
+          lg: 8,
+        });
+        break;
+      case '/auth/login':
+        set_extend({
+          sm: 6,
+          md: 6,
+          lg: 6,
+        });
+        break;
+      case '/auth/cambiar_contrasena':
+        set_extend({
+          sm: 5,
+          md: 5,
+          lg: 3,
+        });
+        break;
+    }
+  }, []);
+
   return (
     <Grid
       container
@@ -27,9 +59,9 @@ export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
         <Grid
           item
           xs={12}
-          sm={mode === 'register' ? 10 : 6}
-          md={mode === 'register' ? 10 : 6}
-          lg={mode === 'register' ? 8 : 6}
+          sm={extent.sm}
+          md={extent.md}
+          lg={extent.lg}
           sx={{
             backgroundColor: '#ffff',
             borderRadius: 5,

@@ -71,6 +71,6 @@ export interface ICvcomputers {
 }
 
 export interface IList {
-  label: string | null;
-  value: number | null | string;
+  label: string | number;
+  value: number | string;
 }
