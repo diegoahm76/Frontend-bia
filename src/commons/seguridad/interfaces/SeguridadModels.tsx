@@ -1,13 +1,3 @@
-import {  type Dispatch, type SetStateAction } from 'react';
-import type { IList } from '../../../interfaces/globalModels';
-
-export interface DelegarSuper {
-    tipo_documento_opt: IList[]; 
-    tipo_documento: string; 
-    loading: boolean; 
-    get_selects_options: () => Promise<void>; 
-    set_tipo_documento: Dispatch<SetStateAction<string>>;
-  }
 
   export interface InfoPersonal {
 
