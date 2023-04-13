@@ -4,7 +4,7 @@ import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { control_error } from '../../../../helpers/controlError';
-import { consultar_conf_alerta_persona, control_success_fail, crear_confi_alerta } from '../../requets/Request';
+import { consultar_conf_alerta_persona, crear_confi_alerta } from '../../requets/Request';
 import { type conf_alarma } from '../interfaces/interfaces';
 
 interface IProps {
@@ -68,7 +68,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
         );
 
         if (alerta_existente != null) {
-            control_success_fail('La alerta ya existe, por lo tanto edita el mensaje en la editar')
+            control_error('La alerta ya existe, por lo tanto edita el mensaje en la editar')
         } else {
             void crear_confi_alerta(nueva_alerta);
             void confi_alerta_persona()

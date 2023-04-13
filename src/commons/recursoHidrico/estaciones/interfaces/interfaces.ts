@@ -1,5 +1,5 @@
 export interface Estaciones {
-    id_estacion: number | string,
+    id_estacion: number,
     fecha_modificacion: null | string,
     nombre_estacion: string,
     cod_tipo_estacion: string,
@@ -44,6 +44,27 @@ export interface Datos {
     velocidad_agua: number,
     id_estacion: number,
 }
+export interface DatosMigracion {
+    id_migracion_estacion: number;
+    id_estacion: number;
+    nombre: string;
+    fecha: string;
+    temperatura: string;
+    temperatura_max: string;
+    temperatura_min: string;
+    humedad_relativa: string;
+    punto_de_rocio: string;
+    presion_atm_abs: string;
+    presion_atm_rel: string;
+    intensidad: string;
+    precipitacion: string;
+    nivel_agua: string;
+    nivel_agua_max: string;
+    nivel_agua_min: string;
+    velocidad_rio: string;
+    caudal: string;
+    voltaje: string;
+}
 export interface Equipo {
     id_alerta_equipo_estacion: number,
     nombre_estacion: string,
@@ -51,7 +72,7 @@ export interface Equipo {
     nombre_variable: string,
     fecha_generacion: string | Date,
 }
-export interface HistorialAlerta{
+export interface HistorialAlerta {
     id_historial_alarma_enviada_estacion: number
     nombre_estacion: string,
     id_persona_estacion: string | number,
