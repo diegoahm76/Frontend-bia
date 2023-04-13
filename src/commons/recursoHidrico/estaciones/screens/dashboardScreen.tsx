@@ -7,13 +7,14 @@ import { Title } from '../../../../components/Title';
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { control_success, control_success_fail } from '../../requets/Request';
+import { control_success } from '../../requets/Request';
 import esLocale from 'dayjs/locale/es';
 import ChartData from "../components/ChartData";
 import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
+import { control_error } from '../../../../helpers/controlError';
+import type { AxiosError } from 'axios';
 
 interface Variables {
     title: string,
@@ -83,23 +84,34 @@ export const DashboardScreen: React.FC = () => {
         control: control_filtrar
     } = useForm();
     const get_datos_estaciones = async (): Promise<any> => {
+        try {
+            const fecha_1 = dayjs(start_date).format('YYYY-MM-DD')
+            const fecha_2 = dayjs(end_date).format('YYYY-MM-DD')
+            const { data } = await api.get(
+                `estaciones/datos/consultar-datos-fecha/${selectdashboards.opc_dashboards}/${fecha_1}/${fecha_2}/`
+            );
+            console.log("fin consulta")
+            if ("data" in data) {
+                control_success("Se encontraron Datos")
+                formatdataforchart(data.data);
+            } else {
+                control_error("No se encontraron datos")
+            }
 
-        const fecha_1 = dayjs(start_date).format('YYYY-MM-DD')
-        const fecha_2 = dayjs(end_date).format('YYYY-MM-DD')
-        const { data } = await api.get(
-            `estaciones/datos/consultar-datos-fecha/${fecha_1}/${fecha_2}`
-        );
-        console.log("fin consulta")
-        if ("data" in data) {
-            control_success("Se encontraron Datos")
-            formatdataforchart(data.data);
-        } else {
-            control_success_fail("No se encontraron datos")
-        }
-
-        return data.data;
-
+            return data.data;
+        } catch (err: unknown) {
+            const temp_error = err as AxiosError
+            console.log("Error", temp_error.response?.status)
+            if (temp_error.response?.status === 404) {
+                control_error("No se encontraron datos para esta estación");
+                console.log("No hay datos");
+            } else {
+                // Otro error, mostrar mensaje de error genérico
+                control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+            }
+        };
     };
+
 
     useEffect(() => {
         if (end_date !== null) {
