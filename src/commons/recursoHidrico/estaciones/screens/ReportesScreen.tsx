@@ -3,23 +3,21 @@
 import { useState } from 'react';
 import { Title } from '../../../../components/Title';
 import jsPDF from 'jspdf';
-import { Button, Grid, Typography, Stack, MenuItem, FormHelperText, Box, CircularProgress } from '@mui/material';
+import { Button, Grid, Typography, Stack, MenuItem, Box, CircularProgress, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { api } from '../../../../api/axios';
 import "react-datepicker/dist/react-datepicker.css";
-import { TextField } from '@mui/material';
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import esLocale from 'dayjs/locale/es'; // si deseas cambiar el idioma a español
-import dayjs from 'dayjs';
-import 'dayjs/locale/es'; // importar el idioma español
-import { Estaciones } from '../interfaces/interfaces';
-import { IList } from '../../../../interfaces/globalModels';
 
+import dayjs from 'dayjs';
+import esLocale from 'dayjs/locale/es'; // importar el idioma español
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const ReportesScreen: React.FC = () => {
 
-  const [info, set_info] = useState<Estaciones[]>([]);
   const [select_reporte, set_select_reporte] = useState({
     opciones_reportes: "0",
   });
@@ -29,6 +27,7 @@ export const ReportesScreen: React.FC = () => {
     { label: 'Reporte variables', value: "1" },
     { label: 'Reporte mensual', value: "2" },
   ];
+
 
   const [selectdashboards, set_select_dashboards] = useState({
     opc_dashboards: "0"
@@ -48,20 +47,6 @@ export const ReportesScreen: React.FC = () => {
   const handle_input_change = (date: Date | null) => {
     set_fecha_inicial(date)
   };
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-  };
-  const initial_options: IList[] = [
-    {
-      label: '',
-      value: '',
-    },
-  ];
-
-
-
-
   const fetch_data = async (): Promise<any> => {
     set_loading(true);
     const fecha = dayjs(fecha_inicial).format('YYYY-MM');
@@ -75,7 +60,7 @@ export const ReportesScreen: React.FC = () => {
 
   }
 
-  const fetch_data_2 = async (): Promise<{ data: any, unique_days: { [key: string]: boolean } }> => {
+  const fetch_data_2 = async (): Promise<{ data: any, unique_days: Record<string, boolean> }> => {
     set_loading(true);
     const fecha = dayjs(fecha_inicial).format("YYYY-MM");
     const response = await api.get(
@@ -87,7 +72,7 @@ export const ReportesScreen: React.FC = () => {
     const month = dayjs(fecha_inicial).month();
     const num_days = new Date(year, month + 1, 0).getDate();
 
-    const unique_days: { [key: string]: boolean } = {};
+    const unique_days: Record<string, boolean> = {};
     for (let i = 1; i <= num_days; i++) {
       const date_str = dayjs().set('year', year).set('month', month).set('date', i).format("YYYY-MM-DD");
       unique_days[date_str] = false;
@@ -107,7 +92,8 @@ export const ReportesScreen: React.FC = () => {
     }
 
     // verificar si hay datos en todos los días únicos del mes
-    const all_days_have_data = Object.values(unique_days).indexOf(false) === -1;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const all_days_have_data = !Object.values(unique_days).includes(false);
 
     set_loading(false);
     return { data: response.data, unique_days };
@@ -116,13 +102,12 @@ export const ReportesScreen: React.FC = () => {
 
   const {
     control: control_filtrar,
-    formState: { errors: errors_filtro },
   } = useForm();
-  const generate_pdf_2 = (data: any, unique_days: { [key: string]: boolean }): void => {
+  const generate_pdf_2 = (data: any, unique_days: Record<string, boolean>): void => {
     // eslint-disable-next-line new-cap
     const doc: jsPDF = new jsPDF();
 
-    //Establecer la fuente y tamaño de letra
+    // Establecer la fuente y tamaño de letra
     const font_props = {
       size: 12
     };
@@ -152,10 +137,11 @@ export const ReportesScreen: React.FC = () => {
 
     const unavailable_days = Object.keys(unique_days).filter(day => !unique_days[day])
       .map(day => dayjs(day).format("DD"));
-    const get_available_days = (unique_days: { [key: string]: boolean }): string[] => {
+    const get_available_days = (unique_days: Record<string, boolean>): string[] => {
       const available_days: string[] = [];
 
-      for (let day in unique_days) {
+      for (const day in unique_days) {
+        // eslint-disable-next-line no-prototype-builtins
         if (unique_days.hasOwnProperty(day)) {
           if (unique_days[day]) {
             available_days.push(day);
@@ -314,7 +300,7 @@ export const ReportesScreen: React.FC = () => {
     doc.text(`La presión del aire promedio que se presento en el mes ${fecha} fue de ${presion_avg.toFixed(2)} Hpa`, 30, 250);
     doc.text(`La presión del aire mínima que se presento en el mes ${fecha} fue de ${presion_min.toFixed(2)} Hpa`, 30, 260);
     doc.text(`La presión del aire maxima que se presento en el mes ${fecha} fue de ${presion_max.toFixed(2)} Hpa`, 30, 270);
-    doc.addPage() //Salto de pagina
+    doc.addPage() // Salto de pagina
     doc.addImage(image_data, 160, 5, 40, 15)
     doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
@@ -374,9 +360,9 @@ export const ReportesScreen: React.FC = () => {
                 defaultValue={value}
                 value={value}
                 onChange={(event) => {
-                  const selectedValue = event.target.value;
-                  set_select_reporte({ opciones_reportes: selectedValue });
-                  onChange(selectedValue, event);
+                  const selected_value = event.target.value;
+                  set_select_reporte({ opciones_reportes: selected_value });
+                  onChange(selected_value, event);
                 }}
               >
                 {opciones_reportes.map((option) => (
@@ -409,9 +395,9 @@ export const ReportesScreen: React.FC = () => {
                       sx={{ width: 490, height: 42 }} // Ancho de 200px
                       value={value}
                       onChange={(event) => {
-                        const selectedValue = event.target.value;
-                        set_select_dashboards({ opc_dashboards: selectedValue });
-                        onChange(selectedValue, event);
+                        const selected_value = event.target.value;
+                        set_select_dashboards({ opc_dashboards: selected_value });
+                        onChange(selected_value, event);
                       }}
                     >
                       {opc_dashboards.map((option) => (
@@ -488,9 +474,9 @@ export const ReportesScreen: React.FC = () => {
                       sx={{ width: 490, height: 42 }} // Ancho de 200px
                       value={value}
                       onChange={(event) => {
-                        const selectedValue = event.target.value;
-                        set_select_dashboards({ opc_dashboards: selectedValue });
-                        onChange(selectedValue, event);
+                        const selected_value = event.target.value;
+                        set_select_dashboards({ opc_dashboards: selected_value });
+                        onChange(selected_value, event);
                       }}
                     >
                       {opc_dashboards.map((option) => (
