@@ -1,0 +1,5 @@
+{
+    "staticPath": "public",
+    "watchDirs": ["src"],
+    "fixturePaths": ["./src/__fixtures__"]
+  }

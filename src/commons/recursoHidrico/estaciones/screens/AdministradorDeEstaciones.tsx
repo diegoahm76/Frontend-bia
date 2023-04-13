@@ -7,11 +7,11 @@ import { Avatar, CircularProgress, Grid, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { Title } from '../../../../components/Title';
-import type {Datos, Estaciones } from '../interfaces/interfaces';
+import type { Datos, Estaciones } from '../interfaces/interfaces';
 import type { AxiosError } from 'axios';
 import {
     consultar_estaciones, consultar_datos_id, control_success,
-    // eliminar_estacion, 
+    eliminar_estacion,
     control_success_fail
 } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
@@ -22,7 +22,7 @@ import Swal from 'sweetalert2';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministradorDeEstaciones: React.FC = () => {
     const [list_estaciones, set_estaciones] = useState<Estaciones[]>([]);
-    const [has_data, set_has_data] = useState(false);
+    const [dato, set_dato] = useState<any>(null);
     const [crear_estacion_is_active, set_crear_estacion_is_active] = useState<boolean>(false);
     const [editar_estacion_is_active, set_editar_estacion_is_active] = useState<boolean>(false);
     const [estacion_editado, set_estacion_editado] = useState(null);
@@ -35,14 +35,15 @@ export const AdministradorDeEstaciones: React.FC = () => {
         { field: 'id_estacion', headerName: 'NÚMERO', width: 140 },
         { field: 'fecha_modificacion', headerName: 'FECHA MOD.', width: 170 },
         { field: 'nombre_estacion', headerName: 'NOMBRE', width: 170 },
-        { field: 'cod_tipo_estacion', headerName: 'COD. ETSACIÓN', width: 170 },
+        { field: 'cod_tipo_estacion', headerName: 'COD. ESTACIÓN', width: 170 },
         { field: 'latitud', headerName: 'LATITUD', width: 170 },
         { field: 'longitud', headerName: 'LONGITUD', width: 170 },
         { field: 'indicaciones_ubicacion', headerName: 'INDICACIONES', width: 170 },
         { field: 'fecha_modificacion_coordenadas', headerName: 'FECHA MOD. COORDENADAS', width: 170 },
+        { field: 'nombre_persona_modifica', headerName: 'PERSONA MODIFICA', width: 200 },
         {
             field: 'ACCIONES',
-            headerName: 'Aciones',
+            headerName: 'ACCIONES',
             width: 200,
             renderCell: (params) => (
                 <>
@@ -68,8 +69,11 @@ export const AdministradorDeEstaciones: React.FC = () => {
                     </IconButton>
                     <IconButton
                         onClick={() => {
-                            confirmar_eliminar_usuario(params.row.id_estacion);
                             void traer_dato({ estacion: { value: params.row.id_estacion } })
+                            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                            if (dato) {
+                                <CircularProgress color="secondary" />
+                              }                              
                         }}
                     >
                         <Avatar
@@ -105,7 +109,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 longitud: estaciones.longitud,
                 indicaciones_ubicacion: estaciones.indicaciones_ubicacion,
                 fecha_modificacion_coordenadas: estaciones.fecha_modificacion_coordenadas,
-                id_persona_modifica: estaciones.id_persona_modifica,
+                nombre_persona_modifica: estaciones.nombre_persona_modifica,
 
             }))
 
@@ -119,51 +123,51 @@ export const AdministradorDeEstaciones: React.FC = () => {
         void estacion()
     }, []);
 
-    const traer_dato = async (data: { estacion: { value: any; }; }): Promise<any> => {
+    const traer_dato = async (data: { estacion: { value: number } }): Promise<any> => {
         try {
             const estacion_id = data.estacion?.value;
             const estacion = await consultar_datos_id(estacion_id).then((res: Datos[]) => {
-                return res
-            }).catch( (err: AxiosError) => {
-                if(err.status === 404){
-                    set_has_data(false)
+                console.log("DATOS", res[res.length - 1]);
+                return res[res.length - 1];
+            }).catch((err: AxiosError) => {
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                if (err?.response) {
+                    if (err.response.status === 404) {
+                        confirmar_eliminar_usuario(estacion_id);
+                    }
                 }
-                throw err
+                throw err;
             });
-            if(estacion.length > 0 ){
-                set_has_data(true)
-            } else {
-                set_has_data(false)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (estacion) {
+                console.log("Paso a no eliminar")
+                control_success_fail("La estación no se puede eliminar porque contiene datos");
             }
-            
+
+            set_dato(estacion); // guardar el valor en el estado
+
         } catch (err) {
+            console.log("Excepción en traer_dato:", err);
             control_error(err);
         }
     };
-
     const confirmar_eliminar_usuario = (id_Estacion: number): void => {
-        if (has_data) {
-            control_success_fail("La estación no se puede eliminar porque contiene datos")
-        } else {
-            void Swal.fire({
-                title: "Estas seguro?",
-                text: "Va a eliminar un usuario",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Si, elminar!",
-                cancelButtonText: "Cancelar",
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    // await eliminar_estacion(id_Estacion);
-                    void estacion()
-                    control_success('La estación se eliminó correctamente')
-                } else {
-                    set_has_data(false)
-                }
-            });
-        }
+        void Swal.fire({
+            title: "Estas seguro?",
+            text: "Va a eliminar una estación",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, elminar!",
+            cancelButtonText: "Cancelar",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                await eliminar_estacion(id_Estacion);
+                void estacion()
+                control_success('La estación se eliminó correctamente')
+            }
+        });
     };
 
     return (

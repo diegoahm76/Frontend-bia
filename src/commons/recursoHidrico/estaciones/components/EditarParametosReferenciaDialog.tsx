@@ -14,7 +14,7 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   parametro_editado: any;
   set_parametro_editado: Dispatch<SetStateAction<any>>;
-  parametros: () => Promise<void>
+  parametros: () => Promise<void>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -68,11 +68,11 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
       set_is_modal_active(false);
       control_success('El parametro se actualizó correctamente')
       void parametros()
+      reset()
     } catch (error) {
       control_error(error);
     }
   };
-
   return (
     <Dialog
       open={is_modal_active}
@@ -83,6 +83,17 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
       <DialogContent sx={{ mb: '0px' }}>
         <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
           <Grid container spacing={1} >
+          <Grid item xs={12}>
+              <TextField
+                className="order-1 mt-3"
+                type="text"
+                size="small"
+                margin="dense"
+                fullWidth
+                value={parametro_editado?.nombre_estacion}
+                disabled
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 label="Frecuencia solicitud de datos"
@@ -94,13 +105,25 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
                 autoFocus
                 fullWidth
                 defaultValue={parametro_editado?.frecuencia_solicitud_datos}
-                {...register("frecuencia_solicitud_datos", { required: true })}
+                {...register("frecuencia_solicitud_datos", {
+                  required: true,
+                  min: 1,
+                  max: 15,
+                  pattern: /^[1-9]{1}$|^[1-9]{1}[0-5]{1}$/
+                })}
                 error={Boolean(errors.frecuencia_solicitud_datos)}
-                helperText={(errors.frecuencia_solicitud_datos != null) ? "Este campo es obligatorio" : ""}
-
+                helperText={
+                  (errors.frecuencia_solicitud_datos?.type === "required") ? "Este campo es obligatorio" :
+                    (errors.frecuencia_solicitud_datos?.type === "min" || errors.frecuencia_solicitud_datos?.type === "max" || errors.frecuencia_solicitud_datos?.type === "pattern") ? "Debe ingresar un número entero entre 1 y 15" : ""
+                }
+                inputProps={{
+                  step: "1",
+                  min: "1",
+                  max: "15",
+                  pattern: "^[1-9]{1}$|^[1-9]{1}[0-5]{1}$"
+                }}
               />
             </Grid>
-
             <Grid item xs={12} sm={6} >
               <TextField
                 label="Temperatura máxima"
@@ -502,7 +525,10 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
             <Button
               variant="text"
               color="primary"
-              onClick={handle_close}
+              onClick={() => {
+                handle_close();
+                reset();
+            }}
             >
               Cancelar
             </Button>

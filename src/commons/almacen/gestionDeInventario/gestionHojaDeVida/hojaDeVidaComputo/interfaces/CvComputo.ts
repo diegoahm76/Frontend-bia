@@ -67,10 +67,10 @@ export interface ICvcomputers {
   id_articulo: number | null;
   marca: string;
   nombre: string;
-  id_marca: number | null;
+  id_marca: number;
 }
 
 export interface IList {
-  label: string | null;
-  value: number | null | string;
+  label: string | number;
+  value: number | string;
 }
