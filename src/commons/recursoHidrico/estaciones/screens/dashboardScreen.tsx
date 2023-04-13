@@ -210,8 +210,6 @@ export const DashboardScreen: React.FC = () => {
                         <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
 
                         <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
-
-                            <label >Fecha Inicial</label>
                             <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
                                 <DatePicker
                                     label="Desde la fecha"
@@ -230,7 +228,6 @@ export const DashboardScreen: React.FC = () => {
                                     )}
                                 />
                             </LocalizationProvider>
-                            <label>Fecha Final</label>
                             <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
                                 <DatePicker
                                     label="Hasta la fecha"
