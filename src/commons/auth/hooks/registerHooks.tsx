@@ -364,8 +364,10 @@ export const use_register = (): ReisterHook => {
   }, []);
 
   useEffect(() => {
-    console.log(numero_documento);
-  }, [numero_documento]);
+    console.log(data_register.tipo_documento);
+    console.log(data_register.tipo_persona);
+    console.log(data_register.numero_documento);
+  }, [data_register]);
 
   return {
     ciudad_expedicion,

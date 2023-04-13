@@ -155,7 +155,13 @@ export const RegisterForm: React.FC = () => {
           </Grid>
         )}
       </Grid>
-      {tipo_persona === 'N' && <RegisterPersonaNatural />}
+      {tipo_persona === 'N' && (
+        <RegisterPersonaNatural
+          numero_documento={numero_documento}
+          tipo_persona={tipo_persona}
+          tipo_documento={tipo_documento}
+        />
+      )}
       {tipo_persona === 'J' && (
         <RegisterPersonaJuridica
           numero_documento={numero_documento}

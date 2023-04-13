@@ -43,64 +43,25 @@ interface PropsStep {
   label: string;
   component: JSX.Element;
 }
+interface Props {
+  numero_documento: string;
+  tipo_documento: string;
+  tipo_persona: string;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterPersonaNatural: React.FC = () => {
+export const RegisterPersonaNatural: React.FC<Props> = ({
+  numero_documento,
+  tipo_documento,
+  tipo_persona,
+}: Props) => {
   const {
     register,
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors, isValid: is_valid },
     watch,
-  } = useForm<DataRegistePortal>({
-    defaultValues: {
-      acepta_notificacion_email: false,
-      acepta_notificacion_sms: false,
-      acepta_tratamiento_datos: false,
-      cod_municipio_laboral_nal: '',
-      cod_municipio_notificacion_nal: '',
-      confirmar_celular: '',
-      confirmar_email: '',
-      confirmar_password: '',
-      digito_verificacion: '',
-      direccion_laboral: '',
-      direccion_notificaciones: '',
-      direccion_residencia_ref: '',
-      direccion_residencia: '',
-      email_empresarial: '',
-      email: '',
-      estado_civil: '',
-      fecha_nacimiento: '',
-      tipo_documento_rep: '',
-      municipio_residencia: '',
-      nombre_rep: '',
-      celular_rep: '',
-      direccion_rep: '',
-      ciudad_rep: '',
-      email_rep: '',
-      nombre_comercial: '',
-      nombre_de_usuario: '',
-      numero_documento: '',
-      pais_nacimiento: '',
-      pais_residencia: '',
-      password: '',
-      primer_apellido: '',
-      primer_nombre: '',
-      razon_social: '',
-      representante_legal: 0,
-      require_nombre_comercial: false,
-      segundo_apellido: '',
-      segundo_nombre: '',
-      sexo: '',
-      telefono_celular_empresa: '',
-      telefono_celular: '',
-      telefono_empresa_2: '',
-      telefono_fijo_residencial: '',
-      tipo_documento: '',
-      tipo_persona: '',
-      ubicacion_georeferenciada: '',
-    },
-  });
+  } = useForm<DataRegistePortal>();
   const {
     ciudad_expedicion,
     ciudad_residencia,
@@ -127,7 +88,6 @@ export const RegisterPersonaNatural: React.FC = () => {
     pais_residencia,
     paises_options,
     show_password,
-    tipo_persona,
     dpto_notifiacion_opt,
     dpto_notifiacion,
     ciudad_notificacion_opt,
@@ -153,7 +113,6 @@ export const RegisterPersonaNatural: React.FC = () => {
     set_pais_nacimiento,
     set_pais_residencia,
     set_tipo_documento,
-    set_tipo_persona,
     set_pais_notificacion,
   } = use_register();
   const [is_modal_active, open_modal] = useState(false);
@@ -222,12 +181,6 @@ export const RegisterPersonaNatural: React.FC = () => {
   }, [watch('cod_municipio_notificacion_nal')]);
 
   useEffect(() => {
-    if (watch('tipo_persona') !== undefined) {
-      set_tipo_persona(watch('tipo_persona'));
-    }
-  }, [watch('tipo_persona')]);
-
-  useEffect(() => {
     if (watch('pais_nacimiento') !== undefined) {
       set_pais_nacimiento(watch('pais_nacimiento'));
     }
@@ -244,15 +197,6 @@ export const RegisterPersonaNatural: React.FC = () => {
       set_estado_civil(watch('estado_civil') as string);
     }
   }, [watch('estado_civil')]);
-
-  useEffect(() => {
-    if (tipo_persona === 'J') {
-      set_value('tipo_documento', 'NT');
-      set_tipo_documento('NT');
-    } else {
-      set_tipo_documento('');
-    }
-  }, [tipo_persona]);
 
   useEffect(() => {
     if (watch('tipo_documento') !== undefined) {
@@ -357,12 +301,14 @@ export const RegisterPersonaNatural: React.FC = () => {
     if (active_step === 4) {
       set_is_saving(true);
       try {
-        if (data.tipo_persona === 'N') {
-          const { data } = await crear_persona_natural_and_user(data_register);
-          control_success(data.detail);
-        } else {
-          console.log('Creando persona juridica');
-        }
+        console.log(data_register);
+        const { data } = await crear_persona_natural_and_user({
+          ...data_register,
+          tipo_documento,
+          tipo_persona,
+          numero_documento,
+        });
+        control_success(data.detail);
 
         window.location.href = '#/app/auth/login';
       } catch (error) {
@@ -428,6 +374,7 @@ export const RegisterPersonaNatural: React.FC = () => {
           size="small"
           label="Direccion"
           disabled
+          fullWidth
           error={errors.direccion_residencia?.type === 'required'}
           helperText={
             errors.direccion_residencia?.type === 'required'
@@ -498,6 +445,7 @@ export const RegisterPersonaNatural: React.FC = () => {
           size="small"
           label="Direccion"
           disabled
+          fullWidth
           error={errors.direccion_notificaciones?.type === 'required'}
           helperText={
             errors.direccion_notificaciones?.type === 'required'
