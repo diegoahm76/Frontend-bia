@@ -20,35 +20,38 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from '../../../components/Title';
 import { api } from '../../../api/axios';
-import { useForm } from 'react-hook-form';
-import { toast, type ToastContent } from 'react-toastify';
+import { useForm, Controller } from 'react-hook-form';
 import { get_permisos_rol_post } from '../../auth/adapters/roles.adapters';
+// import { toast, type ToastContent } from 'react-toastify';
+// import { get_permisos_rol_post } from '../../auth/adapters/roles.adapters';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
+// const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+//   toast.error(message, {
+//     position: 'bottom-right',
+//     autoClose: 3000,
+//     hideProgressBar: false,
+//     closeOnClick: true,
+//     pauseOnHover: true,
+//     draggable: true,
+//     progress: undefined,
+//     theme: 'light',
+//   });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
+// const control_success = (message: ToastContent) =>
+//   toast.success(message, {
+//     position: 'bottom-right',
+//     autoClose: 3000,
+//     hideProgressBar: false,
+//     closeOnClick: true,
+//     pauseOnHover: true,
+//     draggable: true,
+//     progress: undefined,
+//     theme: 'light',
+//   });
+
+const dataone: React.SetStateAction<Array<{ id: number }> | undefined> = [];
 
 interface IProps {
   set_position_tab_admin_roles: Dispatch<SetStateAction<string>>;
@@ -59,25 +62,26 @@ export const FormAdminRoles = ({
   set_position_tab_admin_roles,
 }: IProps): JSX.Element => {
   const [expanded, set_expanded] = React.useState<string | false>(false);
-  const [checked, set_checked] = React.useState([false, false]);
+
   const [is_create, set_is_create] = useState('');
-  const [form_values, set_form_values] = useState({
-    nombre_rol: '',
-    descripcion_rol: '',
-    permisosRol: [],
-  });
+  const [rol_permisos, set_rol_permisos] = useState<Array<{ id: number }>>();
+
+  // const [{form_values}, set_form_values] = useState({
+  //   nombre_rol: '',
+  //   descripcion_rol: '',
+  //   permisosRol: [],
+  // });
   const [permisos, set_permisos] = React.useState([]);
 
   const {
     register: register_rol_permiso,
-    watch: watch_permiso,
+    // watch: watch_permisos,
+    // setValue: set_value,
     // reset: reset_permiso,
-    // control: control_rol_permiso,
+    control,
     handleSubmit: handle_submit_rol_permiso,
     // formState: { errors: errors_rol_permiso },
   } = useForm();
-
-  console.log(watch_permiso('permisosRol'));
 
   const handle_change =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -87,19 +91,19 @@ export const FormAdminRoles = ({
   const handle_change_1 = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    set_checked([event.target.checked, event.target.checked]);
+    // set_checked([event.target.checked, event.target.checked]);
   };
 
-  const handle_change_2 = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ): void => {
-    if (index === 1) {
-      set_checked([event.target.checked, checked[index]]);
-    } else if (index === 2) {
-      set_checked([checked[0], event.target.checked]);
-    }
-  };
+  // const handle_change_2 = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  //   index: number
+  // ): void => {
+  //   // if (index === 1) {
+  //   //   set_checked([event.target.checked, checked[index]]);
+  //   // } else if (index === 2) {
+  //   //   set_checked([checked[0], event.target.checked]);
+  //   // }
+  // };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const get_roles_permisos = async () => {
@@ -114,68 +118,83 @@ export const FormAdminRoles = ({
     }
   };
 
-  const on_submit_rol_permiso = async (data: any): Promise<void> => {
-    console.log(data);
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const on_submit_rol_permiso = async (data: any) => {
+    // eslint-disable-next-line array-callback-return
+    data.permisos.map((item: any, index: any) => {
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (item.true) {
+        dataone.push({
+          id: index,
+        });
+        set_rol_permisos(dataone);
+        console.log(dataone);
+        // data_permisos.push({ id: index, value: item.true });
+      }
+    });
+    // data.permisos.filter((item: { true: boolean }) => item.true)
+    // .map((item: { true: boolean }, index: number) => index)
+    console.log(rol_permisos);
     if (is_create === 'crear') {
       const rol_create = {
         nombre_rol: data.nombre_rol,
         descripcion_rol: data.descripcion_rol,
         Rol_sistema: false,
       };
-
+      console.log(rol_create);
       const { data: data_rol } = await api.post('roles/create/', rol_create);
+      console.log(data_rol);
 
-      const permisos_rol = get_permisos_rol_post(
-        data_rol.id_rol,
-        data.permisosRol
-      );
-      await api
-        .post('permisos/permisos-modulos-rol/create/', permisos_rol)
-        .then(() => {
-          control_success('Rol creado');
-        });
-      control_error('Algo pasó, intente de nuevo');
-    } else {
-      const datos_edit_rol = {
-        nombre_rol: data.nombre_rol,
-        descripcion_rol: data.descripcion_rol,
-      };
-
-      const { data: response_edit_rol } = await api.put(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        `/roles/update/${data.idRol}/`,
-        datos_edit_rol
-      );
-      console.log(response_edit_rol);
-
-      const datos_edit_permisos_rol = get_permisos_rol_post(
-        data.idRol,
-        form_values.permisosRol
-      );
-      const data_format_request_rol = datos_edit_permisos_rol.map(
-        (permiso: { id_permiso_modulo: number }) => ({
-          id_permisos_modulo: permiso.id_permiso_modulo,
-        })
-      );
-      await api
-        .put(
-          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-          `permisos/permisos-modulos-rol/update/${data.idRol}/`,
-          data_format_request_rol
-        )
-        .then(() => {
-          control_success('Datos del rol actualizados correctamente');
-        })
-        .catch(() => {
-          control_error('Algo pasó consulta con tu developer de confianza');
-        });
+      console.log(dataone);
+      const permisos_rol = get_permisos_rol_post(data_rol.id_rol, dataone);
+      console.log(permisos_rol);
+      // await api
+      //   .post('permisos/permisos-modulos-rol/create/', dataone)
+      //   .then(() => {
+      //     control_success('Rol creado');
+      //   });
+      // control_error('Algo pasó, intente de nuevo');
     }
+    // else {
+    //   const datos_edit_rol = {
+    //     nombre_rol: data.nombre_rol,
+    //     descripcion_rol: data.descripcion_rol,
+    //   };
+
+    //   const { data: response_edit_rol } = await api.put(
+    //     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    //     `/roles/update/${data.idRol}/`,
+    //     datos_edit_rol
+    //   );
+    //   console.log(response_edit_rol);
+
+    //   const datos_edit_permisos_rol = get_permisos_rol_post(
+    //     data.idRol,
+    //     form_values.permisosRol
+    //   );
+    //   const data_format_request_rol = datos_edit_permisos_rol.map(
+    //     (permiso: { id_permiso_modulo: number }) => ({
+    //       id_permisos_modulo: permiso.id_permiso_modulo,
+    //     })
+    //   );
+    //   await api
+    //     .put(
+    //       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    //       `permisos/permisos-modulos-rol/update/${data.idRol}/`,
+    //       data_format_request_rol
+    //     )
+    //     .then(() => {
+    //       control_success('Datos del rol actualizados correctamente');
+    //     })
+    //     .catch(() => {
+    //       control_error('Algo pasó consulta con tu developer de confianza');
+    //     });
+    // }
   };
 
   useEffect(() => {
     void get_roles_permisos();
-
-    set_is_create('');
+    set_is_create('crear');
   }, []);
 
   return (
@@ -243,12 +262,14 @@ export const FormAdminRoles = ({
                                           <Checkbox
                                             key={modulo.id_modulo}
                                             checked={
-                                              checked[index] &&
-                                              checked[index + 1]
+                                              false
+                                              // checked[index] &&
+                                              // checked[index + 1]
                                             }
                                             indeterminate={
-                                              checked[index] !==
-                                              checked[index + 1]
+                                              false
+                                              // checked[index] !==
+                                              // checked[index + 1]
                                             }
                                             onChange={handle_change_1}
                                           />
@@ -263,29 +284,28 @@ export const FormAdminRoles = ({
 
                                   {Object.keys(modulo.permisos).length > 0 ? (
                                     Object.keys(modulo.permisos).map(
-                                      (permiso: any, index) => (
-                                        <FormControlLabel
+                                      (permiso, index) => (
+                                        <Controller
                                           key={modulo.permisos[permiso].id}
-                                          labelPlacement="top"
-                                          label={permiso}
-                                          control={
-                                            <Checkbox
-                                              {...register_rol_permiso(
-                                                'permisosRol'
-                                              )}
-                                              checked={
-                                                modulo.permisos[permiso].value
+                                          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                                          name={`permisos[${modulo.permisos[permiso].id}][${modulo.permisos[permiso].value}]`}
+                                          control={control}
+                                          // defaultValue={[
+                                          //   modulo.permisos[permiso].id,
+                                          //   permiso,
+                                          //   false,
+                                          // ]}
+                                          render={({ field }) => (
+                                            <FormControlLabel
+                                              {...field}
+                                              labelPlacement="top"
+                                              label={permiso}
+                                              control={
+                                                <Checkbox color="primary" />
                                               }
-                                              onChange={(event) => {
-                                                handle_change_2(
-                                                  event,
-                                                  modulo.permisos[permiso].id
-                                                );
-                                                set_form_values(form_values);
-                                              }}
                                             />
-                                          }
-                                        />
+                                          )}
+                                        ></Controller>
                                       )
                                     )
                                   ) : (
