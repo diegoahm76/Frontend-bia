@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useEffect, useState } from "react";
-import { Grid, Stack, Typography, MenuItem, Autocomplete, Box } from '@mui/material';
+import { Grid, Stack, Typography, MenuItem, Autocomplete, Box, TextField } from '@mui/material';
 import { api } from "../../../../api/axios";
 import type { Datos } from "../interfaces/interfaces";
 import { Title } from '../../../../components/Title';
@@ -10,9 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { control_success, control_success_fail } from '../../requets/Request';
 import esLocale from 'dayjs/locale/es';
 import ChartData from "../components/ChartData";
-import "react-datepicker/dist/react-datepicker.css";
 import dayjs from 'dayjs';
-import { TextField } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -66,22 +64,23 @@ export const DashboardScreen: React.FC = () => {
     const [end_date, set_end_date] = useState<Date | null>(new Date());
 
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_start_date_change = (date: Date | null) => {
         set_start_date(date)
     };
 
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const handle_end_date_change = (date: Date | null) => {
         set_end_date(date)
     };
-    const options: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    };
+    // const options: Intl.DateTimeFormatOptions = {
+    //     year: 'numeric',
+    //     month: 'long',
+    //     day: 'numeric',
+    // };
     const {
-        control: control_filtrar,
-        formState: { errors: errors_filtro },
+        control: control_filtrar
     } = useForm();
     const get_datos_estaciones = async (): Promise<any> => {
 
@@ -191,9 +190,9 @@ export const DashboardScreen: React.FC = () => {
                                     defaultValue={value}
                                     value={value}
                                     onChange={(event) => {
-                                        const selectedValue = event.target.value;
-                                        set_select_dashboards({ opc_dashboards: selectedValue });
-                                        onChange(selectedValue, event);
+                                        const selected_value = event.target.value;
+                                        set_select_dashboards({ opc_dashboards: selected_value });
+                                        onChange(selected_value, event);
                                     }}
                                 >
                                     {opc_dashboards.map((option) => (
