@@ -159,6 +159,7 @@ export interface CrearAlerta {
     mensaje_no_alarma: string;
     frecuencia_alarma: number;
 }
+
 export interface Tipos {
     frecuencia_solicitud_datos: number;
     temperatura_ambiente_max: number;
