@@ -93,10 +93,10 @@ export function ListRoles({
       })
       .catch((err) => {
         control_error(err.response.data.detail);
+      })
+      .finally(() => {
+        dispatch(get_roles());
       });
-    // .finally(async () => {
-    //   getRolesPermisos();
-    // });
     // }
     // });
   };

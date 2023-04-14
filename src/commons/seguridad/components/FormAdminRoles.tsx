@@ -22,34 +22,21 @@ import { Title } from '../../../components/Title';
 import { api } from '../../../api/axios';
 import { useForm, Controller } from 'react-hook-form';
 import { get_permisos_rol_post } from '../../auth/adapters/roles.adapters';
-// import { toast, type ToastContent } from 'react-toastify';
+import { toast, type ToastContent } from 'react-toastify';
 // import { get_permisos_rol_post } from '../../auth/adapters/roles.adapters';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-// const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-//   toast.error(message, {
-//     position: 'bottom-right',
-//     autoClose: 3000,
-//     hideProgressBar: false,
-//     closeOnClick: true,
-//     pauseOnHover: true,
-//     draggable: true,
-//     progress: undefined,
-//     theme: 'light',
-//   });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-// const control_success = (message: ToastContent) =>
-//   toast.success(message, {
-//     position: 'bottom-right',
-//     autoClose: 3000,
-//     hideProgressBar: false,
-//     closeOnClick: true,
-//     pauseOnHover: true,
-//     draggable: true,
-//     progress: undefined,
-//     theme: 'light',
-//   });
+const control_success = (message: ToastContent) =>
+  toast.success(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
 
 const dataone: React.SetStateAction<Array<{ id: number }> | undefined> = [];
 
@@ -128,32 +115,24 @@ export const FormAdminRoles = ({
           id: index,
         });
         set_rol_permisos(dataone);
-        console.log(dataone);
-        // data_permisos.push({ id: index, value: item.true });
       }
     });
-    // data.permisos.filter((item: { true: boolean }) => item.true)
-    // .map((item: { true: boolean }, index: number) => index)
-    console.log(rol_permisos);
+
     if (is_create === 'crear') {
       const rol_create = {
         nombre_rol: data.nombre_rol,
         descripcion_rol: data.descripcion_rol,
         Rol_sistema: false,
       };
-      console.log(rol_create);
       const { data: data_rol } = await api.post('roles/create/', rol_create);
-      console.log(data_rol);
-
-      console.log(dataone);
-      const permisos_rol = get_permisos_rol_post(data_rol.id_rol, dataone);
-      console.log(permisos_rol);
-      // await api
-      //   .post('permisos/permisos-modulos-rol/create/', dataone)
-      //   .then(() => {
-      //     control_success('Rol creado');
-      //   });
-      // control_error('Algo pasó, intente de nuevo');
+      control_success('Rol creado');
+      set_position_tab_admin_roles('1');
+      const permisos_rol = get_permisos_rol_post(data_rol.id_rol, rol_permisos);
+      await api
+        .post('permisos/permisos-modulos-rol/create/', permisos_rol)
+        .then(() => {
+          control_success('Rol creado');
+        });
     }
     // else {
     //   const datos_edit_rol = {
