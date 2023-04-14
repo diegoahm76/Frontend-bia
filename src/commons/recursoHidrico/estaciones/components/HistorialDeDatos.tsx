@@ -7,14 +7,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import esLocale from 'dayjs/locale/es'; // si deseas cambiar el idioma a español
-import type { Datos } from '../interfaces/interfaces';
+import type { Datos, DatosMigracion } from '../interfaces/interfaces';
 import { api } from '../../../../api/axios';
 import SearchIcon from '@mui/icons-material/Search';
 import { useForm, Controller } from 'react-hook-form';
-import { consultar_datos_mes } from '../../requets/Request';
+import { consultar_datos_mes, consultar_datos_mes_migracion } from '../../requets/Request';
 import Select from "react-select";
 import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
+import type { AxiosError } from 'axios';
 
 const columns: GridColDef[] = [
     { field: 'fecha_registro', headerName: 'FECHA REGISTRO', width: 170 },
@@ -29,7 +30,29 @@ const columns: GridColDef[] = [
     { field: 'velocidad_agua', headerName: 'VEL. AGUA', width: 170 },
     { field: 'id_estacion', headerName: 'NÚMERO ESTACIÓN', width: 170 },
 ];
+const columns_migracion: GridColDef[] = [
+    { field: 'id_migracion_estacion', headerName: 'NÚMERO DATO', width: 170 },
+    { field: 'nombre', headerName: 'ESTACIÓN', width: 170 },
+    { field: 'fecha', headerName: 'FECHA REGISTRO', width: 170 },
+    { field: 'temperatura', headerName: 'TEMPERATURA ', width: 100 },
+    { field: 'temperatura_max', headerName: 'TEMPERATURA MAX', width: 100 },
+    { field: 'temperatura_min', headerName: 'TEMPERATURA MIN', width: 100 },
+    { field: 'humedad_relativa', headerName: 'HUMEDAD ', width: 100 },
 
+    { field: 'punto_de_rocio', headerName: 'PTO. ROCIO ', width: 100 },
+    { field: 'presion_atm_abs', headerName: 'PRECION ABS', width: 100 },
+    { field: 'presion_atm_rel', headerName: 'PRECION REL', width: 100 },
+    { field: 'intensidad', headerName: 'INTENSIDAD', width: 100 },
+
+    { field: 'precipitacion', headerName: 'PTO. ROCIO ', width: 100 },
+    { field: 'nivel_agua', headerName: 'NIVEL AUGUA', width: 100 },
+    { field: 'nivel_agua_max', headerName: 'NIVEL AUG. MIN', width: 100 },
+    { field: 'nivel_agua_min', headerName: 'NIVEL AUG. MAX. ', width: 100 },
+    { field: 'velocidad_rio', headerName: 'VEL. RIO', width: 100 },
+    { field: 'caudal', headerName: 'CAUDAL ', width: 100 },
+    { field: 'voltaje', headerName: 'VOLTAJE ', width: 100 },
+
+];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const HistorialDeDatos: React.FC = () => {
     const {
@@ -43,6 +66,7 @@ export const HistorialDeDatos: React.FC = () => {
     const [estaciones_options, set_estaciones_options] = useState([]);
     const [selected_date, set_selected_date] = useState<Date | null>(new Date());
     const [dato, set_dato] = useState<Datos[]>([]);
+    const [dato_migracion, set_dato_migracion] = useState<DatosMigracion[]>([]);
 
     const get_data_initial = async (): Promise<void> => {
         try {
@@ -54,10 +78,18 @@ export const HistorialDeDatos: React.FC = () => {
             }));
             set_estaciones_options(estaciones_maped);
             set_loading(false);
-        } catch (err) {
-            control_error(err);
-            set_loading(false);
-        }
+        } catch (err: unknown) {
+            const temp_error = err as AxiosError
+            console.log("Error", temp_error.response?.status)
+            if (temp_error.response?.status === 404) {
+                control_error("No se encontraron estaciones");
+                console.log("No hay datos");
+                set_dato([]);
+            } else {
+                // Otro error, mostrar mensaje de error genérico
+                control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+            }
+        };
     };
 
     useEffect(() => {
@@ -93,17 +125,83 @@ export const HistorialDeDatos: React.FC = () => {
             }));
             set_dato(datos_mapeados); // guardar el valor en el estado
             set_loading(false);
-        } catch (err) {
-            console.log("Excepción en traer_dato:", err);
-            control_error(err);
+        } catch (err: unknown) {
             set_loading(false);
-        }
+            const temp_error = err as AxiosError
+            console.log("Error", temp_error.response?.status)
+            if (temp_error.response?.status === 404) {
+                control_error("No se encontraron datos para esta fecha");
+                console.log("No hay datos");
+                set_dato([]);
+            } else {
+                // Otro error, mostrar mensaje de error genérico
+                control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+            }
+        };
     };
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const submit_historial_datos_migracion = async (data: any) => {
+        try {
+            set_loading(true);
+            const estacion_id = data.estacion.value;
+            const fecha = dayjs(selected_date).format('YYYY-MM');
+            console.log("fecha", fecha)
+            const estacion = await consultar_datos_mes_migracion(estacion_id, fecha);
+            const datos_mapeados = estacion.map((dato) => ({
+                id_migracion_estacion: dato.id_migracion_estacion,
+                id_estacion: dato.id_estacion,
+                nombre: dato.nombre,
+                fecha: dato.fecha,
+                temperatura: dato.temperatura,
+                temperatura_max: dato.temperatura_max,
+                temperatura_min: dato.temperatura_min,
+                humedad_relativa: dato.humedad_relativa,
+                punto_de_rocio: dato.punto_de_rocio,
+                presion_atm_abs: dato.presion_atm_abs,
+                presion_atm_rel: dato.presion_atm_rel,
+                intensidad: dato.intensidad,
+                precipitacion: dato.precipitacion,
+                nivel_agua: dato.nivel_agua,
+                nivel_agua_max: dato.nivel_agua_max,
+                nivel_agua_min: dato.nivel_agua_min,
+                velocidad_rio: dato.velocidad_rio,
+                caudal: dato.caudal,
+                voltaje: dato.voltaje
+            }));
+            console.log("datos", datos_mapeados)
+            set_dato_migracion(datos_mapeados); // guardar el valor en el estado
+            set_loading(false);
+        } catch (err: unknown) {
+            set_loading(false);
+            const temp_error = err as AxiosError
+            console.log("Error", temp_error.response?.status)
+            if (temp_error.response?.status === 404) {
+                control_error("No se encontraron datos para esta fecha");
+                console.log("No hay datos");
+                set_dato([]);
+            } else {
+                // Otro error, mostrar mensaje de error genérico
+                control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+            }
+        };
+    };
+
+    const submit_general = (data: any): void => {
+        const { estacion: { value } } = data;
+        console.log(value)
+        set_dato([]);
+        set_dato_migracion([]);
+        if (value === 1 || value === 2 || value === 3 || value === 4) {
+            void submit_historial_datos(data);
+            return
+        }
+        void submit_historial_datos_migracion(data);
+    }
 
     return (
 
         <Grid item xs={12}>
-            <Box component="form" onSubmit={handleSubmit(submit_historial_datos)}>
+            <Box component="form" onSubmit={handleSubmit(submit_general)}>
                 <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
                     <FormControl fullWidth>
                         <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
@@ -179,8 +277,21 @@ export const HistorialDeDatos: React.FC = () => {
                     </Box>
                 </>
             ) : ""}
-
+            {dato_migracion.length > 0 ? (
+                <>
+                    <Title title="HISTORIAL DE DATOS "></Title>
+                    <Box sx={{ mt: '20px' }}>
+                        <DataGrid
+                            autoHeight
+                            rows={dato_migracion}
+                            columns={columns_migracion}
+                            getRowId={(row) => row.id_migracion_estacion}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                        />
+                    </Box>
+                </>
+            ) : ""}
         </Grid>
-
     );
 }      

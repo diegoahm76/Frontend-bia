@@ -267,7 +267,7 @@ export const LoginForm: React.FC = () => {
                 Si tiene algún reclamo o solicitud, ingrese a{' '}
                 <a href="#">PQR en linéa</a> Número de atención: Linea nacional
                 01-8000-51847095 Email:{' '}
-                <a href="#">atención.usuario@macarenia.org</a>
+                <a href="#">pqrds@cormacarena.gov.co</a>
               </i>
             </Typography>
           </Grid>
