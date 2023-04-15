@@ -1,5 +1,9 @@
 import type { SelectChangeEvent } from '@mui/material';
-// import type { FieldErrors, FieldValues } from 'react-hook-form';
+import type {
+  FieldErrors,
+  FieldValues,
+  UseFormRegister
+} from 'react-hook-form';
 
 export interface ResponseThunks<T = any | null> {
   ok: boolean;
@@ -44,15 +48,16 @@ export interface Municipios {
   cod_departamento: string;
 }
 
-export interface PropsSelect<T> {
+export interface PropsSelect {
   options: IList[];
   label: string;
-  name: T;
+  name: string;
   value: string;
   loading: boolean;
   disabled?: boolean;
   required?: boolean;
-  // errors: FieldErrors<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  register: UseFormRegister<any>;
   onChange: (e: SelectChangeEvent<string>) => void;
 }
 
@@ -71,7 +76,6 @@ export interface Direccion {
   cuadrante_secundaria: string;
   barrio: string;
   nombre: string;
-  complemento: string;
   ubicacion: string;
   direccion_estandarizada: string;
 }
@@ -91,6 +95,5 @@ export type keys_direccion =
   | 'cuadrante_secundaria'
   | 'barrio'
   | 'nombre'
-  | 'complemento'
   | 'direccion_estandarizada'
   | 'ubicacion';

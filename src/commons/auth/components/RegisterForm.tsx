@@ -11,9 +11,9 @@ import {
 import { use_register } from '../hooks/registerHooks';
 import { useForm } from 'react-hook-form';
 import type { DataRegistePortal, keys_object } from '../interfaces';
-import { CustomSelect } from './CustomSelect';
 import { RegisterPersonaNatural } from './RegisterPersonaNatural';
 import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
+import { CustomSelect } from '../../../components';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegisterForm: React.FC = () => {
@@ -104,7 +104,8 @@ export const RegisterForm: React.FC = () => {
             loading={loading}
             disabled={false}
             required={true}
-            // errors={errors}
+            errors={errors}
+            register={register}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -117,7 +118,8 @@ export const RegisterForm: React.FC = () => {
             loading={loading}
             disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
             required={true}
-            // errors={errors}
+            errors={errors}
+            register={register}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
