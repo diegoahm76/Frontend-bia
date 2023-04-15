@@ -417,3 +417,9 @@ export interface DataUnlockUser {
   fecha_nacimiento: string;
   redirect_url: string;
 }
+
+export interface ChangePassword {
+  password: string;
+  token: string | null;
+  uidb64: string | null;
+}

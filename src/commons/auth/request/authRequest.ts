@@ -8,7 +8,8 @@ import type {
   DataRegistePortal,
   UserCreate,
   DataUnlockUser,
-  InfoPersonaComplete
+  InfoPersonaComplete,
+  ChangePassword
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -110,4 +111,16 @@ export const verify_account = async (
   token: string
 ): Promise<ResponseServer<any>> => {
   return await api.get(`users/verify/?token=${token}`);
+};
+
+export const password_reset_complete = async (
+  data: ChangePassword
+): Promise<ResponseServer<any>> => {
+  return await api.patch(`users/pasword-reset-complete/`, data);
+};
+
+export const password_unblock_complete = async (
+  data: ChangePassword
+): Promise<ResponseServer<any>> => {
+  return await api.patch(`users/password-unblock-complete/`, data);
 };
