@@ -39,7 +39,7 @@ export const DesbloqueodeUsuario: React.FC = () => {
     email: '',
     fecha_nacimiento: '',
     redirect_url:
-      'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena',
+      'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena?desbloquear=true',
   });
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
   const [tipo_documento, set_tipo_documento] = useState('');
