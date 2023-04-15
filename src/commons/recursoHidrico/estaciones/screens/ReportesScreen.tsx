@@ -15,6 +15,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import esLocale from 'dayjs/locale/es'; // importar el idioma español
 
+import { control_error } from '../../../../helpers/controlError';
+import type { AxiosError } from 'axios';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ReportesScreen: React.FC = () => {
 
@@ -53,50 +56,75 @@ export const ReportesScreen: React.FC = () => {
 
     console.log(fecha)
 
-    const response = await api.get(`https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`);
-
-    set_loading(false);
-    return (response.data);
-
+    try {
+      const response = await api.get(`https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`);
+      set_loading(false);
+      return response.data;
+    } catch (err: unknown) {
+      set_loading(false);
+      const temp_error = err as AxiosError
+      console.log("Error", temp_error.response?.status)
+      if (temp_error.response?.status === 404) {
+          control_error("No se encontraron datos para esta estación");
+          console.log("No hay datos");
+      } else {
+          // Otro error, mostrar mensaje de error genérico
+          control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+      }
+  };
   }
 
   const fetch_data_2 = async (): Promise<{ data: any, unique_days: Record<string, boolean> }> => {
-    set_loading(true);
-    const fecha = dayjs(fecha_inicial).format("YYYY-MM");
-    const response = await api.get(
-      `https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`
-    );
+    try {
+      set_loading(true);
+      const fecha = dayjs(fecha_inicial).format("YYYY-MM");
+      const response = await api.get(
+        `https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`
+      );
 
-    // Dias unicos del mes
-    const year = dayjs(fecha_inicial).year();
-    const month = dayjs(fecha_inicial).month();
-    const num_days = new Date(year, month + 1, 0).getDate();
+      // Dias unicos del mes
+      const year = dayjs(fecha_inicial).year();
+      const month = dayjs(fecha_inicial).month();
+      const num_days = new Date(year, month + 1, 0).getDate();
 
-    const unique_days: Record<string, boolean> = {};
-    for (let i = 1; i <= num_days; i++) {
-      const date_str = dayjs().set('year', year).set('month', month).set('date', i).format("YYYY-MM-DD");
-      unique_days[date_str] = false;
-    }
-
-
-
-    // verificar si hay datos para cada uno de los días únicos del mes
-    for (let i = 0; i < response.data.data.length; i++) {
-      const fecha = dayjs(response.data.data[i].fecha_registro);
-      const date_str = fecha.format("YYYY-MM-DD");
-
-      // verificar si la fecha está dentro del mes seleccionado
-      if (fecha.month() === month && fecha.year() === year) {
-        unique_days[date_str] = true;
+      const unique_days: Record<string, boolean> = {};
+      for (let i = 1; i <= num_days; i++) {
+        const date_str = dayjs().set('year', year).set('month', month).set('date', i).format("YYYY-MM-DD");
+        unique_days[date_str] = false;
       }
+
+      // verificar si hay datos para cada uno de los días únicos del mes
+      for (let i = 0; i < response.data.data.length; i++) {
+        const fecha = dayjs(response.data.data[i].fecha_registro);
+        const date_str = fecha.format("YYYY-MM-DD");
+
+        // verificar si la fecha está dentro del mes seleccionado
+        if (fecha.month() === month && fecha.year() === year) {
+          unique_days[date_str] = true;
+        }
+      }
+
+      // verificar si hay datos en todos los días únicos del mes
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const all_days_have_data = !Object.values(unique_days).includes(false);
+
+      set_loading(false);
+      return { data: response.data, unique_days };
+
+    } catch (err: unknown) {
+      set_loading(false);
+      const temp_error = err as AxiosError
+      console.log("Error", temp_error.response?.status)
+      if (temp_error.response?.status === 404) {
+          control_error("No se encontraron datos para esta fecha");
+          console.log("No hay datos");
+      } else {
+          // Otro error, mostrar mensaje de error genérico
+          control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+      }
+      // agrega un retorno en caso de error
+      return { data: null, unique_days: {} };
     }
-
-    // verificar si hay datos en todos los días únicos del mes
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const all_days_have_data = !Object.values(unique_days).includes(false);
-
-    set_loading(false);
-    return { data: response.data, unique_days };
   };
 
 
