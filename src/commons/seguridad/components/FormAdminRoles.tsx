@@ -23,7 +23,6 @@ import { api } from '../../../api/axios';
 import { useForm, Controller } from 'react-hook-form';
 import { get_permisos_rol_post } from '../../auth/adapters/roles.adapters';
 import { toast, type ToastContent } from 'react-toastify';
-// import { get_permisos_rol_post } from '../../auth/adapters/roles.adapters';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_success = (message: ToastContent) =>
@@ -53,21 +52,12 @@ export const FormAdminRoles = ({
   const [is_create, set_is_create] = useState('');
   const [rol_permisos, set_rol_permisos] = useState<Array<{ id: number }>>();
 
-  // const [{form_values}, set_form_values] = useState({
-  //   nombre_rol: '',
-  //   descripcion_rol: '',
-  //   permisosRol: [],
-  // });
   const [permisos, set_permisos] = React.useState([]);
 
   const {
     register: register_rol_permiso,
-    // watch: watch_permisos,
-    // setValue: set_value,
-    // reset: reset_permiso,
     control,
     handleSubmit: handle_submit_rol_permiso,
-    // formState: { errors: errors_rol_permiso },
   } = useForm();
 
   const handle_change =
@@ -80,17 +70,6 @@ export const FormAdminRoles = ({
   ): void => {
     // set_checked([event.target.checked, event.target.checked]);
   };
-
-  // const handle_change_2 = (
-  //   event: React.ChangeEvent<HTMLInputElement>,
-  //   index: number
-  // ): void => {
-  //   // if (index === 1) {
-  //   //   set_checked([event.target.checked, checked[index]]);
-  //   // } else if (index === 2) {
-  //   //   set_checked([checked[0], event.target.checked]);
-  //   // }
-  // };
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const get_roles_permisos = async () => {
@@ -240,16 +219,8 @@ export const FormAdminRoles = ({
                                         control={
                                           <Checkbox
                                             key={modulo.id_modulo}
-                                            checked={
-                                              false
-                                              // checked[index] &&
-                                              // checked[index + 1]
-                                            }
-                                            indeterminate={
-                                              false
-                                              // checked[index] !==
-                                              // checked[index + 1]
-                                            }
+                                            checked={false}
+                                            indeterminate={false}
                                             onChange={handle_change_1}
                                           />
                                         }
@@ -269,11 +240,6 @@ export const FormAdminRoles = ({
                                           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                                           name={`permisos[${modulo.permisos[permiso].id}][${modulo.permisos[permiso].value}]`}
                                           control={control}
-                                          // defaultValue={[
-                                          //   modulo.permisos[permiso].id,
-                                          //   permiso,
-                                          //   false,
-                                          // ]}
                                           render={({ field }) => (
                                             <FormControlLabel
                                               {...field}
