@@ -34,9 +34,8 @@ export const checking_authentication: (
     }
 
     const { tokens } = data?.userinfo as UserData;
-    console.log(tokens.access)
 
-    sessionStorage.setItem('token', tokens.access);
+    localStorage.setItem('token', tokens.access);
     // Se establece el token en el header de las peticiones
     api.interceptors.request.use(
       (config) => {

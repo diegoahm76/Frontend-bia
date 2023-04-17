@@ -1,192 +1,162 @@
-import React from 'react';
-import { api } from '../../../api/axios';
-import { Button, Grid, Box, TextField, Typography } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
-import { toast, type ToastContent } from 'react-toastify';
+import { useState } from 'react';
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Alert,
+  IconButton,
+} from '@mui/material';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-interface DataUser {
-  nombre_de_usuario: string;
-  tipo_envio: string;
-  redirect_url: string;
-}
-
-const data_values: DataUser = {
-  nombre_de_usuario: '',
-  tipo_envio: '',
-  redirect_url:
-    'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena',
-};
+// import type { DataUserRecover, ResponseRecover } from '../interfaces';
+// import { recover_password } from '../request/authRequest';
+import { LoadingButton } from '@mui/lab';
+// import { control_success } from '../../recursoHidrico/requets/Request';
+import { Email, Sms, Close } from '@mui/icons-material';
+import LinearProgress from '@mui/material/LinearProgress';
+import type { AxiosError } from 'axios';
+import { recover_password } from '../request/authRequest';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecuperarContrasena: React.FC = () => {
-  const [display_medio_recuperacion, set_display_medio_recuperacion] =
-    React.useState(false);
+  const {
+    handleSubmit: handle_submit,
+    formState: { errors },
+    register,
+  } = useForm();
 
-  const { control, handleSubmit: handle_submit } = useForm({
-    defaultValues: data_values,
+  const [is_sending, set_is_sending] = useState(false);
+  const [open, set_open] = useState(false);
+  const [message, set_message] = useState('');
+  const [type_media, set_type_media] = useState('');
+  const [error_message, set_error] = useState('');
+  const [open_alert, set_open_alert] = useState(false);
+
+  const handle_close = (): void => {
+    set_open(false);
+  };
+
+  const on_submit = handle_submit(async ({ nombre_de_usuario }) => {
+    set_is_sending(true);
+    try {
+      set_message('');
+      const data_send = {
+        nombre_de_usuario,
+        tipo_envio: '',
+        redirect_url:
+          'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena',
+      };
+      console.log(data_send);
+      const { data: resp } = await recover_password(data_send);
+      console.log(resp);
+    } catch (error) {
+      const temp_err = error as AxiosError;
+      console.log(temp_err);
+      set_error('Error al recuperar contraseña');
+    } finally {
+      set_is_sending(false);
+    }
+    // data = {
+    //   ...data,
+    //   tipo_envio: type_media,
+    // };
   });
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const on_submit = (data: any) => {
-    void query_recover_pass(data);
-  };
+  // const query_recover_pass = async (
+  //   dataRecover: DataUserRecover
+  // ): Promise<void> => {
+  //   set_is_sending(true);
+  //   try {
+  //     const { data } = await recover_password(dataRecover);
+  //     console.log(data);
+  //     if (data?.data !== undefined) {
+  //       set_open(true);
+  //       set_message(data.detail);
+  //       return;
+  //     }
 
-  const handle_selection_recover_pass = (metodo_envio: string): void => {
-    if (metodo_envio === 'email') {
-      data_values.tipo_envio = 'email';
-    } else if (metodo_envio === 'sms') {
-      data_values.tipo_envio = 'sms';
-    }
-    console.log(metodo_envio);
-    set_display_medio_recuperacion(false);
-    void query_recover_pass(data_values);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const query_recover_pass = async (dataRecover: any) => {
-    try {
-      const { data } = await api.post(
-        'users/request-reset-email/',
-        dataRecover
-      );
-      console.log(data);
-      if ('data' in data) {
-        console.log('ingreso');
-        if (data.data.email !== null && data.data.sms !== null) {
-          data_values.nombre_de_usuario = dataRecover.nombre_de_usuario;
-          set_display_medio_recuperacion(true);
-        }
-      }
-
-      control_success(data.detail);
-    } catch (error: any) {
-      void control_error(error.message);
-    }
-  };
+  //     control_success(data.detail);
+  //   } catch (error: any) {
+  //     const { response } = error as AxiosError<ResponseRecover>;
+  //     set_error(response?.data.detail as string);
+  //     set_open_alert(true);
+  //   } finally {
+  //     set_is_sending(false);
+  //   }
+  // };
 
   return (
     <>
-      <Grid item>
-        {display_medio_recuperacion ? (
-          <Typography
-            textAlign="center"
-            variant={'body2'}
-            sx={{ mb: '10px' }}
-            paragraph
-          >
-            Selecciona uno de los medios para la recuperación de contraseña
-          </Typography>
-        ) : (
-          <Typography
-            textAlign="center"
-            variant={'body2'}
-            sx={{ mb: '10px' }}
-            paragraph
-          >
-            Ingrese su usuario para recuperar contraseña
-          </Typography>
-        )}
-      </Grid>
-      {display_medio_recuperacion ? (
-        <Grid item>
-          <Grid item justifyContent="center" container>
-            <Button
-              sx={{ mt: '20px' }}
-              fullWidth
-              type="submit"
-              variant="contained"
-              size="small"
-              color="success"
-              disableElevation
-              onClick={() => {
-                handle_selection_recover_pass('email');
-              }}
-              style={{ fontSize: '.9rem' }}
-            >
-              <Typography>Email</Typography>
-            </Button>
-
-            <Button
-              sx={{ mt: '20px' }}
-              fullWidth
-              type="submit"
-              variant="contained"
-              size="small"
-              color="success"
-              disableElevation
-              onClick={() => {
-                handle_selection_recover_pass('sms');
-              }}
-              style={{ fontSize: '.9rem' }}
-            >
-              <Typography>Mensaje de texto</Typography>
-            </Button>
+      <form
+        onSubmit={(e) => {
+          void on_submit(e);
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography textAlign="center" fontWeight="bold">
+              Ingrese su usuario para recuperar su contraseña
+            </Typography>
           </Grid>
-        </Grid>
-      ) : (
-        <Box
-          component="form"
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={handle_submit(on_submit)}
-        >
-          <Grid item>
-            <Controller
-              name="nombre_de_usuario"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Usuario"
-                  variant="standard"
-                  fullWidth
-                />
-              )}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Usuario"
+              error={errors.nombre_de_usuario?.type === 'required'}
+              helperText={
+                errors.nombre_de_usuario?.type === 'required'
+                  ? 'Este campo es obligatorio'
+                  : ''
+              }
+              {...register('nombre_de_usuario', {
+                required: true,
+              })}
             />
-            <Grid item justifyContent="center" container>
-              <Button
-                sx={{ mt: '20px' }}
-                fullWidth
+          </Grid>
+          {open_alert && (
+            <Grid item xs={12} container justifyContent="center">
+              <Alert
+                severity="error"
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      set_open_alert(false);
+                    }}
+                  >
+                    <Close fontSize="inherit" />
+                  </IconButton>
+                }
+              >
+                {error_message}
+              </Alert>
+            </Grid>
+          )}
+          <Grid item xs={12} container justifyContent="center">
+            <Grid item xs={12}>
+              <LoadingButton
                 type="submit"
                 variant="contained"
-                size="small"
                 color="success"
-                disableElevation
-                // loading={}
-                // disabled={disable}
-                style={{ fontSize: '.9rem' }}
+                fullWidth
+                loading={is_sending}
+                disabled={is_sending}
               >
                 Enviar
-              </Button>
+              </LoadingButton>
             </Grid>
-            <Grid item sx={{ pt: '10px !important' }}>
+          </Grid>
+          <Grid item xs={12} container justifyContent="center">
+            <Grid item>
               <Link className="no-decoration" to="/auth/login">
                 <Typography sx={{ textAlign: 'center', mb: '20px' }}>
                   Iniciar sesión
@@ -194,8 +164,51 @@ export const RecuperarContrasena: React.FC = () => {
               </Link>
             </Grid>
           </Grid>
-        </Box>
-      )}
+        </Grid>
+      </form>
+      <Dialog open={open} onClose={handle_close}>
+        <DialogTitle textAlign="center">Opciones de recuperación</DialogTitle>
+        <DialogContent>
+          <Typography textAlign="center">
+            Seleccione un medio por el cual desea recibir el link, para
+            recuperar tu contraseña
+          </Typography>
+        </DialogContent>
+        {is_sending && (
+          <>
+            <DialogContent>
+              {is_sending && <LinearProgress />}
+              <DialogContentText textAlign="center">
+                {is_sending ? `Enviando ${type_media}` : message}
+              </DialogContentText>
+            </DialogContent>
+          </>
+        )}
+        <DialogActions>
+          <Grid container justifyContent="space-around" pb={1}>
+            <Button
+              disabled={is_sending}
+              onClick={() => {
+                set_type_media('mail');
+              }}
+              variant="outlined"
+              startIcon={<Email />}
+            >
+              E-mail
+            </Button>
+            <Button
+              disabled={is_sending}
+              onClick={() => {
+                set_type_media('sms');
+              }}
+              variant="outlined"
+              startIcon={<Sms />}
+            >
+              SMS
+            </Button>
+          </Grid>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
