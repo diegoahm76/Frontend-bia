@@ -11,17 +11,22 @@ import {
   DialogActions,
   Alert,
   IconButton,
+  FormControl,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
 } from '@mui/material';
+import type { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-// import type { DataUserRecover, ResponseRecover } from '../interfaces';
-// import { recover_password } from '../request/authRequest';
 import { LoadingButton } from '@mui/lab';
-// import { control_success } from '../../recursoHidrico/requets/Request';
-import { Email, Sms, Close } from '@mui/icons-material';
-import LinearProgress from '@mui/material/LinearProgress';
-import type { AxiosError } from 'axios';
+import { control_success } from '../../recursoHidrico/requets/Request';
 import { recover_password } from '../request/authRequest';
+import LinearProgress from '@mui/material/LinearProgress';
+import { Email, Sms, Close, Send } from '@mui/icons-material';
+
+const redirect_url =
+  'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecuperarContrasena: React.FC = () => {
@@ -30,66 +35,63 @@ export const RecuperarContrasena: React.FC = () => {
     formState: { errors },
     register,
   } = useForm();
-
   const [is_sending, set_is_sending] = useState(false);
   const [open, set_open] = useState(false);
   const [message, set_message] = useState('');
-  const [type_media, set_type_media] = useState('');
+  const [tipo_envio, set_tipo_envio] = useState('');
   const [error_message, set_error] = useState('');
   const [open_alert, set_open_alert] = useState(false);
+  const [nombre_de_usuario, set_nombre_de_usuario] = useState('');
 
   const handle_close = (): void => {
     set_open(false);
   };
 
-  const on_submit = handle_submit(async ({ nombre_de_usuario }) => {
+  const send_media = (): void => {
     set_is_sending(true);
+    setTimeout(() => {
+      void on_submit();
+    }, 2000);
+  };
+
+  const change_value = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_nombre_de_usuario(e.target.value);
+  };
+
+  const change_radio = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_tipo_envio(e.target.value);
+  };
+
+  const on_submit = handle_submit(async () => {
+    set_is_sending(true);
+    set_error('');
+    set_open_alert(false);
     try {
-      set_message('');
       const data_send = {
         nombre_de_usuario,
-        tipo_envio: '',
-        redirect_url:
-          'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena',
+        tipo_envio,
+        redirect_url,
       };
-      console.log(data_send);
       const { data: resp } = await recover_password(data_send);
-      console.log(resp);
-    } catch (error) {
-      const temp_err = error as AxiosError;
-      console.log(temp_err);
-      set_error('Error al recuperar contraseña');
+
+      if (resp.data !== undefined) {
+        set_open(true);
+        set_message(resp.detail);
+        return;
+      }
+
+      control_success(resp.detail);
+      set_open(false);
+    } catch (e) {
+      const temp_err = e as AxiosError;
+      const error = temp_err.response?.data as any;
+      set_error(error.detail);
+      set_open_alert(true);
     } finally {
+      set_tipo_envio('');
       set_is_sending(false);
     }
-    // data = {
-    //   ...data,
-    //   tipo_envio: type_media,
-    // };
   });
-
-  // const query_recover_pass = async (
-  //   dataRecover: DataUserRecover
-  // ): Promise<void> => {
-  //   set_is_sending(true);
-  //   try {
-  //     const { data } = await recover_password(dataRecover);
-  //     console.log(data);
-  //     if (data?.data !== undefined) {
-  //       set_open(true);
-  //       set_message(data.detail);
-  //       return;
-  //     }
-
-  //     control_success(data.detail);
-  //   } catch (error: any) {
-  //     const { response } = error as AxiosError<ResponseRecover>;
-  //     set_error(response?.data.detail as string);
-  //     set_open_alert(true);
-  //   } finally {
-  //     set_is_sending(false);
-  //   }
-  // };
 
   return (
     <>
@@ -118,6 +120,7 @@ export const RecuperarContrasena: React.FC = () => {
               {...register('nombre_de_usuario', {
                 required: true,
               })}
+              onChange={change_value}
             />
           </Grid>
           {open_alert && (
@@ -179,33 +182,71 @@ export const RecuperarContrasena: React.FC = () => {
             <DialogContent>
               {is_sending && <LinearProgress />}
               <DialogContentText textAlign="center">
-                {is_sending ? `Enviando ${type_media}` : message}
+                {is_sending ? `Enviando ${tipo_envio}` : message}
               </DialogContentText>
             </DialogContent>
           </>
         )}
+        {open_alert && (
+          <Grid item xs={12} container justifyContent="center">
+            <Alert
+              severity="error"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    set_open_alert(false);
+                  }}
+                >
+                  <Close fontSize="inherit" />
+                </IconButton>
+              }
+            >
+              {error_message}
+            </Alert>
+          </Grid>
+        )}
         <DialogActions>
-          <Grid container justifyContent="space-around" pb={1}>
-            <Button
-              disabled={is_sending}
-              onClick={() => {
-                set_type_media('mail');
-              }}
-              variant="outlined"
-              startIcon={<Email />}
-            >
-              E-mail
-            </Button>
-            <Button
-              disabled={is_sending}
-              onClick={() => {
-                set_type_media('sms');
-              }}
-              variant="outlined"
-              startIcon={<Sms />}
-            >
-              SMS
-            </Button>
+          <Grid container justifyContent="space-around" pb={1} spacing={1}>
+            <Grid item xs={12} container justifyContent="center">
+              <FormControl onChange={change_radio}>
+                <RadioGroup
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                >
+                  <Grid container width={300}>
+                    <Grid item xs={6} container alignItems="center">
+                      <FormControlLabel
+                        value="email"
+                        control={<Radio />}
+                        label="E-mail"
+                      />
+                      <Email color="primary" />
+                    </Grid>
+                    <Grid item xs={6} container alignItems="center">
+                      <FormControlLabel
+                        value="sms"
+                        control={<Radio />}
+                        label="SMS"
+                      />
+                      <Sms color="primary" />
+                    </Grid>
+                  </Grid>
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} container justifyContent="center">
+              <Button
+                disabled={is_sending || tipo_envio === ''}
+                onClick={send_media}
+                variant="outlined"
+                startIcon={<Send />}
+              >
+                Enviar
+              </Button>
+            </Grid>
           </Grid>
         </DialogActions>
       </Dialog>
