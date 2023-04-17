@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { useEffect, useState } from 'react';
 import { Autocomplete, Box, Button, Grid, TextField, Stack, Chip } from "@mui/material";
