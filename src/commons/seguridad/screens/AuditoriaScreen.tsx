@@ -26,8 +26,6 @@ import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-import { toast, type ToastContent } from 'react-toastify';
 // Components
 import { api } from '../../../api/axios';
 import { Title } from '../../../components/Title';
@@ -36,61 +34,57 @@ import {
   adapter_subsistemas_choices,
 } from '../../auth/adapters/auditorias.adapters';
 import { text_choise_adapter } from '../../auth/adapters/textChoices.adapter';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { TablaGeneral } from '../../../components/TablaGeneral';
+import { control_error } from '../../../helpers/controlError';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-const columns: GridColDef[] = [
+const columns = [
   {
-    headerName: 'Usuario',
+    header: 'Usuario',
     field: 'nombre_completo',
     minWidth: 200,
+    visible: true,
   },
   {
-    headerName: 'Tipo documento',
+    header: 'Tipo documento',
     field: 'cod_tipo_documento',
     minWidth: 150,
+    visible: true,
   },
   {
-    headerName: 'Documento',
+    header: 'Documento',
     field: 'numero_documento',
     minWidth: 150,
+    visible: true,
   },
   {
-    headerName: 'Módulo',
+    header: 'Módulo',
     field: 'nombre_modulo',
     minWidth: 150,
+    visible: true,
   },
   {
-    headerName: 'Subsistema',
+    header: 'Subsistema',
     field: 'subsistema',
     minWidth: 120,
+    visible: true,
   },
   {
-    headerName: 'Descripción',
+    header: 'Descripción',
     field: 'descripcion',
     minWidth: 400,
+    visible: true,
   },
   {
-    headerName: 'Valores actualizados',
+    header: 'Valores actualizados',
     field: 'valores_actualizados',
     minWidth: 300,
+    visible: true,
   },
   {
-    headerName: 'Fecha acción',
+    header: 'Fecha acción',
     field: 'fecha_accion',
     minWidth: 150,
+    visible: true,
   },
 ];
 
@@ -202,7 +196,12 @@ const AuditoriaScreen = (): JSX.Element => {
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
         `auditorias/get-by-query-params/?rango-inicial-fecha=${new_date_ini}&rango-final-fecha=${new_date_fin}&tipo-documento=${tipo_documento.value}&numero-documento=${numero_documento}&modulo=${modulo.value}&subsistema=${subsistema.value}`
       );
-      if (tipo_documento_filter) {
+      console.log(numero_documento);
+      if (
+        tipo_documento_filter &&
+        !subsistema_modulo_filter &&
+        numero_documento !== null
+      ) {
         set_nombre_usuario_auditoria(
           data.detail
             .map((item: any) => item.nombre_completo)
@@ -214,10 +213,9 @@ const AuditoriaScreen = (): JSX.Element => {
       }
       set_auditorias(data.detail);
       set_loading_button(false);
-      // void Swal.fire('Correcto', 'Proceso Exitoso', 'success');
     } catch (error: any) {
       set_loading_button(false);
-      void control_error(error.response.data.detail);
+      control_error(error.response.data.detail);
     }
   };
 
@@ -297,7 +295,7 @@ const AuditoriaScreen = (): JSX.Element => {
         }}
       >
         <Typography sx={{ fontWeight: 'bold', fontSize: '20px', mb: '10px' }}>
-          Auditoria
+          Auditoría
         </Typography>
 
         <Box sx={{ width: '100%', typography: 'body1' }}>
@@ -308,7 +306,7 @@ const AuditoriaScreen = (): JSX.Element => {
             onSubmit={handle_submit(on_submit)}
             sx={{ mt: '20px' }}
           >
-            <Grid container spacing={2} sx={{ mb: '5px' }}>
+            <Grid container spacing={2} sx={{ mb: '0' }}>
               <Grid item xs={12} sm={3}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
@@ -336,6 +334,9 @@ const AuditoriaScreen = (): JSX.Element => {
                       />
                     )}
                   />
+                  <Typography className="label_selects">
+                    Fecha inicial{' '}
+                  </Typography>
                 </LocalizationProvider>
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -371,6 +372,9 @@ const AuditoriaScreen = (): JSX.Element => {
                       />
                     )}
                   />
+                  <Typography className="label_selects">
+                    Fecha final{' '}
+                  </Typography>
                 </LocalizationProvider>
               </Grid>
               {
@@ -476,9 +480,13 @@ const AuditoriaScreen = (): JSX.Element => {
                         name="tipo_documento"
                         options={tipo_documento_options}
                         placeholder="Seleccionar"
+                        required
                       />
                     )}
                   />
+                  <Typography className="label_selects">
+                    Tipo de documento{' '}
+                  </Typography>
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <TextField
@@ -488,29 +496,27 @@ const AuditoriaScreen = (): JSX.Element => {
                     label="Número de documento"
                     type="number"
                     size="small"
+                    required
                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     error={errors.numero_documento?.type === 'required'}
-                    helperText={
-                      errors.numero_documento?.type === 'required'
-                        ? 'Este campo es obligatorio'
-                        : ''
-                    }
+                    helperText="Número de documento"
                     {...register('numero_documento', { required: false })}
                   />
                 </Grid>
-                <Grid item xs={12} sm={3}>
-                  <TextField
-                    margin="dense"
-                    variant="outlined"
-                    fullWidth
-                    defaultValue={nombre_usuario_auditoria}
-                    label={nombre_usuario_auditoria}
-                    type="number"
-                    size="small"
-                    disabled
-                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                  />
-                </Grid>
+                {nombre_usuario_auditoria !== null && (
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      margin="dense"
+                      variant="outlined"
+                      fullWidth
+                      defaultValue={nombre_usuario_auditoria}
+                      label="Usuario auditado"
+                      size="small"
+                      disabled
+                      helperText="Nombre de usuario"
+                    />
+                  </Grid>
+                )}
               </Grid>
             )}
             {subsistema_modulo_filter && (
@@ -532,6 +538,7 @@ const AuditoriaScreen = (): JSX.Element => {
                       />
                     )}
                   />
+                  <Typography className="label_selects">Subsistema </Typography>
                   {errors.subsistema != null && (
                     <div className="col-12">
                       <small className="text-center text-danger">
@@ -557,6 +564,7 @@ const AuditoriaScreen = (): JSX.Element => {
                       />
                     )}
                   />
+                  <Typography className="label_selects">Módulo </Typography>
                 </Grid>
               </Grid>
             )}
@@ -576,13 +584,6 @@ const AuditoriaScreen = (): JSX.Element => {
               >
                 LIMPIAR
               </Button>
-              {/* <Button
-                type="submit"
-                variant="contained"
-                startIcon={<SearchIcon />}
-              >
-                BUSCAR
-              </Button> */}
               <LoadingButton
                 type="submit"
                 loading={loading_button}
@@ -590,20 +591,17 @@ const AuditoriaScreen = (): JSX.Element => {
                 startIcon={<SearchIcon />}
                 variant="contained"
               >
-                BUSCANDO
+                {loading_button ? 'BUSCANDO' : 'BUSCAR'}
               </LoadingButton>
             </Stack>
-
-            <DataGrid
-              density="compact"
-              autoHeight
-              pagination={true}
+            <TablaGeneral
+              showButtonExport
+              tittle={'Auditoría'}
               columns={columns}
-              rows={auditorias}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
-              getRowId={(row) => row.id_auditoria}
-            ></DataGrid>
+              rowsData={auditorias}
+              staticscroll={false}
+              stylescroll={'1560px'}
+            />
           </Box>
         </Box>
       </Grid>

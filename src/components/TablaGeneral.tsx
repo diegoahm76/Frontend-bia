@@ -2,17 +2,19 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 // Importando todos los componentes y utilidades necesarias de 'primereact', 'api' y otras bibliotecas
-import { useRef, useState } from "react";
-import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
-import type { DataTableProps, DataTableValue } from "primereact/datatable";
-import { InputText } from "primereact/inputtext";
-import { Calendar } from "primereact/calendar";
-import { MultiSelect } from "primereact/multiselect";
-import { Tooltip } from "primereact/tooltip";
-import { Button } from "primereact/button";
-import { InputNumber } from "primereact/inputnumber";
-import type { InputNumberChangeEvent } from "primereact/inputnumber";
+import type React from 'react';
+import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import type { DataTableProps, DataTableValue } from 'primereact/datatable';
+import { InputText } from 'primereact/inputtext';
+import { Calendar } from 'primereact/calendar';
+import { MultiSelect } from 'primereact/multiselect';
+import { Tooltip } from 'primereact/tooltip';
+import { Button } from 'primereact/button';
+import { InputNumber } from 'primereact/inputnumber';
+import type { InputNumberChangeEvent } from 'primereact/inputnumber';
 
 // Creando la interfaz de propiedades para la tabla general
 interface GeneralTableProps extends DataTableProps<any> {
@@ -22,16 +24,34 @@ interface GeneralTableProps extends DataTableProps<any> {
   tittle: string;
   staticscroll: boolean;
   stylescroll: string;
+  on_edit?: (rowData?: any) => void;
+}
+interface ActionTemplateProps {
+  rowData: any;
 }
 
 // Creando el componente TableGeneral
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
+export const TablaGeneral = ({
+  showButtonExport,
+  columns,
+  rowsData,
+  tittle,
+  staticscroll,
+  stylescroll,
+  on_edit,
+}: GeneralTableProps): JSX.Element => {
   // Definiendo las variables de estado y las referencias
   const table_ref = useRef<DataTable<any>>(null);
-  const [global_filter, set_global_filter] = useState<string>("");
+  const [global_filter, set_global_filter] = useState<string>('');
   const [filters, set_filters] = useState<Record<string, any>>({});
-
+  const { desktop_open } = useSelector(
+    (state: {
+      layout: {
+        desktop_open: boolean;
+      };
+    }) => state.layout
+  );
   // Función para manejar la exportación a CSV
   const handle_export_csv = (): void => {
     table_ref.current?.exportCSV();
@@ -40,15 +60,15 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
   // Función para manejar la exportación a Excel
   const handle_export_excel = async (): Promise<void> => {
     try {
-      const xlsx = await import("xlsx");
-      const worksheet = xlsx.utils.json_to_sheet(props.rowsData);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
+      const xlsx = await import('xlsx');
+      const worksheet = xlsx.utils.json_to_sheet(rowsData);
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
       const excel_buffer = xlsx.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
+        bookType: 'xlsx',
+        type: 'array',
       });
 
-      save_as_excel_file(excel_buffer, props.tittle);
+      save_as_excel_file(excel_buffer, tittle);
     } catch (error) {
       // Manejar el error de la promesa
     }
@@ -56,12 +76,12 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
 
   // Función para guardar el archivo Excel
   const save_as_excel_file = (buffer: Buffer, fileName: string): void => {
-    import("file-saver")
+    import('file-saver')
       .then((module) => {
         const save_as_fn = module.default.saveAs;
         const excel_type =
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-        const excel_extension = ".xlsx";
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const excel_extension = '.xlsx';
         const data = new Blob([buffer], {
           type: excel_type,
         });
@@ -74,20 +94,18 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
   };
 
   const clear_filter = (): void => {
-    set_global_filter("");
+    set_global_filter('');
   };
   // Creando el componente de encabezado de la tabla
   const header = (
-    <div className="flex align-items-center justify-content-between mb-4">
+    <>
       {/* Campo de búsqueda global */}
-      <div className="flex justify-content-between">
+      <div className="flex align-items-center justify-content-start gap-2">
         <Button
           type="button"
           icon="pi pi-filter-slash"
-          label="Clear"
           outlined
           onClick={clear_filter}
-          style={{ marginLeft: "1rem", marginRight: "1rem" }}
         />
         <span className="p-input-icon-left">
           <i className="pi pi-search" />
@@ -107,7 +125,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
           rounded
           onClick={handle_export_csv}
           tooltip="Export as CSV"
-          style={{ marginLeft: "1rem" }}
+          style={{ marginLeft: '10px' }}
         />
         <Button
           type="button"
@@ -117,19 +135,18 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onClick={handle_export_excel}
           tooltip="Export as Excel"
-          style={{ marginLeft: "1rem" }}
+          style={{ marginLeft: '10px' }}
         />
-
         {/* Filtros de columnas */}
 
-        {Object.keys(props.columns).map((col) => {
-          const column = props.columns[col];
+        {Object.keys(columns).map((col) => {
+          const column = columns[col];
           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           if (column.filter) {
             return (
               <div key={col} className="p-field">
                 <label htmlFor={col}>{column.header}</label>
-                {column.filter.type === "multiSelect" && (
+                {column.filter.type === 'multiSelect' && (
                   <MultiSelect
                     id={col}
                     value={filters[column.field]}
@@ -147,7 +164,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
                     className="p-column-filter"
                   />
                 )}
-                {column.filter.type === "text" && (
+                {column.filter.type === 'text' && (
                   <InputText
                     id={col}
                     value={filters[column.field]}
@@ -163,7 +180,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
                     className="p-column-filter"
                   />
                 )}
-                {column.filter.type === "calendar" && (
+                {column.filter.type === 'calendar' && (
                   <Calendar
                     id={col}
                     value={filters[column.field]}
@@ -186,13 +203,11 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
           return null;
         })}
       </div>
-
-      {/* Botones de exportación */}
-    </div>
+    </>
   );
 
   // Filtrando los datos de acuerdo a los filtros aplicados
-  const filtered_data = props.rowsData.filter((rowData) =>
+  const filtered_data = rowsData.filter((rowData) =>
     Object.keys(filters).every((field) => {
       const filter_value = filters[field];
       const row_value = rowData[field];
@@ -224,7 +239,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
           }
         }
         // Filtrado de rango numérico
-        if (typeof row_value === "number") {
+        if (typeof row_value === 'number') {
           const min_value = filter_value.min || -Infinity;
           const max_value = filter_value.max || Infinity;
           return row_value >= min_value && row_value <= max_value;
@@ -236,7 +251,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
         return filter_value.some((value) => value === row_value);
       }
       // Filtrado para texto
-      if (typeof filter_value === "string" || filter_value instanceof String) {
+      if (typeof filter_value === 'string' || filter_value instanceof String) {
         return row_value
           .toString()
           .toLowerCase()
@@ -251,7 +266,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
       return null;
     }
     // Filtro avanzado de rango de fechas para columnas de tipo calendario
-    if (column.filter.type === "calendar") {
+    if (column.filter.type === 'calendar') {
       return (
         <div>
           <Calendar
@@ -283,7 +298,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
     }
 
     // Filtro avanzado de rango numérico para columnas de tipo numérico
-    if (column.filter.type === "numeric") {
+    if (column.filter.type === 'numeric') {
       return (
         <div>
           <InputNumber
@@ -313,7 +328,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
     }
 
     // Filtro avanzado de selección múltiple para columnas de tipo multiSelect
-    if (column.filter.type === "multiSelect") {
+    if (column.filter.type === 'multiSelect') {
       return (
         <div>
           <MultiSelect
@@ -333,7 +348,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
       );
     }
     // Filtro avanzado por coincidencias
-    if (column.filter.type === "match") {
+    if (column.filter.type === 'match') {
       return (
         <div>
           <InputText
@@ -357,7 +372,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
   };
 
   // Para calcular cuantos registros tiene la tabla
-  const total_records = props.rowsData.length;
+  const total_records = rowsData.length;
   const options_count = Math.ceil(total_records / 10);
   const rows_per_page_options = [];
   for (let i = 0; i < options_count; i++) {
@@ -368,17 +383,17 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
     // Aquí puedes agregar la lógica para determinar el color en función del contenido de la fila
 
     switch (rowsData.status) {
-      case "unqualified":
-        return { backgroundColor: "red" };
+      case 'unqualified':
+        return { backgroundColor: 'red' };
 
-      case "qualified":
-        return { backgroundColor: "blue" };
+      case 'qualified':
+        return { backgroundColor: 'blue' };
 
-      case "new":
-        return { backgroundColor: "green" };
+      case 'new':
+        return { backgroundColor: 'green' };
 
-      case "negotiation":
-        return { backgroundColor: "yellow" };
+      case 'negotiation':
+        return { backgroundColor: 'yellow' };
     }
     // Retorna un objeto vacío como valor predeterminado si no coincide ningún caso
     return {};
@@ -390,15 +405,24 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
     return <div style={cell_color(rowData)}>{rowData[column.field]}</div>;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention
+  const ActionTemplate: React.FC<ActionTemplateProps> = ({ rowData }) => (
+    <div>
+      {/* <Button icon="pi pi-pencil" onClick={() => on_edit(rowData)} /> */}
+    </div>
+  );
+
   // Renderizando el componente TableGeneral
   return (
-    <div className="card">
+    <>
       <Tooltip target=".export-buttons>button" position="bottom" />
       <DataTable
+        size="small"
         ref={table_ref}
         value={filtered_data}
         header={header}
-        className="p-datatable-customers"
+        style={{ maxWidth: desktop_open ? 'calc(100vw - 390px)' : '94vw' }}
+        // className="p-datatable-customers"
         rowHover
         globalFilter={global_filter}
         emptyMessage="No se encontraron registros"
@@ -411,12 +435,12 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
         rowsPerPageOptions={rows_per_page_options}
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown CurrentPageReport"
         currentPageReportTemplate="Mostrando {first} - {last} de {totalRecords} registros"
-        scrollable={props.staticscroll}
-        scrollHeight={props.stylescroll}
+        scrollable={staticscroll}
+        scrollHeight={stylescroll}
       >
-        <Column rowReorder style={{ width: "3rem" }} />
-        {Object.keys(props.columns).map((col) => {
-          const column: Record<string, any> = props.columns[col];
+        <Column rowReorder style={{ width: '3rem' }} />
+        {Object.keys(columns).map((col) => {
+          const column: Record<string, any> = columns[col];
 
           return column.visible ? (
             <Column
@@ -426,14 +450,18 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
               filter
               sortable
               filterPlaceholder={`Buscar por ${column.header}`}
-              body={column.field === "status" ? custom_body : null}
+              body={column.field === 'status' ? custom_body : null}
               // En lo posible, los estados estandarizarlos a status
               filterElement={render_advanced_filter(column)}
             />
           ) : null;
         })}
+        <Column
+          header="ACCIONES"
+          body={(rowData: any) => <ActionTemplate rowData={rowData} />}
+        />
       </DataTable>
-    </div>
+    </>
   );
 };
 
@@ -465,7 +493,7 @@ export const TablaGeneral = (props: GeneralTableProps): JSX.Element => {
 *! adiciona donde quierausar el componente bajo adicionando estas propiedades
 <div className="App">
       <TableGeneral 
-      showButtonExport
+      show_button_export
       tittle={'Productos'} // titulo que dese mostrar al momento de bajar a excel no aplica para el csv
       columns={columns} //parametros de columnas antes declarados
       rowsData={rows} //rows antes declarados pusheados de la api
@@ -507,7 +535,7 @@ function App() {
   return (
     <div className="App">
       <TableGeneral 
-      showButtonExport
+      show_button_export
       tittle={'Productos'} 
       columns={columns} 
       rowsData={rows}
