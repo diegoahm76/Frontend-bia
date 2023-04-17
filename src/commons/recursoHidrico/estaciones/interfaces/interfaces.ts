@@ -44,6 +44,19 @@ export interface Datos {
     velocidad_agua: number,
     id_estacion: number,
 }
+export interface DatosMigracionGraficas {
+    id_migracion_estacion: number,
+    fecha: number,
+    temperatura: number,
+    humedad_relativa: number,
+    punto_de_rocio: number,
+    presion_atm_abs: number,
+    presion_atm_rel: number,
+    precipitacion: number,
+    nivel_agua: number,
+    velocidad_rio: number,
+    caudal: number,
+}
 export interface DatosMigracion {
     id_migracion_estacion: number;
     id_estacion: number;
