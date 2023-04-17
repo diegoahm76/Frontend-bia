@@ -10,10 +10,10 @@ import {
   get_bienes,
   get_marks,
   get_unit_measurement,
-  get_percentages,  
+  get_percentages,
   get_code_bien,
 } from '../slices/indexCatalogodeBienes';
-import { api } from '../../../../../api/axios';
+import { api } from '../../../../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -142,52 +142,52 @@ export const delete_nodo_service: any = (id: number) => {
 };
 
 // Eliminar nodo
-export const get_code_bien_service: any = (code: string|null) => {
+export const get_code_bien_service: any = (code: string | null) => {
   return async (dispatch: Dispatch<any>) => {
-    
-      let codigo = 0;
-      let nivel = 1;
-      let limit = 9;
-      if(code == null){
-        codigo = 1
-        nivel = 1
-        limit = 9
-      } else{
-        if(code.length === 1){
-          codigo = Number(code)*10
-          nivel = 2
-          limit = codigo + 9
-        } else if(code.length === 2){
-          codigo = (Number(code)*100) + 1
-          nivel = 3
-          limit = codigo + 99
-        } else if (code.length === 4) {
-          codigo = (Number(code)*1000) + 1
-          nivel = 4
-          limit = codigo + 999
-        } else{
-          codigo = (Number(code)*100000) + 1
-          nivel = 5
-          limit = codigo + 99999
-        }
+
+    let codigo = 0;
+    let nivel = 1;
+    let limit = 9;
+    if (code == null) {
+      codigo = 1
+      nivel = 1
+      limit = 9
+    } else {
+      if (code.length === 1) {
+        codigo = Number(code) * 10
+        nivel = 2
+        limit = codigo + 9
+      } else if (code.length === 2) {
+        codigo = (Number(code) * 100) + 1
+        nivel = 3
+        limit = codigo + 99
+      } else if (code.length === 4) {
+        codigo = (Number(code) * 1000) + 1
+        nivel = 4
+        limit = codigo + 999
+      } else {
+        codigo = (Number(code) * 100000) + 1
+        nivel = 5
+        limit = codigo + 99999
       }
-      for (let index = codigo; index <= limit; index++) {
-        try {
+    }
+    for (let index = codigo; index <= limit; index++) {
+      try {
         const { data } = await api.get(`almacen/bienes/catalogo-bienes/validar-codigo/${nivel}/${index}/`);
         if (data.success) {
-          dispatch(get_code_bien(index.toString())) 
+          dispatch(get_code_bien(index.toString()))
           return data;
-        } else{
+        } else {
           if (index === limit) {
             control_error("No se pueden crear mas nodos en este nivel");
           }
         }
       } catch (error: any) {
-        
+
       }
-        
-      }
-    
+
+    }
+
   };
 };
 
@@ -234,5 +234,5 @@ export const get_code_bien_service: any = (code: string|null) => {
 
 
 
-    
+
 
