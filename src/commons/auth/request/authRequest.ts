@@ -9,7 +9,9 @@ import type {
   UserCreate,
   DataUnlockUser,
   InfoPersonaComplete,
-  ChangePassword
+  ChangePassword,
+  DataUserRecover,
+  ResponseRecover
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -123,4 +125,14 @@ export const password_unblock_complete = async (
   data: ChangePassword
 ): Promise<ResponseServer<any>> => {
   return await api.patch(`users/password-unblock-complete/`, data);
+};
+
+export const recover_password = async (
+  data: DataUserRecover
+): Promise<ResponseServer<ResponseRecover>> => {
+  return await api.post('users/request-reset-email/', data, {
+    headers: {
+      Authorization: null
+    }
+  });
 };
