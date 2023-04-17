@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Card, Grid, Skeleton, TextField } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,6 +13,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import SearchIcon from '@mui/icons-material/Search';
 import { type BaseSyntheticEvent, useState } from 'react';
 import {
   type FieldValues,
@@ -19,8 +21,9 @@ import {
   type FieldErrors,
   useForm,
 } from 'react-hook-form';
-import { CustomSelect } from '../../../components';
+import { CustomSelect, Title } from '../../../components';
 import { type IList } from '.';
+import { RegisterForm } from '../../auth/components/RegisterForm';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -44,7 +47,7 @@ const TabPanel: (props: TabPanelProps) => JSX.Element = (
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 0 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -110,6 +113,7 @@ const Buscador: (props: PropsBuscador) => JSX.Element = ({
   tipo_documento_opt,
   tipo_persona_opt,
 }: PropsBuscador) => {
+  const [loading_button] = useState(false);
   const [tipo_documento] = useState('');
   const [tipo_persona] = useState('');
   const handle_change = (): void => {
@@ -118,6 +122,7 @@ const Buscador: (props: PropsBuscador) => JSX.Element = ({
   const handle_change_select = (): void => {
     console.log('first');
   };
+
   return (
     <>
       <form
@@ -125,8 +130,8 @@ const Buscador: (props: PropsBuscador) => JSX.Element = ({
           void onSubmit(e);
         }}
       >
-        <Grid container spacing={2} p={2}>
-          <Grid item xs={12} sm={6} md={4}>
+        <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
+          <Grid item xs={12} sm={6} md={3}>
             <CustomSelect
               onChange={handle_change_select}
               label="Tipo de persona *"
@@ -140,7 +145,7 @@ const Buscador: (props: PropsBuscador) => JSX.Element = ({
               register={register}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <CustomSelect
               onChange={handle_change_select}
               label="Tipo de documento *"
@@ -154,7 +159,7 @@ const Buscador: (props: PropsBuscador) => JSX.Element = ({
               register={register}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             {loading ? (
               <Skeleton variant="rectangular" width="100%" height={45} />
             ) : (
@@ -176,6 +181,21 @@ const Buscador: (props: PropsBuscador) => JSX.Element = ({
                 })}
                 onChange={handle_change}
               />
+            )}
+          </Grid>
+          <Grid item xs={12} sm={6} md={2}>
+            {loading ? (
+              <Skeleton variant="rectangular" width="100%" height={45} />
+            ) : (
+              <LoadingButton
+                type="submit"
+                loading={loading_button}
+                loadingPosition="start"
+                startIcon={<SearchIcon />}
+                variant="contained"
+              >
+                {loading_button ? 'BUSCANDO' : 'BUSCAR'}
+              </LoadingButton>
             )}
           </Grid>
         </Grid>
@@ -217,18 +237,20 @@ export const AdministracionPersonas: React.FC = () => {
   return (
     <Grid container>
       <Grid item xs={12}>
-        <Card variant="outlined" sx={{ borderRadius: 5, padding: 2 }}>
+        <Card variant="outlined" sx={{ borderRadius: 5, padding: '20px' }}>
+          <Title title="Administrar Personas" />
           <Tabs
             value={value}
             onChange={handle_change}
             indicatorColor="secondary"
             textColor="inherit"
-            variant="fullWidth"
             aria-label="full width tabs example"
+            sx={{ mt: '10px' }}
           >
-            <Tab label="Item One" {...a11y_props(0)} />
-            <Tab label="Item Two" {...a11y_props(1)} />
-            <Tab label="Item Three" {...a11y_props(2)} />
+            <Tab label="Personas" {...a11y_props(0)} />
+            <Tab label="Usuarios" {...a11y_props(1)} />
+            <Tab label="Ventanilla" {...a11y_props(2)} />
+            <Tab label="Empleados" {...a11y_props(3)} />
           </Tabs>
           <SwipeableViews
             axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
@@ -280,7 +302,10 @@ export const AdministracionPersonas: React.FC = () => {
               Item Two
             </TabPanel>
             <TabPanel value={value} index={2} dir={theme.direction}>
-              Item Three
+              <RegisterForm uso_interno={false} />
+            </TabPanel>
+            <TabPanel value={value} index={3} dir={theme.direction}>
+              Item Four
             </TabPanel>
           </SwipeableViews>
         </Card>
