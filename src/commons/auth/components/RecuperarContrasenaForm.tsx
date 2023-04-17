@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import type { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { control_success } from '../../recursoHidrico/requets/Request';
 import { recover_password } from '../request/authRequest';
@@ -42,6 +42,7 @@ export const RecuperarContrasena: React.FC = () => {
   const [error_message, set_error] = useState('');
   const [open_alert, set_open_alert] = useState(false);
   const [nombre_de_usuario, set_nombre_de_usuario] = useState('');
+  const navigate = useNavigate();
 
   const handle_close = (): void => {
     set_open(false);
@@ -81,11 +82,16 @@ export const RecuperarContrasena: React.FC = () => {
       }
 
       control_success(resp.detail);
-      set_open(false);
+      if (open) {
+        set_open(false);
+        navigate('/login');
+      }
     } catch (e) {
       const temp_err = e as AxiosError;
       const error = temp_err.response?.data as any;
-      set_error(error.detail);
+      // set_error(error.detail);
+      console.log(error);
+      console.log(e);
       set_open_alert(true);
     } finally {
       set_tipo_envio('');
