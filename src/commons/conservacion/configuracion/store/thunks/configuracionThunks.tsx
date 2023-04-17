@@ -167,6 +167,7 @@ export const activate_deactivate_mixture_service: any = (
   const form_data = {
     nombre: mixture.nombre,
     id_unidad_medida: mixture.id_unidad_medida,
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     item_activo: !mixture.item_activo
   }
   return async (dispatch: Dispatch<any>) => {
