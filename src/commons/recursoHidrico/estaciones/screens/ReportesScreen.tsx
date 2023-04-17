@@ -36,10 +36,10 @@ export const ReportesScreen: React.FC = () => {
     opc_dashboards: "0"
   })
   const opc_dashboards = [
-    { label: 'ESTACIÓN GUAMAL', value: "1" },
-    { label: 'ESTACIÓN GUAYURIBA', value: "2" },
-    { label: 'ESTACIÓN OCOA', value: "3" },
-    { label: 'ESTACIÓN PUERTO GAITAN', value: "4" },
+    { label: 'Guamal', value: "1" },
+    { label: 'Guayuriba', value: "2" },
+    { label: 'Ocoa', value: "3" },
+    { label: 'Caño Rubiales', value: "4" },
   ];
 
   const [loading, set_loading] = useState(false);
