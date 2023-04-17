@@ -12,7 +12,6 @@ import type { AxiosError } from 'axios';
 import {
     consultar_estaciones, consultar_datos_id, control_success,
     eliminar_estacion,
-    control_success_fail
 } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
 import { CrearEstacionDialog } from '../components/CrearEstacionDialog';
@@ -73,7 +72,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
                             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                             if (dato) {
                                 <CircularProgress color="secondary" />
-                              }                              
+                              }                            
                         }}
                     >
                         <Avatar
@@ -133,6 +132,10 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                 if (err?.response) {
                     if (err.response.status === 404) {
+                        if (estacion_id === 5 || estacion_id === 6) {
+                            control_error("La estación no se puede eliminar porque contiene datos");
+                            return
+                        }      
                         confirmar_eliminar_usuario(estacion_id);
                     }
                 }
@@ -141,15 +144,23 @@ export const AdministradorDeEstaciones: React.FC = () => {
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (estacion) {
                 console.log("Paso a no eliminar")
-                control_success_fail("La estación no se puede eliminar porque contiene datos");
+                control_error("La estación no se puede eliminar porque contiene datos");
             }
 
             set_dato(estacion); // guardar el valor en el estado
 
-        } catch (err) {
-            console.log("Excepción en traer_dato:", err);
-            control_error(err);
-        }
+        } catch (err: unknown) {
+            const temp_error = err as AxiosError
+            console.log("Error", temp_error.response?.status)
+            if (temp_error.response?.status === 404) {
+              control_error("No se encontraron datos para esta estación");
+              console.log("No hay datos");
+              set_dato([]);
+            } else {
+              // Otro error, mostrar mensaje de error genérico
+              control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+            }
+          };
     };
     const confirmar_eliminar_usuario = (id_Estacion: number): void => {
         void Swal.fire({
