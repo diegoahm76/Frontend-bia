@@ -149,7 +149,7 @@ export const ReportesScreen: React.FC = () => {
     const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
 
     const selected_station = opc_dashboards.find(station => station.value === selectdashboards.opc_dashboards);
-    const title = `CERTIFICADO MENSUAL DE LA ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
+    const title = `CERTIFICADO MENSUAL DE LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
     const title_width = doc.getTextWidth(title);
     const x_pos = (doc.internal.pageSize.width - title_width) / 2;
     doc.addImage(image_data_1, 160, 5, 40, 15)
@@ -281,7 +281,7 @@ export const ReportesScreen: React.FC = () => {
     const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
 
     const selected_station = opc_dashboards.find(station => station.value === selectdashboards.opc_dashboards);
-    const title = `CERTIFICADO DE DATOS OBTENIDOS EN LA ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
+    const title = `CERTIFICADO DE DATOS OBTENIDOS EN LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
     const title_width = doc.getTextWidth(title);
     const x_pos = (doc.internal.pageSize.width - title_width) / 2;
     const fecha = dayjs(fecha_inicial).locale('es').format('MMMM [de] YYYY')
