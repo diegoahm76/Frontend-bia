@@ -15,8 +15,12 @@ import { RegisterPersonaNatural } from './RegisterPersonaNatural';
 import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
 import { CustomSelect } from '../../../components';
 
+interface Props {
+  uso_interno: boolean;
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterForm: React.FC = () => {
+export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
   const {
     register,
     setValue: set_value,
@@ -90,9 +94,11 @@ export const RegisterForm: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h6" textAlign="center" pb={2}>
-        Formulario registro
-      </Typography>
+      {uso_interno && (
+        <Typography variant="h6" textAlign="center" pb={2}>
+          Formulario registro
+        </Typography>
+      )}
       <Grid container spacing={2} p={2}>
         <Grid item xs={12} sm={6} md={4}>
           <CustomSelect

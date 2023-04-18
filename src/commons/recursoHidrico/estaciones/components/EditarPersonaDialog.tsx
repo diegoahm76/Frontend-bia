@@ -223,7 +223,7 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 autoFocus
                 defaultValue={usuario_editado?.cargo}
                 {...register("cargo", {
-                  pattern: /^[a-zA-Z]+$/,
+                  pattern: /^[a-zA-Z\s]+$/, // permite letras y espacios
                   minLength: {
                     value: 3,
                     message: "El cargo debe tener al menos 3 caracteres"
