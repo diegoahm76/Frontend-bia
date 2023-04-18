@@ -111,28 +111,24 @@ export const desbloquer_usuario = async (
 
 export const verify_account = async (
   token: string
-): Promise<ResponseServer<any>> => {
+): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.get(`users/verify/?token=${token}`);
 };
 
 export const password_reset_complete = async (
   data: ChangePassword
-): Promise<ResponseServer<any>> => {
+): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.patch(`users/pasword-reset-complete/`, data);
 };
 
 export const password_unblock_complete = async (
   data: ChangePassword
-): Promise<ResponseServer<any>> => {
+): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.patch(`users/password-unblock-complete/`, data);
 };
 
 export const recover_password = async (
   data: DataUserRecover
-): Promise<ResponseServer<ResponseRecover>> => {
-  return await api.post('users/request-reset-email/', data, {
-    headers: {
-      Authorization: null
-    }
-  });
+): Promise<AxiosResponse<ResponseServer<ResponseRecover>>> => {
+  return await api.post('users/request-reset-email/', data);
 };
