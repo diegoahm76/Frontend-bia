@@ -383,7 +383,9 @@ export const ReportesScreen: React.FC = () => {
 
     // Calcular la temperatura promedio, mínima y máxima
     const temps = data.data.map((item: any) => parseFloat(item.temperatura_ambiente));
+    console.log("temps", temps)
     const temp_avg = temps.reduce((acc: number, cur: number) => acc + cur, 0) / temps.length;
+    console.log("promedio", temp_avg)
     const temp_min = Math.min(...temps);
     const temp_max = Math.max(...temps);
     // Calcular la humedad promedio, mínima y máxima
@@ -507,46 +509,53 @@ export const ReportesScreen: React.FC = () => {
 
     // Calcular la temperatura promedio, mínima y máxima
     const temps = data.data.map((item: any) => parseFloat(item.temperatura));
-    const temp_avg = temps.reduce((acc: number, cur: number) => acc + cur, 0) / temps.length;
-    const temp_min = Math.min(...temps);
-    const temp_max = Math.max(...temps);
+    const filtered_temps = temps.filter((temp: number) => !isNaN(temp));
+    const temp_avg = filtered_temps.reduce((acc: number, cur: number) => acc + cur, 0) / filtered_temps.length;
+    const temp_min = Math.min(...filtered_temps);
+    const temp_max = Math.max(...filtered_temps);
     // Calcular la humedad promedio, mínima y máxima
     const hum = data.data.map((item: any) => parseFloat(item.humedad_relativa));
-    const hum_avg = hum.reduce((acc: number, cur: number) => acc + cur, 0) / hum.length;
-    const hum_min = Math.min(...hum);
-    const hum_max = Math.max(...hum);
+    const filtered_hum = hum.filter((temp: number) => !isNaN(temp));
+    const hum_avg = filtered_hum.reduce((acc: number, cur: number) => acc + cur, 0) / hum.length;
+    const hum_min = Math.min(...filtered_hum);
+    const hum_max = Math.max(...filtered_hum);
     // Calcular el nivel de agua promedio, mínima y máxima
     const nivel = data.data.map((item: any) => parseFloat(item.nivel_agua));
-    const nivel_avg = nivel.reduce((acc: number, cur: number) => acc + cur, 0) / nivel.length;
-    const nivel_min = Math.min(...nivel);
-    const nivel_max = Math.max(...nivel);
+    const filtered_nivel = nivel.filter((temp: number) => !isNaN(temp));
+    const nivel_avg = filtered_nivel.reduce((acc: number, cur: number) => acc + cur, 0) / nivel.length;
+    const nivel_min = Math.min(...filtered_nivel);
+    const nivel_max = Math.max(...filtered_nivel);
 
     // Calcular el velocidad del agua promedio, mínima y máxima
     const velocidad = data.data.map((item: any) => parseFloat(item.velocidad_rio));
-    const velocidad_avg = velocidad.reduce((acc: number, cur: number) => acc + cur, 0) / velocidad.length;
-    const velocidad_min = Math.min(...velocidad);
-    const velocidad_max = Math.max(...velocidad);
+    const filtered_velocidad = velocidad.filter((temp: number) => !isNaN(temp) && temp > 0);
+    const velocidad_avg = filtered_velocidad.reduce((acc: number, cur: number) => acc + cur, 0) / velocidad.length;
+    const velocidad_min = Math.min(...filtered_velocidad);
+    const velocidad_max = Math.max(...filtered_velocidad);
 
     // Calcular presion del aire promedio, minima y maxima
 
     const presion = data.data.map((item: any) => parseFloat(item.presion_atm_abs));
-    const presion_avg = presion.reduce((acc: number, cur: number) => acc + cur, 0) / presion.length;
-    const presion_min = Math.min(...presion);
-    const presion_max = Math.max(...presion);
+    const filtered_presion = presion.filter((temp: number) => !isNaN(temp));
+    const presion_avg = filtered_presion.reduce((acc: number, cur: number) => acc + cur, 0) / presion.length;
+    const presion_min = Math.min(...filtered_presion);
+    const presion_max = Math.max(...filtered_presion);
 
     // Calcular luminosidad promedio, minima y maxima
 
-    const luminosidad = data.data.map((item: any) => parseFloat(item.presion_atm_rel));
-    const luminosidad_avg = luminosidad.reduce((acc: number, cur: number) => acc + cur, 0) / luminosidad.length;
-    const luminosidad_min = Math.min(...luminosidad);
-    const luminosidad_max = Math.max(...luminosidad);
+    const presion_rel = data.data.map((item: any) => parseFloat(item.presion_atm_rel));
+    const filtered_presion_rel = presion_rel.filter((temp: number) => !isNaN(temp));
+    const presion_rel_avg = filtered_presion_rel.reduce((acc: number, cur: number) => acc + cur, 0) / presion_rel.length;
+    const presion_rel_min = Math.min(...filtered_presion_rel);
+    const presion_rel_max = Math.max(...filtered_presion_rel);
 
     // Calcular precipitacion promeido, minima y maxima
 
     const precipitacion = data.data.map((item: any) => parseFloat(item.precipitacion));
-    const precipitacion_avg = precipitacion.reduce((acc: number, cur: number) => acc + cur, 0) / precipitacion.length;
-    const precipitacion_min = Math.min(...precipitacion);
-    const precipitacion_max = Math.max(...precipitacion);
+    const filtered_presion_precipitacion = precipitacion.filter((temp: number) => !isNaN(temp));
+    const precipitacion_avg = filtered_presion_precipitacion.reduce((acc: number, cur: number) => acc + cur, 0) / precipitacion.length;
+    const precipitacion_min = Math.min(...filtered_presion_precipitacion);
+    const precipitacion_max = Math.max(...filtered_presion_precipitacion);
 
     // const notrans = data.data.map((item: any) => (item.fecha_registro));
     // const notrasn_fecha = notrans
@@ -604,9 +613,9 @@ export const ReportesScreen: React.FC = () => {
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
     doc.text(`Presión atm rel`, 98, 40);
     doc.setFont("Arial", "normal"); // establece la fuente en Arial
-    doc.text(`La Presion atm rel promedio que se presento en el mes ${fecha} fue de ${luminosidad_avg.toFixed(2)} Lux`, 30, 50);
-    doc.text(`La La Presion atm rel mínima que se presento en el mes ${fecha} fue de${luminosidad_min.toFixed(2)} Lux`, 30, 60);
-    doc.text(`La La Presion atm rel maxima que se presento en el mes ${fecha} fue de ${luminosidad_max.toFixed(2)} Lux`, 30, 70);
+    doc.text(`La Presion atm rel promedio que se presento en el mes ${fecha} fue de ${presion_rel_avg.toFixed(2)} Hpa `, 30, 50);
+    doc.text(`La La Presion atm rel mínima que se presento en el mes ${fecha} fue de${presion_rel_min.toFixed(2)} Hpa `, 30, 60);
+    doc.text(`La La Presion atm rel maxima que se presento en el mes ${fecha} fue de ${presion_rel_max.toFixed(2)} Hpa `, 30, 70);
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
     doc.text(`Precipitación`, 98, 80);
     doc.setFont("Arial", "normal"); // establece la fuente en Arial
