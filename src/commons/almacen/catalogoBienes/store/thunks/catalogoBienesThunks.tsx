@@ -1,4 +1,4 @@
-
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
