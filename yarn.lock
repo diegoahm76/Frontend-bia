@@ -3873,6 +3873,13 @@ collect-v8-coverage@^1.0.0:
   resolved "https://registry.npmjs.org/collect-v8-coverage/-/collect-v8-coverage-1.0.1.tgz"
   integrity sha512-iBPtljfCNcTKNAto0KEtDfZ3qzjJvqE3aTGZsbhjSBlorqpXJlaWWtPO35D+ZImoC3KWejX64o+yPGxhWSTzfg==
 
+colombian-holidays@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/colombian-holidays/-/colombian-holidays-4.1.1.tgz#adc7f5bf064c3f930374bdda64c6983caab07165"
+  integrity sha512-jjm5bMkH1GBKW2wwrDfEhPVbueiAXya6JAiJS+36hyM+qmZQKQvSCh3BEQIfU4mJzYWUpXDEbQe32BhJ/tnezQ==
+  dependencies:
+    pascua "^2.1.5"
+
 color-convert@^1.9.0:
   version "1.9.3"
   resolved "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
@@ -8032,6 +8039,11 @@ pascal-case@^3.1.2:
   dependencies:
     no-case "^3.0.4"
     tslib "^2.0.3"
+
+pascua@^2.1.5:
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/pascua/-/pascua-2.1.6.tgz#0d859eeb5a6f65a74533101705a86cad8de6bf36"
+  integrity sha512-+Lybe1wBBzSeHUfS2pTL5XFs4j8mEV29xnr0FIjvPONc0PDDK8XTPyPjdlfinCHWKOrIlcIEZicItLwqJp6tuQ==
 
 path-exists@^3.0.0:
   version "3.0.0"
