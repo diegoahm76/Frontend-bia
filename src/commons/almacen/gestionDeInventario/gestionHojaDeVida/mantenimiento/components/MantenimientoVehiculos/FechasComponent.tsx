@@ -72,8 +72,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     const [check_isd, set_check_isd] = useState(false);
     const [check_if, set_check_if] = useState(false);
     const [disabled_type, set_disabled_type] = useState(true);
-    const [selected_date, set_selected_date] = useState<Dayjs[]>([]);
-    const [date, set_date] = useState<Dayjs>();
+    const [selected_date, set_selected_date] = useState<Dayjs[]>([dayjs()]);
 
     const handle_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
         set_tipo(event.target.value);
@@ -125,7 +124,6 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }
 
     const onchange_calendar = (new_date: any): void => {
-        set_date(new_date);
         const dates = [...selected_date];
         const index = dates.findIndex(d => dayjs(d).format("DD-MM-YYYY") === new_date.format("DD-MM-YYYY"))
         if (index !== -1)
@@ -136,18 +134,12 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
         set_selected_date(dates);
     }
 
-    const customDayRenderer = (
-        date: any,
-        selectedDays: any,
-        pickersDayProps: any
-      ) => {
+    const customDayRenderer = (date: any, selectedDays: any, pickersDayProps: any ) => {
         let selected = false
-        selected_date?.forEach((dateInArray) => {
-          if (isSameDay(dateInArray.toDate(), date.toDate())) {
+        selected_date.forEach((dateInArray) => {
+          if (isSameDay(dateInArray.toDate(), date.toDate())) 
             selected = true
-          }
         })
-    
         return (
           <PickersDay
             {...pickersDayProps}
@@ -284,7 +276,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                     </Grid>
                     <Grid item xs={12} sm={8}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <CalendarPicker date={date} onChange={onchange_calendar} disabled={tipo === ""} renderDay={customDayRenderer} />
+                            <CalendarPicker date={null} onChange={onchange_calendar} disabled={tipo === ""} renderDay={customDayRenderer} />
                         </LocalizationProvider>
                     </Grid>
                 </Grid>
