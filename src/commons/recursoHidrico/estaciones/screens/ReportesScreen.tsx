@@ -505,7 +505,6 @@ export const ReportesScreen: React.FC = () => {
     doc.setFont('Arial', 'normal');
     doc.setFontSize(font_props.size);
 
-
     // Calcular la temperatura promedio, mínima y máxima
     const temps = data.data.map((item: any) => parseFloat(item.temperatura));
     const temp_avg = temps.reduce((acc: number, cur: number) => acc + cur, 0) / temps.length;
@@ -620,6 +619,7 @@ export const ReportesScreen: React.FC = () => {
 
   const handle_download_pdf = async (): Promise<void> => {
     const data = await fetch_data();
+    console.log("data", data)
     generate_pdf(data);
   }
   const handle_download_pdf_migracion = async (): Promise<void> => {
