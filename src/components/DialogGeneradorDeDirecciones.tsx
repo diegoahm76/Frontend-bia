@@ -38,7 +38,7 @@ const via_principal_options = [
   { label: 'Carrera', value: 'CARRERA' },
   { label: 'Circunvalar', value: 'CIRCUNVALAR' },
   { label: 'Diagonal', value: 'DIAGONAL' },
-  { label: 'Kilometro', value: 'KILOMETRO' },
+  { label: 'Kilómetro', value: 'KILOMETRO' },
   { label: 'Sector', value: 'SECTOR' },
   { label: 'Transversal', value: 'TRANSVERSAL' },
 ];
@@ -102,7 +102,6 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
       cuadrante_secundaria: '',
       barrio: '',
       nombre: '',
-      complemento: '',
       direccion_estandarizada: '',
     },
   });
@@ -122,7 +121,6 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
     cuadrante_secundaria: '',
     barrio: '',
     nombre: '',
-    complemento: '',
     direccion_estandarizada: '',
   });
   const [direccion_estandarizada, set_direccion_estandariazada] = useState('');
@@ -157,7 +155,6 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
   };
 
   const clear_data_form = (): void => {
-    console.log('first');
     set_data_direction({
       ubicacion: '',
       via_principal: '',
@@ -174,7 +171,6 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
       cuadrante_secundaria: '',
       barrio: '',
       nombre: '',
-      complemento: '',
       direccion_estandarizada: '',
     });
     set_value('ubicacion', '');
@@ -192,7 +188,6 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
     set_value('cuadrante_secundaria', '');
     set_value('barrio', '');
     set_value('nombre', '');
-    set_value('complemento', '');
     set_value('direccion_estandarizada', '');
     openDialog(false);
   };
@@ -342,7 +337,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                     : ''
                 }
                 onChange={handle_change}
-                label="Numero"
+                label="Número"
                 type="number"
                 size="small"
                 fullWidth
@@ -450,14 +445,6 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12}>
               <TextField
-                {...register('complemento')}
-                onChange={handle_change}
-                label="Complemento"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
                 {...register('direccion_estandarizada', { required: true })}
                 error={errors.direccion_estandarizada?.type === 'required'}
                 helperText={
@@ -466,7 +453,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                     : ''
                 }
                 value={direccion_estandarizada}
-                label="Dirección estandarizada"
+                label="Dirección generada"
                 fullWidth
                 multiline
                 maxRows={4}
@@ -485,7 +472,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                 fullWidth
                 startIcon={<SaveIcon />}
               >
-                GUARDAR
+                ACEPTAR
               </Button>
             </Grid>
           </Grid>

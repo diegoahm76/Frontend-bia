@@ -16,7 +16,7 @@ export const get_permisos_adapter_by_rol_for_select = (permisos: any): any => {
 
 export const get_permisos_rol_post = (id_rol: any, permisos: any): any => {
   const permisos_por_rol_adapted = permisos.map((permiso: any) => ({
-    id_permiso_modulo: permiso.value,
+    id_permiso_modulo: permiso.id,
     id_rol,
   }));
   return permisos_por_rol_adapted;

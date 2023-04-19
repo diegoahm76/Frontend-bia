@@ -22,6 +22,7 @@ import { control_error } from '../../../../helpers/controlError';
 import { Title } from '../../../../components/Title';
 import { NuevoUsuarioModal } from '../components/NuevaPersonaDialog';
 import { EditarPersonaDialog } from '../components/EditarPersonaDialog';
+import type { AxiosError } from 'axios';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UsuariosScreen: React.FC = () => {
@@ -145,10 +146,17 @@ export const UsuariosScreen: React.FC = () => {
       }));
       set_estaciones_meteologicas(personas);
       set_loading(false);
-    } catch (err) {
-      control_error(err);
-      set_loading(false);
-    }
+    } catch (err: unknown) {
+      const temp_error = err as AxiosError
+      console.log("Error", temp_error.response?.status)
+      if (temp_error.response?.status === 500) {
+        set_loading(false);
+        return ""
+      } else {
+        // Otro error, mostrar mensaje de error genérico
+        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+      }
+    };
   };
 
   const {
@@ -158,12 +166,17 @@ export const UsuariosScreen: React.FC = () => {
 
   const confirmar_eliminar_usuario = (idPersona: number): void => {
     void Swal.fire({
-      title: "Estas seguro?",
-      text: "Va a eliminar un usuario",
+      // title: "Estas seguro?",
+      customClass: {
+        confirmButton: "square-btn",
+        cancelButton: "square-btn",
+      },
+      width: 350,
+      text: "¿Estas seguro?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#8BC34A",
+      cancelButtonColor: "#B71C1C",
       confirmButtonText: "Si, elminar!",
       cancelButtonText: "Cancelar",
     }).then(async (result) => {
@@ -186,6 +199,17 @@ export const UsuariosScreen: React.FC = () => {
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}>
+        <style>
+          {`
+          .square-btn {
+            border-radius: 0 !important;
+          }
+
+          .swal2-icon.swal2-warning {
+            font-size: 14px !important;
+          }
+        `}
+        </style>
         <Grid item xs={12}>
           <Grid
             item
@@ -281,7 +305,7 @@ export const UsuariosScreen: React.FC = () => {
                   fontSize: '17px',
                   fontWeight: 'bold',
                   alignContent: 'center',
-                }}
+                }} spacing={2}
               >
                 <Title title="INFORMACIÓN GENERAL"></Title>
               </Grid>

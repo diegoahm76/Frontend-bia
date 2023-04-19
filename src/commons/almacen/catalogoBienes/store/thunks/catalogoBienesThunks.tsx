@@ -1,3 +1,4 @@
+
 import { type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
@@ -174,6 +175,7 @@ export const get_code_bien_service: any = (code: string|null) => {
       for (let index = codigo; index <= limit; index++) {
         try {
         const { data } = await api.get(`almacen/bienes/catalogo-bienes/validar-codigo/${nivel}/${index}/`);
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         if (data.success) {
           dispatch(get_code_bien(index.toString())) 
           return data;

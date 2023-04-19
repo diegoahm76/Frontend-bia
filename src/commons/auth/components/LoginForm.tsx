@@ -238,7 +238,7 @@ export const LoginForm: React.FC = () => {
           >
             <Typography sx={{ fontSize: '17px' }}>Bienvenido</Typography>
             <Typography sx={{ fontSize: '13px', textAlign: 'justify' }}>
-              Este es nuestro portal de trámites en lineá un sistema fácil de
+              Este es nuestro portal de trámites en linea un sistema fácil de
               usar, ágil y sencillo para el control general de solicitudes y
               requerimientos ambientales en el departamento del Meta.
             </Typography>
@@ -267,7 +267,7 @@ export const LoginForm: React.FC = () => {
                 Si tiene algún reclamo o solicitud, ingrese a{' '}
                 <a href="#">PQR en linéa</a> Número de atención: Linea nacional
                 01-8000-51847095 Email:{' '}
-                <a href="#">atención.usuario@macarenia.org</a>
+                <a href="#">pqrds@cormacarena.gov.co</a>
               </i>
             </Typography>
           </Grid>
