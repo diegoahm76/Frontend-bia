@@ -1,6 +1,6 @@
 import { api } from '../../../api/axios';
 import type {
-Roles
+Roles, SuperUser
 } from '../interfaces';
 import type {
   ResponseServer,
@@ -23,5 +23,16 @@ export const roles_request = async () => {
     control_error(data.detail);
   }
 };
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const superuser_request = async(id_persona: number) => {
+  try {
+    const { data } = await api.post<ResponseServer<SuperUser[]>>(`users/delegate-rol-super-usuario/${id_persona}/`);
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 
