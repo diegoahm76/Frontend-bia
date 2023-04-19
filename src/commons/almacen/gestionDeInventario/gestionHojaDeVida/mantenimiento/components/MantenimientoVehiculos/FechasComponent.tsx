@@ -14,7 +14,7 @@ import {
     Checkbox
 } from '@mui/material';
 import Button from '@mui/material/Button';
-import { CalendarPicker, DatePicker, LocalizationProvider, PickersDay, PickersDayProps } from '@mui/x-date-pickers/';
+import { CalendarPicker, DatePicker, LocalizationProvider, PickersDay } from '@mui/x-date-pickers/';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import use_previsualizacion from './hooks/usePrevisualizacion';
 import { type holidays_co, type crear_mantenimiennto } from '../../interfaces/IProps';
@@ -68,7 +68,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
     const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
     const [cada, set_cada] = useState("");
-    const [fechas_array, set_fechas_array] = useState<Date[]>([]);
+    const [fechas_array, set_fechas_array] = useState<Dayjs[]>([]);
     const [check_isd, set_check_isd] = useState(false);
     const [check_if, set_check_if] = useState(false);
     const [disabled_type, set_disabled_type] = useState(true);
@@ -81,37 +81,31 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
     const handle_change_fecha: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
         set_fecha(event.target.value);
-        set_fechas();
     }
 
     const handle_change_cada: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_cada(e.target.value);
-        set_fechas();
     };
 
-    const handle_change_fecha_desde = (date: Date | null) => {
-        const fecha_desde = date;
+    const handle_change_fecha_desde = (date: Date | null): void => {
         set_fecha_desde(date);
-        set_fechas();
-        return fecha_desde;
     };
 
-    const handle_change_fecha_hasta = (date: Date | null) => {
-        const fecha_hasta = date;
+    const handle_change_fecha_hasta = (date: Date | null): void => {
         set_fecha_hasta(date);
-        set_fechas();
-        return fecha_hasta;
     };
 
     const handle_change_isd = (e: React.ChangeEvent<HTMLInputElement>): void => {
         set_check_isd(e.target.checked);
-        set_fechas();
     };
 
     const handle_change_if = (e: React.ChangeEvent<HTMLInputElement>): void => {
         set_check_if(e.target.checked);
-        set_fechas();
     };
+
+    useEffect(() => {
+        set_fechas();
+    }, [fecha,cada,fecha_hasta,fecha_desde,check_isd,check_if]);
     /**
      * Obtiene listado de fechas para mantenimiento automatico
      * @param i_cada 
@@ -129,11 +123,8 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
             const f_hasta = dayjs(fecha_hasta);
             const i_cada = parseInt(cada);
             calcular_fechas_auto(i_cada, f_desde, f_hasta, fecha, [], check_isd, check_if).then(response => {
-                let data_selected: Dayjs[] = [];
-                response.forEach(r => { data_selected.push(dayjs(r)) })
-                set_selected_date(data_selected);
+                set_selected_date(response);
                 set_fechas_array(response);
-                console.log('set_fechas: ', fechas_array);
             });
         }
     }
@@ -163,7 +154,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
         )
     }
 
-    const calcular_fechas_auto = async (i_cada: number, f_desde: dayjs.Dayjs, f_hasta: dayjs.Dayjs, fecha: string, fechas_array: Date[], check_isd: boolean, check_if: boolean): Promise<Date[]> => {
+    const calcular_fechas_auto = async (i_cada: number, f_desde: dayjs.Dayjs, f_hasta: dayjs.Dayjs, fecha: string, fechas_array: Dayjs[], check_isd: boolean, check_if: boolean): Promise<Dayjs[]> => {
         const resp_holidays: ColombianHoliday[] = get_holidays({ year: f_desde.year(), month: (f_desde.month() + 1), valueAsDate: false });
 
         if (!check_if)
@@ -172,7 +163,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
         if (!check_isd)
             f_desde = validate_sabados_domingos(resp_holidays, f_desde);
 
-        fechas_array.push(f_desde.toDate());
+        fechas_array.push(f_desde);
 
         const proxima_fecha = fecha === 'W' ? f_desde.add(i_cada, 'week') : f_desde.add(i_cada, 'month');
         if (proxima_fecha.toDate() <= f_hasta.toDate())
