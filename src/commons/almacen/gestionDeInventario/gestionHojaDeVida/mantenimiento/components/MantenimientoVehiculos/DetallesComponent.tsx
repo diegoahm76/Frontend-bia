@@ -4,41 +4,62 @@ import {
     TextField
 } from "@mui/material"
 import { useEffect } from "react";
+import { type IcvVehicles } from "../../../hojaDeVidaVehiculo/interfaces/CvVehiculo";
 import use_previsualizacion from "./hooks/usePrevisualizacion";
 interface IProps {
-    parent_state_setter: any
+    parent_details_veh: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const DetallesComponent: React.FC<IProps> = ({ parent_state_setter }) => {
-
+export const DetallesComponent: React.FC<IProps> = ({ parent_details_veh }) => {
     const {
-       // States
-       marca,
-       serial_placa,
-       modelo,
-       kilometraje,
-       // Edita States
-       set_marca,
-       set_serial_placa,
-       set_modelo,
-       set_kilometraje
+        detalle_vehiculo,
+        set_detalle_vehiculo
     } = use_previsualizacion();
-    const on_change_marca: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        set_marca(e.target.value);
-    };
-    const on_change_serial_placa: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        set_serial_placa(e.target.value);
-    };
-    const on_change_modelo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        set_modelo(e.target.value);
-    };
-    const on_change_kilometraje: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        set_kilometraje(e.target.value);
-    };
 
     useEffect(() => {
-        parent_state_setter({marca,serial_placa,modelo,kilometraje});
-    }, [parent_state_setter, marca,serial_placa,modelo,kilometraje]);
+        const data_veh: IcvVehicles = {
+            id_hoja_de_vida: 10,
+            codigo_bien: "110100100002",
+            nombre: "prueba vehículo",
+            doc_identificador_nro: "bbb111",
+            id_marca: 0,
+            marca: "HYUNDAI",
+            cod_tipo_vehiculo: "",
+            tiene_platon: true,
+            capacidad_pasajeros: 4,
+            color: "",
+            linea: "",
+            tipo_combustible: "",
+            es_arrendado: false,
+            ultimo_kilometraje: 35000,
+            fecha_ultimo_kilometraje: 0,
+            fecha_adquisicion: 0,
+            fecha_vigencia_garantia: 0,
+            numero_motor: "MO55543EE4444RRRR555TO56R",
+            numero_chasis: "ERTY45Y67Y8UU9990",
+            cilindraje: 4600,
+            transmision: "",
+            capacidad_extintor: 100,
+            tarjeta_operacion: "",
+            observaciones_adicionales: "",
+            es_agendable: false,
+            en_circulacion: true,
+            fecha_circulacion: 0,
+            ruta_imagen_foto: "",
+            id_articulo: 170,
+            id_vehiculo_arrendado: null,
+            id_proveedor: null,
+            estado: "Óptimo",
+            dimension_llantas: 0,
+            tipo_vehiculo: ""
+        }
+        set_detalle_vehiculo(data_veh);
+    },[set_detalle_vehiculo]);
+
+    useEffect(() => {
+        parent_details_veh(detalle_vehiculo);
+      }, [parent_details_veh, detalle_vehiculo]);
+
 
     return (
         <>
@@ -49,48 +70,48 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_state_setter }) => 
                 autoComplete="off"
             >
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={3}>
                         <TextField
                             label="Marca"
                             helperText="Seleccione Marca"
                             size="small"
                             required
                             fullWidth
-                            value={marca}
-                            onChange={on_change_marca}
+                            value={detalle_vehiculo.marca}
+                            disabled={true}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={3}>
                         <TextField
                             label="Serial/Placa"
                             helperText="Seleccione Serial/Placa"
                             size="small"
                             required
                             fullWidth
-                            value={serial_placa}
-                            onChange = {on_change_serial_placa}
+                            value={detalle_vehiculo.numero_chasis}
+                            disabled={true}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={3}>
                         <TextField
                             label="Modelo"
                             helperText="Seleccione Modelo"
                             size="small"
                             required
                             fullWidth
-                            value={modelo}
-                            onChange = {on_change_modelo}
+                            value={detalle_vehiculo.numero_motor}
+                            disabled={true}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={3}>
                         <TextField
                             label="Kilometraje"
                             helperText="Seleccione Kilometraje"
                             size="small"
                             required
                             fullWidth
-                            value={kilometraje}
-                            onChange = {on_change_kilometraje}
+                            value={detalle_vehiculo.ultimo_kilometraje}
+                            disabled={true}
                         />
                     </Grid>
                 </Grid>

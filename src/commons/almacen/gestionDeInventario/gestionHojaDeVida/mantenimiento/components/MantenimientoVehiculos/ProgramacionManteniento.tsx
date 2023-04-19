@@ -1,29 +1,48 @@
 import { Button, Grid } from '@mui/material';
 import { Title } from '../../../../../../../components';
+import { ArticuloComponent } from './ArticuloComponent';
 import { DetallesComponent } from './DetallesComponent';
 import { MantenimientoComponent } from './MantenimientoComponent';
 import { FechasComponent } from './FechasComponent';
 import { KilometrajeComponent } from './KilometrajeComponent';
 import { PrevisualizacionComponent } from './PrevisualizacionComponent';
-import { useCallback, useState } from 'react';
-import { type detalle_articulo, type row } from '../../interfaces/IProps';
+import { useCallback } from 'react';
+import { type crear_mantenimiennto } from '../../interfaces/IProps';
+import use_previsualizacion from './hooks/usePrevisualizacion';
+import { type IcvVehicles } from '../../../hojaDeVidaVehiculo/interfaces/CvVehiculo';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
     // the parentState will be set by its child slider component
-    const [rows, set_rows] = useState<row[]>([]);
-    const [details, set_details] = useState<detalle_articulo>({ marca: '', serial_placa: '', modelo: '', kilometraje: '' });
+    const {
+        rows,
+        detalle_vehiculo,
+        tipo_mantenimiento,
+        especificacion,
+        set_rows,
+        set_detalle_vehiculo,
+        set_tipo_mantenimiento,
+        set_especificacion,
+    } = use_previsualizacion();
 
     // make wrapper function to give child
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const wrapperSetParentState = useCallback((val: row[]) => {
+    const wrapperSetParentState = useCallback((val: crear_mantenimiennto[]) => {
         set_rows(val);
     }, [set_rows]);
-
+    console.log(rows)
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const set_details_state = useCallback((val: detalle_articulo) => {
-        set_details(val);
-    }, [set_details]);
+    const set_details_state = useCallback((val: IcvVehicles) => {
+        set_detalle_vehiculo(val);
+    }, [set_detalle_vehiculo]);
+    
+    const set_type_maintenance_state = useCallback((val: string) => {
+        set_tipo_mantenimiento(val);
+    }, [set_tipo_mantenimiento]);
+
+    const set_esp_maintenance_state = useCallback((val: string) => {
+        set_especificacion(val);
+    }, [set_especificacion]);
 
     return (
         <>
@@ -40,9 +59,26 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 }}
             >
                 <Grid item xs={12}>
+                    {/* ARTICULO COMPONENT */}
+                    <Title title="Búsqueda de vehículo" />
+                    <ArticuloComponent />
+                </Grid>
+            </Grid>
+            <Grid
+                container
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                }}
+            >
+                <Grid item xs={12}>
                     {/* DETALLES COMPONENT */}
-                    <Title title="Detalles del articulo" />
-                    <DetallesComponent parent_state_setter={set_details_state} />
+                    <Title title="Datos del vehículo" />
+                    <DetallesComponent parent_details_veh={set_details_state} />
                 </Grid>
             </Grid>
 
@@ -59,8 +95,8 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
             >
                 <Grid item xs={12}>
                     {/* MANTENIMIENTO COMPONENT */}
-                    <Title title='Articulo' />
-                    <MantenimientoComponent />
+                    <Title title='Detalles' />
+                    <MantenimientoComponent parent_type_maintenance = {set_type_maintenance_state} parent_esp_maintenance = {set_esp_maintenance_state}/>
                 </Grid>
             </Grid>
 
@@ -78,7 +114,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* FECHAS COMPONENT */}
                     <Title title='Programar por fechas' />
-                    <FechasComponent parent_state_setter={wrapperSetParentState} detalle_vehiculo={details} />
+                    <FechasComponent parent_state_setter={wrapperSetParentState} detalle_vehiculo={detalle_vehiculo} tipo_matenimiento = {tipo_mantenimiento} especificacion = {especificacion} />
                 </Grid>
             </Grid>
 
