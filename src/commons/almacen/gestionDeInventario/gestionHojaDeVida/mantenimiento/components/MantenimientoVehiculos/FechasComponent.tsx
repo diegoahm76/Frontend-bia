@@ -72,7 +72,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     const [check_isd, set_check_isd] = useState(false);
     const [check_if, set_check_if] = useState(false);
     const [disabled_type, set_disabled_type] = useState(true);
-    const [selected_date, set_selected_date] = useState<Dayjs[]>([dayjs()]);
+    const [selected_date, set_selected_date] = useState<Dayjs[]>([]);
 
     const handle_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
         set_tipo(event.target.value);
@@ -112,14 +112,29 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
         set_check_if(e.target.checked);
         set_fechas();
     };
-
+    /**
+     * Obtiene listado de fechas para mantenimiento automatico
+     * @param i_cada 
+     * @param f_desde 
+     * @param f_hasta 
+     * @param fecha 
+     * @param fechas_array 
+     * @param check_isd 
+     * @param check_if 
+     * @returns arreglo de fechas
+     */
     const set_fechas = (): void => {
         if (fecha_desde !== null && fecha_hasta !== null && cada !== "" && fecha !== "") {
             const f_desde = dayjs(fecha_desde);
             const f_hasta = dayjs(fecha_hasta);
             const i_cada = parseInt(cada);
-            set_fechas_array(calcular_fechas_auto(i_cada, f_desde, f_hasta, fecha, [], check_isd, check_if));
-            console.log('set_fechas: ', fechas_array);
+            calcular_fechas_auto(i_cada, f_desde, f_hasta, fecha, [], check_isd, check_if).then(response => {
+                let data_selected: Dayjs[] = [];
+                response.forEach(r => { data_selected.push(dayjs(r)) })
+                set_selected_date(data_selected);
+                set_fechas_array(response);
+                console.log('set_fechas: ', fechas_array);
+            });
         }
     }
 
@@ -134,19 +149,85 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
         set_selected_date(dates);
     }
 
-    const customDayRenderer = (date: any, selectedDays: any, pickersDayProps: any ) => {
+    const customDayRenderer = (date: any, selectedDays: any, pickersDayProps: any) => {
         let selected = false
         selected_date.forEach((dateInArray) => {
-          if (isSameDay(dateInArray.toDate(), date.toDate())) 
-            selected = true
+            if (isSameDay(dateInArray.toDate(), date.toDate()))
+                selected = true
         })
         return (
-          <PickersDay
-            {...pickersDayProps}
-            selected={selected}
-          />
+            <PickersDay
+                {...pickersDayProps}
+                selected={selected}
+            />
         )
-      }
+    }
+
+    const calcular_fechas_auto = async (i_cada: number, f_desde: dayjs.Dayjs, f_hasta: dayjs.Dayjs, fecha: string, fechas_array: Date[], check_isd: boolean, check_if: boolean): Promise<Date[]> => {
+        const resp_holidays: ColombianHoliday[] = get_holidays({ year: f_desde.year(), month: (f_desde.month() + 1), valueAsDate: false });
+
+        if (!check_if)
+            f_desde = validate_festivos(resp_holidays, f_desde);
+
+        if (!check_isd)
+            f_desde = validate_sabados_domingos(resp_holidays, f_desde);
+
+        fechas_array.push(f_desde.toDate());
+
+        const proxima_fecha = fecha === 'W' ? f_desde.add(i_cada, 'week') : f_desde.add(i_cada, 'month');
+        if (proxima_fecha.toDate() <= f_hasta.toDate())
+            calcular_fechas_auto(i_cada, proxima_fecha, f_hasta, fecha, fechas_array, check_isd, check_if);
+
+        return fechas_array;
+    }
+    /**
+     * Obtine listado de dias festivos
+     * @param year 
+     * @returns arreglo de dias festivos
+     */
+    function get_holidays(year: holidays_co) {
+        try {
+            return getColombianHolidays(year).sort((a, b) =>
+                a.date.localeCompare(b.date)
+            );
+        } catch {
+            return [];
+        }
+    }
+    /**
+     * Define la fechas de mantenimiento automatico sin festivos
+     * @param resp_holidays dias festivos
+     * @param f_desde fecha mantenimiento
+     * @returns dia valido para mentenimiento
+     */
+    function validate_festivos(resp_holidays: ColombianHoliday[], f_desde: Dayjs): Dayjs {
+        let fecha_f: Dayjs = f_desde;
+        resp_holidays.forEach(gh => {
+            if (gh.date === moment(f_desde.toDate()).format("YYYY-MM-DD")) {
+                fecha_f = fecha_f.add(1, 'd');
+                fecha_f = validate_sabados_domingos(resp_holidays, fecha_f);
+            }
+        })
+        return fecha_f;
+    }
+    /**
+     * Define fechas de mantenimiento automatico sin sabados ni domingos
+     * @param resp_holidays dias festivos
+     * @param f_desde fecha mantenimiento
+     * @returns dia valido para mentenimiento
+     */
+    function validate_sabados_domingos(resp_holidays: ColombianHoliday[], f_desde: Dayjs): Dayjs {
+        let fecha_sd: Dayjs = f_desde;
+        if (fecha_sd.day() === 6) {
+            fecha_sd = fecha_sd.add(2, 'd');
+            fecha_sd = validate_festivos(resp_holidays, fecha_sd);
+        }
+        if (fecha_sd.day() === 0) {
+            fecha_sd = fecha_sd.add(1, 'd');
+            fecha_sd = validate_festivos(resp_holidays, fecha_sd);
+        }
+        return fecha_sd;
+    }
 
     const emit_new_data: () => void = () => {
         const data: crear_mantenimiennto = {
@@ -297,81 +378,5 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
             </Stack>
         </>
     )
-}
-/**
- * Obtiene listado de fechas para mantenimiento automatico
- * @param i_cada 
- * @param f_desde 
- * @param f_hasta 
- * @param fecha 
- * @param fechas_array 
- * @param check_isd 
- * @param check_if 
- * @returns arreglo de fechas
- */
-function calcular_fechas_auto(i_cada: number, f_desde: dayjs.Dayjs, f_hasta: dayjs.Dayjs, fecha: string, fechas_array: Date[], check_isd: boolean, check_if: boolean): Date[] {
-    const resp_holidays: ColombianHoliday[] = get_holidays({ year: f_desde.year(), month: (f_desde.month() + 1), valueAsDate: false });
-
-    if (!check_if)
-        f_desde = validate_festivos(resp_holidays, f_desde);
-
-    if (!check_isd)
-        f_desde = validate_sabados_domingos(resp_holidays, f_desde);
-
-    fechas_array.push(f_desde.toDate());
-
-    const proxima_fecha = fecha === 'W' ? f_desde.add(i_cada, 'week') : f_desde.add(i_cada, 'month');
-    if (proxima_fecha.toDate() <= f_hasta.toDate())
-        calcular_fechas_auto(i_cada, proxima_fecha, f_hasta, fecha, fechas_array, check_isd, check_if);
-
-    return fechas_array;
-}
-/**
- * Obtine listado de dias festivos
- * @param year 
- * @returns arreglo de dias festivos
- */
-function get_holidays(year: holidays_co) {
-    try {
-        return getColombianHolidays(year).sort((a, b) =>
-            a.date.localeCompare(b.date)
-        );
-    } catch {
-        return [];
-    }
-}
-/**
- * Define la fechas de mantenimiento automatico sin festivos
- * @param resp_holidays dias festivos
- * @param f_desde fecha mantenimiento
- * @returns dia valido para mentenimiento
- */
-function validate_festivos(resp_holidays: ColombianHoliday[], f_desde: Dayjs): Dayjs {
-    let fecha_f: Dayjs = f_desde;
-    resp_holidays.forEach(gh => {
-        if (gh.date === moment(f_desde.toDate()).format("YYYY-MM-DD")) {
-            fecha_f = fecha_f.add(1, 'd');
-            fecha_f = validate_sabados_domingos(resp_holidays, fecha_f);
-        }
-    })
-    return fecha_f;
-}
-/**
- * Define fechas de mantenimiento automatico sin sabados ni domingos
- * @param resp_holidays dias festivos
- * @param f_desde fecha mantenimiento
- * @returns dia valido para mentenimiento
- */
-function validate_sabados_domingos(resp_holidays: ColombianHoliday[], f_desde: Dayjs): Dayjs {
-    let fecha_sd: Dayjs = f_desde;
-    if (fecha_sd.day() === 6) {
-        fecha_sd = fecha_sd.add(2, 'd');
-        fecha_sd = validate_festivos(resp_holidays, fecha_sd);
-    }
-    if (fecha_sd.day() === 0) {
-        fecha_sd = fecha_sd.add(1, 'd');
-        fecha_sd = validate_festivos(resp_holidays, fecha_sd);
-    }
-    return fecha_sd;
 }
 
