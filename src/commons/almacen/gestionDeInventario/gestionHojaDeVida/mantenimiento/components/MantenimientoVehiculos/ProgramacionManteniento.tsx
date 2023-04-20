@@ -1,4 +1,4 @@
-import { Button, Grid } from '@mui/material';
+import { Box, Button, Grid, Stack } from '@mui/material';
 import { Title } from '../../../../../../../components';
 import { KilometrajeComponent } from './KilometrajeComponent';
 import { useCallback } from 'react';
@@ -12,7 +12,10 @@ import { PrevisualizacionComponent } from '../mantenimientoGeneral/Previsualizac
 import use_previsualizacion from '../mantenimientoGeneral/hooks/usePrevisualizacion';
 import AnularMantenimientoComponent from '../mantenimientoGeneral/AnularMantenimiento';
 import use_anular_mantenimiento from '../mantenimientoGeneral/hooks/useAnularMantenimiento';
-
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import SaveIcon from '@mui/icons-material/Save';
+import ClearIcon from '@mui/icons-material/Clear';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
     // the parentState will be set by its child slider component
@@ -44,7 +47,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
     const set_details_state = useCallback((val: IcvVehicles) => {
         set_detalle_vehiculo(val);
     }, [set_detalle_vehiculo]);
-    
+
     const set_type_maintenance_state = useCallback((val: string) => {
         set_tipo_mantenimiento(val);
     }, [set_tipo_mantenimiento]);
@@ -70,7 +73,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
                     <Title title="Búsqueda de vehículo" />
-                    <ArticuloComponent tipo_articulo={"vehículos"}/>
+                    <ArticuloComponent tipo_articulo={"vehículos"} />
                 </Grid>
             </Grid>
             <Grid
@@ -105,7 +108,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* MANTENIMIENTO COMPONENT */}
                     <Title title='Detalles' />
-                    <MantenimientoComponent parent_type_maintenance = {set_type_maintenance_state} parent_esp_maintenance = {set_esp_maintenance_state}/>
+                    <MantenimientoComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} />
                 </Grid>
             </Grid>
 
@@ -123,7 +126,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* FECHAS COMPONENT */}
                     <Title title='Programar por fechas' />
-                    <FechasComponent parent_state_setter={wrapperSetParentState} detalle_vehiculo={detalle_vehiculo} tipo_matenimiento = {tipo_mantenimiento} especificacion = {especificacion} />
+                    <FechasComponent parent_state_setter={wrapperSetParentState} detalle_vehiculo={detalle_vehiculo} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} />
                 </Grid>
             </Grid>
 
@@ -141,7 +144,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* KILOMETRAJE COMPONENT */}
                     <Title title='Programar por kilometraje' />
-                    <KilometrajeComponent parent_state_setter={wrapperSetParentState} detalle_vehiculo={detalle_vehiculo} tipo_matenimiento = {tipo_mantenimiento} especificacion = {especificacion}/>
+                    <KilometrajeComponent parent_state_setter={wrapperSetParentState} detalle_vehiculo={detalle_vehiculo} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} />
                 </Grid>
             </Grid>
 
@@ -173,48 +176,59 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                 <Grid item xs={7}></Grid>
-                <Grid item xs={1} textAlign="end">
-                <Button
-                        color='primary'
-                        variant='contained'
-                        onClick={() => {
-                            set_anular_mantenimiento_is_active(true);
-                            set_title('Anular mantenimiento');
-                          }}
+                <Grid item xs={12}>
+                    <Box
+                        component="form"
+                        sx={{ mt: '20px', mb: '20px' }}
+                        noValidate
+                        autoComplete="off"
                     >
-                        Anular
-                    </Button>
-                    {anular_mantenimiento_is_active && (
-                                <AnularMantenimientoComponent 
-                                is_modal_active={anular_mantenimiento_is_active} 
-                                set_is_modal_active={set_anular_mantenimiento_is_active} 
-                                title={title} />
+                        <Stack
+                            direction="row"
+                            justifyContent="flex-end"
+                            spacing={2}
+                            sx={{ mt: '20px' }}
+                        >
+                            <Button
+                                color='error'
+                                variant='contained'
+                                startIcon={<DeleteForeverIcon />}
+                                onClick={() => {
+                                    set_anular_mantenimiento_is_active(true);
+                                    set_title('Anular mantenimiento');
+                                }}
+                            >
+                                Anular
+                            </Button>
+                            {anular_mantenimiento_is_active && (
+                                <AnularMantenimientoComponent
+                                    is_modal_active={anular_mantenimiento_is_active}
+                                    set_is_modal_active={set_anular_mantenimiento_is_active}
+                                    title={title} />
                             )}
-                </Grid>
-                <Grid item xs={1} textAlign="center">
-                    <Button
-                        color='primary'
-                        variant='contained'
-                    >
-                        Limpiar
-                    </Button>
-                </Grid>
-                <Grid item xs={1} textAlign="center">
-                    <Button
-                        color='primary'
-                        variant='contained'
-                    >
-                        Guardar
-                    </Button>
-                </Grid>
-                <Grid item xs={1} textAlign="center">
-                    <Button
-                        color='primary'
-                        variant='contained'
-                    >
-                        Salir
-                    </Button>
+                            <Button
+                                color='inherit'
+                                variant="contained"
+                                startIcon={<CleanIcon />}
+                            >
+                                Limpiar
+                            </Button>
+                            <Button
+                                color='primary'
+                                variant='contained'
+                                startIcon={<SaveIcon />}
+                            >
+                                Guardar
+                            </Button>
+                            <Button
+                                color='inherit'
+                                variant='contained'
+                                startIcon={<ClearIcon />}
+                            >
+                                Salir
+                            </Button>
+                        </Stack>
+                    </Box>
                 </Grid>
             </Grid>
         </>
