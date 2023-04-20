@@ -75,18 +75,63 @@ export interface Acciones{
   value: boolean,
   id: number  
 }
-//  {
-//   crear: { value: boolean, id: number },
-//   actualizar: { value: boolean, id: number },
-//   borrar: { value: boolean, id: number },
-//   consultar: { value: boolean, id: number }
-// }
 
-export interface IRolesInfo {
-  roles: Roles[];
-  rol: Rol
+export interface Users {
+  id_usuario: number;
+  nombre_de_usuario: string;
+  persona: number;
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string | null;
+  primer_apellido: string;
+  segundo_apellido: string | null;
+  nombre_completo: string;
+  razon_social: string | null;
+  nombre_comercial: string | null;
+  is_active: boolean;
+  fecha_ultimo_cambio_activacion: string | null;
+  justificacion_ultimo_cambio_activacion: string | null;
+  is_blocked: boolean;
+  fecha_ultimo_cambio_bloqueo: string | null;
+  justificacion_ultimo_cambio_bloqueo: string | null;
+  tipo_usuario: string;
+  profile_img: string;
+  creado_por_portal: boolean;
+  created_at: string;
+  activated_at: string | null;
+  id_usuario_creador: number | null;
+  primer_nombre_usuario_creador: string | null;
+  primer_apellido_usuario_creador: string | null;
+  roles: Array<{
+    id_rol: number;
+    nombre_rol: string;
+  }>;
+}
+
+export interface Persons {
+  id_persona: number;
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string | null;
+  primer_apellido: string;
+  segundo_apellido: string | null;
+  nombre_completo: string;
+  razon_social: string | null;
+  nombre_comercial: string | null;
+  tiene_usuario: boolean;
+}
+
+export interface ISeguridadInfo {
+  roles: Roles[]; 
+  rol: Rol;
+  users: Users[];
+  persons: Persons[];
 }
 
 export interface SeguridadSlice {
-  seguridad: IRolesInfo;
+  seguridad: ISeguridadInfo;
 }

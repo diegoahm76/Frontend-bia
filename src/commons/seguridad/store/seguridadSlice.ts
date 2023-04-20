@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { type IRolesInfo } from '../interfaces/seguridadModels';
+import { type ISeguridadInfo } from '../interfaces/seguridadModels';
 
-const initial_state: IRolesInfo = {
+const initial_state: ISeguridadInfo = {
   roles: [],
   rol: {
     rol:{
@@ -11,7 +11,9 @@ const initial_state: IRolesInfo = {
       Rol_sistema: false,
     },
     permisos: [],
-  }
+  },
+  users: [],
+  persons: [],
 };
 
 export const seguridad_slice = createSlice({
@@ -23,13 +25,21 @@ export const seguridad_slice = createSlice({
     },
     set_rol: (state, {payload}) => {
       state.rol = payload
-      console.log("state_rol", state.rol);
+    },
+    set_users: (state, {payload}) => {
+      state.users = payload
+    },
+    set_persons: (state, {payload}) => {
+      state.persons = payload
     }
+
   }
 });
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const {
   set_roles,
-  set_rol
+  set_rol,
+  set_users,
+  set_persons
 } = seguridad_slice.actions;

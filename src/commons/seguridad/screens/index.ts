@@ -1,5 +1,5 @@
 export * from './AdminUsuariosScreen';
-export * from './AdministracionPersonas';
+export * from './AdminPersonasScreen';
 export * from './AuditoriaScreen';
 export * from './RolScreen';
 export * from './RolesScreen';
