@@ -3,12 +3,14 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { useState, type Dispatch, type SetStateAction } from "react";
-
+import ClearIcon from '@mui/icons-material/Clear';
+import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   title: string;
 }
+
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AnularMantenimientoComponent = ({
   is_modal_active,
@@ -23,6 +25,7 @@ const AnularMantenimientoComponent = ({
 
     const on_change_motivo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_motivo(e.target.value);
+        console.log(motivo);
     };
 
     return (
@@ -59,7 +62,7 @@ const AnularMantenimientoComponent = ({
                                 <DatePicker
                                     label="Fecha"
                                     value={fecha}
-                                    onChange={(newValue) => handle_change_fecha(newValue)}
+                                    onChange={(newValue) => { handle_change_fecha(newValue); }}
                                     renderInput={(params) => (
                                         <TextField
                                             required
@@ -90,8 +93,16 @@ const AnularMantenimientoComponent = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => { set_is_modal_active(false); }}>Cerrar</Button>
-          <Button onClick={() => { set_is_modal_active(false); }}>Agregar</Button>
+          <Button 
+          color='inherit'
+          variant='contained'
+          startIcon={<ClearIcon />}
+          onClick={() => { set_is_modal_active(false); }}>Cancelar</Button>
+          <Button 
+          color='primary'
+          variant='contained'
+          startIcon={<SaveIcon />}
+          onClick={() => { set_is_modal_active(false); }}>Anular</Button>
         </DialogActions>
       </Dialog>
     )

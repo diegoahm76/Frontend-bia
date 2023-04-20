@@ -11,7 +11,7 @@ import {
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { type IcvVehicles } from "../../../hojaDeVidaVehiculo/interfaces/CvVehiculo";
-import { crear_mantenimiennto } from "../../interfaces/IProps";
+import { type crear_mantenimiennto } from "../../interfaces/IProps";
 import use_previsualizacion from "../mantenimientoGeneral/hooks/usePrevisualizacion";
 interface IProps {
     parent_state_setter: any,
@@ -20,7 +20,7 @@ interface IProps {
     especificacion: string
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, detalle_vehiculo, tipo_matenimiento, especificacion }) => {
+export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, detalle_vehiculo, tipo_matenimiento, especificacion }: IProps) => {
     // Hooks
     const {
         rows,
@@ -62,7 +62,7 @@ export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, det
 
     const emit_news_mantenimientos = (): void => {
         if(cada !== "" && cada_desde !== "" && cada_hasta !== ""){
-            calcular_kilometros(cada,cada_desde,cada_hasta,[]).then(response => {
+            void calcular_kilometros(cada,cada_desde,cada_hasta,[]).then(response => {
                 set_rows(response)
             })
         }
@@ -89,7 +89,7 @@ export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, det
                 })
         const cada_proximo = (cada_int + cada_desde_int);
         if(cada_proximo <= cada_hasta_int)    
-            calcular_kilometros(cada,cada_proximo,cada_hasta,rows_emit);   
+            void calcular_kilometros(cada,cada_proximo,cada_hasta,rows_emit);   
 
         return rows_emit;
     }
