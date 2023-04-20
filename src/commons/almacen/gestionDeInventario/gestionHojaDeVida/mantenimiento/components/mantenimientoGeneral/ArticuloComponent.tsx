@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
     Box,
     Button,
@@ -15,15 +14,13 @@ interface IProps {
     tipo_articulo: string
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ArticuloComponent: React.FC<IProps> = ({tipo_articulo}) => {
+export const ArticuloComponent: React.FC<IProps> = ({tipo_articulo}: IProps) => {
     const {        // States
         title,
         consulta_buscar_articulo_is_active,
         // Edita States
         set_title,
         set_buscar_articulo_is_active } = use_buscar_articulo();
-
-    const [tipo] = useState("Veh");
 
     return (
         <>

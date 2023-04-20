@@ -10,6 +10,7 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   title: string;
 }
+
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AnularMantenimientoComponent = ({
   is_modal_active,
@@ -61,7 +62,7 @@ const AnularMantenimientoComponent = ({
                                 <DatePicker
                                     label="Fecha"
                                     value={fecha}
-                                    onChange={(newValue) => handle_change_fecha(newValue)}
+                                    onChange={(newValue) => { handle_change_fecha(newValue); }}
                                     renderInput={(params) => (
                                         <TextField
                                             required

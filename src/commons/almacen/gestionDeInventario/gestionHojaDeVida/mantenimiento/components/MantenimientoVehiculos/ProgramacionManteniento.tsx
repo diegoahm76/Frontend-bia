@@ -16,9 +16,10 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
-    // the parentState will be set by its child slider component
+
     const {
         rows,
         detalle_vehiculo,

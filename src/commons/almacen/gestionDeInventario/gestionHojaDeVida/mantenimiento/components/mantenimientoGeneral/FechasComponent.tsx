@@ -17,7 +17,7 @@ import Button from '@mui/material/Button';
 import { CalendarPicker, DatePicker, LocalizationProvider, PickersDay } from '@mui/x-date-pickers/';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import use_previsualizacion from './hooks/usePrevisualizacion';
-import { type holidays_co, type crear_mantenimiennto, row } from '../../interfaces/IProps';
+import { type holidays_co, type crear_mantenimiennto } from '../../interfaces/IProps';
 import dayjs, { type Dayjs } from 'dayjs';
 import { type IcvVehicles } from '../../../hojaDeVidaVehiculo/interfaces/CvVehiculo';
 import getColombianHolidays from 'colombian-holidays';
@@ -36,8 +36,8 @@ const opcion_programar = [{ value: "MA", label: "Manual" }, { value: "AU", label
 
 const opcion_programar_fecha = [{ value: "W", label: "Semanas" }, { value: "M", label: "Meses" }];
 
-// eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_vehiculo, tipo_matenimiento, especificacion }) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_vehiculo, tipo_matenimiento, especificacion }: IProps) => {
     // Hooks
     const {
         rows,
@@ -112,9 +112,10 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
             const f_desde = dayjs(fecha_desde);
             const f_hasta = dayjs(fecha_hasta);
             const i_cada = parseInt(cada);
-            calcular_fechas_auto(i_cada, f_desde, f_hasta, fecha, [], check_isd, check_if).then(response => {
+            void calcular_fechas_auto(i_cada, f_desde, f_hasta, fecha, [], check_isd, check_if).then(response => {
                 set_selected_date(response);
                 set_fechas_array(response);
+                console.log(fechas_array)
             });
         }
     }
@@ -130,7 +131,8 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
         set_selected_date(dates);
     }
 
-    const customDayRenderer = (date: any, selectedDays: any, pickersDayProps: any) => {
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const custom_day_render = (date: any, selected_days: any, pickers_day_props: any) => {
         let selected = false
         selected_date.forEach((dateInArray) => {
             if (isSameDay(dateInArray.toDate(), date.toDate()))
@@ -138,7 +140,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
         })
         return (
             <PickersDay
-                {...pickersDayProps}
+                {...pickers_day_props}
                 selected={selected}
             />
         )
@@ -167,7 +169,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
         const proxima_fecha = fecha === 'W' ? f_desde.add(i_cada, 'week') : f_desde.add(i_cada, 'month');
         if (proxima_fecha.toDate() <= f_hasta.toDate())
-            calcular_fechas_auto(i_cada, proxima_fecha, f_hasta, fecha, fechas_array, check_isd, check_if);
+            void calcular_fechas_auto(i_cada, proxima_fecha, f_hasta, fecha, fechas_array, check_isd, check_if);
 
         return fechas_array;
     }
@@ -176,9 +178,10 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
      * @param year 
      * @returns arreglo de dias festivos
      */
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     function get_holidays(year: holidays_co) {
         try {
-            return getColombianHolidays(year).sort((a, b) =>
+            return getColombianHolidays(year).sort((a: any, b: any) =>
                 a.date.localeCompare(b.date)
             );
         } catch {
@@ -221,7 +224,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }
 
     const emit_new_data: () => void = () => {
-        let rows_emit: crear_mantenimiennto[] = [];
+        const rows_emit: crear_mantenimiennto[] = [];
         selected_date.forEach(cm => {
             const data: crear_mantenimiennto = {
                 tipo_programacion: "Por Fecha",
@@ -307,7 +310,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                                 <DatePicker
                                     label="Fecha desde"
                                     value={fecha_desde}
-                                    onChange={(newValue) => handle_change_fecha_desde(newValue)}
+                                    onChange={(newValue) => { handle_change_fecha_desde(newValue); }}
                                     renderInput={(params) => (
                                         <TextField
                                             required
@@ -325,7 +328,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                                 <DatePicker
                                     label="Fecha hasta"
                                     value={fecha_hasta}
-                                    onChange={(newValue) => handle_change_fecha_hasta(newValue)}
+                                    onChange={(newValue) => { handle_change_fecha_hasta(newValue); }}
                                     renderInput={(params) => (
                                         <TextField
                                             required
@@ -352,7 +355,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                     </Grid>
                     <Grid item xs={12} sm={8}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <CalendarPicker date={null} onChange={onchange_calendar} disabled={tipo === ""} renderDay={customDayRenderer} />
+                            <CalendarPicker date={null} onChange={onchange_calendar} disabled={tipo === ""} renderDay={custom_day_render} />
                         </LocalizationProvider>
                     </Grid>
                 </Grid>

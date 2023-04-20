@@ -1,4 +1,4 @@
-import { Month } from "colombian-holidays";
+import { type Month } from "colombian-holidays";
 
 export interface row {
     id: number, 
