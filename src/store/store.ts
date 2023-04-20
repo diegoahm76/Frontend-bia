@@ -20,7 +20,6 @@ import {
   medida_slice,
 } from "../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice";
 import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
-import { seguridad_slice } from "../commons/seguridad/store";
 
 const persist_config = {
   key: "macarenia_app",
@@ -45,7 +44,6 @@ const app_reducers = combineReducers({
   configuracion: configuracion_slice.reducer,
   cv: cv_computo_slice.reducer,
   cve: cve_vehicle_slice.reducer,
-  seguridad: seguridad_slice.reducer
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
