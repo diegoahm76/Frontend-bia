@@ -11,9 +11,11 @@ import BuscarArticuloComponent from './BuscarArticulo';
 import use_buscar_articulo from './hooks/useBuscarArticulo';
 
 // const tipo_articulo = [{ value: 'Com', label: 'Computo' }, { value: 'Veh', label: 'Vehiculo' }, { value: 'OAc', label: 'Otro' }]
-
+interface IProps {
+    tipo_articulo: string
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ArticuloComponent: React.FC = () => {
+export const ArticuloComponent: React.FC<IProps> = ({tipo_articulo}) => {
     const {        // States
         title,
         consulta_buscar_articulo_is_active,
@@ -22,7 +24,7 @@ export const ArticuloComponent: React.FC = () => {
         set_buscar_articulo_is_active } = use_buscar_articulo();
 
     const [tipo] = useState("Veh");
-    console.log(tipo);
+
     return (
         <>
             <Box
@@ -63,10 +65,10 @@ export const ArticuloComponent: React.FC = () => {
                                 startIcon={<SearchIcon />}
                                 onClick={() => {
                                     set_buscar_articulo_is_active(true);
-                                    set_title('Buscar vehículo');
+                                    set_title('Buscar '+ tipo_articulo);
                                   }}
                             >
-                                Buscar Vehículo
+                                Buscar {tipo_articulo}
                             </Button>
                             {consulta_buscar_articulo_is_active && (
                                 <BuscarArticuloComponent 

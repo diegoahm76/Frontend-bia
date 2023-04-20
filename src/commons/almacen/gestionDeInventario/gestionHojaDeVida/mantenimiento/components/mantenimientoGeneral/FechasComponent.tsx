@@ -17,7 +17,7 @@ import Button from '@mui/material/Button';
 import { CalendarPicker, DatePicker, LocalizationProvider, PickersDay } from '@mui/x-date-pickers/';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import use_previsualizacion from './hooks/usePrevisualizacion';
-import { type holidays_co, type crear_mantenimiennto } from '../../interfaces/IProps';
+import { type holidays_co, type crear_mantenimiennto, row } from '../../interfaces/IProps';
 import dayjs, { type Dayjs } from 'dayjs';
 import { type IcvVehicles } from '../../../hojaDeVidaVehiculo/interfaces/CvVehiculo';
 import getColombianHolidays from 'colombian-holidays';
@@ -106,17 +106,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     useEffect(() => {
         set_fechas();
     }, [fecha,cada,fecha_hasta,fecha_desde,check_isd,check_if]);
-    /**
-     * Obtiene listado de fechas para mantenimiento automatico
-     * @param i_cada 
-     * @param f_desde 
-     * @param f_hasta 
-     * @param fecha 
-     * @param fechas_array 
-     * @param check_isd 
-     * @param check_if 
-     * @returns arreglo de fechas
-     */
+
     const set_fechas = (): void => {
         if (fecha_desde !== null && fecha_hasta !== null && cada !== "" && fecha !== "") {
             const f_desde = dayjs(fecha_desde);
@@ -153,7 +143,17 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
             />
         )
     }
-
+    /**
+     * Obtiene listado de fechas para mantenimiento automatico
+     * @param i_cada 
+     * @param f_desde 
+     * @param f_hasta 
+     * @param fecha 
+     * @param fechas_array 
+     * @param check_isd 
+     * @param check_if 
+     * @returns arreglo de fechas
+     */
     const calcular_fechas_auto = async (i_cada: number, f_desde: dayjs.Dayjs, f_hasta: dayjs.Dayjs, fecha: string, fechas_array: Dayjs[], check_isd: boolean, check_if: boolean): Promise<Dayjs[]> => {
         const resp_holidays: ColombianHoliday[] = get_holidays({ year: f_desde.year(), month: (f_desde.month() + 1), valueAsDate: false });
 
@@ -221,22 +221,26 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }
 
     const emit_new_data: () => void = () => {
-        const data: crear_mantenimiennto = {
-            tipo_programacion: "Por Fecha",
-            cod_tipo_mantenimiento: tipo_matenimiento,
-            kilometraje_programado: "",
-            fecha_programada: dayjs().add(2, 'd').format("DD-MM-YYYY"),
-            motivo_mantenimiento: especificacion,
-            observaciones: especificacion,
-            fecha_solicitud: dayjs().format("DD-MM-YYYY"),
-            fecha_anulacion: "",
-            justificacion_anulacion: "",
-            ejecutado: false,
-            id_articulo: 170,
-            id_persona_solicita: 1,
-            id_persona_anula: 0
-        }
-        set_rows([...rows, data])
+        let rows_emit: crear_mantenimiennto[] = [];
+        selected_date.forEach(cm => {
+            const data: crear_mantenimiennto = {
+                tipo_programacion: "Por Fecha",
+                cod_tipo_mantenimiento: tipo_matenimiento,
+                kilometraje_programado: "",
+                fecha_programada: cm.format("DD-MM-YYYY"),
+                motivo_mantenimiento: especificacion,
+                observaciones: especificacion,
+                fecha_solicitud: dayjs().format("DD-MM-YYYY"),
+                fecha_anulacion: "",
+                justificacion_anulacion: "",
+                ejecutado: false,
+                id_articulo: 170,
+                id_persona_solicita: 1,
+                id_persona_anula: 0
+            }
+            rows_emit.push(data);
+        })
+        set_rows(rows_emit)
     }
 
     return (
