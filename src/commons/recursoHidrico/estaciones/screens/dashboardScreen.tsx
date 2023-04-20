@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { useEffect, useState } from "react";
-import { Grid, Stack, Typography, MenuItem, Autocomplete, Box, TextField, Button, FormControl, CircularProgress } from '@mui/material';
+import { Grid, Stack, MenuItem, Autocomplete, Box, TextField, Button, FormControl, CircularProgress } from '@mui/material';
 import { api } from "../../../../api/axios";
 import type { Datos, DatosMigracionGraficas } from "../interfaces/interfaces";
 import { Title } from '../../../../components/Title';
@@ -56,9 +56,9 @@ export const DashboardScreen: React.FC = () => {
         { title: 'Humedad', chart_id: "humedad", data: [], value: 2 },
         { title: 'Punto de rocio', chart_id: "punto-rocio", data: [], value: 3 },
         { title: 'Presion atm abs', chart_id: "presion-atm-abs", data: [], value: 4 },
-        { title: 'Presion atm rel', chart_id: "presion-atm-rel", data: [], value: 5 },
+        { title: 'Nivel de Agua', chart_id: "nivel-agua", data: [], value: 5 },
+        { title: 'Presion atm rel', chart_id: "presion-atm-rel", data: [], value: 7 },
         { title: 'Precipitación', chart_id: "precipitacion", data: [], value: 6 },
-        { title: 'Nivel de Agua', chart_id: "nivel-agua", data: [], value: 7 },
         { title: 'Velocidad del rio', chart_id: "nivel-agua", data: [], value: 8 },
         { title: 'Caudal', chart_id: "caudal", data: [], value: 9 },
     ]);
@@ -72,9 +72,9 @@ export const DashboardScreen: React.FC = () => {
         getOptionLabel: (option: Variables) => option.title,
     };
 
-    const [variable_selected, set_variable_selected] = useState<Variables>({ title: 'Temperatura', chart_id: "temperatura", data: [], value: 1 });
+    const [variable_selected, set_variable_selected] = useState<Variables>({ title: 'Nivel de agua', chart_id: "Nivel-de-agua", data: [], value: 5 });
 
-    const [variable_selected_migracion, set_variable_selected_migracion] = useState<Variables>({ title: 'Temperatura', chart_id: "temperatura", data: [], value: 1 });
+    const [variable_selected_migracion, set_variable_selected_migracion] = useState<Variables>({ title: 'Nivel de agua', chart_id: "Nivel-de-agua", data: [], value: 5 });
 
     const [start_date, set_start_date] = useState<Date | null>(new Date());
 
@@ -95,10 +95,20 @@ export const DashboardScreen: React.FC = () => {
     const get_datos_estaciones = async (): Promise<any> => {
         try {
             set_loading_busqueda(true);
+            if (selectdashboards.opc_dashboards === "0") {
+                control_error("Por favor seleccione una estación")
+                set_loading_busqueda(false);
+                return
+            }
             const fecha_1 = dayjs(start_date).format('YYYY-MM-DD')
             const fecha_2 = dayjs(end_date).format('YYYY-MM-DD')
             if (fecha_1 === fecha_2) {
                 control_error("Por favor seleccione un rango de fechas que no sea igual")
+                set_loading_busqueda(false);
+                return
+            }
+            if (fecha_1 > fecha_2) {
+                control_error("La fecha inicial no puede ser mayor a la fecha final")
                 set_loading_busqueda(false);
                 return
             }
@@ -127,10 +137,20 @@ export const DashboardScreen: React.FC = () => {
     const get_datos_estaciones_migracion = async (): Promise<any> => {
         try {
             set_loading_busqueda(true);
+            if (selectdashboards.opc_dashboards === "0") {
+                control_error("Por favor seleccione una estación")
+                set_loading_busqueda(false);
+                return
+            }
             const fecha_1 = dayjs(start_date).format('YYYY-MM-DD')
             const fecha_2 = dayjs(end_date).format('YYYY-MM-DD')
             if (fecha_1 === fecha_2) {
                 control_error("Por favor seleccione un rango de fechas que no sea igual")
+                set_loading_busqueda(false);
+                return
+            }
+            if (fecha_1 > fecha_2) {
+                control_error("La fecha inicial no puede ser mayor a la fecha final")
                 set_loading_busqueda(false);
                 return
             }
@@ -171,6 +191,11 @@ export const DashboardScreen: React.FC = () => {
     const get_datos_primeros_migracion = async (): Promise<any> => {
         try {
             set_loading(true);
+            if (selectdashboards.opc_dashboards === "0") {
+                control_error("Por favor seleccione una estación")
+                set_loading(false);
+                return
+            }
             const { data } = await api.get(
                 `estaciones/migracion/consultar-migracion-estaciones-id/${selectdashboards.opc_dashboards}/`
             );
@@ -214,6 +239,11 @@ export const DashboardScreen: React.FC = () => {
     const get_datos_primeros = async (): Promise<any> => {
         try {
             set_loading(true);
+            if (selectdashboards.opc_dashboards === "0") {
+                control_error("Por favor seleccione una estación")
+                set_loading(false);
+                return
+            }
             const { data } = await api.get(
                 `estaciones/datos/consultar-datos-id-primeros/${selectdashboards.opc_dashboards}/`
             );
@@ -330,9 +360,9 @@ export const DashboardScreen: React.FC = () => {
                 item.value === 2 ? data_aux.push({ ...item, data: data_humedad }) :
                     item.value === 3 ? data_aux.push({ ...item, data: data_pto_rocio }) :
                         item.value === 4 ? data_aux.push({ ...item, data: data_presion_rel }) :
-                            item.value === 5 ? data_aux.push({ ...item, data: data_data_presion_abs }) :
+                            item.value === 5 ? data_aux.push({ ...item, data: data_nivel_agua }) :
                                 item.value === 6 ? data_aux.push({ ...item, data: data_precipitacion }) :
-                                    item.value === 7 ? data_aux.push({ ...item, data: data_nivel_agua }) :
+                                    item.value === 7 ? data_aux.push({ ...item, data: data_data_presion_abs }) :
                                         item.value === 8 ? data_aux.push({ ...item, data: data_velocidad_rio }) :
                                             data_aux.push({ ...item, data: data_caudal })
 
@@ -354,8 +384,7 @@ export const DashboardScreen: React.FC = () => {
                 }}
             >
                 <Grid item xs={12} spacing={2}>
-
-                    <Title title="COMPORTAMIENTO VARIABLE" />
+                    <Title title="Comportamiemto Variable" />
                     <Box component="form">
                         <Stack sx={{ m: '20px 0 20px 0' }} direction="row" spacing={2}>
                             <FormControl fullWidth>
@@ -422,526 +451,204 @@ export const DashboardScreen: React.FC = () => {
                             </FormControl>
                         </Stack>
                     </Box>
-                    {dato_estacion.length > 0 ? (
-                        <>
-                            <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "1"}>
-                                <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
-                                <Stack direction="row" spacing={2} alignItems="center" sx={{ m: '20px 0' }} >
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Inical"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={start_date}
-                                                onChange={handle_start_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Final"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={end_date}
-                                                onChange={handle_end_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Autocomplete
-                                            {...set_variables_select}
-                                            id="controlled-demo"
-                                            value={variable_selected}
-                                            onChange={(event: any, newValue: any) => {
-                                                set_variable_selected(newValue);
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField {...params} label="Seleccione variable" variant="standard" />
-                                            )}
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Button
-                                            variant="contained"
-                                            type="submit"
-                                            className="search-button text-capitalize rounded-pill"
-                                            startIcon={
-                                                loading_busqueda
-                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                                    : <SearchIcon />
-                                            }
-                                            aria-label="Buscar"
-                                            disabled={loading_busqueda}
-                                            size="large"
-                                            onClick={() => {
-                                                if (end_date !== null) {
-                                                    void get_datos_estaciones();
-                                                }
-                                            }}
-                                        >
-                                            Buscar
-                                            {loading_busqueda ? '' : ""}
-                                        </Button>
-                                    </FormControl>
-                                </Stack>
-                                <Typography variant="body1">
-                                    <Title title={variable_selected.title} ></Title>
-                                    <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
-                                </Typography>
-                            </Typography>
-                            <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "2"}>
-                                <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
-                                <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Inical"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={start_date}
-                                                onChange={handle_start_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Final"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={end_date}
-                                                onChange={handle_end_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Autocomplete
-                                            {...set_variables_select}
-                                            id="controlled-demo"
-                                            value={variable_selected}
-                                            onChange={(event: any, newValue: any) => {
-                                                set_variable_selected(newValue);
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField {...params} label="Seleccione variable" variant="standard" />
-                                            )}
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Button
-                                            variant="contained"
-                                            type="submit"
-                                            className="search-button text-capitalize rounded-pill"
-                                            startIcon={
-                                                loading_busqueda
-                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                                    : <SearchIcon />
-                                            }
-                                            aria-label="Buscar"
-                                            disabled={loading_busqueda}
-                                            size="large"
-                                            onClick={() => {
-                                                if (end_date !== null) {
-                                                    void get_datos_estaciones();
-                                                }
-                                            }}
-                                        >
-                                            Buscar
-                                            {loading_busqueda ? '' : ""}
-                                        </Button>
-                                    </FormControl>
-                                </Stack>
-                                <Typography variant="body1">
-                                    <Title title={variable_selected.title} ></Title>
-                                    <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
-                                </Typography>
-                            </Typography>
-                            <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "3"}>
-                                <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
-                                <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Inical"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={start_date}
-                                                onChange={handle_start_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Final"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={end_date}
-                                                onChange={handle_end_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Autocomplete
-                                            {...set_variables_select}
-                                            id="controlled-demo"
-                                            value={variable_selected}
-                                            onChange={(event: any, newValue: any) => {
-                                                set_variable_selected(newValue);
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField {...params} label="Seleccione variable" variant="standard" />
-                                            )}
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Button
-                                            variant="contained"
-                                            type="submit"
-                                            className="search-button text-capitalize rounded-pill"
-                                            startIcon={
-                                                loading_busqueda
-                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                                    : <SearchIcon />
-                                            }
-                                            aria-label="Buscar"
-                                            disabled={loading_busqueda}
-                                            size="large"
-                                            onClick={() => {
-                                                if (end_date !== null) {
-                                                    void get_datos_estaciones();
-                                                }
-                                            }}
-                                        >
-                                            Buscar
-                                            {loading_busqueda ? '' : ""}
-                                        </Button>
-                                    </FormControl>
-                                </Stack>
-                                <Typography variant="body1">
-                                    <Title title={variable_selected.title} ></Title>
-                                    <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
-                                </Typography>
-                            </Typography>
-                            <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "4"}>
-                                <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
-                                <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Inical"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={start_date}
-                                                onChange={handle_start_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Final"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={end_date}
-                                                onChange={handle_end_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Autocomplete
-                                            {...set_variables_select}
-                                            id="controlled-demo"
-                                            value={variable_selected}
-                                            onChange={(event: any, newValue: any) => {
-                                                set_variable_selected(newValue);
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField {...params} label="Seleccione variable" variant="standard" />
-                                            )}
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Button
-                                            variant="contained"
-                                            type="submit"
-                                            className="search-button text-capitalize rounded-pill"
-                                            startIcon={
-                                                loading_busqueda
-                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                                    : <SearchIcon />
-                                            }
-                                            aria-label="Buscar"
-                                            disabled={loading_busqueda}
-                                            size="large"
-                                            onClick={() => {
-                                                if (end_date !== null) {
-                                                    void get_datos_estaciones();
-                                                }
-                                            }}
-                                        >
-                                            Buscar
-                                            {loading_busqueda ? '' : ""}
-                                        </Button>
-                                    </FormControl>
-                                </Stack>
-                                <Typography variant="body1">
-                                    <Title title={variable_selected.title} ></Title>
-                                    <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
-                                </Typography>
-                            </Typography>
-                        </>
-                    ) : ""}
-                    {dato_estacion_migracion.length > 0 ? (
-                        <>
-                            <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "5"}>
-                                <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
-                                <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Inicio"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={start_date}
-                                                onChange={handle_start_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Final"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={end_date}
-                                                onChange={handle_end_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Autocomplete
-                                            {...set_variables_select_migracion}
-                                            id="controlled-demo"
-                                            value={variable_selected_migracion}
-                                            onChange={(event: any, newValue: any) => {
-                                                set_variable_selected_migracion(newValue);
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField {...params} label="Seleccione variable" variant="standard" />
-                                            )}
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Button
-                                            variant="contained"
-                                            type="submit"
-                                            className="search-button text-capitalize rounded-pill"
-                                            startIcon={
-                                                loading_busqueda
-                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                                    : <SearchIcon />
-                                            }
-                                            aria-label="Buscar"
-                                            disabled={loading_busqueda}
-                                            size="large"
-                                            onClick={() => {
-                                                if (end_date !== null) {
-                                                    void get_datos_estaciones_migracion();
-                                                }
-                                            }}
-                                        >
-                                            Buscar
-                                            {loading_busqueda ? '' : ""}
-                                        </Button>
-                                    </FormControl>
-                                </Stack>
-                                <Typography variant="body1">
-                                    <Title title={variable_selected_migracion.title} ></Title>
-                                    <ChartData data={variable_selected_migracion.data} chart_id={variable_selected_migracion.chart_id} />
-                                </Typography>
-                            </Typography>
-                            <Typography variant="body1" align="center" hidden={selectdashboards.opc_dashboards !== "6"}>
-                                <Title title="Por favor seleccione las fechas para filtrar los datos" ></Title>
-                                <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Inicio"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={start_date}
-                                                onChange={handle_start_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha final"
-                                                inputFormat="YYYY/MM/DD"
-                                                openTo="day"
-                                                views={['year', 'month', 'day']}
-                                                value={end_date}
-                                                onChange={handle_end_date_change}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        size="small"
-                                                        {...params}
-                                                    />
-                                                )}
-                                            />
-                                        </LocalizationProvider>
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Autocomplete
-                                            {...set_variables_select_migracion}
-                                            id="controlled-demo"
-                                            value={variable_selected_migracion}
-                                            onChange={(event: any, newValue: any) => {
-                                                set_variable_selected_migracion(newValue);
-                                            }}
-                                            renderInput={(params) => (
-                                                <TextField {...params} label="Seleccione variable" variant="standard" />
-                                            )}
-                                        />
-                                    </FormControl>
-                                    <FormControl fullWidth>
-                                        <Button
-                                            variant="contained"
-                                            type="submit"
-                                            className="search-button text-capitalize rounded-pill"
-                                            startIcon={
-                                                loading_busqueda
-                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                                    : <SearchIcon />
-                                            }
-                                            aria-label="Buscar"
-                                            disabled={loading_busqueda}
-                                            size="large"
-                                            onClick={() => {
-                                                if (end_date !== null) {
-                                                    void get_datos_estaciones_migracion();
-                                                }
-                                            }}
-                                        >
-                                            Buscar
-                                            {loading_busqueda ? '' : ""}
-                                        </Button>
-                                    </FormControl>
-                                </Stack>
-                                <Typography variant="body1">
-
-                                    <Title title={variable_selected_migracion.title} ></Title>
-                                    <ChartData data={variable_selected_migracion.data} chart_id={variable_selected_migracion.chart_id} />
-                                </Typography>
-                            </Typography>
-                        </>
-                    ) : ""}
                 </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        {dato_estacion.length > 0 ? (
+                            <>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12}>
+                                        <Title title="Por favor seleccione las fechas para filtrar los datos" />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Stack direction="row" spacing={2} alignItems="center" sx={{ m: '20px 0' }} >
+                                            <FormControl fullWidth>
+                                                <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                                    <DatePicker
+                                                        label="Fecha Inical"
+                                                        inputFormat="YYYY/MM/DD"
+                                                        openTo="day"
+                                                        views={['year', 'month', 'day']}
+                                                        value={start_date}
+                                                        onChange={handle_start_date_change}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                required
+                                                                fullWidth
+                                                                size="small"
+                                                                {...params}
+                                                            />
+                                                        )}
+                                                    />
+                                                </LocalizationProvider>
+                                            </FormControl>
+                                            <FormControl fullWidth>
+                                                <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                                    <DatePicker
+                                                        label="Fecha Final"
+                                                        inputFormat="YYYY/MM/DD"
+                                                        openTo="day"
+                                                        views={['year', 'month', 'day']}
+                                                        value={end_date}
+                                                        onChange={handle_end_date_change}
+                                                        renderInput={(params) => (
+                                                            <TextField
+                                                                required
+                                                                fullWidth
+                                                                size="small"
+                                                                {...params}
+                                                            />
+                                                        )}
+                                                    />
+                                                </LocalizationProvider>
+                                            </FormControl>
+                                            <FormControl fullWidth>
+                                                <Autocomplete
+                                                    {...set_variables_select}
+                                                    id="controlled-demo"
+                                                    value={variable_selected}
+                                                    onChange={(event: any, newValue: any) => {
+                                                        set_variable_selected(newValue);
+                                                    }}
+                                                    renderInput={(params) => (
+                                                        <TextField {...params} label="Variable" variant="standard" />
+                                                    )}
+                                                    disableClearable={true}
+                                                />
+                                            </FormControl>
+                                            <FormControl fullWidth>
+                                                <Button
+                                                    variant="contained"
+                                                    type="submit"
+                                                    className="search-button text-capitalize rounded-pill"
+                                                    startIcon={
+                                                        loading_busqueda
+                                                            ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                                                            : <SearchIcon />
+                                                    }
+                                                    aria-label="Buscar"
+                                                    disabled={loading_busqueda}
+                                                    size="large"
+                                                    onClick={() => {
+                                                        if (end_date !== null) {
+                                                            void get_datos_estaciones();
+                                                        }
+                                                    }}
+                                                >
+                                                    Buscar
+                                                    {loading_busqueda ? '' : ""}
+                                                </Button>
+                                            </FormControl>
+                                        </Stack>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Title title={variable_selected.title} />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
+                                    </Grid>
+                                </Grid>
+                            </>
+                        ) : ""}
+                    </Grid>
+                </Grid>
+
+                {dato_estacion_migracion.length > 0 ? (
+                    <>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <Title title="Por favor seleccione las fechas para filtrar los datos" />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
+                                    <FormControl fullWidth>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                            <DatePicker
+                                                label="Fecha Inicio"
+                                                inputFormat="YYYY/MM/DD"
+                                                openTo="day"
+                                                views={['year', 'month', 'day']}
+                                                value={start_date}
+                                                onChange={handle_start_date_change}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        required
+                                                        fullWidth
+                                                        size="small"
+                                                        {...params}
+                                                    />
+                                                )}
+                                            />
+                                        </LocalizationProvider>
+                                    </FormControl>
+                                    <FormControl fullWidth>
+                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                            <DatePicker
+                                                label="Fecha Final"
+                                                inputFormat="YYYY/MM/DD"
+                                                openTo="day"
+                                                views={['year', 'month', 'day']}
+                                                value={end_date}
+                                                onChange={handle_end_date_change}
+                                                renderInput={(params) => (
+                                                    <TextField
+                                                        required
+                                                        fullWidth
+                                                        size="small"
+                                                        {...params}
+                                                    />
+                                                )}
+                                            />
+                                        </LocalizationProvider>
+                                    </FormControl>
+                                    <FormControl fullWidth>
+                                        <Autocomplete
+                                            {...set_variables_select_migracion}
+                                            id="controlled-demo"
+                                            value={variable_selected_migracion}
+                                            onChange={(event: any, newValue: any) => {
+                                                set_variable_selected_migracion(newValue);
+                                            }}
+                                            renderInput={(params) => (
+                                                <TextField {...params} label="Variable" variant="standard" />
+                                            )}
+                                            disableClearable={true}
+                                        />
+                                    </FormControl>
+                                    <FormControl fullWidth>
+                                        <Button
+                                            variant="contained"
+                                            type="submit"
+                                            className="search-button text-capitalize rounded-pill"
+                                            startIcon={
+                                                loading_busqueda
+                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                                                    : <SearchIcon />
+                                            }
+                                            aria-label="Buscar"
+                                            disabled={loading_busqueda}
+                                            size="large"
+                                            onClick={() => {
+                                                if (end_date !== null) {
+                                                    void get_datos_estaciones_migracion();
+                                                }
+                                            }}
+                                        >
+                                            Buscar
+                                            {loading_busqueda ? '' : ""}
+                                        </Button>
+                                    </FormControl>
+                                </Stack>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Title title={variable_selected_migracion.title} />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <ChartData data={variable_selected_migracion.data} chart_id={variable_selected_migracion.chart_id} />
+                            </Grid>
+                        </Grid>
+                    </>
+                ) : ""}
             </Grid >
         </>
     )

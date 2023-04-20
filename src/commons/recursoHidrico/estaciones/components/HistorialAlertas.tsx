@@ -24,7 +24,7 @@ const columns: GridColDef[] = [
     { field: 'fecha_hora_envio', headerName: 'FECHA', width: 170 },
     { field: 'mensaje_enviado', headerName: 'MENSAJE', width: 300 },
     { field: 'dir_email_enviado', headerName: 'EMAIL', width: 170 },
-    { field: 'nro_celular_enviado', headerName: 'TÉLEFONO', width: 170 },
+    { field: 'nro_celular_enviado', headerName: 'TELÉFONO', width: 170 },
 
 ];
 
