@@ -138,8 +138,6 @@ export const DashboardScreen: React.FC = () => {
                 `estaciones/migracion/consultar-migracion-estaciones-id/${selectdashboards.opc_dashboards}/?fecha-desde=${fecha_1}&fecha-hasta=${fecha_2}`
             );
             if ("data" in data) {
-                // set_loading_busqueda(false);
-                // Convertir valores de tipo string a número
                 const formatted_data = data.data.map((item: any) => {
                     const formatted_item = { ...item };
                     Object.keys(formatted_item).forEach((key) => {
@@ -161,9 +159,11 @@ export const DashboardScreen: React.FC = () => {
         } catch (err: unknown) {
             const temp_error = err as AxiosError
             if (temp_error.response?.status === 404) {
-                control_error("No se encontraron datos para esta estación");
+                set_loading_busqueda(false);
+                control_error("No se encontraron datos para esta estación en esta fecha");
             } else {
                 // Otro error, mostrar mensaje de error genérico
+                set_loading_busqueda(false);
                 control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
             }
         };
@@ -202,8 +202,10 @@ export const DashboardScreen: React.FC = () => {
             const temp_error = err as AxiosError
             if (temp_error.response?.status === 404) {
                 control_error("No se encontraron datos para esta estación");
+                set_loading(false);
             } else {
                 // Otro error, mostrar mensaje de error genérico
+                set_loading(false);
                 control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
             }
         };

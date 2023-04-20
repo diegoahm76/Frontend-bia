@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // import type React from 'react';
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Typography, TextField, Button, Box, Dialog, IconButton, InputLabel, Select, MenuItem } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { control_error } from '../../../helpers/controlError';
@@ -12,6 +12,8 @@ import Grid from '@material-ui/core/Grid';
 import { useTheme } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import { change_super_user, get_person_by_documents } from '../request/authRequest';
+import { create_super_user } from '../store';
+// import { superuser_request } from '../request/seguridadRequest';
 // import { CustomSelect } from '../../auth/components/CustomSelect';
 
 export const SuperUserScreen = ({ onClose }: { onClose: () => void }): JSX.Element => {
@@ -25,6 +27,8 @@ export const SuperUserScreen = ({ onClose }: { onClose: () => void }): JSX.Eleme
   const { userinfo } = useSelector(
     (state: AuthSlice) => state.auth
   );
+  // const { roles } = useSelector((state:any) => state.seguridad)
+  const dispatch = useDispatch();
   const [superUsuarioActual, setSuperUsuarioActual] = useState(userinfo.nombre_de_usuario);
   const [nuevoSuperUsuario, setNuevoSuperUsuario] = useState({
     tipoDocumento: tipo_documento,
@@ -44,15 +48,21 @@ export const SuperUserScreen = ({ onClose }: { onClose: () => void }): JSX.Eleme
 
 
   // Función para seleccionar el nuevo superusuario
-  const handleSeleccionarNuevoSuperUsuario = (): void => {
+  const handleSeleccionarNuevoSuperUsuario = (id_persona: number): void => {
     // Aquí puedes agregar una validación para asegurarte de que el usuario tiene el rol de superusuario
-    //   setSuperUsuarioActual(nuevoSuperUsuario.nombre);
-    //   setNuevoSuperUsuario({
-    //     tipoDocumento: '',
-    //     numeroIdentificacion: '',
-    //     nombre: '',
-    //   });
-    //   handleClose();
+      // setSuperUsuarioActual(nuevoSuperUsuario.nombre);
+      // setNuevoSuperUsuario({
+      //   tipoDocumento: '',
+      //   numeroIdentificacion: '',
+      //   nombre: '',
+      // });
+      // handleClose();
+      dispatch(create_super_user(id_persona) as any)
+      // superuser_request(id_persona).then(data => {
+      //   console.log(data);
+      // }).catch((error) => {
+      //   console.log(error);
+      // })
   };
   // Función para buscar el nuevo superusuario
   const handleSearchSuperUsuario = (tipo_documento: string, numero_documento: string): void => {
@@ -234,8 +244,12 @@ export const SuperUserScreen = ({ onClose }: { onClose: () => void }): JSX.Eleme
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Grid container spacing={1} alignItems="flex-end">
             <Grid item>
-              <Button variant="contained" onClick={handleSeleccionarNuevoSuperUsuario} sx={{ bgcolor: 'green', color: 'white', mr: 1 }}>
-                Guardar
+              <Button 
+                variant="contained"
+                onClick={() => { handleSeleccionarNuevoSuperUsuario(userinfo.id_persona) }}
+                sx={{ bgcolor: 'green', color: 'white', mr: 1 }}
+              >
+                  Guardar
               </Button>
             </Grid>
 
