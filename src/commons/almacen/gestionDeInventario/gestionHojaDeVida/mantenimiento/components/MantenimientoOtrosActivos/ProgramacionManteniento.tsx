@@ -1,20 +1,19 @@
 import { Button, Grid } from '@mui/material';
 import { Title } from '../../../../../../../components';
-import { KilometrajeComponent } from './KilometrajeComponent';
 import { useCallback } from 'react';
 import { type crear_mantenimiennto } from '../../interfaces/IProps';
 import { type IcvVehicles } from '../../../hojaDeVidaVehiculo/interfaces/CvVehiculo';
-import { ArticuloComponent } from '../mantenimientoGeneral/ArticuloComponent';
-import { DetallesComponent } from '../mantenimientoGeneral/DetallesComponent';
-import { MantenimientoComponent } from '../mantenimientoGeneral/MantenimientoComponent';
 import { FechasComponent } from '../mantenimientoGeneral/FechasComponent';
 import { PrevisualizacionComponent } from '../mantenimientoGeneral/PrevisualizacionComponent';
+import { MantenimientoComponent } from '../mantenimientoGeneral/MantenimientoComponent';
+import { DetallesComponent } from '../mantenimientoGeneral/DetallesComponent';
+import { ArticuloComponent } from '../mantenimientoGeneral/ArticuloComponent';
 import use_previsualizacion from '../mantenimientoGeneral/hooks/usePrevisualizacion';
-import AnularMantenimientoComponent from '../mantenimientoGeneral/AnularMantenimiento';
 import use_anular_mantenimiento from '../mantenimientoGeneral/hooks/useAnularMantenimiento';
+import AnularMantenimientoComponent from '../mantenimientoGeneral/AnularMantenimiento';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
+export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
     // the parentState will be set by its child slider component
     const {
         rows,
@@ -55,7 +54,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
 
     return (
         <>
-            <h1>Programación mantenimiento vehículos</h1>
+            <h1>Programación mantenimiento otros activos</h1>
             <Grid
                 container
                 sx={{
@@ -69,8 +68,8 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
             >
                 <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
-                    <Title title="Búsqueda de vehículo" />
-                    <ArticuloComponent tipo_articulo={"vehículos"}/>
+                    <Title title="Búsqueda de artículo" />
+                    <ArticuloComponent tipo_articulo={"otros activos"}/>
                 </Grid>
             </Grid>
             <Grid
@@ -86,7 +85,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
             >
                 <Grid item xs={12}>
                     {/* DETALLES COMPONENT */}
-                    <Title title="Datos del vehículo" />
+                    <Title title="Datos del artículo" />
                     <DetallesComponent parent_details_veh={set_details_state} />
                 </Grid>
             </Grid>
@@ -126,25 +125,6 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                     <FechasComponent parent_state_setter={wrapperSetParentState} detalle_vehiculo={detalle_vehiculo} tipo_matenimiento = {tipo_mantenimiento} especificacion = {especificacion} />
                 </Grid>
             </Grid>
-
-            <Grid
-                container
-                sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px',
-                    mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                }}
-            >
-                <Grid item xs={12}>
-                    {/* KILOMETRAJE COMPONENT */}
-                    <Title title='Programar por kilometraje' />
-                    <KilometrajeComponent parent_state_setter={wrapperSetParentState} detalle_vehiculo={detalle_vehiculo} tipo_matenimiento = {tipo_mantenimiento} especificacion = {especificacion}/>
-                </Grid>
-            </Grid>
-
             <Grid
                 container
                 sx={{
@@ -175,7 +155,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
             >
                  <Grid item xs={7}></Grid>
                 <Grid item xs={1} textAlign="end">
-                <Button
+                    <Button
                         color='primary'
                         variant='contained'
                         onClick={() => {
