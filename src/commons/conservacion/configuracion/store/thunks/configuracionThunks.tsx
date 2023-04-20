@@ -16,6 +16,7 @@ import {
   // current_bien,
 } from '../slice/configuracionSlice';
 import { api } from '../../../../../api/axios';
+import { type IObjGerminationBed } from '../../interfaces/configuracion';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -76,12 +77,12 @@ export const get_nursery_service: any = (id: string | number)  => {
 };
 
  // Obtener camas por vivero
- export const get_germination_beds_service = (id: string|number|null): any => {
+ export const get_germination_beds_service = (id?: string|number|null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      if(id !== null)
+      if(id !== null && id !== undefined)
       {const { data } = await api.get(`conservacion/camas-siembras/siembra/get-camas-germinacion/${id}/`);
-      console.log(data)
+    
       dispatch(get_germination_beds(data.data));
       return data;}
     } catch (error: any) {
@@ -92,13 +93,33 @@ export const get_nursery_service: any = (id: string | number)  => {
   };
 };
 
+// actualizar camas de germinacion por vivero
+export const update_germination_beds_service: any = (id: string | number, beds: IObjGerminationBed[])  => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      if(id !== undefined)
+      console.log(beds)
+      {const { data } = await api.put(`conservacion/camas-siembras/camas-germinacion/${id}/`, beds);
+      dispatch(get_germination_beds_service(id));
+      console.log(data)
+      control_success(data.data);
+
+      return data;}
+    } catch (error: any) {
+      console.log('update_germination_beds_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtener bienes
 export const get_bienes_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('almacen/bienes/catalogo-bienes/get-list');
+      const { data } = await api.get('conservacion/viveros/get-bienes-consumo-filtro/');
       console.log(data.data)
-      dispatch(get_bienes([data.data[5].data.bien]));
+      dispatch(get_bienes(data.data));
       return data;
     } catch (error: any) {
       console.log('get_bienes_service');

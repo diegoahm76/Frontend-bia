@@ -8,7 +8,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  current_nursery, get_nurseries, get_nurseries_closing, get_nurseries_quarantine,
+  current_nursery, get_items_despacho, get_nurseries, get_nurseries_closing, get_nurseries_quarantine,
   // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
@@ -238,6 +238,22 @@ export const quarantine_nursery_service: any = (
     } catch (error: any) {
       control_error(error.response.data.detail);
       console.log(error);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener items despacho
+export const get_items_despacho_service = (id: string|number|null): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/despachos/items-despacho/get-by-id/${id??""}/`);
+      dispatch(get_items_despacho(data.data));
+      console.log(data.data)
+      return data;
+    } catch (error: any) {
+      console.log('get_items_despacho_service');
+      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
