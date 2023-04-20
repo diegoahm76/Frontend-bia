@@ -5,11 +5,11 @@ import {
   Grid,
   TextField,
   Dialog,
-  DialogActions,
+  // DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
-  Stack,
+  // Stack,
   Button,
   Box,
   Divider,
@@ -20,9 +20,9 @@ import {
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import SaveIcon from '@mui/icons-material/Save';
+// import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { type SeguridadSlice } from '../interfaces';
 import { get_users, get_persons } from '../store/thunks';
@@ -64,6 +64,9 @@ const DialogBusquedaAvanzada = ({
     (state: SeguridadSlice) => state.seguridad
   );
   const [buscar_por, set_buscar_por] = useState<string>('U');
+  const [buscando_persons, set_buscando_persons] = useState<boolean>(false);
+  const [buscando_users, set_buscando_users] = useState<boolean>(false);
+
   const {
     register: register_search_person,
     handleSubmit: handle_submit_search_person,
@@ -81,62 +84,35 @@ const DialogBusquedaAvanzada = ({
     {
       headerName: 'ID persona',
       field: 'id_persona',
-      minWidth: 200,
     },
     {
       headerName: 'Tipo persona',
       field: 'tipo_persona',
-      minWidth: 150,
-    },
-    {
-      headerName: 'Tipo documento',
-      field: 'tipo_documento',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Numero documento',
-      field: 'numero_documento',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Primer nombre',
-      field: 'primer_nombre',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Segundo nombre',
-      field: 'segundo_nombre',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Primer apellido',
-      field: 'primer_apellido',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Segundo apellido',
-      field: 'segundo_apellido',
-      minWidth: 100,
     },
     {
       headerName: 'Nombre completo',
       field: 'nombre_completo',
-      minWidth: 100,
     },
     {
       headerName: 'Razon social',
       field: 'razon_social',
-      minWidth: 100,
     },
     {
       headerName: 'Nombre comercial',
       field: 'nombre_comercial',
-      minWidth: 100,
     },
     {
       headerName: 'Usuario',
       field: 'tiene_usuario',
-      minWidth: 100,
+    },
+
+    {
+      headerName: 'Tipo documento',
+      field: 'tipo_documento',
+    },
+    {
+      headerName: 'Numero documento',
+      field: 'numero_documento',
     },
     {
       headerName: 'Acciones',
@@ -158,7 +134,7 @@ const DialogBusquedaAvanzada = ({
               }}
               variant="rounded"
             >
-              <VisibilityIcon
+              <EditIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -172,53 +148,36 @@ const DialogBusquedaAvanzada = ({
     {
       headerName: 'ID usuario',
       field: 'id_usuario',
-      minWidth: 200,
-    },
-    {
-      headerName: 'Super usuario',
-      field: 'is_superuser',
-      minWidth: 150,
-    },
-    {
-      headerName: 'Nombre comercial',
-      field: 'nombre_comercial',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Nombre completo',
-      field: 'nombre_completo',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Nombre de usuario',
-      field: 'nombre_de_usuario',
-      minWidth: 100,
     },
     {
       headerName: 'ID persona',
       field: 'persona',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Primer apellido',
-      field: 'primer_apellido',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Primer nombre',
-      field: 'primer_nombre',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Razón social',
-      field: 'razon_social',
-      minWidth: 100,
     },
     {
       headerName: 'Tipo de persona',
       field: 'tipo_persona',
-      minWidth: 100,
     },
+    {
+      headerName: 'Nombre completo',
+      field: 'nombre_completo',
+    },
+    {
+      headerName: 'Nombre comercial',
+      field: 'nombre_comercial',
+    },
+    {
+      headerName: 'Nombre de usuario',
+      field: 'nombre_de_usuario',
+    },
+    {
+      headerName: 'Super usuario',
+      field: 'is_superuser',
+    },
+    {
+      headerName: 'Razón social',
+      field: 'razon_social',
+    },
+
     {
       headerName: 'Acciones',
       field: 'accion',
@@ -239,7 +198,7 @@ const DialogBusquedaAvanzada = ({
               }}
               variant="rounded"
             >
-              <VisibilityIcon
+              <EditIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -258,7 +217,7 @@ const DialogBusquedaAvanzada = ({
   };
 
   const on_submit_search_person = (data: FormValuesSearchPerson): void => {
-    console.log(data);
+    set_buscando_persons(true);
     dispatch(
       get_persons(
         data.typeDocument,
@@ -267,20 +226,16 @@ const DialogBusquedaAvanzada = ({
         data.lastName
       )
     );
-    console.log('Buscando persona');
   };
 
   const on_submit_search_user = (data: FormValuesSearchUser): void => {
-    console.log(data);
+    set_buscando_users(true);
     dispatch(get_users(data.nameUser));
-    console.log('Buscando usuario');
-
-    console.log(users);
   };
 
   return (
     <Dialog
-      maxWidth="lg"
+      maxWidth="sm"
       open={is_modal_active}
       onClose={handle_close_busqueda_avanzada}
     >
@@ -303,21 +258,6 @@ const DialogBusquedaAvanzada = ({
       </DialogTitle>
       <Divider />
       <DialogContent sx={{ mb: '0px' }}>
-        <Grid container sx={{ mb: '0px' }} spacing={2}>
-          <Grid item xs={12} sm={3}>
-            <Select
-              size="small"
-              label="Seleccionar"
-              value={buscar_por}
-              onChange={handle_buscar_por}
-              fullWidth
-            >
-              <MenuItem value="U">Usuario</MenuItem>
-              <MenuItem value="P">Persona</MenuItem>
-            </Select>
-            <Typography className="label_selects">Buscar por </Typography>
-          </Grid>
-        </Grid>
         {buscar_por === 'P' ? (
           <>
             <Box
@@ -326,7 +266,20 @@ const DialogBusquedaAvanzada = ({
               onSubmit={handle_submit_search_person(on_submit_search_person)}
               autoComplete="off"
             >
-              <Grid container spacing={2}>
+              <Grid container sx={{ mb: '0px' }} spacing={2}>
+                <Grid item xs={12} sm={3}>
+                  <Select
+                    size="small"
+                    label="Seleccionar"
+                    value={buscar_por}
+                    onChange={handle_buscar_por}
+                    fullWidth
+                  >
+                    <MenuItem value="U">Usuario</MenuItem>
+                    <MenuItem value="P">Persona</MenuItem>
+                  </Select>
+                  <Typography className="label_selects">Buscar por </Typography>
+                </Grid>
                 <Grid item xs={12} sm={3}>
                   <TextField
                     label="Tipo de documento"
@@ -351,7 +304,7 @@ const DialogBusquedaAvanzada = ({
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <TextField
-                    {...register_search_person('firstName', { required: true })}
+                    {...register_search_person('firstName')}
                     label="Primer nombre"
                     helperText="Primer nombre"
                     size="small"
@@ -360,7 +313,7 @@ const DialogBusquedaAvanzada = ({
                 </Grid>
                 <Grid item xs={12} sm={3}>
                   <TextField
-                    {...register_search_person('lastName', { required: true })}
+                    {...register_search_person('lastName')}
                     label="Primer apellido"
                     size="small"
                     helperText="Primer apellido"
@@ -379,17 +332,19 @@ const DialogBusquedaAvanzada = ({
                 </Grid>
               </Grid>
             </Box>
-            <Grid item xs={12}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={persons}
-                columns={columns_persons}
-                pageSize={5}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-              />
-            </Grid>
+            {buscando_persons && (
+              <Grid item xs={12}>
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={persons}
+                  columns={columns_persons}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  getRowId={(row) => row.id_persona}
+                />
+              </Grid>
+            )}
           </>
         ) : (
           buscar_por === 'U' && (
@@ -402,6 +357,21 @@ const DialogBusquedaAvanzada = ({
               >
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={3}>
+                    <Select
+                      size="small"
+                      label="Seleccionar"
+                      value={buscar_por}
+                      onChange={handle_buscar_por}
+                      fullWidth
+                    >
+                      <MenuItem value="U">Usuario</MenuItem>
+                      <MenuItem value="P">Persona</MenuItem>
+                    </Select>
+                    <Typography className="label_selects">
+                      Buscar por{' '}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
                     <TextField
                       {...register_search_user('nameUser', { required: true })}
                       required
@@ -410,6 +380,9 @@ const DialogBusquedaAvanzada = ({
                       helperText="Nombre de usuario"
                       fullWidth
                     />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    {''}
                   </Grid>
                   <Grid item xs={12} sm={3}>
                     <Button
@@ -423,40 +396,23 @@ const DialogBusquedaAvanzada = ({
                   </Grid>
                 </Grid>
               </Box>
-              <Grid item xs={12}>
-                <DataGrid
-                  density="compact"
-                  autoHeight
-                  rows={users}
-                  columns={columns_users}
-                  pageSize={5}
-                  rowsPerPageOptions={[10]}
-                  getRowId={(row) => row.id_usuario}
-                />
-              </Grid>
+              {buscando_users && (
+                <Grid item xs={12}>
+                  <DataGrid
+                    density="compact"
+                    autoHeight
+                    rows={users}
+                    columns={columns_users}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    getRowId={(row) => row.id_usuario}
+                  />
+                </Grid>
+              )}
             </>
           )
         )}
       </DialogContent>
-      <Divider />
-      <DialogActions>
-        <Stack
-          direction="row"
-          spacing={2}
-          sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-        >
-          <Button
-            variant="outlined"
-            onClick={handle_close_busqueda_avanzada}
-            startIcon={<CloseIcon />}
-          >
-            CERRAR
-          </Button>
-          <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
-            GUARDAR
-          </Button>
-        </Stack>
-      </DialogActions>
     </Dialog>
   );
 };
