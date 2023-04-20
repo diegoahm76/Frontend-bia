@@ -187,8 +187,9 @@ export const AnaliticaScreen: React.FC = () => {
                     });
                     return formatted_item_compatacion;
                 });
+                console.log("data_comparacion",formatted_data_comparacion)
+                console.log("data",formatted_data)
                 formatdataforchart_migracion(formatted_data, formatted_data_comparacion);
-                set_dato_estacion_migracion(formatted_data);
                 set_loading_busqueda(false);
             } else {
                 control_error("No se encontraron datos")
@@ -793,7 +794,7 @@ export const AnaliticaScreen: React.FC = () => {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <Grid border={0.5}>
-                                                <ChartData data={variable_selected_migracion.data} chart_id="comparacion" />
+                                                <ChartData data={variable_selected_migracion.data_comparacion} chart_id="comparacion" />
                                             </Grid>
                                         </Grid>
                                     </Grid>
