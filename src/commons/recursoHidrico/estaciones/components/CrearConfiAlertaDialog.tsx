@@ -147,7 +147,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Mensaje Maximo"
+                                label="Mensaje Máximo"
                                 size="small"
                                 margin="dense"
                                 required
@@ -160,7 +160,7 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Mensaje Minimo"
+                                label="Mensaje Mínimo"
                                 size="small"
                                 margin="dense"
                                 required

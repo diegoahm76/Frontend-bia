@@ -11,12 +11,16 @@ import {
 import { use_register } from '../hooks/registerHooks';
 import { useForm } from 'react-hook-form';
 import type { DataRegistePortal, keys_object } from '../interfaces';
-import { CustomSelect } from './CustomSelect';
 import { RegisterPersonaNatural } from './RegisterPersonaNatural';
 import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
+import { CustomSelect } from '../../../components';
+
+interface Props {
+  uso_interno: boolean;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterForm: React.FC = () => {
+export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
   const {
     register,
     setValue: set_value,
@@ -31,6 +35,7 @@ export const RegisterForm: React.FC = () => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
+    has_user,
     set_data_register,
     set_numero_documento,
     set_tipo_documento,
@@ -89,9 +94,11 @@ export const RegisterForm: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h6" textAlign="center" pb={2}>
-        Formulario registro
-      </Typography>
+      {uso_interno && (
+        <Typography variant="h6" textAlign="center" pb={2}>
+          Formulario registro
+        </Typography>
+      )}
       <Grid container spacing={2} p={2}>
         <Grid item xs={12} sm={6} md={4}>
           <CustomSelect
@@ -103,7 +110,8 @@ export const RegisterForm: React.FC = () => {
             loading={loading}
             disabled={false}
             required={true}
-            // errors={errors}
+            errors={errors}
+            register={register}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -116,7 +124,8 @@ export const RegisterForm: React.FC = () => {
             loading={loading}
             disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
             required={true}
-            // errors={errors}
+            errors={errors}
+            register={register}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -154,12 +163,27 @@ export const RegisterForm: React.FC = () => {
             </Grid>
           </Grid>
         )}
+        {has_user && (
+          <Grid item xs={12}>
+            <Grid container justifyContent="center" textAlign="center">
+              <Alert icon={false} severity="error">
+                <Typography>
+                  Lo sentimos, este documento ya tiene un usuario, puede iniciar
+                  sesión con su usuario y contraseña, si ha olvidado sus datos
+                  de acceso, dirigase al inicio de sesión y haga click en
+                  ¿Olvidó su contraseña?
+                </Typography>
+              </Alert>
+            </Grid>
+          </Grid>
+        )}
       </Grid>
       {tipo_persona === 'N' && (
         <RegisterPersonaNatural
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
+          has_user={has_user}
         />
       )}
       {tipo_persona === 'J' && (
@@ -167,6 +191,7 @@ export const RegisterForm: React.FC = () => {
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
+          has_user={has_user}
         />
       )}
     </>

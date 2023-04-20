@@ -262,11 +262,12 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                   required: true,
                   minLength: 3,
                   maxLength: 30,
-                  pattern: /^[a-zA-Z]+$/,
+                  pattern: /^[a-zA-Z\s]+$/, // permite letras y espacios
                 })}
                 error={Boolean(errors.cargo)}
                 helperText={(errors.cargo != null) ? "Este campo es obligatorio y debe tener entre 3 y 30 caracteres, solo letras mayúsculas o minúsculas" : ""}
               />
+
             </Grid>
             <Grid item xs={12}>
               <TextField
