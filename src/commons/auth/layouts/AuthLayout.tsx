@@ -38,6 +38,13 @@ export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
           lg: 3,
         });
         break;
+      case '/auth/recuperar_contrasena':
+        set_extend({
+          sm: 5,
+          md: 4,
+          lg: 3,
+        });
+        break;
     }
   }, []);
 

@@ -1,192 +1,171 @@
-import React from 'react';
-import { api } from '../../../api/axios';
-import { Button, Grid, Box, TextField, Typography } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
-import { toast, type ToastContent } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import {
+  Button,
+  Grid,
+  TextField,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Alert,
+  IconButton,
+  FormControl,
+  FormControlLabel,
+  RadioGroup,
+  Radio,
+} from '@mui/material';
+import type { AxiosError } from 'axios';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { LoadingButton } from '@mui/lab';
+import { control_success } from '../../recursoHidrico/requets/Request';
+import { recover_password } from '../request/authRequest';
+import LinearProgress from '@mui/material/LinearProgress';
+import { Email, Sms, Close, Send } from '@mui/icons-material';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-interface DataUser {
-  nombre_de_usuario: string;
-  tipo_envio: string;
-  redirect_url: string;
-}
-
-const data_values: DataUser = {
-  nombre_de_usuario: '',
-  tipo_envio: '',
-  redirect_url:
-    'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena',
-};
+const redirect_url =
+  'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecuperarContrasena: React.FC = () => {
-  const [display_medio_recuperacion, set_display_medio_recuperacion] =
-    React.useState(false);
+  const {
+    handleSubmit: handle_submit,
+    formState: { errors },
+    register,
+  } = useForm();
+  const [is_sending, set_is_sending] = useState(false);
+  const [open, set_open] = useState(false);
+  const [message, set_message] = useState('');
+  const [tipo_envio, set_tipo_envio] = useState('');
+  const [error_message, set_error] = useState('');
+  const [open_alert, set_open_alert] = useState(false);
+  const [nombre_de_usuario, set_nombre_de_usuario] = useState('');
+  const navigate = useNavigate();
 
-  const { control, handleSubmit: handle_submit } = useForm({
-    defaultValues: data_values,
-  });
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const on_submit = (data: any) => {
-    void query_recover_pass(data);
+  const handle_close = (): void => {
+    set_open(false);
   };
 
-  const handle_selection_recover_pass = (metodo_envio: string): void => {
-    if (metodo_envio === 'email') {
-      data_values.tipo_envio = 'email';
-    } else if (metodo_envio === 'sms') {
-      data_values.tipo_envio = 'sms';
-    }
-    console.log(metodo_envio);
-    set_display_medio_recuperacion(false);
-    void query_recover_pass(data_values);
+  const send_media = (): void => {
+    set_is_sending(true);
+    setTimeout(() => {
+      void on_submit();
+    }, 2000);
   };
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const query_recover_pass = async (dataRecover: any) => {
+  const change_value = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_nombre_de_usuario(e.target.value);
+  };
+
+  const change_radio = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_tipo_envio(e.target.value);
+  };
+
+  const on_submit = handle_submit(async () => {
+    set_is_sending(true);
+    set_error('');
+    set_open_alert(false);
     try {
-      const { data } = await api.post(
-        'users/request-reset-email/',
-        dataRecover
-      );
-      console.log(data);
-      if ('data' in data) {
-        console.log('ingreso');
-        if (data.data.email !== null && data.data.sms !== null) {
-          data_values.nombre_de_usuario = dataRecover.nombre_de_usuario;
-          set_display_medio_recuperacion(true);
-        }
+      const data_send = {
+        nombre_de_usuario,
+        tipo_envio,
+        redirect_url,
+      };
+      const { data: resp } = await recover_password(data_send);
+
+      if (resp.data !== undefined) {
+        set_open(true);
+        set_message(resp.detail);
+        return;
       }
 
-      control_success(data.detail);
-    } catch (error: any) {
-      void control_error(error.message);
+      control_success(resp.detail);
+      if (open) {
+        set_open(false);
+        navigate('/login');
+      }
+    } catch (e) {
+      const temp_err = e as AxiosError;
+      const error = temp_err.response?.data as any;
+      // set_error(error.detail);
+      console.log(error);
+      console.log(e);
+      set_open_alert(true);
+    } finally {
+      set_tipo_envio('');
+      set_is_sending(false);
     }
-  };
+  });
 
   return (
     <>
-      <Grid item>
-        {display_medio_recuperacion ? (
-          <Typography
-            textAlign="center"
-            variant={'body2'}
-            sx={{ mb: '10px' }}
-            paragraph
-          >
-            Selecciona uno de los medios para la recuperación de contraseña
-          </Typography>
-        ) : (
-          <Typography
-            textAlign="center"
-            variant={'body2'}
-            sx={{ mb: '10px' }}
-            paragraph
-          >
-            Ingrese su usuario para recuperar contraseña
-          </Typography>
-        )}
-      </Grid>
-      {display_medio_recuperacion ? (
-        <Grid item>
-          <Grid item justifyContent="center" container>
-            <Button
-              sx={{ mt: '20px' }}
-              fullWidth
-              type="submit"
-              variant="contained"
-              size="small"
-              color="success"
-              disableElevation
-              onClick={() => {
-                handle_selection_recover_pass('email');
-              }}
-              style={{ fontSize: '.9rem' }}
-            >
-              <Typography>Email</Typography>
-            </Button>
-
-            <Button
-              sx={{ mt: '20px' }}
-              fullWidth
-              type="submit"
-              variant="contained"
-              size="small"
-              color="success"
-              disableElevation
-              onClick={() => {
-                handle_selection_recover_pass('sms');
-              }}
-              style={{ fontSize: '.9rem' }}
-            >
-              <Typography>Mensaje de texto</Typography>
-            </Button>
+      <form
+        onSubmit={(e) => {
+          void on_submit(e);
+        }}
+      >
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography textAlign="center" fontWeight="bold">
+              Ingrese su usuario para recuperar su contraseña
+            </Typography>
           </Grid>
-        </Grid>
-      ) : (
-        <Box
-          component="form"
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={handle_submit(on_submit)}
-        >
-          <Grid item>
-            <Controller
-              name="nombre_de_usuario"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  label="Usuario"
-                  variant="standard"
-                  fullWidth
-                />
-              )}
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Usuario"
+              error={errors.nombre_de_usuario?.type === 'required'}
+              helperText={
+                errors.nombre_de_usuario?.type === 'required'
+                  ? 'Este campo es obligatorio'
+                  : ''
+              }
+              {...register('nombre_de_usuario', {
+                required: true,
+              })}
+              onChange={change_value}
             />
-            <Grid item justifyContent="center" container>
-              <Button
-                sx={{ mt: '20px' }}
-                fullWidth
+          </Grid>
+          {open_alert && (
+            <Grid item xs={12} container justifyContent="center">
+              <Alert
+                severity="error"
+                action={
+                  <IconButton
+                    aria-label="close"
+                    color="inherit"
+                    size="small"
+                    onClick={() => {
+                      set_open_alert(false);
+                    }}
+                  >
+                    <Close fontSize="inherit" />
+                  </IconButton>
+                }
+              >
+                {error_message}
+              </Alert>
+            </Grid>
+          )}
+          <Grid item xs={12} container justifyContent="center">
+            <Grid item xs={12}>
+              <LoadingButton
                 type="submit"
                 variant="contained"
-                size="small"
                 color="success"
-                disableElevation
-                // loading={}
-                // disabled={disable}
-                style={{ fontSize: '.9rem' }}
+                fullWidth
+                loading={is_sending}
+                disabled={is_sending}
               >
                 Enviar
-              </Button>
+              </LoadingButton>
             </Grid>
-            <Grid item sx={{ pt: '10px !important' }}>
+          </Grid>
+          <Grid item xs={12} container justifyContent="center">
+            <Grid item>
               <Link className="no-decoration" to="/auth/login">
                 <Typography sx={{ textAlign: 'center', mb: '20px' }}>
                   Iniciar sesión
@@ -194,8 +173,89 @@ export const RecuperarContrasena: React.FC = () => {
               </Link>
             </Grid>
           </Grid>
-        </Box>
-      )}
+        </Grid>
+      </form>
+      <Dialog open={open} onClose={handle_close}>
+        <DialogTitle textAlign="center">Opciones de recuperación</DialogTitle>
+        <DialogContent>
+          <Typography textAlign="center">
+            Seleccione un medio por el cual desea recibir el link, para
+            recuperar tu contraseña
+          </Typography>
+        </DialogContent>
+        {is_sending && (
+          <>
+            <DialogContent>
+              {is_sending && <LinearProgress />}
+              <DialogContentText textAlign="center">
+                {is_sending ? `Enviando ${tipo_envio}` : message}
+              </DialogContentText>
+            </DialogContent>
+          </>
+        )}
+        {open_alert && (
+          <Grid item xs={12} container justifyContent="center">
+            <Alert
+              severity="error"
+              action={
+                <IconButton
+                  aria-label="close"
+                  color="inherit"
+                  size="small"
+                  onClick={() => {
+                    set_open_alert(false);
+                  }}
+                >
+                  <Close fontSize="inherit" />
+                </IconButton>
+              }
+            >
+              {error_message}
+            </Alert>
+          </Grid>
+        )}
+        <DialogActions>
+          <Grid container justifyContent="space-around" pb={1} spacing={1}>
+            <Grid item xs={12} container justifyContent="center">
+              <FormControl onChange={change_radio}>
+                <RadioGroup
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                >
+                  <Grid container width={300}>
+                    <Grid item xs={6} container alignItems="center">
+                      <FormControlLabel
+                        value="email"
+                        control={<Radio />}
+                        label="E-mail"
+                      />
+                      <Email color="primary" />
+                    </Grid>
+                    <Grid item xs={6} container alignItems="center">
+                      <FormControlLabel
+                        value="sms"
+                        control={<Radio />}
+                        label="SMS"
+                      />
+                      <Sms color="primary" />
+                    </Grid>
+                  </Grid>
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} container justifyContent="center">
+              <Button
+                disabled={is_sending || tipo_envio === ''}
+                onClick={send_media}
+                variant="outlined"
+                startIcon={<Send />}
+              >
+                Enviar
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

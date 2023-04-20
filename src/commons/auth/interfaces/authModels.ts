@@ -417,3 +417,20 @@ export interface DataUnlockUser {
   fecha_nacimiento: string;
   redirect_url: string;
 }
+
+export interface ChangePassword {
+  password: string;
+  token: string | null;
+  uidb64: string | null;
+}
+
+export interface DataUserRecover {
+  nombre_de_usuario: string;
+  tipo_envio: string;
+  redirect_url: string;
+}
+
+export interface ResponseRecover {
+  email: string;
+  sms: string;
+}

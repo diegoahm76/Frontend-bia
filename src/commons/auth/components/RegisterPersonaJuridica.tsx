@@ -27,7 +27,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { use_register } from '../hooks/registerHooks';
 import { useForm } from 'react-hook-form';
-import { CustomSelect } from './CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../recursoHidrico/requets/Request';
@@ -38,6 +37,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { validate_password } from '../../../helpers/ValidateFormatPassword';
 import { crear_persona_juridica_and_user } from '../request/authRequest';
+import { CustomSelect } from '../../../components/CustomSelect';
 
 interface PropsStep {
   label: string;
@@ -48,6 +48,7 @@ interface Props {
   numero_documento: string;
   tipo_documento: string;
   tipo_persona: string;
+  has_user: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -55,6 +56,7 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
   numero_documento,
   tipo_documento,
   tipo_persona,
+  has_user,
 }: Props) => {
   const {
     register,
@@ -68,7 +70,6 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
     error_email,
     error_password,
     error_phone,
-    has_user,
     is_exists,
     is_saving,
     paises_options,
@@ -398,6 +399,8 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
           loading={loading}
           disabled={false}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -410,6 +413,8 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
           loading={loading}
           disabled={pais_notificacion === '' ?? true}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -422,6 +427,8 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
           loading={loading}
           disabled={dpto_notifiacion === '' ?? true}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -594,6 +601,8 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
           loading={loading}
           disabled={false}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -758,17 +767,17 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
           La contraseña debe cumplir con las siguientes reglas
         </Typography>
         <ul>
-          <li>Debe contener mínimo 6 caracteres</li>
-          <li>Debe contener 1 Caracter en Mayúscula</li>
-          <li>Debe contener 1 Caracter numérico</li>
-          <li>Debe contener 1 Caracter simbólico (*,-,_,%...)</li>
+          <li>Debe contener mínimo 8 caracteres</li>
+          <li>Debe contener 1 caracter en mayúscula</li>
+          <li>Debe contener 1 caracter numérico</li>
+          <li>Debe contener 1 caracter simbólico (*,-,_,%...)</li>
         </ul>
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
         <TextField
           fullWidth
           size="small"
-          label="Nombre de usuario"
+          label="Nombre de usuario *"
           error={errors.nombre_de_usuario?.type === 'required'}
           helperText={
             errors.nombre_de_usuario?.type === 'required'
@@ -930,6 +939,8 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
           loading={loading}
           disabled={false}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -942,6 +953,8 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
           loading={loading}
           disabled={false}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
     </>
@@ -1009,9 +1022,7 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
                         }}
                         href="#/auth/login"
                       >
-                        <Typography sx={{ color: 'black' }}>
-                          Iniciar sesión
-                        </Typography>
+                        <Typography sx={{ color: 'black' }}>Salir</Typography>
                       </Button>
                     </Grid>
                     <Grid item>

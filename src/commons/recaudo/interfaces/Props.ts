@@ -6,3 +6,9 @@ export interface Props {
     color?: string;
     icono: any
 }
+
+export interface ModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onSave: (values: string[]) => void;
+};

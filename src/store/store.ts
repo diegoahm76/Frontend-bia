@@ -4,6 +4,7 @@ import thunk from "redux-thunk";
 import { persistReducer } from "redux-persist";
 import { layout_slice } from "./layoutSlice";
 import { auth_slice } from "../commons/auth/store/authSlice";
+import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
 import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
 import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
 import { bien_slice } from "../commons/almacen/catalogoBienes/store/slices/indexCatalogodeBienes";
@@ -29,6 +30,7 @@ const persist_config = {
 
 const app_reducers = combineReducers({
   auth: auth_slice.reducer,
+  seguridad: seguridad_slice.reducer,
   layout: layout_slice.reducer,
   organigram: organigrama_slice.reducer,
   ccd: ccd_slice.reducer,

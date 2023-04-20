@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { useEffect, useState } from 'react';
 import { Autocomplete, Box, Button, Grid, TextField, Stack, Chip } from "@mui/material";
@@ -63,6 +64,7 @@ export function AperturaCierreViveroScreen(): JSX.Element {
 
   useEffect(() => {
     reset_nursery({...nursery, justificacion_apertura:"", justificacion_cierre:""});
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     set_action(nursery.id_vivero===null ? "": nursery.en_funcionamiento?"Cerrar" : "Abrir")
   }, [nursery]);
 
