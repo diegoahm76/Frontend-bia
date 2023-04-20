@@ -1,4 +1,5 @@
 import { Box } from "@mui/material"
+import { useEffect, useState } from "react";
 import { type crear_mantenimiennto } from "../../interfaces/IProps";
 import { TablaGeneral } from './../../../../../../../components/TablaGeneral'
 
@@ -7,6 +8,13 @@ interface IProps {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const PrevisualizacionComponent:React.FC<IProps> = ({data_grid}) => {
+    const [data_previsualizacion, set_data_previsualizacion] = useState<crear_mantenimiennto[]>([]);
+    useEffect(() =>{
+        data_grid.forEach(nm =>{
+            set_data_previsualizacion(prevArray => [...prevArray, nm])
+        });
+    },[data_grid]);
+
     const columns = [
         { field: "id_articulo", header: "Id", visible: false },
         { field: "cod_tipo_mantenimiento", header: "Codigo", visible: true },
@@ -24,7 +32,7 @@ export const PrevisualizacionComponent:React.FC<IProps> = ({data_grid}) => {
                     showButtonExport
                     tittle={'Productos'}
                     columns={columns}
-                    rowsData={data_grid}
+                    rowsData={data_previsualizacion}
                     staticscroll={true}
                     stylescroll={"780px"}
                 />
