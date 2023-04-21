@@ -1,14 +1,15 @@
 import { Title } from '../../../../components/Title';
-import { TablaGeneral } from '../../../../components/TablaGeneral';
-import { Grid, Box, TextField, Button, Stack, Checkbox } from "@mui/material";
+import { TablaObligacionesUsuario } from '../componentes/TablaObligacionesUsuario';
+import { Grid, Box, TextField, Button, Stack } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ObligacionesUsuario: React.FC = () => {
+  const navigate = useNavigate();
 
   const rows = [
     {
       id: '1',
-      solicitarFacPago: <Checkbox />,
       nombreObligacion: 'Permiso 1',
       fechaInicio: '01/01/2015',
       expediente: '378765',
@@ -21,7 +22,6 @@ export const ObligacionesUsuario: React.FC = () => {
     },
     {
       id: '2',
-      solicitarFacPago: <Checkbox />,
       nombreObligacion: 'Concesion Aguas',
       fechaInicio: '01/04/2015',
       expediente: '3342765',
@@ -35,7 +35,7 @@ export const ObligacionesUsuario: React.FC = () => {
   ];
 
   const columns = [
-    { field: "solicitarFacPago", header: "[Solicitar Fac. Pago]", visible: true },
+    { field: "id", header: "ID", visible: false },
     { field: "nombreObligacion", header: "Nombre Obligación", visible: true },
     { field: "fechaInicio", header: "Fecha Inicio", visible: true },
     { field: "expediente", header: "Expediente", visible: true },
@@ -105,7 +105,7 @@ export const ObligacionesUsuario: React.FC = () => {
         </Grid>
       </Grid>
       <p>Sus obligaciones pendientes por pago son las siguientes:</p>
-      <TablaGeneral
+      <TablaObligacionesUsuario
         showButtonExport
         tittle={'Sus obligaciones pendientes por pago son las siguientes:'}
         columns={columns}
@@ -116,41 +116,6 @@ export const ObligacionesUsuario: React.FC = () => {
       <Stack
         direction="row"
         justifyContent="right"
-        spacing={10}
-        sx={{ mb: '20px', marginTop: '30px' }}
-      >
-        <h3>Total</h3>
-        <Stack
-        direction="column"
-        justifyContent="center"
-        spacing={1}
-        sx={{ mb: '20px' }}
-        >
-          <h3>Capital</h3>
-          <p>{130000}</p>
-        </Stack>
-        <Stack
-        direction="column"
-        justifyContent="center"
-        spacing={1}
-        sx={{ mb: '20px' }}
-        >
-          <h3>Intereses</h3>
-          <p>{130000}</p>
-        </Stack>
-        <Stack
-        direction="column"
-        justifyContent="center"
-        spacing={1}
-        sx={{ mb: '20px' }}
-        >
-          <h3>Abonado</h3>
-          <p>{130000}</p>
-        </Stack>
-      </Stack>
-      <Stack
-        direction="row"
-        justifyContent="right"
         spacing={2}
         sx={{ mb: '20px' }}
       >
@@ -158,6 +123,9 @@ export const ObligacionesUsuario: React.FC = () => {
           color='info'
           variant='contained'
           sx={{ marginTop: '30px' }}
+          onClick={() => {
+            navigate('registro')
+          }}
         >
         Crear Facilidad de Pago
         </Button>
