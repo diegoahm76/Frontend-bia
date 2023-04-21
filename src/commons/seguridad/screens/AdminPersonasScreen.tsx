@@ -36,7 +36,6 @@ import {
 import { RegisterForm } from '../../auth/components/RegisterForm';
 import { AdminPersonas } from '../components/AdminPersonas';
 import { AdminUsuarios } from '../components/AdminUsuarios';
-import { AdminEmpleados } from '../components/AdminEmpleados';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -319,7 +318,7 @@ export const AdminPersonasScreen: React.FC = () => {
               <RegisterForm uso_interno={true} />
             </TabPanel>
             <TabPanel value={value} index={3} dir={theme.direction}>
-              <AdminEmpleados />
+              Item Four
             </TabPanel>
           </SwipeableViews>
         </Card>
