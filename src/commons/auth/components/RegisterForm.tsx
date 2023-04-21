@@ -94,7 +94,7 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
 
   return (
     <>
-      {uso_interno && (
+      {!uso_interno && (
         <Typography variant="h6" textAlign="center" pb={2}>
           Formulario registro
         </Typography>

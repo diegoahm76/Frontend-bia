@@ -1,139 +1,118 @@
-import { type Dispatch, type SetStateAction } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Grid,
   TextField,
   Dialog,
-  DialogActions,
+  // DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
-  Stack,
+  // Stack,
   Button,
   Box,
   Divider,
   Avatar,
+  Select,
+  MenuItem,
+  type SelectChangeEvent,
+  Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import SaveIcon from '@mui/icons-material/Save';
+// import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { type SeguridadSlice } from '../interfaces';
+import { get_users, get_persons } from '../store/thunks';
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
 }
 
-interface FormValues {
-  nombre: string;
-  version: string;
-  descripcion: string;
+interface FormValuesSearchPerson {
+  typeDocument: string;
+  numberDocument: number;
+  firstName: string;
+  lastName: string;
 }
+
+interface FormValuesSearchUser {
+  nameUser: string;
+}
+
+const initial_state_search_person = {
+  typeDocument: '',
+  numberDocument: undefined,
+  firstName: '',
+  lastName: '',
+};
+
+const initial_state_search_user = {
+  nameUser: '',
+};
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogBusquedaAvanzada = ({
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { handleSubmit: handle_submit } = useForm<FormValues>();
+  const dispatch = useDispatch();
+  const { users, persons } = useSelector(
+    (state: SeguridadSlice) => state.seguridad
+  );
+  const [buscar_por, set_buscar_por] = useState<string>('U');
+  const [buscando_persons, set_buscando_persons] = useState<boolean>(false);
+  const [buscando_users, set_buscando_users] = useState<boolean>(false);
 
-  const handle_close_busqueda_avanzada = (): void => {
-    set_is_modal_active(false);
-  };
+  const {
+    register: register_search_person,
+    handleSubmit: handle_submit_search_person,
+  } = useForm<FormValuesSearchPerson>({
+    defaultValues: initial_state_search_person,
+  });
+  const {
+    register: register_search_user,
+    handleSubmit: handle_submit_search_user,
+  } = useForm<FormValuesSearchUser>({
+    defaultValues: initial_state_search_user,
+  });
 
-  const on_submit = (data: FormValues): void => {
-    // void dispatch(add_organigrams_service(data, set_position_tab_organigrama));
-    handle_close_busqueda_avanzada();
-  };
+  const columns_persons: GridColDef[] = [
+    {
+      headerName: 'ID persona',
+      field: 'id_persona',
+    },
+    {
+      headerName: 'Tipo persona',
+      field: 'tipo_persona',
+    },
+    {
+      headerName: 'Nombre completo',
+      field: 'nombre_completo',
+    },
+    {
+      headerName: 'Razon social',
+      field: 'razon_social',
+    },
+    {
+      headerName: 'Nombre comercial',
+      field: 'nombre_comercial',
+    },
+    {
+      headerName: 'Usuario',
+      field: 'tiene_usuario',
+    },
 
-  const rows = [
     {
-      id: 1,
-      tipo_documento: 35,
-      numero_documento: 35,
-      primer_nombre: 'Snow',
-      primer_apellido: 'Jon',
-    },
-    {
-      id: 2,
-      tipo_documento: 42,
-      numero_documento: 42,
-      primer_nombre: 'Lannister',
-      primer_apellido: 'Cersei',
-    },
-    {
-      id: 3,
-      tipo_documento: 45,
-      numero_documento: 45,
-      primer_nombre: 'Lannister',
-      primer_apellido: 'Jaime',
-    },
-    {
-      id: 4,
-      tipo_documento: 16,
-      numero_documento: 16,
-      primer_nombre: 'Stark',
-      primer_apellido: 'Arya',
-    },
-    {
-      id: 5,
-      tipo_documento: null,
-      numero_documento: null,
-      primer_nombre: 'Targaryen',
-      primer_apellido: 'Daenerys',
-    },
-    {
-      id: 6,
-      tipo_documento: 150,
-      numero_documento: 150,
-      primer_nombre: 'Melisandre',
-      primer_apellido: null,
-    },
-    {
-      id: 7,
-      tipo_documento: 44,
-      numero_documento: 44,
-      primer_nombre: 'Clifford',
-      primer_apellido: 'Ferrara',
-    },
-    {
-      id: 8,
-      tipo_documento: 36,
-      numero_documento: 36,
-      primer_nombre: 'Frances',
-      primer_apellido: 'Rossini',
-    },
-    {
-      id: 9,
-      tipo_documento: 65,
-      numero_documento: 65,
-      primer_nombre: 'Roxie',
-      primer_apellido: 'Harvey',
-    },
-  ];
-
-  const columns: GridColDef[] = [
-    {
-      headerName: 'Tipo de documento',
+      headerName: 'Tipo documento',
       field: 'tipo_documento',
-      minWidth: 200,
     },
     {
-      headerName: 'Número de documento',
+      headerName: 'Numero documento',
       field: 'numero_documento',
-      minWidth: 150,
-    },
-    {
-      headerName: 'Primer nombre',
-      field: 'primer_nombre',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Primer apellido',
-      field: 'primer_apellido',
-      minWidth: 100,
     },
     {
       headerName: 'Acciones',
@@ -155,7 +134,7 @@ const DialogBusquedaAvanzada = ({
               }}
               variant="rounded"
             >
-              <VisibilityIcon
+              <EditIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -165,92 +144,275 @@ const DialogBusquedaAvanzada = ({
     },
   ];
 
+  const columns_users: GridColDef[] = [
+    {
+      headerName: 'ID usuario',
+      field: 'id_usuario',
+    },
+    {
+      headerName: 'ID persona',
+      field: 'persona',
+    },
+    {
+      headerName: 'Tipo de persona',
+      field: 'tipo_persona',
+    },
+    {
+      headerName: 'Nombre completo',
+      field: 'nombre_completo',
+    },
+    {
+      headerName: 'Nombre comercial',
+      field: 'nombre_comercial',
+    },
+    {
+      headerName: 'Nombre de usuario',
+      field: 'nombre_de_usuario',
+    },
+    {
+      headerName: 'Super usuario',
+      field: 'is_superuser',
+    },
+    {
+      headerName: 'Razón social',
+      field: 'razon_social',
+    },
+
+    {
+      headerName: 'Acciones',
+      field: 'accion',
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+          // onClick={() => {
+          //   dispatch(get_ccd_current(params.data));
+          //   set_is_modal_active(false);
+          // }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <EditIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+
+  const handle_close_busqueda_avanzada = (): void => {
+    set_is_modal_active(false);
+  };
+
+  const handle_buscar_por = (event: SelectChangeEvent<string>): void => {
+    set_buscar_por(event.target.value);
+  };
+
+  const on_submit_search_person = (data: FormValuesSearchPerson): void => {
+    set_buscando_persons(true);
+    dispatch(
+      get_persons(
+        data.typeDocument,
+        data.numberDocument,
+        data.firstName,
+        data.lastName
+      )
+    );
+  };
+
+  const on_submit_search_user = (data: FormValuesSearchUser): void => {
+    set_buscando_users(true);
+    dispatch(get_users(data.nameUser));
+  };
+
   return (
     <Dialog
-      maxWidth="lg"
+      maxWidth="sm"
       open={is_modal_active}
       onClose={handle_close_busqueda_avanzada}
     >
-      <Box
-        component="form"
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={handle_submit(on_submit)}
-      >
-        <DialogTitle>
-          Busqueda avanzada
-          <IconButton
-            aria-label="close"
-            onClick={() => {
-              set_is_modal_active(false);
-            }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <Divider />
-        <DialogContent sx={{ mb: '0px' }}>
-          <Grid container sx={{ mb: '0px' }} spacing={2}>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                name="tipoUnidad"
-                label="Primer nombre"
-                size="small"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                name="tipoUnidad"
-                label="Primer apellido"
-                size="small"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Button variant="outlined" startIcon={<SearchIcon />}>
-                BUSCAR
-              </Button>
-            </Grid>
-            <Grid item xs={12} sm={3}></Grid>
-            <Grid item xs={12}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <Divider />
-        <DialogActions>
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-          >
-            <Button
-              variant="outlined"
-              onClick={handle_close_busqueda_avanzada}
-              startIcon={<CloseIcon />}
+      <DialogTitle>
+        Busqueda avanzada por {buscar_por === 'U' ? 'Usuario' : 'Persona'}
+        <IconButton
+          aria-label="close"
+          onClick={() => {
+            set_is_modal_active(false);
+          }}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <Divider />
+      <DialogContent sx={{ mb: '0px' }}>
+        {buscar_por === 'P' ? (
+          <>
+            <Box
+              component="form"
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onSubmit={handle_submit_search_person(on_submit_search_person)}
+              autoComplete="off"
             >
-              CERRAR
-            </Button>
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
-              GUARDAR
-            </Button>
-          </Stack>
-        </DialogActions>
-      </Box>
+              <Grid container sx={{ mb: '0px' }} spacing={2}>
+                <Grid item xs={12} sm={3}>
+                  <Select
+                    size="small"
+                    label="Seleccionar"
+                    value={buscar_por}
+                    onChange={handle_buscar_por}
+                    fullWidth
+                  >
+                    <MenuItem value="U">Usuario</MenuItem>
+                    <MenuItem value="P">Persona</MenuItem>
+                  </Select>
+                  <Typography className="label_selects">Buscar por </Typography>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    label="Tipo de documento"
+                    helperText="Tipo de documento"
+                    size="small"
+                    fullWidth
+                    {...register_search_person('typeDocument', {
+                      required: true,
+                    })}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    label="Número de documento"
+                    helperText="Número de documento"
+                    size="small"
+                    fullWidth
+                    {...register_search_person('numberDocument', {
+                      required: true,
+                    })}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    {...register_search_person('firstName')}
+                    label="Primer nombre"
+                    helperText="Primer nombre"
+                    size="small"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <TextField
+                    {...register_search_person('lastName')}
+                    label="Primer apellido"
+                    size="small"
+                    helperText="Primer apellido"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <Button
+                    type="submit"
+                    variant="outlined"
+                    startIcon={<SearchIcon />}
+                    fullWidth
+                  >
+                    BUSCAR
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+            {buscando_persons && (
+              <Grid item xs={12}>
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={persons}
+                  columns={columns_persons}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  getRowId={(row) => row.id_persona}
+                />
+              </Grid>
+            )}
+          </>
+        ) : (
+          buscar_por === 'U' && (
+            <>
+              <Box
+                component="form"
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                onSubmit={handle_submit_search_user(on_submit_search_user)}
+                autoComplete="off"
+              >
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={3}>
+                    <Select
+                      size="small"
+                      label="Seleccionar"
+                      value={buscar_por}
+                      onChange={handle_buscar_por}
+                      fullWidth
+                    >
+                      <MenuItem value="U">Usuario</MenuItem>
+                      <MenuItem value="P">Persona</MenuItem>
+                    </Select>
+                    <Typography className="label_selects">
+                      Buscar por{' '}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      {...register_search_user('nameUser', { required: true })}
+                      required
+                      label="Nombre de usuario"
+                      size="small"
+                      helperText="Nombre de usuario"
+                      fullWidth
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    {''}
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <Button
+                      type="submit"
+                      variant="outlined"
+                      startIcon={<SearchIcon />}
+                      fullWidth
+                    >
+                      BUSCAR
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+              {buscando_users && (
+                <Grid item xs={12}>
+                  <DataGrid
+                    density="compact"
+                    autoHeight
+                    rows={users}
+                    columns={columns_users}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    getRowId={(row) => row.id_usuario}
+                  />
+                </Grid>
+              )}
+            </>
+          )
+        )}
+      </DialogContent>
     </Dialog>
   );
 };
