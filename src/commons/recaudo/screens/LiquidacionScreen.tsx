@@ -30,7 +30,6 @@ import { useRef, useState } from 'react';
 import FindInPageIcon from '@mui/icons-material/FindInPage';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
-import { VisualBlockEditor } from "../components/visual-block-editor";
 import { TransitionAlerts } from "../components/alert";
 import { Modal } from "@material-ui/core";
 import { Liquidator } from "../components/liquidador/liquidator";
@@ -285,11 +284,6 @@ export const LiquidacionScreen: React.FC = () => {
                         }}
                     >
                         <Grid>
-                            <VisualBlockEditor
-                                variables={variables}
-                                workspace={primaryWorkspace}
-                                readOnly={false}
-                            />
                             <TransitionAlerts configNotify={configNotify} setNotifications={setNotifications} />
                         </Grid>
                     </Box>
