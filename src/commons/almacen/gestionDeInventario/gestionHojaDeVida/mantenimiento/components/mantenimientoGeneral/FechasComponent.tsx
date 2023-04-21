@@ -17,15 +17,11 @@ import Button from '@mui/material/Button';
 import { CalendarPicker, DatePicker, LocalizationProvider, PickersDay } from '@mui/x-date-pickers/';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import use_previsualizacion from './hooks/usePrevisualizacion';
-import { type holidays_co, type crear_mantenimiennto } from '../../interfaces/IProps';
+import { type crear_mantenimiennto } from '../../interfaces/IProps';
 import dayjs, { type Dayjs } from 'dayjs';
 import { type IcvVehicles } from '../../../hojaDeVidaVehiculo/interfaces/CvVehiculo';
-import getColombianHolidays from 'colombian-holidays';
-import { type ColombianHoliday } from 'colombian-holidays/lib/types';
-import moment from 'moment';
 import { isSameDay } from 'date-fns';
-
-
+import { getColombiaHolidaysByYear } from 'colombia-holidays';
 interface IProps {
     parent_state_setter: any,
     detalle_vehiculo: IcvVehicles,
@@ -157,7 +153,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
      * @returns arreglo de fechas
      */
     const calcular_fechas_auto = async (i_cada: number, f_desde: dayjs.Dayjs, f_hasta: dayjs.Dayjs, fecha: string, fechas_array: Dayjs[], check_isd: boolean, check_if: boolean): Promise<Dayjs[]> => {
-        const resp_holidays: ColombianHoliday[] = get_holidays({ year: f_desde.year(), month: (f_desde.month() + 1), valueAsDate: false });
+        const resp_holidays: any[] = getColombiaHolidaysByYear(f_desde.year());
 
         if (!check_if)
             f_desde = validate_festivos(resp_holidays, f_desde);
@@ -173,31 +169,17 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
         return fechas_array;
     }
-    /**
-     * Obtine listado de dias festivos
-     * @param year 
-     * @returns arreglo de dias festivos
-     */
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    function get_holidays(year: holidays_co) {
-        try {
-            return getColombianHolidays(year).sort((a: any, b: any) =>
-                a.date.localeCompare(b.date)
-            );
-        } catch {
-            return [];
-        }
-    }
+
     /**
      * Define la fechas de mantenimiento automatico sin festivos
      * @param resp_holidays dias festivos
      * @param f_desde fecha mantenimiento
      * @returns dia valido para mentenimiento
      */
-    function validate_festivos(resp_holidays: ColombianHoliday[], f_desde: Dayjs): Dayjs {
+    function validate_festivos(resp_holidays: any[], f_desde: Dayjs): Dayjs {
         let fecha_f: Dayjs = f_desde;
         resp_holidays.forEach(gh => {
-            if (gh.date === moment(f_desde.toDate()).format("YYYY-MM-DD")) {
+            if (gh.holiday === f_desde.format("YYYY-MM-DD")) {
                 fecha_f = fecha_f.add(1, 'd');
                 fecha_f = validate_sabados_domingos(resp_holidays, fecha_f);
             }
@@ -210,7 +192,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
      * @param f_desde fecha mantenimiento
      * @returns dia valido para mentenimiento
      */
-    function validate_sabados_domingos(resp_holidays: ColombianHoliday[], f_desde: Dayjs): Dayjs {
+    function validate_sabados_domingos(resp_holidays: any[], f_desde: Dayjs): Dayjs {
         let fecha_sd: Dayjs = f_desde;
         if (fecha_sd.day() === 6) {
             fecha_sd = fecha_sd.add(2, 'd');

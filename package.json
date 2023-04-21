@@ -27,7 +27,7 @@
     "apexcharts": "^3.37.2",
     "axios": "^1.3.4",
     "chart.js": "^4.2.1",
-    "colombian-holidays": "^4.1.1",
+    "colombia-holidays": "^0.0.1",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
     "eslint-config-standard": "^17.0.0",
