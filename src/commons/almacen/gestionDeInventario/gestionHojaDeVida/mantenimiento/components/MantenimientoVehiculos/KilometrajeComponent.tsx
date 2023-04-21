@@ -123,8 +123,6 @@ export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, det
                     <FormHelperText>1) Cada:</FormHelperText>
                 </FormControl>
             </Grid>
-        </Grid>
-        <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
                 <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
                     <OutlinedInput
@@ -139,8 +137,6 @@ export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, det
                     <FormHelperText>2) Desde:</FormHelperText>
                 </FormControl>
             </Grid>
-        </Grid>
-        <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
                 <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
                     <OutlinedInput

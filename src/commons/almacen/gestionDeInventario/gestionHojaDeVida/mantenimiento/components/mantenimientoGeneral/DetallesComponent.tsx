@@ -55,7 +55,7 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_details_veh }) => {
         }
         set_detalle_vehiculo(data_veh);
     },[set_detalle_vehiculo]);
-
+    
     useEffect(() => {
         parent_details_veh(detalle_vehiculo);
       }, [parent_details_veh, detalle_vehiculo]);

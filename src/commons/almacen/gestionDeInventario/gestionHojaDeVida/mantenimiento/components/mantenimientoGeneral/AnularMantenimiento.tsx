@@ -2,7 +2,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, D
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { useState, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
@@ -18,7 +18,9 @@ const AnularMantenimientoComponent = ({
   title,
 }: IProps) => {
     const [fecha, set_fecha] = useState<Date | null>(dayjs().toDate());
-    const [motivo, set_motivo] = useState("");
+    const [motivo, set_motivo] = useState<string>("");
+    const [user_info, set_user_info] = useState<any>({nombre: ''});
+
     const handle_change_fecha = (date: Date | null): void => {
         set_fecha(date);
     };
@@ -27,6 +29,21 @@ const AnularMantenimientoComponent = ({
         set_motivo(e.target.value);
         console.log(motivo);
     };
+
+    const guardar_anulacion = (): void => {
+      console.log({id_mantenimiento: 0,id_funcionario: user_info.id_usuario,fecha_anulacion: fecha, motivo_anulacion: motivo})
+      set_is_modal_active(false);
+    }
+
+    useEffect(()=> {
+      const data = localStorage.getItem('persist:macarenia_app');
+      if(data !== null){
+        const data_json = JSON.parse(data);
+        const data_auth = JSON.parse(data_json.auth);
+        set_user_info(data_auth.userinfo);
+      }
+
+    },[])
 
     return (
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -53,7 +70,7 @@ const AnularMantenimientoComponent = ({
                             size="small"
                             required
                             fullWidth
-                            value={"funcionario test"}
+                            value={''}
                             disabled={true}
                         />
                     </Grid>
@@ -86,7 +103,7 @@ const AnularMantenimientoComponent = ({
                         size="small"
                         required
                         fullWidth
-                        onChange={on_change_motivo}/>
+                        onBlur={on_change_motivo}/>
                 </Grid>
                     </Grid>
             </Box>
@@ -102,7 +119,7 @@ const AnularMantenimientoComponent = ({
           color='primary'
           variant='contained'
           startIcon={<SaveIcon />}
-          onClick={() => { set_is_modal_active(false); }}>Anular</Button>
+          onClick={() => { guardar_anulacion(); }}>Anular</Button>
         </DialogActions>
       </Dialog>
     )
