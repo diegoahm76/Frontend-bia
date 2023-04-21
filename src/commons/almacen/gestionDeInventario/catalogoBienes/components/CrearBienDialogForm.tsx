@@ -17,7 +17,7 @@ import { Title } from '../../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import { add_bien_service, get_code_bien_service, get_marca_service, get_medida_service, get_porcentaje_service } from '../store/thunks/catalogoBienesThunks';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import { type IList, type IObjBien as FormValues } from "../interfaces/catalogodebienes";
 import { api } from "../../../../../api/axios";
 interface IProps {
@@ -55,6 +55,26 @@ const CrearBienDialogForm = ({
   };
 
 
+  //   const [nursery_types, set_nursery_types] = useState(initial_options);
+  //   const [source_resources, set_source_resources] = useState(initial_options);
+  //   const [file, set_file] = useState<any>("");
+
+
+  //   // eslint-disable-next-line @typescript-eslint/naming-convention
+  //   const { control: control_vivero, handleSubmit: handle_submit } =
+  //     useForm<FormValues>();
+
+  //   const handle_close_add_nursery = (): void => {
+  //     set_is_modal_active(false);
+  //   };
+
+  //   const on_submit = (data: FormValues): void => {
+  //     data.ruta_archivo_creacion = file
+  //     console.log(data)
+  //     void dispatch(add_nursery_service(data, navigate));
+  //     handle_close_add_nursery();
+  //   };
+
   const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
       label: dataOld[1],
@@ -72,6 +92,7 @@ const CrearBienDialogForm = ({
       data.nivel_jerarquico = current_nodo.data.bien?.nivel_jerarquico != null ? Number(current_nodo.data.bien.nivel_jerarquico) + 1 : 1;
       data.id_bien_padre = current_nodo.data.bien?.id_bien != null ? current_nodo.data.bien.id_bien : null
       data.nombre_padre = current_nodo.data.bien?.nombre != null ? current_nodo.data.bien.nombre : null
+      data.solicitable_vivero = true
     } else if (action === "create") {
       data.nivel_jerarquico = 1
     }
@@ -115,6 +136,11 @@ const CrearBienDialogForm = ({
 
       reset_bien(current_nodo.data.bien);
 
+    } else if (action === "create") {
+      console.log("create")
+      void dispatch(get_code_bien_service(null))
+      set_tipo_bien_selected("A")
+      console.log(current_nodo.data.bien)
     }
   }, [current_nodo]);
 
@@ -139,9 +165,9 @@ const CrearBienDialogForm = ({
         <DialogTitle>Crear bien</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container spacing={2} p={2}>
+          <Grid container >
             <Title title="Seleccione tipo de bien"></Title>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} md={12} margin={1}>
               <TextField
                 margin="dense"
                 select
@@ -161,151 +187,66 @@ const CrearBienDialogForm = ({
 
             </Grid>
             <Title title="INFORMACION DEL BIEN"></Title>
-            <Grid container spacing={2} p={2}>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="codigo_bien"
-                  control={control_bien}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      size="small"
-                      label="Codigo"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      disabled
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un codigo'
-                          : 'Ingrese codigo'
-                      }
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="nombre"
-                  control={control_bien}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      size="small"
-                      label="Nombre"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar un nombre'
-                          : 'Ingrese nombre'
-                      }
-                    />
-                  )}
-                />
-              </Grid>
-              {(tipo_bien_selected) === "A" ?
-                <Grid item xs={12} sm={6} md={4}>
-                  <Controller
-                    name="cod_tipo_activo"
-                    control={control_bien}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        select
-                        size="small"
-                        label="Tipo activo"
-                        variant="outlined"
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio seleccionar tipo de activo'
-                            : 'seleccione tipo activo'
-                        }
-                      >
-                        {activo_types.map((option: IList) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
+
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="codigo_bien"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Codigo"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    disabled
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un codigo'
+                        : 'Ingrese codigo'
+                    }
                   />
-                </Grid>
-                :
-                <Grid item xs={12} sm={6} md={4}>
-                  <Controller
-                    name="cod_metodo_valoracion"
-                    control={control_bien}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        select
-                        size="small"
-                        label="Metodo valoración"
-                        variant="outlined"
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio seleccionar metodo valoración'
-                            : 'seleccione metodo valoración'
-                        }
-                      >
-                        {metodo_valoracion.map((option: IList) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={3} margin={1}>
+              <Controller
+                name="nombre"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Nombre"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
                   />
-                </Grid>
-              }
-              <Grid item xs={12} sm={6} md={4}>
-
-                <TextField
-                  margin="dense"
-                  fullWidth
-                  size="small"
-                  label="Carpeta padre"
-                  variant="outlined"
-                  value={action === "create_sub" ? current_nodo.data.bien?.nombre : ""}
-                  disabled
-
-
-                />
-
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
+                )}
+              />
+            </Grid>
+            {(tipo_bien_selected) === "A" ?
+              <Grid item xs={11} md={3} margin={1}>
                 <Controller
-                  name="id_unidad_medida"
+                  name="cod_tipo_activo"
                   control={control_bien}
                   rules={{ required: true }}
                   render={({
@@ -317,29 +258,30 @@ const CrearBienDialogForm = ({
                       fullWidth
                       select
                       size="small"
-                      label="Unidad de medida"
+                      label="Tipo activo"
                       variant="outlined"
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
                       helperText={
                         error != null
-                          ? 'Es obligatorio seleccionar unidad de medida'
-                          : 'seleccione unidad de media'
+                          ? 'Es obligatorio seleccionar tipo de activo'
+                          : 'seleccione tipo activo'
                       }
                     >
-                      {unidad_medida.map((option) => (
-                        <MenuItem key={option.id_unidad_medida} value={option.id_unidad_medida}>
-                          {option.nombre}
+                      {activo_types.map((option: IList) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
                         </MenuItem>
                       ))}
                     </TextField>
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
+              :
+              <Grid item xs={11} md={3} margin={1}>
                 <Controller
-                  name="id_porcentaje_iva"
+                  name="cod_metodo_valoracion"
                   control={control_bien}
                   rules={{ required: true }}
                   render={({
@@ -351,358 +293,442 @@ const CrearBienDialogForm = ({
                       fullWidth
                       select
                       size="small"
-                      label="Porcentaje IVA"
+                      label="Metodo valoración"
                       variant="outlined"
-                      defaultValue={value}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
                       helperText={
                         error != null
-                          ? 'Es obligatorio seleccionar porcentaje de iva'
-                          : 'seleccione porcentaje de iva'
+                          ? 'Es obligatorio seleccionar metodo valoración'
+                          : 'seleccione metodo valoración'
                       }
                     >
-                      {porcentaje_iva.map((option) => (
-                        <MenuItem key={option.id_porcentaje_iva} value={option.id_porcentaje_iva}>
-                          {option.porcentaje}
+                      {metodo_valoracion.map((option: IList) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
                         </MenuItem>
                       ))}
                     </TextField>
                   )}
                 />
               </Grid>
+            }
+            <Grid item xs={11} md={3} margin={1}>
+
+              <TextField
+                margin="dense"
+                fullWidth
+                size="small"
+                label="Carpeta padre"
+                variant="outlined"
+                value={action === "create_sub" ? current_nodo.data.bien?.nombre : ""}
+                disabled
 
 
-              {(tipo_bien_selected) === "A" ?
-                <>
-
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name="cod_tipo_depreciacion"
-                      control={control_bien}
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          select
-                          size="small"
-                          label="Tipo depreciación"
-                          variant="outlined"
-                          defaultValue={value}
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio seleccionar tipo de depreciación'
-                              : 'seleccione tipo depreciación'
-                          }
-                        >
-                          {depreciacion_types.map((option: IList) => (
-                            <MenuItem key={option.value} value={option.value}>
-                              {option.label}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name="id_unidad_medida_vida_util"
-                      control={control_bien}
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          select
-                          size="small"
-                          label="Unidad de medida vida util"
-                          variant="outlined"
-                          defaultValue={value}
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio seleccionar unidad de medida vida util'
-                              : 'seleccione unidad de media vida util'
-                          }
-                        >
-                          {unidad_medida.map((option) => (
-                            <MenuItem key={option.id_unidad_medida} value={option.id_unidad_medida}>
-                              {option.nombre}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name="cantidad_vida_util"
-                      control={control_bien}
-                      defaultValue={0}
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          size="small"
-                          type="number"
-                          label="Cantidad vida util"
-                          variant="outlined"
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio ingresar cantidad vida util'
-                              : 'Ingrese cantidad vida util'
-                          }
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name="valor_residual"
-                      control={control_bien}
-                      defaultValue={0}
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          size="small"
-                          type="number"
-                          label="Valor residual"
-                          variant="outlined"
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio ingresar valor residual'
-                              : 'Ingrese cantidad valor residual'
-                          }
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name="id_marca"
-                      control={control_bien}
-                      defaultValue={0}
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          select
-                          size="small"
-                          label="Marca"
-                          variant="outlined"
-                          defaultValue={value}
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio seleccionar marca'
-                              : 'seleccione marca'
-                          }
-                        >
-                          {marca.map((option) => (
-                            <MenuItem key={option.id_marca} value={option.id_marca}>
-                              {option.nombre}
-                            </MenuItem>
-                          ))}
-                        </TextField>
-                      )}
-                    />
-                  </Grid>
-                </>
-                :
-                <>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name="stock_minimo"
-                      control={control_bien}
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          size="small"
-                          type="number"
-                          label="Stock minimo"
-                          variant="outlined"
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio ingresar stock minimo'
-                              : 'Ingrese stock minimo'
-                          }
-                        />
-                      )}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <Controller
-                      name="stock_maximo"
-                      control={control_bien}
-                      rules={{ required: true }}
-                      render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                      }) => (
-                        <TextField
-                          margin="dense"
-                          fullWidth
-                          size="small"
-                          type="number"
-                          label="Stock maximo"
-                          variant="outlined"
-                          value={value}
-                          onChange={onChange}
-                          error={!(error == null)}
-                          helperText={
-                            error != null
-                              ? 'Es obligatorio ingresar stock maximo'
-                              : 'Ingrese stock maximo'
-                          }
-                        />
-                      )}
-                    />
-                  </Grid>
-                </>
-              }
-
-
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="visible_solicitudes"
-                  control={control_bien}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      select
-                      size="small"
-                      label="¿Visible en solicitudes?"
-                      variant="outlined"
-                      defaultValue={value}
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio seleccionar una opción'
-                          : 'Seleccionar opción'
-                      }
-                    >
-                      <MenuItem value="true">SI</MenuItem>
-                      <MenuItem value="false">NO</MenuItem>
-                    </TextField>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <Controller
-                  name="maneja_hoja_vida"
-                  control={control_bien}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      select
-                      size="small"
-                      label="¿Hoja de vida?"
-                      variant="outlined"
-                      defaultValue={value}
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio seleccionar una opción'
-                          : 'Seleccionar opción'
-                      }
-                    >
-                      <MenuItem value="true">SI</MenuItem>
-                      <MenuItem value="false">NO</MenuItem>
-                    </TextField>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={11} md={12} >
-                <Controller
-                  name="descripcion"
-                  control={control_bien}
-                  defaultValue=""
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      multiline
-                      rows={4}
-                      size="small"
-                      label="Descripcion"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio ingresar descripción'
-                          : 'Ingrese descripción'
-                      }
-                    />
-                  )}
-                />
-              </Grid>
-
-
-
+              />
 
             </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="id_unidad_medida"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Unidad de medida"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar unidad de medida'
+                        : 'seleccione unidad de media'
+                    }
+                  >
+                    {unidad_medida.map((option) => (
+                      <MenuItem key={option.id_unidad_medida} value={option.id_unidad_medida}>
+                        {option.nombre}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="id_porcentaje_iva"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="Porcentaje IVA"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar porcentaje de iva'
+                        : 'seleccione porcentaje de iva'
+                    }
+                  >
+                    {porcentaje_iva.map((option) => (
+                      <MenuItem key={option.id_porcentaje_iva} value={option.id_porcentaje_iva}>
+                        {option.porcentaje}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </Grid>
+
+
+            {(tipo_bien_selected) === "A" ?
+              <>
+
+                <Grid item xs={11} md={2} margin={1}>
+                  <Controller
+                    name="cod_tipo_depreciacion"
+                    control={control_bien}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        select
+                        size="small"
+                        label="Tipo depreciación"
+                        variant="outlined"
+                        defaultValue={value}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio seleccionar tipo de depreciación'
+                            : 'seleccione tipo depreciación'
+                        }
+                      >
+                        {depreciacion_types.map((option: IList) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={11} md={2} margin={1}>
+                  <Controller
+                    name="id_unidad_medida_vida_util"
+                    control={control_bien}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        select
+                        size="small"
+                        label="Unidad de medida vida util"
+                        variant="outlined"
+                        defaultValue={value}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio seleccionar unidad de medida vida util'
+                            : 'seleccione unidad de media vida util'
+                        }
+                      >
+                        {unidad_medida.map((option) => (
+                          <MenuItem key={option.id_unidad_medida} value={option.id_unidad_medida}>
+                            {option.nombre}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={11} md={2} margin={1}>
+                  <Controller
+                    name="cantidad_vida_util"
+                    control={control_bien}
+                    defaultValue={0}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        type="number"
+                        label="Cantidad vida util"
+                        variant="outlined"
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar cantidad vida util'
+                            : 'Ingrese cantidad vida util'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={11} md={2} margin={1}>
+                  <Controller
+                    name="valor_residual"
+                    control={control_bien}
+                    defaultValue={0}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        type="number"
+                        label="Valor residual"
+                        variant="outlined"
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar valor residual'
+                            : 'Ingrese cantidad valor residual'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={11} md={2} margin={1}>
+                  <Controller
+                    name="id_marca"
+                    control={control_bien}
+                    defaultValue={0}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        select
+                        size="small"
+                        label="Marca"
+                        variant="outlined"
+                        defaultValue={value}
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio seleccionar marca'
+                            : 'seleccione marca'
+                        }
+                      >
+                        {marca.map((option) => (
+                          <MenuItem key={option.id_marca} value={option.id_marca}>
+                            {option.nombre}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    )}
+                  />
+                </Grid>
+              </>
+              :
+              <>
+                <Grid item xs={11} md={2} margin={1}>
+                  <Controller
+                    name="stock_minimo"
+                    control={control_bien}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        type="number"
+                        label="Stock minimo"
+                        variant="outlined"
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar stock minimo'
+                            : 'Ingrese stock minimo'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+                <Grid item xs={11} md={2} margin={1}>
+                  <Controller
+                    name="stock_maximo"
+                    control={control_bien}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        type="number"
+                        label="Stock maximo"
+                        variant="outlined"
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio ingresar stock maximo'
+                            : 'Ingrese stock maximo'
+                        }
+                      />
+                    )}
+                  />
+                </Grid>
+              </>
+            }
+
+
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="visible_solicitudes"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="¿Visible en solicitudes?"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar una opción'
+                        : 'Seleccionar opción'
+                    }
+                  >
+                    <MenuItem value="true">SI</MenuItem>
+                    <MenuItem value="false">NO</MenuItem>
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="maneja_hoja_vida"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="¿Hoja de vida?"
+                    variant="outlined"
+                    defaultValue={value}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar una opción'
+                        : 'Seleccionar opción'
+                    }
+                  >
+                    <MenuItem value="true">SI</MenuItem>
+                    <MenuItem value="false">NO</MenuItem>
+                  </TextField>
+                )}
+              />
+            </Grid>
+            <Grid item xs={11} md={12} margin={1}>
+              <Controller
+                name="descripcion"
+                control={control_bien}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    multiline
+                    rows={4}
+                    size="small"
+                    label="Descripcion"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar descripción'
+                        : 'Ingrese descripción'
+                    }
+                  />
+                )}
+              />
+            </Grid>
+
+
+
+
+
           </Grid>
         </DialogContent>
         <Divider />

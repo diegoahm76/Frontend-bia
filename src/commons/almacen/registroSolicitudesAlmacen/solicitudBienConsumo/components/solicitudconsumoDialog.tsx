@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { type InfoSolicitud as FormValues } from "../interfaces/solicitudBienConsumo"
 
 import { useEffect, useState } from 'react';
+import PersonaResponsable from './componenteBusqueda/PersonaResponsable';
 interface IProps {
 
     action: string;
@@ -275,6 +276,7 @@ const SolicitudConsumoDialog = ({
                         )}
                     />
                 </Grid>
+                <PersonaResponsable />
 
 
 
