@@ -1,11 +1,12 @@
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
-import type { IList } from '../../../interfaces/globalModels';
 import type {
-  DataRegistePortal,
-  ReisterHook,
-  keys_object,
-} from '../interfaces';
+  IList,
+  InfoPersona,
+  KeysInfoPersona,
+  ResponseServer,
+} from '../../../interfaces/globalModels';
+import type { DataRegistePortal, ReisterHook } from '../interfaces';
 import { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import {
@@ -19,6 +20,7 @@ import {
   get_tipo_documento,
   get_tipo_persona,
 } from '../../../request/';
+import { type AxiosError } from 'axios';
 
 type options = 'inicial' | 'residencia' | 'notificacion';
 
@@ -204,14 +206,13 @@ export const use_register = (): ReisterHook => {
         if (!data.tiene_usuario) {
           set_data_register({ ...data_register, ...data });
           for (const key in data) {
-            const temp_key = key as keys_object;
-            if (data_register[temp_key] !== undefined) {
-              console.log(temp_key);
-              console.log(temp_key);
-              // setValue(key, data[temp_key]);
-            }
+            const temp_key = key as KeysInfoPersona;
+            setValue(key, data[temp_key]);
+            set_data_register({
+              ...data_register,
+              [temp_key]: data[temp_key],
+            });
           }
-          setValue('numero_documento', data.numero_documento);
           set_is_exists(true);
           return;
         } else {
@@ -223,6 +224,21 @@ export const use_register = (): ReisterHook => {
         set_is_exists(false);
       }
     } catch (error) {
+      const temp_err = error as AxiosError;
+      if (temp_err.response?.status === 403) {
+        console.log('first');
+        const { data } = temp_err.response.data as ResponseServer<InfoPersona>;
+        for (const key in data) {
+          const temp_key = key as KeysInfoPersona;
+          console.log(temp_key);
+          setValue(key, data[temp_key]);
+          set_data_register({
+            ...data_register,
+            [temp_key]: data[temp_key],
+          });
+        }
+        console.log(data_register);
+      }
       control_error(error);
     } finally {
       set_is_search(false);

@@ -30,7 +30,6 @@ import { useRef, useState } from 'react';
 import FindInPageIcon from '@mui/icons-material/FindInPage';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
-import { javascriptGenerator } from 'blockly/javascript';
 import { VisualBlockEditor } from "../components/visual-block-editor";
 import { TransitionAlerts } from "../components/alert";
 import { Modal } from "@material-ui/core";
@@ -125,9 +124,8 @@ export const LiquidacionScreen: React.FC = () => {
     };
 
     const generateCode = () => {
-        const code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
         setNotifications({ open: true, message: 'Se ha procesado', type: 'success' });
-        return code
+        return ''
     }
 
     const removeVariable = (variable: any) => {

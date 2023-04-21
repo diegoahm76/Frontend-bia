@@ -14,6 +14,7 @@ import type { DataRegistePortal, keys_object } from '../interfaces';
 import { RegisterPersonaNatural } from './RegisterPersonaNatural';
 import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
 import { CustomSelect } from '../../../components';
+import { LoadingButton } from '@mui/lab';
 
 interface Props {
   uso_interno: boolean;
@@ -23,6 +24,7 @@ interface Props {
 export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
   const {
     register,
+    handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
     watch,
@@ -48,7 +50,6 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
   useEffect(() => {
     if (numero_documento !== undefined && numero_documento !== '') {
       set_numero_documento(numero_documento);
-      void validate_exits(numero_documento);
     }
   }, [numero_documento]);
 
@@ -87,10 +88,9 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
     set_value_form(e.target.name, e.target.value);
   };
 
-  // Cambio inputs
-  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
+  const on_submit = handle_submit(() => {
+    void validate_exits(numero_documento);
+  });
 
   return (
     <>
@@ -99,85 +99,101 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
           Formulario registro
         </Typography>
       )}
-      <Grid container spacing={2} p={2}>
-        <Grid item xs={12} sm={6} md={4}>
-          <CustomSelect
-            onChange={on_change}
-            label="Tipo de persona *"
-            name="tipo_persona"
-            value={tipo_persona}
-            options={tipo_persona_opt}
-            loading={loading}
-            disabled={false}
-            required={true}
-            errors={errors}
-            register={register}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <CustomSelect
-            onChange={on_change}
-            label="Tipo de documento *"
-            name="tipo_documento"
-            value={tipo_documento}
-            options={tipo_documento_opt}
-            loading={loading}
-            disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
-            required={true}
-            errors={errors}
-            register={register}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          {loading ? (
-            <Skeleton variant="rectangular" width="100%" height={45} />
-          ) : (
-            <TextField
-              fullWidth
-              label="Número de documento *"
-              type="number"
-              size="small"
-              disabled={tipo_persona === '' ?? true}
-              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-              error={errors.numero_documento?.type === 'required'}
-              helperText={
-                errors.numero_documento?.type === 'required'
-                  ? 'Este campo es obligatorio'
-                  : ''
-              }
-              {...register('numero_documento', {
-                required: true,
-              })}
-              onChange={handle_change}
+      <form
+        onSubmit={(e) => {
+          void on_submit(e);
+        }}
+      >
+        <Grid container spacing={2} p={2}>
+          <Grid item xs={12} sm={6} md={4}>
+            <CustomSelect
+              onChange={on_change}
+              label="Tipo de persona *"
+              name="tipo_persona"
+              value={tipo_persona}
+              options={tipo_persona_opt}
+              loading={loading}
+              disabled={false}
+              required={true}
+              errors={errors}
+              register={register}
             />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <CustomSelect
+              onChange={on_change}
+              label="Tipo de documento *"
+              name="tipo_documento"
+              value={tipo_documento}
+              options={tipo_documento_opt}
+              loading={loading}
+              disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
+              required={true}
+              errors={errors}
+              register={register}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            {loading ? (
+              <Skeleton variant="rectangular" width="100%" height={45} />
+            ) : (
+              <TextField
+                fullWidth
+                label="Número de documento *"
+                type="number"
+                size="small"
+                disabled={tipo_persona === '' || tipo_documento === ''}
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                error={errors.numero_documento?.type === 'required'}
+                helperText={
+                  errors.numero_documento?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+                {...register('numero_documento', {
+                  required: true,
+                })}
+              />
+            )}
+          </Grid>
+          <Grid item xs={12} container justifyContent="end">
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              loading={is_search}
+              disabled={is_search}
+            >
+              Buscar
+            </LoadingButton>
+          </Grid>
+          {/* Muestra loading cuando esta buscando datos de la persona */}
+          {is_search && (
+            <Grid item xs={12}>
+              <Grid container justifyContent="center" textAlign="center">
+                <Alert icon={false} severity="info">
+                  <LinearProgress />
+                  <Typography>Buscando persona...</Typography>
+                </Alert>
+              </Grid>
+            </Grid>
+          )}
+          {has_user && (
+            <Grid item xs={12}>
+              <Grid container justifyContent="center" textAlign="center">
+                <Alert icon={false} severity="error">
+                  <Typography>
+                    Lo sentimos, este documento ya tiene un usuario, puede
+                    iniciar sesión con su usuario y contraseña, si ha olvidado
+                    sus datos de acceso, dirigase al inicio de sesión y haga
+                    click en ¿Olvidó su contraseña?
+                  </Typography>
+                </Alert>
+              </Grid>
+            </Grid>
           )}
         </Grid>
-        {/* Muestra loading cuando esta buscando datos de la persona */}
-        {is_search && (
-          <Grid item xs={12}>
-            <Grid container justifyContent="center" textAlign="center">
-              <Alert icon={false} severity="info">
-                <LinearProgress />
-                <Typography>Buscando persona...</Typography>
-              </Alert>
-            </Grid>
-          </Grid>
-        )}
-        {has_user && (
-          <Grid item xs={12}>
-            <Grid container justifyContent="center" textAlign="center">
-              <Alert icon={false} severity="error">
-                <Typography>
-                  Lo sentimos, este documento ya tiene un usuario, puede iniciar
-                  sesión con su usuario y contraseña, si ha olvidado sus datos
-                  de acceso, dirigase al inicio de sesión y haga click en
-                  ¿Olvidó su contraseña?
-                </Typography>
-              </Alert>
-            </Grid>
-          </Grid>
-        )}
-      </Grid>
+      </form>
       {tipo_persona === 'N' && (
         <RegisterPersonaNatural
           numero_documento={numero_documento}
