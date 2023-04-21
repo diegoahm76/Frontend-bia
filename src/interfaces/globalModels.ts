@@ -74,6 +74,21 @@ export interface Direccion {
   direccion_estandarizada: string;
 }
 
+export interface Persona {
+  id_persona?: number|string;
+  tipo_persona?: string|null;
+  tipo_documento?: string|null;
+  numero_documento?: string|null;
+  primer_nombre?: string|null;
+  segundo_nombre?: string|null;
+  primer_apellido?: string;
+  segundo_apellido?: string|null;
+  nombre_completo?: string|null;
+  razon_social?: string|null;
+  nombre_comercial?: string|null;
+  tiene_usuario?: boolean|null;
+}
+
 export type keys_direccion =
   | 'via_principal'
   | 'numero_o_nombre_via'
