@@ -8,8 +8,6 @@ import { type GridColDef } from '@mui/x-data-grid';
 import { type IDespacho } from "../interfaces/vivero";
 import type { AuthSlice } from '../../../../commons/auth/interfaces';
 import { useSelector } from 'react-redux';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { get_items_despacho_service } from '../store/thunks/gestorViveroThunks';
 import { set_current_despacho } from '../store/slice/viveroSlice';
 
 const initial_state_despacho: IDespacho = {
@@ -21,12 +19,10 @@ const initial_state_despacho: IDespacho = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarDespacho = () => {
-  const dispatch = useAppDispatch();
 
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { control: control_despacho, reset: reset_despacho} = useForm<IDespacho>();
   const [despachos, set_despachos] = useState<IDespacho[]>([]);
-  const { current_despacho } = useAppSelector((state) => state.nursery);
 
   const columns_despachos: GridColDef[] = [
     { field: 'id_despacho_entrante', headerName: 'ID', width: 20 },
@@ -107,12 +103,7 @@ const SeleccionarDespacho = () => {
     reset_despacho({...initial_state_despacho, persona_distribuye: userinfo.nombre, id_persona_distribuye: userinfo.id_persona})
   }, []);
 
-  useEffect(() => {
-    const id_despacho = current_despacho.id_despacho_entrante
-    if( id_despacho !== null && id_despacho !== undefined){
-    void dispatch(get_items_despacho_service(id_despacho));
-    }
-  }, [current_despacho]);
+  
 
   const get_despachos: any = (async () => {
     try {
@@ -223,7 +214,6 @@ const SeleccionarDespacho = () => {
             }
           ]}
         />
-
       </Grid>
     </>
   );
