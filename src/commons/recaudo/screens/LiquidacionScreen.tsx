@@ -30,8 +30,8 @@ import { useRef, useState } from 'react';
 import FindInPageIcon from '@mui/icons-material/FindInPage';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
-import { javascriptGenerator } from 'blockly/javascript';
-import { VisualBlockEditor } from "../components/visual-block-editor";
+// // import { javascriptGenerator } from 'blockly/javascript';
+// import { VisualBlockEditor } from "../components/visual-block-editor";
 import { TransitionAlerts } from "../components/alert";
 import { Modal } from "@material-ui/core";
 import { Liquidator } from "../components/liquidador/liquidator";
@@ -124,11 +124,11 @@ export const LiquidacionScreen: React.FC = () => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
-    const generateCode = () => {
-        const code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
-        setNotifications({ open: true, message: 'Se ha procesado', type: 'success' });
-        return code
-    }
+    // const generateCode = () => {
+    //     const code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
+    //     setNotifications({ open: true, message: 'Se ha procesado', type: 'success' });
+    //     return code
+    // }
 
     const removeVariable = (variable: any) => {
         setVariables(variables.filter((v) => v !== variable));
@@ -287,11 +287,11 @@ export const LiquidacionScreen: React.FC = () => {
                         }}
                     >
                         <Grid>
-                            <VisualBlockEditor
+                            {/* <VisualBlockEditor
                                 variables={variables}
                                 workspace={primaryWorkspace}
                                 readOnly={false}
-                            />
+                            /> */}
                             <TransitionAlerts configNotify={configNotify} setNotifications={setNotifications} />
                         </Grid>
                     </Box>
@@ -336,12 +336,12 @@ export const LiquidacionScreen: React.FC = () => {
             {(enableTest && open) && (
                 <Modal className='modal-container' open={open} onClose={() => { setOpen(false) }}>
                     <div className='modal'>
-                        <Liquidator
+                        {/* <Liquidator
                             setNotifications={setNotifications}
                             variables={variables}
                             generateCode={generateCode}
                             preview
-                        />
+                        /> */}
                     </div>
                 </Modal>
             )}
