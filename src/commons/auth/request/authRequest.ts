@@ -3,7 +3,6 @@ import type {
   ResponseAuth,
   LoginUser,
   IUserInfo,
-  InfoPersona,
   Permisos,
   DataRegistePortal,
   UserCreate,
@@ -76,15 +75,6 @@ export const permissions_request = async (
   }
 };
 
-export const get_person_by_document = async (
-  tipo_documento: string,
-  numero_documento: string
-): Promise<AxiosResponse<ResponseServer<InfoPersona | null>>> => {
-  return await api.get(
-    `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
-  );
-};
-
 export const get_info_person_by_document = async (
   id_persona: number
 ): Promise<AxiosResponse<ResponseServer<InfoPersonaComplete>>> => {
@@ -111,28 +101,24 @@ export const desbloquer_usuario = async (
 
 export const verify_account = async (
   token: string
-): Promise<ResponseServer<any>> => {
+): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.get(`users/verify/?token=${token}`);
 };
 
 export const password_reset_complete = async (
   data: ChangePassword
-): Promise<ResponseServer<any>> => {
+): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.patch(`users/pasword-reset-complete/`, data);
 };
 
 export const password_unblock_complete = async (
   data: ChangePassword
-): Promise<ResponseServer<any>> => {
+): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.patch(`users/password-unblock-complete/`, data);
 };
 
 export const recover_password = async (
   data: DataUserRecover
-): Promise<ResponseServer<ResponseRecover>> => {
-  return await api.post('users/request-reset-email/', data, {
-    headers: {
-      Authorization: null
-    }
-  });
+): Promise<AxiosResponse<ResponseServer<ResponseRecover>>> => {
+  return await api.post('users/request-reset-email/', data);
 };

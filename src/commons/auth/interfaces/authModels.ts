@@ -323,21 +323,6 @@ export interface ReisterHook {
   validate_exits: (numero_documento: string) => Promise<void>;
 }
 
-export interface InfoPersona {
-  id_persona: number;
-  tipo_persona: string;
-  tipo_documento: string;
-  numero_documento: string;
-  primer_nombre: string;
-  segundo_nombre: string;
-  primer_apellido: string;
-  segundo_apellido: string;
-  nombre_completo: string;
-  razon_social: string;
-  nombre_comercial: string;
-  tiene_usuario: boolean;
-}
-
 export interface InfoPersonaComplete {
   id_persona: number;
   tipo_documento: EstadoCivil;
