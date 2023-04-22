@@ -3,7 +3,7 @@ import SeleccionarDespacho from "../componentes/SeleccionarDespacho";
 import { Title } from '../../../../components/Title';
 import FormButton from '../../../../components/partials/form/FormButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { get_items_despacho_service } from '../store/thunks/gestorViveroThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 
@@ -14,10 +14,10 @@ export function DespachoViveroScreen(): JSX.Element {
 
   const { current_despacho } = useAppSelector((state) => state.nursery);
 
-  const [add_distribucion_is_active, set_add_distribucion_is_active] = useState<boolean>(false);
+  // const [add_distribucion_is_active, set_add_distribucion_is_active] = useState<boolean>(false);
   
   const handle_open_add_distribucion = (): void => {
-    set_add_distribucion_is_active(true);
+    // set_add_distribucion_is_active(true);
 };
 
 useEffect(() => {
