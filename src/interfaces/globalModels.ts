@@ -112,3 +112,28 @@ export type keys_direccion =
   | 'nombre'
   | 'direccion_estandarizada'
   | 'ubicacion';
+
+export interface InfoPersona {
+  id: number;
+  id_persona: number;
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  nombre_completo: string;
+  razon_social: string;
+  nombre_comercial: string;
+  tiene_usuario: boolean;
+}
+
+export interface BusquedaAvanzada {
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre?: string;
+  primer_apellido?: string;
+  razon_social?: string;
+  nombre_comercial?: string;
+}
