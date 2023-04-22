@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { use_register } from "../../auth/hooks/registerHooks";
 import SearchIcon from '@mui/icons-material/Search';
+import { BuscadorPersona } from "../../../components/BuscadorPersona";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdminEmpleados(): JSX.Element {
   const {
