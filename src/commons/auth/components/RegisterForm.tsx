@@ -1,18 +1,17 @@
 import { useEffect } from 'react';
 import {
   Grid,
-  type SelectChangeEvent,
   TextField,
   Typography,
   Skeleton,
   Alert,
   LinearProgress,
+  type SelectChangeEvent,
 } from '@mui/material';
 import { use_register } from '../hooks/registerHooks';
-import { useForm } from 'react-hook-form';
-import type { DataRegistePortal, keys_object } from '../interfaces';
+import type { keys_object } from '../interfaces';
 import { RegisterPersonaNatural } from './RegisterPersonaNatural';
-import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
+// import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
 import { CustomSelect } from '../../../components';
 import { LoadingButton } from '@mui/lab';
 
@@ -23,27 +22,27 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
   const {
-    register,
-    handleSubmit: handle_submit,
-    setValue: set_value,
-    formState: { errors },
-    watch,
-  } = useForm<DataRegistePortal>();
-  const {
-    data_register,
+    errors,
+    message_error,
+    is_error,
+    is_avaiable,
     is_search,
+    is_valid,
     loading,
     tipo_documento_opt,
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
-    has_user,
-    set_data_register,
+    handle_submit,
+    register,
     set_numero_documento,
     set_tipo_documento,
     set_tipo_persona,
+    set_value,
     validate_exits,
+    watch,
   } = use_register();
+
   const numero_documento = watch('numero_documento');
 
   // Consultamos si el usuario existe
@@ -76,10 +75,6 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
 
   // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
-    set_data_register({
-      ...data_register,
-      [name]: value,
-    });
     set_value(name as keys_object, value);
   };
 
@@ -178,38 +173,38 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
               </Grid>
             </Grid>
           )}
-          {has_user && (
+          {is_error && (
             <Grid item xs={12}>
               <Grid container justifyContent="center" textAlign="center">
                 <Alert icon={false} severity="error">
-                  <Typography>
-                    Lo sentimos, este documento ya tiene un usuario, puede
-                    iniciar sesión con su usuario y contraseña, si ha olvidado
-                    sus datos de acceso, dirigase al inicio de sesión y haga
-                    click en ¿Olvidó su contraseña?
-                  </Typography>
+                  <Typography>{message_error}</Typography>
                 </Alert>
               </Grid>
             </Grid>
           )}
         </Grid>
       </form>
-      {tipo_persona === 'N' && (
+      {tipo_persona === 'N' && is_avaiable && (
         <RegisterPersonaNatural
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
-          has_user={has_user}
+          errors={errors}
+          handleSubmit={handle_submit}
+          isValid={is_valid}
+          register={register}
+          setValue={set_value}
+          watch={watch}
         />
       )}
-      {tipo_persona === 'J' && (
+      {/* {tipo_persona === 'J' && (
         <RegisterPersonaJuridica
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
           has_user={has_user}
         />
-      )}
+      )} */}
     </>
   );
 };

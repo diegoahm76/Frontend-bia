@@ -10,7 +10,8 @@ import type {
   InfoPersonaComplete,
   ChangePassword,
   DataUserRecover,
-  ResponseRecover
+  ResponseRecover,
+  DataRegisterPersonaN
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -82,7 +83,7 @@ export const get_info_person_by_document = async (
 };
 
 export const crear_persona_natural_and_user = async (
-  data: DataRegistePortal
+  data: DataRegisterPersonaN
 ): Promise<AxiosResponse<UserCreate>> => {
   return await api.post('personas/persona-natural-and-usuario/create/', data);
 };

@@ -2,7 +2,10 @@ import type { SelectChangeEvent } from '@mui/material';
 import type {
   FieldErrors,
   FieldValues,
-  UseFormRegister
+  UseFormHandleSubmit,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch
 } from 'react-hook-form';
 
 export interface ResponseThunks<T = any | null> {
@@ -52,13 +55,25 @@ export interface PropsSelect {
   options: IList[];
   label: string;
   name: string;
-  value: string;
   loading: boolean;
   disabled?: boolean;
+  value?: string;
   required?: boolean;
   errors: FieldErrors<FieldValues>;
   register: UseFormRegister<any>;
-  onChange: (e: SelectChangeEvent<string>) => void;
+  onChange?: (e: SelectChangeEvent<string>) => void;
+}
+
+export interface PropsRegister {
+  numero_documento: string;
+  tipo_documento: string;
+  tipo_persona: string;
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  isValid: boolean;
+  watch: UseFormWatch<FieldValues>;
 }
 
 export interface Direccion {
