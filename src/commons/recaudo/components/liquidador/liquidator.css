@@ -1,0 +1,18 @@
+.title {
+   font-size: .8em;
+   font-weight: bold;
+   margin-left: 1.9em;
+   margin-top: 25px;
+   color: #736a5a;
+   text-align: left;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+
+.title span {
+   background-color: rgba(198, 203, 208, 0.472);
+   color: rgb(98, 88, 88);
+   font-size: larger;
+   padding: 7px;
+}

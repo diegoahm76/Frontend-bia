@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useState, useEffect } from "react";
 import { Column } from "primereact/column";
 import { TreeTable } from "primereact/treetable";
