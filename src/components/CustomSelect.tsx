@@ -29,7 +29,7 @@ export const CustomSelect = ({
       disabled={disabled}
     >
       {loading ? (
-        <Skeleton variant="rectangular" width="100%" height={45} />
+        <Skeleton variant="rectangular" width="100%" height={42} />
       ) : (
         <>
           <InputLabel id={`label_${name}`}>{label}</InputLabel>

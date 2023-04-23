@@ -4,6 +4,7 @@ import { AperturaCierreViveroScreen  } from '../screens/AperturaCierreViveroScre
 import { BajaHerramientaScreen,  } from '../screens/BajaHerramientaScreen';
 import { CuarentenaViveroScreen,  } from '../screens/CuarentenaViveroScreen';
 import { DespachoViveroScreen,  } from '../screens/DespachoViveroScreen';
+import { AsignarResponsableViveroScreen  } from '../screens/AsignarResponsableVivero';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorViveroRoutes: React.FC = () => {
@@ -15,6 +16,7 @@ export const GestorViveroRoutes: React.FC = () => {
       <Route path="bajas" element={<BajaHerramientaScreen/>} />
       <Route path="cuarentena/:id?" element={<CuarentenaViveroScreen/>} />
       <Route path="recepcion_distribucion" element={<DespachoViveroScreen/>} />
+      <Route path="viverista/:id?" element={<AsignarResponsableViveroScreen/>} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );

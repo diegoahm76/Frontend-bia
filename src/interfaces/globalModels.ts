@@ -80,6 +80,21 @@ export interface Direccion {
   direccion_estandarizada: string;
 }
 
+export interface Persona {
+  id_persona?: number|string;
+  tipo_persona?: string|null;
+  tipo_documento?: string|null;
+  numero_documento?: string|null;
+  primer_nombre?: string|null;
+  segundo_nombre?: string|null;
+  primer_apellido?: string;
+  segundo_apellido?: string|null;
+  nombre_completo?: string|null;
+  razon_social?: string|null;
+  nombre_comercial?: string|null;
+  tiene_usuario?: boolean|null;
+}
+
 export type keys_direccion =
   | 'via_principal'
   | 'numero_o_nombre_via'
@@ -97,3 +112,28 @@ export type keys_direccion =
   | 'nombre'
   | 'direccion_estandarizada'
   | 'ubicacion';
+
+export interface InfoPersona {
+  id: number;
+  id_persona: number;
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  nombre_completo: string;
+  razon_social: string;
+  nombre_comercial: string;
+  tiene_usuario: boolean;
+}
+
+export interface BusquedaAvanzada {
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre?: string;
+  primer_apellido?: string;
+  razon_social?: string;
+  nombre_comercial?: string;
+}

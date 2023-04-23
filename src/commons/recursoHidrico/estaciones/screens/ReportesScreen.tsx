@@ -35,17 +35,15 @@ export const ReportesScreen: React.FC = () => {
     opc_dashboards: "0"
   })
   const opc_dashboards = [
-    { label: 'Guamal', value: "1" },
-    { label: 'Guayuriba', value: "2" },
-    { label: 'Ocoa', value: "3" },
-    { label: 'Caño Rubiales', value: "4" },
-    { label: 'Acaciitas', value: "5" },
-    { label: 'Chichimene', value: "6" },
+    { label: 'GUAMAL', value: "1" },
+    { label: 'GUAYURIBA', value: "2" },
+    { label: 'OCOA', value: "3" },
+    { label: 'CAÑO RUBIALES', value: "4" },
+    { label: 'ACACIITAS', value: "5" },
+    { label: 'CHICHIMENE', value: "6" },
   ];
 
   const [loading, set_loading] = useState(false);
-
-
   const [fecha_inicial, set_fecha_inicial] = useState<Date | null>(new Date());
 
   const handle_input_change = (date: Date | null) => {
@@ -54,9 +52,18 @@ export const ReportesScreen: React.FC = () => {
   const fetch_data = async (): Promise<any> => {
     set_loading(true);
     const fecha = dayjs(fecha_inicial).format('YYYY-MM');
+    const fecha_actual = dayjs().format("YYYY-MM");
 
-    console.log(fecha)
-
+    if (fecha > fecha_actual) {
+      set_loading(false);
+      control_error("Seleccione una fecha que no sea mayor a la actual");
+      return;
+    }
+    if (selectdashboards.opc_dashboards === "0") {
+      control_error("Por favor seleccione una estación")
+      set_loading(false);
+      return
+    }
     try {
       const response = await api.get(`https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`);
       set_loading(false);
@@ -64,21 +71,61 @@ export const ReportesScreen: React.FC = () => {
     } catch (err: unknown) {
       set_loading(false);
       const temp_error = err as AxiosError
-      console.log("Error", temp_error.response?.status)
       if (temp_error.response?.status === 404) {
         control_error("No se encontraron datos para esta estación");
-        console.log("No hay datos");
       } else {
         // Otro error, mostrar mensaje de error genérico
         control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
       }
     };
   }
+  const fetch_data_migracion = async (): Promise<any> => {
+    set_loading(true);
+    const fecha = dayjs(fecha_inicial).format('YYYY-MM');
+    const fecha_actual = dayjs().format("YYYY-MM");
 
+    if (fecha > fecha_actual) {
+      set_loading(false);
+      control_error("Seleccione una fecha que no sea mayor a la actual");
+      return;
+    }
+    if (selectdashboards.opc_dashboards === "0") {
+      control_error("Por favor seleccione una estación")
+      set_loading(false);
+      return
+    }
+    try {
+      const response = await api.get(`estaciones/migracion/consultar-migracion-estaciones-id/${selectdashboards.opc_dashboards}/?fecha-inicio=${fecha}`);
+      set_loading(false);
+      return response.data;
+    } catch (err: unknown) {
+      set_loading(false);
+      const temp_error = err as AxiosError
+      if (temp_error.response?.status === 404) {
+        control_error("No se encontraron datos para esta estación");
+      } else {
+        // Otro error, mostrar mensaje de error genérico
+        control_error(err);
+      }
+    };
+  }
   const fetch_data_2 = async (): Promise<{ data: any, unique_days: Record<string, boolean> }> => {
     try {
       set_loading(true);
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading(false);
+        return { data: null, unique_days: {} };
+      }
+
       const fecha = dayjs(fecha_inicial).format("YYYY-MM");
+      const fecha_actual = dayjs().format("YYYY-MM");
+
+      if (fecha > fecha_actual) {
+        set_loading(false);
+        control_error("Seleccione una fecha que no sea mayor a la actual");
+        return { data: null, unique_days: {} };
+      }
       const response = await api.get(
         `https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`
       );
@@ -115,10 +162,8 @@ export const ReportesScreen: React.FC = () => {
     } catch (err: unknown) {
       set_loading(false);
       const temp_error = err as AxiosError
-      console.log("Error", temp_error.response?.status)
       if (temp_error.response?.status === 404) {
         control_error("No se encontraron datos para esta fecha");
-        console.log("No hay datos");
       } else {
         // Otro error, mostrar mensaje de error genérico
         control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
@@ -128,10 +173,164 @@ export const ReportesScreen: React.FC = () => {
     }
   };
 
+  const fetch_data_2_migracion = async (): Promise<{ data: any, unique_days: Record<string, boolean> }> => {
+    try {
+      set_loading(true);
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading(false);
+        return { data: null, unique_days: {} };
+      }
+
+      const fecha = dayjs(fecha_inicial).format("YYYY-MM");
+      const fecha_actual = dayjs().format("YYYY-MM");
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading(false);
+        return { data: null, unique_days: {} };
+      }
+
+      if (fecha > fecha_actual) {
+        set_loading(false);
+        control_error("Seleccione una fecha que no sea mayor a la actual");
+        return { data: null, unique_days: {} };
+      }
+
+      const response = await api.get(
+        `estaciones/migracion/consultar-migracion-estaciones-id/${selectdashboards.opc_dashboards}/?fecha-inicio=${fecha}`
+      );
+
+      // Dias unicos del mes
+      const year = dayjs(fecha_inicial).year();
+      const month = dayjs(fecha_inicial).month();
+      const num_days = new Date(year, month + 1, 0).getDate();
+
+      const unique_days: Record<string, boolean> = {};
+      for (let i = 1; i <= num_days; i++) {
+        const date_str = dayjs().set('year', year).set('month', month).set('date', i).format("YYYY-MM-DD");
+        unique_days[date_str] = false;
+      }
+
+      // verificar si hay datos para cada uno de los días únicos del mes
+      for (let i = 0; i < response.data.data.length; i++) {
+        const fecha = dayjs(response.data.data[i].fecha);
+        const date_str = fecha.format("YYYY-MM-DD");
+
+        // verificar si la fecha está dentro del mes seleccionado
+        if (fecha.month() === month && fecha.year() === year) {
+          unique_days[date_str] = true;
+        }
+      }
+
+      // verificar si hay datos en todos los días únicos del mes
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const all_days_have_data = !Object.values(unique_days).includes(false);
+
+      set_loading(false);
+      return { data: response.data, unique_days };
+
+    } catch (err: unknown) {
+      set_loading(false);
+      const temp_error = err as AxiosError
+      if (temp_error.response?.status === 404) {
+        control_error("No se encontraron datos para esta fecha");
+      } else {
+        // Otro error, mostrar mensaje de error genérico
+        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+      }
+      // agrega un retorno en caso de error
+
+      return { data: null, unique_days: {} };
+    }
+  };
+
 
   const {
     control: control_filtrar,
   } = useForm();
+  const generate_pdf_2_migracion = (data: any, unique_days: Record<string, boolean>): void => {
+    // eslint-disable-next-line new-cap
+    const doc: jsPDF = new jsPDF();
+
+    // Establecer la fuente y tamaño de letra
+    const font_props = {
+      size: 12
+    };
+    doc.setFont('Arial', 'normal');
+    doc.setFontSize(font_props.size);
+
+    const img_width = 140;
+    const img_height = 15;
+    const img_x = (doc.internal.pageSize.width - img_width) / 2;
+    const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
+
+    const selected_station = opc_dashboards.find(station => station.value === selectdashboards.opc_dashboards);
+    const title = `REPORTE MENSUAL DE LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
+    const title_width = doc.getTextWidth(title);
+    const x_pos = (doc.internal.pageSize.width - title_width) / 2;
+    doc.addImage(image_data_1, 160, 5, 40, 15)
+    doc.addImage(image_data2_1, img_x, img_y, img_width, img_height);;
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(title, x_pos, 30);
+    const fecha = dayjs(fecha_inicial).locale('es').format('MMMM [de] YYYY')
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`En el mes de ${fecha} la ${selected_station?.label ?? 'Ninguna estación seleccionada'} `, 30, 50);
+    doc.text(`presento las siguientes variaciones`, 30, 60);
+    doc.setFont("Arial", "normal");
+
+    const unavailable_days = Object.keys(unique_days).filter(day => !unique_days[day])
+      .map(day => dayjs(day).format("DD"));
+    const get_available_days = (unique_days: Record<string, boolean>): string[] => {
+      const available_days: string[] = [];
+
+      for (const day in unique_days) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (unique_days.hasOwnProperty(day)) {
+          if (unique_days[day]) {
+            available_days.push(day);
+          }
+        }
+      }
+
+      return available_days;
+    }
+    const get_date_range = (available_days: string[]): { start: string, end: string } => {
+      const start_date = dayjs(available_days[0]);
+      const end_date = dayjs(available_days[available_days.length - 1]);
+
+      return {
+        start: start_date.format('DD'),
+        end: end_date.format('DD')
+      };
+    }
+    const available_days = get_available_days(unique_days);
+    const date_range = get_date_range(available_days);
+
+    doc.text(` Se recibieron datos del sensor de temperatura de la estación en los siguientes días:`, 30, 70);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 80);
+    doc.text(`Dia(s) en que no hay datos ${unavailable_days.join(", ")}`, 30, 90);
+    doc.text(`Se recibieron datos del sensor de humedad de la estación en los siguientes días:`, 30, 100);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 110);
+    doc.text(`Dia(s) en que no hay datos ${unavailable_days.join(", ")}`, 30, 120);
+    doc.text(`Se recibieron datos del sensor de presion atm abs de aire de la estación en los siguientes días:`, 30, 130);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 140);
+    doc.text(`Dia(s) en que no hay datos ${unavailable_days.join(", ")}`, 30, 150);
+    doc.text(`Se recibieron datos del sensor de nivel de agua de la estación en los siguientes días:`, 30, 160);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 170);
+    doc.text(`Dia(s) en que no hay datos ${unavailable_days.join(", ")}`, 30, 180);
+    doc.text(`Se recibieron datos del sensor de presion atm rel de la estación en los siguientes días:`, 30, 190);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 200);
+    doc.text(`Dia(s) en que no hay datos ${unavailable_days.join(", ")}`, 30, 210);
+    doc.text(`Se recibieron datos del sensor de punto de rocio de la estación en los siguientes días:`, 30, 220);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 230);
+    doc.text(`Dia(s) en que no hay datos ${unavailable_days.join(", ")}`, 30, 240);
+    doc.text(`Se recibieron datos del sensor de velocidad del rio de la estación en los siguientes días:`, 30, 250);
+    doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 260);
+    doc.text(`Dia(s) en que no hay datos ${unavailable_days.join(", ")}`, 30, 270);
+
+    doc.save('reporte_mensual.pdf');
+  }
+
   const generate_pdf_2 = (data: any, unique_days: Record<string, boolean>): void => {
     // eslint-disable-next-line new-cap
     const doc: jsPDF = new jsPDF();
@@ -149,7 +348,7 @@ export const ReportesScreen: React.FC = () => {
     const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
 
     const selected_station = opc_dashboards.find(station => station.value === selectdashboards.opc_dashboards);
-    const title = `CERTIFICADO MENSUAL DE LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
+    const title = `REPORTE MENSUAL DE LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
     const title_width = doc.getTextWidth(title);
     const x_pos = (doc.internal.pageSize.width - title_width) / 2;
     doc.addImage(image_data_1, 160, 5, 40, 15)
@@ -212,7 +411,7 @@ export const ReportesScreen: React.FC = () => {
     doc.text(`Del día ${date_range.start} al día ${date_range.end} de ${fecha}`, 30, 260);
     doc.text(`Dia(s) en que no hay datos ${unavailable_days.join(", ")}`, 30, 270);
 
-    doc.save('Certificación_mensual.pdf');
+    doc.save('reporte.pdf');
   }
 
   const generate_pdf = (data: any): void => {
@@ -230,7 +429,9 @@ export const ReportesScreen: React.FC = () => {
 
     // Calcular la temperatura promedio, mínima y máxima
     const temps = data.data.map((item: any) => parseFloat(item.temperatura_ambiente));
+    console.log("temps", temps)
     const temp_avg = temps.reduce((acc: number, cur: number) => acc + cur, 0) / temps.length;
+    console.log("promedio", temp_avg)
     const temp_min = Math.min(...temps);
     const temp_max = Math.max(...temps);
     // Calcular la humedad promedio, mínima y máxima
@@ -281,7 +482,7 @@ export const ReportesScreen: React.FC = () => {
     const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
 
     const selected_station = opc_dashboards.find(station => station.value === selectdashboards.opc_dashboards);
-    const title = `CERTIFICADO DE DATOS OBTENIDOS EN LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
+    const title = `REPORTE DE DATOS OBTENIDOS EN LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
     const title_width = doc.getTextWidth(title);
     const x_pos = (doc.internal.pageSize.width - title_width) / 2;
     const fecha = dayjs(fecha_inicial).locale('es').format('MMMM [de] YYYY')
@@ -337,17 +538,159 @@ export const ReportesScreen: React.FC = () => {
     doc.text(`La precipitación mínima que se presento en el mes ${fecha} fue de ${precipitacion_min.toFixed(2)} mm`, 30, 100);
     doc.text(`La precipitación maxima que se presento en el mes ${fecha} fue de ${precipitacion_max.toFixed(2)} mm`, 30, 110);
     // Guardar el PDF
-    doc.save('Certificación.pdf');
+    doc.save('reporte.pdf');
+  }
+
+  const generate_pdf_migracion = (data: any): void => {
+
+    // eslint-disable-next-line new-cap
+    const doc: jsPDF = new jsPDF();
+
+    // Establecer la fuente y tamaño de letra
+    const font_props = {
+      size: 12
+    };
+    doc.setFont('Arial', 'normal');
+    doc.setFontSize(font_props.size);
+
+    // Calcular la temperatura promedio, mínima y máxima
+    const temps = data.data.map((item: any) => parseFloat(item.temperatura));
+    const filtered_temps = temps.filter((temp: number) => !isNaN(temp));
+    const temp_avg = filtered_temps.reduce((acc: number, cur: number) => acc + cur, 0) / filtered_temps.length;
+    const temp_min = Math.min(...filtered_temps);
+    const temp_max = Math.max(...filtered_temps);
+    // Calcular la humedad promedio, mínima y máxima
+    const hum = data.data.map((item: any) => parseFloat(item.humedad_relativa));
+    const filtered_hum = hum.filter((temp: number) => !isNaN(temp));
+    const hum_avg = filtered_hum.reduce((acc: number, cur: number) => acc + cur, 0) / hum.length;
+    const hum_min = Math.min(...filtered_hum);
+    const hum_max = Math.max(...filtered_hum);
+    // Calcular el nivel de agua promedio, mínima y máxima
+    const nivel = data.data.map((item: any) => parseFloat(item.nivel_agua));
+    const filtered_nivel = nivel.filter((temp: number) => !isNaN(temp));
+    const nivel_avg = filtered_nivel.reduce((acc: number, cur: number) => acc + cur, 0) / nivel.length;
+    const nivel_min = Math.min(...filtered_nivel);
+    const nivel_max = Math.max(...filtered_nivel);
+
+    // Calcular el velocidad del agua promedio, mínima y máxima
+    const velocidad = data.data.map((item: any) => parseFloat(item.velocidad_rio));
+    const filtered_velocidad = velocidad.filter((temp: number) => !isNaN(temp) && temp > 0);
+    const velocidad_avg = filtered_velocidad.reduce((acc: number, cur: number) => acc + cur, 0) / velocidad.length;
+    const velocidad_min = Math.min(...filtered_velocidad);
+    const velocidad_max = Math.max(...filtered_velocidad);
+
+    // Calcular presion del aire promedio, minima y maxima
+
+    const presion = data.data.map((item: any) => parseFloat(item.presion_atm_abs));
+    const filtered_presion = presion.filter((temp: number) => !isNaN(temp));
+    const presion_avg = filtered_presion.reduce((acc: number, cur: number) => acc + cur, 0) / presion.length;
+    const presion_min = Math.min(...filtered_presion);
+    const presion_max = Math.max(...filtered_presion);
+
+    // Calcular luminosidad promedio, minima y maxima
+
+    const presion_rel = data.data.map((item: any) => parseFloat(item.presion_atm_rel));
+    const filtered_presion_rel = presion_rel.filter((temp: number) => !isNaN(temp));
+    const presion_rel_avg = filtered_presion_rel.reduce((acc: number, cur: number) => acc + cur, 0) / presion_rel.length;
+    const presion_rel_min = Math.min(...filtered_presion_rel);
+    const presion_rel_max = Math.max(...filtered_presion_rel);
+
+    // Calcular precipitacion promeido, minima y maxima
+
+    const precipitacion = data.data.map((item: any) => parseFloat(item.precipitacion));
+    const filtered_presion_precipitacion = precipitacion.filter((temp: number) => !isNaN(temp));
+    const precipitacion_avg = filtered_presion_precipitacion.reduce((acc: number, cur: number) => acc + cur, 0) / precipitacion.length;
+    const precipitacion_min = Math.min(...filtered_presion_precipitacion);
+    const precipitacion_max = Math.max(...filtered_presion_precipitacion);
+
+    // const notrans = data.data.map((item: any) => (item.fecha_registro));
+    // const notrasn_fecha = notrans
+
+    // Agregar título y datos al PDF
+    const img_width = 140;
+    const img_height = 15;
+    const img_x = (doc.internal.pageSize.width - img_width) / 2;
+    const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
+
+    const selected_station = opc_dashboards.find(station => station.value === selectdashboards.opc_dashboards);
+    const title = `REPORTE DE DATOS OBTENIDOS EN LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
+    const title_width = doc.getTextWidth(title);
+    const x_pos = (doc.internal.pageSize.width - title_width) / 2;
+    const fecha = dayjs(fecha_inicial).locale('es').format('MMMM [de] YYYY')
+    doc.addImage(image_data, 160, 5, 40, 15)
+    doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`A continuación se mostrara un breve resumen de los datos obtenidos por cada una de las`, 30, 50);
+    doc.text(`variables, dichos datos fueron obtenidos en el mes ${fecha}, estos son:`, 30, 60);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(title, x_pos, 30);
+    doc.text(`Temperatura`, 100, 80);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La temperatura promedio que se presentó en el mes de ${fecha} fue de ${temp_avg.toFixed(2)} °C`, 30, 90);
+    doc.text(`La temperatura mínima que se presentó en el mes ${fecha} fue de ${temp_min.toFixed(2)} °C`, 30, 100);
+    doc.text(`La temperatura maxima que se presento en el mes ${fecha} fue de ${temp_max.toFixed(2)} °C`, 30, 110);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Humedad`, 102, 120);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La humedad promedio que se presento en el mes ${fecha} fue de ${hum_avg.toFixed(2)} % `, 30, 130);
+    doc.text(`La humedad mínima que se presento en el mes ${fecha} fue de ${hum_min.toFixed(2)} % `, 30, 140);
+    doc.text(`La humedad maxima que se presento en el mes ${fecha} fue de ${hum_max.toFixed(2)} % `, 30, 150);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Nivel de agua`, 100, 160);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`El nivel de agua promedio que se presento en el mes ${fecha} fue de ${nivel_avg.toFixed(2)} m`, 30, 170);
+    doc.text(`El nivel de agua minimo que se presento en el mes ${fecha} fue de ${nivel_min.toFixed(2)} m`, 30, 180);
+    doc.text(`El nivel de agua máximo que se presento en el mes ${fecha} fue de ${nivel_max.toFixed(2)} m`, 30, 190);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Velocidad del rio`, 94, 200);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La velocidad del rio promedio que se presento en el mes ${fecha} fue de ${velocidad_avg.toFixed(2)} m / s`, 30, 210);
+    doc.text(`La velocidad del rio mínima que se presento en el mes ${fecha} fue de ${velocidad_min.toFixed(2)} m / s`, 30, 220);
+    doc.text(`La velocidad del rio máxima que se presento en el mes ${fecha} fue de ${velocidad_max.toFixed(2)} m / s`, 30, 230);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Presion atm abs`, 97, 240);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La Presion atm abs promedio que se presento en el mes ${fecha} fue de ${presion_avg.toFixed(2)} Hpa`, 30, 250);
+    doc.text(`La Presion atm abs mínima que se presento en el mes ${fecha} fue de ${presion_min.toFixed(2)} Hpa`, 30, 260);
+    doc.text(`La Presion atm abs maxima que se presento en el mes ${fecha} fue de ${presion_max.toFixed(2)} Hpa`, 30, 270);
+    doc.addPage() // Salto de pagina
+    doc.addImage(image_data, 160, 5, 40, 15)
+    doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Presión atm rel`, 98, 40);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La Presion atm rel promedio que se presento en el mes ${fecha} fue de ${presion_rel_avg.toFixed(2)} Hpa `, 30, 50);
+    doc.text(`La La Presion atm rel mínima que se presento en el mes ${fecha} fue de${presion_rel_min.toFixed(2)} Hpa `, 30, 60);
+    doc.text(`La La Presion atm rel maxima que se presento en el mes ${fecha} fue de ${presion_rel_max.toFixed(2)} Hpa `, 30, 70);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Precipitación`, 98, 80);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La precipitación promedio que se presento en el mes ${fecha} fue de ${precipitacion_avg.toFixed(2)} mm`, 30, 90);
+    doc.text(`La precipitación mínima que se presento en el mes ${fecha} fue de ${precipitacion_min.toFixed(2)} mm`, 30, 100);
+    doc.text(`La precipitación maxima que se presento en el mes ${fecha} fue de ${precipitacion_max.toFixed(2)} mm`, 30, 110);
+    // Guardar el PDF
+    doc.save('reporte.pdf');
   }
 
   const handle_download_pdf = async (): Promise<void> => {
     const data = await fetch_data();
+    console.log("data", data)
     generate_pdf(data);
+  }
+  const handle_download_pdf_migracion = async (): Promise<void> => {
+    const data = await fetch_data_migracion();
+    console.log("data", data)
+    generate_pdf_migracion(data);
   }
 
   const handle_download_pdf_2 = async (): Promise<void> => {
     const { data, unique_days } = await fetch_data_2();
     generate_pdf_2(data, unique_days);
+  }
+
+  const handle_download_pdf_2_migracion = async (): Promise<void> => {
+    const { data, unique_days } = await fetch_data_2_migracion();
+    generate_pdf_2_migracion(data, unique_days);
   }
 
   return (
@@ -362,8 +705,8 @@ export const ReportesScreen: React.FC = () => {
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
       }}>
-      <Title title="REPORTES DE LAS ESTACIONES" />
       <Grid item xs={12} spacing={2} >
+        <Title title="REPORTES DE LAS ESTACIONES" />
         <Box mb={2} style={{ marginTop: '20px' }}>
           <Controller
             name="reporte"
@@ -395,6 +738,7 @@ export const ReportesScreen: React.FC = () => {
             )}
           />
         </Box>
+
         <Typography variant="body1" hidden={select_reporte.opciones_reportes !== "1"}>
           <Stack sx={{ m: '20px 0 20px 0' }} direction="row" spacing={2}>
             <FormControl fullWidth>
@@ -432,7 +776,7 @@ export const ReportesScreen: React.FC = () => {
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
                 <DatePicker
-                  label="Desde la fecha"
+                  label="Fecha"
                   inputFormat="YYYY/MM"
                   openTo="month"
                   views={['year', 'month']}
@@ -463,7 +807,14 @@ export const ReportesScreen: React.FC = () => {
                     ""
                   )
                 }
-                onClick={handle_download_pdf}>Descargar PDF
+                onClick={() => {
+                  if (selectdashboards.opc_dashboards === "1" || selectdashboards.opc_dashboards === "2" || selectdashboards.opc_dashboards === "3" || selectdashboards.opc_dashboards === "4") {
+                    void handle_download_pdf();
+                    return;
+                  }
+                  void handle_download_pdf_migracion();
+                }}>
+                Descargar PDF
               </Button>
             </FormControl>
           </Stack>
@@ -505,7 +856,7 @@ export const ReportesScreen: React.FC = () => {
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
                 <DatePicker
-                  label="Desde la fecha"
+                  label="Fecha"
                   inputFormat="YYYY/MM"
                   openTo="month"
                   views={['year', 'month']}
@@ -536,7 +887,14 @@ export const ReportesScreen: React.FC = () => {
                     ""
                   )
                 }
-                onClick={handle_download_pdf_2}>Descargar PDF
+                onClick={() => {
+                  if (selectdashboards.opc_dashboards === "1" || selectdashboards.opc_dashboards === "2" || selectdashboards.opc_dashboards === "3" || selectdashboards.opc_dashboards === "4") {
+                    void handle_download_pdf_2();
+                    return;
+                  }
+                  void handle_download_pdf_2_migracion();
+                }}>
+                Descargar PDF
               </Button>
             </FormControl>
           </Stack>

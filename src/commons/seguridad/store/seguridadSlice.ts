@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { type IRolesInfo } from '../interfaces/seguridadModels';
 
 const initial_state: IRolesInfo = {
+  superUser: [],
   roles: [],
   rol: {
     rol:{
@@ -18,12 +19,16 @@ export const seguridad_slice = createSlice({
   name: 'seguridad',
   initialState: initial_state,
   reducers: {    
-    set_roles: (state, { payload }) => {  
+    set_roles: (state, { payload }) => {
+      console.log('payload', payload)
       state.roles = payload;
     },
     set_rol: (state, {payload}) => {
       state.rol = payload
       console.log("state_rol", state.rol);
+    },
+    delegate_superuser_role: (state, { payload }) => {
+      state.superUser = payload;
     }
   }
 });
@@ -31,5 +36,6 @@ export const seguridad_slice = createSlice({
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const {
   set_roles,
-  set_rol
+  set_rol,
+  delegate_superuser_role
 } = seguridad_slice.actions;
