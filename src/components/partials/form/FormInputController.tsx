@@ -26,6 +26,7 @@ interface IProps {
     multiline_text?: boolean;
     rows_text?: number;
     on_blur_function?: any;
+    set_value?: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -43,10 +44,15 @@ const FormInputController = ({
     multiline_text,
     rows_text,
     on_blur_function,
+    set_value
 }: IProps) => {
 
+    const handle_file_input_change = (e: any): void => {
+        set_value(e.target.files!=null?e.target.files[0]:"");
+      };
     return (
         <Grid item xs={xs} md={md}>
+            {type!== "file" ?
             <Controller
                 name={control_name}
                 control={control_form}
@@ -82,6 +88,42 @@ const FormInputController = ({
                     />
                 )}
             />
+            :
+            <Controller
+                name={control_name}
+                control={control_form}
+                defaultValue={default_value}
+                rules={{ required: rules.required_rule?.rule, min: rules.min_rule?.rule, max: rules.max_rule?.rule }}
+                render={({
+                    field: { onChange },
+                    fieldState: { error },
+                }) => (
+                    <TextField
+                        margin="dense"
+                        fullWidth
+                        size="small"
+                        label={label}
+                        variant="outlined"
+                        type={type}
+                        disabled={disabled}
+                        multiline={multiline_text ?? false}
+                        rows={rows_text ?? 1}
+                        onChange={(event) => {(handle_file_input_change(event))}}
+                        onBlur={on_blur_function}
+                        error={!(error == null)}
+                        helperText={
+                            (error != null)
+                                ? (error.type === "required")
+                                    ? rules.required_rule?.message
+                                    : (error.type === "min")
+                                        ? rules.min_rule?.message
+                                        : rules.max_rule?.message
+                                : helper_text
+                        }
+                    />
+                )}
+            />
+            }
         </Grid>
     );
 }
