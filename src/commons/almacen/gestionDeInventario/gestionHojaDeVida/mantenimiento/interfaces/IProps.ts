@@ -1,5 +1,3 @@
-import { Month } from "colombian-holidays";
-
 export interface row {
     id: number, 
     codigo: number, 
@@ -35,10 +33,4 @@ export interface crear_mantenimiennto {
     id_articulo: number,
     id_persona_solicita: number,
     id_persona_anula: number
-}
-
-export interface holidays_co {
-     year?: number; 
-     month?: Month; 
-     valueAsDate: false; 
 }

@@ -6,13 +6,14 @@ import { TablaGeneral } from './../../../../../../../components/TablaGeneral'
 interface IProps {
     data_grid: crear_mantenimiennto[]
 }
-// eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const PrevisualizacionComponent:React.FC<IProps> = ({data_grid}) => {
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const PrevisualizacionComponent:React.FC<IProps> = ({data_grid}:IProps) => {
     const [data_previsualizacion, set_data_previsualizacion] = useState<crear_mantenimiennto[]>([]);
     useEffect(() =>{
-        data_grid.forEach(nm =>{
-            set_data_previsualizacion(prevArray => [...prevArray, nm])
-        });
+        for(let m = 0; m < data_grid.length; m++ ){
+            set_data_previsualizacion(prevArray => [...prevArray, data_grid[m]])
+        }
     },[data_grid]);
 
     const columns = [

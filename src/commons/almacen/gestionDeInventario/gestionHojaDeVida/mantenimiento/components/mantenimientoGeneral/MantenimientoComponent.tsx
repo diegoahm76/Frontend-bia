@@ -16,8 +16,8 @@ interface IProps {
 }
 const tipo_mantenimiento = [{ value: "PR", label: "Preventivo" },{ value: "CO", label: "Correctivo" },{ value: "OT", label: "Otro" }]
 
-// eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const MantenimientoComponent:React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance }) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const MantenimientoComponent:React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance }: IProps) => {
 
     const [tipo, set_tipo] = useState("");
     const [especificacion, set_especificacion] = useState("");
