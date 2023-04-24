@@ -66,7 +66,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
         staticscroll={true}
         stylescroll={"780px"}
       />
-            <Grid
+      <Grid
         container
         sx={{
           position: 'relative',

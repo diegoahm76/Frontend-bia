@@ -1,60 +1,55 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState, useEffect, useCallback } from 'react';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
+import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Paper, Modal, Typography, Stack, Button } from "@mui/material";
 import { visuallyHidden } from '@mui/utils';
 import { Link } from 'react-router-dom';
 
 interface Data {
   name: string;
-  fechaInicio: string;
-  expediente: string;
+  identificacion: string;
+  obligacion: string;
+  nroObligacion: string;
   nroResolucion: string;
-  valorCapital: number;
-  valorIntereses: number;
-  diasMora: number;
-  valorAbonado: number;
-  estado: string;
+  fechaRadicacion: string;
 }
 
 function createData(
   name: string,
-  fechaInicio: string,
-  expediente: string,
+  identificacion: string,
+  obligacion: string,
+  nroObligacion: string,
   nroResolucion: string,
-  valorCapital: number,
-  valorIntereses: number,
-  diasMora: number,
-  valorAbonado: number,
-  estado: string,
+  fechaRadicacion: string,
 ): Data {
   return {
     name,
-    fechaInicio,
-    expediente,
+    identificacion,
+    obligacion,
+    nroObligacion,
     nroResolucion,
-    valorCapital,
-    valorIntereses,
-    diasMora,
-    valorAbonado,
-    estado
+    fechaRadicacion
   };
 }
 
 const rows = [
-  createData('Permiso 1', '01/01/2015', '378765', '378765-143', 120000000, 35000000, 390, 21000000, 'En Curso'),
-  createData('Concesion Aguas', '01/04/2015', '3342765', '3342765-4546', 190700000, 45000000, 180, 76000000, 'En Curso'),
+  createData('Koch and Sons', '10298723', 'Concesión Agua Superficial', '378765', '543', '01/01/2022'),
+  createData('Steuber LLC', '2346448723', 'Permiso Perforación', '412333', '432', '01/01/2022'),
+  createData('Konopelski Group', '43214134', 'Pago Tasa TUA', '7564332', '2543', '01/01/2022'),
+  createData('Harber Inc', '34545437', 'Uso Agua Subterranea', '59493285', '6543', '01/01/2022'),
 ];
+
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 450,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -104,60 +99,42 @@ const headCells: readonly HeadCell[] = [
     id: 'name',
     numeric: false,
     disablePadding: true,
+    label: 'Nombre Usuario',
+  },
+  {
+    id: 'identificacion',
+    numeric: false,
+    disablePadding: true,
+    label: 'Identificación',
+  },
+  {
+    id: 'obligacion',
+    numeric: false,
+    disablePadding: true,
     label: 'Nombre Obligación',
   },
   {
-    id: 'fechaInicio',
+    id: 'nroObligacion',
     numeric: false,
     disablePadding: true,
-    label: 'Fecha Inicio',
-  },
-  {
-    id: 'expediente',
-    numeric: false,
-    disablePadding: true,
-    label: 'Expediente',
+    label: 'Número Obligación',
   },
   {
     id: 'nroResolucion',
     numeric: false,
     disablePadding: true,
-    label: 'Nro. Resolución',
+    label: 'Número Resolución',
   },
   {
-    id: 'valorCapital',
-    numeric: true,
-    disablePadding: false,
-    label: 'Valor Capital',
-  },
-  {
-    id: 'valorIntereses',
-    numeric: true,
-    disablePadding: false,
-    label: 'Valor Intereses',
-  },
-  {
-    id: 'diasMora',
-    numeric: true,
-    disablePadding: false,
-    label: 'Días Mora',
-  },
-  {
-    id: 'valorAbonado',
-    numeric: true,
-    disablePadding: false,
-    label: 'Valor Abonado',
-  },
-  {
-    id: 'estado',
+    id: 'fechaRadicacion',
     numeric: false,
     disablePadding: true,
-    label: 'Estado',
-  }
+    label: 'Fecha Radicación',
+  },
 ];
 
 const DEFAULT_ORDER = 'asc';
-const DEFAULT_ORDER_BY = 'valorCapital';
+const DEFAULT_ORDER_BY = 'nroObligacion';
 const DEFAULT_ROWS_PER_PAGE = 5;
 
 interface EnhancedTableProps {
@@ -170,7 +147,7 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+  const { order, orderBy, onRequestSort } =
     props;
   const createSortHandler =
     (newOrderBy: keyof Data) => (event: React.MouseEvent<unknown>) => {
@@ -180,17 +157,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all options',
-            }}
-          />
-        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -219,13 +185,18 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         >
           Ver
         </TableCell>
+        <TableCell
+          align='left'
+          padding='normal'
+        >
+          Asignación
+        </TableCell>
       </TableRow>
     </TableHead>
   );
 }
 
-
-export const TablaObligacionesUsuario: React.FC = () => {
+export const TablaObligacionesAdmin: React.FC = () => {
   const [order, setOrder] = useState<Order>(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = useState<keyof Data>(DEFAULT_ORDER_BY);
   const [selected, setSelected] = useState<readonly string[]>([]);
@@ -233,32 +204,10 @@ export const TablaObligacionesUsuario: React.FC = () => {
   const [visibleRows, setVisibleRows] = useState<Data[] | null>(null);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = useState(0);
-  const [capital, setCapital] = useState(0);
-  const [intereses, setIntereses] = useState(0);
-  const [abonado, setAbonado] = useState(0);
-
-  useEffect(() => {
-    let subCapital = 0
-    let subIntereses = 0
-    let subAbonado = 0
-    for(let i=0; i < rows.length; i++){
-      for(let j=0; j < selected.length; j++){
-        if(rows[i].name === selected[j]){
-          subCapital = subCapital + rows[i].valorCapital
-          subIntereses = subIntereses + rows[i].valorIntereses
-          subAbonado = subAbonado + rows[i].valorAbonado
-          setCapital(subCapital)
-          setIntereses(subIntereses)
-          setAbonado(subAbonado)
-        }
-      }
-    }
-    if(selected.length === 0){
-      setCapital(0)
-      setIntereses(0)
-      setAbonado(0)
-    }
-  }, [selected])
+  const [open, setOpen] = useState(false);
+  const [openSubModal, setOpenSubModal] = useState(false);
+  const [optionModal, setOptionModal] = useState('');
+  const handleOpen = () => { setOpen(true) };
 
   useEffect(() => {
     let rowsOnMount = stableSort(
@@ -297,25 +246,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
       return;
     }
     setSelected([]);
-  };
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: readonly string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = useCallback(
@@ -357,8 +287,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
     [order, orderBy],
   );
 
-  const isSelected = (name: string) => selected.includes(name);
-
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -379,64 +307,40 @@ export const TablaObligacionesUsuario: React.FC = () => {
             <TableBody>
               {(visibleRows != null)
                 ? visibleRows.map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
-                    const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
                       <TableRow
                         hover
-                        onClick={(event) => { handleClick(event, row.name); }}
-                        role="checkbox"
-                        aria-checked={isItemSelected}
-                        tabIndex={-1}
                         key={row.name}
-                        selected={isItemSelected}
                         sx={{ cursor: 'pointer' }}
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            color="primary"
-                            checked={isItemSelected}
-                            inputProps={{
-                              'aria-labelledby': labelId,
-                            }}
-                          />
-                        </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="normal"
-                          align='left'
-                        >
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="left" padding="normal">{row.fechaInicio}</TableCell>
+                        <TableCell align="left" padding="normal">{row.name}</TableCell>
+                        <TableCell align="left" padding="normal">{row.identificacion}</TableCell>
+                        <TableCell align="left" padding="normal">{row.obligacion}</TableCell>
+                        <TableCell align="left" padding="normal">{row.nroObligacion}</TableCell>
                         <TableCell align="left" padding="normal">{row.nroResolucion}</TableCell>
-                        <TableCell align="left" padding="normal">{row.valorCapital}</TableCell>
-                        <TableCell align="left" padding="normal">{row.expediente}</TableCell>
-                        <TableCell align="left" padding="normal">{row.valorIntereses}</TableCell>
-                        <TableCell align="left" padding="normal">{row.diasMora}</TableCell>
-                        <TableCell align="left" padding="normal">{row.valorAbonado}</TableCell>
-                        <TableCell align="left" padding="normal">{row.estado}</TableCell>
+                        <TableCell align="left" padding="normal">{row.fechaRadicacion}</TableCell>
                         <TableCell align="left" padding="normal"><Link to={`registro`}>Ver</Link></TableCell>
+                        <TableCell align="left" padding="normal">
+                        <FormControl sx={{ minWidth: 110 }}>
+                          <InputLabel id="demo-simple-select-label">Seleccionar</InputLabel>
+                          <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            label="Seleccionar"
+                            onChange={handleOpen}
+                          >
+                            <MenuItem value='Olga'>Olga</MenuItem>
+                            <MenuItem value='Diana'>Diana</MenuItem>
+                            <MenuItem value='Juan'>Juan</MenuItem>
+                            <MenuItem value='Fernando'>Fernando</MenuItem>
+                          </Select>
+                        </FormControl>
+                        </TableCell>
                       </TableRow>
                     );
                   })
                 : null}
-                <TableRow>
-                  <TableCell align="left" padding="normal"></TableCell>
-                  <TableCell align="left" padding="normal"></TableCell>
-                  <TableCell align="left" padding="normal"></TableCell>
-                  <TableCell align="left" padding="normal"></TableCell>
-                  <TableCell align="left" padding="normal"><strong>Total</strong></TableCell>
-                  <TableCell align="left" padding="normal"><strong>{capital}</strong></TableCell>
-                  <TableCell align="left" padding="normal"><strong>{intereses}</strong></TableCell>
-                  <TableCell align="left" padding="normal"></TableCell>
-                  <TableCell align="left" padding="normal"><strong>{abonado}</strong></TableCell>
-                  <TableCell align="left" padding="normal"></TableCell>
-                  <TableCell align="left" padding="normal"></TableCell>
-                </TableRow>
               {paddingHeight > 0 && (
                 <TableRow
                   style={{
@@ -459,6 +363,72 @@ export const TablaObligacionesUsuario: React.FC = () => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" component="h1" align='center'>
+            <strong>¿Está seguro de realizar la reasignación de usuario?</strong>
+          </Typography>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={2}
+            marginTop='20px'
+          >
+            <Button
+              color='info'
+              variant='contained'
+              onClick={()=>{
+                setOpenSubModal(true)
+                setOptionModal('si')
+              }}
+            >
+            Si
+            </Button>
+            <Button
+              color='info'
+              variant='contained'
+              onClick={()=>{
+                setOpenSubModal(true)
+                setOptionModal('no')
+              }}
+            >
+            No
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
+      <Modal
+        open={openSubModal}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" component="h1" align='center'>
+            <strong>{optionModal === 'si' ? 'Reasignación ejecutada con éxito' : 'Reasignación cancelada'}</strong>
+          </Typography>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={2}
+            marginTop='20px'
+          >
+            <Button
+              color='info'
+              variant='contained'
+              onClick={()=>{
+                setOpenSubModal(false)
+                setOpen(false)
+              }}
+            >
+            Ok
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
     </Box>
   );
 }
