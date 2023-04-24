@@ -1,6 +1,6 @@
   import { type Dispatch } from 'react';
-  import { roles_request, users_request, persons_request } from '../request/seguridadRequest';
-  import { set_roles, set_users, set_persons } from './seguridadSlice';
+  import { roles_request, users_request, persons_request, get_user_info_by_id_request } from '../request/seguridadRequest';
+  import { set_roles, set_users, set_persons, set_user_info } from './seguridadSlice';
 
 export const get_roles: () => any = () => {
   return async (dispatch: Dispatch<any>) => {
@@ -29,18 +29,18 @@ export const get_users: (
 
 export const get_persons: (
   tipo_documento: string,
-  numero_documento: number,
+  numero_documento: string,
   primer_nombre: string,
   primer_apellido: string,
 ) => any = (  tipo_documento: string,
-  numero_documento: number,
+  numero_documento: string,
   primer_nombre: string,
   primer_apellido: string,
 ) => {
   return async (dispatch: Dispatch<any>) => {
     const resp = await persons_request(
       tipo_documento, 
-      numero_documento,
+      numero_documento, 
       primer_nombre,
       primer_apellido,
     );
@@ -57,3 +57,11 @@ export const get_persons: (
     dispatch(set_persons(resp.data));
   };
 };
+
+export const get_data_user: (id:number) => any = (id: number) => {
+  return async (dispatch: Dispatch<any>) => {
+    const resp = await get_user_info_by_id_request(id);
+    console.log(resp.data);
+    dispatch(set_user_info(resp.data));
+  }
+}

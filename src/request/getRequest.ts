@@ -13,6 +13,12 @@ export const get_tipo_persona = async (): Promise<
   return await api.get<ResponseServer<IList[]>>('listas/tipo-persona/');
 };
 
+export const get_tipo_usuario = async (): Promise<
+  AxiosResponse<ResponseServer<IList[]>>
+> => {
+  return await api.get<ResponseServer<IList[]>>('listas/tipo-usuario/');
+};
+
 export const get_tipo_documento = async (): Promise<
   AxiosResponse<ResponseServer<IList[]>>
 > => {

@@ -1,7 +1,7 @@
 import { api } from '../../../api/axios';
 import type {
 Roles,
-Users
+User
 } from '../interfaces';
 import type {
   ResponseServer,
@@ -28,11 +28,11 @@ export const roles_request = async () => {
 // https://backend-bia-beta-production.up.railway.app/api/users/get-user-by-nombre-de-usuario/?nombre_de_usuario=PruebAnatural2820
 export const users_request = async (
   nombre_de_usuario: string
-): Promise<ResponseThunks<Users[]>> => {
+): Promise<ResponseThunks<User[]>> => {
   try {
     const {
       data: { data }
-    } = await api.get<ResponseServer<Users[]>>(
+    } = await api.get<ResponseServer<User[]>>(
       `users/get-user-by-nombre-de-usuario/?nombre_de_usuario=${nombre_de_usuario}`
     );
     return {
@@ -53,14 +53,14 @@ export const users_request = async (
 // 
 export const persons_request = async (
   tipo_documento: string,
-  numero_documento: number,
+  numero_documento: string,
   primer_nombre: string,
   primer_apellido: string,
-): Promise<ResponseThunks<Users[]>> => {
+): Promise<ResponseThunks<User[]>> => {
   try {
     const {
       data: { data }
-    } = await api.get<ResponseServer<Users[]>>(
+    } = await api.get<ResponseServer<User[]>>(
       `personas/get-personas-filters/?tipo_documento=${tipo_documento}&numero_documento=${numero_documento}&primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}&razon_social&nombre_comercial`
     );
     return {
@@ -78,3 +78,8 @@ export const persons_request = async (
   }
 };
 
+export const get_user_info_by_id_request = async (
+  id: number
+): Promise<AxiosResponse<ResponseServer<User | null>>> => {
+  return await api.get(`users/get-by-pk/${id}`);
+};
