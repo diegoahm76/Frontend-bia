@@ -7,16 +7,27 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    Stack,
     TextField,
-    // Typography
+    Typography
 } from "@mui/material"
-import SearchIcon from '@mui/icons-material/Search';
 import { Title } from "../../../components"
 import { change_super_user } from "../request/authRequest"
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { type AuthSlice } from "../../auth/interfaces";
+import SearchIcon from '@mui/icons-material/Search';
+import { get_person_by_document } from "../../../request";
+import { control_error } from "../../../helpers";
+import { create_super_user } from "../store";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DelegacionSuperuserScreen:React.FC = () => {
+
+    const { watch, register } = useForm();
+    const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+    const dispatch = useDispatch();
 
     const {
         tipo_documento_opt,
@@ -24,6 +35,7 @@ export const DelegacionSuperuserScreen:React.FC = () => {
         set_tipo_documento
     } = change_super_user();
 
+    const [ superUsuarioActual, setSuperUsuarioActual ] = useState(userinfo.nombre_de_usuario);
     const [nuevoSuperUsuario, setNuevoSuperUsuario] = useState({
         tipoDocumento: tipo_documento,
         numeroIdentificacion: '',
@@ -34,7 +46,30 @@ export const DelegacionSuperuserScreen:React.FC = () => {
         if (tipo_documento !== undefined) {
             set_tipo_documento(tipo_documento);
         }
-    }, [tipo_documento])
+    }, [tipo_documento]);
+
+    const numero_documento = watch('numero_documento');
+
+    const handleSearchSuperUsuario = (tipo_documento:string, numero_documento:string):void => {
+        get_person_by_document(tipo_documento, numero_documento)
+            .then(({ data: { data } }) => {
+                if (data !== null && data !== undefined) {
+                    setSuperUsuarioActual(userinfo.nombre_de_usuario);
+                    setNuevoSuperUsuario({
+                        tipoDocumento: tipo_documento,
+                        numeroIdentificacion: numero_documento,
+                        nombre: data?.nombre_completo
+                    })
+                }
+            })
+            .catch((error) => {
+                control_error(error)
+            })
+    }
+
+    const handleSeleccionarNuevoSuperUsuario = (id_persona:number):void => {
+        dispatch(create_super_user(id_persona) as any)
+    }
 
   return (
     <>
@@ -64,10 +99,10 @@ export const DelegacionSuperuserScreen:React.FC = () => {
                             justifyContent: 'center'
                         }}
                     >
-                         <Grid item xs={12} sm={4}>
-                            {/* <Typography variant="h6">SuperUsuarioActual:</Typography> */}
+                         <Grid item sx={{ display:'flex' }}>
+                            <Typography variant="body2" sx={{ pr: '20px' }}>SuperUsuarioActual:</Typography>
                             <TextField
-                                placeholder="SuperUsuario Actual"
+                                value={ superUsuarioActual }
                                 size="small"
                                 fullWidth
                                 disabled
@@ -104,6 +139,7 @@ export const DelegacionSuperuserScreen:React.FC = () => {
                                 size="small"
                                 helperText="Ingrese Número de Documento"
                                 fullWidth
+                                { ...register('numero_documento') }
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -111,6 +147,7 @@ export const DelegacionSuperuserScreen:React.FC = () => {
                                 disabled
                                 placeholder="Nombre"
                                 size="small"
+                                value={nuevoSuperUsuario.nombre}
                                 fullWidth
                             />
                         </Grid>
@@ -119,13 +156,30 @@ export const DelegacionSuperuserScreen:React.FC = () => {
                                 type="button"
                                 variant="contained"
                                 startIcon={<SearchIcon />}
-                                onClick={() => {}}
+                                onClick={() => {
+                                    handleSearchSuperUsuario(nuevoSuperUsuario.tipoDocumento, numero_documento)
+                                }}
                             >
                                 Busqueda Personal
                             </Button>
                         </Grid>
                     </Grid>
                 </Box>
+                <Stack
+                    direction="row-reverse"
+                    spacing={2}
+                    sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+                >
+                    <Button
+                        color="success"
+                        variant="outlined"
+                        onClick={() => {
+                            handleSeleccionarNuevoSuperUsuario(userinfo.id_persona)
+                        }}
+                    >
+                        Guardar
+                    </Button>
+                </Stack>
             </Grid>
         </Grid>
     </>
