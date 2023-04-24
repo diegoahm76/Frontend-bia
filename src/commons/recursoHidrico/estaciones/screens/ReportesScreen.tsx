@@ -52,7 +52,18 @@ export const ReportesScreen: React.FC = () => {
   const fetch_data = async (): Promise<any> => {
     set_loading(true);
     const fecha = dayjs(fecha_inicial).format('YYYY-MM');
+    const fecha_actual = dayjs().format("YYYY-MM");
 
+    if (fecha > fecha_actual) {
+      set_loading(false);
+      control_error("Seleccione una fecha que no sea mayor a la actual");
+      return;
+    }
+    if (selectdashboards.opc_dashboards === "0") {
+      control_error("Por favor seleccione una estación")
+      set_loading(false);
+      return
+    }
     try {
       const response = await api.get(`https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`);
       set_loading(false);
@@ -71,7 +82,18 @@ export const ReportesScreen: React.FC = () => {
   const fetch_data_migracion = async (): Promise<any> => {
     set_loading(true);
     const fecha = dayjs(fecha_inicial).format('YYYY-MM');
+    const fecha_actual = dayjs().format("YYYY-MM");
 
+    if (fecha > fecha_actual) {
+      set_loading(false);
+      control_error("Seleccione una fecha que no sea mayor a la actual");
+      return;
+    }
+    if (selectdashboards.opc_dashboards === "0") {
+      control_error("Por favor seleccione una estación")
+      set_loading(false);
+      return
+    }
     try {
       const response = await api.get(`estaciones/migracion/consultar-migracion-estaciones-id/${selectdashboards.opc_dashboards}/?fecha-inicio=${fecha}`);
       set_loading(false);
@@ -90,7 +112,20 @@ export const ReportesScreen: React.FC = () => {
   const fetch_data_2 = async (): Promise<{ data: any, unique_days: Record<string, boolean> }> => {
     try {
       set_loading(true);
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading(false);
+        return { data: null, unique_days: {} };
+      }
+
       const fecha = dayjs(fecha_inicial).format("YYYY-MM");
+      const fecha_actual = dayjs().format("YYYY-MM");
+
+      if (fecha > fecha_actual) {
+        set_loading(false);
+        control_error("Seleccione una fecha que no sea mayor a la actual");
+        return { data: null, unique_days: {} };
+      }
       const response = await api.get(
         `https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`
       );
@@ -141,12 +176,23 @@ export const ReportesScreen: React.FC = () => {
   const fetch_data_2_migracion = async (): Promise<{ data: any, unique_days: Record<string, boolean> }> => {
     try {
       set_loading(true);
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading(false);
+        return { data: null, unique_days: {} };
+      }
+
       const fecha = dayjs(fecha_inicial).format("YYYY-MM");
       const fecha_actual = dayjs().format("YYYY-MM");
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading(false);
+        return { data: null, unique_days: {} };
+      }
 
       if (fecha > fecha_actual) {
         set_loading(false);
-        control_error("Seleccione una fecha correcta.");
+        control_error("Seleccione una fecha que no sea mayor a la actual");
         return { data: null, unique_days: {} };
       }
 
@@ -659,8 +705,8 @@ export const ReportesScreen: React.FC = () => {
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
       }}>
-      <Title title="REPORTES DE LAS ESTACIONES" />
       <Grid item xs={12} spacing={2} >
+        <Title title="REPORTES DE LAS ESTACIONES" />
         <Box mb={2} style={{ marginTop: '20px' }}>
           <Controller
             name="reporte"
@@ -692,6 +738,7 @@ export const ReportesScreen: React.FC = () => {
             )}
           />
         </Box>
+
         <Typography variant="body1" hidden={select_reporte.opciones_reportes !== "1"}>
           <Stack sx={{ m: '20px 0 20px 0' }} direction="row" spacing={2}>
             <FormControl fullWidth>

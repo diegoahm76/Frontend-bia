@@ -3,7 +3,6 @@ import type {
   ResponseAuth,
   LoginUser,
   IUserInfo,
-  InfoPersona,
   Permisos,
   DataRegistePortal,
   UserCreate,
@@ -74,15 +73,6 @@ export const permissions_request = async (
       error_message: data.detail
     };
   }
-};
-
-export const get_person_by_document = async (
-  tipo_documento: string,
-  numero_documento: string
-): Promise<AxiosResponse<ResponseServer<InfoPersona | null>>> => {
-  return await api.get(
-    `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
-  );
 };
 
 export const get_info_person_by_document = async (
