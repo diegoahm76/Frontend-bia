@@ -1,10 +1,8 @@
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
-import { get_person_by_document } from '../request/authRequest';
 import type { IList } from '../../../interfaces/globalModels';
 import type {
   DataRegistePortal,
-  // keys_object,
   ReisterHook,
   keys_object,
 } from '../interfaces';
@@ -17,6 +15,7 @@ import {
   get_generos,
   get_naturaleza_emp,
   get_paises,
+  get_person_by_document,
   get_tipo_documento,
   get_tipo_persona,
 } from '../../../request/';

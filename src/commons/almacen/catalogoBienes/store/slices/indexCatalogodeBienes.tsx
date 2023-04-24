@@ -25,7 +25,7 @@ export const initial_state_current_bien = {
   valor_residual: null,
   stock_minimo: null,
   stock_maximo: null,
-  solicitable_vivero: false,
+  solicitable_vivero: true,
   tiene_hoja_vida: false,
   maneja_hoja_vida: false,
   visible_solicitudes: false,

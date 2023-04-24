@@ -92,6 +92,7 @@ const CrearBienDialogForm = ({
       data.nivel_jerarquico = current_nodo.data.bien?.nivel_jerarquico != null? Number(current_nodo.data.bien.nivel_jerarquico) + 1 : 1;
       data.id_bien_padre = current_nodo.data.bien?.id_bien != null? current_nodo.data.bien.id_bien : null
       data.nombre_padre = current_nodo.data.bien?.nombre != null? current_nodo.data.bien.nombre : null
+      data.solicitable_vivero = true
     } else if(action==="create"){
       data.nivel_jerarquico = 1
     }
@@ -135,11 +136,16 @@ const CrearBienDialogForm = ({
 
       reset_bien(current_nodo.data.bien);
     
+    } else if(action === "create"){
+      console.log("create")
+    void dispatch(get_code_bien_service(null))
+      set_tipo_bien_selected("A") 
+      console.log(current_nodo.data.bien)
     }
   }, [current_nodo]);
 
   useEffect(() => {
-    reset_bien({...current_nodo.data.bien, codigo_bien:code_bien});
+    reset_bien({...current_nodo.data.bien, codigo_bien:code_bien });
     
   }, [code_bien]);
   
