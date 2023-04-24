@@ -16,8 +16,8 @@ import { current_germination_bed, initial_state_current_germination_bed } from '
 import BlockIcon from '@mui/icons-material/Block';
 import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ArticleIcon from '@mui/icons-material/Article';
 import EditIcon from '@mui/icons-material/Edit';
+import ArticleIcon from '@mui/icons-material/Article';
 import CrearCamaGerminacionDialogForm from '../componentes/CrearCamaGerminacionDialogForm';
 import AutocompleteVivero from "../../componentes/AutocompleteVivero";
 
