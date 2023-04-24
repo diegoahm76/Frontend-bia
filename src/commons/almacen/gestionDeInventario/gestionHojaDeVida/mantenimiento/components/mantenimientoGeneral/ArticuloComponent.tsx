@@ -34,7 +34,7 @@ export const ArticuloComponent: React.FC<IProps> = ({tipo_articulo}: IProps) => 
                     <Grid item xs={12} sm={5}>
                         <TextField
                             label="Código"
-                            helperText="Seleccione Código"
+                            helperText="Ingresar Código"
                             size="small"
                             required
                             fullWidth
@@ -43,10 +43,10 @@ export const ArticuloComponent: React.FC<IProps> = ({tipo_articulo}: IProps) => 
                     <Grid item xs={12} sm={5}>
                         <TextField
                             label="Nombre"
-                            helperText="Seleccione Nombre"
+                            helperText="Nombre"
                             size="small"
-                            required
                             fullWidth
+                            disabled={true}
                         />
                     </Grid>
                     <Grid item xs={12} sm={2}>

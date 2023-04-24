@@ -1,5 +1,13 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
-import { type Dispatch, type SetStateAction } from "react";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, TextField } from "@mui/material"
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import SearchIcon from '@mui/icons-material/Search';
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
+import { Title } from '../../../../../../../components';
+import { get_vehicles_all_service } from "../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks";
+import { useAppDispatch } from "../../../../../../../hooks";
+import { get_vehicles } from "../../../hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
+
 
 interface IProps {
   is_modal_active: boolean;
@@ -12,27 +20,157 @@ const BuscarArticuloComponent = ({
   set_is_modal_active,
   title,
 }: IProps) => {
-    return (
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        <Dialog
-        fullWidth
-        maxWidth="sm"
-        open={is_modal_active}
-        onClose={() => { set_is_modal_active(false); }}
-      >
-        <DialogTitle>{title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            Let Google help apps determine location. This means sending anonymous
-            location data to Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => { set_is_modal_active(false); }}>Cerrar</Button>
-          <Button onClick={() => { set_is_modal_active(false); }}>Agregar</Button>
-        </DialogActions>
-      </Dialog>
-    )
+  const dispatch = useAppDispatch();
+  const [codigo, set_codigo] = useState<string>("");
+  const [nombre, set_nombre] = useState<string>("");
+  const [grid_vehivulos, set_grid_vehivulos] = useState<any[]>([]);
+  const [grid_vehivulos_before, set_grid_vehivulos_before] = useState<any[]>([]);
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const [selected_product, set_selected_product] = useState(null);
+  // const [columna_placa, set_columna_placa] = useState<boolean>(false);
+  // const [columna_serial, set_columna_serial] = useState<boolean>(false);
+
+  const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_codigo(e.target.value);
+    console.log(codigo)
+  }
+
+  const on_change_nombre: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_nombre(e.target.value);
+    console.log(nombre)
+  }
+
+  const accionar_busqueda: any = () => {
+    if(nombre === '' && codigo === ''){
+      set_grid_vehivulos(grid_vehivulos_before);
+      return
+    }
+    const data_filter = grid_vehivulos.find(gv => gv.nombre === nombre || gv.id_bien === codigo);
+    set_grid_vehivulos(data_filter);
+  }
+
+  const selected_product_grid: any = () => {
+    console.log(selected_product)
+  }
+
+  useEffect(() => {
+    dispatch(get_vehicles_all_service()).then((response: any) => {
+      set_grid_vehivulos(response.Elementos);
+      set_grid_vehivulos_before([...response.Elementos]);
+    })
+  }, []);
+
+  useEffect(() => {
+    console.log(get_vehicles);
+  }, [grid_vehivulos]);
+
+  // useEffect(() => {
+  //   switch (title) {
+  //     case 'Buscar vehículos':
+  //       set_columna_placa(true);
+  //       break;
+  //     default:
+  //       set_columna_serial(true);
+  //       break;
+  //   }
+  // }, [title])
+  return (
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    <Dialog
+      fullWidth
+      maxWidth="md"
+      open={is_modal_active}
+      onClose={() => { set_is_modal_active(false); }}
+    >
+      <DialogTitle>{title}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-slide-description">
+          <Box
+            component="form"
+            sx={{ mt: '20px' }}
+            noValidate
+            autoComplete="off"
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  label="Código"
+                  helperText=" "
+                  size="small"
+                  fullWidth
+                  value={codigo}
+                  onBlur={on_change_codigo}
+                />
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  label="Nombre"
+                  helperText=" "
+                  size="small"
+                  required
+                  fullWidth
+                  value={nombre}
+                  onBlur={on_change_nombre}
+                />
+              </Grid>
+              <Stack
+                direction="row"
+                justifyContent="flex-end"
+                sx={{ mt: '17px' }}
+              >
+                <Grid item xs={12} sm={4}>
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    startIcon={<SearchIcon />}
+                    onClick={accionar_busqueda}
+                  >
+                    Buscar
+                  </Button>
+                </Grid>
+              </Stack>
+
+            </Grid>
+            <Grid container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+              }}>
+              <Grid item xs={12} sm={12}>
+                <Title title='Resultados' />
+                <Box sx={{ width: '100%', mt: '20px' }}>
+                  <div className="card">
+                    <DataTable value={grid_vehivulos} sortField="nombre" stripedRows  paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+                    selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value); }} dataKey="id_bien"
+                    >
+                      <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
+                      <Column field="codigo_bien" header="Código" style={{ width: '25%' }}></Column>
+                      <Column field="nombre" header="Nombre" style={{ width: '25%' }}></Column>
+                      <Column field="doc_identificador_nro" header="Placa" style={{ width: '25%' }}></Column>
+                    </DataTable>
+                  </div>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          color='inherit'
+          variant='contained'
+          onClick={() => { set_is_modal_active(false); }}>Cerrar</Button>
+        <Button
+          color='primary'
+          variant='contained'
+          onClick={selected_product_grid}>Seleccionar</Button>
+      </DialogActions>
+    </Dialog>
+  )
 }
 // eslint-disable-next-line no-restricted-syntax
 export default BuscarArticuloComponent;

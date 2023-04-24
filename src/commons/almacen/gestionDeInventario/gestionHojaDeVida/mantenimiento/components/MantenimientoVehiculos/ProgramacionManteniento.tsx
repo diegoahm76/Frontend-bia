@@ -57,6 +57,12 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
         set_especificacion(val);
     }, [set_especificacion]);
 
+    const clean_form = (): void => {
+        set_rows([])
+        set_tipo_mantenimiento('')
+        set_especificacion('')
+    } 
+
     return (
         <>
             <h1>Programación mantenimiento vehículos</h1>
@@ -211,6 +217,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                                 color='inherit'
                                 variant="contained"
                                 startIcon={<CleanIcon />}
+                                onClick={clean_form}
                             >
                                 Limpiar
                             </Button>

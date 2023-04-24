@@ -63,6 +63,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     const [fecha, set_fecha] = useState("");
     const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
     const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
+    const [fecha_min, set_fecha_min] = useState<Dayjs>(dayjs());
     const [cada, set_cada] = useState("");
     const [fechas_array, set_fechas_array] = useState<Dayjs[]>([]);
     const [check_isd, set_check_isd] = useState(false);
@@ -72,6 +73,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
     const handle_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
         set_tipo(event.target.value);
+        set_fecha_min(dayjs());
         set_disabled_type(event.target.value === "MA");
     }
 
@@ -85,6 +87,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
     const handle_change_fecha_desde = (date: Date | null): void => {
         set_fecha_desde(date);
+        set_fecha_min(dayjs());
     };
 
     const handle_change_fecha_hasta = (date: Date | null): void => {
@@ -301,6 +304,8 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                                             {...params}
                                         />
                                     )}
+                                    minDate={fecha_min.toDate()}
+                                    maxDate={fecha_hasta}
                                     disabled={disabled_type}
                                 />
                             </LocalizationProvider>
@@ -319,7 +324,8 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                                             {...params}
                                         />
                                     )}
-                                    disabled={disabled_type}
+                                    minDate={fecha_desde}
+                                    disabled={disabled_type || fecha_desde == null}
                                 />
                             </LocalizationProvider>
                         </Grid>
@@ -337,7 +343,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                     </Grid>
                     <Grid item xs={12} sm={8}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <CalendarPicker date={null} onChange={onchange_calendar} disabled={tipo === ""} renderDay={custom_day_render} />
+                            <CalendarPicker date={null} onChange={onchange_calendar} disabled={tipo === ""} renderDay={custom_day_render} minDate={fecha_min}/>
                         </LocalizationProvider>
                     </Grid>
                 </Grid>
