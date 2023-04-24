@@ -7,6 +7,7 @@ import { Title } from '../../../../../../../components';
 import { get_vehicles_all_service } from "../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks";
 import { useAppDispatch } from "../../../../../../../hooks";
 import { get_vehicles } from "../../../hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
+import { get_computers_all_service } from "../../../hojaDeVidaComputo/store/thunks/cvComputoThunks";
 
 
 interface IProps {
@@ -23,8 +24,8 @@ const BuscarArticuloComponent = ({
   const dispatch = useAppDispatch();
   const [codigo, set_codigo] = useState<string>("");
   const [nombre, set_nombre] = useState<string>("");
-  const [grid_vehivulos, set_grid_vehivulos] = useState<any[]>([]);
-  const [grid_vehivulos_before, set_grid_vehivulos_before] = useState<any[]>([]);
+  const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
+  const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
   const [selected_product, set_selected_product] = useState(null);
   const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
 
@@ -40,11 +41,11 @@ const BuscarArticuloComponent = ({
 
   const accionar_busqueda: any = () => {
     if(nombre === '' && codigo === ''){
-      set_grid_vehivulos(grid_vehivulos_before);
+      set_grid_busqueda(grid_busqueda_before);
       return
     }
-    const data_filter = grid_vehivulos_before.filter(gv => ((Boolean(gv.nombre.includes(nombre))) && gv.codigo_bien.toString().includes(codigo)));
-    set_grid_vehivulos(data_filter);
+    const data_filter = grid_busqueda_before.filter(gv => ((Boolean(gv.nombre.includes(nombre))) && gv.codigo_bien.toString().includes(codigo)));
+    set_grid_busqueda(data_filter);
   }
 
   const selected_product_grid: any = () => {
@@ -52,18 +53,33 @@ const BuscarArticuloComponent = ({
   }
 
   useEffect(() => {
-    dispatch(get_vehicles_all_service()).then((response: any) => {
-      set_grid_vehivulos(response.Elementos);
-      set_grid_vehivulos_before([...response.Elementos]);
-    })
+
   }, []);
 
   useEffect(() => {
     console.log(get_vehicles);
-  }, [grid_vehivulos]);
+  }, [grid_busqueda]);
 
   useEffect(() => {
-    title ==='Buscar vehículos' ? set_columna_hidden(false) : set_columna_hidden(true);
+    if(title ==='Buscar vehículos'){
+      set_columna_hidden(false);
+      dispatch(get_vehicles_all_service()).then((response: any) => {
+        set_grid_busqueda(response.Elementos);
+        set_grid_busqueda_before([...response.Elementos]);
+      })
+    }else if(title ==='Buscar computadores'){
+      set_columna_hidden(true);
+      dispatch(get_computers_all_service()).then((response: any) => {
+        set_grid_busqueda(response.Elementos);
+        set_grid_busqueda_before([...response.Elementos]);
+      })
+    }else{
+      set_columna_hidden(true);
+      dispatch(get_computers_all_service()).then((response: any) => {
+        set_grid_busqueda(response.Elementos);
+        set_grid_busqueda_before([...response.Elementos]);
+      })
+    }
   }, [title])
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -134,7 +150,7 @@ const BuscarArticuloComponent = ({
                 <Title title='Resultados' />
                 <Box sx={{ width: '100%', mt: '20px' }}>
                   <div className="card">
-                    <DataTable value={grid_vehivulos} sortField="nombre" stripedRows  paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+                    <DataTable value={grid_busqueda} sortField="nombre" stripedRows  paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
                     selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value); }} dataKey="id_bien"
                     >
                       <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
