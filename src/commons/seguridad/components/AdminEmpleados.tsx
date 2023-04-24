@@ -1,11 +1,10 @@
-import { Grid, TextField, Button, CircularProgress, type SelectChangeEvent, Skeleton, Box } from "@mui/material";
+import { Grid, Typography, TextField, Button, CircularProgress, type SelectChangeEvent, Skeleton, Box } from "@mui/material";
 import { CustomSelect } from "../../../components";
 import type { DataRegistePortal } from "../../auth/interfaces";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { use_register } from "../../auth/hooks/registerHooks";
 import SearchIcon from '@mui/icons-material/Search';
-import { BuscadorPersona } from "../../../components/BuscadorPersona";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdminEmpleados(): JSX.Element {
   const {
@@ -58,6 +57,8 @@ export function AdminEmpleados(): JSX.Element {
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
     set_value_form(e.target.name, e.target.value);
   };
+  const [consulted, set_consulted] = useState(false);
+
 
   return (
     <>
@@ -115,6 +116,7 @@ export function AdminEmpleados(): JSX.Element {
               type="submit"
               disabled={loading}
               className="search-button text-capitalize rounded-pill"
+
               startIcon={
                 loading
                   ? <CircularProgress size={15} key={1} className="align-middle ml-1" />
@@ -122,12 +124,18 @@ export function AdminEmpleados(): JSX.Element {
               }
               aria-label="Buscar "
               size="large"
+              onClick={() => { set_consulted(true); }}
+
             >
               Consultar
               {loading ? '' : ""}
             </Button>
           </Box>
         </Grid>
+        <Typography variant="body1" align="center" hidden={!consulted}>
+
+        </Typography>
+
       </Grid>
     </>
   );
