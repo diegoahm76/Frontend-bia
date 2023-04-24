@@ -73,8 +73,6 @@ const CrearViveroDialogForm = ({
   const on_submit = (data: FormValues): void => {
     console.log(file)
     data.ruta_archivo_creacion = file
-    console.log(data.ruta_archivo_creacion)
-    console.log(data)
     const form_data:any = new FormData();
     form_data.append('nombre', data.nombre);
         form_data.append('cod_municipio', data.cod_municipio);
