@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import { api } from '../../../../../../api/axios';
-import { type Persona } from "../../../../../../interfaces/globalModels";
+import { api } from '../../../../api/axios';
+import { type Persona } from "../../../../interfaces/globalModels";
 import { useForm } from 'react-hook-form';
 import { Grid } from '@mui/material';
 import { type ToastContent, toast } from 'react-toastify';
-import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
+import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 
 interface IList {

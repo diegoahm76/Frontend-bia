@@ -8,7 +8,7 @@ import { type NavigateFunction } from 'react-router-dom';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
 // import { log } from 'console';
-import { info_solicitud, get_unidad_organizacional } from './slices/indexSolicitudBienesConsumo';
+import { set_info_solicitud, get_unidad_organizacional } from './slices/indexSolicitudBienesConsumo';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -41,7 +41,7 @@ export const get_solicitud_consumo_id = (): any => {
         try {
             const { data } = await api.get('almacen/solicitudes/get-nro-documento-solicitudes-bienes-consumo');
             console.log(data)
-            dispatch(info_solicitud(data.data));
+            dispatch(set_info_solicitud(data.data));
             return data;
         } catch (error: any) {
             console.log('solicitud');
@@ -86,3 +86,18 @@ export const get_uni_organizacional = (): any => {
         }
     };
 };
+
+// obtener funcionario responsable
+
+// export const get_funcionario_responsable = (): any => {
+//     return async (dispatch: Dispatch<any>) => {
+//         try {
+//             const { data } = await api.get('almacen/solicitudes/search-funcionario/?tipo_documento&numero_documento&id_unidad_para_la_que_solicita');
+//             console.log(data, "data")
+//             dispatch(get_funcionario_responsable());
+//             return data;
+//         } catch (error: any) {
+//             return error as AxiosError;
+//         }
+//     };
+// };

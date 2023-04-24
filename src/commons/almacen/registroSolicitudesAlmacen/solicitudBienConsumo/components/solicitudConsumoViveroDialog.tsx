@@ -3,12 +3,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Grid, } from '@mui/material';
 // import { Title } from '../../../../../components/Title';
 import PersonaResponsable from './componenteBusqueda/PersonaResponsable';
-import SeleccionarSolicitud from './componenteBusqueda/SeleccionarSolicitud';
+
+import SeleccionarSolicitudVivero from "./componenteBusqueda/SeleccionarSolicitudVivero";
 
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SolicitudConsumoDialog = () => {
+const SolicitudConsumoViveroDialog = () => {
 
 
     return (
@@ -28,7 +29,7 @@ const SolicitudConsumoDialog = () => {
             }}
         >
             <Grid item xs={12} marginY={2}>
-                <SeleccionarSolicitud />
+                <SeleccionarSolicitudVivero />
                 <PersonaResponsable />
             </Grid>
         </Grid>
@@ -41,4 +42,4 @@ const SolicitudConsumoDialog = () => {
 
 
 // eslint-disable-next-line no-restricted-syntax
-export default SolicitudConsumoDialog;
+export default SolicitudConsumoViveroDialog;

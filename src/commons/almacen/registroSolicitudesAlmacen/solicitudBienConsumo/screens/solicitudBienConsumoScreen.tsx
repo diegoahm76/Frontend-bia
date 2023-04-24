@@ -11,7 +11,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { Grid } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import SolicitudConsumoDialog from '../components/solicitudconsumoDialog';
-
+import SolicitudConsumoViveroDialog from '../components/solicitudConsumoViveroDialog'
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
 export const SolicitudBienConsumoScreen: React.FC = () => {
     const [value, set_value] = useState('1');
@@ -41,7 +41,10 @@ export const SolicitudBienConsumoScreen: React.FC = () => {
                         </TabList>
                     </Box>
                     <TabPanel value="1">
-                        <SolicitudConsumoDialog action={''} />
+                        <SolicitudConsumoDialog />
+                    </TabPanel>
+                    <TabPanel value="2">
+                        <SolicitudConsumoViveroDialog />
                     </TabPanel>
 
 

@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type IBodega, type IBodegaGet, } from '../../interfaces/Bodega';
+import { type IdResponsable, type IBodega, type IBodegaGet, } from '../../interfaces/Bodega';
 
 const initial_state_bodega_seleccionada: IBodega = {
     id_bodega: 0,
@@ -7,22 +7,17 @@ const initial_state_bodega_seleccionada: IBodega = {
     cod_municipio: "",
     direccion: "",
     es_principal: false,
-    // id_persona: 0,
-    // tipo_documento: "",
-    // primer_nombre: "",
-    // segundo_nombre: "",    // primer_apellido: "",
-    // segundo_apellido: "",
+    id_responsable: 0,
 }
 
-
-
-
 const initial_state: IBodegaGet = {
-    bodega: [],
-    // id_responsable: [],
+    bodegas: [],
+    id_responsable: [],
     bodega_seleccionada: initial_state_bodega_seleccionada,
 
 };
+
+
 export const bodegas_slice = createSlice({
     name: 'bodega',
     initialState: initial_state,
@@ -32,25 +27,25 @@ export const bodegas_slice = createSlice({
             state: IBodegaGet,
             action: PayloadAction<IBodega[]>
         ) => {
-            state.bodega = action.payload;
+            state.bodegas = action.payload;
         },
-        bodega_seleccionada: (
+        set_bodega_seleccionada: (
             state: IBodegaGet,
             action: PayloadAction<IBodega>
         ) => {
             state.bodega_seleccionada = action.payload;
         },
 
-        // get_id_responsable: (
-        //     state: IBodegaGet,
-        //     action: PayloadAction<IdResponsable[]>
-        // ) => {
-        //     state.id_responsable = action.payload;
-        // },
+        set_responsable: (
+            state: IBodegaGet,
+            action: PayloadAction<IdResponsable[]>
+        ) => {
+            state.id_responsable = action.payload;
+        },
     },
 });
 export const {
     get_bodega,
-    bodega_seleccionada,
-    //   get_id_responsable,
+    set_bodega_seleccionada,
+    set_responsable,
 } = bodegas_slice.actions;

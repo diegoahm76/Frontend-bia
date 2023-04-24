@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/';
 import { type IList } from '../../interfaces/MarcaMedidaPorcentaje';
 import { api } from '../../../../../api/axios';
+import PersonaResponsable from '../../../configuracion/components/PersonaResponsable'
 
 
 // import { type IList } from "../interfaces/marca";
@@ -102,6 +103,7 @@ const CrearBodegaModal = ({
         form_data.append('nombre', data.nombre);
         form_data.append('direccion', data.direccion);
         form_data.append('cod_municipio', data.cod_municipio);
+
 
         void dispatch(edit_bodega_service(data, bodega_seleccionada.id_bodega, navigate));
         handle_close_add_bodega();
@@ -271,6 +273,10 @@ const CrearBodegaModal = ({
                                     </TextField>
                                 )}
                             />
+                        </Grid>
+                        <Grid item xs={12} marginY={2}>
+
+                            <PersonaResponsable />
                         </Grid>
                     </Grid>
                 </DialogContent>

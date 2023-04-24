@@ -6,7 +6,6 @@ import { EntradaysalidArticulosRoutes } from "../gestionDeInventario/catalogoBie
 import { EntradaBienesAlmacenRoutes } from "../entradaDeAlmacen/routes/EntradaAlmacenRoutes";
 import { RegistroSolicitudesAlmacenRoutes } from "../registroSolicitudesAlmacen/routes/RegistroSolicitudesAlmacenRoutes";
 import { ReportesIndicadoresAnaliticaRoutes } from "../reportesIndicadoresAnalitca/routes/ReportesIndicadoresAnaliticaRoutes";
-import { ConfiguracionDatosBasicosRoutes } from "../configuracionDatosBasicos/routes/ConfiguracionDatosBasicosRoutes";
 import { GestionInventarioRoutes } from "../gestionDeInventario/gestionHojaDeVida/routes/GestionInventarioRoutes";
 import { SolicitudBienConsumoScreen } from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens";
 
@@ -34,10 +33,7 @@ export const AlmacenRoutes: React.FC = () => {
         path="reportes_indicadores_analitica/*"
         element={<ReportesIndicadoresAnaliticaRoutes />}
       />
-      <Route
-        path="configuracion_datos_basicos/*"
-        element={<ConfiguracionDatosBasicosRoutes />}
-      />
+
       {/* <Route
         path="programacion_mantenimiento"
         element={<ProgramacionManteniento />}
