@@ -110,6 +110,7 @@ export interface SeguridadSlice {
 export interface DatosRestringidos {
   tipo_documento: string;
   numero_documento: string;
+  primer_nombre: string;
   segundo_nombre: string;
   primer_apellido: string;
   segundo_apellido: string;
