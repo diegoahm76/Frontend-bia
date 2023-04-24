@@ -1112,7 +1112,7 @@ export const ReportesScreen: React.FC = () => {
                 fullWidth
                 select
                 size="small"
-                label="Seleccione tipo de reposte variable"
+                label="Seleccione tipo de reporte variable"
                 variant="outlined"
                 defaultValue={value}
                 value={value}
