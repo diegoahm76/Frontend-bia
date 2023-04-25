@@ -1,6 +1,6 @@
 export interface Estaciones {
-    id_estacion: number | string,
-    fecha_modificacion: null | string,
+    id_estacion: number,
+    fecha_modificacion: null | Date,
     nombre_estacion: string,
     cod_tipo_estacion: string,
     cod_municipio: string | number,
@@ -44,13 +44,48 @@ export interface Datos {
     velocidad_agua: number,
     id_estacion: number,
 }
+export interface DatosMigracionGraficas {
+    id_migracion_estacion: number,
+    fecha: number,
+    temperatura: number,
+    humedad_relativa: number,
+    punto_de_rocio: number,
+    presion_atm_abs: number,
+    presion_atm_rel: number,
+    precipitacion: number,
+    nivel_agua: number,
+    velocidad_rio: number,
+    caudal: number,
+}
+export interface DatosMigracion {
+    id_migracion_estacion: number;
+    id_estacion: number;
+    nombre: string;
+    fecha: string;
+    temperatura: string;
+    temperatura_max: string;
+    temperatura_min: string;
+    humedad_relativa: string;
+    punto_de_rocio: string;
+    presion_atm_abs: string;
+    presion_atm_rel: string;
+    intensidad: string;
+    precipitacion: string;
+    nivel_agua: string;
+    nivel_agua_max: string;
+    nivel_agua_min: string;
+    velocidad_rio: string;
+    caudal: string;
+    voltaje: string;
+}
 export interface Equipo {
     id_alerta_equipo_estacion: number,
     nombre_estacion: string,
     descripcion: string,
+    nombre_variable: string,
     fecha_generacion: string | Date,
 }
-export interface HistorialAlerta{
+export interface HistorialAlerta {
     id_historial_alarma_enviada_estacion: number
     nombre_estacion: string,
     id_persona_estacion: string | number,
@@ -58,6 +93,7 @@ export interface HistorialAlerta{
     mensaje_enviado: string,
     dir_email_enviado: string,
     nro_celular_enviado: string | number,
+    nombre_persona_envio: string,
 }
 export interface conf_alarma {
     id_confi_alerta_persona: number,
@@ -137,6 +173,7 @@ export interface CrearAlerta {
     mensaje_no_alarma: string;
     frecuencia_alarma: number;
 }
+
 export interface Tipos {
     frecuencia_solicitud_datos: number;
     temperatura_ambiente_max: number;

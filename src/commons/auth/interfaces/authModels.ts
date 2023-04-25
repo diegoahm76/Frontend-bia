@@ -186,7 +186,7 @@ export interface DataRegistePortal {
   primer_apellido: string;
   primer_nombre: string;
   razon_social: string | null;
-  representante_legal: string | null;
+  representante_legal: number | null;
   require_nombre_comercial: boolean;
   segundo_apellido: string | null;
   segundo_nombre: string | null;
@@ -231,17 +231,16 @@ export interface Acciones {
 
 export interface ReisterHook {
   ciudad_expedicion: string;
+  ciudad_notificacion_opt: IList[];
   ciudad_notificacion: string;
   ciudad_residencia: string;
   ciudades_opt: IList[];
   ciudades_residencia_opt: IList[];
-  ciudad_notificacion_opt: IList[];
   data_register: DataRegistePortal;
   departamento_expedicion: string;
   departamento_residencia: string;
   departamentos_opt: IList[];
   dpto_notifiacion_opt: IList[];
-  naturaleza_emp_opt: IList[];
   dpto_notifiacion: string;
   dpts_residencia_opt: IList[];
   error_email: boolean;
@@ -250,6 +249,7 @@ export interface ReisterHook {
   estado_civil_opt: IList[];
   estado_civil: string;
   fecha_nacimiento: Dayjs | null;
+  fecha_rep_legal: Dayjs | null;
   genero_opt: IList[];
   genero: string;
   has_user: boolean;
@@ -258,6 +258,12 @@ export interface ReisterHook {
   is_search: boolean;
   loading: boolean;
   message_error_password: string;
+  message_no_person: string;
+  nacionalidad_emp: string;
+  naturaleza_emp_opt: IList[];
+  naturaleza_emp: string;
+  nombre_representante: string;
+  numero_documento: string;
   pais_nacimiento: string;
   pais_notificacion: string;
   pais_residencia: string;
@@ -265,21 +271,12 @@ export interface ReisterHook {
   requiere_nombre_comercial: boolean;
   show_password: boolean;
   tipo_documento_opt: IList[];
+  tipo_documento_rep: string;
   tipo_documento: string;
   tipo_persona_opt: IList[];
   tipo_persona: string;
-  naturaleza_emp: string;
-  nacionalidad_emp: string;
-  tipo_documento_rep: string;
-  message_no_person: string;
-  nombre_representante: string;
-  fecha_rep_legal: Dayjs | null;
-  set_fecha_rep_legal: Dispatch<SetStateAction<Dayjs | null>>;
-  set_nombre_representante: Dispatch<SetStateAction<string>>;
-  set_message_no_person: Dispatch<SetStateAction<string>>;
-  set_tipo_documento_rep: Dispatch<SetStateAction<string>>;
-  set_nacionalidad_emp: Dispatch<SetStateAction<string>>;
-  set_naturaleza_emp: Dispatch<SetStateAction<string>>;
+  documento_rep: string;
+  set_documento_rep: Dispatch<SetStateAction<string>>;
   get_selects_options: () => Promise<void>;
   handle_change_checkbox: (event: ChangeEvent<HTMLInputElement>) => void;
   handle_click_show_password: () => void;
@@ -302,6 +299,7 @@ export interface ReisterHook {
   set_estado_civil_opt: Dispatch<SetStateAction<IList[]>>;
   set_estado_civil: Dispatch<SetStateAction<string>>;
   set_fecha_nacimiento: Dispatch<SetStateAction<Dayjs | null>>;
+  set_fecha_rep_legal: Dispatch<SetStateAction<Dayjs | null>>;
   set_genero_opt: Dispatch<SetStateAction<IList[]>>;
   set_genero: Dispatch<SetStateAction<string>>;
   set_has_user: Dispatch<SetStateAction<boolean>>;
@@ -309,29 +307,20 @@ export interface ReisterHook {
   set_is_saving: Dispatch<SetStateAction<boolean>>;
   set_is_search: Dispatch<SetStateAction<boolean>>;
   set_message_error_password: Dispatch<SetStateAction<string>>;
+  set_message_no_person: Dispatch<SetStateAction<string>>;
+  set_nacionalidad_emp: Dispatch<SetStateAction<string>>;
+  set_naturaleza_emp: Dispatch<SetStateAction<string>>;
+  set_nombre_representante: Dispatch<SetStateAction<string>>;
+  set_numero_documento: Dispatch<SetStateAction<string>>;
   set_pais_nacimiento: Dispatch<SetStateAction<string>>;
   set_pais_notificacion: Dispatch<SetStateAction<string>>;
   set_pais_residencia: Dispatch<SetStateAction<string>>;
   set_show_password: Dispatch<SetStateAction<boolean>>;
+  set_tipo_documento_rep: Dispatch<SetStateAction<string>>;
   set_tipo_documento: Dispatch<SetStateAction<string>>;
   set_tipo_persona: Dispatch<SetStateAction<string>>;
-  validate_exits: (numero_documento: string) => Promise<void>;
   validate_exits_representante: (numero_documento: string) => Promise<void>;
-}
-
-export interface InfoPersona {
-  id_persona: number;
-  tipo_persona: string;
-  tipo_documento: string;
-  numero_documento: string;
-  primer_nombre: string;
-  segundo_nombre: string;
-  primer_apellido: string;
-  segundo_apellido: string;
-  nombre_completo: string;
-  razon_social: string;
-  nombre_comercial: string;
-  tiene_usuario: boolean;
+  validate_exits: (numero_documento: string) => Promise<void>;
 }
 
 export interface InfoPersonaComplete {
@@ -413,4 +402,21 @@ export interface DataUnlockUser {
   email: string;
   fecha_nacimiento: string;
   redirect_url: string;
+}
+
+export interface ChangePassword {
+  password: string;
+  token: string | null;
+  uidb64: string | null;
+}
+
+export interface DataUserRecover {
+  nombre_de_usuario: string;
+  tipo_envio: string;
+  redirect_url: string;
+}
+
+export interface ResponseRecover {
+  email: string;
+  sms: string;
 }

@@ -68,7 +68,6 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   const handle_close_dialog_user = (): void => {
     set_dialog_open(false);
   };
- 
 
   const open_collapse = (obj: Permisos, key: number): void => {
     const temp_permisos = [...permisos];
@@ -140,16 +139,22 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             </ListItemButton>
 
             {/* Validamos si es superusuario */}
-            {userinfo.is_superuser &&(
-            <ListItemButton sx={{ pl: 4 }} onClick={handle_click_delegar_super}>
-              <ListItemIcon>
-                <CircleIcon sx={{ color: 'secondary.main', height: '10px' }} />
-              </ListItemIcon>
-              <ListItemText primary="Delegacion de Super Usuario" />
-            </ListItemButton> 
-            )
-            }
-            {dialog_open && <SuperUserScreen onClose={handle_close_dialog_user} />}
+            {userinfo.is_superuser && (
+              <ListItemButton
+                sx={{ pl: 4 }}
+                onClick={handle_click_delegar_super}
+              >
+                <ListItemIcon>
+                  <CircleIcon
+                    sx={{ color: 'secondary.main', height: '10px' }}
+                  />
+                </ListItemIcon>
+                <ListItemText primary="Delegacion de Super Usuario" />
+              </ListItemButton>
+            )}
+            {dialog_open && (
+              <SuperUserScreen onClose={handle_close_dialog_user} />
+            )}
             <ListItemButton
               sx={{ pl: 4 }}
               onClick={() => {

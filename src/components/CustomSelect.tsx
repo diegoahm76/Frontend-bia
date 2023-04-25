@@ -6,9 +6,7 @@ import {
   Select,
   Skeleton,
 } from '@mui/material';
-import { useForm } from 'react-hook-form';
-import type { PropsSelect } from '../../../interfaces/globalModels';
-import type { keys_object } from '../interfaces';
+import type { PropsSelect } from '../interfaces/globalModels';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CustomSelect = ({
@@ -20,12 +18,9 @@ export const CustomSelect = ({
   disabled = false,
   required = false,
   onChange,
-}: PropsSelect<keys_object>): JSX.Element => {
-  const {
-    register,
-    formState: { errors },
-  } = useForm();
-
+  errors,
+  register,
+}: PropsSelect): JSX.Element => {
   return (
     <FormControl
       fullWidth
@@ -34,7 +29,7 @@ export const CustomSelect = ({
       disabled={disabled}
     >
       {loading ? (
-        <Skeleton variant="rectangular" width="100%" height={45} />
+        <Skeleton variant="rectangular" width="100%" height={42} />
       ) : (
         <>
           <InputLabel id={`label_${name}`}>{label}</InputLabel>

@@ -4,6 +4,7 @@ import thunk from "redux-thunk";
 import { persistReducer } from "redux-persist";
 import { layout_slice } from "./layoutSlice";
 import { auth_slice } from "../commons/auth/store/authSlice";
+import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
 import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
 import { material_vegetal_slice } from "../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice";
 import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
@@ -19,6 +20,7 @@ import {
   porcentajes_slice,
   medida_slice,
 } from "../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice";
+import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
 
 const persist_config = {
   key: "macarenia_app",
@@ -28,6 +30,7 @@ const persist_config = {
 
 const app_reducers = combineReducers({
   auth: auth_slice.reducer,
+  seguridad: seguridad_slice.reducer,
   layout: layout_slice.reducer,
   organigram: organigrama_slice.reducer,
   ccd: ccd_slice.reducer,
@@ -41,6 +44,7 @@ const app_reducers = combineReducers({
   bien: bien_slice.reducer,
   configuracion: configuracion_slice.reducer,
   cv: cv_computo_slice.reducer,
+  cve: cve_vehicle_slice.reducer,
   material_vegetal: material_vegetal_slice.reducer,
 });
 

@@ -9,6 +9,7 @@ import  { Title }  from '../../../../components/Title';
 import { HistorialAlertas } from '../components/HistorialAlertas';
 import { HistorialDeDatos } from '../components/HistorialDeDatos';
 import { HistorialEquipos } from '../components/HistorialEquipos';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const HistorialDatos: React.FC = () => {
     const [value, set_value] = useState('1');

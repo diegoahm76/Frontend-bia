@@ -1,4 +1,9 @@
-import { type SelectChangeEvent } from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material';
+import type {
+  FieldErrors,
+  FieldValues,
+  UseFormRegister
+} from 'react-hook-form';
 
 export interface ResponseThunks<T = any | null> {
   ok: boolean;
@@ -43,14 +48,16 @@ export interface Municipios {
   cod_departamento: string;
 }
 
-export interface PropsSelect<T> {
+export interface PropsSelect {
   options: IList[];
   label: string;
-  name: T;
+  name: string;
   value: string;
   loading: boolean;
   disabled?: boolean;
   required?: boolean;
+  errors: FieldErrors<FieldValues>;
+  register: UseFormRegister<any>;
   onChange: (e: SelectChangeEvent<string>) => void;
 }
 
@@ -69,7 +76,6 @@ export interface Direccion {
   cuadrante_secundaria: string;
   barrio: string;
   nombre: string;
-  complemento: string;
   ubicacion: string;
   direccion_estandarizada: string;
 }
@@ -104,6 +110,30 @@ export type keys_direccion =
   | 'cuadrante_secundaria'
   | 'barrio'
   | 'nombre'
-  | 'complemento'
   | 'direccion_estandarizada'
   | 'ubicacion';
+
+export interface InfoPersona {
+  id: number;
+  id_persona: number;
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  nombre_completo: string;
+  razon_social: string;
+  nombre_comercial: string;
+  tiene_usuario: boolean;
+}
+
+export interface BusquedaAvanzada {
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre?: string;
+  primer_apellido?: string;
+  razon_social?: string;
+  nombre_comercial?: string;
+}

@@ -4,7 +4,6 @@ import {
   Grid,
   InputLabel,
   TextField,
-  FormGroup,
   FormControlLabel,
   Checkbox,
   FormHelperText,
@@ -26,81 +25,48 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { use_register } from '../hooks/registerHooks';
-import { useForm } from 'react-hook-form';
+import { type FieldErrors, useForm } from 'react-hook-form';
 import { crear_persona_natural_and_user } from '../request/authRequest';
-import { CustomSelect } from './CustomSelect';
+import { CustomSelect } from '../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../recursoHidrico/requets/Request';
-import { type Dayjs } from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
 import type { AxiosError } from 'axios';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { validate_password } from '../../../helpers/ValidateFormatPassword';
 
+interface PropsElement {
+  errors: FieldErrors<DataRegistePortal>;
+}
+
 interface PropsStep {
   label: string;
-  component: JSX.Element;
+  component: (props: PropsElement) => JSX.Element;
+}
+interface Props {
+  numero_documento: string;
+  tipo_documento: string;
+  tipo_persona: string;
+  has_user: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterPersonaNatural: React.FC = () => {
+export const RegisterPersonaNatural: React.FC<Props> = ({
+  numero_documento,
+  tipo_documento,
+  tipo_persona,
+  has_user,
+}: Props) => {
   const {
     register,
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors, isValid: is_valid },
     watch,
-  } = useForm<DataRegistePortal>({
-    defaultValues: {
-      acepta_notificacion_email: false,
-      acepta_notificacion_sms: false,
-      acepta_tratamiento_datos: false,
-      cod_municipio_laboral_nal: '',
-      cod_municipio_notificacion_nal: '',
-      confirmar_celular: '',
-      confirmar_email: '',
-      confirmar_password: '',
-      digito_verificacion: '',
-      direccion_laboral: '',
-      direccion_notificaciones: '',
-      direccion_residencia_ref: '',
-      direccion_residencia: '',
-      email_empresarial: '',
-      email: '',
-      estado_civil: '',
-      fecha_nacimiento: '',
-      tipo_documento_rep: '',
-      municipio_residencia: '',
-      nombre_rep: '',
-      celular_rep: '',
-      direccion_rep: '',
-      ciudad_rep: '',
-      email_rep: '',
-      nombre_comercial: '',
-      nombre_de_usuario: '',
-      numero_documento: '',
-      pais_nacimiento: '',
-      pais_residencia: '',
-      password: '',
-      primer_apellido: '',
-      primer_nombre: '',
-      razon_social: '',
-      representante_legal: '',
-      require_nombre_comercial: false,
-      segundo_apellido: '',
-      segundo_nombre: '',
-      sexo: '',
-      telefono_celular_empresa: '',
-      telefono_celular: '',
-      telefono_empresa_2: '',
-      telefono_fijo_residencial: '',
-      tipo_documento: '',
-      tipo_persona: '',
-      ubicacion_georeferenciada: '',
-    },
-  });
+  } = useForm<DataRegistePortal>();
   const {
     ciudad_expedicion,
     ciudad_residencia,
@@ -117,7 +83,6 @@ export const RegisterPersonaNatural: React.FC = () => {
     fecha_nacimiento,
     genero_opt,
     genero,
-    has_user,
     is_exists,
     is_saving,
     loading,
@@ -127,7 +92,6 @@ export const RegisterPersonaNatural: React.FC = () => {
     pais_residencia,
     paises_options,
     show_password,
-    tipo_persona,
     dpto_notifiacion_opt,
     dpto_notifiacion,
     ciudad_notificacion_opt,
@@ -153,7 +117,6 @@ export const RegisterPersonaNatural: React.FC = () => {
     set_pais_nacimiento,
     set_pais_residencia,
     set_tipo_documento,
-    set_tipo_persona,
     set_pais_notificacion,
   } = use_register();
   const [is_modal_active, open_modal] = useState(false);
@@ -161,7 +124,6 @@ export const RegisterPersonaNatural: React.FC = () => {
   const [direccion_notificacion, set_direccion_notificacion] = useState('');
   const [type_direction, set_type_direction] = useState('');
   const [active_step, set_active_step] = useState(0);
-  const [error_step, set_error_step] = useState(false);
 
   // watchers
   const email = watch('email');
@@ -222,12 +184,6 @@ export const RegisterPersonaNatural: React.FC = () => {
   }, [watch('cod_municipio_notificacion_nal')]);
 
   useEffect(() => {
-    if (watch('tipo_persona') !== undefined) {
-      set_tipo_persona(watch('tipo_persona'));
-    }
-  }, [watch('tipo_persona')]);
-
-  useEffect(() => {
     if (watch('pais_nacimiento') !== undefined) {
       set_pais_nacimiento(watch('pais_nacimiento'));
     }
@@ -244,15 +200,6 @@ export const RegisterPersonaNatural: React.FC = () => {
       set_estado_civil(watch('estado_civil') as string);
     }
   }, [watch('estado_civil')]);
-
-  useEffect(() => {
-    if (tipo_persona === 'J') {
-      set_value('tipo_documento', 'NT');
-      set_tipo_documento('NT');
-    } else {
-      set_tipo_documento('');
-    }
-  }, [tipo_persona]);
 
   useEffect(() => {
     if (watch('tipo_documento') !== undefined) {
@@ -316,6 +263,7 @@ export const RegisterPersonaNatural: React.FC = () => {
 
   // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
+    value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
     set_data_register({
       ...data_register,
       [name]: value,
@@ -325,12 +273,7 @@ export const RegisterPersonaNatural: React.FC = () => {
 
   // establece la fecha de nacimiento
   const on_change_birt_day = (value: Dayjs | null): void => {
-    const month = fecha_nacimiento?.get('M').toString() as string;
-    const day = fecha_nacimiento?.get('D').toString() as string;
-    const year = fecha_nacimiento?.get('y').toString() as string;
-    const date = `${year}-${month}-${day}`;
-    console.log(date);
-    console.log(value);
+    const date = dayjs(value).format('YYYY-MM-DD');
     set_value('fecha_nacimiento', date);
     set_value_form('fecha_nacimiento', date);
     set_fecha_nacimiento(value);
@@ -354,29 +297,33 @@ export const RegisterPersonaNatural: React.FC = () => {
     set_value_form(e.target.name, e.target.value);
   };
 
-  const on_submit = handle_submit(async (data) => {
-    if (!is_valid) {
-      set_error_step(true);
-      return;
-    }
-    if (active_step === 4) {
-      set_is_saving(true);
-      try {
-        if (data.tipo_persona === 'N') {
-          const { data } = await crear_persona_natural_and_user(data_register);
-          control_success(data.detail);
-        } else {
-          console.log('Creando persona juridica');
-        }
+  const on_submit = async (): Promise<void> => {
+    set_is_saving(true);
+    try {
+      console.log(data_register);
+      const { data } = await crear_persona_natural_and_user({
+        ...data_register,
+        tipo_documento,
+        tipo_persona,
+        numero_documento,
+      });
+      control_success(data.detail);
 
-        window.location.href = '#/app/auth/login';
-      } catch (error) {
-        const temp_error = error as AxiosError;
-        const resp = temp_error.response?.data as UserCreate;
-        control_error(resp.detail);
-      } finally {
-        set_is_saving(false);
-      }
+      window.location.href = '#/app/auth/login';
+    } catch (error) {
+      const temp_error = error as AxiosError;
+      const resp = temp_error.response?.data as UserCreate;
+      control_error(resp.detail);
+    } finally {
+      set_is_saving(false);
+    }
+  };
+
+  const validate_step = handle_submit(() => {
+    handle_next();
+
+    if (active_step === 4 && is_valid) {
+      void on_submit();
     }
   });
 
@@ -391,594 +338,631 @@ export const RegisterPersonaNatural: React.FC = () => {
   };
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const DatosResidencia = (
-    <>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="País de residencia"
-          name="pais_residencia"
-          value={pais_residencia}
-          options={paises_options}
-          loading={loading}
-          required={true}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="Departamento"
-          name="departamento_residencia"
-          value={departamento_residencia}
-          options={dpts_residencia_opt}
-          loading={loading}
-          disabled={pais_residencia === '' ?? true}
-          required={true}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="Ciudad"
-          name="municipio_residencia"
-          value={ciudad_residencia}
-          options={ciudades_residencia_opt}
-          loading={loading}
-          disabled={departamento_residencia === '' ?? true}
-          required={true}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          size="small"
-          label="Direccion"
-          disabled
-          error={errors.direccion_residencia?.type === 'required'}
-          helperText={
-            errors.direccion_residencia?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('direccion_residencia', {
-            required: true,
-          })}
-          value={direccion}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <Button
-          variant="contained"
-          onClick={() => {
-            open_modal(true);
-            set_type_direction('residencia');
-          }}
-        >
-          Generar dirección
-        </Button>
-      </Grid>
-    </>
-  );
+  const DatosPersonales: (props: PropsElement) => JSX.Element = ({
+    errors,
+  }: PropsElement) => {
+    return (
+      <>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Nombre comercial"
+            error={errors.nombre_comercial?.type === 'required'}
+            helperText={
+              errors.nombre_comercial?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : ''
+            }
+            {...register('nombre_comercial')}
+            onChange={handle_change}
+          />
+        </Grid>
+        {/* Datos personales */}
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            disabled={is_exists}
+            fullWidth
+            size="small"
+            label="Primer nombre *"
+            error={errors.primer_nombre?.type === 'required'}
+            value={data_register.primer_nombre}
+            helperText={
+              errors.primer_nombre?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : ''
+            }
+            {...register('primer_nombre', { required: true })}
+            onChange={handle_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            disabled={is_exists}
+            fullWidth
+            size="small"
+            label="Segundo nombre"
+            value={data_register.segundo_nombre}
+            {...register('segundo_nombre')}
+            onChange={handle_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            disabled={is_exists}
+            fullWidth
+            size="small"
+            label="Primer apellido *"
+            value={data_register.primer_apellido}
+            error={errors.primer_apellido?.type === 'required'}
+            helperText={
+              errors.primer_apellido?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : ''
+            }
+            {...register('primer_apellido', {
+              required: true,
+            })}
+            onChange={handle_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            disabled={is_exists}
+            fullWidth
+            size="small"
+            value={data_register.segundo_apellido}
+            label="Segundo apellido"
+            {...register('segundo_apellido')}
+            onChange={handle_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              disabled={is_exists}
+              label="Fecha de nacimiento *"
+              value={fecha_nacimiento}
+              onChange={on_change_birt_day}
+              renderInput={(params) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  {...params}
+                  {...register('fecha_nacimiento', {
+                    required: true,
+                  })}
+                  onChange={handle_change}
+                  error={errors.fecha_nacimiento?.type === 'required'}
+                  helperText={
+                    errors.fecha_nacimiento?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : ''
+                  }
+                />
+              )}
+            />
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="País de nacimiento *"
+            name="pais_nacimiento"
+            value={pais_nacimiento}
+            options={paises_options}
+            loading={loading}
+            disabled={false}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="Género *"
+            name="sexo"
+            value={genero}
+            options={genero_opt}
+            loading={loading}
+            disabled={false}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="Estado civil *"
+            name="estado_civil"
+            value={estado_civil}
+            options={estado_civil_opt}
+            loading={loading}
+            disabled={false}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        {/* Lugar de expedición del documento */}
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" fontWeight="bold">
+            Lugar de expedición del documento
+          </Typography>
+          <Divider />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="Departamento *"
+            name="departamento_expedicion"
+            value={departamento_expedicion}
+            options={departamentos_opt}
+            loading={loading}
+            disabled={false}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="Ciudad *"
+            name="cod_municipio_expedicion_id"
+            value={ciudad_expedicion}
+            options={ciudades_opt}
+            loading={loading}
+            disabled={false}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+      </>
+    );
+  };
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const DatosNotificacion = (
-    <>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="País de notificación"
-          name="pais_notificacion"
-          value={pais_notificacion}
-          options={paises_options}
-          loading={loading}
-          disabled={false}
-          required={true}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="Departamento"
-          name="dpto_notifiacion"
-          value={dpto_notifiacion}
-          options={dpto_notifiacion_opt}
-          loading={loading}
-          disabled={pais_notificacion === '' ?? true}
-          required={true}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="Ciudad"
-          name="cod_municipio_notificacion_nal"
-          value={ciudad_notificacion}
-          options={ciudad_notificacion_opt}
-          loading={loading}
-          disabled={dpto_notifiacion === '' ?? true}
-          required={true}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          size="small"
-          label="Direccion"
-          disabled
-          error={errors.direccion_notificaciones?.type === 'required'}
-          helperText={
-            errors.direccion_notificaciones?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('direccion_notificaciones', {
-            required: true,
-          })}
-          value={direccion_notificacion}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <Button
-          variant="contained"
-          onClick={() => {
-            open_modal(true);
-            set_type_direction('notificacion');
-          }}
-        >
-          Generar dirección
-        </Button>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          label="Complemento dirección"
-          value={data_register.complemeto_direccion}
-          {...register('complemeto_direccion')}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          label="E-mail"
-          error={errors.email?.type === 'required' || error_email}
-          type="email"
-          value={data_register.email}
-          helperText={
-            errors.email?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : error_email
-              ? 'Los emails no coinciden'
-              : ''
-          }
-          {...register('email', {
-            required: true,
-          })}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          label="Confirme su e-mail"
-          error={errors.confirmar_email?.type === 'required' || error_email}
-          type="email"
-          value={data_register.confirmar_email}
-          helperText={
-            errors.confirmar_email?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : error_email
-              ? 'Los emails no coinciden'
-              : ''
-          }
-          {...register('confirmar_email', {
-            required: true,
-          })}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Typography variant="caption" fontWeight="bold">
-          NOTA: Se recomienda el registro de un número celular, este se usará
-          como medio de recuperación de la cuenta, en caso de que olvide sus
-          datos de acceso.
-        </Typography>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          label="Celular"
-          onCopy={(e: any) => e.preventDefault()}
-          value={data_register.telefono_celular}
-          error={error_phone}
-          helperText={error_phone ? 'Los número de celular no son iguales' : ''}
-          {...register('telefono_celular')}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          label="Confirme su celular"
-          onCopy={(e: any) => e.preventDefault()}
-          error={error_phone}
-          helperText={error_phone ? 'Los número de celular no son iguales' : ''}
-          {...register('confirmar_celular')}
-          onChange={handle_change}
-        />
-      </Grid>
-    </>
-  );
+  const DatosResidencia: (props: PropsElement) => JSX.Element = ({
+    errors,
+  }: PropsElement) => {
+    return (
+      <>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="País de residencia *"
+            name="pais_residencia"
+            value={pais_residencia}
+            options={paises_options}
+            loading={loading}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        {pais_residencia === 'CO' && (
+          <>
+            <Grid item xs={12} sm={6} md={4}>
+              <CustomSelect
+                onChange={on_change}
+                label="Departamento *"
+                name="departamento_residencia"
+                value={departamento_residencia}
+                options={dpts_residencia_opt}
+                loading={loading}
+                required={true}
+                errors={errors}
+                register={register}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <CustomSelect
+                onChange={on_change}
+                label="Ciudad *"
+                name="municipio_residencia"
+                value={ciudad_residencia}
+                options={ciudades_residencia_opt}
+                loading={loading}
+                disabled={departamento_residencia === '' ?? true}
+                required={true}
+                errors={errors}
+                register={register}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                size="small"
+                label="Direccion *"
+                disabled
+                fullWidth
+                error={errors.direccion_residencia?.type === 'required'}
+                helperText={
+                  errors.direccion_residencia?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+                {...register('direccion_residencia', {
+                  required: true,
+                })}
+                value={direccion}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  open_modal(true);
+                  set_type_direction('residencia');
+                }}
+              >
+                Generar dirección
+              </Button>
+            </Grid>
+          </>
+        )}
+      </>
+    );
+  };
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const AutorizacionDatos = (
-    <>
-      <Grid item xs={12}>
-        <FormGroup>
+  const DatosNotificacion: (props: PropsElement) => JSX.Element = ({
+    errors,
+  }: PropsElement) => {
+    return (
+      <>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="País de notificación"
+            name="pais_notificacion"
+            value={pais_notificacion}
+            options={paises_options}
+            loading={loading}
+            disabled={false}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="Departamento"
+            name="dpto_notifiacion"
+            value={dpto_notifiacion}
+            options={dpto_notifiacion_opt}
+            loading={loading}
+            disabled={pais_notificacion === '' ?? true}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="Ciudad"
+            name="cod_municipio_notificacion_nal"
+            value={ciudad_notificacion}
+            options={ciudad_notificacion_opt}
+            loading={loading}
+            disabled={dpto_notifiacion === '' ?? true}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            size="small"
+            label="Direccion"
+            disabled
+            fullWidth
+            error={errors.direccion_notificaciones?.type === 'required'}
+            helperText={
+              errors.direccion_notificaciones?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : ''
+            }
+            {...register('direccion_notificaciones', {
+              required: true,
+            })}
+            value={direccion_notificacion}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              open_modal(true);
+              set_type_direction('notificacion');
+            }}
+          >
+            Generar dirección
+          </Button>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            disabled={is_exists}
+            fullWidth
+            size="small"
+            label="Complemento dirección"
+            value={data_register.complemeto_direccion}
+            {...register('complemeto_direccion')}
+            onChange={handle_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            disabled={is_exists}
+            fullWidth
+            size="small"
+            label="E-mail"
+            error={errors.email?.type === 'required' || error_email}
+            type="email"
+            value={data_register.email}
+            helperText={
+              errors.email?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : error_email
+                ? 'Los emails no coinciden'
+                : ''
+            }
+            {...register('email', {
+              required: true,
+            })}
+            onChange={handle_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            disabled={is_exists}
+            fullWidth
+            size="small"
+            label="Confirme su e-mail"
+            error={errors.confirmar_email?.type === 'required' || error_email}
+            type="email"
+            value={data_register.confirmar_email}
+            helperText={
+              errors.confirmar_email?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : error_email
+                ? 'Los emails no coinciden'
+                : ''
+            }
+            {...register('confirmar_email', {
+              required: true,
+            })}
+            onChange={handle_change}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="caption" fontWeight="bold">
+            NOTA: Se recomienda el registro de un número celular, este se usará
+            como medio de recuperación de la cuenta, en caso de que olvide sus
+            datos de acceso.
+          </Typography>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            disabled={is_exists}
+            fullWidth
+            size="small"
+            label="Celular"
+            onCopy={(e: any) => e.preventDefault()}
+            value={data_register.telefono_celular}
+            error={error_phone}
+            helperText={
+              error_phone ? 'Los número de celular no son iguales' : ''
+            }
+            {...register('telefono_celular')}
+            onChange={handle_change}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            disabled={is_exists}
+            fullWidth
+            size="small"
+            label="Confirme su celular"
+            onCopy={(e: any) => e.preventDefault()}
+            error={error_phone}
+            helperText={
+              error_phone ? 'Los número de celular no son iguales' : ''
+            }
+            {...register('confirmar_celular')}
+            onChange={handle_change}
+          />
+        </Grid>
+      </>
+    );
+  };
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const AutorizacionDatos: (props: PropsElement) => JSX.Element = ({
+    errors,
+  }: PropsElement) => {
+    return (
+      <>
+        <Grid item xs={12}>
           <FormControlLabel
             label="¿Autoriza notificaciones judiciales por correo electrónico?"
             control={
               <Checkbox
                 size="small"
-                value={data_register.acepta_notificacion_email}
+                checked={data_register.acepta_notificacion_email}
                 {...register('acepta_notificacion_email')}
                 onChange={on_change_checkbox}
               />
             }
           />
-        </FormGroup>
-      </Grid>
-      <Grid item xs={12}>
-        <FormGroup>
+        </Grid>
+        <Grid item xs={12}>
           <FormControlLabel
             label="¿Autoriza notifiaciones informativas a través de mensajes de texto?"
             control={
               <Checkbox
                 size="small"
-                value={data_register.acepta_notificacion_sms}
+                checked={data_register.acepta_notificacion_sms}
                 {...register('acepta_notificacion_sms')}
                 onChange={on_change_checkbox}
               />
             }
           />
-        </FormGroup>
-      </Grid>
-      <Grid item xs={12}>
-        <FormGroup>
-          <FormControlLabel
-            label="¿Atoriza tratamiento de datos?"
-            control={
-              <Checkbox
-                size="small"
-                value={data_register.acepta_tratamiento_datos}
-                {...register('acepta_tratamiento_datos')}
-                onChange={on_change_checkbox}
-              />
-            }
-          />
-        </FormGroup>
-      </Grid>
-    </>
-  );
-
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const DatosCuenta = (
-    <>
-      <Grid item xs={12} sm={12}>
-        <Typography>
-          La contraseña debe cumplir con las siguientes reglas
-        </Typography>
-        <ul>
-          <li>Debe contener mínimo 6 caracteres</li>
-          <li>Debe contener 1 Caracter en Mayúscula</li>
-          <li>Debe contener 1 Caracter numérico</li>
-          <li>Debe contener 1 Caracter simbólico (*,-,_,%...)</li>
-        </ul>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          fullWidth
-          size="small"
-          label="Nombre de usuario"
-          error={errors.nombre_de_usuario?.type === 'required'}
-          helperText={
-            errors.nombre_de_usuario?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('nombre_de_usuario', {
-            required: true,
-          })}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <FormControl
-          size="small"
-          fullWidth
-          onCopy={(e: any) => e.preventDefault()}
-          error={errors.password?.type === 'required' || error_password}
-        >
-          <InputLabel htmlFor="password">Contraseña *</InputLabel>
-          <OutlinedInput
+        </Grid>
+        <Grid item xs={12}>
+          <FormControl
             required
-            id="password"
-            type={show_password ? 'text' : 'password'}
-            error={errors.password?.type === 'required'}
-            {...register('password', {
-              required: true,
-            })}
-            onChange={handle_change}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handle_click_show_password}
-                  edge="end"
-                >
-                  {show_password ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Contraseña"
-          />
-          {errors.password?.type === 'required' ? (
-            <FormHelperText>Este campo es obligatorio</FormHelperText>
-          ) : error_password ? (
-            <FormHelperText>{message_error_password}</FormHelperText>
-          ) : (
-            ''
-          )}
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <FormControl
-          size="small"
-          fullWidth
-          onCopy={(e: any) => e.preventDefault()}
-          error={
-            errors.confirmar_password?.type === 'required' || error_password
-          }
-        >
-          <InputLabel htmlFor="repita-password">
-            Repita la contraseña *
-          </InputLabel>
-          <OutlinedInput
-            required
-            id="repita-password"
-            type={show_password ? 'text' : 'password'}
-            error={errors.confirmar_password?.type === 'required'}
-            {...register('confirmar_password', {
-              required: true,
-            })}
-            onChange={handle_change}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handle_click_show_password}
-                  edge="end"
-                >
-                  {show_password ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-            label="Repita la contraseña"
-          />
-          {errors.confirmar_password?.type === 'required' ? (
-            <FormHelperText>Este campo es obligatorio</FormHelperText>
-          ) : error_password ? (
-            <FormHelperText>{message_error_password}</FormHelperText>
-          ) : (
-            ''
-          )}
-        </FormControl>
-      </Grid>
-    </>
-  );
-
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const DatosPersonales = (
-    <>
-      {/* TODO => Validar si es obligatorio o no, acorde al tipo de persona */}
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          fullWidth
-          size="small"
-          label={`Dígito de verificación ${tipo_persona === 'J' ? '*' : ''}`}
-          error={errors.digito_verificacion?.type === 'required'}
-          helperText={
-            errors.digito_verificacion?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('digito_verificacion', {
-            required: tipo_persona === 'J',
-          })}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          fullWidth
-          size="small"
-          label={`Nombre comercial ${tipo_persona === 'J' ? '*' : ''}`}
-          error={errors.nombre_comercial?.type === 'required'}
-          helperText={
-            errors.nombre_comercial?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('nombre_comercial', {
-            required: tipo_persona === 'J',
-          })}
-          onChange={handle_change}
-        />
-      </Grid>
-      {/* Datos personales */}
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          label="Primer nombre"
-          error={errors.primer_nombre?.type === 'required'}
-          value={data_register.primer_nombre}
-          helperText={
-            errors.primer_nombre?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('primer_nombre', { required: true })}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          label="Segundo nombre"
-          value={data_register.segundo_nombre}
-          {...register('segundo_nombre')}
-          onChange={handle_change}
-        />
-        {}
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          label="Primer apellido"
-          value={data_register.primer_apellido}
-          error={errors.primer_apellido?.type === 'required'}
-          helperText={
-            errors.primer_apellido?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('primer_apellido', {
-            required: true,
-          })}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          value={data_register.segundo_apellido}
-          label="Segundo apellido"
-          {...register('segundo_apellido')}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            disabled={is_exists}
-            label="Fecha de nacimiento"
-            value={fecha_nacimiento}
-            onChange={on_change_birt_day}
-            renderInput={(params) => (
-              <TextField
-                fullWidth
-                size="small"
-                {...params}
-                {...register('fecha_nacimiento', {
-                  required: true,
-                })}
-                onChange={handle_change}
-                error={errors.fecha_nacimiento?.type === 'required'}
-                helperText={
-                  errors.fecha_nacimiento?.type === 'required'
-                    ? 'Este campo es obligatorio'
-                    : ''
-                }
-              />
+            error={errors.acepta_tratamiento_datos?.type === 'required'}
+            component="fieldset"
+            variant="standard"
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  {...register('acepta_tratamiento_datos', {
+                    required: true,
+                  })}
+                  onChange={on_change_checkbox}
+                  checked={data_register.acepta_tratamiento_datos}
+                />
+              }
+              label="¿Autoriza tratamiento de datos? *"
+            />
+            {errors.acepta_tratamiento_datos?.type === 'required' && (
+              <FormHelperText>
+                Debe autorizar el tratamiento de datos
+              </FormHelperText>
             )}
+          </FormControl>
+        </Grid>
+      </>
+    );
+  };
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const DatosCuenta: (props: PropsElement) => JSX.Element = ({
+    errors,
+  }: PropsElement) => {
+    return (
+      <>
+        <Grid item xs={12} sm={12}>
+          <Typography>
+            La contraseña debe cumplir con las siguientes reglas
+          </Typography>
+          <ul>
+            <li>Debe contener mínimo 8 caracteres</li>
+            <li>Debe contener 1 caracter en mayúscula</li>
+            <li>Debe contener 1 caracter numérico</li>
+            <li>Debe contener 1 caracter simbólico (*,-,_,%...)</li>
+          </ul>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Nombre de usuario"
+            error={errors.nombre_de_usuario?.type === 'required'}
+            helperText={
+              errors.nombre_de_usuario?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : ''
+            }
+            {...register('nombre_de_usuario', {
+              required: true,
+            })}
+            onChange={handle_change}
           />
-        </LocalizationProvider>
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="País de nacimiento"
-          name="pais_nacimiento"
-          value={pais_nacimiento}
-          options={paises_options}
-          loading={loading}
-          disabled={false}
-          required={true}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="Género"
-          name="sexo"
-          value={genero}
-          options={genero_opt}
-          loading={loading}
-          disabled={false}
-          required={true}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="Estado civil"
-          name="estado_civil"
-          value={estado_civil}
-          options={estado_civil_opt}
-          loading={loading}
-          disabled={false}
-          required={true}
-        />
-      </Grid>
-      {/* Lugar de expedición del documento */}
-      <Grid item xs={12}>
-        <Typography variant="subtitle1" fontWeight="bold">
-          Lugar de expedición del documento
-        </Typography>
-        <Divider />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="Departamento"
-          name="departamento_expedicion"
-          value={departamento_expedicion}
-          options={departamentos_opt}
-          loading={loading}
-          disabled={false}
-          required={true}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <CustomSelect
-          onChange={on_change}
-          label="Ciudad"
-          name="cod_municipio_expedicion_id"
-          value={ciudad_expedicion}
-          options={ciudades_opt}
-          loading={loading}
-          disabled={false}
-          required={true}
-        />
-      </Grid>
-    </>
-  );
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <FormControl
+            size="small"
+            fullWidth
+            onCopy={(e: any) => e.preventDefault()}
+            error={errors.password?.type === 'required' || error_password}
+          >
+            <InputLabel htmlFor="password">Contraseña *</InputLabel>
+            <OutlinedInput
+              required
+              id="password"
+              type={show_password ? 'text' : 'password'}
+              error={errors.password?.type === 'required'}
+              {...register('password', {
+                required: true,
+              })}
+              onChange={handle_change}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handle_click_show_password}
+                    edge="end"
+                  >
+                    {show_password ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Contraseña"
+            />
+            {errors.password?.type === 'required' ? (
+              <FormHelperText>Este campo es obligatorio</FormHelperText>
+            ) : error_password ? (
+              <FormHelperText>{message_error_password}</FormHelperText>
+            ) : (
+              ''
+            )}
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <FormControl
+            size="small"
+            fullWidth
+            onCopy={(e: any) => e.preventDefault()}
+            error={
+              errors.confirmar_password?.type === 'required' || error_password
+            }
+          >
+            <InputLabel htmlFor="repita-password">
+              Repita la contraseña *
+            </InputLabel>
+            <OutlinedInput
+              required
+              id="repita-password"
+              type={show_password ? 'text' : 'password'}
+              error={errors.confirmar_password?.type === 'required'}
+              {...register('confirmar_password', {
+                required: true,
+              })}
+              onChange={handle_change}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handle_click_show_password}
+                    edge="end"
+                  >
+                    {show_password ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Repita la contraseña"
+            />
+            {errors.confirmar_password?.type === 'required' ? (
+              <FormHelperText>Este campo es obligatorio</FormHelperText>
+            ) : error_password ? (
+              <FormHelperText>{message_error_password}</FormHelperText>
+            ) : (
+              ''
+            )}
+          </FormControl>
+        </Grid>
+      </>
+    );
+  };
 
   const steps: PropsStep[] = [
     {
@@ -998,7 +982,7 @@ export const RegisterPersonaNatural: React.FC = () => {
       component: AutorizacionDatos,
     },
     {
-      label: 'Datos de la cuenta',
+      label: 'Datos de acceso',
       component: DatosCuenta,
     },
   ];
@@ -1007,16 +991,16 @@ export const RegisterPersonaNatural: React.FC = () => {
     <>
       <form
         onSubmit={(e) => {
-          void on_submit(e);
+          void validate_step(e);
         }}
       >
         <Stepper activeStep={active_step} orientation="vertical">
           {steps.map((step, index) => (
             <Step key={step.label}>
-              <StepLabel error={error_step}>{step.label}</StepLabel>
+              <StepLabel>{step.label}</StepLabel>
               <StepContent>
                 <Grid container spacing={2} mt={0.1}>
-                  {step.component}
+                  <step.component errors={errors} />
                   {/* Alertas */}
                   {is_exists && data_register.email === '' && (
                     <>
@@ -1042,9 +1026,7 @@ export const RegisterPersonaNatural: React.FC = () => {
                         }}
                         href="#/auth/login"
                       >
-                        <Typography sx={{ color: 'black' }}>
-                          Iniciar sesión
-                        </Typography>
+                        <Typography sx={{ color: 'black' }}>Salir</Typography>
                       </Button>
                     </Grid>
                     <Grid item>
@@ -1067,7 +1049,6 @@ export const RegisterPersonaNatural: React.FC = () => {
                         }
                         loading={is_saving}
                         disabled={is_saving || has_user}
-                        onClick={handle_next}
                       >
                         {index === steps.length - 1
                           ? 'Registrarse'

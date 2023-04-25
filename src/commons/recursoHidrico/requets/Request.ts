@@ -2,15 +2,13 @@ import { toast, type ToastContent } from "react-toastify";
 import { api } from "../../../api/axios";
 import { control_error } from "../../../helpers/controlError";
 import { type ResponseServer } from "../../../interfaces/globalModels";
-import type { Parametros, conf_alarma, Datos, Estaciones, EstacionesDetalle, IEstacionEstaciones, PersonaEstacion, CrearAlerta, EditarPersona, ParametrosEditar, Equipo, HistorialAlerta, } from "../estaciones/interfaces/interfaces";
+import type { Parametros, conf_alarma, Datos, Estaciones, EstacionesDetalle, IEstacionEstaciones, PersonaEstacion, CrearAlerta, EditarPersona, ParametrosEditar, Equipo, HistorialAlerta, DatosMigracion, } from "../estaciones/interfaces/interfaces";
 import axios from 'axios';
 
 export const alertas = axios.create({
   // baseURL: process.env.REACT_APP_BACKEND_URL,
   baseURL: 'http://localhost:8000/api/'
 });
-
-
 export const control_success = (message: ToastContent): any =>
   toast.success(message, {
     position: 'bottom-right',
@@ -53,7 +51,7 @@ export const consultar_estaciones = async (): Promise<Estaciones[]> => {
 }
 // consultar datos por id estación
 export const consultar_datos_id = async (id: number | string): Promise<Datos[]> => {
-  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id/${id}/`);
+  const { data: { data } } = await api.get<ResponseServer<Datos[]>>(`estaciones/datos/consultar-datos-id-primeros/${id}/`);
   return data;
 }
 
@@ -167,7 +165,19 @@ export const consultar_historial_equipo = async (id: number, fecha: string| Date
 // consultar historial equipo
 export const consultar_historial_alertas = async (id: number, fecha: string| Date | null): Promise<HistorialAlerta[]> => {
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const { data } = await api.get<ResponseServer<HistorialAlerta[]>>(`estaciones/historial/consultar-historial-equipo/${id}/${fecha}/`);
+  const { data } = await api.get<ResponseServer<HistorialAlerta[]>>(`estaciones/historial/consultar-historial-alertas/${id}/${fecha}/`);
+  return data.data;
+}
+// consultar datos por fecha migracion
+export const consultar_datos_mes_migracion = async (id: number, fecha: string| Date | null): Promise<DatosMigracion[]> => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const { data } = await api.get<ResponseServer<DatosMigracion[]>>(`estaciones/migracion/consultar-migracion-estaciones-id/${id}/?fecha=${fecha}`);
+  return data.data;
+}
+// consultar datos por fecha migracion
+export const consultar_datos_id_migracion = async (id: number): Promise<DatosMigracion[]> => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const { data } = await api.get<ResponseServer<DatosMigracion[]>>(`estaciones/migracion/consultar-migracion-estaciones-id/${id}/`);
   return data.data;
 }
 

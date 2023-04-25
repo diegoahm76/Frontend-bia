@@ -136,7 +136,6 @@ export function ListOrganigramas({
             onClick={() => {
               dispatch(current_organigram(params.row));
               set_position_tab_organigrama('2');
-              // navigate('/app/gestor_documental/organigrama/editar_organigrama');
             }}
           >
             <Avatar

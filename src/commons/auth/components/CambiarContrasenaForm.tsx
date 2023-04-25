@@ -1,9 +1,8 @@
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import { api } from '../../../api/axios';
 import { Button, Grid, Box, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { type AxiosError } from 'axios';
 import {
   control_success,
@@ -11,8 +10,10 @@ import {
   validate_password,
 } from '../../../helpers';
 import '../css/index.css';
-
-const params = new URLSearchParams(window.location.search);
+import {
+  password_reset_complete,
+  password_unblock_complete,
+} from '../request/authRequest';
 
 interface IDefaultValuesUpdatePassword {
   password: string;
@@ -27,8 +28,11 @@ const default_values = {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CambiarContrasena: React.FC = () => {
   const navigate = useNavigate();
-  const token = params.get('?token');
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const token = params.get('token');
   const uidb64 = params.get('uidb64');
+  const desbloquear = params.get('desbloquear');
   const {
     register,
     handleSubmit: handle_submit,
@@ -68,7 +72,13 @@ export const CambiarContrasena: React.FC = () => {
           token,
           uidb64,
         };
-        await api.patch('users/pasword-reset-complete', axios_body);
+
+        if (desbloquear === 'false') {
+          await password_reset_complete(axios_body);
+        } else {
+          await password_unblock_complete(axios_body);
+        }
+
         control_success('Contraseña cambiada correctamente');
         navigate('/auth/login');
       } catch (err: any) {

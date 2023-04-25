@@ -11,7 +11,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { control_error } from '../../../helpers/controlError';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { CustomSelect } from './CustomSelect';
 import { get_tipo_documento } from '../../../request/getRequest';
 import ReCaptcha from 'react-google-recaptcha';
 import { desbloquer_usuario } from '../request/authRequest';
@@ -20,6 +19,7 @@ import type { IList } from '../../seguridad/screens/AuditoriaScreen';
 import type { ResponseServer } from '../../../interfaces/globalModels';
 import type { AxiosError } from 'axios';
 import { control_success } from '../../recursoHidrico/requets/Request';
+import { CustomSelect } from '../../../components';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DesbloqueodeUsuario: React.FC = () => {
@@ -39,7 +39,7 @@ export const DesbloqueodeUsuario: React.FC = () => {
     email: '',
     fecha_nacimiento: '',
     redirect_url:
-      'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena',
+      'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena?desbloquear=true',
   });
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
   const [tipo_documento, set_tipo_documento] = useState('');
@@ -144,6 +144,8 @@ export const DesbloqueodeUsuario: React.FC = () => {
               options={tipo_documento_opt}
               loading={is_loading}
               required={true}
+              errors={errors}
+              register={register}
             />
           </Grid>
           <Grid item xs={12} sm={6}>

@@ -5,7 +5,7 @@ import { AuthLayout } from '../layouts/AuthLayout';
 export const RegisterScreen: React.FC = () => {
   return (
     <AuthLayout>
-      <RegisterForm />
+      <RegisterForm uso_interno={true} />
     </AuthLayout>
   );
 };

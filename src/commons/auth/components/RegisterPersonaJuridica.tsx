@@ -27,80 +27,49 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { use_register } from '../hooks/registerHooks';
 import { useForm } from 'react-hook-form';
-import { CustomSelect } from './CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../recursoHidrico/requets/Request';
-import { type Dayjs } from 'dayjs';
+import dayjs, { type Dayjs } from 'dayjs';
 import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
 import type { AxiosError } from 'axios';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { validate_password } from '../../../helpers/ValidateFormatPassword';
+import { crear_persona_juridica_and_user } from '../request/authRequest';
+import { CustomSelect } from '../../../components/CustomSelect';
 
 interface PropsStep {
   label: string;
   component: JSX.Element;
 }
 
+interface Props {
+  numero_documento: string;
+  tipo_documento: string;
+  tipo_persona: string;
+  has_user: boolean;
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterPersonaJuridica: React.FC = () => {
+export const RegisterPersonaJuridica: React.FC<Props> = ({
+  numero_documento,
+  tipo_documento,
+  tipo_persona,
+  has_user,
+}: Props) => {
   const {
     register,
     handleSubmit: handle_submit,
     setValue: set_value,
-    formState: { errors, isValid: is_valid },
+    formState: { errors },
     watch,
-  } = useForm<DataRegistePortal>({
-    defaultValues: {
-      acepta_notificacion_email: false,
-      acepta_notificacion_sms: false,
-      acepta_tratamiento_datos: false,
-      cod_municipio_laboral_nal: '',
-      cod_municipio_notificacion_nal: '',
-      confirmar_celular: '',
-      confirmar_email: '',
-      confirmar_password: '',
-      digito_verificacion: '',
-      direccion_laboral: '',
-      direccion_notificaciones: '',
-      direccion_residencia_ref: '',
-      direccion_residencia: '',
-      email_empresarial: '',
-      email: '',
-      estado_civil: '',
-      fecha_nacimiento: '',
-      municipio_residencia: '',
-      nombre_comercial: '',
-      nombre_de_usuario: '',
-      numero_documento: '',
-      pais_nacimiento: '',
-      pais_residencia: '',
-      password: '',
-      primer_apellido: '',
-      primer_nombre: '',
-      razon_social: '',
-      representante_legal: '',
-      require_nombre_comercial: false,
-      segundo_apellido: '',
-      segundo_nombre: '',
-      sexo: '',
-      telefono_celular_empresa: '',
-      telefono_celular: '',
-      telefono_empresa_2: '',
-      telefono_fijo_residencial: '',
-      tipo_documento: '',
-      tipo_persona: '',
-      ubicacion_georeferenciada: '',
-    },
-  });
+  } = useForm<DataRegistePortal>();
   const {
     data_register,
     error_email,
     error_password,
     error_phone,
-    fecha_nacimiento,
-    has_user,
     is_exists,
     is_saving,
     paises_options,
@@ -114,7 +83,6 @@ export const RegisterPersonaJuridica: React.FC = () => {
     tipo_documento_rep,
     naturaleza_emp,
     naturaleza_emp_opt,
-    tipo_persona,
     dpto_notifiacion_opt,
     dpto_notifiacion,
     ciudad_notificacion_opt,
@@ -122,6 +90,10 @@ export const RegisterPersonaJuridica: React.FC = () => {
     message_no_person,
     nombre_representante,
     fecha_rep_legal,
+    documento_rep,
+    set_documento_rep,
+    set_nacionalidad_emp,
+    set_naturaleza_emp,
     set_fecha_rep_legal,
     validate_exits_representante,
     set_ciudad_notificacion,
@@ -136,28 +108,25 @@ export const RegisterPersonaJuridica: React.FC = () => {
     set_error_error_phone,
     set_error_password,
     set_estado_civil,
-    set_fecha_nacimiento,
     set_genero,
     set_is_saving,
     set_message_error_password,
     set_pais_nacimiento,
     set_pais_residencia,
-    set_tipo_documento,
     set_tipo_persona,
-    validate_exits,
     set_pais_notificacion,
     set_tipo_documento_rep,
+    set_message_no_person,
   } = use_register();
   const [is_modal_active, open_modal] = useState(false);
   const [direccion_notificacion, set_direccion_notificacion] = useState('');
   const [type_direction, set_type_direction] = useState('');
   const [active_step, set_active_step] = useState(0);
-  const [error_step, set_error_step] = useState(false);
+  const [error_doc, set_error_doc] = useState('');
 
   // watchers
   const email = watch('email');
   const confirmar_email = watch('confirmar_email');
-  const numero_documento = watch('numero_documento');
   const numero_documento_rep = watch('numero_documento_rep');
   const password = watch('password');
   const confirmar_password = watch('confirmar_password');
@@ -165,15 +134,23 @@ export const RegisterPersonaJuridica: React.FC = () => {
   const confirmar_celular = watch('confirmar_celular');
 
   // Consultamos si el usuario existe
-  useEffect(() => {
-    if (numero_documento !== undefined && numero_documento !== '') {
-      void validate_exits(numero_documento);
-    }
-  }, [numero_documento]);
 
   useEffect(() => {
-    if (numero_documento_rep !== undefined && numero_documento_rep !== '') {
+    set_error_doc('');
+    set_message_no_person('');
+    if (
+      numero_documento_rep !== undefined &&
+      numero_documento_rep !== '' &&
+      numero_documento_rep !== numero_documento &&
+      numero_documento_rep !== '1'
+    ) {
       void validate_exits_representante(numero_documento_rep);
+    } else if (numero_documento_rep === numero_documento) {
+      set_error_doc(
+        ' El documento del representante legal no puede ser igual al de la empresa a registrar'
+      );
+    } else if (numero_documento_rep === '1') {
+      set_error_doc('El documento no puede ser 1');
     }
   }, [numero_documento_rep]);
 
@@ -259,19 +236,22 @@ export const RegisterPersonaJuridica: React.FC = () => {
   }, [watch('estado_civil')]);
 
   useEffect(() => {
-    if (tipo_persona === 'J') {
-      set_value('tipo_documento', 'NT');
-      set_tipo_documento('NT');
-    } else {
-      set_tipo_documento('');
+    if (watch('cod_naturaleza_empresa') !== undefined) {
+      set_naturaleza_emp(watch('cod_naturaleza_empresa'));
     }
-  }, [tipo_persona]);
+  }, [watch('cod_naturaleza_empresa')]);
 
   useEffect(() => {
-    if (watch('tipo_documento') !== undefined) {
-      set_tipo_documento(watch('tipo_documento'));
+    if (watch('cod_pais_nacionalidad_empresa') !== undefined) {
+      set_nacionalidad_emp(watch('cod_pais_nacionalidad_empresa'));
     }
-  }, [watch('tipo_documento')]);
+  }, [watch('cod_pais_nacionalidad_empresa')]);
+
+  useEffect(() => {
+    if (watch('numero_documento_rep') !== undefined) {
+      set_documento_rep(watch('numero_documento_rep'));
+    }
+  }, [watch('numero_documento_rep')]);
 
   useEffect(() => {
     if (email !== confirmar_email) {
@@ -307,6 +287,14 @@ export const RegisterPersonaJuridica: React.FC = () => {
     set_error_password(false);
   }, [password, confirmar_password]);
 
+  useEffect(() => {
+    set_value_form('tipo_documento', tipo_documento);
+  }, [tipo_documento]);
+
+  useEffect(() => {
+    set_value_form('tipo_persona', tipo_persona);
+  }, [tipo_persona]);
+
   const set_value_direction = (value: string, type: string): void => {
     // direccion_laboral
     // direccion_notificaciones
@@ -336,27 +324,10 @@ export const RegisterPersonaJuridica: React.FC = () => {
     set_value(name as keys_object, value);
   };
 
-  const format_date = (date: Dayjs): string => {
-    const month = date.get('M').toString();
-    const day = date.get('D').toString();
-    const year = date.get('y').toString();
-
-    return `${year}-${month}-${day}`;
-  };
-
   // establece la fecha de nacimiento
-  const on_change_birt_day = (value: Dayjs | null): void => {
-    if (value !== null) {
-      const date = format_date(value);
-      set_value('fecha_nacimiento', date);
-      set_value_form('fecha_nacimiento', date);
-      set_fecha_nacimiento(value);
-    }
-  };
-
   const on_change_fecha_rep = (value: Dayjs | null): void => {
     if (value !== null) {
-      const date = format_date(value);
+      const date = dayjs(value).format('YYYY-MM-DD');
       set_value('fecha_inicio_cargo_rep_legal', date);
       set_value_form('fecha_inicio_cargo_rep_legal', date);
       set_fecha_rep_legal(value);
@@ -382,17 +353,18 @@ export const RegisterPersonaJuridica: React.FC = () => {
   };
 
   const on_submit = handle_submit(async (data) => {
-    if (!is_valid) {
-      set_error_step(true);
-      return;
-    }
     if (active_step === 4) {
       set_is_saving(true);
       try {
         // Hacemos el registro de la persona JURIDICA
+        await crear_persona_juridica_and_user({
+          ...data,
+          numero_documento,
+          representante_legal: data_register.representante_legal,
+        });
 
         control_success('Registro exitoso');
-        // window.location.href = '#/app/auth/login';
+        window.location.href = '#/app/auth/login';
       } catch (error) {
         const temp_error = error as AxiosError;
         const resp = temp_error.response?.data as UserCreate;
@@ -404,15 +376,7 @@ export const RegisterPersonaJuridica: React.FC = () => {
   });
 
   const handle_next = (): void => {
-    // if (!is_valid) {
-    //   set_error_step(true);
-    //   return;
-    // }
     console.log(errors);
-    console.log(Object.keys(errors).length);
-
-    console.log(active_step);
-
     if (active_step !== 4) {
       set_active_step((prevActiveStep) => prevActiveStep + 1);
     }
@@ -435,6 +399,8 @@ export const RegisterPersonaJuridica: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -447,6 +413,8 @@ export const RegisterPersonaJuridica: React.FC = () => {
           loading={loading}
           disabled={pais_notificacion === '' ?? true}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -459,6 +427,8 @@ export const RegisterPersonaJuridica: React.FC = () => {
           loading={loading}
           disabled={dpto_notifiacion === '' ?? true}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -631,6 +601,8 @@ export const RegisterPersonaJuridica: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -638,15 +610,21 @@ export const RegisterPersonaJuridica: React.FC = () => {
           fullWidth
           size="small"
           label="Número de documento"
-          error={errors.numero_documento_rep?.type === 'required'}
+          error={
+            errors.numero_documento_rep?.type === 'required' || error_doc !== ''
+          }
+          disabled={tipo_documento_rep === ''}
           helperText={
             errors.numero_documento_rep?.type === 'required'
               ? 'Este campo es obligatorio'
+              : error_doc !== ''
+              ? error_doc
               : ''
           }
           {...register('numero_documento_rep', {
             required: true,
           })}
+          value={documento_rep}
           onChange={handle_change}
         />
       </Grid>
@@ -789,17 +767,17 @@ export const RegisterPersonaJuridica: React.FC = () => {
           La contraseña debe cumplir con las siguientes reglas
         </Typography>
         <ul>
-          <li>Debe contener mínimo 6 caracteres</li>
-          <li>Debe contener 1 Caracter en Mayúscula</li>
-          <li>Debe contener 1 Caracter numérico</li>
-          <li>Debe contener 1 Caracter simbólico (*,-,_,%...)</li>
+          <li>Debe contener mínimo 8 caracteres</li>
+          <li>Debe contener 1 caracter en mayúscula</li>
+          <li>Debe contener 1 caracter numérico</li>
+          <li>Debe contener 1 caracter simbólico (*,-,_,%...)</li>
         </ul>
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
         <TextField
           fullWidth
           size="small"
-          label="Nombre de usuario"
+          label="Nombre de usuario *"
           error={errors.nombre_de_usuario?.type === 'required'}
           helperText={
             errors.nombre_de_usuario?.type === 'required'
@@ -961,6 +939,8 @@ export const RegisterPersonaJuridica: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
+          errors={errors}
+          register={register}
         />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
@@ -973,34 +953,9 @@ export const RegisterPersonaJuridica: React.FC = () => {
           loading={loading}
           disabled={false}
           required={true}
+          errors={errors}
+          register={register}
         />
-      </Grid>
-      <Grid item xs={12} sm={6} md={4}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            disabled={is_exists}
-            label="Fecha de nacimiento"
-            value={fecha_nacimiento}
-            onChange={on_change_birt_day}
-            renderInput={(params) => (
-              <TextField
-                fullWidth
-                size="small"
-                {...params}
-                {...register('fecha_nacimiento', {
-                  required: true,
-                })}
-                onChange={handle_change}
-                error={errors.fecha_nacimiento?.type === 'required'}
-                helperText={
-                  errors.fecha_nacimiento?.type === 'required'
-                    ? 'Este campo es obligatorio'
-                    : ''
-                }
-              />
-            )}
-          />
-        </LocalizationProvider>
       </Grid>
     </>
   );
@@ -1038,7 +993,7 @@ export const RegisterPersonaJuridica: React.FC = () => {
         <Stepper activeStep={active_step} orientation="vertical">
           {steps.map((step, index) => (
             <Step key={step.label}>
-              <StepLabel error={error_step}>{step.label}</StepLabel>
+              <StepLabel>{step.label}</StepLabel>
               <StepContent>
                 <Grid container spacing={2} mt={0.1}>
                   {step.component}
@@ -1067,9 +1022,7 @@ export const RegisterPersonaJuridica: React.FC = () => {
                         }}
                         href="#/auth/login"
                       >
-                        <Typography sx={{ color: 'black' }}>
-                          Iniciar sesión
-                        </Typography>
+                        <Typography sx={{ color: 'black' }}>Salir</Typography>
                       </Button>
                     </Grid>
                     <Grid item>

@@ -5,7 +5,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 // Interfaces
-import {   get_computers, get_cv_computer,  } from '../../store/slices/indexCvComputo';
+import {   get_computers, get_cv_computer, get_marks  } from '../../store/slices/indexCvComputo';
 import { type Dispatch } from 'react';
 
 
@@ -34,6 +34,18 @@ const control_success = (message: ToastContent) =>
     progress: undefined,
     theme: 'light'
   });
+
+  export const get_marca_service = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+      try {
+        const { data } = await api.get('almacen/marcas/get-list');
+        dispatch(get_marks(data));
+        return data;
+      } catch (error: any) {
+        return error as AxiosError;
+      }
+    };
+  };
 
 // Obtener Mantenimientos
 // export const get_cv_maintenance_service = (id_articulo: number) => {
@@ -84,10 +96,10 @@ export const get_cv_computer_service = (id: any) => {
 };
 
 // Crear Hoja de Vida PC
-export const create_cv_computers_service: any = (formdata: any) => {
+export const create_cv_computers_service: any = (form_data: any) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.post('almacen/hoja-de-vida/computadores/create/', formdata);
+            const { data } = await api.post('almacen/hoja-de-vida/computadores/create/', form_data);
             control_success('La hoja de vida se creo correctamente');
             dispatch(get_computers_all_service());
             return data;

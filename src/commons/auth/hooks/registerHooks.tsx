@@ -1,11 +1,10 @@
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
-import { get_person_by_document } from '../request/authRequest';
 import type { IList } from '../../../interfaces/globalModels';
 import type {
   DataRegistePortal,
-  // keys_object,
   ReisterHook,
+  keys_object,
 } from '../interfaces';
 import { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
@@ -16,6 +15,7 @@ import {
   get_generos,
   get_naturaleza_emp,
   get_paises,
+  get_person_by_document,
   get_tipo_documento,
   get_tipo_persona,
 } from '../../../request/';
@@ -26,12 +26,14 @@ export const use_register = (): ReisterHook => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { setValue } = useForm();
   const [ciudad_expedicion, set_ciudad_expedicion] = useState('');
+  const [numero_documento, set_numero_documento] = useState('');
   const [ciudad_notificacion_opt, set_ciudad_notificacion_opt] = useState<
     IList[]
   >([]);
   const [ciudad_notificacion, set_ciudad_notificacion] = useState('');
   const [ciudad_residencia, set_ciudad_residencia] = useState('');
   const [nombre_representante, set_nombre_representante] = useState('');
+  const [documento_rep, set_documento_rep] = useState('');
   const [ciudades_opt, set_ciudades_opt] = useState<IList[]>([]);
   const [ciudades_residencia_opt, set_ciudades_residencia_opt] = useState<
     IList[]
@@ -118,7 +120,7 @@ export const use_register = (): ReisterHook => {
     razon_social: '',
     tipo_documento_rep: '',
     numero_documento_rep: '',
-    representante_legal: '',
+    representante_legal: null,
     nombre_rep: '',
     celular_rep: '',
     direccion_rep: '',
@@ -192,20 +194,24 @@ export const use_register = (): ReisterHook => {
   const validate_exits = async (numero_documento: string): Promise<void> => {
     set_is_search(true);
     try {
+      set_has_user(false);
+      set_is_exists(false);
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
 
       if (data !== null && data !== undefined) {
         if (!data.tiene_usuario) {
-          // set_data_register({ ...info_person });
-          // for (const key in data) {
-          //   const temp_key = key as keys_object;
-          //   setValue(key, data[temp_key]);
-          // }
-          // setValue('numero_documento', data.numero_documento);
-
-          // set_fecha_nacimiento(dayjs(info_person.fecha_nacimiento));
+          set_data_register({ ...data_register, ...data });
+          for (const key in data) {
+            const temp_key = key as keys_object;
+            if (data_register[temp_key] !== undefined) {
+              console.log(temp_key);
+              console.log(temp_key);
+              // setValue(key, data[temp_key]);
+            }
+          }
+          setValue('numero_documento', data.numero_documento);
           set_is_exists(true);
           return;
         } else {
@@ -240,6 +246,7 @@ export const use_register = (): ReisterHook => {
             tipo_documento_rep: data.tipo_documento,
             numero_documento_rep: data.numero_documento,
             nombre_rep: data.nombre_completo,
+            representante_legal: data.id_persona,
           });
           set_nombre_representante(data.nombre_completo);
           setValue('tipo_documento_rep', data.tipo_documento);
@@ -355,6 +362,7 @@ export const use_register = (): ReisterHook => {
       set_tipo_documento_opt(tipo_documento_opt_all);
     }
   }, [tipo_persona]);
+
   useEffect(() => {
     void get_selects_options();
   }, []);
@@ -379,6 +387,7 @@ export const use_register = (): ReisterHook => {
     estado_civil_opt,
     estado_civil,
     fecha_nacimiento,
+    fecha_rep_legal,
     genero_opt,
     genero,
     has_user,
@@ -387,6 +396,12 @@ export const use_register = (): ReisterHook => {
     is_search,
     loading,
     message_error_password,
+    message_no_person,
+    nacionalidad_emp,
+    naturaleza_emp_opt,
+    naturaleza_emp,
+    nombre_representante,
+    numero_documento,
     pais_nacimiento,
     pais_notificacion,
     pais_residencia,
@@ -394,23 +409,12 @@ export const use_register = (): ReisterHook => {
     requiere_nombre_comercial,
     show_password,
     tipo_documento_opt,
+    tipo_documento_rep,
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
-    naturaleza_emp_opt,
-    naturaleza_emp,
-    nacionalidad_emp,
-    tipo_documento_rep,
-    message_no_person,
-    nombre_representante,
-    fecha_rep_legal,
-    set_fecha_rep_legal,
-    set_nombre_representante,
-    set_message_no_person,
-    validate_exits_representante,
-    set_tipo_documento_rep,
-    set_nacionalidad_emp,
-    set_naturaleza_emp,
+    documento_rep,
+    set_documento_rep,
     get_selects_options,
     handle_change_checkbox,
     handle_click_show_password,
@@ -433,6 +437,7 @@ export const use_register = (): ReisterHook => {
     set_estado_civil_opt,
     set_estado_civil,
     set_fecha_nacimiento,
+    set_fecha_rep_legal,
     set_genero_opt,
     set_genero,
     set_has_user,
@@ -440,12 +445,19 @@ export const use_register = (): ReisterHook => {
     set_is_saving,
     set_is_search,
     set_message_error_password,
+    set_message_no_person,
+    set_nacionalidad_emp,
+    set_naturaleza_emp,
+    set_nombre_representante,
+    set_numero_documento,
     set_pais_nacimiento,
     set_pais_notificacion,
     set_pais_residencia,
     set_show_password,
+    set_tipo_documento_rep,
     set_tipo_documento,
     set_tipo_persona,
+    validate_exits_representante,
     validate_exits,
   };
 };
