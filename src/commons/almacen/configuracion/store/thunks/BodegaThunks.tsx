@@ -2,7 +2,7 @@ import { type Dispatch } from 'react';
 import { type NavigateFunction } from 'react-router-dom';
 import { toast, type ToastContent } from 'react-toastify';
 
-import { get_bodega, set_bodega_seleccionada } from '../slice/BodegaSlice';
+import { get_bodega, } from '../slice/BodegaSlice';
 import { api } from '../../../../../api/axios';
 import { type AxiosError } from 'axios';
 
@@ -62,7 +62,7 @@ export const add_bodega_service: any = (
             );
 
             dispatch(get_bodega_service());
-            dispatch(set_bodega_seleccionada(data.detail));
+            // dispatch(set_bodega_seleccionada(data.detail));
             control_success('La Bodega se agrego correctamente');
 
             return data;

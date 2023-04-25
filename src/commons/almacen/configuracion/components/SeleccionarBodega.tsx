@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useForm } from 'react-hook-form';
+
 import { Chip, Grid } from '@mui/material';
 
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
@@ -8,21 +8,26 @@ import { type GridColDef } from '@mui/x-data-grid';
 import type { AuthSlice } from '../../../../commons/auth/interfaces';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { type IBodega } from '../interfaces/Bodega';
 import { type IList } from '../../gestionDeInventario/catalogoBienes/interfaces/catalogodebienes';
 import { set_bodega_seleccionada, get_bodega, } from '../store/slice/BodegaSlice';
 import { delete_bodega_service, get_bodega_service } from '../store/thunks/BodegaThunks';
 import { api } from '../../../../api/axios';
 
-
+interface IProps {
+    control_bodega: any;
+    reset_bodega: any;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarBodega = () => {
+const SeleccionarBodega = ({
+    control_bodega,
+    reset_bodega
+}: IProps) => {
 
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
-    const { bodegas, bodega_seleccionada } = useAppSelector((state) => state.bodegas);
-    const { control: control_bodega, reset: reset_bodega } = useForm<IBodega>();
+    const { bodegas, bodega_seleccionada } = useAppSelector((state: { bodegas: any; }) => state.bodegas);
+
     const [municipalities, set_municipalities] = useState<IList[]>([]);
     const dispatch = useAppDispatch();
 
@@ -56,10 +61,12 @@ const SeleccionarBodega = () => {
 
         reset_bodega({ ...bodega_seleccionada, id_responsable: userinfo.id_persona })
     }, [])
-    useEffect(() => {
 
-        console.log(municipalities)
-    }, [municipalities])
+
+    useEffect(() => {
+        reset_bodega(bodega_seleccionada)
+
+    }, [bodega_seleccionada])
 
 
 
