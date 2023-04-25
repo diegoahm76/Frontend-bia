@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import { Title } from "../../../../components/Title";
 import SeleccionarSiembra from "../componentes/SeleccionarSiembra";
+import SeleccionarBienSiembra from "../componentes/SeleccionarBienSiembra";
 import { useAppSelector} from '../../../../hooks';
 import SeleccionarPersona from "../../../../components/partials/SeleccionarPersona";
 import { set_planting_person, set_current_planting } from '../store/slice/materialvegetalSlice';
@@ -37,9 +38,8 @@ useEffect(() => {
         title={"Persona que siembra"}
         set_persona={set_planting_person}
         />
-        {/* {current_planting.id_siembra !== null &&
+
           <SeleccionarBienSiembra/>
-        } */}
         
         
       </Grid>

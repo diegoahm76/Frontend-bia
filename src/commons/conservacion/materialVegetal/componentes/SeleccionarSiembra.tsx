@@ -3,14 +3,14 @@ import { useForm } from 'react-hook-form';
 import { Chip, Grid } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { type IObjPlanting } from "../interfaces/materialvegetal";
+import { type IObjNursery, type IObjPlanting } from "../interfaces/materialvegetal";
 import type { AuthSlice } from '../../../auth/interfaces';
 import {  useSelector } from 'react-redux';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
 
 
-import { set_current_planting, initial_state_planting, get_plantings } from '../store/slice/materialvegetalSlice';
-import { get_nurseries_service, get_plantings_service, get_germination_beds_service, get_vegetal_materials_service } from '../store/thunks/materialvegetalThunks';
+import { set_current_planting, initial_state_planting, get_plantings, set_current_nursery } from '../store/slice/materialvegetalSlice';
+import { get_nurseries_service, get_plantings_service, get_germination_beds_service, get_vegetal_materials_service, get_planting_goods_service } from '../store/thunks/materialvegetalThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSiembra = () => {
@@ -86,6 +86,9 @@ const SeleccionarSiembra = () => {
   useEffect(() => {
     if(watch("id_vivero") !== null){
       void dispatch(get_germination_beds_service(Number(watch("id_vivero"))));
+      const vivero: IObjNursery | undefined = nurseries.find((p) => p.id_vivero === watch("id_vivero"))
+      
+      if(vivero !== undefined) dispatch (set_current_nursery(vivero))
   }
   }, [watch("id_vivero")]);
 

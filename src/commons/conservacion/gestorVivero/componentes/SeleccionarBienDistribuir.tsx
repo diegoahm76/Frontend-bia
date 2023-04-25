@@ -5,7 +5,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IObjItem, type IObjDistribucion, type IObjNursery } from "../interfaces/vivero";
 import { get_items_despacho } from '../store/slice/viveroSlice';
-import { save_items_distribuidos_service, get_items_despacho_service, get_items_distribuidos_service, get_nurseries_closing_service, control_error } from '../store/thunks/gestorViveroThunks';
+import { confirmar_items_distribuidos_service, save_items_distribuidos_service, get_items_despacho_service, get_items_distribuidos_service, get_nurseries_closing_service, control_error } from '../store/thunks/gestorViveroThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -171,7 +171,7 @@ const SeleccionarBienDistribuir = () => {
                             </IconButton>
                         </Tooltip>
                     }
-                    {params.row.id_distribucion_item_despacho_entrante === null &&
+                    {/* {params.row.id_distribucion_item_despacho_entrante === null && */}
                         <Tooltip title="Borrar">
                             <IconButton
                                 onClick={() => {
@@ -194,7 +194,7 @@ const SeleccionarBienDistribuir = () => {
                                 </Avatar>
                             </IconButton>
                         </Tooltip>
-                    }
+                    {/* } */}
                 </>
             ),
         },
@@ -221,6 +221,7 @@ const SeleccionarBienDistribuir = () => {
     }, [items_distribuidos]);
 
     useEffect(() => {
+        console.log(get_values_bien("cod_tipo_elemento_vivero"))
         set_action("agregar")
     }, [watch("id_bien")]);
 
@@ -236,7 +237,7 @@ const SeleccionarBienDistribuir = () => {
             id_vivero: get_values_distribucion("id_vivero"),
             id_bien: get_values_bien("id_bien"),
             cantidad_asignada: Number(get_values_distribucion("cantidad_asignada")),
-            cod_etapa_lote_al_ingresar: "G",
+            cod_etapa_lote_al_ingresar: "G",// (get_values_bien("cod_tipo_elemento_vivero") !== "MV") ? "G" : get_values_distribucion("cod_etapa_lote_al_ingresar"),
             id_item_despacho_entrante: get_values_bien("id_item_despacho_entrante"),
             vivero_nombre: vivero?.nombre ?? "",
             unidad_medida: get_values_bien("unidad_medida") ?? "",
@@ -286,6 +287,13 @@ const SeleccionarBienDistribuir = () => {
         const id_despacho = current_despacho.id_despacho_entrante
         if (id_despacho !== null && id_despacho !== undefined) {
             void dispatch(save_items_distribuidos_service(id_despacho, current_despacho.observacion_distribucion ?? "", aux_items_distribuidos));
+        }
+    });
+
+    const distribution_confirm_items: any = (async () => {
+        const id_despacho = current_despacho.id_despacho_entrante
+        if (id_despacho !== null && id_despacho !== undefined) {
+            void dispatch(confirmar_items_distribuidos_service(id_despacho, current_despacho.observacion_distribucion ?? "", aux_items_distribuidos));
         }
     });
 
@@ -355,7 +363,7 @@ const SeleccionarBienDistribuir = () => {
                         {
                             datum_type: "select_controller",
                             xs: 12,
-                            md: 5,
+                            md: 3,
                             control_form: control_distribucion,
                             control_name: "id_vivero",
                             default_value: "",
@@ -367,6 +375,22 @@ const SeleccionarBienDistribuir = () => {
                             option_label: "nombre",
                             option_key: "id_vivero",
                         },
+                        {
+                            datum_type: "select_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_distribucion,
+                            control_name: "cod_etapa_lote_al_ingresar",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            label: "Etapa a ingresar",
+                            disabled: action === "editar",
+                            helper_text: "debe seleccionar campo",
+                            select_options: [{label: "Producción", value: "P"}, {label: "Distribución", value: "D"}],
+                            option_label: "label",
+                            option_key: "value",
+                            hidden_text: get_values_bien("cod_tipo_elemento_vivero") !== "MV"
+                        }, 
                         {
                             datum_type: "input_controller",
                             xs: 12,
@@ -449,7 +473,7 @@ const SeleccionarBienDistribuir = () => {
                     <Grid item xs={12} md={4}>
                         <FormButton
                             variant_button="contained"
-                            on_click_function={null}
+                            on_click_function={distribution_confirm_items}
                             icon_class={<CheckIcon />}
                             label={"Confirmar distribucion"}
                             type_button="button"

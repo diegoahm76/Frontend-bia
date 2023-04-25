@@ -71,6 +71,18 @@ const initial_state_person: Persona = {
   tiene_usuario: true,
 }
 
+const initial_state_current_good: IObjGoods = {
+  id_inventario_vivero: null,
+  cantidad_entrante: null,
+  id_vivero: null,
+  id_bien: null,
+  codigo_bien: "",
+  nombre_bien: "",
+  tipo_bien: null,
+  cantidad_disponible_bien: null,
+  unidad_disponible: null,
+}
+
 const initial_state: IMaterialVegetal = {
   nurseries: [],
   current_nursery: initial_state_current_nursery,
@@ -78,6 +90,7 @@ const initial_state: IMaterialVegetal = {
   germination_beds: [],
   planting_goods: [],
   goods: [],
+  current_good: initial_state_current_good,
   plantings: [],
   current_planting: initial_state_planting,
   planting_person: initial_state_person
@@ -109,6 +122,10 @@ export const material_vegetal_slice = createSlice({
       state.goods = action.payload;
     },
 
+    set_current_good: (state: IMaterialVegetal, action: PayloadAction<IObjGoods>) => {
+      state.current_good = action.payload;
+    },
+
     get_plantings: (state: IMaterialVegetal, action: PayloadAction<IObjPlanting[]>) => {
       state.plantings = action.payload;
     },
@@ -121,4 +138,4 @@ export const material_vegetal_slice = createSlice({
     },
   },
 });
-export const { set_planting_person, set_current_nursery, get_nurseries, get_vegetal_materials, get_germination_beds, get_planting_goods, get_plantings, set_current_planting } = material_vegetal_slice.actions;
+export const { set_current_good, get_goods, set_planting_person, set_current_nursery, get_nurseries, get_vegetal_materials, get_germination_beds, get_planting_goods, get_plantings, set_current_planting } = material_vegetal_slice.actions;

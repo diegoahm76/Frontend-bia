@@ -27,6 +27,7 @@ interface IProps {
     rows_text?: number;
     on_blur_function?: any;
     set_value?: any;
+    hidden_text?: boolean | null,
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -44,7 +45,8 @@ const FormInputController = ({
     multiline_text,
     rows_text,
     on_blur_function,
-    set_value
+    set_value,
+    hidden_text
 }: IProps) => {
 
     const handle_file_input_change = (e: any): void => {
@@ -63,6 +65,7 @@ const FormInputController = ({
                     fieldState: { error },
                 }) => (
                     <TextField
+                        hidden = {hidden_text ?? false}
                         margin="dense"
                         fullWidth
                         size="small"
@@ -99,6 +102,7 @@ const FormInputController = ({
                     fieldState: { error },
                 }) => (
                     <TextField
+                        hidden = {hidden_text ?? false}
                         margin="dense"
                         fullWidth
                         size="small"
