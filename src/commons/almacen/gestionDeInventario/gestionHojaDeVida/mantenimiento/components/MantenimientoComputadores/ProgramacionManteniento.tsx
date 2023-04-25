@@ -21,13 +21,15 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
     // the parentState will be set by its child slider component
     const {
         rows,
-        detalle_vehiculo,
+        detalle_seleccionado,
         tipo_mantenimiento,
         especificacion,
+        user_info,
         set_rows,
-        set_detalle_vehiculo,
+        set_detalle_seleccionado,
         set_tipo_mantenimiento,
         set_especificacion,
+        set_user_info
     } = use_previsualizacion();
 
     const {
@@ -44,8 +46,8 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
     console.log(rows)
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const set_details_state = useCallback((val: IcvVehicles) => {
-        set_detalle_vehiculo(val);
-    }, [set_detalle_vehiculo]);
+        set_detalle_seleccionado(val);
+    }, [set_detalle_seleccionado]);
 
     const set_type_maintenance_state = useCallback((val: string) => {
         set_tipo_mantenimiento(val);
@@ -54,6 +56,10 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
     const set_esp_maintenance_state = useCallback((val: string) => {
         set_especificacion(val);
     }, [set_especificacion]);
+
+    const set_user_info_state = useCallback((val: string) => {
+        set_user_info(val);
+    }, [set_user_info]);
 
     return (
         <>
@@ -72,7 +78,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
                     <Title title="Búsqueda de computador" />
-                    <ArticuloComponent tipo_articulo={"computadores"} />
+                    <ArticuloComponent tipo_articulo={"computadores"} parent_details={set_details_state} user_info_prop={set_user_info_state}/>
                 </Grid>
             </Grid>
             <Grid
@@ -89,7 +95,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* DETALLES COMPONENT */}
                     <Title title="Datos del computador" />
-                    <DetallesComponent parent_details_veh={set_details_state} />
+                    <DetallesComponent detalle_seleccionado_prop={detalle_seleccionado} tipo_articulo={"computadores"}/>
                 </Grid>
             </Grid>
 
@@ -125,7 +131,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* FECHAS COMPONENT */}
                     <Title title='Programar por fechas' />
-                    <FechasComponent parent_state_setter={wrapperSetParentState} detalle_vehiculo={detalle_vehiculo} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} />
+                    <FechasComponent parent_state_setter={wrapperSetParentState} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion}  user_info={user_info}/>
                 </Grid>
             </Grid>
             <Grid
@@ -142,7 +148,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* PREVISUALIZACION COMPONENT */}
                     <Title title='Previsualización' />
-                    <PrevisualizacionComponent data_grid={rows} />
+                    <PrevisualizacionComponent data_grid={rows}/>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -173,7 +179,9 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                             <AnularMantenimientoComponent
                                 is_modal_active={anular_mantenimiento_is_active}
                                 set_is_modal_active={set_anular_mantenimiento_is_active}
-                                title={title} />
+                                title={title}
+                                user_info={user_info} />
+                                
                         )}
                         <Button
                             color='inherit'

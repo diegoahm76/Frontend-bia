@@ -10,22 +10,21 @@ import {
 } from "@mui/material"
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { type IcvVehicles } from "../../../hojaDeVidaVehiculo/interfaces/CvVehiculo";
 import { type crear_mantenimiennto } from "../../interfaces/IProps";
 import use_previsualizacion from "../mantenimientoGeneral/hooks/usePrevisualizacion";
 interface IProps {
     parent_state_setter: any,
-    detalle_vehiculo: IcvVehicles,
+    detalle_seleccionado: any,
     tipo_matenimiento: string,
     especificacion: string
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, detalle_vehiculo, tipo_matenimiento, especificacion }: IProps) => {
+export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion }: IProps) => {
     // Hooks
     const {
         rows,
         set_rows,
-        set_detalle_vehiculo,
+        set_detalle_seleccionado,
         set_tipo_mantenimiento,
         set_especificacion,
     } = use_previsualizacion();
@@ -43,8 +42,8 @@ export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, det
     }, [especificacion]);
 
     useEffect(() => {
-        set_detalle_vehiculo(detalle_vehiculo);
-    }, [detalle_vehiculo]);
+        set_detalle_seleccionado(detalle_seleccionado);
+    }, [detalle_seleccionado]);
 
     const [cada, set_cada] = useState("");
     const [cada_desde, set_cada_desde] = useState("");

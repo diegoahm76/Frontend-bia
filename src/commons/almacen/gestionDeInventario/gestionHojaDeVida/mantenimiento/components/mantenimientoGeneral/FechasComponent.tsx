@@ -19,26 +19,26 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import use_previsualizacion from './hooks/usePrevisualizacion';
 import { type crear_mantenimiennto } from '../../interfaces/IProps';
 import dayjs, { type Dayjs } from 'dayjs';
-import { type IcvVehicles } from '../../../hojaDeVidaVehiculo/interfaces/CvVehiculo';
 import { isSameDay } from 'date-fns';
 import { getColombiaHolidaysByYear } from 'colombia-holidays';
 interface IProps {
     parent_state_setter: any,
-    detalle_vehiculo: IcvVehicles,
+    detalle_seleccionado: any,
     tipo_matenimiento: string,
-    especificacion: string
+    especificacion: string,
+    user_info: any
 }
 const opcion_programar = [{ value: "MA", label: "Manual" }, { value: "AU", label: "Automatica" }, { value: "OT", label: "Otro" }];
 
 const opcion_programar_fecha = [{ value: "W", label: "Semanas" }, { value: "M", label: "Meses" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_vehiculo, tipo_matenimiento, especificacion }: IProps) => {
+export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, user_info }: IProps) => {
     // Hooks
     const {
         rows,
         set_rows,
-        set_detalle_vehiculo,
+        set_detalle_seleccionado,
         set_tipo_mantenimiento,
         set_especificacion,
     } = use_previsualizacion();
@@ -56,8 +56,8 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }, [especificacion]);
 
     useEffect(() => {
-        set_detalle_vehiculo(detalle_vehiculo);
-    }, [detalle_vehiculo]);
+        set_detalle_seleccionado(detalle_seleccionado);
+    }, [detalle_seleccionado]);
 
     const [tipo, set_tipo] = useState("");
     const [fecha, set_fecha] = useState("");
@@ -222,8 +222,8 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                 fecha_anulacion: "",
                 justificacion_anulacion: "",
                 ejecutado: false,
-                id_articulo: 170,
-                id_persona_solicita: 1,
+                id_articulo: detalle_seleccionado.id_bien,
+                id_persona_solicita: user_info.id_persona,
                 id_persona_anula: 0
             }
             rows_emit.push(data);

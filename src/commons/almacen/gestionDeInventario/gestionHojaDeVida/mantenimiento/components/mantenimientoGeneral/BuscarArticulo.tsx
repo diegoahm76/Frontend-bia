@@ -6,7 +6,6 @@ import { DataTable } from "primereact/datatable";
 import { Title } from '../../../../../../../components';
 import { get_vehicles_all_service } from "../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks";
 import { useAppDispatch } from "../../../../../../../hooks";
-import { get_vehicles } from "../../../hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
 import { get_computers_all_service } from "../../../hojaDeVidaComputo/store/thunks/cvComputoThunks";
 
 
@@ -14,12 +13,14 @@ interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   title: string;
-}
+  parent_details: any;
+} 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const BuscarArticuloComponent = ({
   is_modal_active,
   set_is_modal_active,
   title,
+  parent_details
 }: IProps) => {
   const dispatch = useAppDispatch();
   const [codigo, set_codigo] = useState<string>("");
@@ -31,12 +32,10 @@ const BuscarArticuloComponent = ({
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo(e.target.value);
-    console.log(codigo)
   }
 
   const on_change_nombre: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_nombre(e.target.value);
-    console.log(nombre)
   }
 
   const accionar_busqueda: any = () => {
@@ -49,16 +48,12 @@ const BuscarArticuloComponent = ({
   }
 
   const selected_product_grid: any = () => {
-    console.log(selected_product)
+    set_is_modal_active(false);
   }
-
+  
   useEffect(() => {
-
-  }, []);
-
-  useEffect(() => {
-    console.log(get_vehicles);
-  }, [grid_busqueda]);
+    parent_details(selected_product);
+  }, [selected_product]);
 
   useEffect(() => {
     if(title ==='Buscar vehículos'){

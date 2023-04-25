@@ -2,13 +2,14 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, D
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { useState, type Dispatch, type SetStateAction } from "react";
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   title: string;
+  user_info: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -16,10 +17,10 @@ const AnularMantenimientoComponent = ({
   is_modal_active,
   set_is_modal_active,
   title,
+  user_info
 }: IProps) => {
     const [fecha, set_fecha] = useState<Date | null>(dayjs().toDate());
     const [motivo, set_motivo] = useState<string>("");
-    const [user_info, set_user_info] = useState<any>({nombre: ''});
 
     const handle_change_fecha = (date: Date | null): void => {
         set_fecha(date);
@@ -34,16 +35,6 @@ const AnularMantenimientoComponent = ({
       console.log({id_mantenimiento: 0,id_funcionario: user_info.id_usuario,fecha_anulacion: fecha, motivo_anulacion: motivo})
       set_is_modal_active(false);
     }
-
-    useEffect(()=> {
-      const data = localStorage.getItem('persist:macarenia_app');
-      if(data !== null){
-        const data_json = JSON.parse(data);
-        const data_auth = JSON.parse(data_json.auth);
-        set_user_info(data_auth.userinfo);
-      }
-
-    },[])
 
     return (
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -70,7 +61,7 @@ const AnularMantenimientoComponent = ({
                             size="small"
                             required
                             fullWidth
-                            value={''}
+                            value={user_info.nombre}
                             disabled={true}
                         />
                     </Grid>
