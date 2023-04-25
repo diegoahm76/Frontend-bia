@@ -1,15 +1,15 @@
 import { Box } from "@mui/material"
 import { useEffect, useState } from "react";
-import { type crear_mantenimiennto } from "../../interfaces/IProps";
+import { type crear_mantenimiento } from "../../interfaces/IProps";
 import { TablaGeneral } from './../../../../../../../components/TablaGeneral'
 
 interface IProps {
-    data_grid: crear_mantenimiennto[]
+    data_grid: crear_mantenimiento[]
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PrevisualizacionComponent:React.FC<IProps> = ({data_grid}:IProps) => {
-    const [data_previsualizacion, set_data_previsualizacion] = useState<crear_mantenimiennto[]>([]);
+    const [data_previsualizacion, set_data_previsualizacion] = useState<crear_mantenimiento[]>([]);
     useEffect(() =>{
         for(let m = 0; m < data_grid.length; m++ ){
             set_data_previsualizacion(prevArray => [...prevArray, data_grid[m]])

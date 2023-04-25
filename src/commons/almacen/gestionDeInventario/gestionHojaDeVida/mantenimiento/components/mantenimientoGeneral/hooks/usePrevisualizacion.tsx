@@ -1,10 +1,10 @@
 // eslint-disable @typescript-eslint/no-non-null-assertion
 import { useState } from "react";
-import { type crear_mantenimiennto } from "../../../interfaces/IProps";
+import { type crear_mantenimiento } from "../../../interfaces/IProps";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_previsualizacion = () => {
-    const [rows, set_rows] = useState<crear_mantenimiennto[]>([]);
+    const [rows, set_rows] = useState<crear_mantenimiento[]>([]);
     const [tipo_mantenimiento, set_tipo_mantenimiento] = useState<string>("");
     const [especificacion, set_especificacion] = useState<string>("");
     const [detalle_seleccionado, set_detalle_seleccionado] = useState<any>([]);

@@ -17,7 +17,7 @@ import Button from '@mui/material/Button';
 import { CalendarPicker, DatePicker, LocalizationProvider, PickersDay } from '@mui/x-date-pickers/';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import use_previsualizacion from './hooks/usePrevisualizacion';
-import { type crear_mantenimiennto } from '../../interfaces/IProps';
+import { type crear_mantenimiento } from '../../interfaces/IProps';
 import dayjs, { type Dayjs } from 'dayjs';
 import { isSameDay } from 'date-fns';
 import { getColombiaHolidaysByYear } from 'colombia-holidays';
@@ -209,9 +209,9 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }
 
     const emit_new_data: () => void = () => {
-        const rows_emit: crear_mantenimiennto[] = [];
+        const rows_emit: crear_mantenimiento[] = [];
         selected_date.forEach(cm => {
-            const data: crear_mantenimiennto = {
+            const data: crear_mantenimiento = {
                 tipo_programacion: "fecha",
                 cod_tipo_mantenimiento: tipo_matenimiento,
                 kilometraje_programado: "",

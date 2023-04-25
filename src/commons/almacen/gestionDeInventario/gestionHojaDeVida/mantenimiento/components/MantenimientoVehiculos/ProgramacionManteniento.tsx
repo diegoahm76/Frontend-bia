@@ -2,7 +2,7 @@ import { Box, Button, Grid, Stack } from '@mui/material';
 import { Title } from '../../../../../../../components';
 import { KilometrajeComponent } from './KilometrajeComponent';
 import { useCallback } from 'react';
-import { type crear_mantenimiennto } from '../../interfaces/IProps';
+import { type crear_mantenimiento } from '../../interfaces/IProps';
 import { ArticuloComponent } from '../mantenimientoGeneral/ArticuloComponent';
 import { DetallesComponent } from '../mantenimientoGeneral/DetallesComponent';
 import { MantenimientoComponent } from '../mantenimientoGeneral/MantenimientoComponent';
@@ -23,7 +23,7 @@ import { create_maintenance_service } from '../mantenimientoGeneral/thunks/maint
 export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    
+
     const {
         rows,
         detalle_seleccionado,
@@ -44,7 +44,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
         set_anular_mantenimiento_is_active
     } = use_anular_mantenimiento();
 
-    const wrapper_set_parent_state = useCallback((val: crear_mantenimiennto[]) => {
+    const wrapper_set_parent_state = useCallback((val: crear_mantenimiento[]) => {
         set_rows(val);
     }, [set_rows]);
 

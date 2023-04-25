@@ -10,7 +10,7 @@ import {
 } from "@mui/material"
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { type crear_mantenimiennto } from "../../interfaces/IProps";
+import { type crear_mantenimiento } from "../../interfaces/IProps";
 import use_previsualizacion from "../mantenimientoGeneral/hooks/usePrevisualizacion";
 interface IProps {
     parent_state_setter: any,
@@ -67,7 +67,7 @@ export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, det
         }
     }
 
-    const calcular_kilometros = async (cada: any, cada_desde: any, cada_hasta: any, rows_emit: crear_mantenimiennto[]): Promise<crear_mantenimiennto[]> => {
+    const calcular_kilometros = async (cada: any, cada_desde: any, cada_hasta: any, rows_emit: crear_mantenimiento[]): Promise<crear_mantenimiento[]> => {
         const cada_int = parseInt(cada);
         const cada_desde_int = parseInt(cada_desde);
         const cada_hasta_int = parseInt(cada_hasta);
