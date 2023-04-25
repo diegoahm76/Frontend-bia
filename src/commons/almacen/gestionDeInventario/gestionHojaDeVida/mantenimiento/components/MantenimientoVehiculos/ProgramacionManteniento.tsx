@@ -167,7 +167,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* KILOMETRAJE COMPONENT */}
                     <Title title='Programar por kilometraje' />
-                    <KilometrajeComponent parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} limpiar_formulario={limpiar_formulario} />
+                    <KilometrajeComponent parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} limpiar_formulario={limpiar_formulario} user_info={user_info} />
                 </Grid>
             </Grid>
 
