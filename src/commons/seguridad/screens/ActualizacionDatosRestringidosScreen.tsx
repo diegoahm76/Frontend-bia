@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { BuscadorPersona } from "../../../components/BuscadorPersona";
 import type { InfoPersona } from "../../../interfaces/globalModels";
-import { Button, Grid, Input, InputLabel, MenuItem, Stack, TextField } from "@mui/material";
+import { Button, CircularProgress, Grid, Input, InputLabel, MenuItem, Stack, TextField } from "@mui/material";
 import { Title } from "../../../components/Title";
 import { control_error } from "../../../helpers/controlError";
 import { control_success } from "../../../helpers/controlSuccess";
@@ -11,6 +11,9 @@ import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   const [persona, set_persona] = useState<InfoPersona>();
+  const [loading_natural, set_loading_natural] = useState(false)
+  const [loading_juridica, set_loading_juridica] = useState(false)
+
   const {
     register,
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -28,10 +31,12 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
 
   const on_submit_persona: SubmitHandler<FieldValues> = async (data) => {
     try {
+      set_loading_natural(false)
       const datos_persona = {
 
         tipo_documento: data.tipo_documento,
         numero_documento: data.numero_documento,
+        primer_nombre: data.primer_nombre,
         segundo_nombre: data.segundo_nombre,
         primer_apellido: data.primer_apellido,
         segundo_apellido: data.segundo_apellido,
@@ -40,13 +45,16 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
       };
       const id_persona: number | undefined = persona?.id_persona;
       await editar_datos_restringidos_persona(id_persona, datos_persona);
+      set_loading_natural(false)
       control_success('Se actualizaron los datos correctamente')
     } catch (error) {
+      set_loading_natural(false)
       control_error(error);
     }
   };
   const on_submit_persona_juridica: SubmitHandler<FieldValues> = async (data) => {
     try {
+      set_loading_juridica(true)
       const datos_persona = {
 
         numero_documento: data.numero_documento,
@@ -58,12 +66,20 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
       };
       const id_persona: number | undefined = persona?.id_persona;
       await editar_datos_restringidos_juridica(id_persona, datos_persona);
+      set_loading_juridica(false)
       control_success('Se actualizaron los datos correctamente')
     } catch (error) {
       control_error(error);
+      set_loading_juridica(false)
     }
   };
 
+  const tipos_doc_comercial = [
+    {
+      value: 'NT',
+      label: 'NIT',
+    },
+  ];
   const tipos_doc = [
     {
       value: 'CC',
@@ -92,10 +108,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
     {
       value: 'PE',
       label: 'Permiso especial de permanencia',
-    },
-    {
-      value: 'NT',
-      label: 'NIT',
     },
   ];
   const tipo_persona = [
@@ -197,14 +209,9 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     defaultValue={persona?.numero_documento}
                     {...register("numero_documento", {
                       required: "Este campo es obligatorio",
-                      pattern: {
-                        value: /^\d{4,20}$/,
-                        message: "El número documento debe tener mínimo 4 digitos y máximo 20 digitos"
-                      }
                     })}
                     error={Boolean(errors.numero_documento)}
-                    helperText={(errors.numero_documento?.type === "required") ? "Este campo es obligatorio" :
-                      (errors.numero_documento?.type === "pattern") ? "El número documento debe tener mínimo 4 digitos y máximo 20 digitos" : ""}
+                    helperText={(errors.numero_documento?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -220,6 +227,11 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     required
                     autoFocus
                     defaultValue={persona?.primer_nombre}
+                    {...register("primer_nombre", {
+                      required: "Este campo es obligatorio",
+                    })}
+                    error={Boolean(errors.primer_nombre)}
+                    helperText={(errors.primer_nombre?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -231,6 +243,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     margin="dense"
                     autoFocus
                     defaultValue={persona?.segundo_nombre}
+                    {...register("segundo_nombre")}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -243,6 +256,11 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     required
                     autoFocus
                     defaultValue={persona?.primer_apellido}
+                    {...register("primer_apellido", {
+                      required: "Este campo es obligatorio",
+                    })}
+                    error={Boolean(errors.primer_apellido)}
+                    helperText={(errors.primer_apellido?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -252,9 +270,9 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     fullWidth
                     size="small"
                     margin="dense"
-                    required
                     autoFocus
                     defaultValue={persona?.segundo_apellido}
+                    {...register("segundo_apellido")}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -264,7 +282,11 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     type="file"
                     required
                     autoFocus
-                  />|
+                    {...register("ruta_archivo_soporte", {
+                      required: "Este campo es obligatorio",
+                    })}
+                    error={Boolean(errors.ruta_archivo_soporte)}
+                  />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -275,6 +297,11 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     multiline
                     required
                     autoFocus
+                    {...register("justificacion", {
+                      required: "Este campo es obligatorio",
+                    })}
+                    error={Boolean(errors.justificacion)}
+                    helperText={(errors.justificacion?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} />
@@ -284,7 +311,20 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                       cancelar();
                     }}>Cancelar
                     </Button>
-                    <Button variant="contained" color="primary" type="submit">Actualizar</Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      type="submit"
+                      startIcon={
+                        loading_natural
+                          ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                          : ""
+                      }
+                      aria-label="Actualizar"
+                      disabled={loading_natural}
+                      size="large"
+                    >
+                      Actualizar</Button>
                   </Stack>
                 </Grid>
               </Grid>
@@ -325,9 +365,10 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     margin="dense"
                     required
                     autoFocus
+                    disabled
                     defaultValue={persona?.tipo_documento}
                   >
-                    {tipos_doc.map((option) => (
+                    {tipos_doc_comercial.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
                       </MenuItem>
@@ -343,10 +384,24 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     margin="dense"
                     required
                     defaultValue={persona?.numero_documento}
+                    {...register("numero_documento", {
+                      required: "Este campo es obligatorio",
+                    })}
+                    error={Boolean(errors.numero_documento)}
+                    helperText={(errors.numero_documento?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <Grid>Digito de verificación: Pendiente</Grid>
+                  <TextField
+                    label="Digito de verificación:"
+                    type="number"
+                    fullWidth
+                    size="small"
+                    margin="dense"
+                    required
+                    autoFocus
+                    defaultValue={"pendiente"}
+                  />
                 </Grid>
                 <Grid item xs={12}>
                   <Title title="DATOS EMPRESARIALES" />
@@ -361,6 +416,11 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     required
                     autoFocus
                     defaultValue={persona?.razon_social}
+                    {...register("razon_social", {
+                      required: "Este campo es obligatorio",
+                    })}
+                    error={Boolean(errors.razon_social)}
+                    helperText={(errors.razon_social?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -373,6 +433,11 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     required
                     autoFocus
                     defaultValue={persona?.nombre_comercial}
+                    {...register("nombre_comercial", {
+                      required: "Este campo es obligatorio",
+                    })}
+                    error={Boolean(errors.nombre_comercial)}
+                    helperText={(errors.nombre_comercial?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -400,6 +465,10 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     type="file"
                     required
                     autoFocus
+                    {...register("ruta_archivo_soporte", {
+                      required: "Este campo es obligatorio",
+                    })}
+                    error={Boolean(errors.ruta_archivo_soporte)}
                   />|
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -411,6 +480,11 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     multiline
                     required
                     autoFocus
+                    {...register("justificacion", {
+                      required: "Este campo es obligatorio",
+                    })}
+                    error={Boolean(errors.justificacion)}
+                    helperText={(errors.justificacion?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -419,7 +493,19 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                       cancelar();
                     }}>Cancelar
                     </Button>
-                    <Button variant="contained" color="primary">Actualizar</Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      startIcon={
+                        loading_juridica
+                          ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                          : ""
+                      }
+                      aria-label="Actualizar"
+                      disabled={loading_juridica}
+                      size="large"
+                    >Actualizar</Button>
                   </Stack>
                 </Grid>
               </Grid>

@@ -9,6 +9,11 @@ import { type ToastContent, toast } from 'react-toastify';
 import BuscarModelo from "./getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 
+
+interface IProps {
+  set_persona?: any;
+  title?: string;
+}
 interface IList {
   value: string | number;
   label: string | number;
@@ -20,12 +25,16 @@ const initial_options: IList[] = [
   },
 ];
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarPersona = () => {
+const SeleccionarPersona = ({
+  set_persona,
+  title
+}: IProps) => {
 
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { control: control_persona, reset: reset_persona, getValues: get_values } = useForm<Persona>();
   const [document_type, set_document_type] = useState<IList[]>(initial_options);
   const [personas, set_personas] = useState<Persona[]>([]);
+  const [persona_selected, set_persona_selected] = useState<Persona>();
   
   const columns_personas: GridColDef[] = [
     { field: 'id_persona', headerName: 'ID', width: 20 },
@@ -93,14 +102,21 @@ const SeleccionarPersona = () => {
           document_type_no_format
         );
         set_document_type(document_type_format);
-        reset_persona({...control_persona, id_persona: persona_data.data.id_persona, tipo_documento: persona_data.data.tipo_documento, numero_documento: persona_data.data.numero_documento, 
-                  nombre_completo: String(persona_data.data.primer_nombre) + " " + String(persona_data.data.primer_apellido)})
+        set_persona_selected({...control_persona, id_persona: persona_data.data.id_persona, tipo_documento: persona_data.data.tipo_documento, numero_documento: persona_data.data.numero_documento, 
+          nombre_completo: String(persona_data.data.primer_nombre) + " " + String(persona_data.data.primer_apellido)})
+       
       } catch (err) {
         console.log(err);
       }
     };
     void get_selects_options();
   }, []);
+
+  useEffect(() => {
+    reset_persona(persona_selected)
+    set_persona(persona_selected)
+      
+  }, [persona_selected]);
 
   const search_person: any = (async () => {
     const document = get_values("numero_documento")??""
@@ -182,6 +198,7 @@ const get_personas: any = (async () => {
         borderRadius={2}
       >
         <BuscarModelo
+        set_current_model={set_persona}
         row_id={"id_persona"}
         columns_model={columns_personas}
         models={personas}
@@ -192,7 +209,7 @@ const get_personas: any = (async () => {
           form_inputs={[
             {
                 datum_type: "title",
-                title_label: "Seleccione persona"
+                title_label: title??"Seleccione persona"
 
             },
             {
@@ -227,7 +244,7 @@ const get_personas: any = (async () => {
             {
                 datum_type: "input_controller",
                 xs: 12,
-                md: 5,
+                md: 4,
                 control_form: control_persona,
                 control_name: "nombre_completo",
                 default_value: "",

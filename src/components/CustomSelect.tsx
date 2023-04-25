@@ -43,16 +43,17 @@ export const CustomSelect = ({
             })}
             onChange={onChange}
           >
-            <MenuItem value="">
+            <MenuItem value={''}>
               <em>Seleccionar opción</em>
             </MenuItem>
-            {options.map((e, k: number) => {
-              return (
-                <MenuItem value={e.value} key={k}>
-                  {e.label}
-                </MenuItem>
-              );
-            })}
+            {options.length > 0 &&
+              options.map((e, k: number) => {
+                return (
+                  <MenuItem value={e.value} key={k}>
+                    {e.label}
+                  </MenuItem>
+                );
+              })}
           </Select>
           {errors[name]?.type === 'required' && (
             <FormHelperText>Campo Requerido</FormHelperText>
