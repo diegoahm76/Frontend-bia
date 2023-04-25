@@ -4,8 +4,8 @@ import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IObjPlantingGoods } from "../interfaces/materialvegetal";
-import { get_planting_goods } from '../store/slice/materialvegetalSlice';
-import { get_planting_goods_service, control_error } from '../store/thunks/materialvegetalThunks';
+import { get_planting_goods, set_current_good } from '../store/slice/materialvegetalSlice';
+import { get_planting_goods_service, control_error, get_goods_service } from '../store/thunks/materialvegetalThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,10 +14,11 @@ import SaveIcon from '@mui/icons-material/Save';
 import FormButton from '../../../../components/partials/form/FormButton';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
+import React from 'react';
 
 // const initial_state_item: IObjPlantingGoods = {
 //     id_item_despacho_entrante: null,
-//     id_despacho_entrante: null,
+//     id_siembra: null,
 //     id_bien: null,
 //     cantidad_entrante: null,
 //     cantidad_distribuida: null,
@@ -40,7 +41,7 @@ const SeleccionarBienDistribuir = () => {
     const [aux_planting_goods, set_aux_planting_goods] = useState<IObjPlantingGoods[]>([]);
     const [action, set_action] = useState<string>("agregar");
 
-    const { current_planting, goods, planting_goods } = useAppSelector((state) => state.material_vegetal);
+    const { current_planting, goods, planting_goods, current_nursery, current_good } = useAppSelector((state) => state.material_vegetal);
     const dispatch = useAppDispatch();
 
     const columns_bienes: GridColDef[] = [
@@ -66,6 +67,16 @@ const SeleccionarBienDistribuir = () => {
             ),
         },
         {
+            field: 'tipo_bien',
+            headerName: 'Tipo',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
+        {
             field: 'cantidad_entrante',
             headerName: 'Cantidad entrante',
             width: 150,
@@ -76,8 +87,8 @@ const SeleccionarBienDistribuir = () => {
             ),
         },
         {
-            field: 'cantidad_distribuida',
-            headerName: 'Cantidad distribuida',
+            field: 'cantidad_disponible_bien',
+            headerName: 'Cantidad disponible',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -86,8 +97,8 @@ const SeleccionarBienDistribuir = () => {
             ),
         },
         {
-            field: 'cantidad_restante',
-            headerName: 'Cantidad restante',
+            field: 'unidad_disponible',
+            headerName: 'unidad',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -98,8 +109,8 @@ const SeleccionarBienDistribuir = () => {
 
     ];
 
-    const columns_bienes_distribuidos: GridColDef[] = [
-        { field: 'id_bien', headerName: 'ID', width: 20 },
+    const columns_bienes_siembra: GridColDef[] = [
+        { field: 'id_bien_consumido', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
             headerName: 'Codigo',
@@ -121,8 +132,18 @@ const SeleccionarBienDistribuir = () => {
             ),
         },
         {
-            field: 'cantidad_asignada',
-            headerName: 'Cantidad asignada',
+            field: 'tipo_bien',
+            headerName: 'Tipo',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
+        {
+            field: 'cantidad',
+            headerName: 'Cantidad',
             width: 140,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -131,8 +152,8 @@ const SeleccionarBienDistribuir = () => {
             ),
         },
         {
-            field: 'vivero_nombre',
-            headerName: 'Vivero',
+            field: 'observaciones',
+            headerName: 'Observacion',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -146,13 +167,13 @@ const SeleccionarBienDistribuir = () => {
             width: 90,
             renderCell: (params) => (
                 <>
-                    {current_planting.distribucion_confirmada === false &&
+                    
                         <Tooltip title="Editar">
                             <IconButton
-                                onClick={() => {
-                                    edit_bien_distribuido(params.row)
+                                // onClick={() => {
+                                //     edit_bien_distribuido(params.row)
 
-                                }}
+                                // }}
                             >
                                 <Avatar
                                     sx={{
@@ -170,13 +191,12 @@ const SeleccionarBienDistribuir = () => {
                                 </Avatar>
                             </IconButton>
                         </Tooltip>
-                    }
-                    {params.row.id_distribucion_item_despacho_entrante === null &&
+                    
                         <Tooltip title="Borrar">
                             <IconButton
-                                onClick={() => {
-                                    delete_bien_distribuido(params.row)
-                                }}
+                                // onClick={() => {
+                                //     delete_bien_distribuido(params.row)
+                                // }}
                             >
                                 <Avatar
                                     sx={{
@@ -194,7 +214,7 @@ const SeleccionarBienDistribuir = () => {
                                 </Avatar>
                             </IconButton>
                         </Tooltip>
-                    }
+                    
                 </>
             ),
         },
@@ -202,56 +222,53 @@ const SeleccionarBienDistribuir = () => {
 
 
     const get_bienes: any = (async () => {
-        const id_despacho = current_planting.id_despacho_entrante
-        if (id_despacho !== null && id_despacho !== undefined) {
-            void dispatch(get_planting_goods_service(id_despacho));
+        const id_vivero = current_nursery.id_vivero
+        console.log(current_nursery)
+        if (id_vivero !== null && id_vivero !== undefined) {
+            void dispatch(get_goods_service(id_vivero));
         }
     })
 
     useEffect(() => {
-        const id_despacho = current_planting.id_despacho_entrante
-        if (id_despacho !== null && id_despacho !== undefined) {
-            void dispatch(get_planting_goods_service(id_despacho));
+        const id_vivero = current_nursery.id_vivero
+        if (id_vivero !== null && id_vivero !== undefined) {
+            void dispatch(get_goods_service(id_vivero));
         }
         set_action("agregar")
-    }, [current_planting]);
+    }, [current_nursery]);
 
     useEffect(() => {
         set_aux_planting_goods(planting_goods)
     }, [planting_goods]);
 
     useEffect(() => {
-        set_action("agregar")
-    }, [watch("id_bien")]);
+        console.log(aux_planting_goods)
+    }, [aux_planting_goods]);
 
     useEffect(() => {
-        void dispatch(get_nurseries_closing_service());
-    }, []);
+        set_action("agregar")
+    }, [current_good]);
 
-    const add_bien_distribuido = (): void => {
-        const bien: IObjPlantingGoods | undefined = aux_planting_goods.find((p) => p.id_bien === get_values_bien("id_bien") && p.id_vivero === get_values_siembra("id_vivero"))
-        const vivero: IObjNursery | undefined = nurseries.find((p) => p.id_vivero === get_values_siembra("id_vivero"));
+    const add_bien_siembra = (): void => {
+        const bien: IObjPlantingGoods | undefined = aux_planting_goods.find((p) => p.id_bien_consumido === current_good.id_bien )
         const new_bien: IObjPlantingGoods = {
-            id_distribucion_item_despacho_entrante: null,
-            id_vivero: get_values_siembra("id_vivero"),
-            id_bien: get_values_bien("id_bien"),
-            cantidad_asignada: Number(get_values_siembra("cantidad_asignada")),
-            cod_etapa_lote_al_ingresar: "G",
-            id_item_despacho_entrante: get_values_bien("id_item_despacho_entrante"),
-            vivero_nombre: vivero?.nombre ?? "",
-            unidad_medida: get_values_bien("unidad_medida") ?? "",
-            codigo_bien: get_values_bien("codigo_bien") ?? "",
-            nombre_bien: get_values_bien("nombre_bien") ?? "",
+            id_consumo_siembra: null,
+            id_siembra: current_planting.id_siembra,
+            id_bien_consumido: current_good.id_bien,
+            cantidad: Number(get_values_siembra("cantidad")),
+            observaciones: get_values_siembra("observaciones"),
+            id_mezcla_consumida: current_good.id_inventario_vivero,
+            tipo_bien: current_good.tipo_bien,
+            codigo_bien: current_good.codigo_bien,
+            nombre_bien: current_good.nombre_bien,
         }
         if (bien === undefined) {
             set_aux_planting_goods([...aux_planting_goods, new_bien])
         } else {
             if (action === "editar") {
-
-
                 const aux_items: IObjPlantingGoods[] = []
                 aux_planting_goods.forEach((option) => {
-                    if (option.id_bien === get_values_bien("id_bien")) {
+                    if (option.id_bien_consumido === get_values_bien("id_bien_consumido")) {
                         aux_items.push(new_bien)
                     } else {
                         aux_items.push(option)
@@ -260,32 +277,32 @@ const SeleccionarBienDistribuir = () => {
                 set_aux_planting_goods(aux_items)
                 set_action("agregar")
             } else {
-                control_error("el bien ya se asigno en el vivero, seleccione la opcion de editar")
+                control_error("El bien ya fue agregado o ya existe semilla")
             }
         }
     };
 
-    const edit_bien_distribuido = (item: IObjPlantingGoods): void => {
-        reset_bien(goods.find((p: IObjPlantingGoods) => p.id_item_despacho_entrante === item.id_item_despacho_entrante))
-        reset_siembra(aux_planting_goods.find((p) => p.id_bien === item.id_bien && p.id_vivero === item.id_vivero))
-        set_action("editar")
+    // const edit_bien_distribuido = (item: IObjPlantingGoods): void => {
+    //     reset_bien(goods.find((p: IObjPlantingGoods) => p.id_item_despacho_entrante === item.id_item_despacho_entrante))
+    //     reset_siembra(aux_planting_goods.find((p) => p.id_bien === item.id_bien && p.id_vivero === item.id_vivero))
+    //     set_action("editar")
 
-    };
+    // };
 
-    const delete_bien_distribuido = (item: IObjPlantingGoods): void => {
-        const aux_items: IObjPlantingGoods[] = []
-        aux_planting_goods.forEach((option) => {
-            if (option.id_bien !== item.id_bien || option.id_vivero !== item.id_vivero) {
-                aux_items.push(option)
-            }
-        })
-        set_aux_planting_goods(aux_items)
-    };
+    // const delete_bien_distribuido = (item: IObjPlantingGoods): void => {
+    //     const aux_items: IObjPlantingGoods[] = []
+    //     aux_planting_goods.forEach((option) => {
+    //         if (option.id_bien !== item.id_bien || option.id_vivero !== item.id_vivero) {
+    //             aux_items.push(option)
+    //         }
+    //     })
+    //     set_aux_planting_goods(aux_items)
+    // };
 
     const save_items: any = (async () => {
-        const id_despacho = current_planting.id_despacho_entrante
+        const id_despacho = current_planting.id_siembra
         if (id_despacho !== null && id_despacho !== undefined) {
-            void dispatch(save_planting_goods_service(id_despacho, current_planting.observacion_distribucion ?? "", aux_planting_goods));
+            // void dispatch(save_planting_goods_service(id_despacho, current_planting.observacion_distribucion ?? "", aux_planting_goods));
         }
     });
 
@@ -298,7 +315,8 @@ const SeleccionarBienDistribuir = () => {
                 borderRadius={2}
             >
                 <BuscarModelo
-                    row_id={"id_item_despacho_entrante"}
+                    set_current_model={set_current_good}
+                    row_id={"id_inventario_vivero"}
                     columns_model={columns_bienes}
                     models={goods}
                     get_filters_models={get_bienes}
@@ -341,38 +359,22 @@ const SeleccionarBienDistribuir = () => {
                             xs: 12,
                             md: 3,
                             control_form: control_bien,
-                            control_name: "cantidad_restante",
+                            control_name: "cantidad_disponible_bien",
                             default_value: "",
                             rules: {},
-                            label: "Cantidad restante",
+                            label: "Cantidad disponible",
                             type: "text",
                             disabled: true,
                             helper_text: ""
                         },
                     ]}
                     form_inputs_list={[
-
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 5,
-                            control_form: control_siembra,
-                            control_name: "id_vivero",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Vivero",
-                            disabled: action === "editar",
-                            helper_text: "debe seleccionar campo",
-                            select_options: nurseries,
-                            option_label: "nombre",
-                            option_key: "id_vivero",
-                        },
                         {
                             datum_type: "input_controller",
                             xs: 12,
                             md: 2,
                             control_form: control_siembra,
-                            control_name: "cantidad_asignada",
+                            control_name: "cantidad",
                             default_value: "",
                             rules: {},
                             label: "Cantidad",
@@ -393,14 +395,29 @@ const SeleccionarBienDistribuir = () => {
                             disabled: true,
                             helper_text: ""
                         },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 5,
+                            control_form: control_siembra,
+                            control_name: "observaciones",
+                            default_value: "",
+                            rules: {},
+                            label: "Observación",
+                            type: "text",
+                            multiline_text: true,
+                            rows_text: 4,
+                            disabled: false,
+                            helper_text: ""
+                        },
 
                     ]}
-                    title_list='Bienes pre-distribuidos'
+                    title_list='Bienes consumidos'
                     list={aux_planting_goods}
-                    add_item_list={add_bien_distribuido}
+                    add_item_list={add_bien_siembra}
                     add_list_button_label={action}
-                    columns_list={columns_bienes_distribuidos}
-                    row_list_id={"id_distribucion_item_despacho_entrante"}
+                    columns_list={columns_bienes_siembra}
+                    row_list_id={"id_consumo_siembra"}
                     modal_select_model_title='Buscar bien'
                     modal_form_filters={[
                         {

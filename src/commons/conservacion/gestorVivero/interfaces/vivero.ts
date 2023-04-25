@@ -39,6 +39,7 @@ export interface IObjItem {
   numero_documento?: string | number | null;
   unidad_medida?: string | null;
   cantidad_restante?: number | null;
+  cod_tipo_elemento_vivero?: string | null;
 }
 
 export interface IDespacho {

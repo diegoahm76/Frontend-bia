@@ -7,7 +7,7 @@ import {
 } from 'axios';
 // Slices
 import {
-    get_nurseries, get_vegetal_materials, get_germination_beds, get_planting_goods, get_plantings, set_current_planting
+    get_goods, get_nurseries, get_vegetal_materials, get_germination_beds, get_planting_goods, get_plantings, set_current_planting
 } from '../slice/materialvegetalSlice';
 import { api } from '../../../../../api/axios';
 
@@ -84,7 +84,7 @@ export const get_germination_beds_service = (id: string|number): any => {
     };
   };
 
-    // Obtener camas germinacion
+    // Obtener bienes siembra
 export const get_planting_goods_service = (id: string|number): any => {
     return async (dispatch: Dispatch<any>) => {
       try {
@@ -98,6 +98,21 @@ export const get_planting_goods_service = (id: string|number): any => {
       }
     };
   };
+      // Obtener bienes vivero
+export const get_goods_service = (id: string|number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id}/`);
+      console.log(data)
+      dispatch(get_goods(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_planting_goods_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 // obtener siembras
   export const get_plantings_service = (): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -118,7 +133,7 @@ export const get_planting_goods_service = (id: string|number): any => {
     };
   };
 
-      // Obtener camas germinacion
+      // Obtener siembra actual
 export const get_current_planting_service = (id: string|number): any => {
     return async (dispatch: Dispatch<any>) => {
       try {
