@@ -16,10 +16,12 @@ interface IProps {
     parent_state_setter: any,
     detalle_seleccionado: any,
     tipo_matenimiento: string,
-    especificacion: string
+    especificacion: string,
+    limpiar_formulario: boolean
+
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion }: IProps) => {
+export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, limpiar_formulario }: IProps) => {
     // Hooks
     const {
         rows,
@@ -44,6 +46,12 @@ export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, det
     useEffect(() => {
         set_detalle_seleccionado(detalle_seleccionado);
     }, [detalle_seleccionado]);
+
+    useEffect(() => {
+        set_cada("");
+        set_cada_desde("");
+        set_cada_hasta("");
+    }, [limpiar_formulario]);
 
     const [cada, set_cada] = useState("");
     const [cada_desde, set_cada_desde] = useState("");

@@ -6,10 +6,11 @@ import {
 import { useEffect, useState } from "react";
 interface IProps {
     detalle_seleccionado_prop: any,
-    tipo_articulo: string
+    tipo_articulo: string,
+    limpiar_formulario: boolean
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop, tipo_articulo}: IProps) => {
+export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop, tipo_articulo, limpiar_formulario }: IProps) => {
     const [marca, set_marca] = useState<string | null>("");
     const [codigo_bien, set_codigo_bien] = useState<string | null>("");
     const [descripcion, set_descripcion] = useState<string | null>("");
@@ -17,18 +18,26 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
     const [tipo_columna, set_tipo_columna] = useState<string>("");
 
     useEffect(() => {
-        if(detalle_seleccionado_prop !== undefined && detalle_seleccionado_prop !== null){
+        if (detalle_seleccionado_prop !== undefined && detalle_seleccionado_prop !== null) {
             set_marca(detalle_seleccionado_prop.marca);
             set_codigo_bien(detalle_seleccionado_prop.codigo_bien);
             set_descripcion(detalle_seleccionado_prop.descripcion);
             set_porcentaje_iva(detalle_seleccionado_prop.porcentaje_iva);
         }
-    },[detalle_seleccionado_prop]);
+    }, [detalle_seleccionado_prop]);
 
-    useEffect(()=>{
+    useEffect(() => {
         tipo_articulo === 'vehículos' ? set_tipo_columna("Placa") : set_tipo_columna("Serial")
-        console.log(tipo_columna)
-    },[tipo_articulo]);
+    }, [tipo_articulo]);
+
+    useEffect(() => {
+        if (limpiar_formulario) {
+            set_marca('');
+            set_codigo_bien('');
+            set_descripcion('');
+            set_porcentaje_iva('');
+        }
+    }, [limpiar_formulario]);
 
     return (
         <>
@@ -52,7 +61,7 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
-                        <TextField 
+                        <TextField
                             label={tipo_columna}
                             size="small"
                             required
@@ -78,7 +87,6 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                     <Grid item xs={12} sm={3}>
                         <TextField
                             label="Kilometraje"
-                            helperText="Seleccione Kilometraje"
                             size="small"
                             required
                             fullWidth

@@ -26,14 +26,15 @@ interface IProps {
     detalle_seleccionado: any,
     tipo_matenimiento: string,
     especificacion: string,
-    user_info: any
+    user_info: any,
+    limpiar_formulario: boolean
 }
 const opcion_programar = [{ value: "MA", label: "Manual" }, { value: "AU", label: "Automatica" }, { value: "OT", label: "Otro" }];
 
 const opcion_programar_fecha = [{ value: "W", label: "Semanas" }, { value: "M", label: "Meses" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, user_info }: IProps) => {
+export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, user_info, limpiar_formulario }: IProps) => {
     // Hooks
     const {
         rows,
@@ -58,6 +59,22 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     useEffect(() => {
         set_detalle_seleccionado(detalle_seleccionado);
     }, [detalle_seleccionado]);
+
+    useEffect(() => {
+        if (limpiar_formulario) {
+            set_tipo("");
+            set_fecha("");
+            set_fecha_desde(null);
+            set_fecha_hasta(null);
+            set_fecha_min(dayjs());
+            set_cada("");
+            set_fechas_array([]);
+            set_check_isd(false);
+            set_check_if(false);
+            set_disabled_type(true);
+            set_selected_date([]);
+        }
+    }, [limpiar_formulario]);
 
     const [tipo, set_tipo] = useState("");
     const [fecha, set_fecha] = useState("");
@@ -104,7 +121,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
     useEffect(() => {
         set_fechas();
-    }, [fecha,cada,fecha_hasta,fecha_desde,check_isd,check_if]);
+    }, [fecha, cada, fecha_hasta, fecha_desde, check_isd, check_if]);
 
     const set_fechas = (): void => {
         if (fecha_desde !== null && fecha_hasta !== null && cada !== "" && fecha !== "") {
@@ -343,7 +360,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                     </Grid>
                     <Grid item xs={12} sm={8}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <CalendarPicker date={null} onChange={onchange_calendar} disabled={tipo === ""} renderDay={custom_day_render} minDate={fecha_min}/>
+                            <CalendarPicker date={null} onChange={onchange_calendar} disabled={tipo === ""} renderDay={custom_day_render} minDate={fecha_min} />
                         </LocalizationProvider>
                     </Grid>
                 </Grid>

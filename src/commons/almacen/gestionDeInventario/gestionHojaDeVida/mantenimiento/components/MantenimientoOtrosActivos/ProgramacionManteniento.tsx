@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Stack } from '@mui/material';
 import { Title } from '../../../../../../../components';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { type crear_mantenimiento } from '../../interfaces/IProps';
 import { FechasComponent } from '../mantenimientoGeneral/FechasComponent';
 import { PrevisualizacionComponent } from '../mantenimientoGeneral/PrevisualizacionComponent';
@@ -19,9 +19,10 @@ import { useAppDispatch } from '../../../../../../../hooks';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const [limpiar_formulario, set_limpiar_formulario] = useState<boolean>(false);
+
     const {
         rows,
         detalle_seleccionado,
@@ -45,7 +46,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
     const wrapper_set_parent_state = useCallback((val: crear_mantenimiento[]) => {
         set_rows(val);
     }, [set_rows]);
-    
+
     const set_details_state = useCallback((val: any) => {
         set_detalle_seleccionado(val);
     }, [set_detalle_seleccionado]);
@@ -64,13 +65,23 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
 
     const crear_mantenimiento: () => void = () => {
         dispatch(create_maintenance_service(rows)).then((response: any) => {
-            console.log('Se creo el mantenimiento: ',response)
+            console.log('Se creo el mantenimiento: ', response)
         });
     }
 
     const salir_mantenimiento: () => void = () => {
         navigate('/home');
     }
+
+    const limpiar: () => void = () => {
+        set_limpiar_formulario(true);
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            set_limpiar_formulario(false);
+        }, 1000);
+    }, [limpiar_formulario])
 
     return (
         <>
@@ -89,7 +100,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
                     <Title title="Búsqueda de artículo" />
-                    <ArticuloComponent tipo_articulo={"otros activos"} parent_details={set_details_state} user_info_prop={set_user_info_state}/>
+                    <ArticuloComponent tipo_articulo={"otros activos"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
             <Grid
@@ -106,7 +117,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* DETALLES COMPONENT */}
                     <Title title="Datos del artículo" />
-                    <DetallesComponent detalle_seleccionado_prop={detalle_seleccionado} tipo_articulo={"otros activos"}/>
+                    <DetallesComponent detalle_seleccionado_prop={detalle_seleccionado} tipo_articulo={"otros activos"} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
 
@@ -124,7 +135,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* MANTENIMIENTO COMPONENT */}
                     <Title title='Detalles' />
-                    <MantenimientoComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} />
+                    <MantenimientoComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
 
@@ -142,7 +153,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* FECHAS COMPONENT */}
                     <Title title='Programar por fechas' />
-                    <FechasComponent parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} user_info={user_info} />
+                    <FechasComponent parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} user_info={user_info} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
             <Grid
@@ -159,7 +170,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* PREVISUALIZACION COMPONENT */}
                     <Title title='Previsualización' />
-                    <PrevisualizacionComponent data_grid={rows}/>
+                    <PrevisualizacionComponent data_grid={rows} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
             <Grid item xs={12}>
@@ -197,6 +208,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                             color='inherit'
                             variant="contained"
                             startIcon={<CleanIcon />}
+                            onClick={limpiar}
                         >
                             Limpiar
                         </Button>
