@@ -130,6 +130,8 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       razon_social: 'string',
       nombre_comercial: 'string',
       tiene_usuario: false,
+      digito_verificacion: "",
+      cod_naturaleza_empresa: "",
     },
     {
       id: 2,
@@ -145,6 +147,8 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       razon_social: 'string',
       nombre_comercial: 'string',
       tiene_usuario: false,
+      digito_verificacion: "",
+      cod_naturaleza_empresa: "",
     },
   ]);
   const handle_click_open = (): void => {
