@@ -69,7 +69,7 @@ export const get_naturaleza_emp = async (): Promise<
 export const get_person_by_document = async (
   tipo_documento: string,
   numero_documento: string
-): Promise<AxiosResponse<ResponseServer<InfoPersona | null>>> => {
+): Promise<AxiosResponse<ResponseServer<InfoPersona>>> => {
   return await api.get<ResponseServer<InfoPersona>>(
     `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
   );

@@ -3,14 +3,15 @@ import type {
   ResponseAuth,
   LoginUser,
   IUserInfo,
-  Permisos,
   DataRegistePortal,
   UserCreate,
   DataUnlockUser,
   InfoPersonaComplete,
   ChangePassword,
   DataUserRecover,
-  ResponseRecover
+  ResponseRecover,
+  DataRegisterPersonaN,
+  Menu
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -49,12 +50,12 @@ export const login_post = async (
 export const permissions_request = async (
   id_usuario: number,
   tipo_entorno: string
-): Promise<ResponseThunks<Permisos[]>> => {
+): Promise<ResponseThunks<Menu[]>> => {
   try {
     const {
       data: { data }
-    } = await api.get<ResponseServer<Permisos[]>>(
-      `permisos/permisos-rol/get-by-entorno/?id_usuario=${id_usuario}&tipo_entorno=${tipo_entorno}`
+    } = await api.get<ResponseServer<Menu[]>>(
+      `permisos/permisos-rol/get-estructura-menu/?id_usuario=${id_usuario}&tipo_entorno=${tipo_entorno}`
     );
 
     return {
@@ -82,7 +83,7 @@ export const get_info_person_by_document = async (
 };
 
 export const crear_persona_natural_and_user = async (
-  data: DataRegistePortal
+  data: DataRegisterPersonaN
 ): Promise<AxiosResponse<UserCreate>> => {
   return await api.post('personas/persona-natural-and-usuario/create/', data);
 };

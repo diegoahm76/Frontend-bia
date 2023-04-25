@@ -1,6 +1,14 @@
 import type { Dayjs } from 'dayjs';
-import type { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import type { IList } from '../../../interfaces/globalModels';
+import type {
+  FieldErrors,
+  FieldValues,
+  UseFormHandleSubmit,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch
+} from 'react-hook-form';
 
 export interface UserRol {
   id_rol: number;
@@ -22,7 +30,7 @@ export interface ResponseAuth {
 
 export interface IUserInfo {
   userinfo: UserData;
-  permisos: Permisos[];
+  permisos: Menu[];
   representante_legal: any[];
   user_sesion: string;
   status: 'checking' | 'not-authenticated' | 'authenticated';
@@ -204,28 +212,45 @@ export interface AuthSlice {
   auth: IUserInfo;
 }
 
-export interface Permisos {
+export interface Menu {
   subsistema: string;
   desc_subsistema: string;
   expanded: boolean;
+  menus: MenuElement[];
+}
+
+export interface MenuElement {
+  id_menu: number;
+  desc_subsistema: string;
+  nombre: string;
+  nivel_jerarquico: number;
+  orden_por_padre: number;
+  subsistema: string;
+  id_menu_padre: number | null;
   modulos: Modulo[];
+  expanded: boolean;
+  submenus: MenuElement[];
 }
 
 export interface Modulo {
   id_modulo: number;
   nombre_modulo: string;
   descripcion: string;
+  subsistema: string;
+  desc_subsistema: string;
   ruta_formulario: string;
   nombre_icono: string;
-  permisos: Acciones;
+  id_menu: number;
+  permisos: Permisos;
+  expanded: boolean;
 }
 
-export interface Acciones {
-  actualizar?: boolean;
-  consultar: boolean;
-  ejecutar?: boolean;
+export interface Permisos {
   crear?: boolean;
+  consultar: boolean;
+  actualizar?: boolean;
   borrar?: boolean;
+  ejecutar?: boolean;
 }
 
 export interface ReisterHook {
@@ -239,46 +264,48 @@ export interface ReisterHook {
   departamento_expedicion: string;
   departamento_residencia: string;
   departamentos_opt: IList[];
+  documento_rep: string;
   dpto_notifiacion_opt: IList[];
   dpto_notifiacion: string;
   dpts_residencia_opt: IList[];
   error_email: boolean;
   error_password: boolean;
   error_phone: boolean;
+  errors: FieldErrors<FieldValues>;
   estado_civil_opt: IList[];
   estado_civil: string;
   fecha_nacimiento: Dayjs | null;
   fecha_rep_legal: Dayjs | null;
   genero_opt: IList[];
   genero: string;
-  has_user: boolean;
+  is_avaiable: boolean;
   is_exists: boolean;
+  is_error: boolean;
   is_saving: boolean;
   is_search: boolean;
+  is_valid: boolean;
   loading: boolean;
   message_error_password: string;
   message_no_person: string;
+  message_error: string;
   nacionalidad_emp: string;
   naturaleza_emp_opt: IList[];
   naturaleza_emp: string;
   nombre_representante: string;
   numero_documento: string;
   pais_nacimiento: string;
-  pais_notificacion: string;
   pais_residencia: string;
   paises_options: IList[];
-  requiere_nombre_comercial: boolean;
   show_password: boolean;
   tipo_documento_opt: IList[];
   tipo_documento_rep: string;
   tipo_documento: string;
   tipo_persona_opt: IList[];
   tipo_persona: string;
-  documento_rep: string;
-  set_documento_rep: Dispatch<SetStateAction<string>>;
   get_selects_options: () => Promise<void>;
-  handle_change_checkbox: (event: ChangeEvent<HTMLInputElement>) => void;
   handle_click_show_password: () => void;
+  handle_submit: UseFormHandleSubmit<FieldValues>;
+  register: UseFormRegister<FieldValues>;
   set_ciudad_expedicion: Dispatch<SetStateAction<string>>;
   set_ciudad_notificacion_opt: Dispatch<SetStateAction<IList[]>>;
   set_ciudad_notificacion: Dispatch<SetStateAction<string>>;
@@ -288,6 +315,7 @@ export interface ReisterHook {
   set_data_register: Dispatch<SetStateAction<DataRegistePortal>>;
   set_departamento: Dispatch<SetStateAction<string>>;
   set_departamentos_opt: Dispatch<SetStateAction<IList[]>>;
+  set_documento_rep: Dispatch<SetStateAction<string>>;
   set_dpto_notifiacion_opt: Dispatch<SetStateAction<IList[]>>;
   set_dpto_notifiacion: Dispatch<SetStateAction<string>>;
   set_dpto_residencia_opt: Dispatch<SetStateAction<IList[]>>;
@@ -301,7 +329,6 @@ export interface ReisterHook {
   set_fecha_rep_legal: Dispatch<SetStateAction<Dayjs | null>>;
   set_genero_opt: Dispatch<SetStateAction<IList[]>>;
   set_genero: Dispatch<SetStateAction<string>>;
-  set_has_user: Dispatch<SetStateAction<boolean>>;
   set_is_exists: Dispatch<SetStateAction<boolean>>;
   set_is_saving: Dispatch<SetStateAction<boolean>>;
   set_is_search: Dispatch<SetStateAction<boolean>>;
@@ -312,14 +339,51 @@ export interface ReisterHook {
   set_nombre_representante: Dispatch<SetStateAction<string>>;
   set_numero_documento: Dispatch<SetStateAction<string>>;
   set_pais_nacimiento: Dispatch<SetStateAction<string>>;
-  set_pais_notificacion: Dispatch<SetStateAction<string>>;
   set_pais_residencia: Dispatch<SetStateAction<string>>;
   set_show_password: Dispatch<SetStateAction<boolean>>;
   set_tipo_documento_rep: Dispatch<SetStateAction<string>>;
   set_tipo_documento: Dispatch<SetStateAction<string>>;
   set_tipo_persona: Dispatch<SetStateAction<string>>;
+  set_value: UseFormSetValue<FieldValues>;
   validate_exits_representante: (numero_documento: string) => Promise<void>;
   validate_exits: (numero_documento: string) => Promise<void>;
+  watch: UseFormWatch<FieldValues>;
+}
+
+export interface DataRegisterPersonaN {
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  cod_municipio_expedicion_id: string;
+  nombre_comercial: string;
+  primer_nombre: string;
+  segundo_nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  fecha_nacimiento: string;
+  email: string;
+  telefono_celular: string;
+  telefono_empresa_2: null | string;
+  sexo: string;
+  estado_civil: string;
+  pais_nacimiento: string;
+  email_empresarial: string;
+  ubicacion_georeferenciada: string;
+  telefono_fijo_residencial: null | string;
+  pais_residencia: string;
+  municipio_residencia: string;
+  direccion_residencia: string;
+  direccion_laboral: string;
+  direccion_residencia_ref: string;
+  direccion_notificaciones: string;
+  cod_municipio_laboral_nal: string;
+  cod_municipio_notificacion_nal: string;
+  acepta_notificacion_sms: boolean;
+  acepta_notificacion_email: boolean;
+  acepta_tratamiento_datos: boolean;
+  nombre_de_usuario: string;
+  password: string;
+  redirect_url: string;
 }
 
 export interface InfoPersonaComplete {
