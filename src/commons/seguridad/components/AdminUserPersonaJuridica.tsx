@@ -25,6 +25,8 @@ import type {
   DataAadminUser,
   UserCreate,
   SeguridadSlice,
+  InfoPersonal,
+  InfoUsuario,
 } from '../interfaces';
 import type { AxiosError } from 'axios';
 // import { crear_persona_juridica_and_user } from '../../auth/request/authRequest';
@@ -42,6 +44,7 @@ interface Props {
   tipo_documento: string;
   tipo_persona: string;
   has_user: boolean;
+  data: InfoUsuario | InfoPersonal;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -50,6 +53,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   tipo_documento,
   tipo_persona,
   has_user,
+  data,
 }: Props) => {
   const { action_admin_users } = useSelector(
     (state: SeguridadSlice) => state.seguridad
@@ -70,6 +74,8 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     set_data_register,
     // set_tipo_persona,
   } = use_admin_users();
+
+  console.log(data);
 
   // useEffect(() => {
   //   if (watch('tipo_persona') !== undefined) {

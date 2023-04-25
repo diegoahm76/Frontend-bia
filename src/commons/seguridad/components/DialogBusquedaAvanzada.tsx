@@ -32,22 +32,28 @@ import type {
   FormValuesSearchUser,
   // keys_object_search_user,
   keys_object_search_person,
+  InfoPersonal,
+  InfoUsuario,
 } from '../interfaces';
 import { get_users, get_persons, get_data_user } from '../store/thunks';
 import { set_action_admin_users } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
-import { use_admin_users } from '../hooks/AdminUserHooks';
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  onData: (
+    data_person_or_user: InfoPersonal | InfoUsuario,
+    buscar_por: string
+  ) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogBusquedaAvanzada = ({
   is_modal_active,
   set_is_modal_active,
+  onData,
 }: IProps) => {
   const dispatch = useDispatch();
   const { users, persons } = useSelector(
@@ -73,7 +79,6 @@ const DialogBusquedaAvanzada = ({
     set_tipo_documento,
     set_tipo_persona,
   } = use_busqueda_avanzada();
-  const { set_tipo_persona: set_tipo_personas_a } = use_admin_users();
   const {
     register: register_search_person,
     handleSubmit: handle_submit_search_person,
@@ -118,7 +123,6 @@ const DialogBusquedaAvanzada = ({
       set_tipo_documento('');
     }
   }, [tipo_persona]);
-
   const columns_persons: GridColDef[] = [
     {
       headerName: 'ID persona',
@@ -271,22 +275,22 @@ const DialogBusquedaAvanzada = ({
   ];
 
   const trigger_user_person_create_active = (data: any): void => {
-    console.log(data);
-    set_tipo_personas_a(data.tipo_persona);
+    console.log(data.tipo_persona);
+    onData(data, buscar_por);
     dispatch(set_action_admin_users('CREATE'));
   };
 
   const trigger_user_person_edit_active = (data: any): void => {
-    console.log(data);
+    console.log(data.tipo_persona);
     get_data_user(data.id_persona);
-    set_tipo_personas_a(data.tipo_persona);
+    onData(data, buscar_por);
     dispatch(set_action_admin_users('EDIT'));
   };
 
   const trigger_user_edit_active = (data: any): void => {
-    console.log(data);
+    console.log(data.tipo_persona);
     get_data_user(data.id_usuario);
-    set_tipo_personas_a(data.tipo_persona);
+    onData(data, buscar_por);
     dispatch(set_action_admin_users('EDIT'));
   };
 

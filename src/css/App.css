@@ -37,10 +37,12 @@ body::-webkit-scrollbar-thumb {
   border: none !important;
   border-style: none;
   background: transparent;
-  background-image: linear-gradient(90deg,
-      hsla(0deg, 0%, 100%, 0),
-      #fff,
-      hsla(0deg, 0%, 100%, 0)) !important;
+  background-image: linear-gradient(
+    90deg,
+    hsla(0deg, 0%, 100%, 0),
+    #fff,
+    hsla(0deg, 0%, 100%, 0)
+  ) !important;
 }
 
 .divider2 {
@@ -48,10 +50,12 @@ body::-webkit-scrollbar-thumb {
   border: none !important;
   border-style: none;
   background: transparent;
-  background-image: linear-gradient(90deg,
-      hsl(0, 0%, 100%),
-      #042f4a,
-      hsla(0, 0%, 100%)) !important;
+  background-image: linear-gradient(
+    90deg,
+    hsl(0, 0%, 100%),
+    #042f4a,
+    hsla(0, 0%, 100%)
+  ) !important;
 }
 
 .box-shadow {
@@ -125,7 +129,6 @@ body::-webkit-scrollbar-thumb {
 }
 
 @media (min-width: 900px) and (max-width: 1326px) {
-
   #rc-imageselect,
   .g-recaptcha {
     transform: scale(0.81);
@@ -136,7 +139,6 @@ body::-webkit-scrollbar-thumb {
 }
 
 @media (max-width: 899px) {
-
   #rc-imageselect,
   .g-recaptcha {
     transform: scale(0.86);

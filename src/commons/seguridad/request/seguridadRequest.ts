@@ -25,7 +25,7 @@ export const roles_request = async () => {
   }
 };
 
-// https://backend-bia-beta-production.up.railway.app/api/users/get-user-by-nombre-de-usuario/?nombre_de_usuario=PruebAnatural2820
+// busqueda de usuarios por nombre
 export const users_request = async (
   nombre_de_usuario: string
 ): Promise<ResponseThunks<User[]>> => {
@@ -50,7 +50,7 @@ export const users_request = async (
   }
 };
 
-// 
+// Busqueda avanzada de personas por varios parametros
 export const persons_request = async (
   tipo_documento: string,
   numero_documento: string,
@@ -78,7 +78,8 @@ export const persons_request = async (
   }
 };
 
-export const get_user_info_by_id_request = async (
+// Trae todos los datos de un usuario
+export const user_request = async (
   id: number
 ): Promise<AxiosResponse<ResponseServer<User | null>>> => {
   return await api.get(`users/get-by-pk/${id}`);

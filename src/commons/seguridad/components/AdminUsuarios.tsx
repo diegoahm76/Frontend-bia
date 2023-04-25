@@ -15,16 +15,57 @@ import {
 // Icons de Material UI
 import SearchIcon from '@mui/icons-material/Search';
 import { use_admin_users } from '../hooks/AdminUserHooks';
-import type { DataAadminUser, keys_object } from '../interfaces';
+import type {
+  DataAadminUser,
+  keys_object,
+  InfoPersonal,
+  InfoUsuario,
+} from '../interfaces';
 import DialogBusquedaAvanzada from './DialogBusquedaAvanzada';
 import { CustomSelect } from '../../../components';
 import { AdminUserPersonaJuridica } from './AdminUserPersonaJuridica';
 import { AdminUserPersonaNatural } from './AdminUserPersonaNatural';
 
+const initial_state_data_user: InfoUsuario = {
+  id_usuario: 0,
+  nombre_de_usuario: '',
+  persona: 0,
+  tipo_persona: '',
+  numero_documento: '',
+  primer_nombre: '',
+  primer_apellido: '',
+  nombre_completo: '',
+  razon_social: '',
+  nombre_comercial: '',
+  is_superuser: false,
+};
+
+const initial_state_data_person: InfoPersonal = {
+  id_persona: 0,
+  tipo_persona: '',
+  tipo_documento: '',
+  numero_documento: '',
+  primer_nombre: '',
+  segundo_nombre: '',
+  primer_apellido: '',
+  segundo_apellido: '',
+  nombre_completo: '',
+  razon_social: '',
+  nombre_comercial: '',
+  tiene_usuario: false,
+};
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdminUsuarios(): JSX.Element {
   const [busqueda_avanzada_is_active, set_busqueda_avanzada_is_active] =
     useState<boolean>(false);
+  const [data_person, set_data_person] = useState<InfoPersonal>(
+    initial_state_data_person
+  );
+  const [data_user, set_data_user] = useState<InfoUsuario>(
+    initial_state_data_user
+  );
+  const [buscar_por, set_buscar_por] = useState<string>('U');
+
   const {
     register,
     setValue: set_value,
@@ -67,6 +108,7 @@ export function AdminUsuarios(): JSX.Element {
   }, [watch('tipo_documento')]);
 
   useEffect(() => {
+    console.log('Hola');
     if (tipo_persona === 'J') {
       set_value('tipo_documento', 'NT');
       set_tipo_documento('NT');
@@ -74,6 +116,20 @@ export function AdminUsuarios(): JSX.Element {
       set_tipo_documento('');
     }
   }, [tipo_persona]);
+
+  useEffect(() => {
+    console.log('Funciona', data_person);
+    if ('tipo_persona' in data_person) {
+      set_tipo_persona(data_person.tipo_persona);
+    }
+  }, [data_person]);
+
+  useEffect(() => {
+    console.log('Funciona', data_user);
+    if ('tipo_persona' in data_user) {
+      set_tipo_persona(data_user.tipo_persona);
+    }
+  }, [data_user]);
 
   // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
@@ -92,6 +148,15 @@ export function AdminUsuarios(): JSX.Element {
   // Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
     set_value_form(e.target.name, e.target.value);
+  };
+
+  const handle_data_emit_search = (new_data: any, buscar_por: string): void => {
+    set_buscar_por(buscar_por);
+    if (buscar_por === 'U') {
+      set_data_user(new_data);
+    } else if (buscar_por === 'P') {
+      set_data_person(new_data);
+    }
   };
 
   return (
@@ -200,6 +265,8 @@ export function AdminUsuarios(): JSX.Element {
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
           has_user={has_user}
+          data={buscar_por === 'U' ? data_user : data_person}
+          buscar_por={buscar_por}
         />
       )}
       {tipo_persona === 'J' && (
@@ -208,11 +275,13 @@ export function AdminUsuarios(): JSX.Element {
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
           has_user={has_user}
+          data={buscar_por === 'U' ? data_user : data_person}
         />
       )}
       <DialogBusquedaAvanzada
         is_modal_active={busqueda_avanzada_is_active}
         set_is_modal_active={set_busqueda_avanzada_is_active}
+        onData={handle_data_emit_search}
       />
     </>
   );

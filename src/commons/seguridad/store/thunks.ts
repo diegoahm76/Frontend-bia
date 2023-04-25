@@ -1,5 +1,5 @@
   import { type Dispatch } from 'react';
-  import { roles_request, users_request, persons_request, get_user_info_by_id_request } from '../request/seguridadRequest';
+  import { roles_request, users_request, persons_request, user_request } from '../request/seguridadRequest';
   import { set_roles, set_users, set_persons, set_user_info } from './seguridadSlice';
 
 export const get_roles: () => any = () => {
@@ -60,7 +60,7 @@ export const get_persons: (
 
 export const get_data_user: (id:number) => any = (id: number) => {
   return async (dispatch: Dispatch<any>) => {
-    const resp = await get_user_info_by_id_request(id);
+    const resp = await user_request(id);
     console.log(resp.data);
     dispatch(set_user_info(resp.data));
   }

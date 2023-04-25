@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
 import { Title } from '../../../components/Title';
-import DialogBusquedaAvanzada from './DialogBusquedaAvanzada';
+// import DialogBusquedaAvanzada from './DialogBusquedaAvanzada';
 import DialogGeneradorDeDirecciones from './DialogGeneradorDeDirecciones';
 
 interface IProps {
@@ -21,8 +21,8 @@ interface IProps {
 export const FormAdminPersonas = ({
   set_position_tab_admin_personas,
 }: IProps): JSX.Element => {
-  const [busqueda_avanzada_is_active, set_busqueda_avanzada_is_active] =
-    useState<boolean>(false);
+  // const [busqueda_avanzada_is_active, set_busqueda_avanzada_is_active] =
+  //   useState<boolean>(false);
   const [
     generador_de_direcciones_is_active,
     set_generador_de_direcciones_is_active,
@@ -448,10 +448,10 @@ export const FormAdminPersonas = ({
         </Box>
       </Grid>
 
-      <DialogBusquedaAvanzada
+      {/* <DialogBusquedaAvanzada
         is_modal_active={busqueda_avanzada_is_active}
         set_is_modal_active={set_busqueda_avanzada_is_active}
-      />
+      /> */}
       <DialogGeneradorDeDirecciones
         is_modal_active={generador_de_direcciones_is_active}
         set_is_modal_active={set_generador_de_direcciones_is_active}
