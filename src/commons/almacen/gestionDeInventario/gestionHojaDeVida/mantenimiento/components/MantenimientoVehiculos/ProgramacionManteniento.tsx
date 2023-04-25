@@ -15,10 +15,15 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { useAppDispatch } from '../../../../../../../hooks';
+import { useNavigate } from 'react-router-dom';
+import { create_maintenance_service } from '../mantenimientoGeneral/thunks/maintenanceThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
-
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    
     const {
         rows,
         detalle_seleccionado,
@@ -39,12 +44,10 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
         set_anular_mantenimiento_is_active
     } = use_anular_mantenimiento();
 
-    // make wrapper function to give child
     const wrapper_set_parent_state = useCallback((val: crear_mantenimiennto[]) => {
         set_rows(val);
     }, [set_rows]);
-    console.log(rows)
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     const set_details_state = useCallback((val: any) => {
         set_detalle_seleccionado(val);
     }, [set_detalle_seleccionado]);
@@ -67,6 +70,16 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
         set_user_info(val);
     }, [set_user_info]);
 
+    const crear_mantenimiento: () => void = () => {
+        dispatch(create_maintenance_service(rows)).then((response: any) => {
+            console.log('Se creo el mantenimiento: ',response)
+        });
+    }
+
+    const salir_mantenimiento: () => void = () => {
+        navigate('/home');
+    }
+    
     return (
         <>
             <h1>Programación mantenimiento vehículos</h1>
@@ -227,19 +240,21 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                                 Limpiar
                             </Button>
                             <Button
-                                color='primary'
-                                variant='contained'
-                                startIcon={<SaveIcon />}
-                            >
-                                Guardar
-                            </Button>
-                            <Button
-                                color='inherit'
-                                variant='contained'
-                                startIcon={<ClearIcon />}
-                            >
-                                Salir
-                            </Button>
+                            color='primary'
+                            variant='contained'
+                            startIcon={<SaveIcon />}
+                            onClick={crear_mantenimiento}
+                        >
+                            Guardar
+                        </Button>
+                        <Button
+                            color='inherit'
+                            variant='contained'
+                            startIcon={<ClearIcon />}
+                            onClick={salir_mantenimiento}
+                        >
+                            Salir
+                        </Button>
                         </Stack>
                     </Box>
                 </Grid>

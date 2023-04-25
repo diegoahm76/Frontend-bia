@@ -212,7 +212,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
         const rows_emit: crear_mantenimiennto[] = [];
         selected_date.forEach(cm => {
             const data: crear_mantenimiennto = {
-                tipo_programacion: "Por Fecha",
+                tipo_programacion: "fecha",
                 cod_tipo_mantenimiento: tipo_matenimiento,
                 kilometraje_programado: "",
                 fecha_programada: cm.format("DD-MM-YYYY"),

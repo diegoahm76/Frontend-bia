@@ -15,10 +15,15 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { useAppDispatch } from '../../../../../../../hooks';
+import { useNavigate } from 'react-router-dom';
+import { create_maintenance_service } from '../mantenimientoGeneral/thunks/maintenanceThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
-    // the parentState will be set by its child slider component
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    
     const {
         rows,
         detalle_seleccionado,
@@ -38,13 +43,11 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
         set_title,
         set_anular_mantenimiento_is_active
     } = use_anular_mantenimiento();
-    // make wrapper function to give child
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const wrapperSetParentState = useCallback((val: crear_mantenimiennto[]) => {
+
+    const wrapper_set_parent_state = useCallback((val: crear_mantenimiennto[]) => {
         set_rows(val);
     }, [set_rows]);
-    console.log(rows)
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+    
     const set_details_state = useCallback((val: IcvVehicles) => {
         set_detalle_seleccionado(val);
     }, [set_detalle_seleccionado]);
@@ -60,6 +63,16 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
     const set_user_info_state = useCallback((val: string) => {
         set_user_info(val);
     }, [set_user_info]);
+
+    const crear_mantenimiento: () => void = () => {
+        dispatch(create_maintenance_service(rows)).then((response: any) => {
+            console.log('Se creo el mantenimiento: ',response)
+        });
+    }
+
+    const salir_mantenimiento: () => void = () => {
+        navigate('/home');
+    }
 
     return (
         <>
@@ -131,7 +144,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* FECHAS COMPONENT */}
                     <Title title='Programar por fechas' />
-                    <FechasComponent parent_state_setter={wrapperSetParentState} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion}  user_info={user_info}/>
+                    <FechasComponent parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion}  user_info={user_info}/>
                 </Grid>
             </Grid>
             <Grid
@@ -194,6 +207,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                             color='primary'
                             variant='contained'
                             startIcon={<SaveIcon />}
+                            onClick={crear_mantenimiento}
                         >
                             Guardar
                         </Button>
@@ -201,6 +215,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                             color='inherit'
                             variant='contained'
                             startIcon={<ClearIcon />}
+                            onClick={salir_mantenimiento}
                         >
                             Salir
                         </Button>
