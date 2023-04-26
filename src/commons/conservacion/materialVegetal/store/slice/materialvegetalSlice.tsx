@@ -15,7 +15,7 @@ import { type Persona } from "../../../../../interfaces/globalModels";
 export const initial_state_planting: IObjPlanting = {
   id_siembra: null,
   nro_lote: null,
-  fecha_siembra: (new Date().toDateString()),
+  fecha_siembra: (new Date().toString()),
   agno_lote: null,
   id_vivero: null,
   cama_germinacion: [],

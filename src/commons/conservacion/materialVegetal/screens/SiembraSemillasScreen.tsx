@@ -4,8 +4,8 @@ import SeleccionarSiembra from "../componentes/SeleccionarSiembra";
 import SeleccionarBienSiembra from "../componentes/SeleccionarBienSiembra";
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { set_current_planting, set_current_nursery } from '../store/slice/materialvegetalSlice';
-import { useEffect } from "react";
-import { get_germination_beds_service } from "../store/thunks/materialvegetalThunks";
+import { useEffect, useState } from "react";
+import { add_siembra_service, edit_siembra_service, get_germination_beds_service } from "../store/thunks/materialvegetalThunks";
 import { type IObjNursery, type IObjPlanting } from "../interfaces/materialvegetal";
 import { useForm } from "react-hook-form";
 import FormButton from "../../../../components/partials/form/FormButton";
@@ -19,6 +19,7 @@ export function SiembraSemillasScreen(): JSX.Element {
 
   const { current_planting, planting_person, nurseries, current_nursery, planting_goods } = useAppSelector((state) => state.material_vegetal);
   const { control: control_siembra, handleSubmit: handle_submit, reset: reset_siembra, getValues: get_values, watch } = useForm<IObjPlanting>();
+  const [action, set_action] = useState<string>("Crear")
   const dispatch = useAppDispatch()
 
   useEffect(() => {
@@ -35,30 +36,36 @@ export function SiembraSemillasScreen(): JSX.Element {
       const vivero: IObjNursery | undefined = nurseries.find((p: IObjNursery) => p.id_vivero === watch("id_vivero"))
 
       if (vivero !== undefined) dispatch(set_current_nursery(vivero))
+      set_action("editar")
     }
   }, [watch("id_vivero")]);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const on_submit = (data: IObjPlanting) => {
-    console.log(data)
+    const form_data:any = new FormData();
+    console.log("editar")
+     
     if (current_planting.id_siembra !== null && current_planting.id_siembra !== undefined) {
+      set_action("editar")
+      const data_edit = {
+        ...data, distancia_entre_semillas: Number(data.distancia_entre_semillas)
+      }
       console.log("editar")
-      // void dispatch(edit_bodega_service(data))
+        form_data.append('data_siembra', JSON.stringify({...data_edit}));
+        form_data.append('data_bienes_consumidos', JSON.stringify(planting_goods));
+        void dispatch(edit_siembra_service(form_data, current_planting.id_siembra));
     } else {
-      console.log("agregar")
-      const siembra = [{
-        data_siembra: {
-          ...data
-        },
-        ruta_archivo_soporte: "",
-        data_bienes_consumidos: {
-          ...planting_goods
-        }
-      }]
-      console.log(siembra)
-      // void dispatch(add_bodega_service(data));
-    }
+      set_action("crear")
+      const fecha = new Date(data.fecha_siembra??"").toISOString()
 
+      const data_edit = {
+        ...data, fecha_siembra: fecha.slice(0,10) + " " + fecha.slice(11,19), distancia_entre_semillas: Number(data.distancia_entre_semillas)
+      }
+        form_data.append('data_siembra', JSON.stringify({...data_edit}));
+        form_data.append('data_bienes_consumidos', JSON.stringify(planting_goods));
+        form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
+        void dispatch(add_siembra_service(form_data));
+    }
   };
 
   return (
@@ -99,7 +106,7 @@ export function SiembraSemillasScreen(): JSX.Element {
               variant_button="contained"
               on_click_function={handle_submit(on_submit)}
               icon_class={<SaveIcon />}
-              label={"guardar"}
+              label={action}
               type_button="button"
             />
           </Grid>

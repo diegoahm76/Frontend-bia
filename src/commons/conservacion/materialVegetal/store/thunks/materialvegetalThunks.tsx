@@ -233,22 +233,43 @@ export const add_siembra_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('conservacion/camas-siembras/siembra/create/', siembra);
+      const { data } = await api.post('conservacion/camas-siembras/siembra/create/', siembra);
       console.log(data)
-      // if ("data" in data) {
-      //   dispatch (set_planting_person({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
-      //     nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido)}))
-        
-      // } else {
-      //   control_error(data.detail)
-      // }
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
       return data;
     } catch (error: any) {
       console.log('add_siembra_service');
+      console.log(error)
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
 
-
+// editar siembra
+export const edit_siembra_service = (
+  siembra: any,
+  id: number
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post(`conservacion/camas-siembras/siembra/update/${id}/`, siembra);
+      console.log(data)
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_siembra_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
