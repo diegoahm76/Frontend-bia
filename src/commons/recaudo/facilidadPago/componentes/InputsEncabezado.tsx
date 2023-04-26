@@ -12,6 +12,7 @@ export const InputsEncabezado: React.FC = () => {
           background: '#FAFAFA',
           borderRadius: '15px',
           mb: '20px',
+          mt: '20px',
           p: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
@@ -20,7 +21,6 @@ export const InputsEncabezado: React.FC = () => {
         <Grid item xs={12}>
           <Box
             component="form"
-            sx={{ mt: '20px' }}
             noValidate
             autoComplete="off"
           >

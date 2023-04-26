@@ -26,7 +26,6 @@ export const ObligacionesUsuario: React.FC = () => {
         <Grid item xs={12}>
           <Box
             component="form"
-            sx={{ mt: '20px'}}
             noValidate
             autoComplete="off"
           >

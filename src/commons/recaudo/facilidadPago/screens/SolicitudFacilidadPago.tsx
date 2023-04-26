@@ -2,7 +2,7 @@ import { Title } from '../../../../components/Title';
 import { InputsEncabezado } from '../componentes/InputsEncabezado';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
 import { PersonaNatural, PersonaJuridica, DeudorSolidario } from '../componentes/CasoPersona';
-import { Grid, Box, Button, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, TextareaAutosize } from "@mui/material";
 import { useState } from 'react';
 
 interface event {
@@ -73,55 +73,41 @@ export const SolicitudFacilidadPago: React.FC = () => {
           background: '#FAFAFA',
           borderRadius: '15px',
           mb: '20px',
+          mt: '20px',
           p: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
 
-        <Grid item xs={12}>
+        <Grid item xs={16}>
           <Box
             component="form"
-            sx={{ mt: '20px' }}
             noValidate
             autoComplete="off"
           >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
-              <input
-                required
-                accept="image/*"
-                style={{ display: 'none' }}
-                id="upload-button-solicitud"
-                type="file"
-              />
-              <label htmlFor="upload-button-solicitud">
-                <Button
+            <Grid container spacing={10}>
+              <Grid item xs={11} sm={3} >
+                <TextField
+                  size="small"
+                  sx={{ width: '300px' }}
+                  fullWidth
+                  helperText='Cargar Documento Solicitud'
                   variant="outlined"
-                  component="span"
-                >
-                  Cargar Documento Solicitud
-                </Button>
-              </label>
+                  type="file"
+                />
+              </Grid>
+              <Grid item xs={11} sm={3} >
+                <TextField
+                  size="small"
+                  sx={{ width: '300px' }}
+                  fullWidth
+                  helperText="Cargar Soporte Consignación"
+                  variant="outlined"
+                  type="file"
+                />
               </Grid>
               <Grid item xs={12} sm={3}>
-              <input
-                required
-                accept="image/*"
-                style={{ display: 'none' }}
-                id="upload-button-consignacion"
-                type="file"
-              />
-              <label htmlFor="upload-button-consignacion">
-                <Button
-                  variant="outlined"
-                  component="span"
-                >
-                  Cargar Soporte Consignación
-                </Button>
-              </label>
-              </Grid>
-              <Grid item xs={12} sm={3}>
-              <FormControl fullWidth>
+              <FormControl size='small' sx={{ width: '300px' }}>
                 <InputLabel id="demo-simple-select-label">Calidad en que actúa la persona</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -153,6 +139,110 @@ export const SolicitudFacilidadPago: React.FC = () => {
       {
         persona === '1' ? (<PersonaNatural />) : persona === '2' ? (<PersonaJuridica />) : persona === '3' ? (<DeudorSolidario />) : null
       }
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          mb: '20px',
+          mt: '20px',
+          p: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={3}>
+                <FormControl size="small" fullWidth>
+                  <InputLabel id="demo-simple-select-label">Periodicidad y Modalidad</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Periodicidad y Modalidad"
+                  >
+                    <MenuItem>Ej 1</MenuItem>
+                    <MenuItem>Ej 2</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <FormControl size="small" fullWidth>
+                  <InputLabel id="demo-simple-select-label">Plazo</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Plazo"
+                  >
+                    <MenuItem>Ej 1</MenuItem>
+                    <MenuItem>Ej 2</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3} direction="row" rowSpacing={2}>
+                <FormControl size="small" fullWidth>
+                  <InputLabel id="demo-simple-select-label">Garantías Ofrecidas</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Garantías Ofrecidas"
+                  >
+                    <MenuItem>Ej 1</MenuItem>
+                    <MenuItem>Ej 2</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  helperText='Carga Garantías Ofrecidas'
+                  variant="outlined"
+                  type="file"
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  size="small"
+                  fullWidth
+                  helperText='Carga Documento No Enajenación'
+                  variant="outlined"
+                  type="file"
+                />
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+      </Grid>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          mb: '20px',
+          mt: '20px',
+          p: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Box
+          component="form"
+          noValidate
+          autoComplete="off"
+          width='350px'
+        >
+          <p>Observación</p>
+          <TextareaAutosize
+            minRows={10}
+          />
+        </Box>
+      </Grid>
     </>
   )
 }
