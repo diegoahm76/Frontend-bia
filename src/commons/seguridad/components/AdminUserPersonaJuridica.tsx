@@ -1,7 +1,4 @@
-import {
-  useEffect,
-  // useState
-} from 'react';
+import { useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -10,10 +7,7 @@ import {
   Button,
   type SelectChangeEvent,
 } from '@mui/material';
-// import { LoadingButton } from '@mui/lab';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import { useForm } from 'react-hook-form';
 import { control_error } from '../../../helpers/controlError';
@@ -25,8 +19,6 @@ import type {
   DataAadminUser,
   UserCreate,
   SeguridadSlice,
-  InfoPersonal,
-  InfoUsuario,
 } from '../interfaces';
 import type { AxiosError } from 'axios';
 // import { crear_persona_juridica_and_user } from '../../auth/request/authRequest';
@@ -44,7 +36,6 @@ interface Props {
   tipo_documento: string;
   tipo_persona: string;
   has_user: boolean;
-  data: InfoUsuario | InfoPersonal;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -53,17 +44,15 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   tipo_documento,
   tipo_persona,
   has_user,
-  data,
 }: Props) => {
-  const { action_admin_users } = useSelector(
-    (state: SeguridadSlice) => state.seguridad
-  );
+  const { action_admin_users, data_person_search, data_user_search } =
+    useSelector((state: SeguridadSlice) => state.seguridad);
   const {
     register,
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
-    // watch,
+    watch,
   } = useForm<DataAadminUser>();
   const {
     data_register,
@@ -72,16 +61,15 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     tipo_usuario,
     tipo_usuario_opt,
     set_data_register,
-    // set_tipo_persona,
+    set_tipo_persona,
+    set_tipo_documento,
   } = use_admin_users();
 
-  console.log(data);
-
-  // useEffect(() => {
-  //   if (watch('tipo_persona') !== undefined) {
-  //     set_tipo_persona(watch('tipo_persona'));
-  //   }
-  // }, [watch('tipo_persona')]);
+  useEffect(() => {
+    if (watch('tipo_persona') !== undefined) {
+      set_tipo_persona(watch('tipo_persona'));
+    }
+  }, [watch('tipo_persona')]);
 
   useEffect(() => {
     set_value_form('tipo_documento', tipo_documento);
@@ -91,6 +79,38 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     set_value_form('tipo_persona', tipo_persona);
   }, [tipo_persona]);
 
+  useEffect(() => {
+    // if (data_user_search !== undefined) {
+    console.log('Edicion de usuario - persona natural');
+    // Traer datos de usuario completos
+    // set_data_register({
+    //   ...data_register,
+    //   primer_nombre: data_user.primer_nombre,
+    //   segundo_nombre: data_user.segundo_nombre,
+    //   primer_apellido: data_user.primer_apellido,
+    //   segundo_apellido: data_user.segundo_apellido,
+    // });
+    // }
+  }, [data_user_search]);
+
+  useEffect(() => {
+    // if (data_person !== undefined) {
+    console.log('Creación de usuario - persona natural');
+    set_data_register({
+      ...data_register,
+      primer_nombre: data_person_search.primer_nombre,
+      segundo_nombre: data_person_search.segundo_nombre,
+      primer_apellido: data_person_search.primer_apellido,
+      segundo_apellido: data_person_search.segundo_apellido,
+    });
+    // }
+  }, [data_person_search]);
+
+  useEffect(() => {
+    if (watch('tipo_documento') !== undefined) {
+      set_tipo_documento(watch('tipo_documento'));
+    }
+  }, [watch('tipo_documento')]);
   // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
     set_data_register({
@@ -139,15 +159,15 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
           disabled={is_exists}
           fullWidth
           size="small"
-          label="Primer nombre *"
-          error={errors.primer_nombre?.type === 'required'}
-          value={data_register.primer_nombre}
+          label="Razon social *"
+          error={errors.razon_social?.type === 'required'}
+          value={data_register.razon_social}
           helperText={
-            errors.primer_nombre?.type === 'required'
+            errors.razon_social?.type === 'required'
               ? 'Este campo es obligatorio'
               : ''
           }
-          {...register('primer_nombre', { required: true })}
+          {...register('razon_social', { required: true })}
           onChange={handle_change}
         />
       </Grid>
@@ -156,39 +176,9 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
           disabled={is_exists}
           fullWidth
           size="small"
-          label="Segundo nombre"
-          value={data_register.segundo_nombre}
-          {...register('segundo_nombre')}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          label="Primer apellido *"
-          value={data_register.primer_apellido}
-          error={errors.primer_apellido?.type === 'required'}
-          helperText={
-            errors.primer_apellido?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
-          {...register('primer_apellido', {
-            required: true,
-          })}
-          onChange={handle_change}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6} md={3}>
-        <TextField
-          disabled={is_exists}
-          fullWidth
-          size="small"
-          value={data_register.segundo_apellido}
-          label="Segundo apellido"
-          {...register('segundo_apellido')}
+          label="Nombre comercial"
+          value={data_register.nombre_comercial}
+          {...register('nombre_comercial')}
           onChange={handle_change}
         />
       </Grid>

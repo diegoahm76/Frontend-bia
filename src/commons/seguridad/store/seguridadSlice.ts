@@ -1,5 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { type ISeguridadInfo } from '../interfaces/seguridadModels';
+import type {  ISeguridadInfo,InfoUsuario,InfoPersonal } from '../interfaces/seguridadModels';
+
+const initial_state_data_user_search: InfoUsuario = {
+  id_usuario: 0,
+  nombre_de_usuario: '',
+  persona: 0,
+  tipo_persona: '',
+  numero_documento: '',
+  primer_nombre: '',
+  primer_apellido: '',
+  nombre_completo: '',
+  razon_social: '',
+  nombre_comercial: '',
+  is_superuser: false,
+};
+
+const initial_state_data_person_search: InfoPersonal = {
+  id_persona: 0,
+  tipo_persona: '',
+  tipo_documento: '',
+  numero_documento: '',
+  primer_nombre: '',
+  segundo_nombre: '',
+  primer_apellido: '',
+  segundo_apellido: '',
+  nombre_completo: '',
+  razon_social: '',
+  nombre_comercial: '',
+  tiene_usuario: false,
+};
 
 const initial_state_user_info = {
   id_usuario: 0,
@@ -49,6 +78,8 @@ const initial_state: ISeguridadInfo = {
   users: [],
   persons: [],
   action_admin_users: '',
+  data_user_search: initial_state_data_user_search,
+  data_person_search: initial_state_data_person_search,
   user_info: initial_state_user_info,
 };
 
@@ -73,6 +104,12 @@ export const seguridad_slice = createSlice({
     },
     set_user_info: (state, {payload}) => {
       state.user_info = payload
+    },
+    set_data_user_search: (state, {payload}) => {
+      state.data_user_search = payload
+    },
+    set_data_person_search: (state, {payload}) => {
+      state.data_person_search = payload
     }
 
   }
@@ -85,5 +122,7 @@ export const {
   set_users,
   set_persons,
   set_action_admin_users,
-  set_user_info
+  set_user_info,
+  set_data_user_search,
+  set_data_person_search
 } = seguridad_slice.actions;

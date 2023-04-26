@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useState,
-  // useState
-} from 'react';
+import { useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -23,8 +19,6 @@ import type {
   DataAadminUser,
   UserCreate,
   SeguridadSlice,
-  InfoUsuario,
-  InfoPersonal,
 } from '../interfaces/seguridadModels';
 import type { AxiosError } from 'axios';
 import { Title } from '../../../components/Title';
@@ -39,8 +33,6 @@ interface Props {
   tipo_documento: string;
   tipo_persona: string;
   has_user: boolean;
-  data: InfoUsuario | InfoPersonal;
-  buscar_por: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -49,14 +41,10 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   tipo_documento,
   tipo_persona,
   has_user,
-  data,
-  buscar_por,
 }: Props) => {
-  const { action_admin_users } = useSelector(
-    (state: SeguridadSlice) => state.seguridad
-  );
-  const [data_user, set_data_user] = useState<InfoUsuario>();
-  const [data_person, set_data_person] = useState<InfoPersonal>();
+  const { action_admin_users, data_person_search, data_user_search } =
+    useSelector((state: SeguridadSlice) => state.seguridad);
+
   const {
     register,
     handleSubmit: handle_submit,
@@ -75,57 +63,32 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   } = use_admin_users();
   // const [image, set_image] = useState(null);
 
-  // watchers
   useEffect(() => {
-    if (buscar_por === 'U') {
-      set_data_user(data);
-    } else if (buscar_por === 'P') {
-      set_data_person(data);
-    }
-  }, [data]);
+    // if (data_user_search !== undefined) {
+    console.log('Edicion de usuario - persona natural');
+    // Traer datos de usuario completos
+    // set_data_register({
+    //   ...data_register,
+    //   primer_nombre: data_user.primer_nombre,
+    //   segundo_nombre: data_user.segundo_nombre,
+    //   primer_apellido: data_user.primer_apellido,
+    //   segundo_apellido: data_user.segundo_apellido,
+    // });
+    // }
+  }, [data_user_search]);
 
   useEffect(() => {
-    if (data_user !== undefined) {
-      if (data_user.tipo_persona === 'N') {
-        console.log('Edicion de usuario - persona natural');
-        set_data_register({
-          ...data_register,
-          primer_nombre: data_user.primer_nombre,
-          segundo_nombre: data_user.segundo_nombre,
-          primer_apellido: data_user.primer_apellido,
-          segundo_apellido: data_user.segundo_apellido,
-        });
-      } else if (data_user.tipo_persona === 'J') {
-        console.log('Edicion de usuario - persona juridica');
-        set_data_register({
-          ...data_register,
-          primer_nombre: data_user.primer_nombre,
-          primer_apellido: data_user.primer_apellido,
-        });
-      }
-    }
-  }, [data_user]);
-
-  useEffect(() => {
-    if (data_person !== undefined) {
-      if (data_person.tipo_persona === 'N') {
-        console.log('Edicion de usuario - persona juridica');
-        set_data_register({
-          ...data_register,
-          primer_nombre: data_person.primer_nombre,
-          segundo_nombre: data_person.segundo_nombre,
-          primer_apellido: data_person.primer_apellido,
-          segundo_apellido: data_person.segundo_apellido,
-        });
-      } else if (data_person.tipo_persona === 'J') {
-        set_data_register({
-          ...data_register,
-          primer_nombre: data_person.primer_nombre,
-          primer_apellido: data_person.primer_apellido,
-        });
-      }
-    }
-  }, [data_person]);
+    // if (data_person !== undefined) {
+    console.log('Creación de usuario - persona natural');
+    set_data_register({
+      ...data_register,
+      primer_nombre: data_person_search.primer_nombre,
+      segundo_nombre: data_person_search.segundo_nombre,
+      primer_apellido: data_person_search.primer_apellido,
+      segundo_apellido: data_person_search.segundo_apellido,
+    });
+    // }
+  }, [data_person_search]);
 
   useEffect(() => {
     if (watch('tipo_documento') !== undefined) {
