@@ -8,7 +8,7 @@ import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IList } from '../../gestionDeInventario/catalogoBienes/interfaces/catalogodebienes';
 import { set_bodega_seleccionada, get_bodega, } from '../store/slice/BodegaSlice';
-import { delete_bodega_service, get_bodega_service } from '../store/thunks/BodegaThunks';
+import { get_bodega_service } from '../store/thunks/BodegaThunks';
 import { api } from '../../../../api/axios';
 
 interface IProps {
