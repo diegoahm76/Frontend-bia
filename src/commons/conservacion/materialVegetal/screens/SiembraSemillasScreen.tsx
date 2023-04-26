@@ -28,6 +28,8 @@ export function SiembraSemillasScreen(): JSX.Element {
 
   useEffect(() => {
     if(current_planting.id_siembra !== null){
+      const vivero: IObjNursery | undefined = nurseries.find((p: IObjNursery) => p.id_vivero === current_planting.id_vivero)
+      if (vivero !== undefined) dispatch(set_current_nursery(vivero))
       
         // pushear camas selecionadas a lista de camas
     }
