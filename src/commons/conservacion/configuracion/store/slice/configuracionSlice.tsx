@@ -1,9 +1,11 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
   type IObjBien,
-  type IBien,
+  type IConfiguration,
   type IObjMixture,
   type IMedidas,
+  type IObjGerminationBed,
+  type IObjNursery,
 
 } from '../../interfaces/configuracion';
 
@@ -46,43 +48,100 @@ const initial_state_current_bien = {
   id_bien_padre: null,
 };
 
-const initial_state: IBien = {
+export const initial_state_current_germination_bed = {
+  id_cama_germinacion_vivero: null,
+  nombre: "",
+  nro_de_orden: null,
+  observacion: "",
+  item_activo: true,
+  item_ya_usado: false,
+  id_vivero: null
+}
+const initial_state_current_nursery = {
+  id_vivero: null,
+  nombre: '',
+  cod_municipio: '',
+  direccion: '',
+  area_mt2: null,
+  area_propagacion_mt2: null,
+  tiene_area_produccion: false,
+  tiene_areas_pep_sustrato: false,
+  tiene_area_embolsado: false,
+  cod_tipo_vivero: null,
+  fecha_inicio_viverista_actual: null,
+  cod_origen_recursos_vivero: null,
+  fecha_creacion: null,
+  en_funcionamiento: true,
+  fecha_ultima_apertura: null,
+  justificacion_apertura: '',
+  fecha_cierre_actual: null,
+  justificacion_cierre: null,
+  vivero_en_cuarentena: false,
+  fecha_inicio_cuarentena: null,
+  justificacion_cuarentena: null,
+  ruta_archivo_creacion: null,
+  activo: true,
+  item_ya_usado: true,
+  id_viverista_actual: null,
+  id_persona_crea: null,
+  id_persona_abre: null,
+  id_persona_cierra: null,
+  id_persona_cuarentena: null,
+};
+
+const initial_state: IConfiguration = {
   bienes: [],
   current_bien: initial_state_current_bien,
   mixtures: [],
   current_mixture: initial_state_current_mixture,
   unidad_medida: [],
+  germination_beds: [],
+  current_germination_bed: initial_state_current_germination_bed,
+  nurseries:[],
+  current_nursery: initial_state_current_nursery
 };
 export const configuracion_slice = createSlice({
   name: 'configuracion',
   initialState: initial_state,
   reducers: {
+    get_nurseries: (state: IConfiguration, action: PayloadAction<IObjNursery[]>) => {
+      state.nurseries = action.payload;
+    },
+    current_nursery: (state: IConfiguration, action: PayloadAction<IObjNursery>) => {
+      state.current_nursery = action.payload;
+    },
+    get_germination_beds: (state: IConfiguration, action: PayloadAction<IObjGerminationBed[]>) => {
+      state.germination_beds = action.payload;
+    },
+    current_germination_bed: (state: IConfiguration, action: PayloadAction<IObjGerminationBed>) => {
+      state.current_germination_bed = action.payload;
+    },
     get_bienes: (
-      state: IBien,
+      state: IConfiguration,
       action: PayloadAction<IObjBien[]>
     ) => {
       state.bienes = action.payload;
     },
     current_bien: (
-      state: IBien,
+      state: IConfiguration,
       action: PayloadAction<IObjBien>
     ) => {
       state.current_bien = action.payload;
     },
     get_mixtures: (
-      state: IBien,
+      state: IConfiguration,
       action: PayloadAction<IObjMixture[]>
     ) => {
       state.mixtures = action.payload;
     },
     current_mixture: (
-      state: IBien,
+      state: IConfiguration,
       action: PayloadAction<IObjMixture>
     ) => {
       state.current_mixture = action.payload;
     },
     get_unit_measurement: (
-      state: IBien,
+      state: IConfiguration,
       action: PayloadAction<IMedidas[]>
     ) => {
       state.unidad_medida = action.payload;
@@ -90,6 +149,10 @@ export const configuracion_slice = createSlice({
   },
 });
 export const {
+  get_germination_beds,
+  get_nurseries,
+  current_germination_bed,
+  current_nursery,
   get_bienes,
   current_bien,
   get_mixtures,

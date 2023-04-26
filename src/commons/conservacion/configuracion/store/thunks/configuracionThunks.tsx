@@ -7,12 +7,16 @@ import {
 } from 'axios';
 // Slices
 import {
+  current_nursery,
   get_bienes,
+  get_germination_beds,
   get_mixtures,
+  get_nurseries,
   get_unit_measurement
   // current_bien,
 } from '../slice/configuracionSlice';
 import { api } from '../../../../../api/axios';
+import { type IObjGerminationBed } from '../../interfaces/configuracion';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -40,14 +44,81 @@ const control_success = (message: ToastContent) =>
     theme: 'light'
   });
 
+  // Obtener viveros 
+export const get_nurseries_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio');
+      console.log(data)
+      dispatch(get_nurseries(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_nursery_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener vivero por id
+export const get_nursery_service: any = (id: string | number)  => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      if(id !== undefined)
+      {const { data } = await api.get(`conservacion/viveros/get-by-id/${id}/`);
+      console.log(data)
+      dispatch(current_nursery(data));
+      return data;}
+    } catch (error: any) {
+      console.log('get_nursery_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+ // Obtener camas por vivero
+ export const get_germination_beds_service = (id?: string|number|null): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      if(id !== null && id !== undefined)
+      {const { data } = await api.get(`conservacion/camas-siembras/siembra/get-camas-germinacion-list/?id_vivero=${id}`);
+    
+      dispatch(get_germination_beds(data.data));
+      return data;}
+    } catch (error: any) {
+      console.log('get_germination_beds_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// actualizar camas de germinacion por vivero
+export const update_germination_beds_service: any = (id: string | number, beds: IObjGerminationBed[])  => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      if(id !== undefined)
+      console.log(beds)
+      {const { data } = await api.put(`conservacion/camas-siembras/camas-germinacion/${id}/`, beds);
+      dispatch(get_germination_beds_service(id));
+      control_success(data.detail);
+
+      return data;}
+    } catch (error: any) {
+      console.log('update_germination_beds_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // Obtener bienes
 export const get_bienes_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('almacen/bienes/catalogo-bienes/get-list');
+      const { data } = await api.get('conservacion/viveros/get-bienes-consumo-filtro/');
       console.log(data.data)
-      dispatch(get_bienes([data.data[5].data.bien]));
+      dispatch(get_bienes(data.data));
       return data;
     } catch (error: any) {
       console.log('get_bienes_service');
