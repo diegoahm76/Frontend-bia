@@ -119,7 +119,7 @@ const PersonaSiembra = ({
 
     useEffect(() => {
         if (current_planting.id_persona_siembra !== planting_person.id_persona) { 
-            void dispatch(get_person_id_service(current_planting.id_persona_siembra ?? 0)) 
+            void dispatch(get_person_id_service(Number(current_planting.id_persona_siembra) ?? 0)) 
         }
     }, [current_planting]);
 

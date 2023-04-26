@@ -5,7 +5,8 @@ import type {
   ResponseServer,
   IList,
   BusquedaAvanzada,
-  InfoPersona
+  InfoPersona,
+  CompleteInfoPersona
 } from '../interfaces/globalModels';
 
 export const get_direcciones = async (): Promise<any> => {
@@ -68,9 +69,17 @@ export const get_naturaleza_emp = async (): Promise<
 export const get_person_by_document = async (
   tipo_documento: string,
   numero_documento: string
-): Promise<AxiosResponse<ResponseServer<InfoPersona | null>>> => {
-  return await api.get(
+): Promise<AxiosResponse<ResponseServer<InfoPersona>>> => {
+  return await api.get<ResponseServer<InfoPersona>>(
     `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
+  );
+};
+
+export const get_person_by_id = async (
+  id_persona: string
+): Promise<AxiosResponse<ResponseServer<CompleteInfoPersona>>> => {
+  return await api.get<ResponseServer<CompleteInfoPersona>>(
+    `personas/get-by-id/${id_persona}/`
   );
 };
 
@@ -82,7 +91,7 @@ export const search_avanzada = async ({
   razon_social,
   nombre_comercial
 }: BusquedaAvanzada): Promise<AxiosResponse<ResponseServer<InfoPersona[]>>> => {
-  return await api.get(
+  return await api.get<ResponseServer<InfoPersona[]>>(
     `personas/get-personas-filters/?tipo_documento=${tipo_documento}&numero_documento=${numero_documento}&primer_nombre=${
       primer_nombre ?? ''
     }&primer_apellido=${primer_apellido ?? ''}&razon_social=${

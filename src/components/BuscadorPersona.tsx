@@ -130,6 +130,8 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       razon_social: 'string',
       nombre_comercial: 'string',
       tiene_usuario: false,
+      digito_verificacion: "",
+      cod_naturaleza_empresa: "",
     },
     {
       id: 2,
@@ -145,6 +147,8 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       razon_social: 'string',
       nombre_comercial: 'string',
       tiene_usuario: false,
+      digito_verificacion: "",
+      cod_naturaleza_empresa: "",
     },
   ]);
   const handle_click_open = (): void => {
@@ -244,7 +248,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
         }}
       >
         <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
             <CustomSelect
               onChange={handle_change_select}
               label="Tipo de documento *"
@@ -258,7 +262,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
               register={register}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={4} lg={3}>
             {is_loading ? (
               <Skeleton variant="rectangular" width="100%" height={45} />
             ) : (
@@ -301,7 +305,16 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
               </FormControl>
             )}
           </Grid>
-          <Grid item xs={12} sm={6} md={2}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            lg={2}
+            container
+            direction="column"
+            justifyContent="center"
+          >
             <Button
               variant="outlined"
               color="primary"

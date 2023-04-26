@@ -25,18 +25,24 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { use_register } from '../hooks/registerHooks';
-import { type FieldErrors, useForm } from 'react-hook-form';
 import { crear_persona_natural_and_user } from '../request/authRequest';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../recursoHidrico/requets/Request';
 import dayjs, { type Dayjs } from 'dayjs';
-import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
-import type { AxiosError } from 'axios';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { validate_password } from '../../../helpers/ValidateFormatPassword';
+import type { FieldErrors, FieldValues } from 'react-hook-form';
+import type {
+  keys_object,
+  DataRegistePortal,
+  UserCreate,
+  DataRegisterPersonaN,
+} from '../interfaces';
+import type { AxiosError } from 'axios';
+import type { PropsRegister } from '../../../interfaces/globalModels';
 
 interface PropsElement {
   errors: FieldErrors<DataRegistePortal>;
@@ -46,32 +52,20 @@ interface PropsStep {
   label: string;
   component: (props: PropsElement) => JSX.Element;
 }
-interface Props {
-  numero_documento: string;
-  tipo_documento: string;
-  tipo_persona: string;
-  has_user: boolean;
-}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterPersonaNatural: React.FC<Props> = ({
-  numero_documento,
-  tipo_documento,
-  tipo_persona,
-  has_user,
-}: Props) => {
-  const {
-    register,
-    handleSubmit: handle_submit,
-    setValue: set_value,
-    formState: { errors, isValid: is_valid },
-    watch,
-  } = useForm<DataRegistePortal>();
+export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
+  register,
+  handleSubmit: handle_submit,
+  setValue: set_value,
+  errors,
+  isValid: is_valid,
+  watch,
+}: PropsRegister) => {
   const {
     ciudad_expedicion,
     ciudad_residencia,
     ciudades_opt,
-    data_register,
     departamento_expedicion,
     departamento_residencia,
     departamentos_opt,
@@ -88,7 +82,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
     loading,
     message_error_password,
     pais_nacimiento,
-    pais_notificacion,
     pais_residencia,
     paises_options,
     show_password,
@@ -103,7 +96,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
     handle_click_show_password,
     set_ciudad_expedicion,
     set_ciudad_residencia,
-    set_data_register,
     set_departamento,
     set_dpto_residencia,
     set_error_email,
@@ -117,11 +109,9 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
     set_pais_nacimiento,
     set_pais_residencia,
     set_tipo_documento,
-    set_pais_notificacion,
   } = use_register();
   const [is_modal_active, open_modal] = useState(false);
   const [direccion, set_direccion] = useState('');
-  const [direccion_notificacion, set_direccion_notificacion] = useState('');
   const [type_direction, set_type_direction] = useState('');
   const [active_step, set_active_step] = useState(0);
 
@@ -132,6 +122,10 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
   const confirmar_password = watch('confirmar_password');
   const telefono_celular = watch('telefono_celular');
   const confirmar_celular = watch('confirmar_celular');
+  const misma_direccion = watch('misma_direccion');
+  const acepta_notificacion_email = watch('acepta_notificacion_email');
+  const acepta_notificacion_sms = watch('acepta_notificacion_sms');
+  const acepta_tratamiento_datos = watch('acepta_tratamiento_datos');
 
   useEffect(() => {
     if (watch('departamento_expedicion') !== undefined) {
@@ -163,13 +157,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
       set_ciudad_residencia(watch('municipio_residencia'));
     }
   }, [watch('municipio_residencia')]);
-
-  // Datos de notificación
-  useEffect(() => {
-    if (watch('pais_notificacion') !== undefined) {
-      set_pais_notificacion(watch('pais_notificacion'));
-    }
-  }, [watch('pais_notificacion')]);
 
   useEffect(() => {
     if (watch('dpto_notifiacion') !== undefined) {
@@ -253,9 +240,7 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
 
         break;
       case 'notificacion':
-        set_direccion_notificacion(value);
         set_value_form('direccion_notificaciones', value);
-
         break;
     }
     open_modal(false);
@@ -264,10 +249,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
   // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
     value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
-    set_data_register({
-      ...data_register,
-      [name]: value,
-    });
     set_value(name as keys_object, value);
   };
 
@@ -284,29 +265,12 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
     set_value_form(e.target.name, e.target.value);
   };
 
-  const on_change_checkbox = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_data_register({
-      ...data_register,
-      [e.target.name]: e.target.checked,
-    });
-    set_value(e.target.name as keys_object, e.target.checked);
-  };
-
-  // Cambio inputs
-  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  const on_submit = async (): Promise<void> => {
+  const on_submit = async (values: FieldValues): Promise<void> => {
     set_is_saving(true);
     try {
-      console.log(data_register);
-      const { data } = await crear_persona_natural_and_user({
-        ...data_register,
-        tipo_documento,
-        tipo_persona,
-        numero_documento,
-      });
+      const { data } = await crear_persona_natural_and_user(
+        values as DataRegisterPersonaN
+      );
       control_success(data.detail);
 
       window.location.href = '#/app/auth/login';
@@ -319,11 +283,13 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
     }
   };
 
-  const validate_step = handle_submit(() => {
+  const validate_step = handle_submit((e) => {
     handle_next();
 
+    console.log(e);
+
     if (active_step === 4 && is_valid) {
-      void on_submit();
+      void on_submit(e);
     }
   });
 
@@ -343,57 +309,34 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
   }: PropsElement) => {
     return (
       <>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            fullWidth
-            size="small"
-            label="Nombre comercial"
-            error={errors.nombre_comercial?.type === 'required'}
-            helperText={
-              errors.nombre_comercial?.type === 'required'
-                ? 'Este campo es obligatorio'
-                : ''
-            }
-            {...register('nombre_comercial')}
-            onChange={handle_change}
-          />
-        </Grid>
         {/* Datos personales */}
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            disabled={is_exists}
             fullWidth
             size="small"
             label="Primer nombre *"
             error={errors.primer_nombre?.type === 'required'}
-            value={data_register.primer_nombre}
             helperText={
               errors.primer_nombre?.type === 'required'
                 ? 'Este campo es obligatorio'
                 : ''
             }
             {...register('primer_nombre', { required: true })}
-            onChange={handle_change}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            disabled={is_exists}
             fullWidth
             size="small"
             label="Segundo nombre"
-            value={data_register.segundo_nombre}
             {...register('segundo_nombre')}
-            onChange={handle_change}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            disabled={is_exists}
             fullWidth
             size="small"
             label="Primer apellido *"
-            value={data_register.primer_apellido}
             error={errors.primer_apellido?.type === 'required'}
             helperText={
               errors.primer_apellido?.type === 'required'
@@ -403,24 +346,19 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
             {...register('primer_apellido', {
               required: true,
             })}
-            onChange={handle_change}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            disabled={is_exists}
             fullWidth
             size="small"
-            value={data_register.segundo_apellido}
             label="Segundo apellido"
             {...register('segundo_apellido')}
-            onChange={handle_change}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              disabled={is_exists}
               label="Fecha de nacimiento *"
               value={fecha_nacimiento}
               onChange={on_change_birt_day}
@@ -432,7 +370,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
                   {...register('fecha_nacimiento', {
                     required: true,
                   })}
-                  onChange={handle_change}
                   error={errors.fecha_nacimiento?.type === 'required'}
                   helperText={
                     errors.fecha_nacimiento?.type === 'required'
@@ -602,6 +539,16 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
                 Generar dirección
               </Button>
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                size="small"
+                type="textarea"
+                rows="3"
+                label="Complemento dirección"
+                {...register('direccion_residencia_ref')}
+              />
+            </Grid>
           </>
         )}
       </>
@@ -614,15 +561,27 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
   }: PropsElement) => {
     return (
       <>
+        <Grid item xs={12}>
+          <FormControlLabel
+            label="¿Desea usar la dirección de residencia como dirección de notificación?"
+            control={
+              <Checkbox
+                size="small"
+                checked={misma_direccion}
+                {...register('misma_direccion')}
+              />
+            }
+          />
+        </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <CustomSelect
             onChange={on_change}
-            label="País de notificación"
+            label="País de notificación *"
             name="pais_notificacion"
-            value={pais_notificacion}
+            value={'CO'}
             options={paises_options}
             loading={loading}
-            disabled={false}
+            disabled={true}
             required={true}
             errors={errors}
             register={register}
@@ -631,12 +590,11 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
         <Grid item xs={12} sm={6} md={4}>
           <CustomSelect
             onChange={on_change}
-            label="Departamento"
+            label="Departamento *"
             name="dpto_notifiacion"
             value={dpto_notifiacion}
             options={dpto_notifiacion_opt}
             loading={loading}
-            disabled={pais_notificacion === '' ?? true}
             required={true}
             errors={errors}
             register={register}
@@ -645,7 +603,7 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
         <Grid item xs={12} sm={6} md={4}>
           <CustomSelect
             onChange={on_change}
-            label="Ciudad"
+            label="Ciudad *"
             name="cod_municipio_notificacion_nal"
             value={ciudad_notificacion}
             options={ciudad_notificacion_opt}
@@ -659,7 +617,7 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
         <Grid item xs={12} sm={6} md={4}>
           <TextField
             size="small"
-            label="Direccion"
+            label="Direccion *"
             disabled
             fullWidth
             error={errors.direccion_notificaciones?.type === 'required'}
@@ -671,7 +629,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
             {...register('direccion_notificaciones', {
               required: true,
             })}
-            value={direccion_notificacion}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -685,26 +642,23 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
             Generar dirección
           </Button>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12}>
           <TextField
-            disabled={is_exists}
             fullWidth
             size="small"
+            type="textarea"
+            rows="3"
             label="Complemento dirección"
-            value={data_register.complemeto_direccion}
-            {...register('complemeto_direccion')}
-            onChange={handle_change}
+            {...register('complemento_direccion')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            disabled={is_exists}
             fullWidth
             size="small"
-            label="E-mail"
+            label="E-mail *"
             error={errors.email?.type === 'required' || error_email}
             type="email"
-            value={data_register.email}
             helperText={
               errors.email?.type === 'required'
                 ? 'Este campo es obligatorio'
@@ -712,21 +666,16 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
                 ? 'Los emails no coinciden'
                 : ''
             }
-            {...register('email', {
-              required: true,
-            })}
-            onChange={handle_change}
+            {...register('email')}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            disabled={is_exists}
             fullWidth
             size="small"
-            label="Confirme su e-mail"
+            label="Confirme su e-mail *"
             error={errors.confirmar_email?.type === 'required' || error_email}
             type="email"
-            value={data_register.confirmar_email}
             helperText={
               errors.confirmar_email?.type === 'required'
                 ? 'Este campo es obligatorio'
@@ -737,7 +686,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
             {...register('confirmar_email', {
               required: true,
             })}
-            onChange={handle_change}
           />
         </Grid>
         <Grid item xs={12}>
@@ -749,23 +697,19 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            disabled={is_exists}
             fullWidth
             size="small"
             label="Celular"
             onCopy={(e: any) => e.preventDefault()}
-            value={data_register.telefono_celular}
             error={error_phone}
             helperText={
               error_phone ? 'Los número de celular no son iguales' : ''
             }
             {...register('telefono_celular')}
-            onChange={handle_change}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            disabled={is_exists}
             fullWidth
             size="small"
             label="Confirme su celular"
@@ -775,7 +719,30 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
               error_phone ? 'Los número de celular no son iguales' : ''
             }
             {...register('confirmar_celular')}
-            onChange={handle_change}
+          />
+        </Grid>
+      </>
+    );
+  };
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
+    errors,
+  }: PropsElement) => {
+    return (
+      <>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            fullWidth
+            size="small"
+            label="Nombre comercial"
+            error={errors.nombre_comercial?.type === 'required'}
+            helperText={
+              errors.nombre_comercial?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : ''
+            }
+            {...register('nombre_comercial')}
           />
         </Grid>
       </>
@@ -794,22 +761,20 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
             control={
               <Checkbox
                 size="small"
-                checked={data_register.acepta_notificacion_email}
+                checked={acepta_notificacion_email}
                 {...register('acepta_notificacion_email')}
-                onChange={on_change_checkbox}
               />
             }
           />
         </Grid>
         <Grid item xs={12}>
           <FormControlLabel
-            label="¿Autoriza notifiaciones informativas a través de mensajes de texto?"
+            label="¿Autoriza notificaciones informativas a través de mensajes de texto?"
             control={
               <Checkbox
                 size="small"
-                checked={data_register.acepta_notificacion_sms}
+                checked={acepta_notificacion_sms}
                 {...register('acepta_notificacion_sms')}
-                onChange={on_change_checkbox}
               />
             }
           />
@@ -827,8 +792,7 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
                   {...register('acepta_tratamiento_datos', {
                     required: true,
                   })}
-                  onChange={on_change_checkbox}
-                  checked={data_register.acepta_tratamiento_datos}
+                  checked={acepta_tratamiento_datos}
                 />
               }
               label="¿Autoriza tratamiento de datos? *"
@@ -875,7 +839,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
             {...register('nombre_de_usuario', {
               required: true,
             })}
-            onChange={handle_change}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -894,7 +857,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
               {...register('password', {
                 required: true,
               })}
-              onChange={handle_change}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -937,7 +899,6 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
               {...register('confirmar_password', {
                 required: true,
               })}
-              onChange={handle_change}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -978,6 +939,10 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
       component: DatosNotificacion,
     },
     {
+      label: 'Datos adicionales (opcionales)',
+      component: DatosOpcionales,
+    },
+    {
       label: 'Autorización de notificación y tratamiento de datos',
       component: AutorizacionDatos,
     },
@@ -1002,7 +967,7 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
                 <Grid container spacing={2} mt={0.1}>
                   <step.component errors={errors} />
                   {/* Alertas */}
-                  {is_exists && data_register.email === '' && (
+                  {is_exists && email === '' && (
                     <>
                       <Grid item sx={{ pt: '10px !important' }}>
                         <Alert severity="error">
@@ -1048,7 +1013,7 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
                           index === steps.length - 1 ? 'success' : 'primary'
                         }
                         loading={is_saving}
-                        disabled={is_saving || has_user}
+                        disabled={is_saving}
                       >
                         {index === steps.length - 1
                           ? 'Registrarse'
