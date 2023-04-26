@@ -59,10 +59,12 @@ const dialog_busqueda_avanzada_usuario = ({
     {
       headerName: 'Nombre completo',
       field: 'nombre_completo',
+      width: 250,
     },
     {
       headerName: 'Nombre comercial',
       field: 'nombre_comercial',
+      width: 250,
     },
     {
       headerName: 'Nombre de usuario',
@@ -75,6 +77,7 @@ const dialog_busqueda_avanzada_usuario = ({
     {
       headerName: 'Razón social',
       field: 'razon_social',
+      width: 200,
     },
 
     {
@@ -108,10 +111,8 @@ const dialog_busqueda_avanzada_usuario = ({
   ];
 
   const trigger_user_edit_active = (data: any): void => {
-    console.log(data.tipo_persona);
-    get_data_user(data.id_usuario);
-    // asignar data a data_user_search en
     dispatch(set_data_user_search(data));
+    dispatch(get_data_user(data.id_usuario));
     dispatch(set_action_admin_users('EDIT'));
   };
 

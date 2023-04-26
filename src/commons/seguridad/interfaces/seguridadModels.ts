@@ -55,16 +55,16 @@ export interface DataAadminUser {
   roles: [];
   // Estatus
   activo: boolean;
-  activo_fecha_ultimo_cambio: string;
-  activo_justificacion_cambio:string;
+  activo_fecha_ultimo_cambio: string | null;
+  activo_justificacion_cambio:string | null;
   bloqueado: boolean;
-  bloqueado_fecha_ultimo_cambio: string;
-  bloqueado_justificacion_cambio:string;
+  bloqueado_fecha_ultimo_cambio: string | null;
+  bloqueado_justificacion_cambio:string | null;
   // Otros datos
   fecha_creacion:string;
-  fecha_activación_inicial:string;
+  fecha_activación_inicial:string | null;
   creado_desde_portal:boolean;
-  persona_que_creo: string;
+  persona_que_creo: number | null;
 }
 
 export type keys_object =

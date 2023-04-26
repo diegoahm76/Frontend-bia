@@ -61,7 +61,7 @@ export const persons_request = async (
     const {
       data: { data }
     } = await api.get<ResponseServer<User[]>>(
-      `personas/get-personas-filters/?tipo_documento=${tipo_documento}&numero_documento=${numero_documento}&primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}&razon_social&nombre_comercial`
+      `personas/get-personas-filters-admin-user/?tipo_documento=${tipo_documento}&numero_documento=${numero_documento}&primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}&razon_social&nombre_comercial`
     );
     return {
       ok: true,
@@ -81,6 +81,6 @@ export const persons_request = async (
 // Trae todos los datos de un usuario
 export const user_request = async (
   id: number
-): Promise<AxiosResponse<ResponseServer<User | null>>> => {
+): Promise<AxiosResponse<ResponseServer<User>>> => {
   return await api.get(`users/get-by-pk/${id}`);
 };

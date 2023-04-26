@@ -45,8 +45,12 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   tipo_persona,
   has_user,
 }: Props) => {
-  const { action_admin_users, data_person_search, data_user_search } =
-    useSelector((state: SeguridadSlice) => state.seguridad);
+  const {
+    action_admin_users,
+    data_person_search,
+    data_user_search,
+    user_info,
+  } = useSelector((state: SeguridadSlice) => state.seguridad);
   const {
     register,
     handleSubmit: handle_submit,
@@ -80,31 +84,26 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   }, [tipo_persona]);
 
   useEffect(() => {
-    // if (data_user_search !== undefined) {
-    console.log('Edicion de usuario - persona natural');
-    // Traer datos de usuario completos
-    // set_data_register({
-    //   ...data_register,
-    //   primer_nombre: data_user.primer_nombre,
-    //   segundo_nombre: data_user.segundo_nombre,
-    //   primer_apellido: data_user.primer_apellido,
-    //   segundo_apellido: data_user.segundo_apellido,
-    // });
-    // }
-  }, [data_user_search]);
-
-  useEffect(() => {
-    // if (data_person !== undefined) {
-    console.log('Creación de usuario - persona natural');
-    set_data_register({
-      ...data_register,
-      primer_nombre: data_person_search.primer_nombre,
-      segundo_nombre: data_person_search.segundo_nombre,
-      primer_apellido: data_person_search.primer_apellido,
-      segundo_apellido: data_person_search.segundo_apellido,
-    });
-    // }
-  }, [data_person_search]);
+    console.log(action_admin_users);
+    if (action_admin_users === 'CREATE') {
+      console.log('Creación de usuario - persona juridica');
+      console.log(data_person_search);
+      set_data_register({
+        ...data_register,
+        razon_social: user_info.razon_social,
+        nombre_comercial: user_info.nombre_comercial,
+      });
+    } else if (action_admin_users === 'EDIT') {
+      console.log(data_user_search);
+      console.log('Edicion de usuario - persona juridica');
+      // Traer datos de usuario completos
+      set_data_register({
+        ...data_register,
+        razon_social: user_info.razon_social,
+        nombre_comercial: user_info.nombre_comercial,
+      });
+    }
+  }, [action_admin_users]);
 
   useEffect(() => {
     if (watch('tipo_documento') !== undefined) {
@@ -132,6 +131,8 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
 
   const on_submit = handle_submit(async (data) => {
     try {
+      console.log('Onsubmit', data);
+      console.log(data_register);
       // Hacemos el registro de la persona JURIDICA
       // await crear_persona_juridica_and_user({
       //   ...data,
@@ -195,7 +196,6 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
         <TextField
           size="small"
           label="Nombre de usuario"
-          disabled
           fullWidth
           error={errors.nombre_de_usuario?.type === 'required'}
           helperText={
@@ -488,11 +488,15 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
         }}
       >
         {steps.map((step, index) => (
-          <>
-            <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
-              {step.component}
-              {/* Alertas */}
-              {/* {is_exists && data_register.email === '' && (
+          <Grid
+            key={index}
+            container
+            spacing={2}
+            sx={{ mt: '5px', mb: '20px' }}
+          >
+            {step.component}
+            {/* Alertas */}
+            {/* {is_exists && data_register.email === '' && (
                 <>
                   <Grid item sx={{ pt: '10px !important' }}>
                     <Alert severity="error">
@@ -503,8 +507,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                   </Grid>
                 </>
               )} */}
-            </Grid>
-          </>
+          </Grid>
         ))}
         <Stack direction="row" justifyContent="flex-end" spacing={2}>
           <Button

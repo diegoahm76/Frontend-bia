@@ -42,8 +42,12 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   tipo_persona,
   has_user,
 }: Props) => {
-  const { action_admin_users, data_person_search, data_user_search } =
-    useSelector((state: SeguridadSlice) => state.seguridad);
+  const {
+    action_admin_users,
+    data_person_search,
+    data_user_search,
+    user_info,
+  } = useSelector((state: SeguridadSlice) => state.seguridad);
 
   const {
     register,
@@ -64,31 +68,44 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   // const [image, set_image] = useState(null);
 
   useEffect(() => {
-    // if (data_user_search !== undefined) {
-    console.log('Edicion de usuario - persona natural');
-    // Traer datos de usuario completos
-    // set_data_register({
-    //   ...data_register,
-    //   primer_nombre: data_user.primer_nombre,
-    //   segundo_nombre: data_user.segundo_nombre,
-    //   primer_apellido: data_user.primer_apellido,
-    //   segundo_apellido: data_user.segundo_apellido,
-    // });
-    // }
-  }, [data_user_search]);
-
-  useEffect(() => {
-    // if (data_person !== undefined) {
-    console.log('Creación de usuario - persona natural');
-    set_data_register({
-      ...data_register,
-      primer_nombre: data_person_search.primer_nombre,
-      segundo_nombre: data_person_search.segundo_nombre,
-      primer_apellido: data_person_search.primer_apellido,
-      segundo_apellido: data_person_search.segundo_apellido,
-    });
-    // }
-  }, [data_person_search]);
+    console.log(action_admin_users);
+    if (action_admin_users === 'CREATE') {
+      console.log('Creación de usuario - persona natural');
+      console.log(data_person_search);
+      set_data_register({
+        ...data_register,
+        primer_nombre: data_person_search.primer_nombre,
+        segundo_nombre: data_person_search.segundo_nombre,
+        primer_apellido: data_person_search.primer_apellido,
+        segundo_apellido: data_person_search.segundo_apellido,
+      });
+    } else if (action_admin_users === 'EDIT') {
+      console.log(data_user_search);
+      console.log('Edicion de usuario - persona natural');
+      // Traer datos de usuario completos
+      set_data_register({
+        ...data_register,
+        primer_nombre: user_info.primer_nombre,
+        segundo_nombre: user_info.segundo_nombre,
+        primer_apellido: user_info.primer_apellido,
+        segundo_apellido: user_info.segundo_apellido,
+        nombre_de_usuario: user_info.nombre_de_usuario,
+        tipo_usuario: user_info.tipo_usuario,
+        activo: user_info.is_active,
+        activo_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_activacion,
+        activo_justificacion_cambio:
+          user_info.justificacion_ultimo_cambio_activacion,
+        bloqueado: user_info.is_blocked,
+        bloqueado_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_bloqueo,
+        bloqueado_justificacion_cambio:
+          user_info.justificacion_ultimo_cambio_bloqueo,
+        fecha_creacion: user_info.created_at,
+        fecha_activación_inicial: user_info.activated_at,
+        creado_desde_portal: user_info.creado_por_portal,
+        persona_que_creo: user_info.id_usuario_creador,
+      });
+    }
+  }, [action_admin_users]);
 
   useEffect(() => {
     if (watch('tipo_documento') !== undefined) {
@@ -116,8 +133,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     set_value_form(e.target.name, e.target.value);
   };
 
-  const on_submit = handle_submit(async () => {
+  const on_submit = handle_submit(async (data) => {
     try {
+      console.log('Onsubmit', data);
       console.log(data_register);
       // const { data } = await crear_persona_natural_and_user({
       //   ...data_register,
@@ -515,11 +533,15 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         }}
       >
         {steps.map((step, index) => (
-          <>
-            <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
-              {step.component}
-              {/* Alertas */}
-              {/* {is_exists && data_register.email === '' && (
+          <Grid
+            key={index}
+            container
+            spacing={2}
+            sx={{ mt: '5px', mb: '20px' }}
+          >
+            {step.component}
+            {/* Alertas */}
+            {/* {is_exists && data_register.email === '' && (
                 <>
                   <Grid item sx={{ pt: '10px !important' }}>
                     <Alert severity="error">
@@ -530,8 +552,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   </Grid>
                 </>
               )} */}
-            </Grid>
-          </>
+          </Grid>
         ))}
         <Stack direction="row" justifyContent="flex-end" spacing={2}>
           <Button

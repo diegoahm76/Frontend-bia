@@ -56,7 +56,7 @@ export const use_admin_users = (): AdminUserHook => {
     fecha_creacion: '',
     fecha_activación_inicial: '',
     creado_desde_portal: false,
-    persona_que_creo: '',
+    persona_que_creo: 0,
   });
 
   const get_selects_options = async (): Promise<void> => {

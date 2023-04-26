@@ -28,7 +28,7 @@ import type {
 import { get_persons, get_data_user } from '../store/thunks';
 import {
   set_action_admin_users,
-  set_data_user_search,
+  set_data_person_search,
 } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
@@ -107,14 +107,17 @@ const DialogBusquedaAvanzada = ({
     {
       headerName: 'Nombre completo',
       field: 'nombre_completo',
+      width: 250,
     },
     {
       headerName: 'Razon social',
       field: 'razon_social',
+      width: 200,
     },
     {
       headerName: 'Nombre comercial',
       field: 'nombre_comercial',
+      width: 250,
     },
     {
       headerName: 'Usuario',
@@ -184,13 +187,13 @@ const DialogBusquedaAvanzada = ({
 
   const trigger_user_person_create_active = (data: any): void => {
     console.log(data.tipo_persona);
-    dispatch(set_data_user_search(data));
+    dispatch(set_data_person_search(data));
     dispatch(set_action_admin_users('CREATE'));
   };
 
   const trigger_user_edit_active = (data: any): void => {
     console.log(data.tipo_persona);
-    get_data_user(data.id_persona);
+    dispatch(get_data_user(data.id_persona));
     dispatch(set_action_admin_users('EDIT'));
   };
 
