@@ -45,10 +45,12 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     handleSubmit,
     formState: { errors },
+    reset,
     // watch
   } = useForm();
 
   const on_result = (info_persona: InfoPersona): void => {
+    reset();
     set_persona(info_persona);
   };
   const cancelar = (): void => {
@@ -58,7 +60,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   const on_submit_persona: SubmitHandler<FieldValues> = async (data) => {
     try {
       set_loading_natural(true)
-
       const datos_persona = new FormData
 
       datos_persona.append("tipo_documento", data.tipo_documento);
@@ -81,6 +82,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   };
   const on_submit_persona_juridica: SubmitHandler<FieldValues> = async (data) => {
     try {
+      
       set_loading_juridica(true);
       const datos_persona = new FormData();
 
@@ -92,8 +94,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
       datos_persona.append("justificacion", data.justificacion);
       
       const id_persona: number | undefined = persona?.id_persona;
-      console.log("data", data)
-      console.log("id",id_persona, "datos persona",  datos_persona)
       await editar_datos_restringidos_juridica(id_persona, datos_persona);
       set_loading_juridica(false);
       control_success('Se actualizaron los datos correctamente');
@@ -235,6 +235,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Número Identificación"
+                    id="documento_natural"
                     type="number"
                     fullWidth
                     size="small"
@@ -338,9 +339,8 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     helperText={(errors.justificacion?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} />
-                <Grid item xs={12} sm={6}>
-                  <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
+                <Grid item xs={12} >
+                  <Stack justifyContent="flex-end" sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
                     <Button
                       variant="outlined"
                       startIcon={<CancelIcon />}
@@ -367,7 +367,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                       variant="outlined"
                       startIcon={<RemoveRedEyeIcon />}
                       onClick={() => {
-                        console.log("persona", persona)
                         set_datos_historico(persona)
                         handle_open_historico();
                       }}>Historico
@@ -413,12 +412,8 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     margin="dense"
                     required
                     autoFocus
+                    disabled
                     defaultValue={persona?.tipo_documento}
-                    {...register("tipo_documento", {
-                      required: "Este campo es obligatorio",
-                    })}
-                    error={Boolean(errors.tipo_documento)}
-                    helperText={(errors.tipo_documento?.type === "required") ? "Este campo es obligatorio" : ""}
                   >
                     {tipos_doc_comercial.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
@@ -430,6 +425,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     label="Número Identificación"
+                    id="documento_juridico"
                     type="number"
                     fullWidth
                     size="small"
@@ -549,8 +545,8 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                     helperText={(errors.justificacion?.type === "required") ? "Este campo es obligatorio" : ""}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
+                <Grid item xs={12}>
+                  <Stack justifyContent="flex-end" sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
                     <Button
                       variant="outlined"
                       startIcon={<CancelIcon />}
@@ -576,7 +572,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                       variant="outlined"
                       startIcon={<RemoveRedEyeIcon />}
                       onClick={() => {
-                        console.log("persona", persona)
                         set_datos_historico(persona)
                         handle_open_historico();
                       }}>Historico
