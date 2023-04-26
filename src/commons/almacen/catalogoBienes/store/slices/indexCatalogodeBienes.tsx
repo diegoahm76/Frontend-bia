@@ -1,22 +1,14 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
-  type IObjBien,
   type IBien,
-  type IObjMixture,
+  type IMarcas,
   type IMedidas,
+  type IPorcentajes
+} from '../../interfaces/catalogodebienes';
+import { type INodo } from "../../interfaces/Nodo";
 
-} from '../../interfaces/configuracion';
 
-const initial_state_current_mixture = {
-  id_mezcla: null,
-  unidad_medida: "",
-  nombre: "",
-  item_activo: true,
-  item_ya_usado: false,
-  id_unidad_medida: null
-}
-
-const initial_state_current_bien = {
+export const initial_state_current_bien = {
   id_bien: null,
   codigo_bien: null,
   nro_elemento_bien: null,
@@ -26,8 +18,6 @@ const initial_state_current_bien = {
   nivel_jerarquico: null,
   nombre_cientifico: null,
   descripcion: "",
-  es_semilla_vivero: null,
-  cod_tipo_elemento_vivero: null,
   doc_identificador_nro: null,
   cod_metodo_valoracion: null,
   cod_tipo_depreciacion: null,
@@ -45,41 +35,69 @@ const initial_state_current_bien = {
   id_unidad_medida_vida_util: null,
   id_bien_padre: null,
 };
+const initial_state_data ={
+  nombre: "",
+  codigo: "",
+  acciones: "",
+  id_nodo: 0,
+  crear: false,
+  editar: false,
+  eliminar: false,
+  bien: initial_state_current_bien,
+}
+
+export const initial_state_current_nodo = {
+  key: "",
+  data: initial_state_data,
+  children: []
+}
+
 
 const initial_state: IBien = {
+  code_bien: "",
+  nodo: [],
+  current_nodo: initial_state_current_nodo,
   bienes: [],
   current_bien: initial_state_current_bien,
-  mixtures: [],
-  current_mixture: initial_state_current_mixture,
+  marca: [],
   unidad_medida: [],
+  porcentaje_iva: [],
+  
 };
-export const configuracion_slice = createSlice({
-  name: 'configuracion',
+export const bien_slice = createSlice({
+  name: 'bien',
   initialState: initial_state,
   reducers: {
+
     get_bienes: (
       state: IBien,
-      action: PayloadAction<IObjBien[]>
+      action: PayloadAction<INodo[]>
     ) => {
-      state.bienes = action.payload;
+      state.nodo = action.payload;
     },
     current_bien: (
       state: IBien,
-      action: PayloadAction<IObjBien>
+      action: PayloadAction<INodo>
     ) => {
-      state.current_bien = action.payload;
+      state.current_nodo= action.payload;
     },
-    get_mixtures: (
+    get_code_bien: (
       state: IBien,
-      action: PayloadAction<IObjMixture[]>
+      action: PayloadAction<string|null|undefined>
     ) => {
-      state.mixtures = action.payload;
+      state.code_bien = action.payload;
     },
-    current_mixture: (
+    get_marks: (
       state: IBien,
-      action: PayloadAction<IObjMixture>
+      action: PayloadAction<IMarcas[]>
     ) => {
-      state.current_mixture = action.payload;
+      state.marca = action.payload;
+    },
+    get_percentages: (
+      state: IBien,
+      action: PayloadAction<IPorcentajes[]>
+    ) => {
+      state.porcentaje_iva = action.payload;
     },
     get_unit_measurement: (
       state: IBien,
@@ -92,7 +110,8 @@ export const configuracion_slice = createSlice({
 export const {
   get_bienes,
   current_bien,
-  get_mixtures,
-  current_mixture,
+  get_code_bien,
+  get_marks,
+  get_percentages,
   get_unit_measurement,
-} = configuracion_slice.actions;
+} = bien_slice.actions;

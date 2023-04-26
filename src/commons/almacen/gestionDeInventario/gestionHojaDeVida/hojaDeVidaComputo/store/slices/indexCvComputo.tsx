@@ -32,7 +32,7 @@ const initial_state_current_computer = {
 }
 
 const initial_state_current_cv_computer = {
-  antivirus: "",
+   antivirus: "",
   capacidad_almacenamiento: "",
   color: "",
   id_articulo: 0,
@@ -54,52 +54,52 @@ const initial_state_current_cv_computer = {
 }
 
 const initial_state: Icv = {
-  computers: [],
-  current_computer: initial_state_current_computer,
-  current_cv_computer: initial_state_current_cv_computer,
-  marcas: [],
+    computers: [],
+    current_computer: initial_state_current_computer,
+    current_cv_computer: initial_state_current_cv_computer,
+    marcas: [],
 
 };
 
 export const cv_computo_slice = createSlice({
-  name: "cve",
-  initialState: initial_state,
-  reducers: {
-    get_computers: (
-      state: Icv,
-      action: PayloadAction<IComputers[]>
-    ) => {
-      state.computers = action.payload;
-    },
-    current_computer: (
-      state: Icv,
-      action: PayloadAction<IComputers>
-    ) => {
-      state.current_computer = action.payload;
-    },
-    get_cv_computer: (
-      state: Icv,
-      action: PayloadAction<ICvcomputers>
-    ) => {
-      state.current_cv_computer = action.payload;
-    },
+    name: "cv",
+    initialState: initial_state,
+    reducers: {
+        get_computers: (
+            state: Icv, 
+            action: PayloadAction<IComputers[]>
+            ) => {
+            state.computers = action.payload;
+        },
+        current_computer: (
+            state: Icv, 
+            action: PayloadAction<IComputers>
+            ) => {
+            state.current_computer = action.payload;
+        },
+        get_cv_computer: (
+            state: Icv, 
+            action: PayloadAction<ICvcomputers>
+            ) => {
+            state.current_cv_computer = action.payload;
+        },
 
 
-    get_marks: (
-      state: Icv,
-      action: PayloadAction<IMarca[]>
-    ) => {
-      state.marcas = action.payload;
-    },
-    // get_cv_maintenance: (
-    //     state: Icv, 
-    //     action: PayloadAction<IcvMaintenance[]>
-    //     ) => {
-    //     state.cv_maintenance = action.payload;
-    // },
-
-  }
+        get_marks: (
+            state: Icv,
+            action: PayloadAction<IMarca[]>
+          ) => {
+            state.marcas = action.payload;
+          },
+        // get_cv_maintenance: (
+        //     state: Icv, 
+        //     action: PayloadAction<IcvMaintenance[]>
+        //     ) => {
+        //     state.cv_maintenance = action.payload;
+        // },
+        
+    }
 })
 
-export const { current_computer, get_cv_computer, get_marks, get_computers } = cv_computo_slice.actions;
+export const {  current_computer, get_cv_computer, get_marks, get_computers } = cv_computo_slice.actions;
 

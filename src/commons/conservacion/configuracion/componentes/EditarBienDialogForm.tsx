@@ -124,7 +124,7 @@ const EditarBienDialogForm = ({
                 name="nombre_cientifico"
                 control={control_bien}
                 defaultValue=""
-                rules={{ required: tipo_elemento_selected === "MV" }}
+                rules={{ required: true }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -175,7 +175,7 @@ const EditarBienDialogForm = ({
                 name="es_semilla_vivero"
                 control={control_bien}
                 defaultValue={tipo_elemento_selected === "MV"}
-                rules={{ required: tipo_elemento_selected === "MV" }}
+                rules={{ required: true }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -188,7 +188,7 @@ const EditarBienDialogForm = ({
                     label="¿Es semilla?"
                     variant="outlined"
                     disabled = {tipo_elemento_selected !== "MV" || action==="detail"}
-                    value={value}
+                    value={tipo_elemento_selected !== "MV"?false:value}
                     onChange={onChange}
                     error={!(error == null)}
                     helperText={

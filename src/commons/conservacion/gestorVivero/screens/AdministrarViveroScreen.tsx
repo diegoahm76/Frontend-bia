@@ -345,7 +345,7 @@ export function AdministrarViveroScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Viveros"></Title>
+          <Title title="VIVEROS"></Title>
           <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
             <Button
               variant="outlined"
@@ -360,7 +360,6 @@ export function AdministrarViveroScreen(): JSX.Element {
             </Button>
           </Stack>
           <Grid item>
-
             <Box sx={{ width: '100%' }}>
               <DataGrid
                 density="compact"

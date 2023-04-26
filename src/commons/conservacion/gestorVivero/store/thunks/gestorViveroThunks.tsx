@@ -8,13 +8,13 @@ import {
 } from 'axios';
 // Slices
 import {
-  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine,
+  current_nursery, get_nurseries, get_nurseries_closing, get_nurseries_quarantine,
   // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
   toast.error(message, {
     position: 'bottom-right',
     autoClose: 3000,
@@ -27,7 +27,7 @@ export const control_error = (message: ToastContent = 'Algo pasó, intente de nu
   });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const control_success = (message: ToastContent) =>
+const control_success = (message: ToastContent) =>
   toast.success(message, {
     position: 'bottom-right',
     autoClose: 3000,
@@ -238,74 +238,6 @@ export const quarantine_nursery_service: any = (
     } catch (error: any) {
       control_error(error.response.data.detail);
       console.log(error);
-      return error as AxiosError;
-    }
-  };
-};
-
-// Obtener items despacho
-export const get_items_despacho_service = (id: string|number): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(`conservacion/despachos/items-despacho/get-by-id/${id??""}/`);
-      if (data.data.length > 0) {
-          dispatch(get_items_despacho(data.data));
-          control_success("Se encontraron bienes")
-      } else {
-          control_error("No se encontraron bienes")
-          dispatch(get_items_despacho([]));
-      }
-      
-      return data;
-    } catch (error: any) {
-      console.log('get_items_despacho_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// Obtener items predistribuidos
-export const get_items_distribuidos_service = (id: string|number): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(`conservacion/despachos/get-obtener-items-predistribuidos/${id??""}/`);
-      if (data.data.length > 0) {
-          dispatch(get_items_distribuidos(data.data));
-      } else {
-          dispatch(get_items_distribuidos([]));
-      }
-      
-      return data;
-    } catch (error: any) {
-      console.log('get_items_despacho_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// guardar items predistribuidos
-export const save_items_distribuidos_service = (
-  id: string|number,
-  observacion: string|null,
-  items: any
-  ): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.put(`conservacion/despachos/guardar/${id??""}/?observaciones_distribucion=test/`,
-                                    items);
-      if (data.success){
-        dispatch(get_items_distribuidos_service(id));
-        control_success(data.detail)
-      } else {
-        control_success(data.detail)
-      }
-      return data;
-    } catch (error: any) {
-      console.log('save_items_despacho_service');
-      console.log(error)
-      control_error(error);
       return error as AxiosError;
     }
   };

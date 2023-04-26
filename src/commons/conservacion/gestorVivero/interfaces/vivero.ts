@@ -1,9 +1,6 @@
 export interface INursery {
   nurseries: IObjNursery[];
   current_nursery: IObjNursery;
-  items_despacho: IObjItem[];
-  current_despacho: IDespacho;
-  items_distribuidos: IObjDistribucion[];
 }
 
 export interface IList {
@@ -11,51 +8,9 @@ export interface IList {
   label: string | number;
 }
 
-export interface IObjDistribucion {
-  id_item_despacho_entrante?: number | null;
-  id_vivero?: number | null;
-  cantidad_asignada?: number | null;
-  cod_etapa_lote_al_ingresar?: string | null;
-  id_distribucion_item_despacho_entrante?: number | null;
-  id_bien?: number | null;
-  vivero_nombre?: string | null;
-  unidad_medida?: string | null;
-  codigo_bien?: string | null;
-  nombre_bien?: string | null;
-}
-
-export interface IObjItem {
-  id_item_despacho_entrante?: number | null;
-  id_despacho_entrante?: number | null;
-  id_bien?: number | null;
-  id_entrada_alm_del_bien?: number | null;
-  fecha_ingreso?: string | null;
-  cantidad_entrante?: number | null;
-  cantidad_distribuida?: number | null;
-  observacion?: string | null;
-  codigo_bien?: string | null;
-  nombre_bien?: string | null;
-  tipo_documento?: string | null;
-  numero_documento?: string | number | null;
-  unidad_medida?: string | null;
-  cantidad_restante?: number | null;
-}
-
-export interface IDespacho {
-  id_despacho_entrante?: number | string | null;
-  numero_despacho_consumo?: number | null;
-  fecha_ingreso?: string | null;
-  distribucion_confirmada?: boolean | null;
-  fecha_confirmacion_distribucion?: string | null;
-  observacion_distribucion?: string | null;
-  id_despacho_consumo_alm?: number | null;
-  id_persona_distribuye?: number | null;
-  persona_distribuye?: string | null;
-}
-
 export interface IObjNursery {
   id_vivero: number | null;
-  nombre: string;
+  nombre: string ;
   cod_municipio: string | null;
   direccion: string | null;
   area_mt2: number | null;

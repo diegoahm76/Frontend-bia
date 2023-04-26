@@ -57,9 +57,8 @@ const CrearViveroDialogForm = ({
 
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { control: control_vivero, handleSubmit: handle_submit, reset: reset_nursery, getValues, formState: { errors } } =
+  const { control: control_vivero, handleSubmit: handle_submit, reset: reset_nursery } =
     useForm<FormValues>();
-    console.log("Errors:", errors);
 
   const handle_close_add_nursery = (): void => {
     set_is_modal_active(false);
@@ -73,6 +72,8 @@ const CrearViveroDialogForm = ({
   const on_submit = (data: FormValues): void => {
     console.log(file)
     data.ruta_archivo_creacion = file
+    console.log(data.ruta_archivo_creacion)
+    console.log(data)
     const form_data:any = new FormData();
     form_data.append('nombre', data.nombre);
         form_data.append('cod_municipio', data.cod_municipio);
@@ -259,7 +260,6 @@ const CrearViveroDialogForm = ({
                     onChange={onChange}
                     error={!(error == null)}
                     helperText={
-                      
                       error != null
                         ? 'Es obligatorio ingresar una dirección'
                         : 'Ingrese dirección'
@@ -273,10 +273,10 @@ const CrearViveroDialogForm = ({
                 name="area_mt2"
                 control={control_vivero}
                 defaultValue={0}
-                rules={{ required: true, min:0, max: getValues("area_propagacion_mt2")?? '' }}
+                rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error }
+                  fieldState: { error },
                 }) => (
                   <TextField
                     margin="dense"
@@ -289,15 +289,13 @@ const CrearViveroDialogForm = ({
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
-                    helperText= {
+                    helperText={
                       error != null
-                        ? error.type === "required"?'El area es requerida':`El valor del area debe ser menor al area de propagacion (${getValues("area_propagacion_mt2")??""})`
+                        ? 'Es obligatorio ingresar area'
                         : 'Ingrese area'
                     }
                   />
                 )}
-                
-
               />
             </Grid>
             <Grid item xs={11} md={5} margin={1}>
@@ -343,7 +341,7 @@ const CrearViveroDialogForm = ({
                 name="area_propagacion_mt2"
                 control={control_vivero}
                 defaultValue={0}
-                rules={{ required: true, min: getValues("area_mt2")?? '' }}
+                rules={{ required: true }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -361,8 +359,8 @@ const CrearViveroDialogForm = ({
                     error={!(error == null)}
                     helperText={
                       error != null
-                      ? error.type === "required"?'El area de propagacion es requerida':`El valor del area debe ser mayor al area (${getValues("area_mt2")??""})`
-                      : 'Ingrese area'
+                        ? 'Es obligatorio ingresar area'
+                        : 'Ingrese area'
                     }
                   />
                 )}
@@ -383,7 +381,7 @@ const CrearViveroDialogForm = ({
                     fullWidth
                     select
                     size="small"
-                    label="¿Tiene area de produccion?"
+                    label="¿Area de produccion?"
                     variant="outlined"
                     disabled = {action === "detail"}
                     defaultValue={value}
@@ -417,7 +415,7 @@ const CrearViveroDialogForm = ({
                     fullWidth
                     select
                     size="small"
-                    label="¿Tiene area preparacion de sustrato?"
+                    label="¿Area preparacion sustrato?"
                     variant="outlined"
                     disabled = {action === "detail"}
                     defaultValue={value}
@@ -451,7 +449,7 @@ const CrearViveroDialogForm = ({
                     fullWidth
                     select
                     size="small"
-                    label="¿Tiene area de embolsado?"
+                    label="¿Area de embolsado?"
                     variant="outlined"
                     disabled = {action === "detail"}
                     defaultValue={value}
