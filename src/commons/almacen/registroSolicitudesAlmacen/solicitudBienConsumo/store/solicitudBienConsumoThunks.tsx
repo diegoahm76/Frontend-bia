@@ -87,17 +87,3 @@ export const get_uni_organizacional = (): any => {
     };
 };
 
-// obtener funcionario responsable
-
-// export const get_funcionario_responsable = (): any => {
-//     return async (dispatch: Dispatch<any>) => {
-//         try {
-//             const { data } = await api.get('almacen/solicitudes/search-funcionario/?tipo_documento&numero_documento&id_unidad_para_la_que_solicita');
-//             console.log(data, "data")
-//             dispatch(get_funcionario_responsable());
-//             return data;
-//         } catch (error: any) {
-//             return error as AxiosError;
-//         }
-//     };
-// };
