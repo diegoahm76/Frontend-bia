@@ -10,6 +10,7 @@ export interface IMaterialVegetal {
   current_good: IObjGoods;
   plantings: IObjPlanting[];
   current_planting: IObjPlanting;
+  persons: Persona[];
   planting_person: Persona;
 }
 

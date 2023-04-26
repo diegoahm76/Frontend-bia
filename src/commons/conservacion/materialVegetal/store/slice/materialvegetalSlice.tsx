@@ -93,6 +93,7 @@ const initial_state: IMaterialVegetal = {
   current_good: initial_state_current_good,
   plantings: [],
   current_planting: initial_state_planting,
+  persons: [],
   planting_person: initial_state_person
 }
 
@@ -100,25 +101,25 @@ export const material_vegetal_slice = createSlice({
   name: 'material_vegetal',
   initialState: initial_state,
   reducers: {
-    get_nurseries: (state: IMaterialVegetal, action: PayloadAction<IObjNursery[]>) => {
+    set_nurseries: (state: IMaterialVegetal, action: PayloadAction<IObjNursery[]>) => {
       state.nurseries = action.payload;
     },
     set_current_nursery: (state: IMaterialVegetal, action: PayloadAction<IObjNursery>) => {
       state.current_nursery = action.payload;
     },
-    get_vegetal_materials: (state: IMaterialVegetal, action: PayloadAction<IObjVegetalMaterial[]>) => {
+    set_vegetal_materials: (state: IMaterialVegetal, action: PayloadAction<IObjVegetalMaterial[]>) => {
       state.vegetal_materials = action.payload;
     },
 
-    get_germination_beds: (state: IMaterialVegetal, action: PayloadAction<IObjGerminationBed[]>) => {
+    set_germination_beds: (state: IMaterialVegetal, action: PayloadAction<IObjGerminationBed[]>) => {
       state.germination_beds = action.payload;
     },
 
-    get_planting_goods: (state: IMaterialVegetal, action: PayloadAction<IObjPlantingGoods[]>) => {
+    set_planting_goods: (state: IMaterialVegetal, action: PayloadAction<IObjPlantingGoods[]>) => {
       state.planting_goods = action.payload;
     },
 
-    get_goods: (state: IMaterialVegetal, action: PayloadAction<IObjGoods[]>) => {
+    set_goods: (state: IMaterialVegetal, action: PayloadAction<IObjGoods[]>) => {
       state.goods = action.payload;
     },
 
@@ -126,16 +127,20 @@ export const material_vegetal_slice = createSlice({
       state.current_good = action.payload;
     },
 
-    get_plantings: (state: IMaterialVegetal, action: PayloadAction<IObjPlanting[]>) => {
+    set_plantings: (state: IMaterialVegetal, action: PayloadAction<IObjPlanting[]>) => {
       state.plantings = action.payload;
     },
 
     set_current_planting: (state: IMaterialVegetal, action: PayloadAction<IObjPlanting>) => {
       state.current_planting = action.payload;
     },
+    set_persons: (state: IMaterialVegetal, action: PayloadAction<Persona[]>) => {
+      state.persons = action.payload;
+    },
+
     set_planting_person: (state: IMaterialVegetal, action: PayloadAction<Persona>) => {
       state.planting_person = action.payload;
     },
   },
 });
-export const { set_current_good, get_goods, set_planting_person, set_current_nursery, get_nurseries, get_vegetal_materials, get_germination_beds, get_planting_goods, get_plantings, set_current_planting } = material_vegetal_slice.actions;
+export const { set_persons, set_current_good, set_goods, set_planting_person, set_current_nursery, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting } = material_vegetal_slice.actions;
