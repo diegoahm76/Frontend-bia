@@ -25,7 +25,8 @@ export const PrevisualizacionComponent: React.FC<IProps> = ({ data_grid, limpiar
     const columns = [
         { field: "id_articulo", header: "Id", visible: false },
         { field: "cod_tipo_mantenimiento", header: "Codigo", visible: true },
-        { field: "serial_placa", header: "Serial", visible: true },
+        { field: "serial_placa", header: "Placa", visible: true },
+        { field: "kilometraje_programado", header: "Kilometraje", visible: true },
         { field: "fecha_programada", header: "Fecha", visible: true },
         { field: "cod_tipo_mantenimiento", header: "Tipo de mantenimiento", visible: true }
     ];
