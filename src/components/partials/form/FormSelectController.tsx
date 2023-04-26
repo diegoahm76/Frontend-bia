@@ -1,7 +1,7 @@
 // import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { Controller } from 'react-hook-form';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import { v4 as uuid } from "uuid";
 
 interface IRuleMessage {
@@ -25,7 +25,7 @@ interface IProps {
     select_options: any;
     option_key: string | number;
     option_label: string | number;
-    multiple?: boolean|null;
+    multiple?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -58,25 +58,36 @@ const FormSelectController = ({
                     fieldState: { error },
                 }) => (
                     <FormControl fullWidth>
-                    <InputLabel id={id_select}>{label??""}</InputLabel>
-                    <Select
-                        labelId={id_select}
-                        multiple= {multiple??false}
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label={label??""}
-                        variant="outlined"
-                        disabled={disabled}
-                        value={value}
-                        onChange={onChange}
-                    >
-                        {select_options.map((option: any) => (
-                            <MenuItem key={option[option_key]} value={option[option_key]}>
-                                {option[option_label]}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                        <InputLabel id={id_select}>{label ?? ""}</InputLabel>
+                        <Select
+                            labelId={id_select}
+                            multiple={multiple ?? false}
+                            margin="dense"
+                            fullWidth
+                            size="small"
+                            label={label ?? ""}
+                            variant="outlined"
+                            disabled={disabled}
+                            value={value}
+                            onChange={onChange}
+                            error={!(error == null)}
+
+
+                        >
+                            {/* <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem> */}
+                            {select_options.map((option: any) => (
+                                <MenuItem key={option[option_key]} value={option[option_key]}>
+                                    {option[option_label]}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>
+                            {(error != null)
+                                ? rules.required_rule?.message
+                                : helper_text}
+                        </FormHelperText>
                     </FormControl>
                 )}
             />

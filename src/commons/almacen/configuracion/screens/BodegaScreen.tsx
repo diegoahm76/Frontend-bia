@@ -3,16 +3,19 @@ import SeleccionarBodega, { } from "../components/SeleccionarBodega";
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from '../../../../components/Title';
 import PersonaResponsable from "../components/PersonaResponsable";
-import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import EditIcon from '@mui/icons-material/Edit';
 import { useEffect } from "react";
 // import CheckIcon from '@mui/icons-material/Check';
 import { useAppSelector } from "../../../../hooks";
 import { set_bodega_seleccionada, set_responsable } from "../store/slice/BodegaSlice";
 import FormButton from "../../../../components/partials/form/FormButton";
-// import { add_bodega_service } from "../store/thunks/BodegaThunks";
+
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { type IBodega } from "../interfaces/Bodega";
+import { add_bodega_service, edit_bodega_service } from "../store/thunks/BodegaThunks";
 
 
 
@@ -27,26 +30,19 @@ export function BodegaScreen(): JSX.Element {
 
 
   useEffect(() => {
-    console.log(id_responsable_bodega)
-    dispatch(set_bodega_seleccionada({ ...bodega_seleccionada, id_responsable: 12, nombre_completo_responsable: id_responsable_bodega?.nombre_completo }))
+    dispatch(set_bodega_seleccionada({ ...bodega_seleccionada, nombre: get_values("nombre"), direccion: get_values("direccion"), cod_municipio: get_values("cod_municipio"), es_principal: get_values("es_principal"), id_responsable: id_responsable_bodega?.id_persona, nombre_completo_responsable: id_responsable_bodega?.nombre_completo }))
   }, [id_responsable_bodega]);
 
-  const on_submit = (data: IBodega): void => {
-    console.log(data)
-
-  };
-
-
-
-
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const button_save = () => {
-    console.log(get_values())
-    handle_submit(on_submit)
-    // dispatch(add_bodega_service(bodega_seleccionada));
+  const on_submit = (data: IBodega) => {
+    if (bodega_seleccionada.id_bodega !== null && bodega_seleccionada.id_bodega !== undefined) {
+      console.log("editar")
+      void dispatch(edit_bodega_service(data))
+    } else {
+      void dispatch(add_bodega_service(data));
+    }
 
   };
-
 
   return (
     <>
@@ -71,6 +67,7 @@ export function BodegaScreen(): JSX.Element {
         < PersonaResponsable
           title={"Persona responsable de la bodega"}
           set_persona={set_responsable} />
+
         <Grid
           container
           direction="row"
@@ -78,37 +75,51 @@ export function BodegaScreen(): JSX.Element {
           spacing={2}
         >
           <Grid item xs={12} md={3}>
-            <FormButton
-              variant_button="contained"
-              on_click_function={button_save}
+            {bodega_seleccionada.id_bodega !== null && bodega_seleccionada.id_bodega !== undefined ?
+              <FormButton
+                variant_button="contained"
+                on_click_function={handle_submit(on_submit)}
 
-              icon_class={<SaveIcon />}
-              label={"guardar"}
-              type_button="button"
+                icon_class={<EditIcon />}
+                label={"Editar"}
+                type_button="button"
 
-            />
+              />
+              :
+              <FormButton
+                variant_button="contained"
+                on_click_function={handle_submit(on_submit)}
+
+                icon_class={<SaveIcon />}
+                label={"Crear"}
+                type_button="button"
+
+              />
+            }
           </Grid>
 
-          {/* <Grid item xs={12} md={4}>
-            <FormButton
-              variant_button="contained"
-              on_click_function={null}
-              icon_class={<CheckIcon />}
-              label={"Confirmar distribucion"}
-              type_button="button"
-            />
-          </Grid> */}
-          <Grid item xs={12} md={3}>
+          {(bodega_seleccionada.id_bodega !== null && bodega_seleccionada.id_bodega !== undefined) &&
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={null}
+                icon_class={<DeleteIcon />}
+                label={"Eliminar"}
+                type_button="button"
+              />
+            </Grid>
+          }
+          {/* <Grid item xs={12} md={3}>
             <FormButton
               variant_button="outlined"
               on_click_function={null}
               icon_class={<CloseIcon />}
               label={"Cancelar"}
               type_button="button"
-            />
-          </Grid>
+            /> 
+        </Grid> */}
         </Grid>
-      </Grid>
+      </Grid >
     </>
 
   );

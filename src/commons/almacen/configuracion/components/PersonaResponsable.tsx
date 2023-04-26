@@ -9,6 +9,8 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
+import { set_responsable } from '../store/slice/BodegaSlice';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 
 interface IProps {
     set_persona?: any;
@@ -32,13 +34,15 @@ const PersonaResponsable = ({
     title
 
 }: IProps) => {
-    console.log(title)
+
+    const dispatch = useAppDispatch();
+
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_persona, reset: reset_persona, getValues: get_values } = useForm<Persona>();
+    const { id_responsable_bodega, bodega_seleccionada } = useAppSelector((state: { bodegas: any; }) => state.bodegas);
 
     const [document_type, set_document_type] = useState<IList[]>(initial_options);
     const [personas, set_personas] = useState<Persona[]>([]);
-    const [persona_selected, set_persona_selected] = useState<Persona>();
     const columns_personas: GridColDef[] = [
         { field: 'id_persona', headerName: 'ID', width: 20 },
         {
@@ -107,10 +111,10 @@ const PersonaResponsable = ({
                     document_type_no_format
                 );
                 set_document_type(document_type_format);
-                set_persona_selected({
-                    ...control_persona, id_persona: persona_data.data.id_persona, tipo_documento: persona_data.data.tipo_documento, numero_documento: persona_data.data.numero_documento,
+                dispatch(set_responsable({
+                    ...id_responsable_bodega, id_persona: persona_data.data.id_persona, tipo_documento: persona_data.data.tipo_documento, numero_documento: persona_data.data.numero_documento,
                     nombre_completo: String(persona_data.data.primer_nombre) + " " + String(persona_data.data.primer_apellido)
-                })
+                }))
 
             } catch (err) {
                 console.log(err);
@@ -118,11 +122,31 @@ const PersonaResponsable = ({
         };
         void get_selects_options();
     }, []);
-    useEffect(() => {
-        reset_persona(persona_selected)
-        set_persona(persona_selected)
 
-    }, [persona_selected]);
+    const get_persona: any = async (id: number | null) => {
+        try {
+            const { data: persona_data } = await api.get(
+
+                `personas/get-by-id/${id ?? ""}/`
+            );
+            dispatch(set_responsable({
+                ...id_responsable_bodega, id_persona: persona_data.data.id_persona, tipo_documento: persona_data.data.tipo_documento, numero_documento: persona_data.data.numero_documento,
+                nombre_completo: String(persona_data.data.primer_nombre) + " " + String(persona_data.data.primer_apellido)
+            }))
+
+
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+    useEffect(() => {
+        reset_persona(id_responsable_bodega)
+    }, [id_responsable_bodega]);
+
+    useEffect(() => {
+        if (bodega_seleccionada.id_responsable !== id_responsable_bodega.id_persona) { void get_persona(bodega_seleccionada.id_responsable) }
+    }, [bodega_seleccionada]);
 
     const search_person: any = (async () => {
         const document = get_values("numero_documento") ?? ""
@@ -133,7 +157,7 @@ const PersonaResponsable = ({
                 `personas/get-personas-by-document/${type}/${document}/`
             );
             if ("data" in persona_data) {
-                reset_persona(persona_data.data)
+                dispatch(set_responsable(persona_data.data))
                 control_success("Se selecciono la persona ")
 
             } else {
@@ -207,7 +231,7 @@ const PersonaResponsable = ({
             >
                 <BuscarModelo
 
-                    set_current_model={set_persona}
+                    set_current_model={set_responsable}
                     row_id={"id_persona"}
                     columns_model={columns_personas}
                     models={personas}

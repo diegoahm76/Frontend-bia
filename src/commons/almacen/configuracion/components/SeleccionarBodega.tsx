@@ -5,8 +5,6 @@ import { Chip, Grid } from '@mui/material';
 
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import type { AuthSlice } from '../../../../commons/auth/interfaces';
-import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IList } from '../../gestionDeInventario/catalogoBienes/interfaces/catalogodebienes';
 import { set_bodega_seleccionada, get_bodega, } from '../store/slice/BodegaSlice';
@@ -23,9 +21,6 @@ const SeleccionarBodega = ({
     control_bodega,
     reset_bodega
 }: IProps) => {
-
-    const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-
     const { bodegas, bodega_seleccionada } = useAppSelector((state: { bodegas: any; }) => state.bodegas);
 
     const [municipalities, set_municipalities] = useState<IList[]>([]);
@@ -58,8 +53,6 @@ const SeleccionarBodega = ({
         };
 
         void get_selects_options();
-
-        reset_bodega({ ...bodega_seleccionada, id_responsable: userinfo.id_persona })
     }, [])
 
 
@@ -107,9 +100,7 @@ const SeleccionarBodega = ({
 
 
     const get_bodegas_filtro: any = (async () => {
-        console.log("funcion")
         void dispatch(get_bodega_service());
-        void dispatch(delete_bodega_service());
     })
 
     return (
@@ -137,7 +128,7 @@ const SeleccionarBodega = ({
                             control_form: control_bodega,
                             control_name: "nombre",
                             default_value: "",
-                            rules: {},
+                            rules: { required_rule: { rule: true, message: "campo requerido" } },
                             label: "Nombre",
                             type: "text",
                             disabled: false,
@@ -151,7 +142,7 @@ const SeleccionarBodega = ({
                             control_form: control_bodega,
                             control_name: "direccion",
                             default_value: "",
-                            rules: {},
+                            rules: { required_rule: { rule: true, message: "campo requerido" } },
                             label: "Dirección",
                             type: "text",
                             disabled: false,
@@ -179,7 +170,7 @@ const SeleccionarBodega = ({
                             control_form: control_bodega,
                             control_name: "es_principal",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Es Principal",
                             disabled: false,
                             helper_text: "debe seleccionar campo",

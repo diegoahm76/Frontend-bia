@@ -12,12 +12,8 @@ const initial_state_bodega_seleccionada: IBodega = {
     id_responsable: null,
     nombre_completo_responsable: "",
     activo: true,
-    item_ya_usado: true,
-
+    item_ya_usado: false,
 }
-
-
-
 
 const initial_state_person: Persona = {
     id_persona: null,

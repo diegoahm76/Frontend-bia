@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../../../../../api/axios';
 import { useForm } from 'react-hook-form';
-import { Grid } from '@mui/material';
+import { Grid, } from '@mui/material';
 import { type ToastContent, toast } from 'react-toastify';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { set_info_solicitud } from '../../store/slices/indexSolicitudBienesConsumo';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { get_uni_organizacional } from '../../store/solicitudBienConsumoThunks';
+
 
 const initial_state_solicitud: InfoSolicitud = {
     id_solicitud_consumibles: null,
@@ -110,7 +111,6 @@ const SeleccionarSolicitud = () => {
     }, [unidad_selected]);
 
 
-
     const search_solicitud: any = (async () => {
         const number_solicitud = get_values("id_solicitud_consumibles") ?? ""
         try {
@@ -161,7 +161,12 @@ const SeleccionarSolicitud = () => {
                 direction="row"
                 padding={2}
                 borderRadius={2}
+
             >
+
+
+
+
                 <BuscarModelo
                     set_current_model={set_info_solicitud}
                     row_id={"id_solicitud_consumible"}

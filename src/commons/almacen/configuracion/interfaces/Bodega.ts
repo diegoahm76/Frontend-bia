@@ -15,7 +15,7 @@ export interface IBodega {
   activo: boolean;
   item_ya_usado: boolean;
   id_responsable: number | null;
-  es_principal: boolean;
+  es_principal: boolean | null;
 }
 
 

@@ -55,21 +55,16 @@ export const add_bodega_service: any = (
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(bodega);
             const { data } = await api.post(
                 'almacen/bodega/create/',
                 bodega
             );
-
-            dispatch(get_bodega_service());
-            // dispatch(set_bodega_seleccionada(data.detail));
             control_success('La Bodega se agrego correctamente');
 
             return data;
         } catch (error: any) {
-            console.log('add_bodega_service');
             control_error(error.response.data.detail);
-            console.log(error.response.data);
+            console.log('add_bodega_service');
 
             return error as AxiosError;
         }
