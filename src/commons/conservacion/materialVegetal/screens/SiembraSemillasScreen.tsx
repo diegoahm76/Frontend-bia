@@ -27,12 +27,21 @@ export function SiembraSemillasScreen(): JSX.Element {
   }, [planting_person]);
 
   useEffect(() => {
+    if(current_planting.id_siembra !== null){
+      
+        // pushear camas selecionadas a lista de camas
+    }
     reset_siembra(current_planting)
   }, [current_planting]);
 
   useEffect(() => {
+    if(current_nursery.id_vivero !== null){
+      void dispatch(get_germination_beds_service(Number(current_nursery.id_vivero)));
+    }
+  }, [current_nursery]);
+
+  useEffect(() => {
     if (watch("id_vivero") !== null) {
-      void dispatch(get_germination_beds_service(Number(watch("id_vivero"))));
       const vivero: IObjNursery | undefined = nurseries.find((p: IObjNursery) => p.id_vivero === watch("id_vivero"))
 
       if (vivero !== undefined) dispatch(set_current_nursery(vivero))
