@@ -8,7 +8,7 @@ export interface IBodegaGet {
 }
 export interface IBodega {
   id_bodega: number | null;
-  nombre_completo_responsable: string | null;
+  nombre_completo_responsable?: string | null;
   nombre: string | null;
   cod_municipio: string;
   direccion: string;

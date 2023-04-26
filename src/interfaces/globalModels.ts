@@ -96,7 +96,7 @@ export interface Direccion {
 }
 
 export interface Persona {
-  id_persona?: number | string;
+  id_persona: number | null;
   tipo_persona?: string | null;
   tipo_documento?: string | null;
   numero_documento?: string | null;
