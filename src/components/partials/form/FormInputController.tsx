@@ -98,7 +98,7 @@ const FormInputController = ({
                 defaultValue={default_value}
                 rules={{ required: rules.required_rule?.rule, min: rules.min_rule?.rule, max: rules.max_rule?.rule }}
                 render={({
-                    field: { onChange },
+                    field: { onChange, value },
                     fieldState: { error },
                 }) => (
                     <TextField
