@@ -26,22 +26,39 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Title } from "../../../components"
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import FindInPageIcon from '@mui/icons-material/FindInPage';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
-// // import { javascriptGenerator } from 'blockly/javascript';
-// import { VisualBlockEditor } from "../components/visual-block-editor";
+import { javascriptGenerator } from 'blockly/javascript';
+import { VisualBlockEditor } from "../components/visual-block-editor";
 import { TransitionAlerts } from "../components/alert";
 import { Modal } from "@material-ui/core";
 import { Liquidator } from "../components/liquidador/liquidator";
 import './LiquidacionScreen.css'
 import { PruebasLiquidacionModal } from "../components/constructorLiquidador/modal/PruebasLiquidacionModal";
 import { AddParametroModal } from "../components/constructorLiquidador/modal/AddParametroModal";
-
+import axios from "axios";
+import type { Liquidacion } from "../interfaces/liquidacion";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionScreen: React.FC = () => {
+    const [liquidaciones, set_liquidaciones] = useState<Liquidacion[]>([]);
+    const [id_liquidacion, set_id_liquidacion] = useState('');
+
+    useEffect(() => {
+        axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/liquidacion-base')
+            .then((response) => {
+                set_liquidaciones(response.data.data);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }, []);
+
+    const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
+        set_id_liquidacion(event.target.value);
+    };
 
     const column: GridColDef[] = [
         {
@@ -57,12 +74,9 @@ export const LiquidacionScreen: React.FC = () => {
                 <>
                     <IconButton
                         onClick={() => {
-                            console.log("params:", params)
                             const updatedRow = row.filter((item) => item.id !== params.id);
-                            // const updatedVariables = variables.filter((item) => item === params.row.nombre)
                             setRow(updatedRow);
                             removeVariable(params.row.nombre)
-                            console.log("variables: ", variables)
                         }}
                     >
                         <Avatar
@@ -113,6 +127,9 @@ export const LiquidacionScreen: React.FC = () => {
 
     const primaryWorkspace = useRef<any>();
 
+    const [add_parametro, set_add_parametro] = useState<boolean>(false);
+    const [modal_pruebas, set_modal_pruebas] = useState<boolean>(false);
+
     const setNotifications = (notification: any) => {
         setConfigNotify(notification);
         if (notification.type === 'error') {
@@ -121,14 +138,29 @@ export const LiquidacionScreen: React.FC = () => {
     }
 
     const handleInputChange = (event: any) => {
-        setFormData({ ...formData, [event.target.name]: event.target.value });
+        const { name, value } = event.target;
+        setFormData({ ...formData, [name]: value });
     };
 
-    // const generateCode = () => {
-    //     const code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
-    //     setNotifications({ open: true, message: 'Se ha procesado', type: 'success' });
-    //     return code
-    // }
+    const generateCode = () => {
+        // console.log("primaryWorkspace.current:", primaryWorkspace.current)
+        // const code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
+        // const code = javascriptGenerator.statementToCode(primaryWorkspace.current, 'DO');
+        // setNotifications({ open: true, message: 'Se ha procesado', type: 'success' });
+        // return code
+
+        let code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
+        // Convertir el código en un arreglo de líneas
+        let lines = code.split('\n');
+        // Filtrar las líneas que contienen declaraciones de variables
+        lines = lines.filter((line: any) => !line.includes('var'));
+        // Unir las líneas filtradas para obtener el código final
+        code = lines.join('\n');
+        // Eliminar los saltos de línea del código final
+        code = code.replace(/\n/g, '');
+        setNotifications({ open: true, message: 'Se ha procesado', type: 'success' });
+        return code;
+    }
 
     const removeVariable = (variable: any) => {
         setVariables(variables.filter((v) => v !== variable));
@@ -164,6 +196,7 @@ export const LiquidacionScreen: React.FC = () => {
 
         setRow([...row, newRow]);
     };
+
     const handleSubmitProcess = (event: any) => {
         event.preventDefault();
         if (primaryWorkspace?.current?.getAllBlocks()?.length === 0) {
@@ -182,8 +215,29 @@ export const LiquidacionScreen: React.FC = () => {
 
     }
 
-    const [add_parametro, set_add_parametro] = useState<boolean>(false);
-    const [modal_pruebas, set_modal_pruebas] = useState<boolean>(false);
+    // POST Crear opción liquidación
+    const handleSave = () => {
+        // const data = {
+        //     nombre_liquidacion: formData.nombre_liquidacion,
+        //     variables,
+        //     funcion: generateCode()
+        // };
+        // console.log("data", data);
+        // // console.log("data stringfly", JSON.stringify(data));
+        // console.log("generateCode(): ", generateCode())
+
+        axios.post('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/opciones-liquidacion-base/', {
+            nombre: formData.nombre_liquidacion,
+            funcion: generateCode(),
+            variables,
+        })
+        .then((response) => {
+            console.log(response);
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+    }
 
     return (
         <>
@@ -208,12 +262,31 @@ export const LiquidacionScreen: React.FC = () => {
                         autoComplete="off"
                     >
                         <Grid container spacing={1}>
-                            <Grid item xs={12} sm={4}>
+                            {/* <Grid item xs={12} sm={4}>
                                 <TextField
                                     placeholder="Liquidacion de intereses por mora"
                                     size="small"
                                     fullWidth
                                 />
+                            </Grid> */}
+                            <Grid item xs={12} sm={4}>
+                                <FormControl size="small" fullWidth>
+                                    <InputLabel>Selecciona liquidación</InputLabel>
+                                    <Select
+                                        label='Selecciona liquidación'
+                                        value={id_liquidacion}
+                                        onChange={handle_select_change}
+                                    >
+                                        {liquidaciones.map((liquidacion) => (
+                                            <MenuItem
+                                                key={liquidacion?.id}
+                                                value={liquidacion?.id}
+                                            >
+                                                {liquidacion?.id_opcion_liq?.nombre}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                             </Grid>
                             <Grid item xs={12} sm={4}>
                                 <IconButton size="large" color="primary">
@@ -259,11 +332,6 @@ export const LiquidacionScreen: React.FC = () => {
                                     Agregar variable
                                 </Button>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Button variant="contained" color="primary" onClick={handleSubmitProcess}>
-                                    Procesar
-                                </Button>
-                            </Grid>
                         </Grid>
                         {/* FIN TEST */}
                         <Grid container spacing={1}>
@@ -287,14 +355,19 @@ export const LiquidacionScreen: React.FC = () => {
                         }}
                     >
                         <Grid>
-                            {/* <VisualBlockEditor
+                            <VisualBlockEditor
                                 variables={variables}
                                 workspace={primaryWorkspace}
                                 readOnly={false}
-                            /> */}
+                            />
                             <TransitionAlerts configNotify={configNotify} setNotifications={setNotifications} />
                         </Grid>
                     </Box>
+                    <Grid item xs={12}>
+                        <Button variant="contained" color="primary" onClick={handleSubmitProcess}>
+                            Procesar
+                        </Button>
+                    </Grid>
                     <Stack
                         direction="row"
                         justifyContent="center"
@@ -318,6 +391,7 @@ export const LiquidacionScreen: React.FC = () => {
                             <Button
                                 color='success'
                                 variant='contained'
+                                onClick={handleSave}
                             >
                                 Guardar
                             </Button>
@@ -336,12 +410,12 @@ export const LiquidacionScreen: React.FC = () => {
             {(enableTest && open) && (
                 <Modal className='modal-container' open={open} onClose={() => { setOpen(false) }}>
                     <div className='modal'>
-                        {/* <Liquidator
+                        <Liquidator
                             setNotifications={setNotifications}
                             variables={variables}
                             generateCode={generateCode}
                             preview
-                        /> */}
+                        />
                     </div>
                 </Modal>
             )}
