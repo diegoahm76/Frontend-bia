@@ -25,7 +25,8 @@ interface IProps {
     select_options: any;
     option_key: string | number;
     option_label: string | number;
-    multiple?: boolean | null;
+    multiple?: boolean|null;
+    hidden_text?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -42,11 +43,14 @@ const FormSelectController = ({
     select_options,
     option_label,
     option_key,
-    multiple
+    multiple,
+    hidden_text
 }: IProps) => {
     const id_select = String(uuid())
 
     return (
+        <>
+        {((!hidden_text)??false) &&
         <Grid item xs={xs} md={md}>
             <Controller
                 name={control_name}
@@ -92,6 +96,8 @@ const FormSelectController = ({
                 )}
             />
         </Grid>
+    }
+    </>
     );
 }
 

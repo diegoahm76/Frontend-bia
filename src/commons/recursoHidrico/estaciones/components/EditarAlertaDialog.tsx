@@ -68,7 +68,7 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                label="Mensaje Maximo"
+                label="Mensaje Máximo"
                 fullWidth
                 defaultValue={alerta_editado?.mensaje_alarma_maximo}
                 {...register("mensaje_alarma_maximo", { required: true })}
@@ -78,7 +78,7 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Mensaje Minimo"
+                label="Mensaje Mínimo"
                 fullWidth
                 defaultValue={alerta_editado?.mensaje_alarma_minimo}
                 {...register("mensaje_alarma_minimo", { required: true })}

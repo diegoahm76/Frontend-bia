@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import EngineeringIcon from '@mui/icons-material/Engineering';

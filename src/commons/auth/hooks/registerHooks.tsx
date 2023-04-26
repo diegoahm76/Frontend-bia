@@ -1,12 +1,12 @@
-import { type ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
-import { get_person_by_document } from '../request/authRequest';
-import type { IList } from '../../../interfaces/globalModels';
 import type {
-  DataRegistePortal,
-  // keys_object,
-  ReisterHook,
-} from '../interfaces';
+  IList,
+  InfoPersona,
+  KeysInfoPersona,
+  ResponseServer,
+} from '../../../interfaces/globalModels';
+import type { DataRegistePortal, ReisterHook } from '../interfaces';
 import { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import {
@@ -16,15 +16,23 @@ import {
   get_generos,
   get_naturaleza_emp,
   get_paises,
+  get_person_by_document,
   get_tipo_documento,
   get_tipo_persona,
 } from '../../../request/';
+import { type AxiosError } from 'axios';
 
 type options = 'inicial' | 'residencia' | 'notificacion';
 
 export const use_register = (): ReisterHook => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { setValue } = useForm();
+  const {
+    register,
+    handleSubmit: handle_submit,
+    setValue: set_value,
+    formState: { errors, isValid: is_valid },
+    getValues: get_values,
+    watch,
+  } = useForm();
   const [ciudad_expedicion, set_ciudad_expedicion] = useState('');
   const [numero_documento, set_numero_documento] = useState('');
   const [ciudad_notificacion_opt, set_ciudad_notificacion_opt] = useState<
@@ -44,7 +52,7 @@ export const use_register = (): ReisterHook => {
   const [dpto_notifiacion_opt, set_dpto_notifiacion_opt] = useState<IList[]>(
     []
   );
-  const [dpto_notifiacion, set_dpto_notifiacion] = useState('');
+  const [dpto_notifiacion, set_dpto_notifiacion] = useState('CO');
   const [naturaleza_emp, set_naturaleza_emp] = useState('');
   const [nacionalidad_emp, set_nacionalidad_emp] = useState('');
   const [dpts_residencia_opt, set_dpto_residencia_opt] = useState<IList[]>([]);
@@ -58,19 +66,18 @@ export const use_register = (): ReisterHook => {
   const [genero_opt, set_genero_opt] = useState<IList[]>([]);
   const [naturaleza_emp_opt, set_naturaleza_emp_opt] = useState<IList[]>([]);
   const [genero, set_genero] = useState('');
-  const [has_user, set_has_user] = useState(false);
+  const [is_error, set_is_error] = useState(false);
   const [is_exists, set_is_exists] = useState(false);
   const [is_saving, set_is_saving] = useState(false);
   const [is_search, set_is_search] = useState(false);
+  const [is_avaiable, set_is_is_avaiable] = useState(false);
+  const [message_error, set_message_error] = useState('');
   const [loading, set_loading] = useState<boolean>(false);
   const [message_error_password, set_message_error_password] = useState('');
   const [pais_nacimiento, set_pais_nacimiento] = useState('');
   const [tipo_documento_rep, set_tipo_documento_rep] = useState('');
-  const [pais_notificacion, set_pais_notificacion] = useState('');
   const [pais_residencia, set_pais_residencia] = useState('');
   const [paises_options, set_paises_options] = useState<IList[]>([]);
-  const [requiere_nombre_comercial, set_requiere_nombre_comercial] =
-    useState(false);
   const [show_password, set_show_password] = useState(false);
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
   const [tipo_documento_opt_all, set_tipo_documento_opt_all] = useState<
@@ -113,7 +120,7 @@ export const use_register = (): ReisterHook => {
     numero_documento: '',
     pais_nacimiento: '',
     pais_residencia: '',
-    pais_notificacion: '',
+    pais_notificacion: 'CO',
     password: '',
     primer_apellido: '',
     primer_nombre: '',
@@ -142,10 +149,19 @@ export const use_register = (): ReisterHook => {
   });
   const [message_no_person, set_message_no_person] = useState('');
 
-  const handle_change_checkbox = (
-    event: ChangeEvent<HTMLInputElement>
-  ): void => {
-    set_requiere_nombre_comercial(event.target.checked);
+  const handle_change_checkbox = (value: boolean): void => {
+    if (value) {
+      set_value('dpto_notifiacion', get_values('departamento_residencia'));
+      set_value(
+        'cod_municipio_notificacion_nal',
+        get_values('municipio_residencia')
+      );
+      set_value('direccion_notificaciones', get_values('direccion_residencia'));
+    } else {
+      set_value('dpto_notifiacion', '');
+      set_value('cod_municipio_notificacion_nal', '');
+      set_value('direccion_notificaciones', '');
+    }
   };
 
   const get_selects_options = async (): Promise<void> => {
@@ -179,6 +195,8 @@ export const use_register = (): ReisterHook => {
         data: { data: naturaleza },
       } = await get_naturaleza_emp();
       set_naturaleza_emp_opt(naturaleza);
+
+      void get_departamentos_por_pais('notificacion', 'CO');
     } catch (err) {
       control_error(err);
     } finally {
@@ -194,31 +212,44 @@ export const use_register = (): ReisterHook => {
   const validate_exits = async (numero_documento: string): Promise<void> => {
     set_is_search(true);
     try {
+      set_is_error(false);
+      set_is_is_avaiable(true);
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
 
       if (data !== null && data !== undefined) {
         if (!data.tiene_usuario) {
-          // set_data_register({ ...info_person });
-          // for (const key in data) {
-          //   const temp_key = key as keys_object;
-          //   setValue(key, data[temp_key]);
-          // }
-          // setValue('numero_documento', data.numero_documento);
-
-          // set_fecha_nacimiento(dayjs(info_person.fecha_nacimiento));
-          set_is_exists(true);
+          set_data_register({ ...data_register, ...data });
+          for (const key in data) {
+            const temp_key = key as KeysInfoPersona;
+            set_value(key, data[temp_key]);
+            set_data_register({
+              ...data_register,
+              [temp_key]: data[temp_key],
+            });
+          }
           return;
         } else {
-          set_has_user(true);
+          set_message_error(
+            'Lo sentimos, este documento ya tiene un usuario, puede iniciar sesión con su usuario y contraseña, si ha olvidado sus datos de acceso, dirigase al inicio de sesión y haga click en ¿Olvidó su contraseña?'
+          );
+          set_is_error(true);
+          set_is_is_avaiable(false);
           return;
         }
       } else {
-        set_has_user(false);
-        set_is_exists(false);
+        set_is_error(false);
       }
     } catch (error) {
+      set_is_is_avaiable(false);
+      const temp_err = error as AxiosError;
+      if (temp_err.response?.status === 403) {
+        const resp = temp_err.response.data as ResponseServer<InfoPersona>;
+        set_message_error(resp.detail);
+        set_is_error(true);
+        return;
+      }
       control_error(error);
     } finally {
       set_is_search(false);
@@ -245,9 +276,9 @@ export const use_register = (): ReisterHook => {
             representante_legal: data.id_persona,
           });
           set_nombre_representante(data.nombre_completo);
-          setValue('tipo_documento_rep', data.tipo_documento);
-          setValue('numero_documento_rep', data.numero_documento);
-          setValue('nombre_rep', data.nombre_completo);
+          set_value('tipo_documento_rep', data.tipo_documento);
+          set_value('numero_documento_rep', data.numero_documento);
+          set_value('nombre_rep', data.nombre_completo);
           return;
         } else {
           set_is_exists(true);
@@ -334,10 +365,6 @@ export const use_register = (): ReisterHook => {
   }, [pais_residencia]);
 
   useEffect(() => {
-    void get_departamentos_por_pais('notificacion', pais_notificacion);
-  }, [pais_notificacion]);
-
-  useEffect(() => {
     void get_ciudades_opt('inicial', departamento_expedicion);
   }, [departamento_expedicion]);
 
@@ -360,14 +387,12 @@ export const use_register = (): ReisterHook => {
   }, [tipo_persona]);
 
   useEffect(() => {
-    void get_selects_options();
-  }, []);
+    handle_change_checkbox(watch('misma_direccion'));
+  }, [watch('misma_direccion')]);
 
   useEffect(() => {
-    console.log(data_register.tipo_documento);
-    console.log(data_register.tipo_persona);
-    console.log(data_register.numero_documento);
-  }, [data_register]);
+    void get_selects_options();
+  }, []);
 
   return {
     ciudad_expedicion,
@@ -380,46 +405,48 @@ export const use_register = (): ReisterHook => {
     departamento_expedicion,
     departamento_residencia,
     departamentos_opt,
+    documento_rep,
     dpto_notifiacion_opt,
     dpto_notifiacion,
     dpts_residencia_opt,
     error_email,
     error_password,
     error_phone,
+    errors,
     estado_civil_opt,
     estado_civil,
     fecha_nacimiento,
     fecha_rep_legal,
     genero_opt,
     genero,
-    has_user,
+    is_error,
+    is_avaiable,
     is_exists,
     is_saving,
     is_search,
+    is_valid,
     loading,
     message_error_password,
     message_no_person,
+    message_error,
     nacionalidad_emp,
     naturaleza_emp_opt,
     naturaleza_emp,
     nombre_representante,
     numero_documento,
     pais_nacimiento,
-    pais_notificacion,
     pais_residencia,
     paises_options,
-    requiere_nombre_comercial,
     show_password,
     tipo_documento_opt,
     tipo_documento_rep,
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
-    documento_rep,
-    set_documento_rep,
     get_selects_options,
-    handle_change_checkbox,
     handle_click_show_password,
+    handle_submit,
+    register,
     set_ciudad_expedicion,
     set_ciudad_notificacion_opt,
     set_ciudad_notificacion,
@@ -429,6 +456,7 @@ export const use_register = (): ReisterHook => {
     set_data_register,
     set_departamento,
     set_departamentos_opt,
+    set_documento_rep,
     set_dpto_notifiacion_opt,
     set_dpto_notifiacion,
     set_dpto_residencia_opt,
@@ -442,7 +470,6 @@ export const use_register = (): ReisterHook => {
     set_fecha_rep_legal,
     set_genero_opt,
     set_genero,
-    set_has_user,
     set_is_exists,
     set_is_saving,
     set_is_search,
@@ -453,13 +480,14 @@ export const use_register = (): ReisterHook => {
     set_nombre_representante,
     set_numero_documento,
     set_pais_nacimiento,
-    set_pais_notificacion,
     set_pais_residencia,
     set_show_password,
     set_tipo_documento_rep,
     set_tipo_documento,
     set_tipo_persona,
+    set_value,
     validate_exits_representante,
     validate_exits,
+    watch,
   };
 };

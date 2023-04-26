@@ -249,6 +249,7 @@ export const get_items_despacho_service = (id: string|number): any => {
     try {
       const { data } = await api.get(`conservacion/despachos/items-despacho/get-by-id/${id??""}/`);
       if (data.data.length > 0) {
+        console.log(data.data)
           dispatch(get_items_despacho(data.data));
           control_success("Se encontraron bienes")
       } else {
@@ -311,3 +312,28 @@ export const save_items_distribuidos_service = (
   };
 };
 
+// confirmar items predistribuidos
+export const confirmar_items_distribuidos_service = (
+  id: string|number,
+  observacion: string|null,
+  items: any
+  ): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/despachos/confirmar-distribucion/${id??""}/?observaciones_distribucion=test/`,
+                                    items);
+      if (data.success){
+        dispatch(get_items_distribuidos_service(id));
+        control_success(data.detail)
+      } else {
+        control_success(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('save_items_despacho_service');
+      console.log(error)
+      control_error(error);
+      return error as AxiosError;
+    }
+  };
+};

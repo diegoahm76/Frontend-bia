@@ -20,7 +20,7 @@ interface IProps {
     modal_select_model_title: string;
     modal_form_filters: any[];
     set_models: any;
-    reset_values: any;
+    reset_values?: any;
     get_filters_models: any;
     models: any[];
     columns_model: GridColDef[];
@@ -76,7 +76,7 @@ const BuscarModelo = ({
                 rows_text={form_input.rows_text ?? 1}
                 on_blur_function={form_input.on_blur_function ?? null}
                 set_value={form_input.set_value ?? null}
-
+                hidden_text={form_input.hidden_text ?? null}
             />;
         } else if (form_input.datum_type === "input_no_controller") {
             return <FormInputNoController
@@ -106,6 +106,8 @@ const BuscarModelo = ({
                 option_label={form_input.option_label}
                 option_key={form_input.option_key}
                 multiple={form_input.multiple ?? false}
+                hidden_text={form_input.hidden_text ?? null}
+
             />
         } else if (form_input.datum_type === "title") {
             return <Title title={form_input.title_label}></Title>
@@ -198,7 +200,6 @@ const BuscarModelo = ({
                 modal_title={modal_select_model_title}
                 form_filters={modal_form_filters}
                 set_models={set_models}
-                reset_values_filters={reset_values}
                 get_filters_models={get_filters_models}
                 models={models}
                 columns_model={columns_model}

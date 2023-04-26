@@ -22,7 +22,6 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch } from '../../../hooks';
 
 interface IProps {
-    reset_values_filters: any;
     set_models: any;
     form_filters: any[];
     modal_title: string;
@@ -32,7 +31,7 @@ interface IProps {
     models: any[]
     columns_model: GridColDef[];
     row_id: string | number;
-    set_current_model?: any;
+    set_current_model: any;
 
 }
 
@@ -44,7 +43,6 @@ const SeleccionarModeloDialogForm = ({
     form_filters,
     modal_title,
     set_models,
-    reset_values_filters,
     get_filters_models,
     models,
     columns_model,
@@ -73,6 +71,9 @@ const SeleccionarModeloDialogForm = ({
                 rows_text={form_input.rows_text}
                 on_blur_function={form_input.on_blur_function}
                 set_value={form_input.set_value ?? null}
+                hidden_text={form_input.hidden_text ?? null}
+
+
 
             />;
         } else if (form_input.datum_type === "input_no_controller") {
@@ -103,6 +104,8 @@ const SeleccionarModeloDialogForm = ({
                 option_label={form_input.option_label}
                 option_key={form_input.option_key}
                 multiple={form_input.multiple ?? false}
+                hidden_text={form_input.hidden_text ?? null}
+
             />
         } else if (form_input.datum_type === "title") {
             return <Title title={form_input.title_label}></Title>
@@ -121,8 +124,7 @@ const SeleccionarModeloDialogForm = ({
     const select_model = (): void => {
         const model = models.find((p) => p[row_id] === selected_row[0])
         if (model !== undefined) {
-            set_current_model !== undefined && dispatch(set_current_model(model));
-            reset_values_filters(model)
+            dispatch(set_current_model(model));
             set_models([])
             handle_close_select_model();
         }

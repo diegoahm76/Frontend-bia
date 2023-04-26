@@ -7,8 +7,10 @@ export interface IMaterialVegetal {
   germination_beds: IObjGerminationBed[];
   planting_goods: IObjPlantingGoods[];
   goods: IObjGoods[];
+  current_good: IObjGoods;
   plantings: IObjPlanting[];
   current_planting: IObjPlanting;
+  persons: Persona[];
   planting_person: Persona;
 }
 
@@ -33,7 +35,7 @@ export interface IObjPlanting {
   cama_germinacion: number[] | null;
   id_bien_sembrado: number | null;
   distancia_entre_semillas: number | null;
-  id_persona_siembra: number | null;
+  id_persona_siembra: string | number | null;
   observaciones: string | null;
   ruta_archivo_soporte: string | null;
 }

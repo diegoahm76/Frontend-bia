@@ -1,23 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { Chip, Grid } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { type IObjPlanting } from "../interfaces/materialvegetal";
-import type { AuthSlice } from '../../../auth/interfaces';
-import {  useSelector } from 'react-redux';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
+import { set_current_planting,  set_plantings } from '../store/slice/materialvegetalSlice';
+import { get_nurseries_service, get_plantings_service,  get_vegetal_materials_service } from '../store/thunks/materialvegetalThunks';
 
 
-import { set_current_planting, initial_state_planting, get_plantings } from '../store/slice/materialvegetalSlice';
-import { get_nurseries_service, get_plantings_service, get_germination_beds_service, get_vegetal_materials_service } from '../store/thunks/materialvegetalThunks';
-
+interface IProps {
+  control_siembra: any;
+  get_values: any
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarSiembra = () => {
+const SeleccionarSiembra = ({
+  control_siembra,
+  get_values
+}: IProps) => {
+
   const dispatch= useAppDispatch()
-  const { current_planting, plantings, nurseries, germination_beds, vegetal_materials} = useAppSelector((state) => state.material_vegetal);
-  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { control: control_siembra, reset: reset_siembra, getValues: get_values, watch} = useForm<IObjPlanting>();
+  const {  current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery} = useAppSelector((state) => state.material_vegetal);
   const [file, set_file] = useState<any>(null);
 
   const columns_siembras: GridColDef[] = [
@@ -70,26 +71,13 @@ const SeleccionarSiembra = () => {
   ];
 
   useEffect(() => {
-    reset_siembra({...initial_state_planting, id_persona_siembra: userinfo.id_persona})
     void dispatch(get_nurseries_service());
     void dispatch(get_vegetal_materials_service());
   }, []);
 
-  useEffect(() => {
-    if(current_planting.id_persona_siembra === null){
-    reset_siembra({...current_planting, id_persona_siembra: userinfo.id_persona})
-  } else {
-    reset_siembra(current_planting)
-  }
-  }, [current_planting]);
-
-  useEffect(() => {
-    if(watch("id_vivero") !== null){
-      void dispatch(get_germination_beds_service(Number(watch("id_vivero"))));
-  }
-  }, [watch("id_vivero")]);
-
-  
+  useEffect(() => {console.log(file)
+    dispatch(set_current_planting({ ...current_planting, id_vivero: get_values("id_vivero"), id_bien_sembrado: get_values("id_bien_sembrado"), cama_germinacion: get_values("cama_germinacion"), distancia_entre_semillas: get_values("distancia_entre_semillas"), observaciones: get_values("observaciones"), ruta_archivo_soporte: file }))
+  }, [file]);
 
   const get_siembras: any = (async () => {
     void dispatch(get_plantings_service());
@@ -109,8 +97,7 @@ const SeleccionarSiembra = () => {
           columns_model={columns_siembras}
           models={plantings}
           get_filters_models={get_siembras}
-          set_models={get_plantings}
-          reset_values={reset_siembra}
+          set_models={set_plantings}
           button_submit_label='Buscar siembra'
           form_inputs={[
             {
@@ -120,10 +107,10 @@ const SeleccionarSiembra = () => {
               control_form: control_siembra,
               control_name: "id_vivero",
               default_value: "",
-              rules: { required_rule: { rule: true, message: "requerido" } },
+              rules: { required_rule: { rule: true, message: "Vivero requerido" } },
               label: "Vivero",
               disabled: false,
-              helper_text: "debe seleccionar campo",
+              helper_text: "Seleccione Vivero",
               select_options: nurseries,
               option_label: "nombre",
               option_key: "id_vivero",
@@ -135,7 +122,7 @@ const SeleccionarSiembra = () => {
               control_form: control_siembra,
               control_name: "id_bien_sembrado",
               default_value: "",
-              rules: { required_rule: { rule: true, message: "requerido" } },
+              rules: { required_rule: { rule: true, message: "Material vegetal requerido" } },
               label: "Material vegetal",
               disabled: false,
               helper_text: "debe seleccionar campo",
@@ -152,7 +139,7 @@ const SeleccionarSiembra = () => {
               default_value: "",
               rules: { required_rule: { rule: true, message: "requerido" } },
               label: "Cama de germinación",
-              disabled: get_values("id_vivero") === null,
+              disabled: current_nursery.id_vivero === null,
               helper_text: "debe seleccionar campo",
               select_options: germination_beds,
               option_label: "nombre",
@@ -166,7 +153,7 @@ const SeleccionarSiembra = () => {
               control_form: control_siembra,
               control_name: "distancia_entre_semillas",
               default_value: "",
-              rules: {},
+              rules: { required_rule: { rule: true, message: "Distancia requerida" } },
               label: "Distancia entre semillas (cms)",
               type: "number",
               disabled: false,
@@ -179,7 +166,7 @@ const SeleccionarSiembra = () => {
               control_form: control_siembra,
               control_name: "ruta_archivo_soporte",
               default_value: "",
-              rules: {},
+              rules: { required_rule: { rule: false, message: "Archivo requerido" } },
               label: "Archivo soporte",
               type: "file",
               disabled: false,
@@ -193,7 +180,7 @@ const SeleccionarSiembra = () => {
               control_form: control_siembra,
               control_name: "observaciones",
               default_value: "",
-              rules: {},
+              rules: { required_rule: { rule: true, message: "Observación requerida" } },
               label: "Observacion",
               type: "text",
               multiline_text: true,
@@ -208,7 +195,7 @@ const SeleccionarSiembra = () => {
               control_form: control_siembra,
               control_name: "nro_lote",
               default_value: "",
-              rules: {},
+              rules: { required_rule: { rule: false, message: "requerido" } },
               label: "# lote",
               type: "number",
               disabled: true,
@@ -221,7 +208,7 @@ const SeleccionarSiembra = () => {
               control_form: control_siembra,
               control_name: "fecha_siembra",
               default_value: "",
-              rules: {},
+              rules: { required_rule: { rule: false, message: "requerido" } },
               label: "Fecha de siembra",
               type: "text",
               disabled: true,

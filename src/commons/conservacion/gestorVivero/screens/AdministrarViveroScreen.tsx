@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // Componentes de Material UI

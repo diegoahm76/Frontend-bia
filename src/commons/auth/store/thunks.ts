@@ -34,9 +34,8 @@ export const checking_authentication: (
     }
 
     const { tokens } = data?.userinfo as UserData;
-    console.log(tokens.access)
 
-    sessionStorage.setItem('token', tokens.access);
+    localStorage.setItem('token', tokens.access);
     // Se establece el token en el header de las peticiones
     api.interceptors.request.use(
       (config) => {
@@ -89,6 +88,14 @@ export const get_persmisions_user: (
       set_permissions(
         resp.data?.map((e) => {
           e.expanded = false;
+          e.menus.map((i) => {
+            i.expanded = false;
+            i.modulos.map((o) => {
+              o.expanded = false;
+              return o;
+            });
+            return i;
+          });
           return e;
         })
       )
