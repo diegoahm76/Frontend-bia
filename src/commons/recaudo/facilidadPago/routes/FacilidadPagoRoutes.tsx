@@ -10,8 +10,8 @@ export const FacilidadPagoRoutes: React.FC = () => {
     <Routes>
       <Route path='/*' element={<ObligacionesUsuario />} />
       <Route path='registro' element={<SolicitudFacilidadPago />} />
-      <Route path='auditoria' element={<ObligacionesAdmin />} />
-      <Route path='auditoria-asignadas' element={<ObligacionesAdminAsignadas />} />
+      <Route path='admin' element={<ObligacionesAdmin />} />
+      <Route path='asignadas' element={<ObligacionesAdminAsignadas />} />
     </Routes>
   )
 }

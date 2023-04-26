@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState, useEffect, useCallback } from 'react';
-import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Paper, Modal, Typography, Stack, Button } from "@mui/material";
+import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Paper, Modal, Typography, Stack, Button, TextField } from "@mui/material";
 import { visuallyHidden } from '@mui/utils';
+import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 
 interface Data {
@@ -137,6 +138,12 @@ const DEFAULT_ORDER = 'asc';
 const DEFAULT_ORDER_BY = 'nroObligacion';
 const DEFAULT_ROWS_PER_PAGE = 5;
 
+interface event {
+  target: {
+    value: string
+  }
+}
+
 interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => void;
@@ -208,6 +215,8 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const [openSubModal, setOpenSubModal] = useState(false);
   const [optionModal, setOptionModal] = useState('');
   const handleOpen = () => { setOpen(true) };
+  const [filter, setFilter] = useState('');
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     let rowsOnMount = stableSort(
@@ -289,6 +298,101 @@ export const TablaObligacionesAdmin: React.FC = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
+      <Stack
+        direction="row"
+        justifyContent="left"
+        spacing={2}
+        sx={{ mb: '20px' }}
+      >
+        <FormControl sx={{ minWidth: 130 }}>
+          <InputLabel id="demo-simple-select-label">Filtrar por: </InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="filter"
+              label="Filtrar por: "
+              onChange={(event: event)=>{
+                const { value } = event.target
+                setFilter(value)
+              }}
+            >
+              <MenuItem value='name'>Nombre Usuario</MenuItem>
+              <MenuItem value='identificacion'>Identificación</MenuItem>
+              <MenuItem value='obligacion'>Nombre Obligación</MenuItem>
+              <MenuItem value='nroObligacion'>Número Obligación</MenuItem>
+              <MenuItem value='nroResolucion'>Número Resolución</MenuItem>
+            </Select>
+        </FormControl>
+        <TextField
+          required
+          id="outlined-error-helper-text"
+          label="Búsqueda"
+          size="medium"
+          onChange={(event: event)=>{
+            const { value } = event.target
+            setSearch(value)
+          }}
+        />
+        <Button
+          color='secondary'
+          variant='contained'
+          onClick={() => {
+            const newRows = [];
+            if(filter === 'name'){
+              for(let i=0; i < rows.length; i++){
+                if(rows[i].name.toLowerCase().includes(search.toLowerCase())){
+                  newRows.push(rows[i])
+                }
+              }
+              setVisibleRows(newRows)
+            }
+            if(filter === 'identificacion'){
+              for(let i=0; i < rows.length; i++){
+                if(rows[i].identificacion.toLowerCase().includes(search.toLowerCase())){
+                  newRows.push(rows[i])
+                }
+              }
+              setVisibleRows(newRows)
+            }
+            if(filter === 'obligacion'){
+              for(let i=0; i < rows.length; i++){
+                if(rows[i].obligacion.toLowerCase().includes(search.toLowerCase())){
+                  newRows.push(rows[i])
+                }
+              }
+              setVisibleRows(newRows)
+            }
+            if(filter === 'nroObligacion'){
+              for(let i=0; i < rows.length; i++){
+                if(rows[i].nroObligacion.toLowerCase().includes(search.toLowerCase())){
+                  newRows.push(rows[i])
+                }
+              }
+              setVisibleRows(newRows)
+            }
+            if(filter === 'nroResolucion'){
+              for(let i=0; i < rows.length; i++){
+                if(rows[i].nroResolucion.toLowerCase().includes(search.toLowerCase())){
+                  newRows.push(rows[i])
+                }
+              }
+              setVisibleRows(newRows)
+            }
+          }}
+        >
+        Buscar
+        <SearchOutlined />
+        </Button>
+        <Button
+          color='secondary'
+          variant='outlined'
+          onClick={() => {
+            setVisibleRows(rows)
+          }}
+        >
+        Mostrar Todo
+        <FilterAltOffOutlined />
+        </Button>
+      </Stack>
       <Paper sx={{ width: '100%', mb: 2 }}>
         <TableContainer>
           <Table

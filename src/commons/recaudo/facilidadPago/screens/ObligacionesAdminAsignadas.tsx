@@ -6,7 +6,7 @@ export const ObligacionesAdminAsignadas: React.FC = () => {
 
   return (
     <>
-      <Title title='Listado de Obligaciones Generales - Usuario Cormacarena Admin'/>
+      <Title title='Listado de Obligaciones Generales - Usuario Cormacarena'/>
       <p>Buzón de facilidades de Pago ingresadas:</p>
       <TablaObligacionesAdminAsignadas />
     </>
