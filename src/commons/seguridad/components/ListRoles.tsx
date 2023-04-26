@@ -1,42 +1,22 @@
-import { api } from '../../../api/axios';
-import { type Dispatch, type SetStateAction, useEffect } from 'react';
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
 // Componentes de Material UI
-import { Grid, Box, IconButton, Avatar, Chip } from '@mui/material';
+import {
+  Grid,
+  Box,
+  IconButton,
+  Avatar,
+  Chip,
+  CircularProgress,
+} from '@mui/material';
 // Icons de Material UI
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { get_roles } from '../store/thunks';
-import { useDispatch, useSelector } from 'react-redux';
-import { type SeguridadSlice } from '../interfaces/seguridadModels';
-import { set_rol } from '../store/seguridadSlice';
-import { type ToastContent, toast } from 'react-toastify';
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
+import { control_error, control_success } from '../../../helpers';
+import type { AxiosError } from 'axios';
+import type { ResponseServer } from '../../../interfaces/globalModels';
+import type { Roles } from '../interfaces';
+import { roles_request } from '../request/seguridadRequest';
 interface IProps {
   set_position_tab_admin_roles: Dispatch<SetStateAction<string>>;
 }
@@ -45,80 +25,23 @@ interface IProps {
 export function ListRoles({
   set_position_tab_admin_roles,
 }: IProps): JSX.Element {
-  const { roles } = useSelector((state: SeguridadSlice) => state.seguridad);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(get_roles());
-  }, []);
-
-  const handle_edit_rol = async (id: number): Promise<void> => {
-    console.log(id);
-    const { data: data_rol } = await api.get(`roles/get-by-id/${id}/`);
-    const { data: data_permisos } = await api.get(
-      `permisos/permisos-modulos-rol/get-by-rol/${id}/`
-    );
-
-    console.log(data_permisos.data);
-    const data_rol_edit = {
-      rol: {
-        id_rol: data_rol.id_rol,
-        nombre_rol: data_rol.nombre_rol,
-        descripcion_rol: data_rol.descripcion_rol,
-        Rol_sistema: data_rol.Rol_sistema,
-      },
-      permisos: [],
-    };
-
-    dispatch(set_rol(data_rol_edit));
-  };
-
-  const confirm_delete_rol = async (id_rol: any): Promise<void> => {
-    // Swal.fire({
-    //   title: "Estas seguro?",
-    //   text: "Un rol que se elimina no se puede recuperar",
-    //   icon: "warning",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Si, elminar!",
-    //   cancelButtonText: "Cancelar",
-    // }).then(async (result) => {
-    // if (result.isConfirmed) {
-    await api
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      .delete(`roles/delete/${id_rol}`)
-      .then((res) => {
-        control_success('Eliminado correctamente');
-      })
-      .catch((err) => {
-        control_error(err.response.data.detail);
-      })
-      .finally(() => {
-        dispatch(get_roles());
-      });
-    // }
-    // });
-  };
-
+  const [roles, set_roles] = useState<Roles[]>([]);
+  const [is_loading, set_is_loading] = useState(false);
   const columns: GridColDef[] = [
     {
       headerName: 'ID',
       field: 'id_rol',
       minWidth: 150,
-      // visible: true,
     },
     {
       headerName: 'Nombre',
       field: 'nombre_rol',
       minWidth: 300,
-      // visible: true,
     },
     {
       headerName: 'Descripción',
       field: 'descripcion_rol',
       minWidth: 300,
-      // visible: true,
     },
     {
       headerName: 'Estado',
@@ -131,7 +54,6 @@ export function ListRoles({
           <Chip size="small" label="false" color="error" variant="outlined" />
         );
       },
-      // visible: true,
     },
     {
       headerName: 'Acciones',
@@ -182,20 +104,55 @@ export function ListRoles({
     },
   ];
 
+  const handle_edit_rol = async (id: number): Promise<void> => {};
+
+  const get_data = async (): Promise<void> => {
+    set_is_loading(true);
+    try {
+      const { data } = await roles_request();
+      set_roles(data);
+    } catch (error) {
+      control_error(error);
+    } finally {
+      set_is_loading(false);
+    }
+  };
+
+  const confirm_delete_rol = async (id_rol: any): Promise<void> => {
+    set_is_loading(true);
+    try {
+      control_success('Eliminado correctamente');
+      void get_data();
+    } catch (error) {
+      const err = error as AxiosError<ResponseServer<any>>;
+      control_error(err.response?.data.detail);
+    } finally {
+      set_is_loading(false);
+    }
+  };
+
+  useEffect(() => {
+    void get_data();
+  }, []);
+
   return (
     <>
-      <Grid item>
-        <Box sx={{ width: '100%' }}>
-          <DataGrid
-            density="compact"
-            autoHeight
-            rows={roles}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            getRowId={(row) => row.id_rol}
-          />
-        </Box>
+      <Grid container justifyContent="center">
+        {is_loading ? (
+          <CircularProgress />
+        ) : (
+          <Box sx={{ width: '100%' }}>
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={roles}
+              columns={columns}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              getRowId={(row) => row.id_rol}
+            />
+          </Box>
+        )}
       </Grid>
     </>
   );
