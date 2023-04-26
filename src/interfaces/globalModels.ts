@@ -96,18 +96,18 @@ export interface Direccion {
 }
 
 export interface Persona {
-  id_persona: number|null;
-  tipo_persona?: string|null;
-  tipo_documento?: string|null;
-  numero_documento?: string|null;
-  primer_nombre?: string|null;
-  segundo_nombre?: string|null;
+  id_persona?: number | string;
+  tipo_persona?: string | null;
+  tipo_documento?: string | null;
+  numero_documento?: string | null;
+  primer_nombre?: string | null;
+  segundo_nombre?: string | null;
   primer_apellido?: string;
-  segundo_apellido?: string|null;
-  nombre_completo?: string|null;
-  razon_social?: string|null;
-  nombre_comercial?: string|null;
-  tiene_usuario?: boolean|null;
+  segundo_apellido?: string | null;
+  nombre_completo?: string | null;
+  razon_social?: string | null;
+  nombre_comercial?: string | null;
+  tiene_usuario?: boolean | null;
 }
 
 export type keys_direccion =
@@ -142,6 +142,8 @@ export interface InfoPersona {
   razon_social: string;
   nombre_comercial: string;
   tiene_usuario: boolean;
+  digito_verificacion: string;
+  cod_naturaleza_empresa: string;
 }
 
 export type KeysInfoPersona =
@@ -223,4 +225,15 @@ export interface CompleteInfoPersona {
   tipo_documento: string;
   tipo_persona: string;
   ubicacion_georeferenciada: string;
+}
+
+export interface HistoricoDatosRestringidos {
+  id: number,
+  historico_cambio_id_persona: number;
+  nombre_campo_cambiado: string;
+  valor_campo_cambiado: string;
+  ruta_archivo_soporte: string | File;
+  fecha_cambio: FormData;
+  justificacion_cambio: string;
+  id_persona: number;
 }
