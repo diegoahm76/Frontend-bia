@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
+    Alert,
     Box,
     Button,
     FormControl,
@@ -19,7 +20,7 @@ import { useForm } from "react-hook-form";
 import { type AuthSlice } from "../../auth/interfaces";
 import SearchIcon from '@mui/icons-material/Search';
 import { get_person_by_document } from "../../../request";
-import { control_error, control_success } from "../../../helpers";
+import { control_error } from "../../../helpers";
 import { create_super_user } from "../store";
 import Swal from "sweetalert2";
 
@@ -36,11 +37,14 @@ export const DelegacionSuperuserScreen:React.FC = () => {
         set_tipo_documento
     } = change_super_user();
 
+    const [errorMessage, setErrorMessage] = useState('');
+    const [showErrorAlert, setShowErrorAlert] = useState(false);
     const [ superUsuarioActual, setSuperUsuarioActual ] = useState(userinfo.nombre_de_usuario);
     const [nuevoSuperUsuario, setNuevoSuperUsuario] = useState({
         tipoDocumento: tipo_documento,
         numeroIdentificacion: '',
-        nombre: ''
+        nombre: '',
+        id_persona: 0
     })
 
     useEffect(() => {
@@ -55,12 +59,20 @@ export const DelegacionSuperuserScreen:React.FC = () => {
         get_person_by_document(tipo_documento, numero_documento)
             .then(({ data: { data } }) => {
                 if (data !== null && data !== undefined) {
+                    console.log(data);
                     setSuperUsuarioActual(userinfo.nombre_de_usuario);
                     setNuevoSuperUsuario({
                         tipoDocumento: tipo_documento,
                         numeroIdentificacion: numero_documento,
-                        nombre: data?.nombre_completo
+                        nombre: data?.nombre_completo,
+                        id_persona: data.id_persona,
                     })
+                } else {
+                    setErrorMessage('No se encontraron resultados');
+                    setShowErrorAlert(true);
+                    setTimeout(() => {
+                        setShowErrorAlert(false);
+                    }, 5000)
                 }
             })
             .catch((error) => {
@@ -82,13 +94,9 @@ export const DelegacionSuperuserScreen:React.FC = () => {
             cancelButtonColor: "#B71C1C",
             confirmButtonText: "Si, Delegar",
             cancelButtonText: "Cancelar"
-        }).then(() => {
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            if (nuevoSuperUsuario.numeroIdentificacion !== '') {     
+        }).then((result) => {
+            if (nuevoSuperUsuario.numeroIdentificacion !== '' && result.isConfirmed) {     
                 dispatch(create_super_user(id_persona) as any);
-                setTimeout(() => {
-                    control_success(`El superusuario a sido delegado correctamente a ${nuevoSuperUsuario.nombre}`)
-                }, 5000)
             }
         }).catch((err) => {
             console.log(err);
@@ -188,6 +196,13 @@ export const DelegacionSuperuserScreen:React.FC = () => {
                             </Button>
                         </Grid>
                     </Grid>
+                    {
+                        showErrorAlert && (
+                            <Alert severity="error" onClose={() => {setShowErrorAlert(false)}}>
+                                { errorMessage }
+                            </Alert>
+                        )
+                    }
                 </Box>
                 <Stack
                     direction="row-reverse"
@@ -198,7 +213,7 @@ export const DelegacionSuperuserScreen:React.FC = () => {
                         color="success"
                         variant="outlined"
                         onClick={() => {
-                            handleSeleccionarNuevoSuperUsuario(userinfo.id_persona)
+                            handleSeleccionarNuevoSuperUsuario(nuevoSuperUsuario.id_persona)
                         }}
                     >
                         Guardar
