@@ -19,8 +19,9 @@ import { useForm } from "react-hook-form";
 import { type AuthSlice } from "../../auth/interfaces";
 import SearchIcon from '@mui/icons-material/Search';
 import { get_person_by_document } from "../../../request";
-import { control_error } from "../../../helpers";
+import { control_error, control_success } from "../../../helpers";
 import { create_super_user } from "../store";
+import Swal from "sweetalert2";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DelegacionSuperuserScreen:React.FC = () => {
@@ -68,7 +69,30 @@ export const DelegacionSuperuserScreen:React.FC = () => {
     }
 
     const handleSeleccionarNuevoSuperUsuario = (id_persona:number):void => {
-        dispatch(create_super_user(id_persona) as any)
+        Swal.fire({
+            customClass: {
+                confirmButton: "square-btn",
+                cancelButton: "square-btn"
+            },
+            width: 350,
+            text: `¿Estas Seguro de delegar el superusuario a ${nuevoSuperUsuario.nombre}?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#8BC34A",
+            cancelButtonColor: "#B71C1C",
+            confirmButtonText: "Si, Delegar",
+            cancelButtonText: "Cancelar"
+        }).then(() => {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (nuevoSuperUsuario.numeroIdentificacion !== '') {     
+                dispatch(create_super_user(id_persona) as any);
+                setTimeout(() => {
+                    control_success(`El superusuario a sido delegado correctamente a ${nuevoSuperUsuario.nombre}`)
+                }, 5000)
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
     }
 
   return (
