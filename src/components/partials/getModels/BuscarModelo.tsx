@@ -20,7 +20,7 @@ interface IProps {
     modal_select_model_title: string;
     modal_form_filters: any[];
     set_models: any;
-    reset_values: any;
+    reset_values?: any;
     get_filters_models: any;
     models: any[];
     columns_model: GridColDef[];
@@ -200,7 +200,6 @@ const BuscarModelo = ({
                 modal_title={modal_select_model_title}
                 form_filters={modal_form_filters}
                 set_models={set_models}
-                reset_values_filters={reset_values}
                 get_filters_models={get_filters_models}
                 models={models}
                 columns_model={columns_model}
