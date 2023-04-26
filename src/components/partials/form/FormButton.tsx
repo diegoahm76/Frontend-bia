@@ -22,6 +22,7 @@ const FormButton = ({
         <Button
             fullWidth
             variant={variant_button}
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             onClick={on_click_function}
             startIcon={icon_class}
             type={type_button}

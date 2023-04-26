@@ -89,7 +89,7 @@ export interface Persona {
   segundo_nombre?: string|null;
   primer_apellido?: string;
   segundo_apellido?: string|null;
-  nombre_completo?: string|null;
+  nombre_completo: string|null;
   razon_social?: string|null;
   nombre_comercial?: string|null;
   tiene_usuario?: boolean|null;
