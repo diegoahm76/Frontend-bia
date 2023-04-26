@@ -424,7 +424,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
                         <TableCell align="left" padding="normal">{row.nroObligacion}</TableCell>
                         <TableCell align="left" padding="normal">{row.nroResolucion}</TableCell>
                         <TableCell align="left" padding="normal">{row.fechaRadicacion}</TableCell>
-                        <TableCell align="left" padding="normal"><Link to={`registro`}>Ver</Link></TableCell>
+                        <TableCell align="left" padding="normal"><Link to={`../solicitadas`}>Ver</Link></TableCell>
                         <TableCell align="left" padding="normal">
                         <FormControl sx={{ minWidth: 110 }}>
                           <InputLabel id="demo-simple-select-label">Seleccionar</InputLabel>

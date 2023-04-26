@@ -402,7 +402,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
                         <TableCell align="left" padding="normal">{row.nroObligacion}</TableCell>
                         <TableCell align="left" padding="normal">{row.nroResolucion}</TableCell>
                         <TableCell align="left" padding="normal">{row.fechaRadicacion}</TableCell>
-                        <TableCell align="left" padding="normal"><Link to={`registro`}>Ver</Link></TableCell>
+                        <TableCell align="left" padding="normal"><Link to={`../solicitadas`}>Ver</Link></TableCell>
                       </TableRow>
                     );
                   })

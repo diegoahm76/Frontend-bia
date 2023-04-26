@@ -2,7 +2,7 @@ import { Title } from '../../../../components/Title';
 import { InputsEncabezado } from '../componentes/InputsEncabezado';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
 import { PersonaNatural, PersonaJuridica, DeudorSolidario } from '../componentes/CasoPersona';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, TextareaAutosize } from "@mui/material";
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, TextareaAutosize, Stack, Button, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
 import { useState } from 'react';
 
 interface event {
@@ -220,6 +220,80 @@ export const SolicitudFacilidadPago: React.FC = () => {
         </Grid>
       </Grid>
       <Grid
+      container
+      sx={{
+        position: 'relative',
+        background: '#FAFAFA',
+        borderRadius: '15px',
+        mb: '20px',
+        mt: '20px',
+        p: '20px',
+        boxShadow: '0px 3px 6px #042F4A26',
+      }}
+    >
+      <h3>Relación de bienes</h3>
+      <Grid item xs={12}>
+        <Box
+          component="form"
+          noValidate
+          autoComplete="off"
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={3} >
+              <TextField
+                size="small"
+                fullWidth
+                label='Identificación'
+                helperText='Escribe Documento de Identidad'
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                required
+                id="outlined-error-helper-text"
+                label="Avalúo"
+                helperText='Escribe el Avalúo'
+                size="small"
+                fullWidth
+                type='number'
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                required
+                id="outlined-error-helper-text"
+                label="Dirección"
+                helperText='Escribe la Dirección'
+                size="small"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                required
+                id="outlined-error-helper-text"
+                helperText='Carga el Documento Impuesto'
+                size="small"
+                fullWidth
+                type='file'
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <Button
+                color='info'
+                variant='outlined'
+                size='small'
+                onClick={() => {}}
+              >
+                Agregar
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Grid>
+    </Grid>
+      <Grid
         container
         sx={{
           position: 'relative',
@@ -238,11 +312,27 @@ export const SolicitudFacilidadPago: React.FC = () => {
           width='350px'
         >
           <p>Observación</p>
-          <TextareaAutosize
-            minRows={10}
-          />
+          <TextareaAutosize minRows={8} cols={153} />
         </Box>
       </Grid>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        spacing={2}
+        sx={{ mb: '20px', mt: '20px' }}
+      >
+        <FormGroup>
+          <FormControlLabel required control={<Checkbox />} label="Aceptar términos y condiciones" />
+          <FormControlLabel required control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
+        </FormGroup>
+        <Button
+          color='info'
+          variant='contained'
+          onClick={() => {}}
+        >
+        Enviar Solicitud
+        </Button>
+      </Stack>
     </>
   )
 }
