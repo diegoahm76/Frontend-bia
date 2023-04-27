@@ -45,5 +45,5 @@ export interface Liquidacion {
   periodo_liquidacion: string;
   valor: number;
   estado: string;
-  detalle: Detalle[];
+  detalles: Detalle[];
 }
