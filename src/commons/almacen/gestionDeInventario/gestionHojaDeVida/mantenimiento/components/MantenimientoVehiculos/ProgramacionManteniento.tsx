@@ -10,6 +10,7 @@ import { FechasComponent } from '../mantenimientoGeneral/FechasComponent';
 import use_previsualizacion from '../mantenimientoGeneral/hooks/usePrevisualizacion';
 import AnularMantenimientoComponent from '../mantenimientoGeneral/AnularMantenimiento';
 import use_anular_mantenimiento from '../mantenimientoGeneral/hooks/useAnularMantenimiento';
+import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -18,6 +19,8 @@ import { useAppDispatch } from '../../../../../../../hooks';
 import { useNavigate } from 'react-router-dom';
 import { create_maintenance_service } from '../mantenimientoGeneral/thunks/maintenanceThunks';
 import { PrevisualizacionComponent } from './PrevisualizacionComponent';
+import BuscarProrgamacionComponent from '../mantenimientoGeneral/BuscarProgramacion';
+import use_buscar_programacion from '../mantenimientoGeneral/hooks/useBuscarProgramacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
@@ -37,6 +40,13 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
         set_especificacion,
         set_user_info
     } = use_previsualizacion();
+
+    const {
+        title_programacion,
+        buscar_programacion_is_active,
+        set_title_programacion,
+        set_buscar_programacion_is_active
+    } = use_buscar_programacion();
 
     const {
         title,
@@ -199,7 +209,40 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                <Grid item xs={12}>
+                <Grid item xs={6}>
+                <Box
+                        component="form"
+                        sx={{ mt: '20px', mb: '20px' }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                                                <Stack
+                            direction="row"
+                            justifyContent="flex-start"
+                            spacing={2}
+                            sx={{ mt: '20px' }}
+                        >
+                                                    <Button
+                                color='primary'
+                                variant='contained'
+                                startIcon={<SearchIcon />}
+                                onClick={() => {
+                                    set_buscar_programacion_is_active(true);
+                                    set_title_programacion('Buscar programación');
+                                }}
+                            >
+                                Buscar programación
+                            </Button>
+                            {buscar_programacion_is_active && (
+                                <BuscarProrgamacionComponent
+                                    is_modal_active={buscar_programacion_is_active}
+                                    set_is_modal_active={set_buscar_programacion_is_active}
+                                    title={title_programacion} parent_details={set_details_state} />
+                            )}
+                        </Stack>
+                        </Box>
+                </Grid>
+                <Grid item xs={6}>
                     <Box
                         component="form"
                         sx={{ mt: '20px', mb: '20px' }}
