@@ -5,6 +5,9 @@ import {
   TextField,
   Stack,
   Button,
+  MenuItem,
+  Input,
+  InputLabel,
   type SelectChangeEvent,
 } from '@mui/material';
 
@@ -56,6 +59,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
+    reset,
     watch,
   } = useForm<DataAadminUser>();
   const {
@@ -64,8 +68,11 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     loading,
     tipo_usuario,
     tipo_usuario_opt,
+    activo,
+    activo_opt,
     set_data_register,
     set_tipo_persona,
+    set_tipo_usuario,
     set_tipo_documento,
   } = use_admin_users();
 
@@ -84,6 +91,13 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   }, [tipo_persona]);
 
   useEffect(() => {
+    if (watch('tipo_usuario') !== undefined) {
+      set_tipo_usuario(watch('tipo_usuario'));
+    }
+  }, [watch('tipo_usuario')]);
+
+  useEffect(() => {
+    reset();
     console.log(action_admin_users);
     if (action_admin_users === 'CREATE') {
       console.log('Creación de usuario - persona juridica');
@@ -101,6 +115,20 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
         ...data_register,
         razon_social: user_info.razon_social,
         nombre_comercial: user_info.nombre_comercial,
+        nombre_de_usuario: user_info.nombre_de_usuario,
+        tipo_usuario: user_info.tipo_usuario,
+        activo: user_info.is_active,
+        activo_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_activacion,
+        activo_justificacion_cambio:
+          user_info.justificacion_ultimo_cambio_activacion,
+        bloqueado: user_info.is_blocked,
+        bloqueado_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_bloqueo,
+        bloqueado_justificacion_cambio:
+          user_info.justificacion_ultimo_cambio_bloqueo,
+        fecha_creacion: user_info.created_at,
+        fecha_activación_inicial: user_info.activated_at,
+        creado_desde_portal: user_info.creado_por_portal,
+        persona_que_creo: user_info.id_usuario_creador,
       });
     }
   }, [action_admin_users]);
@@ -192,52 +220,34 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
       <Box sx={{ ml: '16px', width: '100%' }}>
         <Title title="Datos de acceso" />
       </Box>
-      <Grid item xs={12} sm={6} md={4}>
+      <Grid item xs={12} sm={6} md={3}>
         <TextField
           size="small"
           label="Nombre de usuario"
           fullWidth
+          value={data_register.nombre_de_usuario}
           error={errors.nombre_de_usuario?.type === 'required'}
           helperText={
             errors.nombre_de_usuario?.type === 'required'
               ? 'Este campo es obligatorio'
               : ''
           }
-          {...register('nombre_de_usuario', {
-            required: true,
-          })}
-          // value={nombre_de_usuario}
+          {...register('nombre_de_usuario')}
         />
       </Grid>
-      {/* 
-      <Grid item xs={12} sm={6} md={4}>
-        <div>
-          <input
-            accept="image/jpeg, image/png, image/jpg"
-            id="profilePicture"
-            name="profilePicture"
-            type="file"
-            ref={register}
-            style={{ display: 'none' }}
-          />
-
-          <label htmlFor="profilePicture">
-            <Button
-              variant="contained"
-              color="primary"
-              component="span"
-              startIcon={<CloudUpload />}
-            >
-              Upload Profile Picture
-            </Button>
-          </label>
-
-          {errors.profilePicture && (
-            <div role="alert">{errors.profilePicture?.message}</div>
-          )}
-        </div> 
+      <Grid item xs={12} sm={6} md={6}>
+        <InputLabel htmlFor="imagen_usuario">
+          Subir imagen de usuario
+        </InputLabel>
+        <Input
+          id="imagen_usuario"
+          type="file"
+          required
+          autoFocus
+          {...register('imagen_usuario')}
+          error={Boolean(errors.imagen_usuario)}
+        />
       </Grid>
-      */}
     </>
   );
 
@@ -247,7 +257,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
       <Box sx={{ ml: '16px', width: '100%' }}>
         <Title title="Tipo de usuario y roles" />
       </Box>
-      <Grid item xs={12} sm={6} md={4}>
+      <Grid item xs={12} sm={6} md={3}>
         <CustomSelect
           onChange={on_change}
           label="Tipo de usuario"
@@ -261,7 +271,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
           register={register}
         />
       </Grid>
-      {/* <Grid item xs={12} sm={6} md={4}>
+      {/* <Grid item xs={12} sm={6} md={3}>
         <CustomSelect
           onChange={on_change}
           label="Roles"
@@ -293,25 +303,28 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
           <Box sx={{ ml: '16px', width: '100%' }}>
             <Title title="Estado" />
           </Box>
-          {/*
-      <Grid item xs={12} sm={6} md={4}>
-         <CustomSelect
-          onChange={on_change}
-          label="Activo"
-          name="activo"
-          value={dpto_notifiacion}
-          options={dpto_notifiacion_opt}
-          loading={loading}
-          disabled={pais_notificacion === '' ?? true}
-          required={true}
-          errors={errors}
-          register={register}
-        /> 
-      </Grid>
-      */}
-          <Grid item xs={12} sm={6} md={4}>
+
+          <Grid item xs={12} sm={6} md={3}>
             <TextField
-              disabled={is_exists}
+              label="Activo"
+              select
+              fullWidth
+              size="small"
+              margin="dense"
+              required
+              autoFocus
+              defaultValue={activo}
+            >
+              {activo_opt.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              disabled
               fullWidth
               size="small"
               label="Fecha ultimo cambio"
@@ -320,9 +333,9 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
               onChange={handle_change}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={6}>
             <TextField
-              disabled={is_exists}
+              disabled
               fullWidth
               size="small"
               label="Justificación del cambio"
@@ -332,25 +345,27 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
               onChange={handle_change}
             />
           </Grid>
-          {/*
-      <Grid item xs={12} sm={6} md={4}>
-         <CustomSelect
-          onChange={on_change}
-          label="Bloqueado"
-          name="bloqueado"
-          value={dpto_notifiacion}
-          options={dpto_notifiacion_opt}
-          loading={loading}
-          disabled={pais_notificacion === '' ?? true}
-          required={true}
-          errors={errors}
-          register={register}
-        /> 
-      </Grid>
-      */}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={3}>
             <TextField
-              disabled={is_exists}
+              label="Bloqueado"
+              select
+              fullWidth
+              size="small"
+              margin="dense"
+              required
+              autoFocus
+              defaultValue={activo}
+            >
+              {activo_opt.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              disabled
               fullWidth
               size="small"
               label="Fecha ultimo cambio"
@@ -359,9 +374,9 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
               onChange={handle_change}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid item xs={12} sm={6} md={6}>
             <TextField
-              disabled={is_exists}
+              disabled
               fullWidth
               size="small"
               label="Justificación del cambio"
@@ -395,10 +410,9 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('fecha_creacion', {
-                required: true,
-              })}
+              {...register('fecha_creacion')}
               onChange={handle_change}
+              disabled
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -412,10 +426,9 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('fecha_activación_inicial', {
-                required: true,
-              })}
+              {...register('fecha_activación_inicial')}
               onChange={handle_change}
+              disabled
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -429,10 +442,9 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('creado_desde_portal', {
-                required: true,
-              })}
+              {...register('creado_desde_portal')}
               onChange={handle_change}
+              disabled
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -446,10 +458,9 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('persona_que_creo', {
-                required: true,
-              })}
+              {...register('persona_que_creo')}
               onChange={handle_change}
+              disabled
             />
           </Grid>
         </>

@@ -111,6 +111,8 @@ export type keys_object =
     tipo_persona_opt: IList[];
     tipo_persona: string;
     tipo_usuario_opt: IList[];
+    activo: string;
+    activo_opt: IList[];
     tipo_usuario: string;
     get_selects_options: () => Promise<void>;
     set_data_register: Dispatch<SetStateAction<DataAadminUser>>;
@@ -122,6 +124,7 @@ export type keys_object =
     set_tipo_documento: Dispatch<SetStateAction<string>>;
     set_tipo_persona: Dispatch<SetStateAction<string>>;
     set_tipo_usuario: Dispatch<SetStateAction<string>>;
+    set_activo: Dispatch<SetStateAction<string>>;
   }
 
   export interface EstadoCivil {

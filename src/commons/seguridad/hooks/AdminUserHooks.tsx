@@ -14,6 +14,11 @@ import {
   get_tipo_usuario,
 } from '../../../request';
 
+const activo_opt: IList[] = [
+  { value: 'false', label: 'No' },
+  { value: 'true', label: 'Si' },
+];
+
 export const use_admin_users = (): AdminUserHook => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
 
@@ -32,6 +37,7 @@ export const use_admin_users = (): AdminUserHook => {
   const [tipo_persona, set_tipo_persona] = useState('');
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
   const [tipo_usuario, set_tipo_usuario] = useState('');
+  const [activo, set_activo] = useState('');
   const [tipo_usuario_opt, set_tipo_usuario_opt] = useState<IList[]>([]);
   const [data_register, set_data_register] = useState<DataAadminUser>({
     tipo_persona: '',
@@ -70,7 +76,6 @@ export const use_admin_users = (): AdminUserHook => {
       const {
         data: { data: res_tipo_usuario },
       } = await get_tipo_usuario();
-      console.log(res_tipo_usuario);
       set_tipo_usuario_opt(res_tipo_usuario ?? []);
 
       const {
@@ -95,6 +100,16 @@ export const use_admin_users = (): AdminUserHook => {
     }
   }, [tipo_persona]);
 
+  // useEffect(() => {
+  //   if (activo === false) {
+  //     set_activo_opt(
+  //       tipo_documento_opt_all.filter((e) => e.value !== 'NT')
+  //     );
+  //   } else {
+  //     set_activo_opt(tipo_documento_opt_all);
+  //   }
+  // }, [activo]);
+
   useEffect(() => {
     void get_selects_options();
   }, []);
@@ -113,6 +128,8 @@ export const use_admin_users = (): AdminUserHook => {
     tipo_persona,
     tipo_usuario_opt,
     tipo_usuario,
+    activo,
+    activo_opt,
     get_selects_options,
     set_data_register,
     set_has_user,
@@ -120,6 +137,7 @@ export const use_admin_users = (): AdminUserHook => {
     set_is_saving,
     set_is_search,
     set_numero_documento,
+    set_activo,
     set_tipo_documento,
     set_tipo_persona,
     set_tipo_usuario,

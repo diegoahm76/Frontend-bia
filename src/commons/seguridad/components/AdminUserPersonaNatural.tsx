@@ -3,8 +3,11 @@ import {
   Box,
   Grid,
   TextField,
+  MenuItem,
   Stack,
   Button,
+  Input,
+  InputLabel,
   type SelectChangeEvent,
 } from '@mui/material';
 import { use_admin_users } from '../hooks/AdminUserHooks';
@@ -42,18 +45,16 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   tipo_persona,
   has_user,
 }: Props) => {
-  const {
-    action_admin_users,
-    data_person_search,
-    data_user_search,
-    user_info,
-  } = useSelector((state: SeguridadSlice) => state.seguridad);
+  const { action_admin_users, data_person_search, user_info } = useSelector(
+    (state: SeguridadSlice) => state.seguridad
+  );
 
   const {
     register,
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
+    reset,
     watch,
   } = useForm<DataAadminUser>();
   const {
@@ -62,12 +63,16 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     loading,
     tipo_usuario,
     tipo_usuario_opt,
+    activo,
+    activo_opt,
+    set_tipo_usuario,
     set_data_register,
     set_tipo_documento,
   } = use_admin_users();
   // const [image, set_image] = useState(null);
 
   useEffect(() => {
+    reset();
     console.log(action_admin_users);
     if (action_admin_users === 'CREATE') {
       console.log('Creación de usuario - persona natural');
@@ -80,7 +85,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         segundo_apellido: data_person_search.segundo_apellido,
       });
     } else if (action_admin_users === 'EDIT') {
-      console.log(data_user_search);
+      console.log(user_info);
       console.log('Edicion de usuario - persona natural');
       // Traer datos de usuario completos
       set_data_register({
@@ -104,6 +109,35 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         creado_desde_portal: user_info.creado_por_portal,
         persona_que_creo: user_info.id_usuario_creador,
       });
+
+      set_value('primer_nombre', user_info.primer_nombre);
+      set_value('segundo_nombre', user_info.segundo_nombre);
+      set_value('primer_apellido', user_info.primer_apellido);
+      set_value('segundo_apellido', user_info.segundo_apellido);
+      set_value('nombre_de_usuario', user_info.nombre_de_usuario);
+      set_value('tipo_usuario', user_info.tipo_usuario);
+      set_value('activo', user_info.is_active);
+      set_value(
+        'activo_fecha_ultimo_cambio',
+        user_info.fecha_ultimo_cambio_activacion
+      );
+      set_value(
+        'activo_justificacion_cambio',
+        user_info.justificacion_ultimo_cambio_activacion
+      );
+      set_value('bloqueado', user_info.is_blocked);
+      set_value(
+        'bloqueado_fecha_ultimo_cambio',
+        user_info.fecha_ultimo_cambio_bloqueo
+      );
+      set_value(
+        'bloqueado_justificacion_cambio',
+        user_info.justificacion_ultimo_cambio_bloqueo
+      );
+      set_value('fecha_creacion', user_info.created_at);
+      set_value('fecha_activación_inicial', user_info.activated_at);
+      set_value('creado_desde_portal', user_info.creado_por_portal);
+      set_value('persona_que_creo', user_info.id_usuario_creador);
     }
   }, [action_admin_users]);
 
@@ -112,6 +146,12 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       set_tipo_documento(watch('tipo_documento'));
     }
   }, [watch('tipo_documento')]);
+
+  useEffect(() => {
+    if (watch('tipo_usuario') !== undefined) {
+      set_tipo_usuario(watch('tipo_usuario'));
+    }
+  }, [watch('tipo_usuario')]);
 
   // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
@@ -144,8 +184,6 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       //   numero_documento,
       // });
       // control_success(data.detail);
-
-      window.location.href = '#/app/auth/login';
     } catch (error) {
       const temp_error = error as AxiosError;
       const resp = temp_error.response?.data as UserCreate;
@@ -239,50 +277,34 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       </Box>
       <Grid item xs={12} sm={6} md={3}>
         <TextField
+          disabled={is_exists}
           size="small"
           label="Nombre de usuario"
           fullWidth
+          value={data_register.nombre_de_usuario}
           error={errors.nombre_de_usuario?.type === 'required'}
           helperText={
             errors.nombre_de_usuario?.type === 'required'
               ? 'Este campo es obligatorio'
               : ''
           }
-          {...register('nombre_de_usuario', {
-            required: true,
-          })}
-          // value={nombre_de_usuario}
+          {...register('nombre_de_usuario')}
+          onChange={handle_change}
         />
       </Grid>
-      {/* 
-      <Grid item xs={12} sm={6} md={3}>
-        <div>
-          <input
-            accept="image/jpeg, image/png, image/jpg"
-            id="profilePicture"
-            name="profilePicture"
-            type="file"
-            ref={register}
-            style={{ display: 'none' }}
-          />
-
-          <label htmlFor="profilePicture">
-            <Button
-              variant="contained"
-              color="primary"
-              component="span"
-              startIcon={<CloudUpload />}
-            >
-              Upload Profile Picture
-            </Button>
-          </label>
-
-          {errors.profilePicture && (
-            <div role="alert">{errors.profilePicture?.message}</div>
-          )}
-        </div> 
+      <Grid item xs={12} sm={6} md={6}>
+        <InputLabel htmlFor="imagen_usuario">
+          Subir imagen de usuario
+        </InputLabel>
+        <Input
+          id="imagen_usuario"
+          type="file"
+          required
+          autoFocus
+          {...register('imagen_usuario')}
+          error={Boolean(errors.imagen_usuario)}
+        />
       </Grid>
-      */}
     </>
   );
 
@@ -338,25 +360,29 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           <Box sx={{ ml: '16px', width: '100%' }}>
             <Title title="Estado" />
           </Box>
-          {/*
-          <Grid item xs={12} sm={6} md={3}>
-            <CustomSelect
-              onChange={on_change}
-              label="Activo"
-              name="activo"
-              value={dpto_notifiacion}
-              options={dpto_notifiacion_opt}
-              loading={loading}
-              disabled={pais_notificacion === '' ?? true}
-              required={true}
-              errors={errors}
-              register={register}
-            /> 
-          </Grid>
-          */}
+
           <Grid item xs={12} sm={6} md={3}>
             <TextField
-              disabled={is_exists}
+              label="Activo"
+              select
+              fullWidth
+              size="small"
+              margin="dense"
+              required
+              autoFocus
+              defaultValue={activo}
+            >
+              {activo_opt.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              disabled
               fullWidth
               size="small"
               label="Fecha ultimo cambio"
@@ -365,9 +391,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               onChange={handle_change}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={6}>
             <TextField
-              disabled={is_exists}
+              disabled
               fullWidth
               size="small"
               label="Justificación del cambio"
@@ -377,25 +403,29 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               onChange={handle_change}
             />
           </Grid>
-          {/*
-          <Grid item xs={12} sm={6} md={3}>
-            <CustomSelect
-              onChange={on_change}
-              label="Bloqueado"
-              name="bloqueado"
-              value={dpto_notifiacion}
-              options={dpto_notifiacion_opt}
-              loading={loading}
-              disabled={pais_notificacion === '' ?? true}
-              required={true}
-              errors={errors}
-              register={register}
-            /> 
-          </Grid>
-          */}
+
           <Grid item xs={12} sm={6} md={3}>
             <TextField
-              disabled={is_exists}
+              label="Bloqueado"
+              select
+              fullWidth
+              size="small"
+              margin="dense"
+              required
+              autoFocus
+              defaultValue={activo}
+            >
+              {activo_opt.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              disabled
               fullWidth
               size="small"
               label="Fecha ultimo cambio"
@@ -404,9 +434,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               onChange={handle_change}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid item xs={12} sm={6} md={6}>
             <TextField
-              disabled={is_exists}
+              disabled
               fullWidth
               size="small"
               label="Justificación del cambio"
@@ -440,10 +470,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('fecha_creacion', {
-                required: true,
-              })}
+              {...register('fecha_creacion')}
               onChange={handle_change}
+              disabled
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -457,10 +486,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('fecha_activación_inicial', {
-                required: true,
-              })}
+              {...register('fecha_activación_inicial')}
               onChange={handle_change}
+              disabled
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -474,10 +502,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('creado_desde_portal', {
-                required: true,
-              })}
+              {...register('creado_desde_portal')}
               onChange={handle_change}
+              disabled
             />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
@@ -491,10 +518,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('persona_que_creo', {
-                required: true,
-              })}
+              {...register('persona_que_creo')}
               onChange={handle_change}
+              disabled
             />
           </Grid>
         </>

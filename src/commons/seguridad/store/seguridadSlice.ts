@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import produce from 'immer';
 import type {  ISeguridadInfo,InfoUsuario,InfoPersonal } from '../interfaces/seguridadModels';
 
 const initial_state_data_user_search: InfoUsuario = {
@@ -103,7 +104,9 @@ export const seguridad_slice = createSlice({
       state.action_admin_users = payload
     },
     set_user_info: (state, {payload}) => {
-      state.user_info = payload
+      return produce(state, draftState => {
+        draftState.user_info = payload;
+      });
     },
     set_data_user_search: (state, {payload}) => {
       state.data_user_search = payload
