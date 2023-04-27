@@ -265,7 +265,7 @@ const DialogBusquedaAvanzada = ({
           autoComplete="off"
         >
           <Grid container sx={{ mb: '0px' }} spacing={2}>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={4}>
               <CustomSelect
                 onChange={on_change}
                 label="Tipo de persona *"
@@ -280,7 +280,7 @@ const DialogBusquedaAvanzada = ({
               />
               <Typography className="label_selects">Tipo de persona</Typography>
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={4}>
               <CustomSelect
                 onChange={on_change}
                 label="Tipo de documento *"
@@ -297,7 +297,7 @@ const DialogBusquedaAvanzada = ({
                 Tipo de documento
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 label="Número de documento"
                 helperText="Número de documento"
@@ -306,7 +306,7 @@ const DialogBusquedaAvanzada = ({
                 {...register_search_person('numero_documento')}
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 {...register_search_person('primer_nombre')}
                 label="Primer nombre"
@@ -315,7 +315,7 @@ const DialogBusquedaAvanzada = ({
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 {...register_search_person('primer_apellido')}
                 label="Primer apellido"
@@ -324,7 +324,7 @@ const DialogBusquedaAvanzada = ({
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={4}>
               <Button
                 type="submit"
                 variant="outlined"

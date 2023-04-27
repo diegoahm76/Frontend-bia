@@ -1,9 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import {
-  AdminUsuariosScreen,
-  AdminPersonasScreen,
-  RolesScreen,
-} from '../screens/';
+import { AdminUsuariosScreen, RolesScreen } from '../screens/';
 import { Page404 } from '../../../screens/404';
 import AuditoriaScreen from '../screens/AuditoriaScreen';
 
@@ -11,10 +7,12 @@ import AuditoriaScreen from '../screens/AuditoriaScreen';
 export const SeguridadRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/administrar_usuarios" element={<AdminUsuariosScreen />} />
       <Route path="/auditoria" element={<AuditoriaScreen />} />
       <Route path="/roles" element={<RolesScreen />} />
-      <Route path="/administrador_personas" element={<AdminPersonasScreen />} />
+      <Route
+        path="/administracion_usuarios"
+        element={<AdminUsuariosScreen />}
+      />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );

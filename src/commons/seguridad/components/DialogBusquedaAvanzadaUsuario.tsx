@@ -156,9 +156,10 @@ const dialog_busqueda_avanzada_usuario = ({
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={handle_submit_search_user(on_submit_search_user)}
           autoComplete="off"
+          sx={{ minWidth: '800px' }}
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={6}>
               <TextField
                 {...register_search_user('nombre_usuario', {
                   required: true,
@@ -170,10 +171,8 @@ const dialog_busqueda_avanzada_usuario = ({
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
-              {''}
-            </Grid>
-            <Grid item xs={12} sm={3}>
+
+            <Grid item xs={12} sm={6}>
               <Button
                 type="submit"
                 variant="outlined"

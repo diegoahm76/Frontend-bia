@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-// Componentes de Material UI
 import {
   Grid,
   Button,
@@ -11,14 +10,12 @@ import {
   TextField,
   Skeleton,
 } from '@mui/material';
-// Icons de Material UI
 import SearchIcon from '@mui/icons-material/Search';
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import type {
   DataAadminUser,
   keys_object,
   SeguridadSlice,
-  // InfoUsuario,
 } from '../interfaces';
 import DialogBusquedaAvanzadaUsuario from './DialogBusquedaAvanzadaUsuario';
 import DialogBusquedaAvanzadaPersona from './DialogBusquedaAvanzadaPersona';
