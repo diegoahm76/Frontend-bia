@@ -23,6 +23,7 @@ export interface FormValuesSearchUser {
   nombre_usuario: string;
 }
 
+
 export type keys_object_search_person = 
 | 'tipo_persona'
 | 'tipo_documento'
@@ -52,7 +53,7 @@ export interface DataAadminUser {
   imagen_usuario: string;
   // Tipo usuario y Roles
   tipo_usuario: string;
-  roles: [];
+  roles: RolUser[];
   // Estatus
   activo: boolean;
   activo_fecha_ultimo_cambio: string | null;
@@ -65,6 +66,11 @@ export interface DataAadminUser {
   fecha_activación_inicial:string | null;
   creado_desde_portal:boolean;
   persona_que_creo: number | null;
+}
+
+export interface RolUser{
+  id_rol: number;
+  nombre_rol: string;
 }
 
 export type keys_object =
@@ -114,6 +120,8 @@ export type keys_object =
     activo: string;
     activo_opt: IList[];
     tipo_usuario: string;
+    roles: RolUser[];
+    // roles_opt: RolUser[];
     get_selects_options: () => Promise<void>;
     set_data_register: Dispatch<SetStateAction<DataAadminUser>>;
     set_has_user: Dispatch<SetStateAction<boolean>>;
@@ -197,7 +205,7 @@ export interface Acciones{
   id: number  
 }
 
-export interface User {
+export interface Users {
   id_usuario: number;
   nombre_de_usuario: string;
   persona: number;
@@ -249,12 +257,12 @@ export interface Persons {
 export interface ISeguridadInfo {
   roles: Roles[]; 
   rol: Rol;
-  users: User[];
+  users: Users[];
   persons: Persons[];
   action_admin_users: string;
   data_user_search: InfoUsuario;
   data_person_search: InfoPersonal;
-  user_info: User;
+  user_info: Users;
 }
 
 export interface SeguridadSlice {

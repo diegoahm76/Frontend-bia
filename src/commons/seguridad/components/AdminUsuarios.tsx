@@ -233,16 +233,7 @@ export function AdminUsuarios(): JSX.Element {
           </Grid>
         )}
       </Grid>
-      {tipo_persona === 'N' && (
-        <AdminUserPersonaNatural
-          numero_documento={numero_documento}
-          tipo_persona={tipo_persona}
-          tipo_documento={tipo_documento}
-          has_user={has_user}
-
-          // buscar_por={buscar_por}
-        />
-      )}
+      {tipo_persona === 'N' && <AdminUserPersonaNatural has_user={has_user} />}
       {tipo_persona === 'J' && (
         <AdminUserPersonaJuridica
           numero_documento={numero_documento}

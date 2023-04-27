@@ -1,7 +1,9 @@
 import { api } from '../../../api/axios';
 import type {
-Roles,
-User
+  DataAadminUser,
+  Roles,
+  Users,
+  UserCreate
 } from '../interfaces';
 import type {
   ResponseServer,
@@ -28,11 +30,11 @@ export const roles_request = async () => {
 // busqueda de usuarios por nombre
 export const users_request = async (
   nombre_de_usuario: string
-): Promise<ResponseThunks<User[]>> => {
+): Promise<ResponseThunks<Users[]>> => {
   try {
     const {
       data: { data }
-    } = await api.get<ResponseServer<User[]>>(
+    } = await api.get<ResponseServer<Users[]>>(
       `users/get-user-by-nombre-de-usuario/?nombre_de_usuario=${nombre_de_usuario}`
     );
     return {
@@ -56,11 +58,11 @@ export const persons_request = async (
   numero_documento: string,
   primer_nombre: string,
   primer_apellido: string,
-): Promise<ResponseThunks<User[]>> => {
+): Promise<ResponseThunks<Users[]>> => {
   try {
     const {
       data: { data }
-    } = await api.get<ResponseServer<User[]>>(
+    } = await api.get<ResponseServer<Users[]>>(
       `personas/get-personas-filters-admin-user/?tipo_documento=${tipo_documento}&numero_documento=${numero_documento}&primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}&razon_social&nombre_comercial`
     );
     return {
@@ -80,7 +82,20 @@ export const persons_request = async (
 
 // Trae todos los datos de un usuario
 export const user_request = async (
-  id: number
-): Promise<AxiosResponse<ResponseServer<User>>> => {
-  return await api.get(`users/get-by-pk/${id}`);
+  id_usuario: number
+): Promise<AxiosResponse<ResponseServer<Users>>> => {
+  return await api.get(`users/get-by-pk/${id_usuario}`);
+};
+
+export const crear_user_admin_user = async (
+  data: DataAadminUser
+): Promise<AxiosResponse<UserCreate>> => {
+  return await api.post('users/register/', data);
+};
+
+export const update_user_admin_user = async (
+  id_usuario: number,
+  data: DataAadminUser,
+): Promise<AxiosResponse<UserCreate>> => {
+  return await api.patch(`users/update/${id_usuario}}/`, data);
 };

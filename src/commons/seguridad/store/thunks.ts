@@ -14,15 +14,6 @@ export const get_users: (
 ) => any = (nombre_de_usuario: string) => {
   return async (dispatch: Dispatch<any>) => {
     const resp = await users_request(nombre_de_usuario);
-    // podemos enviar mensaje de error al dispatch
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    // if (!(resp.ok)) {
-    //   // Agregar dispatch de error
-    //   dispatch(logout({ error_message: resp.error_message }));
-    //   return;
-    // }
-    console.log(resp.data);
-
     dispatch(set_users(resp.data));
   };
 };
@@ -44,16 +35,6 @@ export const get_persons: (
       primer_nombre,
       primer_apellido,
     );
-
-    // podemos enviar mensaje de error al dispatch
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    // if (!(resp.ok)) {
-    //   // Agregar dispatch de error
-    //   dispatch(logout({ error_message: resp.error_message }));
-    //   return;
-    // }
-
-    console.log(resp.data);
     dispatch(set_persons(resp.data));
   };
 };

@@ -1,4 +1,7 @@
 import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import type { AxiosError } from 'axios';
 import {
   Box,
   Grid,
@@ -10,26 +13,25 @@ import {
   InputLabel,
   type SelectChangeEvent,
 } from '@mui/material';
-
-import { use_admin_users } from '../hooks/AdminUserHooks';
-import { useForm } from 'react-hook-form';
-import { control_error } from '../../../helpers/controlError';
-// import { control_success } from '../../recursoHidrico/requets/Request';
 import SaveIcon from '@mui/icons-material/Save';
 // import dayjs, { type Dayjs } from 'dayjs';
+import { CustomSelect } from '../../../components/CustomSelect';
+import { Title } from '../../../components/Title';
 import type {
   keys_object,
   DataAadminUser,
   UserCreate,
   SeguridadSlice,
 } from '../interfaces';
-import type { AxiosError } from 'axios';
-// import { crear_persona_juridica_and_user } from '../../auth/request/authRequest';
-import { CustomSelect } from '../../../components/CustomSelect';
-import { Title } from '../../../components/Title';
-import { useSelector } from 'react-redux';
+import {
+  crear_user_admin_user,
+  update_user_admin_user,
+} from '../request/seguridadRequest';
+import { use_admin_users } from '../hooks/AdminUserHooks';
+import { control_error } from '../../../helpers/controlError';
+import { control_success } from '../../../helpers/controlSuccess';
 
-interface PropsStep {
+interface PropsSection {
   label: string;
   component: JSX.Element;
 }
@@ -55,14 +57,6 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     user_info,
   } = useSelector((state: SeguridadSlice) => state.seguridad);
   const {
-    register,
-    handleSubmit: handle_submit,
-    setValue: set_value,
-    formState: { errors },
-    reset,
-    watch,
-  } = useForm<DataAadminUser>();
-  const {
     data_register,
     is_exists,
     loading,
@@ -75,6 +69,57 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     set_tipo_usuario,
     set_tipo_documento,
   } = use_admin_users();
+
+  const {
+    register,
+    handleSubmit: handle_submit,
+    setValue: set_value,
+    formState: { errors },
+    reset,
+    watch,
+  } = useForm<DataAadminUser>();
+
+  // Establece los valores del formulario
+  const set_value_form = (name: string, value: string): void => {
+    set_data_register({
+      ...data_register,
+      [name]: value,
+    });
+    set_value(name as keys_object, value);
+  };
+
+  // Se usa para escuchar los cambios de valor del componente CustomSelect
+  const on_change = (e: SelectChangeEvent<string>): void => {
+    set_value_form(e.target.name, e.target.value);
+  };
+
+  // Cambio inputs
+  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_value_form(e.target.name, e.target.value);
+  };
+
+  const on_submit = handle_submit(async () => {
+    try {
+      if (action_admin_users === 'CREATE') {
+        console.log('Onsubmit', data_register);
+        // Hacemos el registro de la persona JURIDICA
+        const { data } = await crear_user_admin_user(data_register);
+        control_success(data.detail);
+      } else if (action_admin_users === 'EDIT') {
+        console.log('Onsubmit EDIT', data_register);
+        // Actualización de usuario Persona Natural
+        const { data } = await update_user_admin_user(
+          user_info.id_usuario,
+          data_register
+        );
+        control_success(data.detail);
+      }
+    } catch (error) {
+      const temp_error = error as AxiosError;
+      const resp = temp_error.response?.data as UserCreate;
+      control_error(resp.detail);
+    }
+  });
 
   useEffect(() => {
     if (watch('tipo_persona') !== undefined) {
@@ -117,6 +162,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
         nombre_comercial: user_info.nombre_comercial,
         nombre_de_usuario: user_info.nombre_de_usuario,
         tipo_usuario: user_info.tipo_usuario,
+        roles: user_info.roles,
         activo: user_info.is_active,
         activo_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_activacion,
         activo_justificacion_cambio:
@@ -130,6 +176,35 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
         creado_desde_portal: user_info.creado_por_portal,
         persona_que_creo: user_info.id_usuario_creador,
       });
+      set_value('primer_nombre', user_info.primer_nombre);
+      set_value('segundo_nombre', user_info.segundo_nombre);
+      set_value('primer_apellido', user_info.primer_apellido);
+      set_value('segundo_apellido', user_info.segundo_apellido);
+      set_value('nombre_de_usuario', user_info.nombre_de_usuario);
+      set_value('tipo_usuario', user_info.tipo_usuario);
+      set_value('roles', user_info.roles);
+      set_value('activo', user_info.is_active);
+      set_value(
+        'activo_fecha_ultimo_cambio',
+        user_info.fecha_ultimo_cambio_activacion
+      );
+      set_value(
+        'activo_justificacion_cambio',
+        user_info.justificacion_ultimo_cambio_activacion
+      );
+      set_value('bloqueado', user_info.is_blocked);
+      set_value(
+        'bloqueado_fecha_ultimo_cambio',
+        user_info.fecha_ultimo_cambio_bloqueo
+      );
+      set_value(
+        'bloqueado_justificacion_cambio',
+        user_info.justificacion_ultimo_cambio_bloqueo
+      );
+      set_value('fecha_creacion', user_info.created_at);
+      set_value('fecha_activación_inicial', user_info.activated_at);
+      set_value('creado_desde_portal', user_info.creado_por_portal);
+      set_value('persona_que_creo', user_info.id_usuario_creador);
     }
   }, [action_admin_users]);
 
@@ -138,47 +213,8 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
       set_tipo_documento(watch('tipo_documento'));
     }
   }, [watch('tipo_documento')]);
-  // Establece los valores del formulario
-  const set_value_form = (name: string, value: string): void => {
-    set_data_register({
-      ...data_register,
-      [name]: value,
-    });
-    set_value(name as keys_object, value);
-  };
 
-  // Se usa para escuchar los cambios de valor del componente CustomSelect
-  const on_change = (e: SelectChangeEvent<string>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  // Cambio inputs
-  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  const on_submit = handle_submit(async (data) => {
-    try {
-      console.log('Onsubmit', data);
-      console.log(data_register);
-      // Hacemos el registro de la persona JURIDICA
-      // await crear_persona_juridica_and_user({
-      //   ...data,
-      //   numero_documento,
-      //   representante_legal: data_register.representante_legal,
-      // });
-
-      // control_success('Registro exitoso');
-      window.location.href = '#/app/auth/login';
-    } catch (error) {
-      const temp_error = error as AxiosError;
-      const resp = temp_error.response?.data as UserCreate;
-      control_error(resp.detail);
-    }
-  });
-
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const DatosPersonales = (
+  const datos_personales = (
     <>
       <Box sx={{ ml: '16px', width: '100%' }}>
         <Title title="Datos personales J" />
@@ -214,8 +250,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     </>
   );
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const DatosAcceso = (
+  const datos_acceso = (
     <>
       <Box sx={{ ml: '16px', width: '100%' }}>
         <Title title="Datos de acceso" />
@@ -251,8 +286,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     </>
   );
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const TypesUserAndRoles = (
+  const types_user_and_roles = (
     <>
       <Box sx={{ ml: '16px', width: '100%' }}>
         <Title title="Tipo de usuario y roles" />
@@ -295,8 +329,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     </>
   );
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const Estatus = (
+  const estatus = (
     <>
       {action_admin_users === 'EDIT' && (
         <>
@@ -391,8 +424,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     </>
   );
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const OtherDates = (
+  const other_dates = (
     <>
       {action_admin_users === 'EDIT' && (
         <>
@@ -468,26 +500,26 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     </>
   );
 
-  const steps: PropsStep[] = [
+  const steps: PropsSection[] = [
     {
       label: 'Datos básicos',
-      component: DatosPersonales,
+      component: datos_personales,
     },
     {
       label: 'Datos de acceso',
-      component: DatosAcceso,
+      component: datos_acceso,
     },
     {
       label: 'Tipo de usuario y roles',
-      component: TypesUserAndRoles,
+      component: types_user_and_roles,
     },
     {
       label: 'Estado',
-      component: Estatus,
+      component: estatus,
     },
     {
       label: 'Otros datos',
-      component: OtherDates,
+      component: other_dates,
     },
   ];
 

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { control_error } from '../../../helpers/controlError';
 import type { IList } from '../../../interfaces/globalModels';
 import type {
   DataAadminUser,
   AdminUserHook,
+  SeguridadSlice,
   // keys_object,
 } from '../interfaces';
 // import { type Dayjs } from 'dayjs';
@@ -13,6 +15,8 @@ import {
   get_tipo_persona,
   get_tipo_usuario,
 } from '../../../request';
+// import type { UserRol } from '../../auth/interfaces/authModels';
+import { get_roles } from '../store/thunks';
 
 const activo_opt: IList[] = [
   { value: 'false', label: 'No' },
@@ -20,7 +24,7 @@ const activo_opt: IList[] = [
 ];
 
 export const use_admin_users = (): AdminUserHook => {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const dispatch = useDispatch();
 
   const [numero_documento, set_numero_documento] = useState('');
 
@@ -39,6 +43,8 @@ export const use_admin_users = (): AdminUserHook => {
   const [tipo_usuario, set_tipo_usuario] = useState('');
   const [activo, set_activo] = useState('');
   const [tipo_usuario_opt, set_tipo_usuario_opt] = useState<IList[]>([]);
+  const { roles } = useSelector((state: SeguridadSlice) => state.seguridad);
+  // const [roles_opt, set_roles_opt] = useState<UserRol[]>([]);
   const [data_register, set_data_register] = useState<DataAadminUser>({
     tipo_persona: '',
     tipo_documento: '',
@@ -77,6 +83,8 @@ export const use_admin_users = (): AdminUserHook => {
         data: { data: res_tipo_usuario },
       } = await get_tipo_usuario();
       set_tipo_usuario_opt(res_tipo_usuario ?? []);
+
+      dispatch(get_roles());
 
       const {
         data: { data: res_tipo_documento },
@@ -130,6 +138,7 @@ export const use_admin_users = (): AdminUserHook => {
     tipo_usuario,
     activo,
     activo_opt,
+    roles,
     get_selects_options,
     set_data_register,
     set_has_user,

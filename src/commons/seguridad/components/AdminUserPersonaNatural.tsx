@@ -1,4 +1,7 @@
 import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { useSelector } from 'react-redux';
+import type { AxiosError } from 'axios';
 import {
   Box,
   Grid,
@@ -9,45 +12,56 @@ import {
   Input,
   InputLabel,
   type SelectChangeEvent,
+  Autocomplete,
 } from '@mui/material';
-import { use_admin_users } from '../hooks/AdminUserHooks';
-import { useForm } from 'react-hook-form';
-// import { crear_persona_natural_and_user } from '../../auth/request/authRequest';
 import SaveIcon from '@mui/icons-material/Save';
 import { CustomSelect } from '../../../components/CustomSelect';
-import { control_error } from '../../../helpers/controlError';
-// import { control_success } from '../../recursoHidrico/requets/Request';
+import { Title } from '../../../components/Title';
 import type {
   keys_object,
   DataAadminUser,
   UserCreate,
   SeguridadSlice,
-} from '../interfaces/seguridadModels';
-import type { AxiosError } from 'axios';
-import { Title } from '../../../components/Title';
-import { useSelector } from 'react-redux';
+  // RolUser,
+} from '../interfaces';
+import {
+  crear_user_admin_user,
+  update_user_admin_user,
+} from '../request/seguridadRequest';
+import { use_admin_users } from '../hooks/AdminUserHooks';
+import { control_error } from '../../../helpers/controlError';
+import { control_success } from '../../../helpers/controlSuccess';
 
-interface PropsStep {
+interface PropsSection {
   label: string;
   component: JSX.Element;
 }
+
 interface Props {
-  numero_documento: string;
-  tipo_documento: string;
-  tipo_persona: string;
   has_user: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUserPersonaNatural: React.FC<Props> = ({
-  numero_documento,
-  tipo_documento,
-  tipo_persona,
   has_user,
 }: Props) => {
   const { action_admin_users, data_person_search, user_info } = useSelector(
     (state: SeguridadSlice) => state.seguridad
   );
+  const {
+    data_register,
+    is_exists,
+    loading,
+    tipo_usuario,
+    tipo_usuario_opt,
+    activo,
+    activo_opt,
+    roles,
+    // roles_opt,
+    set_tipo_usuario,
+    set_data_register,
+    set_tipo_documento,
+  } = use_admin_users();
 
   const {
     register,
@@ -57,19 +71,63 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     reset,
     watch,
   } = useForm<DataAadminUser>();
-  const {
-    data_register,
-    is_exists,
-    loading,
-    tipo_usuario,
-    tipo_usuario_opt,
-    activo,
-    activo_opt,
-    set_tipo_usuario,
-    set_data_register,
-    set_tipo_documento,
-  } = use_admin_users();
-  // const [image, set_image] = useState(null);
+
+  // Establece los valores del formulario
+  const set_value_form = (name: string, value: string): void => {
+    // value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
+    set_data_register({
+      ...data_register,
+      [name]: value,
+    });
+    set_value(name as keys_object, value);
+  };
+
+  // Se usa para escuchar los cambios de valor del componente CustomSelect
+  const on_change = (e: SelectChangeEvent<string>): void => {
+    console.log(e.target.name, e.target.value);
+    set_value_form(e.target.name, e.target.value);
+  };
+
+  // Cambio inputs
+  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    console.log(e.target.name, e.target.value);
+    set_value_form(e.target.name, e.target.value);
+  };
+
+  const on_submit = handle_submit(async (fata) => {
+    try {
+      console.log(fata);
+      if (action_admin_users === 'CREATE') {
+        console.log('Onsubmit CREATE', data_register);
+        // Creación de usuario Persona Natural
+        const { data } = await crear_user_admin_user(data_register);
+        control_success(data.detail);
+      } else if (action_admin_users === 'EDIT') {
+        console.log('Onsubmit EDIT', data_register);
+        // Actualización de usuario Persona Natural
+        const { data } = await update_user_admin_user(
+          user_info.id_usuario,
+          data_register
+        );
+        control_success(data.detail);
+      }
+    } catch (error) {
+      const temp_error = error as AxiosError;
+      const resp = temp_error.response?.data as UserCreate;
+      control_error(resp.detail);
+    }
+  });
+
+  // const handle_image_upload = (event: any): void => {
+  //   const file = event.target.files[0];
+  //   if (Boolean(file) && Boolean(file.type.startsWith('image/'))) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       set_image(e.target.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   useEffect(() => {
     reset();
@@ -96,6 +154,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         segundo_apellido: user_info.segundo_apellido,
         nombre_de_usuario: user_info.nombre_de_usuario,
         tipo_usuario: user_info.tipo_usuario,
+        roles: user_info.roles,
         activo: user_info.is_active,
         activo_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_activacion,
         activo_justificacion_cambio:
@@ -116,6 +175,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       set_value('segundo_apellido', user_info.segundo_apellido);
       set_value('nombre_de_usuario', user_info.nombre_de_usuario);
       set_value('tipo_usuario', user_info.tipo_usuario);
+      set_value('roles', user_info.roles);
       set_value('activo', user_info.is_active);
       set_value(
         'activo_fecha_ultimo_cambio',
@@ -153,57 +213,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     }
   }, [watch('tipo_usuario')]);
 
-  // Establece los valores del formulario
-  const set_value_form = (name: string, value: string): void => {
-    value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
-    set_data_register({
-      ...data_register,
-      [name]: value,
-    });
-    set_value(name as keys_object, value);
-  };
-
-  // Se usa para escuchar los cambios de valor del componente CustomSelect
-  const on_change = (e: SelectChangeEvent<string>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  // Cambio inputs
-  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  const on_submit = handle_submit(async (data) => {
-    try {
-      console.log('Onsubmit', data);
-      console.log(data_register);
-      // const { data } = await crear_persona_natural_and_user({
-      //   ...data_register,
-      //   tipo_documento,
-      //   tipo_persona,
-      //   numero_documento,
-      // });
-      // control_success(data.detail);
-    } catch (error) {
-      const temp_error = error as AxiosError;
-      const resp = temp_error.response?.data as UserCreate;
-      control_error(resp.detail);
-    }
-  });
-
-  // const handle_image_upload = (event: any): void => {
-  //   const file = event.target.files[0];
-  //   if (Boolean(file) && Boolean(file.type.startsWith('image/'))) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       set_image(e.target.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const DatosPersonales = (
+  const datos_personales = (
     <>
       <Box sx={{ ml: '16px', width: '100%' }}>
         <Title title="Datos personales N" />
@@ -269,8 +279,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     </>
   );
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const DatosAcceso = (
+  const datos_acceso = (
     <>
       <Box sx={{ ml: '16px', width: '100%' }}>
         <Title title="Datos de acceso" />
@@ -308,8 +317,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     </>
   );
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const TypesUserAndRoles = (
+  const types_user_and_roles = (
     <>
       <Box sx={{ ml: '16px', width: '100%' }}>
         <Title title="Tipo de usuario y roles" />
@@ -328,20 +336,24 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           register={register}
         />
       </Grid>
-      {/* <Grid item xs={12} sm={6} md={3}>
-        <CustomSelect
-          onChange={on_change}
-          label="Roles"
-          name="roles"
-          value={roles}
-          options={roles_opt}
-          loading={loading}
-          // disabled={pais_notificacion === '' ?? true}
-          required={true}
-          errors={errors}
-          register={register}
+      <Grid item xs={12} sm={6} md={9}>
+        <Autocomplete
+          multiple
+          fullWidth
+          id="tags-standard"
+          options={roles}
+          getOptionLabel={(option) => option.nombre_rol}
+          defaultValue={[roles[13]]}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Selección de roles"
+              placeholder="Roles asignados"
+            />
+          )}
+          {...register('roles', { onChange: on_change })}
         />
-      </Grid> */}
+      </Grid>
       {/* <Grid item xs={12}>
         <Typography variant="caption" fontWeight="bold">
           NOTA: Se recomienda el registro de un número celular, este se usará
@@ -352,8 +364,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     </>
   );
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const Estatus = (
+  const estatus = (
     <>
       {action_admin_users === 'EDIT' && (
         <>
@@ -371,6 +382,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               required
               autoFocus
               defaultValue={activo}
+              onChange={handle_change}
             >
               {activo_opt.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -414,6 +426,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               required
               autoFocus
               defaultValue={activo}
+              onChange={handle_change}
             >
               {activo_opt.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -451,8 +464,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     </>
   );
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const OtherDates = (
+  const other_dates = (
     <>
       {action_admin_users === 'EDIT' && (
         <>
@@ -528,26 +540,26 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     </>
   );
 
-  const steps: PropsStep[] = [
+  const steps: PropsSection[] = [
     {
       label: 'Datos básicos',
-      component: DatosPersonales,
+      component: datos_personales,
     },
     {
       label: 'Datos de acceso',
-      component: DatosAcceso,
+      component: datos_acceso,
     },
     {
       label: 'Tipo de usuario y roles',
-      component: TypesUserAndRoles,
+      component: types_user_and_roles,
     },
     {
       label: 'Estado',
-      component: Estatus,
+      component: estatus,
     },
     {
       label: 'Otros datos',
-      component: OtherDates,
+      component: other_dates,
     },
   ];
 
