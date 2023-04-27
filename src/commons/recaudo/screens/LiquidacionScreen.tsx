@@ -41,10 +41,24 @@ import { AddParametroModal } from "../components/constructorLiquidador/modal/Add
 import axios from "axios";
 import type { Liquidacion } from "../interfaces/liquidacion";
 
+interface Rows {
+    id: number;
+    nombre: string;
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionScreen: React.FC = () => {
     const [liquidaciones, set_liquidaciones] = useState<Liquidacion[]>([]);
     const [id_liquidacion, set_id_liquidacion] = useState('');
+    const [row, set_row] = useState<Rows[]>([]);
+    const [variables, set_variables] = useState<string[]>([]);
+    const [formData, setFormData] = useState({ variable: '', nombre_liquidacion: '' });
+    const [configNotify, setConfigNotify] = useState({ open: false, message: '' });
+    const [open, setOpen] = useState(false);
+    const [enableTest, setEnableTest] = useState(false);
+    const primaryWorkspace = useRef<any>();
+    const [add_parametro, set_add_parametro] = useState<boolean>(false);
+    const [modal_pruebas, set_modal_pruebas] = useState<boolean>(false);
 
     useEffect(() => {
         axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/liquidacion-base')
@@ -53,8 +67,20 @@ export const LiquidacionScreen: React.FC = () => {
             })
             .catch((error) => {
                 console.log(error);
-            })
+            });
     }, []);
+
+    useEffect(() => {
+        if (id_liquidacion) {
+            const liquidacion: Liquidacion = liquidaciones.filter(liquidacion => liquidacion.id === Number(id_liquidacion))[0];
+            const new_rows: Rows[] = Object.keys(liquidacion?.id_opcion_liq?.variables).map((key, index) => ({
+                id: index,
+                nombre: key,
+            }));
+            set_row(new_rows);
+            set_variables(Object.keys(liquidacion.id_opcion_liq.variables));
+        }
+    }, [id_liquidacion]);
 
     const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
         set_id_liquidacion(event.target.value);
@@ -75,7 +101,7 @@ export const LiquidacionScreen: React.FC = () => {
                     <IconButton
                         onClick={() => {
                             const updatedRow = row.filter((item) => item.id !== params.id);
-                            setRow(updatedRow);
+                            set_row(updatedRow);
                             removeVariable(params.row.nombre)
                         }}
                     >
@@ -116,19 +142,7 @@ export const LiquidacionScreen: React.FC = () => {
     ]
 
     // TEST
-    const [row, setRow] = useState(rowTest)
-    const [formData, setFormData] = useState({ variable: '', nombre_liquidacion: '' });
-    const [variables, setVariables] = useState<string[]>([]);
-    const [configNotify, setConfigNotify] = useState({ open: false, message: '' });
-
-    const [open, setOpen] = useState(false);
-
-    const [enableTest, setEnableTest] = useState(false);
-
-    const primaryWorkspace = useRef<any>();
-
-    const [add_parametro, set_add_parametro] = useState<boolean>(false);
-    const [modal_pruebas, set_modal_pruebas] = useState<boolean>(false);
+    
 
     const setNotifications = (notification: any) => {
         setConfigNotify(notification);
@@ -163,7 +177,7 @@ export const LiquidacionScreen: React.FC = () => {
     }
 
     const removeVariable = (variable: any) => {
-        setVariables(variables.filter((v) => v !== variable));
+        set_variables(variables.filter((v) => v !== variable));
         /**
          * remove variable from workspace
          */
@@ -182,7 +196,7 @@ export const LiquidacionScreen: React.FC = () => {
             variable: ''
         }));
 
-        setVariables([
+        set_variables([
             ...Array.from(new Set([...variables, formData.variable]))
         ]);
 
@@ -194,7 +208,7 @@ export const LiquidacionScreen: React.FC = () => {
             opciones: '',
         };
 
-        setRow([...row, newRow]);
+        set_row([...row, newRow]);
     };
 
     const handleSubmitProcess = (event: any) => {
@@ -229,14 +243,16 @@ export const LiquidacionScreen: React.FC = () => {
         axios.post('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/opciones-liquidacion-base/', {
             nombre: formData.nombre_liquidacion,
             funcion: generateCode(),
-            variables,
+            variables: variables.reduce((acumulador, valor) => {
+                return { ...acumulador, [valor]: ''};
+            }, {}),
         })
-        .then((response) => {
-            console.log(response);
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     return (
@@ -282,7 +298,7 @@ export const LiquidacionScreen: React.FC = () => {
                                                 key={liquidacion?.id}
                                                 value={liquidacion?.id}
                                             >
-                                                {liquidacion?.id_opcion_liq?.nombre}
+                                                {liquidacion?.id_opcion_liq.nombre}
                                             </MenuItem>
                                         ))}
                                     </Select>
