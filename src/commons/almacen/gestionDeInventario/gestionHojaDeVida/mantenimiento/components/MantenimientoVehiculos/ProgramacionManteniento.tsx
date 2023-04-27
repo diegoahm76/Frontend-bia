@@ -21,7 +21,6 @@ import { create_maintenance_service } from '../mantenimientoGeneral/thunks/maint
 import { PrevisualizacionComponent } from './PrevisualizacionComponent';
 import BuscarProrgamacionComponent from '../mantenimientoGeneral/BuscarProgramacion';
 import use_buscar_programacion from '../mantenimientoGeneral/hooks/useBuscarProgramacion';
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -77,6 +76,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
 
     const crear_mantenimiento: () => void = () => {
         dispatch(create_maintenance_service(rows)).then((response: any) => {
+            limpiar();
             console.log('Se creo el mantenimiento: ', response)
         });
     }
@@ -127,17 +127,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 </Grid>
             </Grid>
 
-            <Grid
-                container
-                sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px',
-                    mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                }}
-            >
+            <Grid container>
                 <Grid item xs={12}>
                     {/* MANTENIMIENTO COMPONENT */}
                     <Title title='Detalles' />
@@ -210,19 +200,19 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 }}
             >
                 <Grid item xs={6}>
-                <Box
+                    <Box
                         component="form"
                         sx={{ mt: '20px', mb: '20px' }}
                         noValidate
                         autoComplete="off"
                     >
-                                                <Stack
+                        <Stack
                             direction="row"
                             justifyContent="flex-start"
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                                                    <Button
+                            <Button
                                 color='primary'
                                 variant='contained'
                                 startIcon={<SearchIcon />}
@@ -240,7 +230,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                                     title={title_programacion} parent_details={set_details_state} />
                             )}
                         </Stack>
-                        </Box>
+                    </Box>
                 </Grid>
                 <Grid item xs={6}>
                     <Box
