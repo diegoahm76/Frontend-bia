@@ -1,7 +1,9 @@
-import TextField from '@mui/material/TextField';
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+// import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { Controller } from 'react-hook-form';
-import { MenuItem } from '@mui/material';
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
+import { v4 as uuid } from "uuid";
 
 interface IRuleMessage {
     rule: any;
@@ -24,6 +26,8 @@ interface IProps {
     select_options: any;
     option_key: string | number;
     option_label: string | number;
+    multiple?: boolean|null;
+    hidden_text?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -39,10 +43,15 @@ const FormSelectController = ({
     default_value,
     select_options,
     option_label,
-    option_key
+    option_key,
+    multiple,
+    hidden_text
 }: IProps) => {
+    const id_select = String(uuid())
 
     return (
+        <>
+        {((!hidden_text)??false) &&
         <Grid item xs={xs} md={md}>
             <Controller
                 name={control_name}
@@ -53,34 +62,43 @@ const FormSelectController = ({
                     field: { onChange, value },
                     fieldState: { error },
                 }) => (
-                    <TextField
-                        select
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label={label}
-                        variant="outlined"
-                        disabled={disabled}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                            (error != null)
-                                ? (error.type === "required")
-                                    ? rules.required_rule?.message
-                                    : ""
-                                : helper_text
-                        }
-                    >
-                        {select_options.map((option: any) => (
-                            <MenuItem key={option[option_key]} value={option[option_key]}>
-                                {option[option_label]}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    <FormControl fullWidth>
+                        <InputLabel id={id_select}>{label ?? ""}</InputLabel>
+                        <Select
+                            labelId={id_select}
+                            multiple={multiple ?? false}
+                            margin="dense"
+                            fullWidth
+                            size="small"
+                            label={label ?? ""}
+                            variant="outlined"
+                            disabled={disabled}
+                            value={value}
+                            onChange={onChange}
+                            error={!(error == null)}
+
+
+                        >
+                            {/* <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem> */}
+                            {select_options.map((option: any) => (
+                                <MenuItem key={option[option_key]} value={option[option_key]}>
+                                    {option[option_label]}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>
+                            {(error != null)
+                                ? rules.required_rule?.message
+                                : helper_text}
+                        </FormHelperText>
+                    </FormControl>
                 )}
             />
         </Grid>
+    }
+    </>
     );
 }
 

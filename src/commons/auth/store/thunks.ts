@@ -88,6 +88,14 @@ export const get_persmisions_user: (
       set_permissions(
         resp.data?.map((e) => {
           e.expanded = false;
+          e.menus.map((i) => {
+            i.expanded = false;
+            i.modulos.map((o) => {
+              o.expanded = false;
+              return o;
+            });
+            return i;
+          });
           return e;
         })
       )

@@ -3,10 +3,11 @@ import {
   ActualizacionDatosRestringidosScreen,
   AdminUsuariosScreen,
   AdministracionPersonas,
-  RolesScreen,
+  RolesScreen
 } from '../screens/';
 import { Page404 } from '../../../screens/404';
 import AuditoriaScreen from '../screens/AuditoriaScreen';
+import { DelegacionSuperuserScreen } from '../screens/DelegacionSuperuserScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeguridadRoutes: React.FC = () => {
@@ -20,6 +21,7 @@ export const SeguridadRoutes: React.FC = () => {
         path="/administrador_personas"
         element={<AdministracionPersonas />}
       />
+      <Route path="/delegacion_superusuario" element={<DelegacionSuperuserScreen />}/>
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );

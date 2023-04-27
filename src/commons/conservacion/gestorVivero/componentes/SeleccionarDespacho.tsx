@@ -7,10 +7,13 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IDespacho } from "../interfaces/vivero";
 import type { AuthSlice } from '../../../../commons/auth/interfaces';
-import { useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
+import { useAppSelector, useAppDispatch } from '../../../../hooks';
+
 import { set_current_despacho } from '../store/slice/viveroSlice';
 
 const initial_state_despacho: IDespacho = {
+  id_despacho_entrante: null,
   numero_despacho_consumo: null,
   fecha_ingreso: "",
   observacion_distribucion: "",
@@ -19,9 +22,12 @@ const initial_state_despacho: IDespacho = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarDespacho = () => {
+  const dispatch= useAppDispatch()
 
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { control: control_despacho, reset: reset_despacho} = useForm<IDespacho>();
+  const { current_despacho } = useAppSelector((state) => state.nursery);
+
+  const { control: control_despacho, reset: reset_despacho, getValues: get_values} = useForm<IDespacho>();
   const [despachos, set_despachos] = useState<IDespacho[]>([]);
 
   const columns_despachos: GridColDef[] = [
@@ -99,9 +105,39 @@ const SeleccionarDespacho = () => {
       theme: 'light'
     });
 
+    const search_despacho: any = (async () => {
+      const numero = get_values("numero_despacho_consumo")??""
+      try {
+        const { data } = await api.get(
+          `conservacion/despachos/get-list/?numero_despacho=${numero}`
+        );
+        if ("data" in data) {
+          if(data.data.length > 0){
+          dispatch(set_current_despacho(data.data[0]))
+          control_success("Se selecciono el despacho ")
+        } else{
+          control_error(data.detail)
+        }
+  
+        } else {
+          control_error(data.detail)
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    })
+
   useEffect(() => {
     reset_despacho({...initial_state_despacho, persona_distribuye: userinfo.nombre, id_persona_distribuye: userinfo.id_persona})
   }, []);
+
+  useEffect(() => {
+    if(current_despacho.id_persona_distribuye === null){
+    reset_despacho({...current_despacho, persona_distribuye: userinfo.nombre, id_persona_distribuye: userinfo.id_persona})
+  } else {
+    reset_despacho(current_despacho)
+  }
+  }, [current_despacho]);
 
   
 
@@ -152,8 +188,9 @@ const SeleccionarDespacho = () => {
               rules: {},
               label: "Numero despacho",
               type: "number",
-              disabled: true,
+              disabled: false,
               helper_text: "",
+              on_blur_function: search_despacho
             },
             {
               datum_type: "input_controller",
