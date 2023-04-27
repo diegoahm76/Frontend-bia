@@ -5,7 +5,7 @@ import SeleccionarBienSiembra from "../componentes/SeleccionarBienSiembra";
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { set_current_planting, set_current_nursery } from '../store/slice/materialvegetalSlice';
 import { useEffect, useState } from "react";
-import { add_siembra_service, edit_siembra_service, get_germination_beds_service } from "../store/thunks/materialvegetalThunks";
+import { add_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_planting_goods_service } from "../store/thunks/materialvegetalThunks";
 import { type IObjNursery, type IObjPlanting } from "../interfaces/materialvegetal";
 import { useForm } from "react-hook-form";
 import FormButton from "../../../../components/partials/form/FormButton";
@@ -17,7 +17,7 @@ import PersonaSiembra from "../componentes/PersonaSiembra";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function SiembraSemillasScreen(): JSX.Element {
 
-  const { current_planting, planting_person, nurseries, current_nursery, planting_goods } = useAppSelector((state) => state.material_vegetal);
+  const { current_planting, planting_person, nurseries, current_nursery, planting_goods} = useAppSelector((state) => state.material_vegetal);
   const { control: control_siembra, handleSubmit: handle_submit, reset: reset_siembra, getValues: get_values, watch } = useForm<IObjPlanting>();
   const [action, set_action] = useState<string>("Crear")
   const dispatch = useAppDispatch()
@@ -28,10 +28,11 @@ export function SiembraSemillasScreen(): JSX.Element {
 
   useEffect(() => {
     if(current_planting.id_siembra !== null){
+      console.log(current_planting)
       const vivero: IObjNursery | undefined = nurseries.find((p: IObjNursery) => p.id_vivero === current_planting.id_vivero)
       if (vivero !== undefined) dispatch(set_current_nursery(vivero))
+      void dispatch(get_planting_goods_service(current_planting.id_siembra))
       
-        // pushear camas selecionadas a lista de camas
     }
     reset_siembra(current_planting)
   }, [current_planting]);
@@ -39,6 +40,7 @@ export function SiembraSemillasScreen(): JSX.Element {
   useEffect(() => {
     if(current_nursery.id_vivero !== null){
       void dispatch(get_germination_beds_service(Number(current_nursery.id_vivero)));
+      // void dispatch(get_germination_beds_id_service([10]));
     }
   }, [current_nursery]);
 

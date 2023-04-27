@@ -18,7 +18,7 @@ const SeleccionarSiembra = ({
 }: IProps) => {
 
   const dispatch= useAppDispatch()
-  const {  current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery} = useAppSelector((state) => state.material_vegetal);
+  const {  current_planting, plantings, nurseries, vegetal_materials, current_nursery, germination_beds} = useAppSelector((state) => state.material_vegetal);
   const [file, set_file] = useState<any>(null);
 
   const columns_siembras: GridColDef[] = [
@@ -130,22 +130,22 @@ const SeleccionarSiembra = ({
               option_label: "nombre",
               option_key: "id_bien",
             },
-            {
-              datum_type: "select_controller",
-              xs: 12,
-              md: 6,
-              control_form: control_siembra,
-              control_name: "cama_germinacion",
-              default_value: "",
-              rules: { required_rule: { rule: true, message: "requerido" } },
-              label: "Cama de germinación",
-              disabled: current_nursery.id_vivero === null,
-              helper_text: "debe seleccionar campo",
-              select_options: germination_beds,
-              option_label: "nombre",
-              option_key: "id_cama_germinacion_vivero",
-              multiple: true
-            },
+            // {
+            //   datum_type: "select_controller",
+            //   xs: 12,
+            //   md: 6,
+            //   control_form: control_siembra,
+            //   control_name: "cama_germinacion",
+            //   default_value: "",
+            //   rules: { required_rule: { rule: true, message: "requerido" } },
+            //   label: "Cama de germinación",
+            //   disabled: current_nursery.id_vivero === null,
+            //   helper_text: "debe seleccionar campo",
+            //   select_options: germination_beds,
+            //   option_label: "nombre",
+            //   option_key: "id_cama_germinacion_vivero",
+            //   multiple: true
+            // },
             {
               datum_type: "input_controller",
               xs: 12,
