@@ -41,7 +41,8 @@ export const get_persons: (
 
 export const get_data_user: (id:number) => any = (id: number) => {
   return async (dispatch: Dispatch<any>) => {
-    const {data: {data}} = await user_request(id);
-    dispatch(set_user_info(data));
+    const {data} = await user_request(id);
+    console.log(data);
+    dispatch(set_user_info(data.data));
   }
 }

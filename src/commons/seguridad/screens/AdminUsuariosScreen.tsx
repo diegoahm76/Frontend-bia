@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
-import { Card, Grid, Box, Typography, Tabs, Tab } from '@mui/material';
+import { Card, Grid, Box, Tabs, Tab } from '@mui/material';
 import { Title } from '../../../components';
 import { AdminPersonas } from '../components/AdminPersonas';
 import { AdminUsuarios } from '../components/AdminUsuarios';
@@ -27,11 +27,7 @@ const TabPanel: (props: TabPanelProps) => JSX.Element = (
       aria-labelledby={`full-width-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 0 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 0 }}>{children}</Box>}
     </div>
   );
 };

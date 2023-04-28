@@ -186,15 +186,15 @@ const DialogBusquedaAvanzada = ({
   ];
 
   const trigger_user_person_create_active = (data: any): void => {
+    console.log('punto 1 - CREATE');
     dispatch(set_data_person_search(data));
     dispatch(set_action_admin_users('CREATE'));
   };
 
   const trigger_user_edit_active = (data: any): void => {
+    console.log('punto 1 - EDIT');
     dispatch(set_data_person_search(data));
-    console.log(data.usuarios);
     if (data.usuarios.length === 1) {
-      console.log(data.usuarios[0].id_usuario);
       dispatch(get_data_user(data.usuarios[0].id_usuario));
     } else if (data.usuarios.length === 2) {
       console.log('Disparar modal con los 2 usuarios disponibles');

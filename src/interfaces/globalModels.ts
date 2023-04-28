@@ -56,6 +56,7 @@ export interface PropsSelect {
   loading: boolean;
   disabled?: boolean;
   required?: boolean;
+  multiple?: boolean;
   errors: FieldErrors<FieldValues>;
   register: UseFormRegister<any>;
   onChange: (e: SelectChangeEvent<string>) => void;

@@ -156,7 +156,7 @@ const dialog_busqueda_avanzada_usuario = ({
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={handle_submit_search_user(on_submit_search_user)}
           autoComplete="off"
-          sx={{ minWidth: '800px' }}
+          // sx={{ minWidth: '800px' }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>

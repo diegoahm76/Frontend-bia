@@ -68,71 +68,12 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
-    reset,
     watch,
   } = useForm<DataAadminUser>();
 
-  // Establece los valores del formulario
-  const set_value_form = (name: string, value: string): void => {
-    // value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
-    set_data_register({
-      ...data_register,
-      [name]: value,
-    });
-    set_value(name as keys_object, value);
-  };
-
-  // Se usa para escuchar los cambios de valor del componente CustomSelect
-  const on_change = (e: SelectChangeEvent<string>): void => {
-    console.log(e.target.name, e.target.value);
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  // Cambio inputs
-  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    console.log(e.target.name, e.target.value);
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  const on_submit = handle_submit(async (fata) => {
-    try {
-      console.log(fata);
-      if (action_admin_users === 'CREATE') {
-        console.log('Onsubmit CREATE', data_register);
-        // Creación de usuario Persona Natural
-        const { data } = await crear_user_admin_user(data_register);
-        control_success(data.detail);
-      } else if (action_admin_users === 'EDIT') {
-        console.log('Onsubmit EDIT', data_register);
-        // Actualización de usuario Persona Natural
-        const { data } = await update_user_admin_user(
-          user_info.id_usuario,
-          data_register
-        );
-        control_success(data.detail);
-      }
-    } catch (error) {
-      const temp_error = error as AxiosError;
-      const resp = temp_error.response?.data as UserCreate;
-      control_error(resp.detail);
-    }
-  });
-
-  // const handle_image_upload = (event: any): void => {
-  //   const file = event.target.files[0];
-  //   if (Boolean(file) && Boolean(file.type.startsWith('image/'))) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       set_image(e.target.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
-
   useEffect(() => {
-    reset();
-    console.log(action_admin_users);
     if (action_admin_users === 'CREATE') {
+      console.log('Punto 2', action_admin_users);
       console.log('Creación de usuario - persona natural');
       console.log(data_person_search);
       set_data_register({
@@ -143,6 +84,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         segundo_apellido: data_person_search.segundo_apellido,
       });
     } else if (action_admin_users === 'EDIT') {
+      console.log('Punto 2', action_admin_users);
       console.log(user_info);
       console.log('Edicion de usuario - persona natural');
       // Traer datos de usuario completos
@@ -212,6 +154,64 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       set_tipo_usuario(watch('tipo_usuario'));
     }
   }, [watch('tipo_usuario')]);
+
+  // Establece los valores del formulario
+  const set_value_form = (name: string, value: string): void => {
+    // value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
+    set_data_register({
+      ...data_register,
+      [name]: value,
+    });
+    set_value(name as keys_object, value);
+  };
+
+  // Se usa para escuchar los cambios de valor del componente CustomSelect
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const on_change = (e: SelectChangeEvent<string>) => {
+    console.log(e.target.name, e.target.value);
+    set_value_form(e.target.name, e.target.value);
+  };
+
+  // Cambio inputs
+  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    console.log(e.target.name, e.target.value);
+    set_value_form(e.target.name, e.target.value);
+  };
+
+  const on_submit = handle_submit(async (fata) => {
+    try {
+      console.log(fata);
+      if (action_admin_users === 'CREATE') {
+        console.log('Onsubmit CREATE', data_register);
+        // Creación de usuario Persona Natural
+        const { data } = await crear_user_admin_user(data_register);
+        control_success(data.detail);
+      } else if (action_admin_users === 'EDIT') {
+        console.log('Onsubmit EDIT', data_register);
+        // Actualización de usuario Persona Natural
+        const { data } = await update_user_admin_user(
+          user_info.id_usuario,
+          data_register
+        );
+        control_success(data.detail);
+      }
+    } catch (error) {
+      const temp_error = error as AxiosError;
+      const resp = temp_error.response?.data as UserCreate;
+      control_error(resp.detail);
+    }
+  });
+
+  // const handle_image_upload = (event: any): void => {
+  //   const file = event.target.files[0];
+  //   if (Boolean(file) && Boolean(file.type.startsWith('image/'))) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       set_image(e.target.result);
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
 
   const datos_personales = (
     <>

@@ -100,11 +100,8 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
                 }}
               />
             </IconButton>
-            <IconButton>
-              <HomeIcon
-                onClick={handle_direct_home}
-                sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }}
-              />
+            <IconButton onClick={handle_direct_home}>
+              <HomeIcon sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }} />
             </IconButton>
           </Stack>
           <Stack spacing={2} direction="row">

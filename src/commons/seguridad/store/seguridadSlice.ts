@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
-import type {  ISeguridadInfo,InfoUsuario,InfoPersonal } from '../interfaces/seguridadModels';
+import type {  ISeguridadInfo,InfoUsuario,InfoPersonal,Users } from '../interfaces/seguridadModels';
 
 const initial_state_data_user_search: InfoUsuario = {
   id_usuario: 0,
@@ -31,7 +31,7 @@ const initial_state_data_person_search: InfoPersonal = {
   tiene_usuario: false,
 };
 
-const initial_state_user_info = {
+const initial_state_user_info: Users = {
   id_usuario: 0,
   nombre_de_usuario: '',
   persona: 0,
