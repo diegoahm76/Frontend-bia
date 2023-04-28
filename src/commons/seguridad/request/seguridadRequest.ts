@@ -1,6 +1,6 @@
 import { api } from '../../../api/axios';
 import type { ResponseServer } from '../../../interfaces/globalModels';
-import type { PermisosRol, RolCreated, Roles } from '../interfaces';
+import type { PermisosRol, RolCreated, Roles, SuperUser } from '../interfaces';
 import type { AxiosResponse } from 'axios';
 
 export const roles_request = async (): Promise<AxiosResponse<Roles[]>> => {
@@ -32,4 +32,17 @@ export const create_permiso_rol = async (
     'permisos/permisos-modulos-rol/create/',
     permisos
   );
+};
+
+export const superuser_request = async (
+  id_persona: number
+): Promise<ResponseServer<SuperUser[]> | undefined> => {
+  try {
+    const { data } = await api.post<ResponseServer<SuperUser[]>>(
+      `users/delegate-rol-super-usuario/${id_persona}/`
+    );
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
 };
