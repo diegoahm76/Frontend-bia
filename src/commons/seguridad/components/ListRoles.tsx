@@ -7,6 +7,13 @@ import {
   Avatar,
   Chip,
   CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  Typography,
 } from '@mui/material';
 // Icons de Material UI
 import EditIcon from '@mui/icons-material/Edit';
@@ -15,8 +22,8 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { control_error, control_success } from '../../../helpers';
 import type { AxiosError } from 'axios';
 import type { ResponseServer } from '../../../interfaces/globalModels';
-import type { Roles } from '../interfaces';
-import { roles_request } from '../request/seguridadRequest';
+import type { Rol } from '../interfaces';
+import { delete_request, roles_request } from '../request/seguridadRequest';
 interface IProps {
   set_position_tab_admin_roles: Dispatch<SetStateAction<string>>;
 }
@@ -25,8 +32,16 @@ interface IProps {
 export function ListRoles({
   set_position_tab_admin_roles,
 }: IProps): JSX.Element {
-  const [roles, set_roles] = useState<Roles[]>([]);
+  const [roles, set_roles] = useState<Rol[]>([]);
   const [is_loading, set_is_loading] = useState(false);
+  const [open, set_open] = useState(false);
+  const [rol, set_rol] = useState<Rol>({
+    id_rol: 0,
+    nombre_rol: '',
+    descripcion_rol: '',
+    Rol_sistema: false,
+  });
+
   const columns: GridColDef[] = [
     {
       headerName: 'ID',
@@ -82,7 +97,7 @@ export function ListRoles({
           </IconButton>
           <IconButton
             onClick={() => {
-              void confirm_delete_rol(params.row.id_rol);
+              void confirm_delete_rol(params.row);
             }}
           >
             <Avatar
@@ -106,6 +121,16 @@ export function ListRoles({
 
   const handle_edit_rol = async (id: number): Promise<void> => {};
 
+  const handle_close = (): void => {
+    set_rol({
+      id_rol: 0,
+      nombre_rol: '',
+      descripcion_rol: '',
+      Rol_sistema: false,
+    });
+    set_open(false);
+  };
+
   const get_data = async (): Promise<void> => {
     set_is_loading(true);
     try {
@@ -118,10 +143,17 @@ export function ListRoles({
     }
   };
 
-  const confirm_delete_rol = async (id_rol: any): Promise<void> => {
+  const confirm_delete_rol = async (rol: Rol): Promise<void> => {
+    set_rol(rol);
+    set_open(true);
+  };
+
+  const delete_rol = async (): Promise<void> => {
     set_is_loading(true);
     try {
       control_success('Eliminado correctamente');
+      await delete_request(rol.id_rol);
+      handle_close();
       void get_data();
     } catch (error) {
       const err = error as AxiosError<ResponseServer<any>>;
@@ -151,6 +183,46 @@ export function ListRoles({
               rowsPerPageOptions={[10]}
               getRowId={(row) => row.id_rol}
             />
+
+            <Dialog
+              open={open}
+              onClose={handle_close}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Seguro que quieres eliminar el siguiente Rol?
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  <Typography variant="body1">
+                    <b>Nombre rol:</b> {rol.nombre_rol}
+                  </Typography>
+                  <Typography variant="body1">
+                    <b>Descripción:</b> {rol.descripcion_rol}
+                  </Typography>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handle_close}
+                  variant="outlined"
+                  color="success"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={() => {
+                    void delete_rol();
+                  }}
+                  variant="outlined"
+                  color="error"
+                  autoFocus
+                >
+                  Eliminar
+                </Button>
+              </DialogActions>
+            </Dialog>
           </Box>
         )}
       </Grid>

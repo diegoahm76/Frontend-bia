@@ -4,7 +4,7 @@ import type {
   HistoricoDatosRestringidos,
   IList
 } from '../../../interfaces/globalModels';
-import type { PermisosRol, RolCreated, Roles, SuperUser } from '../interfaces';
+import type { PermisosRol, Rol, Roles, SuperUser } from '../interfaces';
 import type { AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
 import { get_tipo_documento } from '../../../request/getRequest';
@@ -44,8 +44,8 @@ export const change_super_user = (): DelegarSuper => {
   };
 };
 
-export const roles_request = async (): Promise<AxiosResponse<Roles[]>> => {
-  return await api.get<Roles[]>('roles/get-list/');
+export const roles_request = async (): Promise<AxiosResponse<Rol[]>> => {
+  return await api.get<Rol[]>('roles/get-list/');
 };
 
 export const delete_request = async (id_rol: number): Promise<any> => {
@@ -60,10 +60,8 @@ export const get_permisos_by_modulos = async (): Promise<
   );
 };
 
-export const create_rol = async (
-  rol: RolCreated
-): Promise<AxiosResponse<RolCreated>> => {
-  return await api.post<RolCreated>('roles/create/', rol);
+export const create_rol = async (rol: Rol): Promise<AxiosResponse<Rol>> => {
+  return await api.post<Rol>('roles/create/', rol);
 };
 
 export const create_permiso_rol = async (

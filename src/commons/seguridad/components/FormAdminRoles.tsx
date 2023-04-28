@@ -19,13 +19,7 @@ import {
   get_permisos_by_modulos,
 } from '../request/seguridadRequest';
 import { control_error, control_success } from '../../../helpers';
-import type {
-  Acciones,
-  Modulo,
-  PermisosRol,
-  RolCreated,
-  Roles,
-} from '../interfaces';
+import type { Acciones, Modulo, PermisosRol, Rol, Roles } from '../interfaces';
 import SaveIcon from '@mui/icons-material/Save';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { AxiosError } from 'axios';
@@ -73,7 +67,7 @@ export const FormAdminRoles = ({ on_create }: Props): JSX.Element => {
   const on_submit = handle_submit(async (data_form) => {
     set_is_saving(true);
     try {
-      const { data } = await create_rol(data_form as RolCreated);
+      const { data } = await create_rol(data_form as Rol);
       permisos_rol.forEach((e) => {
         e.id_rol = data.id_rol;
       });

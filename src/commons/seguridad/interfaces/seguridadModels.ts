@@ -76,7 +76,7 @@ export interface PermisosRol {
   id_permiso_modulo_rol?: number;
 }
 
-export interface RolCreated {
+export interface Rol {
   id_rol: number;
   nombre_rol: string;
   descripcion_rol: string;
