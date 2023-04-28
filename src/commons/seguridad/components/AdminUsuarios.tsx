@@ -1,32 +1,50 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
   Grid,
+  Button,
   type SelectChangeEvent,
-  TextField,
-  Typography,
-  Skeleton,
   Alert,
+  Typography,
   LinearProgress,
+  TextField,
+  Skeleton,
 } from '@mui/material';
-import { use_register } from '../hooks/registerHooks';
-import { useForm } from 'react-hook-form';
-import type { DataRegistePortal, keys_object } from '../interfaces';
-import { RegisterPersonaNatural } from './RegisterPersonaNatural';
-import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
+import SearchIcon from '@mui/icons-material/Search';
+import { use_admin_users } from '../hooks/AdminUserHooks';
+import type {
+  DataAadminUser,
+  keys_object,
+  SeguridadSlice,
+} from '../interfaces';
+import DialogBusquedaAvanzadaUsuario from './DialogBusquedaAvanzadaUsuario';
+import DialogBusquedaAvanzadaPersona from './DialogBusquedaAvanzadaPersona';
 import { CustomSelect } from '../../../components';
+import { AdminUserPersonaJuridica } from './AdminUserPersonaJuridica';
+import { AdminUserPersonaNatural } from './AdminUserPersonaNatural';
+import { useDispatch, useSelector } from 'react-redux';
+import { set_action_admin_users } from '../store/seguridadSlice';
 
-interface Props {
-  uso_interno: boolean;
-}
+export function AdminUsuarios(): JSX.Element {
+  const dispatch = useDispatch();
+  const [
+    busqueda_avanzada_person_is_active,
+    set_busqueda_avanzada_person_is_active,
+  ] = useState<boolean>(false);
+  const [
+    busqueda_avanzada_user_is_active,
+    set_busqueda_avanzada_user_is_active,
+  ] = useState<boolean>(false);
+  const { user_info, data_user_search, data_person_search } = useSelector(
+    (state: SeguridadSlice) => state.seguridad
+  );
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
   const {
     register,
     setValue: set_value,
     formState: { errors },
     watch,
-  } = useForm<DataRegistePortal>();
+  } = useForm<DataAadminUser>();
   const {
     data_register,
     is_search,
@@ -40,15 +58,13 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
     set_numero_documento,
     set_tipo_documento,
     set_tipo_persona,
-    validate_exits,
-  } = use_register();
+  } = use_admin_users();
   const numero_documento = watch('numero_documento');
 
   // Consultamos si el usuario existe
   useEffect(() => {
     if (numero_documento !== undefined && numero_documento !== '') {
       set_numero_documento(numero_documento);
-      void validate_exits(numero_documento);
     }
   }, [numero_documento]);
 
@@ -65,6 +81,8 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
   }, [watch('tipo_documento')]);
 
   useEffect(() => {
+    console.log('Hola');
+    dispatch(set_action_admin_users('CREATE'));
     if (tipo_persona === 'J') {
       set_value('tipo_documento', 'NT');
       set_tipo_documento('NT');
@@ -72,6 +90,18 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
       set_tipo_documento('');
     }
   }, [tipo_persona]);
+
+  useEffect(() => {
+    set_tipo_persona(data_person_search.tipo_persona);
+    set_tipo_documento(data_person_search.tipo_documento);
+    set_numero_documento(data_person_search.numero_documento);
+  }, [data_person_search]);
+
+  useEffect(() => {
+    set_tipo_persona(user_info.tipo_persona);
+    set_tipo_documento(user_info.tipo_documento);
+    set_numero_documento(user_info.numero_documento);
+  }, [data_user_search]);
 
   // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
@@ -94,12 +124,34 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
 
   return (
     <>
-      {!uso_interno && (
-        <Typography variant="h6" textAlign="center" pb={2}>
-          Formulario registro
-        </Typography>
-      )}
-      <Grid container spacing={2} p={2}>
+      <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Button
+            fullWidth
+            variant="outlined"
+            startIcon={<SearchIcon />}
+            onClick={() => {
+              set_busqueda_avanzada_person_is_active(true);
+            }}
+          >
+            BUSQUEDA POR PERSONA
+          </Button>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Button
+            fullWidth
+            variant="outlined"
+            startIcon={<SearchIcon />}
+            onClick={() => {
+              set_busqueda_avanzada_user_is_active(true);
+            }}
+          >
+            BUSQUEDA POR USUARIO
+          </Button>
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={2} sx={{ mb: '20px' }}>
         <Grid item xs={12} sm={6} md={4}>
           <CustomSelect
             onChange={on_change}
@@ -178,22 +230,23 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
           </Grid>
         )}
       </Grid>
-      {tipo_persona === 'N' && (
-        <RegisterPersonaNatural
-          numero_documento={numero_documento}
-          tipo_persona={tipo_persona}
-          tipo_documento={tipo_documento}
-          has_user={has_user}
-        />
-      )}
+      {tipo_persona === 'N' && <AdminUserPersonaNatural has_user={has_user} />}
       {tipo_persona === 'J' && (
-        <RegisterPersonaJuridica
+        <AdminUserPersonaJuridica
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
           has_user={has_user}
         />
       )}
+      <DialogBusquedaAvanzadaPersona
+        is_modal_active={busqueda_avanzada_person_is_active}
+        set_is_modal_active={set_busqueda_avanzada_person_is_active}
+      />
+      <DialogBusquedaAvanzadaUsuario
+        is_modal_active={busqueda_avanzada_user_is_active}
+        set_is_modal_active={set_busqueda_avanzada_user_is_active}
+      />
     </>
   );
-};
+}

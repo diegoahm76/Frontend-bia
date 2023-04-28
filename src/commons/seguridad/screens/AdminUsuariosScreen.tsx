@@ -1,60 +1,103 @@
-import { type SyntheticEvent, useState } from 'react';
-import { Box, Grid, Typography, Tab } from '@mui/material';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { useAppSelector } from '../../../hooks';
-import { FormAdminPersonas } from '../components/FormAdminPersonas';
-import { ListPersonas } from '../components/ListPersonas';
+import { useState } from 'react';
+import SwipeableViews from 'react-swipeable-views';
+import { useTheme } from '@mui/material/styles';
+import { Card, Grid, Box, Typography, Tabs, Tab } from '@mui/material';
+import { Title } from '../../../components';
+import { AdminPersonas } from '../components/AdminPersonas';
+import { AdminUsuarios } from '../components/AdminUsuarios';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
+interface TabPanelProps {
+  children?: React.ReactNode;
+  dir?: string;
+  index: number;
+  value: number;
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const TabPanel: (props: TabPanelProps) => JSX.Element = (
+  props: TabPanelProps
+) => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 0 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+};
+
+const a11y_props = (
+  index: number
+): {
+  id: string;
+  'aria-controls': string;
+} => {
+  return {
+    id: `full-width-tab-${index}`,
+    'aria-controls': `full-width-tabpanel-${index}`,
+  };
+};
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsuariosScreen: React.FC = () => {
-  const [position_tab, set_position_tab_admin_personas] = useState('1');
-  const { organigram_current } = useAppSelector((state) => state.organigram);
-  const handle_change = (event: SyntheticEvent, newValue: string): void => {
-    set_position_tab_admin_personas(newValue);
+  const theme = useTheme();
+  const [value, set_value] = useState(0);
+
+  const handle_change = (
+    event: React.SyntheticEvent,
+    newValue: number
+  ): void => {
+    set_value(newValue);
+  };
+
+  const handle_change_index = (index: number): void => {
+    set_value(index);
   };
 
   return (
-    <Grid
-      container
-      sx={{
-        position: 'relative',
-        background: '#FAFAFA',
-        borderRadius: '15px',
-        p: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
-      }}
-    >
-      <Typography sx={{ fontWeight: 'bold', fontSize: '20px', mb: '10px' }}>
-        Administrar usuarios
-      </Typography>
-      <Box sx={{ width: '100%', typography: 'body1' }}>
-        <TabContext value={position_tab}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <TabList onChange={handle_change} aria-label="lab API tabs example">
-              <Tab label="Usuarios" value="1" />
-              <Tab
-                label={
-                  organigram_current.fecha_terminado !== null
-                    ? 'Usuarios'
-                    : 'Editar usuarios'
-                }
-                // disabled={position_tab === '1' && true}
-                value="2"
-              />
-            </TabList>
-          </Box>
-          <TabPanel value="1" sx={{ p: '20px 0' }}>
-            <ListPersonas
-              set_position_tab_admin_personas={set_position_tab_admin_personas}
-            />
-          </TabPanel>
-          <TabPanel value="2" sx={{ p: '20px 0' }}>
-            <FormAdminPersonas
-              set_position_tab_admin_personas={set_position_tab_admin_personas}
-            />
-          </TabPanel>
-        </TabContext>
-      </Box>
+    <Grid container>
+      <Grid item xs={12}>
+        <Card variant="outlined" sx={{ borderRadius: 5, padding: '20px' }}>
+          <Title title="Administrar usuarios" />
+          <Tabs
+            value={value}
+            onChange={handle_change}
+            indicatorColor="secondary"
+            textColor="inherit"
+            aria-label="full width tabs example"
+            sx={{ mt: '10px' }}
+          >
+            <Tab label="Usuarios" {...a11y_props(0)} />
+            <Tab label="Personas" {...a11y_props(1)} />
+            <Tab label="Empleados" {...a11y_props(2)} />
+          </Tabs>
+          <SwipeableViews
+            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+            index={value}
+            onChangeIndex={handle_change_index}
+          >
+            <TabPanel value={value} index={0} dir={theme.direction}>
+              <AdminUsuarios />
+            </TabPanel>
+            <TabPanel value={value} index={1} dir={theme.direction}>
+              <AdminPersonas />
+            </TabPanel>
+            <TabPanel value={value} index={2} dir={theme.direction}>
+              Item Four
+            </TabPanel>
+          </SwipeableViews>
+        </Card>
+      </Grid>
     </Grid>
   );
 };
