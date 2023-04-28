@@ -40,6 +40,7 @@ const app_reducers = combineReducers({
   subseries: subseries_slice.reducer,
   assignments: assignments_slice.reducer,
   nursery: nursery_slice.reducer,
+  seguridad: seguridad_slice.reducer,
   marca: marcas_slice.reducer,
   porcentaje: porcentajes_slice.reducer,
   medida: medida_slice.reducer,
