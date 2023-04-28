@@ -82,3 +82,7 @@ export interface RolCreated {
   descripcion_rol: string;
   Rol_sistema: boolean;
 }
+
+export interface IRolesInfo {
+  superUser: SuperUser[];
+}
