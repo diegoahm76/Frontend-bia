@@ -50,6 +50,7 @@ export interface UserData {
   tipo_usuario: string;
   id_persona: number;
   tipo_persona: string;
+  nombre?: string;
 }
 
 export interface Tokens {

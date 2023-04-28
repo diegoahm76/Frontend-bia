@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import {
+  ActualizacionDatosRestringidosScreen,
   AdminUsuariosScreen,
   AdministracionPersonas,
   RolesScreen,
@@ -14,6 +15,7 @@ export const SeguridadRoutes: React.FC = () => {
       <Route path="/administrar_usuarios" element={<AdminUsuariosScreen />} />
       <Route path="/auditoria" element={<AuditoriaScreen />} />
       <Route path="/roles" element={<RolesScreen />} />
+      <Route path="/datos_restringidos" element={<ActualizacionDatosRestringidosScreen />} />
       <Route
         path="/administrador_personas"
         element={<AdministracionPersonas />}

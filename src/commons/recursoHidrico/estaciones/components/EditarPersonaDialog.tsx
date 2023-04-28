@@ -71,8 +71,7 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
       control_error(error);
     }
   };
-
-
+  
   return (
     <Dialog
       open={is_modal_active}
@@ -126,7 +125,6 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                     message: "El segundo nombre debe tener al menos 6 caracteres"
                   },
                   maxLength: 30,
-                  required: true
                 })}
                 error={Boolean(errors.segundo_nombre)}
                 helperText={(errors.segundo_nombre?.type === "required") ? "Este campo es obligatorio" :
@@ -278,7 +276,7 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 })}
                 error={Boolean(errors.nro_celular_notificacion)}
                 helperText={(errors.nro_celular_notificacion?.type === "required") ? "Este campo es obligatorio" :
-                  (errors.cargo?.type === "pattern") ? "El número celular debe tener de 10 a 12 dígitos" : ""}
+                  (errors.nro_celular_notificacion?.type === "pattern") ? "El número celular debe tener de 10 a 12 dígitos" : ""}
               />
             </Grid>
             <Grid item xs={12}>
@@ -313,7 +311,7 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
               onClick={() => {
                 handle_close();
                 reset();
-            }}
+              }}
             >
               Cancelar
             </Button>

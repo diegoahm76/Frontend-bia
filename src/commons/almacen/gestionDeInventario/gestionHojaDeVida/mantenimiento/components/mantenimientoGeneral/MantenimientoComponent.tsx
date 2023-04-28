@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
     Box, 
     FormControl,
@@ -10,17 +10,33 @@ import {
     TextField 
 } from "@mui/material"
 
-
+interface IProps {
+    parent_type_maintenance: any,
+    parent_esp_maintenance: any
+}
 const tipo_mantenimiento = [{ value: "PR", label: "Preventivo" },{ value: "CO", label: "Correctivo" },{ value: "OT", label: "Otro" }]
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const MantenimientoComponent:React.FC = () => {
+export const MantenimientoComponent:React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance }: IProps) => {
 
     const [tipo, set_tipo] = useState("");
+    const [especificacion, set_especificacion] = useState("");
 
-    const handle_change:(event:SelectChangeEvent) => void = (event: SelectChangeEvent) => {
-        set_tipo(event.target.value);
+    useEffect(() => {
+        parent_type_maintenance(tipo);
+      }, [parent_type_maintenance,tipo]);
+
+    useEffect(() => {
+        parent_esp_maintenance(especificacion);
+      }, [parent_esp_maintenance,especificacion]);
+
+    const handle_change:(event:SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+        set_tipo(e.target.value);
     }
+
+    const on_change_especificacion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_especificacion(e.target.value);
+    };
 
   return (
     <>
@@ -56,7 +72,7 @@ export const MantenimientoComponent:React.FC = () => {
                         size="small"
                         required
                         fullWidth
-                    />
+                        onChange={on_change_especificacion}/>
                 </Grid>
         </Grid>
         </Box>

@@ -8,6 +8,7 @@ import {
   UsuariosScreen,
   ReportesScreen,
   DashboardScreen,
+  AnaliticaScreen,
 } from '../screens';
 import { HistorialDatos } from '../screens/HistorialScreen';
 
@@ -37,6 +38,9 @@ export const EstacionesRoutes: React.FC = () => {
 
       {/* Dashboard Estaciones */}
       <Route path="dashboard/*" element={<DashboardScreen />} />
+
+      {/* Analitica Estaciones */}
+      <Route path="analitica/*" element={<AnaliticaScreen />} />
 
       <Route path="/*" element={<Page404 />} />
     </Routes>

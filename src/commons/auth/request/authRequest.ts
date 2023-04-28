@@ -3,6 +3,10 @@ import type {
   ResponseAuth,
   LoginUser,
   IUserInfo,
+<<<<<<< HEAD
+=======
+  Permisos,
+>>>>>>> 9daf06344d7b043f266e225b3c496fda6afb7a85
   DataRegistePortal,
   UserCreate,
   DataUnlockUser,
