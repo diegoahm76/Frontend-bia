@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { control_error } from '../../../helpers/controlError';
-<<<<<<< HEAD
 import type {
   IList,
   InfoPersona,
@@ -8,14 +7,6 @@ import type {
   ResponseServer,
 } from '../../../interfaces/globalModels';
 import type { DataRegistePortal, ReisterHook } from '../interfaces';
-=======
-import type { IList } from '../../../interfaces/globalModels';
-import type {
-  DataRegistePortal,
-  ReisterHook,
-  keys_object,
-} from '../interfaces';
->>>>>>> 9daf06344d7b043f266e225b3c496fda6afb7a85
 import { type Dayjs } from 'dayjs';
 import { useForm } from 'react-hook-form';
 import {
