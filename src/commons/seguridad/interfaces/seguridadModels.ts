@@ -144,18 +144,18 @@ export type keys_object =
     cod_tipo_documento?: string;
   }
 export interface InfoPersonal {
-  id_persona: number,
-  tipo_persona: string,
-  tipo_documento: string,
-  numero_documento: string,
-  primer_nombre: string,
-  segundo_nombre: string,
-  primer_apellido: string,
-  segundo_apellido: string,
-  nombre_completo: string,
-  razon_social: string,
-  nombre_comercial: string,
-  tiene_usuario: boolean
+  id_persona:	number,
+  tipo_persona:	string,
+  tipo_documento:	string,
+  numero_documento:	string,
+  primer_nombre:	string,
+  segundo_nombre:	string,
+  primer_apellido:	string,
+  segundo_apellido:	string,
+  nombre_completo:	string,
+  razon_social:	string,
+  nombre_comercial:	string,
+  tiene_usuario:	boolean
 }
 
 export interface InfoUsuario {
@@ -204,6 +204,14 @@ export interface Acciones {
   value: boolean,
   id: number
 }
+
+
+
+
+export interface SeguridadSlice {
+  seguridad: ISeguridadInfo;
+}
+
 
 export interface Users {
   id_usuario: number;
@@ -266,9 +274,6 @@ export interface ISeguridadInfo {
   user_info: Users;
 }
 
-export interface SeguridadSlice {
-  seguridad: ISeguridadInfo;
-}
 export interface SuperUser {
   id_persona: number,
   tipo_persona: string,

@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
 import type {  ISeguridadInfo,InfoUsuario,InfoPersonal,Users } from '../interfaces/seguridadModels';
 
+
 const initial_state_data_user_search: InfoUsuario = {
   id_usuario: 0,
   nombre_de_usuario: '',
@@ -95,6 +96,10 @@ export const seguridad_slice = createSlice({
     },
     set_rol: (state, {payload}) => {
       state.rol = payload
+      console.log("state_rol", state.rol);
+    },
+    delegate_superuser_role: (state, { payload }) => {
+      state.superUser = payload;
     },
     set_users: (state, {payload}) => {
       state.users = payload
@@ -117,10 +122,6 @@ export const seguridad_slice = createSlice({
       state.data_person_search = payload
       console.log("state_rol", state.rol);
     },
-    delegate_superuser_role: (state, { payload }) => {
-      state.superUser = payload;
-    }
-
   }
 });
 
@@ -133,6 +134,5 @@ export const {
   set_action_admin_users,
   set_user_info,
   set_data_user_search,
-  set_data_person_search,
   delegate_superuser_role
 } = seguridad_slice.actions;

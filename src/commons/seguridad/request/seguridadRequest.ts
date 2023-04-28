@@ -1,10 +1,10 @@
 import { api } from '../../../api/axios';
 import type {
+  UserCreate,
+  SuperUser,
   DataAadminUser,
   Roles,
-  Users,
-  UserCreate,
-SuperUser
+  Users
 } from '../interfaces';
 import type {
   ResponseServer,
@@ -27,6 +27,17 @@ export const roles_request = async () => {
     control_error(data.detail);
   }
 };
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const superuser_request = async(id_persona: number) => {
+  try {
+    const { data } = await api.post<ResponseServer<SuperUser[]>>(`users/delegate-rol-super-usuario/${id_persona}/`);
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 // busqueda de usuarios por nombre
 export const users_request = async (
@@ -87,16 +98,7 @@ export const user_request = async (
 ): Promise<AxiosResponse<ResponseServer<Users>>> => {
   return await api.get(`users/get-by-pk/${id_usuario}`);
 };
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const superuser_request = async(id_persona: number) => {
-  try {
-    const { data } = await api.post<ResponseServer<SuperUser[]>>(`users/delegate-rol-super-usuario/${id_persona}/`);
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.error(error);
-  }
-}
+
 
 
 export const crear_user_admin_user = async (
