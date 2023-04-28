@@ -1,11 +1,9 @@
-import { api } from '../../../api/axios';
-import { type AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
 import { get_tipo_documento } from '../../../request/getRequest';
 // import { control_error } from '../../../helpers/controlError';
-import type { IList, ResponseServer } from '../../../interfaces/globalModels';
+import type { IList } from '../../../interfaces/globalModels';
 import { control_error } from '../../../helpers/controlError';
-import type { DelegarSuper, InfoPersonal } from '../interfaces/seguridadModels';
+import type { DelegarSuper } from '../interfaces/seguridadModels';
 
 export const change_super_user = (): DelegarSuper => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -39,14 +37,4 @@ export const change_super_user = (): DelegarSuper => {
     get_selects_options,
     set_tipo_documento,
   };
-};
-
-export const get_person_by_documents = async (
-  tipo_documento: string,
-  numero_documento: string
-): Promise<AxiosResponse<ResponseServer<InfoPersonal | null>>> => {
-  return await api.get(
-    `personas/get-personas-by-document/${tipo_documento}/${numero_documento}`
-    // `users/get-user-by-nombre-de-usuario/?nombre_de_usuario=NomprePrueba`
-  );
 };

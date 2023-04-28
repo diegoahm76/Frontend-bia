@@ -6,9 +6,13 @@ import { ListRoles } from '../components/ListRoles';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
 export const RolesScreen: React.FC = () => {
-  const [position_tab, set_position_tab_admin_roles] = useState('1');
+  const [tab, set_tab] = useState('1');
   const handle_change = (event: SyntheticEvent, newValue: string): void => {
-    set_position_tab_admin_roles(newValue);
+    set_tab(newValue);
+  };
+
+  const on_create = (): void => {
+    set_tab('1');
   };
 
   return (
@@ -23,7 +27,7 @@ export const RolesScreen: React.FC = () => {
       }}
     >
       <Box sx={{ width: '100%', typography: 'body1' }}>
-        <TabContext value={position_tab}>
+        <TabContext value={tab}>
           <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList
               variant="fullWidth"
@@ -39,14 +43,10 @@ export const RolesScreen: React.FC = () => {
             </TabList>
           </Box>
           <TabPanel value="1" sx={{ p: '20px 0' }}>
-            <ListRoles
-              set_position_tab_admin_roles={set_position_tab_admin_roles}
-            />
+            <ListRoles set_position_tab_admin_roles={set_tab} />
           </TabPanel>
           <TabPanel value="2" sx={{ p: '20px 0' }}>
-            <FormAdminRoles
-              set_position_tab_admin_roles={set_position_tab_admin_roles}
-            />
+            <FormAdminRoles on_create={on_create} />
           </TabPanel>
         </TabContext>
       </Box>
