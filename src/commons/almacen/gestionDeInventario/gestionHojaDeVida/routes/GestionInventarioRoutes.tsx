@@ -5,6 +5,7 @@ import { ProgramacionMantenientoVehiculosScreen } from "../mantenimiento/compone
 import { CrearHojaVidaVehiculoScreen } from "../hojaDeVidaVehiculo/screens/CrearHojaVidaVehiculoScreen";
 import { ProgramacionMantenientoComputadoresScreen } from "../mantenimiento/components/MantenimientoComputadores/ProgramacionManteniento";
 import { ProgramacionMantenientoOtrosScreen } from "../mantenimiento/components/MantenimientoOtrosActivos/ProgramacionManteniento";
+import { CrearHojaVidaOtrosActivosScreen } from "../hojaDeVidaOtrosActivos/screens/CrearHojaVidaOtrosActivoScreen"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionInventarioRoutes: React.FC = () => {
@@ -15,6 +16,7 @@ export const GestionInventarioRoutes: React.FC = () => {
       <Route path="programacion_mantenimiento_computadores/*" element={<ProgramacionMantenientoComputadoresScreen />} />
       <Route path="programacion_mantenimiento_otros_activos/*" element={<ProgramacionMantenientoOtrosScreen />} />
       <Route path="cv_vehiculo/*" element={<CrearHojaVidaVehiculoScreen />} />
+      <Route path="cv_otros_activos/*" element={<CrearHojaVidaOtrosActivosScreen />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );
