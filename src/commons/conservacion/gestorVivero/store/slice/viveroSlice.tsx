@@ -3,7 +3,8 @@ import {
     type IObjNursery,
     type INursery,
     type IObjItem,
-    type IDespacho
+    type IDespacho,
+    type IObjDistribucion
   } from '../../interfaces/vivero';
 
 const initial_state_current_nursery = {
@@ -38,6 +39,7 @@ const initial_state_current_nursery = {
   id_persona_cuarentena: null,
 };
 const initial_state_despacho: IDespacho = {
+  id_despacho_entrante: null,
   numero_despacho_consumo: null,
   fecha_ingreso: "",
   observacion_distribucion: "",
@@ -48,7 +50,8 @@ const initial_state: INursery = {
   nurseries: [],
   current_nursery: initial_state_current_nursery,
   items_despacho: [],
-  current_despacho: initial_state_despacho
+  current_despacho: initial_state_despacho,
+  items_distribuidos: [],
 };
 export const nursery_slice = createSlice({
   name: 'nursery',
@@ -72,6 +75,9 @@ export const nursery_slice = createSlice({
     get_items_despacho: (state: INursery, action: PayloadAction<IObjItem[]>) => {
       state.items_despacho = action.payload;
     },
+    get_items_distribuidos: (state: INursery, action: PayloadAction<IObjDistribucion[]>) => {
+      state.items_distribuidos = action.payload;
+    },
   },
 });
-export const { get_nurseries, current_nursery, get_nurseries_closing, get_nurseries_quarantine, get_items_despacho, set_current_despacho } = nursery_slice.actions;
+export const { get_nurseries, current_nursery, get_nurseries_closing, get_nurseries_quarantine, get_items_despacho, get_items_distribuidos, set_current_despacho } = nursery_slice.actions;
