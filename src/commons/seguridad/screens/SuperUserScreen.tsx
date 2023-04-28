@@ -21,7 +21,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Grid from '@material-ui/core/Grid';
 import { useTheme } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
-import { change_super_user } from '../request/authRequest';
+import { change_super_user } from '../request/seguridadRequest';
 import { get_person_by_document } from '../../../request';
 // import { CustomSelect } from '../../auth/components/CustomSelect';
 

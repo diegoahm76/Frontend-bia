@@ -1,5 +1,5 @@
 import { type Dispatch } from 'react';
-import { roles_request, superuser_request } from '../request/seguridadRequest';
+import { superuser_request } from '../request/seguridadRequest';
 import { delegate_superuser_role } from './seguridadSlice';
 
 export const create_super_user: (
@@ -8,6 +8,5 @@ export const create_super_user: (
   return async (dispatch: Dispatch<any>) => {
     const data = await superuser_request(id_persona);
     dispatch(delegate_superuser_role(data));
-    console.log(data);
   };
 };
