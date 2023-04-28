@@ -3,7 +3,7 @@ import { Title } from "../../../../components/Title";
 import SeleccionarSiembra from "../componentes/SeleccionarSiembra";
 import SeleccionarBienSiembra from "../componentes/SeleccionarBienSiembra";
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { set_current_planting, set_current_nursery } from '../store/slice/materialvegetalSlice';
+import { set_current_planting, set_current_nursery, set_germination_beds } from '../store/slice/materialvegetalSlice';
 import { useEffect, useState } from "react";
 import { add_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_planting_goods_service } from "../store/thunks/materialvegetalThunks";
 import { type IObjNursery, type IObjPlanting } from "../interfaces/materialvegetal";
@@ -17,7 +17,7 @@ import PersonaSiembra from "../componentes/PersonaSiembra";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function SiembraSemillasScreen(): JSX.Element {
 
-  const { current_planting, planting_person, nurseries, current_nursery, planting_goods} = useAppSelector((state) => state.material_vegetal);
+  const { current_planting, planting_person, nurseries, current_nursery, planting_goods, current_germination_beds, germination_beds} = useAppSelector((state) => state.material_vegetal);
   const { control: control_siembra, handleSubmit: handle_submit, reset: reset_siembra, getValues: get_values, watch } = useForm<IObjPlanting>();
   const [action, set_action] = useState<string>("Crear")
   const dispatch = useAppDispatch()
@@ -28,27 +28,44 @@ export function SiembraSemillasScreen(): JSX.Element {
 
   useEffect(() => {
     if(current_planting.id_siembra !== null){
-      console.log(current_planting)
-      const vivero: IObjNursery | undefined = nurseries.find((p: IObjNursery) => p.id_vivero === current_planting.id_vivero)
-      if (vivero !== undefined) dispatch(set_current_nursery(vivero))
-      void dispatch(get_planting_goods_service(current_planting.id_siembra))
-      
+      void dispatch(get_germination_beds_service(Number(current_planting.id_vivero)));  
+      void dispatch(get_planting_goods_service(current_planting.id_siembra));     
     }
     reset_siembra(current_planting)
   }, [current_planting]);
 
   useEffect(() => {
     if(current_nursery.id_vivero !== null){
-      void dispatch(get_germination_beds_service(Number(current_nursery.id_vivero)));
-      // void dispatch(get_germination_beds_id_service([10]));
-    }
+      if(current_planting.cama_germinacion !== null){
+        console.log("vivero")
+        void dispatch(get_germination_beds_id_service(current_planting.cama_germinacion));
+      }
+  }
   }, [current_nursery]);
+  useEffect(() => {
+    dispatch(set_germination_beds(germination_beds.concat(current_germination_beds)))
+  
+  }, [current_germination_beds]);
+
+  useEffect(() => {
+    if(!(current_germination_beds.length > 0))
+    {
+      console.log("camas")
+      const vivero: IObjNursery | undefined = nurseries.find((p: IObjNursery) => p.id_vivero === current_planting.id_vivero)
+      if (vivero !== undefined) {
+        console.log("update_vivero")
+        dispatch(set_current_nursery(vivero))
+      } 
+    }  
+  }, [germination_beds]);
 
   useEffect(() => {
     if (watch("id_vivero") !== null) {
       const vivero: IObjNursery | undefined = nurseries.find((p: IObjNursery) => p.id_vivero === watch("id_vivero"))
-
-      if (vivero !== undefined) dispatch(set_current_nursery(vivero))
+      if (vivero !== undefined) {
+        dispatch(set_current_planting({...current_planting, id_vivero: vivero.id_vivero}))
+      void dispatch(get_germination_beds_service(Number(vivero.id_vivero)));      
+      }
       set_action("editar")
     }
   }, [watch("id_vivero")]);

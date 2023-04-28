@@ -7,12 +7,11 @@ import {
 } from 'axios';
 // Slices
 import {
-  set_goods, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting, set_planting_person, set_persons
+  set_goods, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting, set_planting_person, set_persons, set_current_germination_beds
 } from '../slice/materialvegetalSlice';
 import { api } from '../../../../../api/axios';
-// import { useAppSelector } from '../../../../../hooks';
+import { useAppSelector } from '../../../../../hooks';
 
-// const { germination_beds } = useAppSelector((state) => state.material_vegetal);
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -92,18 +91,12 @@ export const get_germination_beds_service = (id: string | number): any => {
 export const get_germination_beds_id_service = (camas:number[]): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const camas_gemination_id: any = {"camas_list": camas.join(',')}
-      console.log(camas_gemination_id.camas_list.split(','))
-      const config = {
-        params: {camas_list: camas.join(',')}
-      };
-
-      const { data } = await api.get("conservacion/camas-siembras/siembra/get-camas-germinacion-by-id-list/", config);
-      console.log(data)
-      // dispatch(set_germination_beds(data.data));
+      const camas_gemination_id: any = {"camas_list": camas}
+      const { data } = await api.post("conservacion/camas-siembras/siembra/get-camas-germinacion-by-id-list/", camas_gemination_id);
+      dispatch(set_current_germination_beds(data.data));
       return data;
     } catch (error: any) {
-      console.log('get_germination_beds_service');
+      console.log('get_germination_beds_id_service');
       console.log(error)
       control_error(error.response.data.detail);
       return error as AxiosError;
