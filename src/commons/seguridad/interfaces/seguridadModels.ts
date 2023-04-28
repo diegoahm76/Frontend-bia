@@ -83,6 +83,21 @@ export interface RolCreated {
   Rol_sistema: boolean;
 }
 
+export interface SuperUser {
+  id_persona: number;
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string | null;
+  primer_apellido: string;
+  segundo_apellido: string | null;
+  nombre_completo: string;
+  razon_social: string | null;
+  nombre_comercial: string | null;
+  tiene_usuario: boolean;
+}
+
 export interface IRolesInfo {
   superUser: SuperUser[];
 }
