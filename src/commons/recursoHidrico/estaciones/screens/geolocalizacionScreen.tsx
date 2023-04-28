@@ -74,7 +74,8 @@ export const GeolocalizacionScreen: React.FC = () => {
       set_dato([])
       const estacion_id = data.estacion?.value;
       const estacion = await consultar_datos_id(estacion_id);
-      const ultimo_dato = estacion[estacion.length - 1];
+      const datos_ordenados = estacion.sort((a, b) => new Date(b.fecha_registro).getTime() - new Date(a.fecha_registro).getTime());
+      const ultimo_dato = datos_ordenados[0];
       const datos = {
         id_data: ultimo_dato.id_data,
         fecha_registro: ultimo_dato.fecha_registro,
@@ -110,7 +111,8 @@ export const GeolocalizacionScreen: React.FC = () => {
       set_dato([])
       const estacion_id = data.estacion?.value;
       const estacion = await consultar_datos_id_migracion(estacion_id);
-      const ultimo_dato = estacion[estacion.length - 1];
+      const datos_ordenados = estacion.sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+      const ultimo_dato = datos_ordenados[0];
       const datos = {
         id_migracion_estacion: ultimo_dato.id_migracion_estacion,
         id_estacion: ultimo_dato.id_estacion,
@@ -174,7 +176,7 @@ export const GeolocalizacionScreen: React.FC = () => {
     >
       <Popup>
         <Typography text-align="center">
-          <strong>Estacion: {estacion.nombre_estacion}</strong>
+          <strong>Estación: {estacion.nombre_estacion}</strong>
         </Typography>
         <Divider className="divider2" sx={{ m: '10px 0' }} />
 
@@ -246,12 +248,7 @@ export const GeolocalizacionScreen: React.FC = () => {
             attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
           />
 
-          {markers}
-          {/* <Marker position={position} icon={icon_locate}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker> */}
+          {markers}          
         </MapContainer>
       </Box>
     </Grid>

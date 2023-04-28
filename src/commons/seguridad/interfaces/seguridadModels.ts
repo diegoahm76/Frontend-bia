@@ -3,10 +3,10 @@ import type { IList } from '../../../interfaces/globalModels';
 // import { type Dayjs } from 'dayjs';
 
 export interface DelegarSuper {
-  tipo_documento_opt: IList[]; 
-  tipo_documento: string; 
-  loading: boolean; 
-  get_selects_options: () => Promise<void>; 
+  tipo_documento_opt: IList[];
+  tipo_documento: string;
+  loading: boolean;
+  get_selects_options: () => Promise<void>;
   set_tipo_documento: Dispatch<SetStateAction<string>>;
 }
 
@@ -144,18 +144,18 @@ export type keys_object =
     cod_tipo_documento?: string;
   }
 export interface InfoPersonal {
-  id_persona:	number,
-  tipo_persona:	string,
-  tipo_documento:	string,
-  numero_documento:	string,
-  primer_nombre:	string,
-  segundo_nombre:	string,
-  primer_apellido:	string,
-  segundo_apellido:	string,
-  nombre_completo:	string,
-  razon_social:	string,
-  nombre_comercial:	string,
-  tiene_usuario:	boolean
+  id_persona: number,
+  tipo_persona: string,
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  segundo_nombre: string,
+  primer_apellido: string,
+  segundo_apellido: string,
+  nombre_completo: string,
+  razon_social: string,
+  nombre_comercial: string,
+  tiene_usuario: boolean
 }
 
 export interface InfoUsuario {
@@ -179,18 +179,18 @@ export interface Roles {
   Rol_sistema: boolean;
 }
 
-export interface Rol{
+export interface Rol {
   rol: Roles;
   permisos: Permisos[];
 }
 
-export interface Permisos{
+export interface Permisos {
   subsistema: string,
   desc_subsistema: string,
   modulos: Modulos[]
 }
 
-export interface Modulos{
+export interface Modulos {
   id_modulo: number,
   nombre_modulo: string,
   descripcion: string,
@@ -199,10 +199,10 @@ export interface Modulos{
   permisos: Acciones[]
 }
 
-export interface Acciones{
-  name: string, 
+export interface Acciones {
+  name: string,
   value: boolean,
-  id: number  
+  id: number
 }
 
 export interface Users {
@@ -255,6 +255,7 @@ export interface Persons {
 }
 
 export interface ISeguridadInfo {
+  superUser: SuperUser[];
   roles: Roles[]; 
   rol: Rol;
   users: Users[];
@@ -267,4 +268,37 @@ export interface ISeguridadInfo {
 
 export interface SeguridadSlice {
   seguridad: ISeguridadInfo;
+}
+export interface SuperUser {
+  id_persona: number,
+  tipo_persona: string,
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  segundo_nombre: string | null,
+  primer_apellido: string,
+  segundo_apellido: string | null,
+  nombre_completo: string,
+  razon_social: string | null,
+  nombre_comercial: string | null,
+  tiene_usuario: boolean
+}
+
+export interface DatosRestringidos {
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  ruta_archivo_soporte: FormData;
+  justificacion: string;
+}
+export interface DatosRestringidos_juridica {
+  numero_documento: string;
+  razon_social: string;
+  nombre_comercial: string;
+  cod_naturaleza_empresa: string | number;
+  ruta_archivo_soporte: FormData;
+  justificacion: string;
 }

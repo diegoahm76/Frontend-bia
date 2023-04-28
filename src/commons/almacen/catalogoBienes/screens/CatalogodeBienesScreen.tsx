@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useState, useEffect } from "react";
 import { Column } from "primereact/column";
 import { TreeTable } from "primereact/treetable";
@@ -12,7 +13,7 @@ import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import Button from "@mui/material/Button";
 import { Grid, Stack, Box } from "@mui/material";
-import { Title } from "../../../../components";
+import { Title } from "../../../../components"; 
 import CrearBienDialogForm from "../components/CrearBienDialogForm";
 import { get_bienes_service, delete_nodo_service} from "../store/thunks/catalogoBienesThunks";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
@@ -22,9 +23,10 @@ import { type INodo } from "../interfaces/Nodo";
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const CatalogodeBienesScreen: React.FC = () => {
   const dispatch = useAppDispatch();
+  const  [action, set_action ] = useState<string>("create");
+
   const [add_bien_is_active, set_add_bien_is_active] = useState<boolean>(false);
   const { nodo } = useAppSelector((state) => state.bien);
-  const  [action, set_action ] = useState<string>("create");
  
 
 

@@ -1,5 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import { AdminUsuariosScreen, RolesScreen } from '../screens/';
+import {
+  ActualizacionDatosRestringidosScreen,
+  AdminUsuariosScreen,
+  RolesScreen,
+} from '../screens/';
 import { Page404 } from '../../../screens/404';
 import AuditoriaScreen from '../screens/AuditoriaScreen';
 
@@ -9,6 +13,10 @@ export const SeguridadRoutes: React.FC = () => {
     <Routes>
       <Route path="/auditoria" element={<AuditoriaScreen />} />
       <Route path="/roles" element={<RolesScreen />} />
+      <Route
+        path="/datos_restringidos"
+        element={<ActualizacionDatosRestringidosScreen />}
+      />
       <Route
         path="/administracion_usuarios"
         element={<AdminUsuariosScreen />}

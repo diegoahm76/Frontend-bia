@@ -66,6 +66,7 @@ const initial_state_user_info: Users = {
 }
 
 const initial_state: ISeguridadInfo = {
+  superUser: [],
   roles: [],
   rol: {
     rol:{
@@ -88,7 +89,8 @@ export const seguridad_slice = createSlice({
   name: 'seguridad',
   initialState: initial_state,
   reducers: {    
-    set_roles: (state, { payload }) => {  
+    set_roles: (state, { payload }) => {
+      console.log('payload', payload)
       state.roles = payload;
     },
     set_rol: (state, {payload}) => {
@@ -113,6 +115,10 @@ export const seguridad_slice = createSlice({
     },
     set_data_person_search: (state, {payload}) => {
       state.data_person_search = payload
+      console.log("state_rol", state.rol);
+    },
+    delegate_superuser_role: (state, { payload }) => {
+      state.superUser = payload;
     }
 
   }
@@ -127,5 +133,6 @@ export const {
   set_action_admin_users,
   set_user_info,
   set_data_user_search,
-  set_data_person_search
+  set_data_person_search,
+  delegate_superuser_role
 } = seguridad_slice.actions;

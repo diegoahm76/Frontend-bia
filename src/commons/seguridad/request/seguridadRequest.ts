@@ -3,7 +3,8 @@ import type {
   DataAadminUser,
   Roles,
   Users,
-  UserCreate
+  UserCreate,
+SuperUser
 } from '../interfaces';
 import type {
   ResponseServer,
@@ -86,6 +87,17 @@ export const user_request = async (
 ): Promise<AxiosResponse<ResponseServer<Users>>> => {
   return await api.get(`users/get-by-pk/${id_usuario}`);
 };
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const superuser_request = async(id_persona: number) => {
+  try {
+    const { data } = await api.post<ResponseServer<SuperUser[]>>(`users/delegate-rol-super-usuario/${id_persona}/`);
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 
 export const crear_user_admin_user = async (
   data: DataAadminUser

@@ -30,12 +30,12 @@ export const ConfiguracionAlarma: React.FC = () => {
   const columns: GridColDef[] = [
     { field: 'id_confi_alerta_persona', headerName: 'NÚMERO ALERTA', width: 140 },
     { field: 'nombre_variable_alarma', headerName: 'NOMBRE VARIABLE', width: 170 },
-    { field: 'mensaje_alarma_minimo', headerName: 'MENSAJE MINIMO', width: 170 },
-    { field: 'mensaje_no_alarma', headerName: 'MENSAJE MAXIMO', width: 170 },
+    { field: 'mensaje_alarma_minimo', headerName: 'MENSAJE MÍNIMO', width: 170 },
+    { field: 'mensaje_no_alarma', headerName: 'MENSAJE MÁXIMO', width: 170 },
     { field: 'frecuencia_alarma', headerName: 'FRECUENCIA ALARMA', width: 170 },
     {
       field: 'ACCIONES',
-      headerName: 'Aciones',
+      headerName: 'ACCIONES',
       width: 200,
       renderCell: (params) => (
         <>
@@ -82,7 +82,7 @@ export const ConfiguracionAlarma: React.FC = () => {
       ),
     },
   ];
-  
+
   const confi_alerta_persona = async (): Promise<void> => {
     try {
       const response = await consultar_conf_alerta_persona();
@@ -109,12 +109,17 @@ export const ConfiguracionAlarma: React.FC = () => {
 
   const confirmar_eliminar_alarma = (idPersona: number): void => {
     void Swal.fire({
-      title: "Estas seguro?",
-      text: "Va a eliminar una alarma",
+      // title: "Estas seguro?",
+      customClass: {
+        confirmButton: "square-btn",
+        cancelButton: "square-btn",
+      },
+      width: 350,
+      text: "¿Estas seguro?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#8BC34A",
+      cancelButtonColor: "#B71C1C",
       confirmButtonText: "Si, elminar!",
       cancelButtonText: "Cancelar",
     }).then(async (result) => {
@@ -160,6 +165,17 @@ export const ConfiguracionAlarma: React.FC = () => {
 
   return (
     <Grid container>
+      <style>
+        {`
+          .square-btn {
+            border-radius: 0 !important;
+          }
+
+          .swal2-icon.swal2-warning {
+            font-size: 14px !important;
+          }
+        `}
+      </style>
       <Grid item xs={12}>
         <Button
           sx={{ mb: '20px' }}
