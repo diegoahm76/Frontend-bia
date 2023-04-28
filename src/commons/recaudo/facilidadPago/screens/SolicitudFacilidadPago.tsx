@@ -1,19 +1,37 @@
 import { Title } from '../../../../components/Title';
 import { InputsEncabezado } from '../componentes/InputsEncabezado';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
-import { PersonaNatural, PersonaJuridica, DeudorSolidario } from '../componentes/CasoPersona';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, TextareaAutosize, Stack, Button, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { use_form } from '../../../../hooks/useForm';
 
 interface event {
   target: {
     value: string;
+    name: string;
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SolicitudFacilidadPago: React.FC = () => {
-  const [persona, set_persona] = useState('')
+  const [persona, set_persona] = useState('');
+  const [periodicidad, set_periodicidad] = useState('');
+  const [limite, set_limite] = useState(0);
+  const [arr_periodicidad, set_arr_periodicidad] = useState(Array<number>);
+  const [plazo, set_plazo] = useState('');
+  const { form_state, on_input_change } = use_form({});
+  console.log(form_state)
+
+  useEffect(()=>{
+    let count:number = 0;
+    const arr:number[] = []
+    for (let i=0; i<limite; i++){
+      count = count + 1
+      arr.push(count)
+    }
+    set_arr_periodicidad(arr)
+  },[limite])
+
   const rows = [
     {
       id: '1',
@@ -94,6 +112,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   helperText='Cargar Documento Solicitud'
                   variant="outlined"
                   type="file"
+                  onChange={on_input_change}
+                  name='docSolicitud'
                 />
               </Grid>
               <Grid item xs={11} sm={3} >
@@ -104,6 +124,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   helperText="Cargar Soporte Consignación"
                   variant="outlined"
                   type="file"
+                  onChange={on_input_change}
+                name='docConsignacion'
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -113,6 +135,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Calidad en que actúa la persona"
+                  defaultValue={""}
                   onChange={(event: event) => {
                     const { value } = event.target
                     if(value === 'Natural') {
@@ -137,7 +160,286 @@ export const SolicitudFacilidadPago: React.FC = () => {
         </Grid>
       </Grid>
       {
-        persona === '1' ? (<PersonaNatural />) : persona === '2' ? (<PersonaJuridica />) : persona === '3' ? (<DeudorSolidario />) : null
+        persona === '1' ? (
+          <>
+            <Grid
+              container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                mb: '20px',
+                mt: '20px',
+                p: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+              }}
+            >
+              <h3>Caso Persona Natural</h3>
+              <Grid item xs={12}>
+                <Box
+                  component="form"
+                  noValidate
+                  autoComplete="off"
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={3} >
+                      <TextField
+                        size="small"
+                        fullWidth
+                        helperText='Carga Documento de Identidad'
+                        variant="outlined"
+                        type="file"
+                        onChange={on_input_change}
+                        name='docIdentidad'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        id="outlined-error-helper-text"
+                        label="Dirección Notificación"
+                        helperText='Escribe la Dirección de Notificación'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='direccion'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        id="outlined-error-helper-text"
+                        label="Ciudad"
+                        helperText='Escribe la Ciudad'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='ciudad'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        id="outlined-error-helper-text"
+                        label="Teléfono Contacto"
+                        helperText='Escribe el Teléfono de Contacto'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='telefono'
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </>
+        ) : persona === '2' ? (
+          <>
+            <Grid
+              container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                mb: '20px',
+                mt: '20px',
+                p: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+              }}
+            >
+              <h3>Caso Persona Juridica / Apoderado</h3>
+              <Grid item xs={12}>
+                <Box
+                  component="form"
+                  noValidate
+                  autoComplete="off"
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={3} >
+                      <TextField
+                        size="small"
+                        fullWidth
+                        helperText='Carga Documento de Identidad Apoderado'
+                        variant="outlined"
+                        type="file"
+                        onChange={on_input_change}
+                        name='docIdentidad'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3} >
+                      <TextField
+                        size="small"
+                        fullWidth
+                        helperText='Carga Documento Poder'
+                        variant="outlined"
+                        type="file"
+                        onChange={on_input_change}
+                        name='docPoder'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3} >
+                      <TextField
+                        size="small"
+                        fullWidth
+                        helperText='Carga Cert. Existencia y Representación Legal'
+                        variant="outlined"
+                        type="file"
+                        onChange={on_input_change}
+                        name='docRepresentacionLegal'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        id="outlined-error-helper-text"
+                        label="Dirección Notificación"
+                        helperText='Escribe la Dirección de Notificación'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='direccion'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        id="outlined-error-helper-text"
+                        label="Ciudad"
+                        helperText='Escribe la Ciudad'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='ciudad'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        id="outlined-error-helper-text"
+                        label="Teléfono Contacto"
+                        helperText='Escribe el Teléfono de Contacto'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='telefono'
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </>
+        ) : persona === '3' ? (
+          <>
+            <Grid
+              container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                mb: '20px',
+                mt: '20px',
+                p: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+              }}
+            >
+              <h3>Caso Deudor Solidario</h3>
+              <Grid item xs={12}>
+                <Box
+                  component="form"
+                  noValidate
+                  autoComplete="off"
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={3}>
+                      <FormControl size="small" fullWidth>
+                        <InputLabel id="demo-simple-select-label">Tipo Deudor Solidario</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="Tipo Deudor Solidario"
+                          onChange={on_input_change}
+                          name='tipoDeudor'
+                        >
+                          <MenuItem>Ej 1</MenuItem>
+                          <MenuItem>Ej 2</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={3} >
+                      <TextField
+                        size="small"
+                        fullWidth
+                        helperText='Carga Documento Deudor Solidario'
+                        variant="outlined"
+                        type="file"
+                        onChange={on_input_change}
+                        name='docIdentidad'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3} >
+                      <TextField
+                        size="small"
+                        fullWidth
+                        helperText='Carga Oficio Respaldando Deuda'
+                        variant="outlined"
+                        type="file"
+                        onChange={on_input_change}
+                        name='docRespaldoDeuda'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3} >
+                      <TextField
+                        size="small"
+                        fullWidth
+                        helperText='Carga Cert. Existencia y Representación Legal'
+                        variant="outlined"
+                        type="file"
+                        onChange={on_input_change}
+                        name='docRepresentacionLegal'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        id="outlined-error-helper-text"
+                        label="Dirección Notificación"
+                        helperText='Escribe la Dirección de Notificación'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='direccion'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        id="outlined-error-helper-text"
+                        label="Ciudad"
+                        helperText='Escribe la Ciudad'
+                        size="small"
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        id="outlined-error-helper-text"
+                        label="Teléfono Contacto"
+                        helperText='Escribe el Teléfono de Contacto'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='telefono'
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </>
+        ) : null
       }
       <Grid
         container
@@ -165,47 +467,93 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     label="Periodicidad y Modalidad"
+                    name='periodicidadymodalidad'
+                    defaultValue={""}
+                    onChange={(event: event) => {
+                      const { value } = event.target
+                      if(value === 'mensual') {
+                        set_periodicidad('meses')
+                        set_limite(60)
+                      }
+                      if(value === 'trimestral') {
+                        set_periodicidad('trimestres')
+                        set_limite(20)
+                      }
+                      if(value === 'semestral') {
+                        set_periodicidad('semestres')
+                        set_limite(10)
+                      }
+                      if(value === 'anual') {
+                        set_periodicidad('años')
+                        set_limite(5)
+                      }
+                    }}
                   >
-                    <MenuItem>Ej 1</MenuItem>
-                    <MenuItem>Ej 2</MenuItem>
+                    <MenuItem value="mensual">Mensual</MenuItem>
+                    <MenuItem value="trimestral">Trimestral</MenuItem>
+                    <MenuItem value="semestral">Semestral</MenuItem>
+                    <MenuItem value="anual">Anual</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">Plazo</InputLabel>
+                  <InputLabel id="demo-simple-select-label">{periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}</InputLabel>
                   <Select
+                    required
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    label="Plazo"
+                    label={periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}
+                    name='plazo'
+                    defaultValue={""}
+                    onChange={(event: event) => {
+                      const { value } = event.target
+                      set_plazo(value)
+                    }}
                   >
-                    <MenuItem>Ej 1</MenuItem>
-                    <MenuItem>Ej 2</MenuItem>
+                    {
+                      arr_periodicidad.map((count)=>(
+                        <MenuItem key={count} value={count}>{count}</MenuItem>
+                      ))
+                    }
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={3} direction="row" rowSpacing={2}>
-                <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">Garantías Ofrecidas</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Garantías Ofrecidas"
-                  >
-                    <MenuItem>Ej 1</MenuItem>
-                    <MenuItem>Ej 2</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  size="small"
-                  fullWidth
-                  helperText='Carga Garantías Ofrecidas'
-                  variant="outlined"
-                  type="file"
-                />
-              </Grid>
+              {
+                periodicidad === 'años' && parseInt(plazo) > 1 || periodicidad === 'semestres' && parseInt(plazo) > 2 || periodicidad === 'trimestres' && parseInt(plazo) > 4 || periodicidad === 'meses' && parseInt(plazo) > 12 ? (
+                  <>
+                    <Grid item xs={12} sm={3} direction="row" rowSpacing={2}>
+                      <FormControl size="small" fullWidth>
+                        <InputLabel id="demo-simple-select-label">Garantías Ofrecidas</InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          label="Garantías Ofrecidas"
+                          onChange={on_input_change}
+                          name='garantias'
+                          defaultValue={""}
+                        >
+                          <MenuItem value="hipoteca">Hipoteca</MenuItem>
+                          <MenuItem value="prenda">Prenda</MenuItem>
+                          <MenuItem value="fideicomisoAdministracion">Fideicomiso en Administración</MenuItem>
+                          <MenuItem value="fideicomisoGarantia">Fideicomiso en Garantía</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        size="small"
+                        fullWidth
+                        helperText='Carga Garantías Ofrecidas'
+                        variant="outlined"
+                        type="file"
+                        onChange={on_input_change}
+                        name='docGarantias'
+                      />
+                    </Grid>
+                  </>
+                ) : null
+              }
               <Grid item xs={12} sm={3}>
                 <TextField
                   size="small"
@@ -213,6 +561,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   helperText='Carga Documento No Enajenación'
                   variant="outlined"
                   type="file"
+                  onChange={on_input_change}
+                  name='docEnajenacion'
                 />
               </Grid>
             </Grid>
@@ -246,6 +596,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 label='Identificación'
                 helperText='Escribe Documento de Identidad'
                 variant="outlined"
+                onChange={on_input_change}
+                name='identificacion'
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -257,6 +609,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 size="small"
                 fullWidth
                 type='number'
+                onChange={on_input_change}
+                name='avaluo'
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -267,6 +621,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 helperText='Escribe la Dirección'
                 size="small"
                 fullWidth
+                onChange={on_input_change}
+                name='direccion'
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -277,6 +633,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 size="small"
                 fullWidth
                 type='file'
+                onChange={on_input_change}
+                name='docImpuesto'
               />
             </Grid>
             <Grid item xs={12} sm={3}>
@@ -312,7 +670,12 @@ export const SolicitudFacilidadPago: React.FC = () => {
           width='350px'
         >
           <p>Observación</p>
-          <TextareaAutosize minRows={8} cols={153} />
+          <TextareaAutosize
+            minRows={8}
+            cols={153}
+            onChange={on_input_change}
+            name='observacion'
+          />
         </Box>
       </Grid>
       <Stack
@@ -322,8 +685,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
         sx={{ mb: '20px', mt: '20px' }}
       >
         <FormGroup>
-          <FormControlLabel required control={<Checkbox />} label="Aceptar términos y condiciones" />
-          <FormControlLabel required control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
+          <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
+          <FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
         </FormGroup>
         <Button
           color='info'
