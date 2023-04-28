@@ -351,7 +351,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               placeholder="Roles asignados"
             />
           )}
-          {...register('roles', { onChange: on_change })}
+          {...register('roles')}
         />
       </Grid>
       {/* <Grid item xs={12}>

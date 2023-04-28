@@ -85,7 +85,7 @@ export const use_admin_users = (): AdminUserHook => {
       set_tipo_usuario_opt(res_tipo_usuario ?? []);
 
       dispatch(get_roles());
-
+      console.log(roles);
       const {
         data: { data: res_tipo_documento },
       } = await get_tipo_documento();
