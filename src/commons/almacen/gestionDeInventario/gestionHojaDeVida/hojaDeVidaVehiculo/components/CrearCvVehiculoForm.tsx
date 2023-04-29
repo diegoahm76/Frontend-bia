@@ -134,7 +134,7 @@ const CrearCvVehiculoForm = ({
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container spacing={2}>
-            <Grid item xs={5} md={5} >
+            <Grid item xs={12} sm={3} >
               <Controller
                 name="doc_identificador_nro"
                 control={control_vehiculo}
@@ -187,7 +187,7 @@ const CrearCvVehiculoForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={5} md={5} >
+            <Grid item xs={12} sm={3} >
               <Controller
                 name="tipo_vehiculo"
                 control={control_vehiculo}
@@ -223,7 +223,39 @@ const CrearCvVehiculoForm = ({
               />
             </Grid>
 
-            <Grid item xs={5} md={5} >
+            <Grid item xs={12} sm={3} >
+              <Controller
+                name="es_arrendado"
+                control={control_vehiculo}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    select
+                    fullWidth
+                    size="small"
+                    label="Es arrendado"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  >
+                    <MenuItem value="true">SI</MenuItem>
+                    <MenuItem value="false">NO</MenuItem>
+                  </TextField>
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={3} >
               <Controller
                 name="es_arrendado"
                 control={control_vehiculo}
@@ -541,6 +573,40 @@ const CrearCvVehiculoForm = ({
               />
 
             </Grid>
+
+            <Grid item xs={11} md={10} spacing={2}>
+              <Controller
+                name="observaciones_adicionales"
+                control={control_vehiculo}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Observaciones adicionales"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar un nombre'
+                        : 'Ingrese nombre'
+                    }
+                  />
+                )}
+              />
+
+            </Grid>
+
+
+
           </Grid>
 
           <DialogActions>

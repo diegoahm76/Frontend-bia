@@ -50,11 +50,10 @@ import { current_computer } from '../store/slices/indexCvComputo';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaComputoScreen(): JSX.Element {
- // const navigate = useNavigate();
+  // const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  // const  [action] = useState<string>("create");
   const { computers } = useAppSelector((state) => state.cv);
-  const  [action, set_action ] = useState<string>("create");
+  const [action, set_action] = useState<string>("create");
   const [add_cv_com_is_active, set_add_cv_com_is_active] =
     useState<boolean>(false);
 
@@ -95,66 +94,66 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
       width: 100,
 
     },
-    
+
     {
       field: 'acciones',
       headerName: 'Acciones',
       width: 300,
       renderCell: (params) => (
         <>
-        {params.row.tiene_hoja_vida?
-        <Tooltip title="Editar">
-        <IconButton
-          onClick={() => {
-            dispatch(current_computer(params.row));
-            set_action("create")
-            set_add_cv_com_is_active(true)
-          }}
-        >
-          <Avatar
-            sx={{
-              width: 24,
-              height: 24,
-              background: '#fff',
-              border: '2px solid',
-            }}
-            variant="rounded"
-          >
-            <EditIcon
-              sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-            />
-
-          </Avatar>
-        </IconButton>
-      </Tooltip>:
-        <Tooltip title="Crear hoja de vida">
-            <IconButton
-              onClick={() => {
-                
-                set_add_cv_com_is_active(true);              
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
+          {params.row.tiene_hoja_vida ?
+            <Tooltip title="Editar">
+              <IconButton
+                onClick={() => {
+                  dispatch(current_computer(params.row));
+                  set_action("create")
+                  set_add_cv_com_is_active(true)
                 }}
-                variant="rounded"
               >
-                <NoteAddIcon 
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <EditIcon
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
 
-              </Avatar>
-            </IconButton>
-          </Tooltip>
+                </Avatar>
+              </IconButton>
+            </Tooltip> :
+            <Tooltip title="Crear hoja de vida">
+              <IconButton
+                onClick={() => {
+
+                  set_add_cv_com_is_active(true);
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <NoteAddIcon
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           }
           <Tooltip title="Programar mantenimiento">
             <IconButton
               onClick={() => {
-            
+
               }}
             >
               <Avatar
@@ -176,7 +175,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           <Tooltip title="Asignaciones">
             <IconButton
               onClick={() => {
-            
+
               }}
             >
               <Avatar
@@ -206,7 +205,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
 
   return (
     <>
-    
+
       <Grid
         container
         sx={{
@@ -219,10 +218,10 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12}>
-        <DialogTitle>Activos</DialogTitle>
-        
+          <DialogTitle>Activos</DialogTitle>
+
           <Title title="Computadores"></Title>
-         
+
           <Grid item>
             <Box sx={{ width: '100%' }}>
               <DataGrid
@@ -239,10 +238,10 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           </Grid>
           <CrearCvComputoForm
             is_modal_active={add_cv_com_is_active}
-           set_is_modal_active={set_add_cv_com_is_active} 
-            action = {action}       
+            set_is_modal_active={set_add_cv_com_is_active}
+            action={action}
           />
-           
+
         </Grid>
       </Grid>
     </>
