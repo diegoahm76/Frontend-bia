@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import type { AxiosError } from 'axios';
@@ -12,17 +12,18 @@ import {
   Input,
   InputLabel,
   type SelectChangeEvent,
-  Autocomplete,
+  // Autocomplete,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import HistoryIcon from '@mui/icons-material/History';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
+import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialCambiosEstadoUser';
 import type {
   keys_object,
   DataAadminUser,
   UserCreate,
   SeguridadSlice,
-  // RolUser,
 } from '../interfaces';
 import {
   crear_user_admin_user,
@@ -48,6 +49,10 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   const { action_admin_users, data_person_search, user_info } = useSelector(
     (state: SeguridadSlice) => state.seguridad
   );
+  const [
+    historial_cambios_estado_is_active,
+    set_historial_cambios_estado_is_active,
+  ] = useState<boolean>(false);
   const {
     data_register,
     is_exists,
@@ -56,7 +61,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     tipo_usuario_opt,
     activo,
     activo_opt,
-    roles,
+    // roles,
     // roles_opt,
     set_tipo_usuario,
     set_data_register,
@@ -68,10 +73,37 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
+    reset,
     watch,
   } = useForm<DataAadminUser>();
 
   useEffect(() => {
+    reset();
+    set_data_register({
+      tipo_persona: '',
+      tipo_documento: '',
+      numero_documento: '',
+      razon_social: '',
+      nombre_comercial: '',
+      primer_apellido: '',
+      primer_nombre: '',
+      segundo_apellido: '',
+      segundo_nombre: '',
+      nombre_de_usuario: '',
+      imagen_usuario: '',
+      tipo_usuario: '',
+      roles: [],
+      activo: false,
+      activo_fecha_ultimo_cambio: '',
+      activo_justificacion_cambio: '',
+      bloqueado: false,
+      bloqueado_fecha_ultimo_cambio: '',
+      bloqueado_justificacion_cambio: '',
+      fecha_creacion: '',
+      fecha_activación_inicial: '',
+      creado_desde_portal: false,
+      persona_que_creo: 0,
+    });
     if (action_admin_users === 'CREATE') {
       console.log('Punto 2', action_admin_users);
       console.log('Creación de usuario - persona natural');
@@ -166,8 +198,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   };
 
   // Se usa para escuchar los cambios de valor del componente CustomSelect
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const on_change = (e: SelectChangeEvent<string>) => {
+  const on_change = (e: SelectChangeEvent<string>): void => {
     console.log(e.target.name, e.target.value);
     set_value_form(e.target.name, e.target.value);
   };
@@ -337,7 +368,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         />
       </Grid>
       <Grid item xs={12} sm={6} md={9}>
-        <Autocomplete
+        {/* <Autocomplete
           multiple
           fullWidth
           id="tags-standard"
@@ -352,7 +383,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
             />
           )}
           {...register('roles')}
-        />
+        /> */}
       </Grid>
       {/* <Grid item xs={12}>
         <Typography variant="caption" fontWeight="bold">
@@ -370,8 +401,28 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         <>
           <Box sx={{ ml: '16px', width: '100%' }}>
             <Title title="Estado" />
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6} md={3}>
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  spacing={2}
+                  sx={{ mt: '20px' }}
+                >
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    startIcon={<HistoryIcon />}
+                    onClick={() => {
+                      set_historial_cambios_estado_is_active(true);
+                    }}
+                  >
+                    HISTORIAL
+                  </Button>
+                </Stack>
+              </Grid>
+            </Grid>
           </Box>
-
           <Grid item xs={12} sm={6} md={3}>
             <TextField
               label="Activo"
@@ -382,7 +433,6 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               required
               autoFocus
               defaultValue={activo}
-              onChange={handle_change}
             >
               {activo_opt.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -426,7 +476,6 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               required
               autoFocus
               defaultValue={activo}
-              onChange={handle_change}
             >
               {activo_opt.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -605,6 +654,11 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           </Button>
         </Stack>
       </form>
+      <DialogHistorialCambiosEstadoUser
+        is_modal_active={historial_cambios_estado_is_active}
+        set_is_modal_active={set_historial_cambios_estado_is_active}
+        id_usuario={user_info.id_usuario}
+      />
     </>
   );
 };

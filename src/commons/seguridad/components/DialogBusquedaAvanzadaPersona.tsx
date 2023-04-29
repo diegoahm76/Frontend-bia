@@ -112,12 +112,12 @@ const DialogBusquedaAvanzada = ({
     {
       headerName: 'Razon social',
       field: 'razon_social',
-      width: 200,
+      width: 150,
     },
     {
       headerName: 'Nombre comercial',
       field: 'nombre_comercial',
-      width: 250,
+      width: 150,
     },
     {
       headerName: 'Usuario',
@@ -235,7 +235,8 @@ const DialogBusquedaAvanzada = ({
 
   return (
     <Dialog
-      maxWidth="sm"
+      fullWidth
+      maxWidth="lg"
       open={is_modal_active}
       onClose={handle_close_busqueda_avanzada}
     >
@@ -265,7 +266,7 @@ const DialogBusquedaAvanzada = ({
           autoComplete="off"
         >
           <Grid container sx={{ mb: '0px' }} spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={2}>
               <CustomSelect
                 onChange={on_change}
                 label="Tipo de persona *"
@@ -280,7 +281,7 @@ const DialogBusquedaAvanzada = ({
               />
               <Typography className="label_selects">Tipo de persona</Typography>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={2}>
               <CustomSelect
                 onChange={on_change}
                 label="Tipo de documento *"
@@ -297,7 +298,7 @@ const DialogBusquedaAvanzada = ({
                 Tipo de documento
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={2}>
               <TextField
                 label="Número de documento"
                 helperText="Número de documento"
@@ -306,7 +307,7 @@ const DialogBusquedaAvanzada = ({
                 {...register_search_person('numero_documento')}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={2}>
               <TextField
                 {...register_search_person('primer_nombre')}
                 label="Primer nombre"
@@ -315,7 +316,7 @@ const DialogBusquedaAvanzada = ({
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={2}>
               <TextField
                 {...register_search_person('primer_apellido')}
                 label="Primer apellido"
@@ -324,7 +325,7 @@ const DialogBusquedaAvanzada = ({
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={2}>
               <Button
                 type="submit"
                 variant="outlined"
@@ -337,7 +338,7 @@ const DialogBusquedaAvanzada = ({
           </Grid>
         </Box>
         {buscando_persons && (
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{ mt: '15px' }}>
             <DataGrid
               density="compact"
               autoHeight

@@ -131,8 +131,9 @@ export const {
   set_rol,
   set_users,
   set_persons,
-  set_action_admin_users,
   set_user_info,
   set_data_user_search,
+  set_action_admin_users,
+  set_data_person_search,
   delegate_superuser_role
 } = seguridad_slice.actions;

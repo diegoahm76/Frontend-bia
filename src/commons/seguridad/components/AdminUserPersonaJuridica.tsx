@@ -143,6 +143,31 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
 
   useEffect(() => {
     reset();
+    set_data_register({
+      tipo_persona: '',
+      tipo_documento: '',
+      numero_documento: '',
+      razon_social: '',
+      nombre_comercial: '',
+      primer_apellido: '',
+      primer_nombre: '',
+      segundo_apellido: '',
+      segundo_nombre: '',
+      nombre_de_usuario: '',
+      imagen_usuario: '',
+      tipo_usuario: '',
+      roles: [],
+      activo: false,
+      activo_fecha_ultimo_cambio: '',
+      activo_justificacion_cambio: '',
+      bloqueado: false,
+      bloqueado_fecha_ultimo_cambio: '',
+      bloqueado_justificacion_cambio: '',
+      fecha_creacion: '',
+      fecha_activación_inicial: '',
+      creado_desde_portal: false,
+      persona_que_creo: 0,
+    });
     console.log(action_admin_users);
     if (action_admin_users === 'CREATE') {
       console.log('Creación de usuario - persona juridica');

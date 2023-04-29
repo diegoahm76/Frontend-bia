@@ -1,8 +1,9 @@
 import { api } from '../../../api/axios';
 import type {
+  HistoricoCambioEstadosUser,
+  DataAadminUser,
   UserCreate,
   SuperUser,
-  DataAadminUser,
   Roles,
   Users
 } from '../interfaces';
@@ -99,7 +100,17 @@ export const user_request = async (
   return await api.get(`users/get-by-pk/${id_usuario}`);
 };
 
+// Trae historico de cambios de estado para cada usuario
+export const user_historico_cambios_estado = async (
+  id_usuario: number
+  ): Promise<HistoricoCambioEstadosUser[]> => {
+    console.log(id_usuario)
 
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const { data } = await api.get<ResponseServer<HistoricoCambioEstadosUser[]>>(`users/historico-activacion/${id_usuario}/`);
+  console.log(data);
+  return data.data;
+}
 
 export const crear_user_admin_user = async (
   data: DataAadminUser
@@ -113,3 +124,4 @@ export const update_user_admin_user = async (
 ): Promise<AxiosResponse<UserCreate>> => {
   return await api.patch(`users/update/${id_usuario}}/`, data);
 };
+

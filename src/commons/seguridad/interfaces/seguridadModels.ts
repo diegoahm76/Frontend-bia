@@ -307,3 +307,13 @@ export interface DatosRestringidos_juridica {
   ruta_archivo_soporte: FormData;
   justificacion: string;
 }
+
+export interface HistoricoCambioEstadosUser {
+  id_historico: number;
+  nombre_operador: string;
+  cod_operacion: string;
+  fecha_operacion: string;
+  justificacion: string;
+  id_usuario_afectado: number;
+  usuario_operador: number;
+}

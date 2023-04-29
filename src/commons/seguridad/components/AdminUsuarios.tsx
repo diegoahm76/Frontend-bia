@@ -81,7 +81,6 @@ export function AdminUsuarios(): JSX.Element {
   }, [watch('tipo_documento')]);
 
   useEffect(() => {
-    console.log('Hola');
     dispatch(set_action_admin_users('CREATE'));
     if (tipo_persona === 'J') {
       set_value('tipo_documento', 'NT');

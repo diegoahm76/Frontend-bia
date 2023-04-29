@@ -85,7 +85,7 @@ export const use_admin_users = (): AdminUserHook => {
       set_tipo_usuario_opt(res_tipo_usuario ?? []);
 
       dispatch(get_roles());
-      console.log(roles);
+
       const {
         data: { data: res_tipo_documento },
       } = await get_tipo_documento();
@@ -107,16 +107,6 @@ export const use_admin_users = (): AdminUserHook => {
       set_tipo_documento_opt(tipo_documento_opt_all);
     }
   }, [tipo_persona]);
-
-  // useEffect(() => {
-  //   if (activo === false) {
-  //     set_activo_opt(
-  //       tipo_documento_opt_all.filter((e) => e.value !== 'NT')
-  //     );
-  //   } else {
-  //     set_activo_opt(tipo_documento_opt_all);
-  //   }
-  // }, [activo]);
 
   useEffect(() => {
     void get_selects_options();
