@@ -10,7 +10,6 @@ import {
   set_goods, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting, set_planting_person, set_persons, set_current_germination_beds
 } from '../slice/materialvegetalSlice';
 import { api } from '../../../../../api/axios';
-import { useAppSelector } from '../../../../../hooks';
 
 
 
@@ -236,7 +235,6 @@ export const get_person_id_service = (
       if ("data" in data) {
         dispatch (set_planting_person({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
           nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido)}))
-        
       } else {
         control_error(data.detail)
       }
@@ -257,6 +255,7 @@ export const add_siembra_service = (
     try {
       const { data } = await api.post('conservacion/camas-siembras/siembra/create/', siembra);
       console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail)      
       } else {
@@ -279,8 +278,9 @@ export const edit_siembra_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.post(`conservacion/camas-siembras/siembra/update/${id}/`, siembra);
+      const { data } = await api.put(`conservacion/camas-siembras/siembra/update/${id}/`, siembra);
       console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail)      
       } else {
