@@ -58,7 +58,7 @@ const columns: GridColDef[] = [
     field: 'justificacion',
     headerName: 'Justificacion',
     sortable: true,
-    width: 170,
+    width: 300,
   },
 ];
 
@@ -135,7 +135,7 @@ export const DialogHistorialCambiosEstadoUser: React.FC<IProps> = ({
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
-                getRowId={(row) => row.historico_cambio_id_persona}
+                getRowId={(row) => row.id_historico}
               />
             </Grid>
           </Grid>

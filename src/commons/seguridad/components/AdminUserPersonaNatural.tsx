@@ -32,6 +32,7 @@ import {
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../../helpers/controlSuccess';
+import FormSelectController from '../../../components/partials/form/FormSelectController';
 
 interface PropsSection {
   label: string;
@@ -61,7 +62,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     tipo_usuario_opt,
     activo,
     activo_opt,
-    // roles,
+    roles,
     // roles_opt,
     set_tipo_usuario,
     set_data_register,
@@ -69,6 +70,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   } = use_admin_users();
 
   const {
+    control,
     register,
     handleSubmit: handle_submit,
     setValue: set_value,
@@ -367,7 +369,37 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           register={register}
         />
       </Grid>
+      {/* <Grid item xs={12} sm={6} md={3}>
+        <CustomSelect
+          onChange={on_change}
+          label="Roles"
+          name="roles"
+          multiple={true}
+          value={tipo_usuario}
+          options={roles}
+          loading={loading}
+          disabled={false}
+          required={true}
+          errors={errors}
+          register={register}
+        />
+      </Grid> */}
       <Grid item xs={12} sm={6} md={9}>
+        <FormSelectController
+          xs={12}
+          md={6}
+          control_form={control}
+          control_name="roles"
+          default_value=""
+          rules={{ required_rule: { rule: true, message: 'requerido' } }}
+          label="Roles"
+          // multiple={true}
+          disabled={false}
+          helper_text=""
+          select_options={roles}
+          option_label="nombre_rol"
+          option_key="id_rol"
+        />
         {/* <Autocomplete
           multiple
           fullWidth
