@@ -82,7 +82,7 @@ export const get_nursery_service: any = (id: string | number)  => {
   return async (dispatch: Dispatch<any>) => {
     try {
       if(id !== null && id !== undefined)
-      {const { data } = await api.get(`conservacion/camas-siembras/siembra/get-camas-germinacion/${id}/`);
+      {const { data } = await api.get(`conservacion/camas-siembras/siembra/get-camas-germinacion-list/?id_vivero=${id}`);
     
       dispatch(get_germination_beds(data.data));
       return data;}
@@ -102,8 +102,7 @@ export const update_germination_beds_service: any = (id: string | number, beds: 
       console.log(beds)
       {const { data } = await api.put(`conservacion/camas-siembras/camas-germinacion/${id}/`, beds);
       dispatch(get_germination_beds_service(id));
-      console.log(data)
-      control_success(data.data);
+      control_success(data.detail);
 
       return data;}
     } catch (error: any) {
