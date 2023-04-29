@@ -27,8 +27,8 @@
     "@typescript-eslint/parser": "^5.52.0",
     "apexcharts": "^3.37.2",
     "axios": "^1.3.4",
-    "blockly": "^9.3.2",
     "chart.js": "^4.2.1",
+    "colombia-holidays": "^0.0.1",
     "date-fns": "^2.29.3",
     "dayjs": "^1.11.7",
     "eslint-config-standard": "^17.0.0",
@@ -111,6 +111,8 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.32.2",
     "prettier": "^2.8.4",
-    "react-cosmos": "^5.7.2"
+    "react-cosmos": "^5.7.2",
+    "source-map-loader": "^4.0.1",
+    "webpack-config": "^7.5.0"
   }
 }

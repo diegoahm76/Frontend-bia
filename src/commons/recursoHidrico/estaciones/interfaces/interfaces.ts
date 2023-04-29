@@ -1,6 +1,6 @@
 export interface Estaciones {
     id_estacion: number,
-    fecha_modificacion: null | string,
+    fecha_modificacion: null | Date,
     nombre_estacion: string,
     cod_tipo_estacion: string,
     cod_municipio: string | number,
@@ -93,6 +93,7 @@ export interface HistorialAlerta {
     mensaje_enviado: string,
     dir_email_enviado: string,
     nro_celular_enviado: string | number,
+    nombre_persona_envio: string,
 }
 export interface conf_alarma {
     id_confi_alerta_persona: number,

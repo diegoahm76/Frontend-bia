@@ -248,12 +248,7 @@ export const GeolocalizacionScreen: React.FC = () => {
             attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
           />
 
-          {markers}
-          {/* <Marker position={position} icon={icon_locate}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </Marker> */}
+          {markers}          
         </MapContainer>
       </Box>
     </Grid>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Title } from '../../../../components/Title';
 import jsPDF from 'jspdf';
-import { Button, Grid, Typography, Stack, MenuItem, Box, CircularProgress, TextField, FormControl } from '@mui/material';
+import { Button, Grid, Stack, MenuItem, Box, CircularProgress, TextField, FormControl } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { api } from '../../../../api/axios';
 import "react-datepicker/dist/react-datepicker.css";
@@ -42,17 +42,126 @@ export const ReportesScreen: React.FC = () => {
     { label: 'ACACIITAS', value: "5" },
     { label: 'CHICHIMENE', value: "6" },
   ];
+  const [selected_reporte_variable, set_selected_reporte_variable] = useState({
+    opc_reporte_variable: "0"
+  })
+  const opc_reporte_variable = [
+    { label: 'Mensual', value: "1" },
+    { label: 'Diario', value: "2" },
+    { label: 'Rango de Fechas', value: "3" },
+  ];
 
   const [loading, set_loading] = useState(false);
+  const [loading_rango, set_loading_rango] = useState(false);
+  const [loading_dia, set_loading_dia] = useState(false);
   const [fecha_inicial, set_fecha_inicial] = useState<Date | null>(new Date());
+  const [start_date, set_start_date] = useState<Date | null>(new Date());
+  const [start_date_dia, set_start_date_dia] = useState<Date | null>(new Date());
+  const [end_date, set_end_date] = useState<Date | null>(new Date());
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_start_date_change_dia = (date: Date | null) => {
+    set_start_date_dia(date)
+  };
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_start_date_change = (date: Date | null) => {
+    set_start_date(date)
+  };
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_end_date_change = (date: Date | null) => {
+    set_end_date(date)
+  };
 
   const handle_input_change = (date: Date | null) => {
     set_fecha_inicial(date)
   };
+  const get_datos_estaciones = async (): Promise<any> => {
+    try {
+      set_loading_rango(true);
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading_rango(false);
+        return
+      }
+      const fecha_1 = dayjs(start_date).format('YYYY-MM-DD')
+      const fecha_2 = dayjs(end_date).format('YYYY-MM-DD')
+      if (fecha_1 === fecha_2) {
+        control_error("Por favor seleccione un rango de fechas que no sea igual")
+        set_loading_rango(false);
+        return
+      }
+      if (fecha_1 > fecha_2) {
+        control_error("La fecha inicial no puede ser mayor a la fecha final")
+        set_loading_rango(false);
+        return
+      }
+      const response = await api.get(
+        `estaciones/datos/consultar-datos-fecha/${selectdashboards.opc_dashboards}/${fecha_1}/${fecha_2}/`
+      );
+      if ("data" in response) {
+        set_loading_rango(false);
+      } else {
+        control_error("No se encontraron datos")
+        set_loading(false);
+      }
+
+      return response.data;
+    } catch (err: unknown) {
+      const temp_error = err as AxiosError
+      if (temp_error.response?.status === 404) {
+        control_error("No se encontraron datos para esta estación");
+      } else {
+        // Otro error, mostrar mensaje de error genérico
+        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+      }
+    };
+  };
+  const get_datos_estaciones_diario = async (): Promise<any> => {
+    try {
+      set_loading_dia(true);
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading_dia(false);
+        return
+      }
+      const fecha_1 = dayjs(start_date).format('YYYY-MM-DD')
+      const response = await api.get(
+        `estaciones/datos/consultar-datos-diario/${selectdashboards.opc_dashboards}/${fecha_1}/`
+      );
+      if ("data" in response) {
+        set_loading_dia(false);
+      } else {
+        control_error("No se encontraron datos")
+        set_loading_dia(false);
+      }
+
+      return response.data;
+    } catch (err: unknown) {
+      const temp_error = err as AxiosError
+      if (temp_error.response?.status === 404) {
+        control_error("No se encontraron datos para esta estación");
+      } else {
+        // Otro error, mostrar mensaje de error genérico
+        control_error("Ha ocurrido un error, por favor intente de nuevo más tarde.");
+      }
+    };
+  };
   const fetch_data = async (): Promise<any> => {
     set_loading(true);
     const fecha = dayjs(fecha_inicial).format('YYYY-MM');
+    const fecha_actual = dayjs().format("YYYY-MM");
 
+    if (fecha > fecha_actual) {
+      set_loading(false);
+      control_error("Seleccione una fecha que no sea mayor a la actual");
+      return;
+    }
+    if (selectdashboards.opc_dashboards === "0") {
+      control_error("Por favor seleccione una estación")
+      set_loading(false);
+      return
+    }
     try {
       const response = await api.get(`https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`);
       set_loading(false);
@@ -71,7 +180,18 @@ export const ReportesScreen: React.FC = () => {
   const fetch_data_migracion = async (): Promise<any> => {
     set_loading(true);
     const fecha = dayjs(fecha_inicial).format('YYYY-MM');
+    const fecha_actual = dayjs().format("YYYY-MM");
 
+    if (fecha > fecha_actual) {
+      set_loading(false);
+      control_error("Seleccione una fecha que no sea mayor a la actual");
+      return;
+    }
+    if (selectdashboards.opc_dashboards === "0") {
+      control_error("Por favor seleccione una estación")
+      set_loading(false);
+      return
+    }
     try {
       const response = await api.get(`estaciones/migracion/consultar-migracion-estaciones-id/${selectdashboards.opc_dashboards}/?fecha-inicio=${fecha}`);
       set_loading(false);
@@ -90,7 +210,20 @@ export const ReportesScreen: React.FC = () => {
   const fetch_data_2 = async (): Promise<{ data: any, unique_days: Record<string, boolean> }> => {
     try {
       set_loading(true);
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading(false);
+        return { data: null, unique_days: {} };
+      }
+
       const fecha = dayjs(fecha_inicial).format("YYYY-MM");
+      const fecha_actual = dayjs().format("YYYY-MM");
+
+      if (fecha > fecha_actual) {
+        set_loading(false);
+        control_error("Seleccione una fecha que no sea mayor a la actual");
+        return { data: null, unique_days: {} };
+      }
       const response = await api.get(
         `https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`
       );
@@ -141,12 +274,23 @@ export const ReportesScreen: React.FC = () => {
   const fetch_data_2_migracion = async (): Promise<{ data: any, unique_days: Record<string, boolean> }> => {
     try {
       set_loading(true);
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading(false);
+        return { data: null, unique_days: {} };
+      }
+
       const fecha = dayjs(fecha_inicial).format("YYYY-MM");
       const fecha_actual = dayjs().format("YYYY-MM");
+      if (selectdashboards.opc_dashboards === "0") {
+        control_error("Por favor seleccione una estación")
+        set_loading(false);
+        return { data: null, unique_days: {} };
+      }
 
       if (fecha > fecha_actual) {
         set_loading(false);
-        control_error("Seleccione una fecha correcta.");
+        control_error("Seleccione una fecha que no sea mayor a la actual");
         return { data: null, unique_days: {} };
       }
 
@@ -467,9 +611,9 @@ export const ReportesScreen: React.FC = () => {
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
     doc.text(`Velocidad del agua`, 94, 200);
     doc.setFont("Arial", "normal"); // establece la fuente en Arial
-    doc.text(`La velocidad del agua promedio que se presento en el mes ${fecha} fue de ${velocidad_avg.toFixed(2)} m / s`, 30, 210);
-    doc.text(`La velocidad del agua mínima que se presento en el mes ${fecha} fue de ${velocidad_min.toFixed(2)} m / s`, 30, 220);
-    doc.text(`La velocidad del agua maxima que se presento en el mes ${fecha} fue de ${velocidad_max.toFixed(2)} m / s`, 30, 230);
+    doc.text(`La velocidad del agua promedio que se presento en el mes ${fecha} fue de ${velocidad_avg.toFixed(2)} m/s`, 30, 210);
+    doc.text(`La velocidad del agua mínima que se presento en el mes ${fecha} fue de ${velocidad_min.toFixed(2)} m/s`, 30, 220);
+    doc.text(`La velocidad del agua maxima que se presento en el mes ${fecha} fue de ${velocidad_max.toFixed(2)} m/s`, 30, 230);
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
     doc.text(`Presion del aire`, 97, 240);
     doc.setFont("Arial", "normal"); // establece la fuente en Arial
@@ -491,6 +635,259 @@ export const ReportesScreen: React.FC = () => {
     doc.text(`La precipitación promedio que se presento en el mes ${fecha} fue de ${precipitacion_avg.toFixed(2)} mm`, 30, 90);
     doc.text(`La precipitación mínima que se presento en el mes ${fecha} fue de ${precipitacion_min.toFixed(2)} mm`, 30, 100);
     doc.text(`La precipitación maxima que se presento en el mes ${fecha} fue de ${precipitacion_max.toFixed(2)} mm`, 30, 110);
+    // Guardar el PDF
+    doc.save('reporte.pdf');
+  }
+  const generate_pdf_dia = (data: any): void => {
+
+    // eslint-disable-next-line new-cap
+    const doc: jsPDF = new jsPDF();
+
+    // Establecer la fuente y tamaño de letra
+    const font_props = {
+      size: 12
+    };
+    doc.setFont('Arial', 'normal');
+    doc.setFontSize(font_props.size);
+
+
+    // Calcular la temperatura promedio, mínima y máxima
+    const temps = data.data.map((item: any) => parseFloat(item.temperatura_ambiente));
+    console.log("temps", temps)
+    const temp_avg = temps.reduce((acc: number, cur: number) => acc + cur, 0) / temps.length;
+    console.log("promedio", temp_avg)
+    const temp_min = Math.min(...temps);
+    const temp_max = Math.max(...temps);
+    // Calcular la humedad promedio, mínima y máxima
+    const hum = data.data.map((item: any) => parseFloat(item.humedad_ambiente));
+    const hum_avg = hum.reduce((acc: number, cur: number) => acc + cur, 0) / hum.length;
+    const hum_min = Math.min(...hum);
+    const hum_max = Math.max(...hum);
+    // Calcular el nivel de agua promedio, mínima y máxima
+    const nivel = data.data.map((item: any) => parseFloat(item.nivel_agua));
+    const nivel_avg = nivel.reduce((acc: number, cur: number) => acc + cur, 0) / nivel.length;
+    const nivel_min = Math.min(...nivel);
+    const nivel_max = Math.max(...nivel);
+
+    // Calcular el velocidad del agua promedio, mínima y máxima
+    const velocidad = data.data.map((item: any) => parseFloat(item.velocidad_agua));
+    const velocidad_avg = velocidad.reduce((acc: number, cur: number) => acc + cur, 0) / velocidad.length;
+    const velocidad_min = Math.min(...velocidad);
+    const velocidad_max = Math.max(...velocidad);
+
+    // Calcular presion del aire promedio, minima y maxima
+
+    const presion = data.data.map((item: any) => parseFloat(item.presion_barometrica));
+    const presion_avg = presion.reduce((acc: number, cur: number) => acc + cur, 0) / presion.length;
+    const presion_min = Math.min(...presion);
+    const presion_max = Math.max(...presion);
+
+    // Calcular luminosidad promedio, minima y maxima
+
+    const luminosidad = data.data.map((item: any) => parseFloat(item.luminosidad));
+    const luminosidad_avg = luminosidad.reduce((acc: number, cur: number) => acc + cur, 0) / luminosidad.length;
+    const luminosidad_min = Math.min(...luminosidad);
+    const luminosidad_max = Math.max(...luminosidad);
+
+    // Calcular precipitacion promeido, minima y maxima
+
+    const precipitacion = data.data.map((item: any) => parseFloat(item.precipitacion));
+    const precipitacion_avg = precipitacion.reduce((acc: number, cur: number) => acc + cur, 0) / precipitacion.length;
+    const precipitacion_min = Math.min(...precipitacion);
+    const precipitacion_max = Math.max(...precipitacion);
+
+    // const notrans = data.data.map((item: any) => (item.fecha_registro));
+    // const notrasn_fecha = notrans
+
+    // Agregar título y datos al PDF
+    const img_width = 140;
+    const img_height = 15;
+    const img_x = (doc.internal.pageSize.width - img_width) / 2;
+    const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
+
+    const selected_station = opc_dashboards.find(station => station.value === selectdashboards.opc_dashboards);
+    const title = `REPORTE DE DATOS OBTENIDOS EN LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
+    const title_width = doc.getTextWidth(title);
+    const x_pos = (doc.internal.pageSize.width - title_width) / 2;
+    const fecha = dayjs(fecha_inicial).locale('es').format('DD [de] MMMM [del] YYYY')
+    doc.addImage(image_data, 160, 5, 40, 15)
+    doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`A continuación se mostrara un breve resumen de los datos obtenidos por cada una de las`, 30, 50);
+    doc.text(`variables, dichos datos fueron obtenidos el dia ${fecha}, estos son:`, 30, 60);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(title, x_pos, 30);
+    doc.text(`Temperatura`, 100, 80);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La temperatura promedio que se presentó el dia ${fecha} fue de ${temp_avg.toFixed(2)} °C`, 30, 90);
+    doc.text(`La temperatura mínima que se presentó el dia ${fecha} fue de ${temp_min.toFixed(2)} °C`, 30, 100);
+    doc.text(`La temperatura maxima que se presento el dia ${fecha} fue de ${temp_max.toFixed(2)} °C`, 30, 110);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Humedad`, 102, 120);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La humedad promedio que se presento el dia ${fecha} fue de ${hum_avg.toFixed(2)} % `, 30, 130);
+    doc.text(`La humedad mínima que se presento el dia ${fecha} fue de ${hum_min.toFixed(2)} % `, 30, 140);
+    doc.text(`La humedad maxima que se presento el dia ${fecha} fue de ${hum_max.toFixed(2)} % `, 30, 150);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Nivel de agua`, 100, 160);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`El nivel de agua promedio que se presento el dia ${fecha} fue de ${nivel_avg.toFixed(2)} m`, 30, 170);
+    doc.text(`El nivel de agua minimo que se presento el dia ${fecha} fue de ${nivel_min.toFixed(2)} m`, 30, 180);
+    doc.text(`El nivel de agua maximo que se presento el dia ${fecha} fue de ${nivel_max.toFixed(2)} m`, 30, 190);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Velocidad del agua`, 94, 200);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La velocidad del agua promedio que se presento el dia ${fecha} fue de ${velocidad_avg.toFixed(2)} m/s`, 30, 210);
+    doc.text(`La velocidad del agua mínima que se presento el dia ${fecha} fue de ${velocidad_min.toFixed(2)} m/s`, 30, 220);
+    doc.text(`La velocidad del agua maxima que se presento el dia ${fecha} fue de ${velocidad_max.toFixed(2)} m/s`, 30, 230);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Presion del aire`, 97, 240);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La presión del aire promedio que se presento el dia ${fecha} fue de ${presion_avg.toFixed(2)} Hpa`, 30, 250);
+    doc.text(`La presión del aire mínima que se presento el dia ${fecha} fue de ${presion_min.toFixed(2)} Hpa`, 30, 260);
+    doc.text(`La presión del aire maxima que se presento el dia ${fecha} fue de ${presion_max.toFixed(2)} Hpa`, 30, 270);
+    doc.addPage() // Salto de pagina
+    doc.addImage(image_data, 160, 5, 40, 15)
+    doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Luminosidad`, 98, 40);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La luminosidad promedio que se presento el dia ${fecha} fue de ${luminosidad_avg.toFixed(2)} Lux`, 30, 50);
+    doc.text(`La luminosidad mínima que se presento el dia ${fecha} fue de${luminosidad_min.toFixed(2)} Lux`, 30, 60);
+    doc.text(`La luminosidad maxima que se presento el dia ${fecha} fue de ${luminosidad_max.toFixed(2)} Lux`, 30, 70);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Precipitación`, 98, 80);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La precipitación promedio que se presento el dia ${fecha} fue de ${precipitacion_avg.toFixed(2)} mm`, 30, 90);
+    doc.text(`La precipitación mínima que se presento el dia ${fecha} fue de ${precipitacion_min.toFixed(2)} mm`, 30, 100);
+    doc.text(`La precipitación maxima que se presento el dia ${fecha} fue de ${precipitacion_max.toFixed(2)} mm`, 30, 110);
+    // Guardar el PDF
+    doc.save('reporte.pdf');
+  }
+  const generate_pdf_rango = (data: any): void => {
+
+    // eslint-disable-next-line new-cap
+    const doc: jsPDF = new jsPDF();
+
+    // Establecer la fuente y tamaño de letra
+    const font_props = {
+      size: 12
+    };
+    doc.setFont('Arial', 'normal');
+    doc.setFontSize(font_props.size);
+
+
+    // Calcular la temperatura promedio, mínima y máxima
+    const temps = data.data.map((item: any) => parseFloat(item.temperatura_ambiente));
+    console.log("temps", temps)
+    const temp_avg = temps.reduce((acc: number, cur: number) => acc + cur, 0) / temps.length;
+    console.log("promedio", temp_avg)
+    const temp_min = Math.min(...temps);
+    const temp_max = Math.max(...temps);
+    // Calcular la humedad promedio, mínima y máxima
+    const hum = data.data.map((item: any) => parseFloat(item.humedad_ambiente));
+    const hum_avg = hum.reduce((acc: number, cur: number) => acc + cur, 0) / hum.length;
+    const hum_min = Math.min(...hum);
+    const hum_max = Math.max(...hum);
+    // Calcular el nivel de agua promedio, mínima y máxima
+    const nivel = data.data.map((item: any) => parseFloat(item.nivel_agua));
+    const nivel_avg = nivel.reduce((acc: number, cur: number) => acc + cur, 0) / nivel.length;
+    const nivel_min = Math.min(...nivel);
+    const nivel_max = Math.max(...nivel);
+
+    // Calcular el velocidad del agua promedio, mínima y máxima
+    const velocidad = data.data.map((item: any) => parseFloat(item.velocidad_agua));
+    const velocidad_avg = velocidad.reduce((acc: number, cur: number) => acc + cur, 0) / velocidad.length;
+    const velocidad_min = Math.min(...velocidad);
+    const velocidad_max = Math.max(...velocidad);
+
+    // Calcular presion del aire promedio, minima y maxima
+
+    const presion = data.data.map((item: any) => parseFloat(item.presion_barometrica));
+    const presion_avg = presion.reduce((acc: number, cur: number) => acc + cur, 0) / presion.length;
+    const presion_min = Math.min(...presion);
+    const presion_max = Math.max(...presion);
+
+    // Calcular luminosidad promedio, minima y maxima
+
+    const luminosidad = data.data.map((item: any) => parseFloat(item.luminosidad));
+    const luminosidad_avg = luminosidad.reduce((acc: number, cur: number) => acc + cur, 0) / luminosidad.length;
+    const luminosidad_min = Math.min(...luminosidad);
+    const luminosidad_max = Math.max(...luminosidad);
+
+    // Calcular precipitacion promeido, minima y maxima
+
+    const precipitacion = data.data.map((item: any) => parseFloat(item.precipitacion));
+    const precipitacion_avg = precipitacion.reduce((acc: number, cur: number) => acc + cur, 0) / precipitacion.length;
+    const precipitacion_min = Math.min(...precipitacion);
+    const precipitacion_max = Math.max(...precipitacion);
+
+    // const notrans = data.data.map((item: any) => (item.fecha_registro));
+    // const notrasn_fecha = notrans
+
+    // Agregar título y datos al PDF
+    const img_width = 140;
+    const img_height = 15;
+    const img_x = (doc.internal.pageSize.width - img_width) / 2;
+    const img_y = doc.internal.pageSize.getHeight() - img_height - 10; // Aquí se resta 10 unidades para dejar algo de espacio entre la imagen y el borde inferior de la página
+
+    const selected_station = opc_dashboards.find(station => station.value === selectdashboards.opc_dashboards);
+    const title = `REPORTE DE DATOS OBTENIDOS EN LA ESTACIÓN ${selected_station?.label ?? 'Ninguna estación seleccionada'}`;
+    const title_width = doc.getTextWidth(title);
+    const x_pos = (doc.internal.pageSize.width - title_width) / 2;
+    const fecha1 = dayjs(start_date).locale('es').format('DD[-] MMMM[-]YYYY')
+    const fecha2 = dayjs(end_date).locale('es').format('DD[-]MMMM[-]YYYY')
+    doc.addImage(image_data, 160, 5, 40, 15)
+    doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`A continuación se mostrara un breve resumen de los datos obtenidos por cada una de las`, 20, 50);
+    doc.text(`variables, dichos datos fueron obtenidos del dia ${fecha1}, al dia ${fecha2} estos son:`, 20, 60);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(title, x_pos, 30);
+    doc.text(`Temperatura`, 100, 80);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La temperatura promedio que se presentó del dia ${fecha1}, al dia ${fecha2} fue de ${temp_avg.toFixed(2)} °C`, 20, 90);
+    doc.text(`La temperatura mínima que se presentó del dia ${fecha1}, al dia ${fecha2} fue de ${temp_min.toFixed(2)} °C`, 20, 100);
+    doc.text(`La temperatura maxima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${temp_max.toFixed(2)} °C`, 20, 110);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Humedad`, 102, 120);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La humedad promedio que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${hum_avg.toFixed(2)} % `, 20, 130);
+    doc.text(`La humedad mínima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${hum_min.toFixed(2)} % `, 20, 140);
+    doc.text(`La humedad maxima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${hum_max.toFixed(2)} % `, 20, 150);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Nivel de agua`, 100, 160);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`El nivel de agua promedio que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${nivel_avg.toFixed(2)} m`, 20, 170);
+    doc.text(`El nivel de agua minimo que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${nivel_min.toFixed(2)} m`, 20, 180);
+    doc.text(`El nivel de agua maximo que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${nivel_max.toFixed(2)} m`, 20, 190);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Velocidad del agua`, 94, 200);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La velocidad del agua promedio que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${velocidad_avg.toFixed(2)} m/s`, 20, 210);
+    doc.text(`La velocidad del agua mínima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${velocidad_min.toFixed(2)} m/s`, 20, 220);
+    doc.text(`La velocidad del agua maxima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${velocidad_max.toFixed(2)} m/s`, 20, 230);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Presion del aire`, 97, 240);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La presión del aire promedio que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${presion_avg.toFixed(2)} Hpa`, 20, 250);
+    doc.text(`La presión del aire mínima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${presion_min.toFixed(2)} Hpa`, 20, 260);
+    doc.text(`La presión del aire maxima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${presion_max.toFixed(2)} Hpa`, 20, 270);
+    doc.addPage() // Salto de pagina
+    doc.addImage(image_data, 160, 5, 40, 15)
+    doc.addImage(image_data2, img_x, img_y, img_width, img_height);;
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Luminosidad`, 98, 40);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La luminosidad promedio que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${luminosidad_avg.toFixed(2)} Lux`, 20, 50);
+    doc.text(`La luminosidad mínima que se presento del dia ${fecha1}, al dia ${fecha2} fue de${luminosidad_min.toFixed(2)} Lux`, 20, 60);
+    doc.text(`La luminosidad maxima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${luminosidad_max.toFixed(2)} Lux`, 20, 70);
+    doc.setFont("Arial", "bold"); // establece la fuente en Arial
+    doc.text(`Precipitación`, 98, 80);
+    doc.setFont("Arial", "normal"); // establece la fuente en Arial
+    doc.text(`La precipitación promedio que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${precipitacion_avg.toFixed(2)} mm`, 20, 90);
+    doc.text(`La precipitación mínima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${precipitacion_min.toFixed(2)} mm`, 20, 100);
+    doc.text(`La precipitación maxima que se presento del dia ${fecha1}, al dia ${fecha2} fue de ${precipitacion_max.toFixed(2)} mm`, 20, 110);
     // Guardar el PDF
     doc.save('reporte.pdf');
   }
@@ -598,9 +995,9 @@ export const ReportesScreen: React.FC = () => {
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
     doc.text(`Velocidad del rio`, 94, 200);
     doc.setFont("Arial", "normal"); // establece la fuente en Arial
-    doc.text(`La velocidad del rio promedio que se presento en el mes ${fecha} fue de ${velocidad_avg.toFixed(2)} m / s`, 30, 210);
-    doc.text(`La velocidad del rio mínima que se presento en el mes ${fecha} fue de ${velocidad_min.toFixed(2)} m / s`, 30, 220);
-    doc.text(`La velocidad del rio máxima que se presento en el mes ${fecha} fue de ${velocidad_max.toFixed(2)} m / s`, 30, 230);
+    doc.text(`La velocidad del rio promedio que se presento en el mes ${fecha} fue de ${velocidad_avg.toFixed(2)} m/s`, 30, 210);
+    doc.text(`La velocidad del rio mínima que se presento en el mes ${fecha} fue de ${velocidad_min.toFixed(2)} m/s`, 30, 220);
+    doc.text(`La velocidad del rio máxima que se presento en el mes ${fecha} fue de ${velocidad_max.toFixed(2)} m/s`, 30, 230);
     doc.setFont("Arial", "bold"); // establece la fuente en Arial
     doc.text(`Presion atm abs`, 97, 240);
     doc.setFont("Arial", "normal"); // establece la fuente en Arial
@@ -631,6 +1028,16 @@ export const ReportesScreen: React.FC = () => {
     console.log("data", data)
     generate_pdf(data);
   }
+  const handle_download_pdf_rango = async (): Promise<void> => {
+    const data = await get_datos_estaciones();
+    console.log("data", data)
+    generate_pdf_rango(data);
+  }
+  const handle_download_pdf_dia = async (): Promise<void> => {
+    const data = await get_datos_estaciones_diario();
+    console.log("data", data)
+    generate_pdf_dia(data);
+  }
   const handle_download_pdf_migracion = async (): Promise<void> => {
     const data = await fetch_data_migracion();
     console.log("data", data)
@@ -659,8 +1066,8 @@ export const ReportesScreen: React.FC = () => {
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
       }}>
-      <Title title="REPORTES DE LAS ESTACIONES" />
       <Grid item xs={12} spacing={2} >
+        <Title title="REPORTES DE LAS ESTACIONES" />
         <Box mb={2} style={{ marginTop: '20px' }}>
           <Controller
             name="reporte"
@@ -692,166 +1099,385 @@ export const ReportesScreen: React.FC = () => {
             )}
           />
         </Box>
-        <Typography variant="body1" hidden={select_reporte.opciones_reportes !== "1"}>
-          <Stack sx={{ m: '20px 0 20px 0' }} direction="row" spacing={2}>
-            <FormControl fullWidth>
-              <Controller
-                name="estacion"
-                control={control_filtrar}
-                defaultValue={""}
-                rules={{ required: true }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="Estación"
-                    variant="outlined"
-                    defaultValue={value}
-                    value={value}
-                    onChange={(event) => {
-                      const selected_value = event.target.value;
-                      set_select_dashboards({ opc_dashboards: selected_value });
-                      onChange(selected_value, event);
-                    }}
-                  >
-                    {opc_dashboards.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+        {select_reporte.opciones_reportes === "1" && (
+          <>
+          <Controller
+            name="variable"
+            control={control_filtrar}
+            defaultValue={""}
+            rules={{ required: true }}
+            render={({ field: { onChange, value } }) => (
+              <TextField
+                margin="dense"
+                fullWidth
+                select
+                size="small"
+                label="Seleccione tipo de reporte variable"
+                variant="outlined"
+                defaultValue={value}
+                value={value}
+                onChange={(event) => {
+                  const selected_value = event.target.value;
+                  set_selected_reporte_variable({ opc_reporte_variable: selected_value });
+                  onChange(selected_value, event);
+                }}
+              >
+                {opc_reporte_variable.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            )}
+          />
+            {selected_reporte_variable.opc_reporte_variable === "1" && (
+              <>
+                <Stack sx={{ m: '20px 0 20px 0' }} direction="row" spacing={2}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name="estacion"
+                      control={control_filtrar}
+                      defaultValue={""}
+                      rules={{ required: true }}
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          margin="dense"
+                          fullWidth
+                          select
+                          size="small"
+                          label="Estación"
+                          variant="outlined"
+                          defaultValue={value}
+                          value={value}
+                          onChange={(event) => {
+                            const selected_value = event.target.value;
+                            set_select_dashboards({ opc_dashboards: selected_value });
+                            onChange(selected_value, event);
+                          }}
+                        >
+                          {opc_dashboards.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
 
-                )}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                <DatePicker
-                  label="Fecha"
-                  inputFormat="YYYY/MM"
-                  openTo="month"
-                  views={['year', 'month']}
-                  value={fecha_inicial}
-
-                  onChange={handle_input_change}
-                  renderInput={(params) => (
-                    <TextField
-                      required
-                      fullWidth
-                      size="small"
-                      {...params}
+                      )}
                     />
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                      <DatePicker
+                        label="Fecha"
+                        inputFormat="YYYY/MM"
+                        openTo="month"
+                        views={['year', 'month']}
+                        value={fecha_inicial}
+
+                        onChange={handle_input_change}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            fullWidth
+                            size="small"
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      className="text-capitalize rounded-pill "
+                      disabled={loading}
+                      startIcon={
+                        loading ? (
+                          <CircularProgress size={20} />
+                        ) : (
+                          ""
+                        )
+                      }
+                      onClick={() => {
+                        if (selectdashboards.opc_dashboards === "1" || selectdashboards.opc_dashboards === "2" || selectdashboards.opc_dashboards === "3" || selectdashboards.opc_dashboards === "4") {
+                          void handle_download_pdf();
+                          return;
+                        }
+                        void handle_download_pdf_migracion();
+                      }}>
+                      Descargar PDF
+                    </Button>
+                  </FormControl>
+                </Stack>
+              </>
+            )}
+            {selected_reporte_variable.opc_reporte_variable === "2" && (
+              <>
+                <Stack sx={{ m: '20px 0 20px 0' }} direction="row" spacing={2}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name="estacion"
+                      control={control_filtrar}
+                      defaultValue={""}
+                      rules={{ required: true }}
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          margin="dense"
+                          fullWidth
+                          select
+                          size="small"
+                          label="Estación"
+                          variant="outlined"
+                          defaultValue={value}
+                          value={value}
+                          onChange={(event) => {
+                            const selected_value = event.target.value;
+                            set_select_dashboards({ opc_dashboards: selected_value });
+                            onChange(selected_value, event);
+                          }}
+                        >
+                          {opc_dashboards.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+
+                      )}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                      <DatePicker
+                        label="Fecha Inicio"
+                        inputFormat="YYYY/MM/DD"
+                        openTo="day"
+                        views={['year', 'month', 'day']}
+                        value={start_date_dia}
+                        onChange={handle_start_date_change_dia}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            fullWidth
+                            size="small"
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      className="text-capitalize rounded-pill "
+                      disabled={loading_dia}
+                      startIcon={
+                        loading_dia ? (
+                          <CircularProgress size={20} />
+                        ) : (
+                          ""
+                        )
+                      }
+                      onClick={() => {
+                        if (selectdashboards.opc_dashboards === "1" || selectdashboards.opc_dashboards === "2" || selectdashboards.opc_dashboards === "3" || selectdashboards.opc_dashboards === "4") {
+                          void handle_download_pdf_dia();
+                          return;
+                        }
+                        void handle_download_pdf_migracion();
+                      }}>
+                      Descargar PDF dia
+                    </Button>
+                  </FormControl>
+                </Stack>
+              </>
+            )}
+            {selected_reporte_variable.opc_reporte_variable === "3" && (
+              <>
+                <Stack sx={{ m: '20px 0 20px 0' }} direction="row" spacing={2}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name="estacion"
+                      control={control_filtrar}
+                      defaultValue={""}
+                      rules={{ required: true }}
+                      render={({ field: { onChange, value } }) => (
+                        <TextField
+                          margin="dense"
+                          fullWidth
+                          select
+                          size="small"
+                          label="Estación"
+                          variant="outlined"
+                          defaultValue={value}
+                          value={value}
+                          onChange={(event) => {
+                            const selected_value = event.target.value;
+                            set_select_dashboards({ opc_dashboards: selected_value });
+                            onChange(selected_value, event);
+                          }}
+                        >
+                          {opc_dashboards.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                              {option.label}
+                            </MenuItem>
+                          ))}
+                        </TextField>
+
+                      )}
+                    />
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                      <DatePicker
+                        label="Fecha Inicio"
+                        inputFormat="YYYY/MM/DD"
+                        openTo="day"
+                        views={['year', 'month', 'day']}
+                        value={start_date}
+                        onChange={handle_start_date_change}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            fullWidth
+                            size="small"
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                      <DatePicker
+                        label="Fecha Final"
+                        inputFormat="YYYY/MM/DD"
+                        openTo="day"
+                        views={['year', 'month', 'day']}
+                        value={end_date}
+                        onChange={handle_end_date_change}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            fullWidth
+                            size="small"
+                            {...params}
+                          />
+                        )}
+                      />
+                    </LocalizationProvider>
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      className="text-capitalize rounded-pill "
+                      disabled={loading_rango}
+                      startIcon={
+                        loading_rango ? (
+                          <CircularProgress size={20} />
+                        ) : (
+                          ""
+                        )
+                      }
+                      onClick={() => {
+                        if (selectdashboards.opc_dashboards === "1" || selectdashboards.opc_dashboards === "2" || selectdashboards.opc_dashboards === "3" || selectdashboards.opc_dashboards === "4") {
+                          void handle_download_pdf_rango();
+                          return;
+                        }
+                        void handle_download_pdf_migracion();
+                      }}>
+                      Descargar PDF Rango
+                    </Button>
+                  </FormControl>
+                </Stack>
+              </>
+            )}
+          </>
+        )}
+        {select_reporte.opciones_reportes === "2" && (
+          <>
+            <Stack sx={{ m: '20px 0 20px 0' }} direction="row" spacing={2}>
+              <FormControl fullWidth>
+                <Controller
+                  name="estacion"
+                  control={control_filtrar}
+                  defaultValue={""}
+                  rules={{ required: true }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      select
+                      size="small"
+                      label="Estación"
+                      variant="outlined"
+                      defaultValue={value}
+                      value={value}
+                      onChange={(event) => {
+                        const selected_value = event.target.value;
+                        set_select_dashboards({ opc_dashboards: selected_value });
+                        onChange(selected_value, event);
+                      }}
+                    >
+                      {opc_dashboards.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+
                   )}
                 />
-              </LocalizationProvider>
-            </FormControl>
-            <FormControl fullWidth>
-              <Button
-                variant="contained"
-                type="submit"
-                className="text-capitalize rounded-pill "
-                disabled={loading}
-                startIcon={
-                  loading ? (
-                    <CircularProgress size={20} />
-                  ) : (
-                    ""
-                  )
-                }
-                onClick={() => {
-                  if (selectdashboards.opc_dashboards === "1" || selectdashboards.opc_dashboards === "2" || selectdashboards.opc_dashboards === "3" || selectdashboards.opc_dashboards === "4") {
-                    void handle_download_pdf();
-                    return;
-                  }
-                  void handle_download_pdf_migracion();
-                }}>
-                Descargar PDF
-              </Button>
-            </FormControl>
-          </Stack>
-        </Typography>
-        <Typography variant="body1" hidden={select_reporte.opciones_reportes !== "2"}>
-          <Stack sx={{ m: '20px 0 20px 0' }} direction="row" spacing={2}>
-            <FormControl fullWidth>
-              <Controller
-                name="estacion"
-                control={control_filtrar}
-                defaultValue={""}
-                rules={{ required: true }}
-                render={({ field: { onChange, value } }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="Estación"
-                    variant="outlined"
-                    defaultValue={value}
-                    value={value}
-                    onChange={(event) => {
-                      const selected_value = event.target.value;
-                      set_select_dashboards({ opc_dashboards: selected_value });
-                      onChange(selected_value, event);
-                    }}
-                  >
-                    {opc_dashboards.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+              </FormControl>
+              <FormControl fullWidth>
+                <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                  <DatePicker
+                    label="Fecha"
+                    inputFormat="YYYY/MM"
+                    openTo="month"
+                    views={['year', 'month']}
+                    value={fecha_inicial}
 
-                )}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                <DatePicker
-                  label="Fecha"
-                  inputFormat="YYYY/MM"
-                  openTo="month"
-                  views={['year', 'month']}
-                  value={fecha_inicial}
-
-                  onChange={handle_input_change}
-                  renderInput={(params) => (
-                    <TextField
-                      required
-                      fullWidth
-                      size="small"
-                      {...params}
-                    />
-                  )}
-                />
-              </LocalizationProvider>
-            </FormControl>
-            <FormControl fullWidth>
-              <Button
-                variant="contained"
-                type="submit"
-                className="text-capitalize rounded-pill "
-                disabled={loading}
-                startIcon={
-                  loading ? (
-                    <CircularProgress size={20} />
-                  ) : (
-                    ""
-                  )
-                }
-                onClick={() => {
-                  if (selectdashboards.opc_dashboards === "1" || selectdashboards.opc_dashboards === "2" || selectdashboards.opc_dashboards === "3" || selectdashboards.opc_dashboards === "4") {
-                    void handle_download_pdf_2();
-                    return;
+                    onChange={handle_input_change}
+                    renderInput={(params) => (
+                      <TextField
+                        required
+                        fullWidth
+                        size="small"
+                        {...params}
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </FormControl>
+              <FormControl fullWidth>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  className="text-capitalize rounded-pill "
+                  disabled={loading}
+                  startIcon={
+                    loading ? (
+                      <CircularProgress size={20} />
+                    ) : (
+                      ""
+                    )
                   }
-                  void handle_download_pdf_2_migracion();
-                }}>
-                Descargar PDF
-              </Button>
-            </FormControl>
-          </Stack>
-        </Typography>
+                  onClick={() => {
+                    if (selectdashboards.opc_dashboards === "1" || selectdashboards.opc_dashboards === "2" || selectdashboards.opc_dashboards === "3" || selectdashboards.opc_dashboards === "4") {
+                      void handle_download_pdf_2();
+                      return;
+                    }
+                    void handle_download_pdf_2_migracion();
+                  }}>
+                  Descargar PDF
+                </Button>
+              </FormControl>
+            </Stack>
+          </>
+        )}
       </Grid >
     </Grid >
 

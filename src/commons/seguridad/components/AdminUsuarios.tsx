@@ -1,171 +1,251 @@
-import { useState } from 'react';
-// import { type Dispatch, type SetStateAction } from 'react';
-// Componentes de Material UI
-import { Grid, Box, Button, IconButton, Avatar } from '@mui/material';
-// Icons de Material UI
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import {
+  Grid,
+  Button,
+  type SelectChangeEvent,
+  Alert,
+  Typography,
+  LinearProgress,
+  TextField,
+  Skeleton,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import DialogBusquedaAvanzada from './DialogBusquedaAvanzada';
+import { use_admin_users } from '../hooks/AdminUserHooks';
+import type {
+  DataAadminUser,
+  keys_object,
+  SeguridadSlice,
+} from '../interfaces';
+import DialogBusquedaAvanzadaUsuario from './DialogBusquedaAvanzadaUsuario';
+import DialogBusquedaAvanzadaPersona from './DialogBusquedaAvanzadaPersona';
+import { CustomSelect } from '../../../components';
+import { AdminUserPersonaJuridica } from './AdminUserPersonaJuridica';
+import { AdminUserPersonaNatural } from './AdminUserPersonaNatural';
+import { useDispatch, useSelector } from 'react-redux';
+import { set_action_admin_users } from '../store/seguridadSlice';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdminUsuarios(): JSX.Element {
-  const [busqueda_avanzada_is_active, set_busqueda_avanzada_is_active] =
-    useState<boolean>(false);
-  const rows = [
-    {
-      id: 1,
-      tipo_documento: 35,
-      numero_documento: 35,
-      primer_nombre: 'Snow',
-      primer_apellido: 'Jon',
-    },
-    {
-      id: 2,
-      tipo_documento: 42,
-      numero_documento: 42,
-      primer_nombre: 'Lannister',
-      primer_apellido: 'Cersei',
-    },
-    {
-      id: 3,
-      tipo_documento: 45,
-      numero_documento: 45,
-      primer_nombre: 'Lannister',
-      primer_apellido: 'Jaime',
-    },
-    {
-      id: 4,
-      tipo_documento: 16,
-      numero_documento: 16,
-      primer_nombre: 'Stark',
-      primer_apellido: 'Arya',
-    },
-    {
-      id: 5,
-      tipo_documento: null,
-      numero_documento: null,
-      primer_nombre: 'Targaryen',
-      primer_apellido: 'Daenerys',
-    },
-    {
-      id: 6,
-      tipo_documento: 150,
-      numero_documento: 150,
-      primer_nombre: 'Melisandre',
-      primer_apellido: null,
-    },
-    {
-      id: 7,
-      tipo_documento: 44,
-      numero_documento: 44,
-      primer_nombre: 'Clifford',
-      primer_apellido: 'Ferrara',
-    },
-    {
-      id: 8,
-      tipo_documento: 36,
-      numero_documento: 36,
-      primer_nombre: 'Frances',
-      primer_apellido: 'Rossini',
-    },
-    {
-      id: 9,
-      tipo_documento: 65,
-      numero_documento: 65,
-      primer_nombre: 'Roxie',
-      primer_apellido: 'Harvey',
-    },
-  ];
+  const dispatch = useDispatch();
+  const [
+    busqueda_avanzada_person_is_active,
+    set_busqueda_avanzada_person_is_active,
+  ] = useState<boolean>(false);
+  const [
+    busqueda_avanzada_user_is_active,
+    set_busqueda_avanzada_user_is_active,
+  ] = useState<boolean>(false);
+  const { user_info, data_user_search, data_person_search } = useSelector(
+    (state: SeguridadSlice) => state.seguridad
+  );
 
-  const columns: GridColDef[] = [
-    {
-      headerName: 'Tipo de documento',
-      field: 'tipo_documento',
-      minWidth: 200,
-    },
-    {
-      headerName: 'Número de documento',
-      field: 'numero_documento',
-      minWidth: 150,
-    },
-    {
-      headerName: 'Primer nombre',
-      field: 'primer_nombre',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Primer apellido',
-      field: 'primer_apellido',
-      minWidth: 100,
-    },
-    {
-      headerName: 'Acciones',
-      field: 'accion',
-      renderCell: (params: any) => (
-        <>
-          <IconButton
-          // onClick={() => {
-          //   dispatch(get_ccd_current(params.data));
-          //   set_is_modal_active(false);
-          // }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </>
-      ),
-    },
-  ];
+  const {
+    register,
+    setValue: set_value,
+    formState: { errors },
+    watch,
+  } = useForm<DataAadminUser>();
+  const {
+    data_register,
+    is_search,
+    loading,
+    tipo_documento_opt,
+    tipo_documento,
+    tipo_persona_opt,
+    tipo_persona,
+    has_user,
+    set_data_register,
+    set_numero_documento,
+    set_tipo_documento,
+    set_tipo_persona,
+  } = use_admin_users();
+  const numero_documento = watch('numero_documento');
+
+  // Consultamos si el usuario existe
+  useEffect(() => {
+    if (numero_documento !== undefined && numero_documento !== '') {
+      set_numero_documento(numero_documento);
+    }
+  }, [numero_documento]);
+
+  useEffect(() => {
+    if (watch('tipo_persona') !== undefined) {
+      set_tipo_persona(watch('tipo_persona'));
+    }
+  }, [watch('tipo_persona')]);
+
+  useEffect(() => {
+    if (watch('tipo_documento') !== undefined) {
+      set_tipo_documento(watch('tipo_documento'));
+    }
+  }, [watch('tipo_documento')]);
+
+  useEffect(() => {
+    console.log('Hola');
+    dispatch(set_action_admin_users('CREATE'));
+    if (tipo_persona === 'J') {
+      set_value('tipo_documento', 'NT');
+      set_tipo_documento('NT');
+    } else {
+      set_tipo_documento('');
+    }
+  }, [tipo_persona]);
+
+  useEffect(() => {
+    set_tipo_persona(data_person_search.tipo_persona);
+    set_tipo_documento(data_person_search.tipo_documento);
+    set_numero_documento(data_person_search.numero_documento);
+  }, [data_person_search]);
+
+  useEffect(() => {
+    set_tipo_persona(user_info.tipo_persona);
+    set_tipo_documento(user_info.tipo_documento);
+    set_numero_documento(user_info.numero_documento);
+  }, [data_user_search]);
+
+  // Establece los valores del formulario
+  const set_value_form = (name: string, value: string): void => {
+    set_data_register({
+      ...data_register,
+      [name]: value,
+    });
+    set_value(name as keys_object, value);
+  };
+
+  // Se usa para escuchar los cambios de valor del componente CustomSelect
+  const on_change = (e: SelectChangeEvent<string>): void => {
+    set_value_form(e.target.name, e.target.value);
+  };
+
+  // Cambio inputs
+  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_value_form(e.target.name, e.target.value);
+  };
 
   return (
     <>
-      <Grid item xs={12}>
-        <Box
-          sx={{ width: '100%', typography: 'body1', mt: '20px', mb: '20px' }}
-        >
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={3}>
-              <Button
-                variant="outlined"
-                startIcon={<SearchIcon />}
-                onClick={() => {
-                  set_busqueda_avanzada_is_active(true);
-                }}
-              >
-                BUSQUEDA AVANZADA
-              </Button>
+      <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Button
+            fullWidth
+            variant="outlined"
+            startIcon={<SearchIcon />}
+            onClick={() => {
+              set_busqueda_avanzada_person_is_active(true);
+            }}
+          >
+            BUSQUEDA POR PERSONA
+          </Button>
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <Button
+            fullWidth
+            variant="outlined"
+            startIcon={<SearchIcon />}
+            onClick={() => {
+              set_busqueda_avanzada_user_is_active(true);
+            }}
+          >
+            BUSQUEDA POR USUARIO
+          </Button>
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={2} sx={{ mb: '20px' }}>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="Tipo de persona *"
+            name="tipo_persona"
+            value={tipo_persona}
+            options={tipo_persona_opt}
+            loading={loading}
+            disabled={false}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <CustomSelect
+            onChange={on_change}
+            label="Tipo de documento *"
+            name="tipo_documento"
+            value={tipo_documento}
+            options={tipo_documento_opt}
+            loading={loading}
+            disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
+            required={true}
+            errors={errors}
+            register={register}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          {loading ? (
+            <Skeleton variant="rectangular" width="100%" height={45} />
+          ) : (
+            <TextField
+              fullWidth
+              label="Número de documento *"
+              type="number"
+              size="small"
+              disabled={tipo_persona === '' ?? true}
+              inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              error={errors.numero_documento?.type === 'required'}
+              helperText={
+                errors.numero_documento?.type === 'required'
+                  ? 'Este campo es obligatorio'
+                  : ''
+              }
+              {...register('numero_documento', {
+                required: true,
+              })}
+              onChange={handle_change}
+            />
+          )}
+        </Grid>
+        {/* Muestra loading cuando esta buscando datos de la persona */}
+        {is_search && (
+          <Grid item xs={12}>
+            <Grid container justifyContent="center" textAlign="center">
+              <Alert icon={false} severity="info">
+                <LinearProgress />
+                <Typography>Buscando persona...</Typography>
+              </Alert>
             </Grid>
           </Grid>
-        </Box>
+        )}
+        {has_user && (
+          <Grid item xs={12}>
+            <Grid container justifyContent="center" textAlign="center">
+              <Alert icon={false} severity="error">
+                <Typography>
+                  Lo sentimos, este documento ya tiene un usuario, puede iniciar
+                  sesión con su usuario y contraseña, si ha olvidado sus datos
+                  de acceso, dirigase al inicio de sesión y haga click en
+                  ¿Olvidó su contraseña?
+                </Typography>
+              </Alert>
+            </Grid>
+          </Grid>
+        )}
       </Grid>
-      <Grid item>
-        <Box sx={{ width: '100%' }}>
-          <DataGrid
-            density="compact"
-            autoHeight
-            rows={rows}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            // getRowId={(row) => row.id_persona}
-          />
-        </Box>
-      </Grid>
-      <DialogBusquedaAvanzada
-        is_modal_active={busqueda_avanzada_is_active}
-        set_is_modal_active={set_busqueda_avanzada_is_active}
+      {tipo_persona === 'N' && <AdminUserPersonaNatural has_user={has_user} />}
+      {tipo_persona === 'J' && (
+        <AdminUserPersonaJuridica
+          numero_documento={numero_documento}
+          tipo_persona={tipo_persona}
+          tipo_documento={tipo_documento}
+          has_user={has_user}
+        />
+      )}
+      <DialogBusquedaAvanzadaPersona
+        is_modal_active={busqueda_avanzada_person_is_active}
+        set_is_modal_active={set_busqueda_avanzada_person_is_active}
+      />
+      <DialogBusquedaAvanzadaUsuario
+        is_modal_active={busqueda_avanzada_user_is_active}
+        set_is_modal_active={set_busqueda_avanzada_user_is_active}
       />
     </>
   );

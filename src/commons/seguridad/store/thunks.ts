@@ -1,6 +1,6 @@
   import { type Dispatch } from 'react';
-  import { roles_request, users_request, persons_request } from '../request/seguridadRequest';
-  import { set_roles, set_users, set_persons } from './seguridadSlice';
+  import { roles_request, users_request, persons_request, user_request , superuser_request} from '../request/seguridadRequest';
+  import { set_roles, set_users, set_persons, set_user_info, delegate_superuser_role } from './seguridadSlice';
 
 export const get_roles: () => any = () => {
   return async (dispatch: Dispatch<any>) => {
@@ -14,46 +14,42 @@ export const get_users: (
 ) => any = (nombre_de_usuario: string) => {
   return async (dispatch: Dispatch<any>) => {
     const resp = await users_request(nombre_de_usuario);
-    // podemos enviar mensaje de error al dispatch
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    // if (!(resp.ok)) {
-    //   // Agregar dispatch de error
-    //   dispatch(logout({ error_message: resp.error_message }));
-    //   return;
-    // }
-    console.log(resp.data);
-
     dispatch(set_users(resp.data));
   };
 };
 
 export const get_persons: (
   tipo_documento: string,
-  numero_documento: number,
+  numero_documento: string,
   primer_nombre: string,
   primer_apellido: string,
 ) => any = (  tipo_documento: string,
-  numero_documento: number,
+  numero_documento: string,
   primer_nombre: string,
   primer_apellido: string,
 ) => {
   return async (dispatch: Dispatch<any>) => {
     const resp = await persons_request(
       tipo_documento, 
-      numero_documento,
+      numero_documento, 
       primer_nombre,
       primer_apellido,
     );
-
-    // podemos enviar mensaje de error al dispatch
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    // if (!(resp.ok)) {
-    //   // Agregar dispatch de error
-    //   dispatch(logout({ error_message: resp.error_message }));
-    //   return;
-    // }
-
-    console.log(resp.data);
     dispatch(set_persons(resp.data));
   };
 };
+
+export const get_data_user: (id:number) => any = (id: number) => {
+  return async (dispatch: Dispatch<any>) => {
+    const {data} = await user_request(id);
+    console.log(data);
+    dispatch(set_user_info(data.data));
+  }
+}
+export const create_super_user: (id_persona: number) => (dispatch: Dispatch<any>) => Promise<void> = (id_persona:number) => {
+  return async(dispatch: Dispatch<any>) => {
+    const data = await superuser_request(id_persona);
+    dispatch(delegate_superuser_role(data))
+    console.log(data);
+  }
+}

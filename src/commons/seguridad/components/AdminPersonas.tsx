@@ -1,4 +1,4 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 // import { type Dispatch, type SetStateAction } from 'react';
 // Componentes de Material UI
 import { Grid, Box, Button, IconButton, Avatar } from '@mui/material';
@@ -6,12 +6,12 @@ import { Grid, Box, Button, IconButton, Avatar } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import DialogBusquedaAvanzada from './DialogBusquedaAvanzada';
+// import DialogBusquedaAvanzada from './DialogBusquedaAvanzada';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdminPersonas(): JSX.Element {
-  const [busqueda_avanzada_is_active, set_busqueda_avanzada_is_active] =
-    useState<boolean>(false);
+  // const [busqueda_avanzada_is_active, set_busqueda_avanzada_is_active] =
+  //   useState<boolean>(false);
   const rows = [
     {
       id: 1,
@@ -140,9 +140,9 @@ export function AdminPersonas(): JSX.Element {
               <Button
                 variant="outlined"
                 startIcon={<SearchIcon />}
-                onClick={() => {
-                  set_busqueda_avanzada_is_active(true);
-                }}
+                // onClick={() => {
+                //   set_busqueda_avanzada_is_active(true);
+                // }}
               >
                 BUSQUEDA AVANZADA
               </Button>
@@ -163,10 +163,10 @@ export function AdminPersonas(): JSX.Element {
           />
         </Box>
       </Grid>
-      <DialogBusquedaAvanzada
+      {/* <DialogBusquedaAvanzada
         is_modal_active={busqueda_avanzada_is_active}
         set_is_modal_active={set_busqueda_avanzada_is_active}
-      />
+      /> */}
     </>
   );
 }
