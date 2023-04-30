@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 // Componentes de Material UI
 import {
   Grid,
@@ -25,13 +25,11 @@ import type { ResponseServer } from '../../../interfaces/globalModels';
 import type { Rol } from '../interfaces';
 import { delete_request, roles_request } from '../request/seguridadRequest';
 interface IProps {
-  set_position_tab_admin_roles: Dispatch<SetStateAction<string>>;
+  on_edit: (tab: string, rol: Rol) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function ListRoles({
-  set_position_tab_admin_roles,
-}: IProps): JSX.Element {
+export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
   const [roles, set_roles] = useState<Rol[]>([]);
   const [is_loading, set_is_loading] = useState(false);
   const [open, set_open] = useState(false);
@@ -77,8 +75,7 @@ export function ListRoles({
         <>
           <IconButton
             onClick={() => {
-              void handle_edit_rol(params.row.id_rol);
-              set_position_tab_admin_roles('2');
+              on_edit('2', params.row);
             }}
           >
             <Avatar
@@ -118,8 +115,6 @@ export function ListRoles({
       ),
     },
   ];
-
-  const handle_edit_rol = async (id: number): Promise<void> => {};
 
   const handle_close = (): void => {
     set_rol({
@@ -228,4 +223,4 @@ export function ListRoles({
       </Grid>
     </>
   );
-}
+};

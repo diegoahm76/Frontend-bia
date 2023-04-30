@@ -52,6 +52,12 @@ export const delete_request = async (id_rol: number): Promise<any> => {
   return await api.delete(`roles/delete/${id_rol}`);
 };
 
+export const get_rol_by_id = async (
+  id_rol: number
+): Promise<AxiosResponse<ResponseServer<Roles[]>>> => {
+  return await api.get(`permisos/permisos-rol/get-by-rol/${id_rol}/`);
+};
+
 export const get_permisos_by_modulos = async (): Promise<
   AxiosResponse<ResponseServer<Roles[]>>
 > => {
