@@ -14,6 +14,7 @@ import {
   DialogActions,
   Button,
   Typography,
+  Alert,
 } from '@mui/material';
 // Icons de Material UI
 import EditIcon from '@mui/icons-material/Edit';
@@ -32,6 +33,7 @@ interface IProps {
 export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
   const [roles, set_roles] = useState<Rol[]>([]);
   const [is_loading, set_is_loading] = useState(false);
+  const [message_error, set_message_error] = useState('');
   const [open, set_open] = useState(false);
   const [rol, set_rol] = useState<Rol>({
     id_rol: 0,
@@ -146,13 +148,18 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
   const delete_rol = async (): Promise<void> => {
     set_is_loading(true);
     try {
-      control_success('Eliminado correctamente');
       await delete_request(rol.id_rol);
+      control_success('Eliminado correctamente');
+      set_message_error('');
       handle_close();
       void get_data();
     } catch (error) {
       const err = error as AxiosError<ResponseServer<any>>;
-      control_error(err.response?.data.detail);
+      if (err.response?.status === 403) {
+        set_message_error(err.response?.data.detail);
+      } else {
+        control_error(err.response?.data.detail);
+      }
     } finally {
       set_is_loading(false);
     }
@@ -189,6 +196,9 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
                 Seguro que quieres eliminar el siguiente Rol?
               </DialogTitle>
               <DialogContent>
+                {message_error !== '' && (
+                  <Alert severity="error">{message_error}</Alert>
+                )}
                 <DialogContentText>
                   <Typography variant="body1">
                     <b>Nombre rol:</b> {rol.nombre_rol}
@@ -213,6 +223,7 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
                   variant="outlined"
                   color="error"
                   autoFocus
+                  disabled={message_error !== ''}
                 >
                   Eliminar
                 </Button>
