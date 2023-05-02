@@ -119,9 +119,10 @@ export type keys_object =
     tipo_usuario_opt: IList[];
     activo: string;
     activo_opt: IList[];
+    bloqueado: string;
+    bloqueado_opt: IList[];
     tipo_usuario: string;
     roles: RolUser[];
-    // roles_opt: RolUser[];
     get_selects_options: () => Promise<void>;
     set_data_register: Dispatch<SetStateAction<DataAadminUser>>;
     set_has_user: Dispatch<SetStateAction<boolean>>;
@@ -133,6 +134,7 @@ export type keys_object =
     set_tipo_persona: Dispatch<SetStateAction<string>>;
     set_tipo_usuario: Dispatch<SetStateAction<string>>;
     set_activo: Dispatch<SetStateAction<string>>;
+    set_bloqueado: Dispatch<SetStateAction<string>>;
   }
 
   export interface EstadoCivil {

@@ -22,11 +22,14 @@ import DialogBusquedaAvanzadaPersona from './DialogBusquedaAvanzadaPersona';
 import { CustomSelect } from '../../../components';
 import { AdminUserPersonaJuridica } from './AdminUserPersonaJuridica';
 import { AdminUserPersonaNatural } from './AdminUserPersonaNatural';
-import { useDispatch, useSelector } from 'react-redux';
-import { set_action_admin_users } from '../store/seguridadSlice';
+import {
+  // useDispatch,
+  useSelector,
+} from 'react-redux';
+// import { set_action_admin_users } from '../store/seguridadSlice';
 
 export function AdminUsuarios(): JSX.Element {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [
     busqueda_avanzada_person_is_active,
     set_busqueda_avanzada_person_is_active,
@@ -40,7 +43,7 @@ export function AdminUsuarios(): JSX.Element {
   );
 
   const {
-    register,
+    register: register_search_ini,
     setValue: set_value,
     formState: { errors },
     watch,
@@ -69,6 +72,7 @@ export function AdminUsuarios(): JSX.Element {
   }, [numero_documento]);
 
   useEffect(() => {
+    // reset();
     if (watch('tipo_persona') !== undefined) {
       set_tipo_persona(watch('tipo_persona'));
     }
@@ -81,7 +85,7 @@ export function AdminUsuarios(): JSX.Element {
   }, [watch('tipo_documento')]);
 
   useEffect(() => {
-    dispatch(set_action_admin_users('CREATE'));
+    // dispatch(set_action_admin_users('CREATE'));
     if (tipo_persona === 'J') {
       set_value('tipo_documento', 'NT');
       set_tipo_documento('NT');
@@ -92,14 +96,14 @@ export function AdminUsuarios(): JSX.Element {
 
   useEffect(() => {
     set_tipo_persona(data_person_search.tipo_persona);
-    set_tipo_documento(data_person_search.tipo_documento);
-    set_numero_documento(data_person_search.numero_documento);
+    // set_tipo_documento(data_person_search.tipo_documento);
+    // set_numero_documento(data_person_search.numero_documento);
   }, [data_person_search]);
 
   useEffect(() => {
     set_tipo_persona(user_info.tipo_persona);
-    set_tipo_documento(user_info.tipo_documento);
-    set_numero_documento(user_info.numero_documento);
+    // set_tipo_documento(user_info.tipo_documento);
+    // set_numero_documento(user_info.numero_documento);
   }, [data_user_search]);
 
   // Establece los valores del formulario
@@ -162,7 +166,7 @@ export function AdminUsuarios(): JSX.Element {
             disabled={false}
             required={true}
             errors={errors}
-            register={register}
+            register={register_search_ini}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -176,7 +180,7 @@ export function AdminUsuarios(): JSX.Element {
             disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
             required={true}
             errors={errors}
-            register={register}
+            register={register_search_ini}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
@@ -196,7 +200,7 @@ export function AdminUsuarios(): JSX.Element {
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('numero_documento', {
+              {...register_search_ini('numero_documento', {
                 required: true,
               })}
               onChange={handle_change}

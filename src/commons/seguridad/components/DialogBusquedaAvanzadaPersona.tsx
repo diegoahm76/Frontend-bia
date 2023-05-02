@@ -25,7 +25,7 @@ import type {
   FormValuesSearchPerson,
   keys_object_search_person,
 } from '../interfaces';
-import { get_persons, get_data_user } from '../store/thunks';
+import { get_persons } from '../store/thunks';
 import {
   set_action_admin_users,
   set_data_person_search,
@@ -186,19 +186,14 @@ const DialogBusquedaAvanzada = ({
   ];
 
   const trigger_user_person_create_active = (data: any): void => {
-    console.log('punto 1 - CREATE');
+    console.log('punto 1 - CREATE', data);
     dispatch(set_data_person_search(data));
     dispatch(set_action_admin_users('CREATE'));
   };
 
   const trigger_user_edit_active = (data: any): void => {
-    console.log('punto 1 - EDIT');
+    console.log('punto 1 - EDIT', data);
     dispatch(set_data_person_search(data));
-    if (data.usuarios.length === 1) {
-      dispatch(get_data_user(data.usuarios[0].id_usuario));
-    } else if (data.usuarios.length === 2) {
-      console.log('Disparar modal con los 2 usuarios disponibles');
-    }
     dispatch(set_action_admin_users('EDIT'));
   };
 

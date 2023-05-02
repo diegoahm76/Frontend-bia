@@ -23,6 +23,11 @@ const activo_opt: IList[] = [
   { value: 'true', label: 'Si' },
 ];
 
+const bloqueado_opt: IList[] = [
+  { value: 'false', label: 'No' },
+  { value: 'true', label: 'Si' },
+];
+
 export const use_admin_users = (): AdminUserHook => {
   const dispatch = useDispatch();
 
@@ -42,6 +47,7 @@ export const use_admin_users = (): AdminUserHook => {
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
   const [tipo_usuario, set_tipo_usuario] = useState('');
   const [activo, set_activo] = useState('');
+  const [bloqueado, set_bloqueado] = useState('');
   const [tipo_usuario_opt, set_tipo_usuario_opt] = useState<IList[]>([]);
   const { roles } = useSelector((state: SeguridadSlice) => state.seguridad);
   // const [roles_opt, set_roles_opt] = useState<UserRol[]>([]);
@@ -128,6 +134,8 @@ export const use_admin_users = (): AdminUserHook => {
     tipo_usuario,
     activo,
     activo_opt,
+    bloqueado,
+    bloqueado_opt,
     roles,
     get_selects_options,
     set_data_register,
@@ -137,6 +145,7 @@ export const use_admin_users = (): AdminUserHook => {
     set_is_search,
     set_numero_documento,
     set_activo,
+    set_bloqueado,
     set_tipo_documento,
     set_tipo_persona,
     set_tipo_usuario,

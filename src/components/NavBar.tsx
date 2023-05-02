@@ -62,7 +62,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             : { md: `100%` },
           ml: { sm: `${drawer_width}px` },
           transition: 'width 0.15s',
-          bgcolor: 'background.default',
+          bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
           position: 'absolute',
         }}
       >

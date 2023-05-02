@@ -6,17 +6,17 @@ import {
   Box,
   Grid,
   TextField,
-  MenuItem,
+  // MenuItem,
   Stack,
   Button,
   Input,
   InputLabel,
-  type SelectChangeEvent,
+  // type SelectChangeEvent,
   // Autocomplete,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import HistoryIcon from '@mui/icons-material/History';
-import { CustomSelect } from '../../../components/CustomSelect';
+// import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialCambiosEstadoUser';
 import type {
@@ -57,12 +57,14 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   const {
     data_register,
     is_exists,
-    loading,
+    // loading,
     tipo_usuario,
     tipo_usuario_opt,
     activo,
     activo_opt,
-    roles,
+    bloqueado,
+    bloqueado_opt,
+    // roles,
     // roles_opt,
     set_tipo_usuario,
     set_data_register,
@@ -71,41 +73,41 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
 
   const {
     control,
-    register,
+    register: register_admin_user,
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
-    reset,
+    // reset: reset_admin_user,
     watch,
   } = useForm<DataAadminUser>();
 
   useEffect(() => {
-    reset();
-    set_data_register({
-      tipo_persona: '',
-      tipo_documento: '',
-      numero_documento: '',
-      razon_social: '',
-      nombre_comercial: '',
-      primer_apellido: '',
-      primer_nombre: '',
-      segundo_apellido: '',
-      segundo_nombre: '',
-      nombre_de_usuario: '',
-      imagen_usuario: '',
-      tipo_usuario: '',
-      roles: [],
-      activo: false,
-      activo_fecha_ultimo_cambio: '',
-      activo_justificacion_cambio: '',
-      bloqueado: false,
-      bloqueado_fecha_ultimo_cambio: '',
-      bloqueado_justificacion_cambio: '',
-      fecha_creacion: '',
-      fecha_activación_inicial: '',
-      creado_desde_portal: false,
-      persona_que_creo: 0,
-    });
+    // reset_admin_user();
+    // set_data_register({
+    //   tipo_persona: '',
+    //   tipo_documento: '',
+    //   numero_documento: '',
+    //   razon_social: '',
+    //   nombre_comercial: '',
+    //   primer_apellido: '',
+    //   primer_nombre: '',
+    //   segundo_apellido: '',
+    //   segundo_nombre: '',
+    //   nombre_de_usuario: '',
+    //   imagen_usuario: '',
+    //   tipo_usuario: '',
+    //   roles: [],
+    //   activo: false,
+    //   activo_fecha_ultimo_cambio: '',
+    //   activo_justificacion_cambio: '',
+    //   bloqueado: false,
+    //   bloqueado_fecha_ultimo_cambio: '',
+    //   bloqueado_justificacion_cambio: '',
+    //   fecha_creacion: '',
+    //   fecha_activación_inicial: '',
+    //   creado_desde_portal: false,
+    //   persona_que_creo: 0,
+    // });
     if (action_admin_users === 'CREATE') {
       console.log('Punto 2', action_admin_users);
       console.log('Creación de usuario - persona natural');
@@ -199,11 +201,11 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     set_value(name as keys_object, value);
   };
 
-  // Se usa para escuchar los cambios de valor del componente CustomSelect
-  const on_change = (e: SelectChangeEvent<string>): void => {
-    console.log(e.target.name, e.target.value);
-    set_value_form(e.target.name, e.target.value);
-  };
+  // // Se usa para escuchar los cambios de valor del componente CustomSelect
+  // const on_change = (e: SelectChangeEvent<string>): void => {
+  //   console.log(e.target.name, e.target.value);
+  //   set_value_form(e.target.name, e.target.value);
+  // };
 
   // Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -264,7 +266,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               ? 'Este campo es obligatorio'
               : ''
           }
-          {...register('primer_nombre', { required: true })}
+          {...register_admin_user('primer_nombre', { required: true })}
           onChange={handle_change}
         />
       </Grid>
@@ -275,7 +277,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           size="small"
           label="Segundo nombre"
           value={data_register.segundo_nombre}
-          {...register('segundo_nombre')}
+          {...register_admin_user('segundo_nombre')}
           onChange={handle_change}
         />
       </Grid>
@@ -292,7 +294,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               ? 'Este campo es obligatorio'
               : ''
           }
-          {...register('primer_apellido', {
+          {...register_admin_user('primer_apellido', {
             required: true,
           })}
           onChange={handle_change}
@@ -305,7 +307,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           size="small"
           value={data_register.segundo_apellido}
           label="Segundo apellido"
-          {...register('segundo_apellido')}
+          {...register_admin_user('segundo_apellido')}
           onChange={handle_change}
         />
       </Grid>
@@ -330,7 +332,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               ? 'Este campo es obligatorio'
               : ''
           }
-          {...register('nombre_de_usuario')}
+          {...register_admin_user('nombre_de_usuario')}
           onChange={handle_change}
         />
       </Grid>
@@ -343,7 +345,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           type="file"
           required
           autoFocus
-          {...register('imagen_usuario')}
+          {...register_admin_user('imagen_usuario')}
           error={Boolean(errors.imagen_usuario)}
         />
       </Grid>
@@ -356,7 +358,21 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         <Title title="Tipo de usuario y roles" />
       </Box>
       <Grid item xs={12} sm={6} md={3}>
-        <CustomSelect
+        <FormSelectController
+          xs={12}
+          md={12}
+          control_form={control}
+          control_name="tipo_usuario"
+          default_value={tipo_usuario}
+          select_options={tipo_usuario_opt}
+          rules={{ required_rule: { rule: true, message: 'requerido' } }}
+          label="Tipo de usuario"
+          disabled={false}
+          helper_text=""
+          option_label="label"
+          option_key="value"
+        />
+        {/* <CustomSelect
           onChange={on_change}
           label="Tipo de usuario"
           name="tipo_usuario"
@@ -367,7 +383,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           required={true}
           errors={errors}
           register={register}
-        />
+        /> */}
       </Grid>
       {/* <Grid item xs={12} sm={6} md={3}>
         <CustomSelect
@@ -385,7 +401,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         />
       </Grid> */}
       <Grid item xs={12} sm={6} md={9}>
-        <FormSelectController
+        {/* <FormSelectController
           xs={12}
           md={6}
           control_form={control}
@@ -393,13 +409,13 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           default_value=""
           rules={{ required_rule: { rule: true, message: 'requerido' } }}
           label="Roles"
-          // multiple={true}
+          multiple={true}
           disabled={false}
           helper_text=""
           select_options={roles}
           option_label="nombre_rol"
           option_key="id_rol"
-        />
+        /> */}
         {/* <Autocomplete
           multiple
           fullWidth
@@ -456,22 +472,32 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
             </Grid>
           </Box>
           <Grid item xs={12} sm={6} md={3}>
-            <TextField
+            {/* <CustomSelect
+              onChange={on_change}
               label="Activo"
-              select
-              fullWidth
-              size="small"
-              margin="dense"
-              required
-              autoFocus
-              defaultValue={activo}
-            >
-              {activo_opt.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+              name="activo"
+              value={activo}
+              options={activo_opt}
+              loading={loading}
+              disabled={false}
+              required={true}
+              errors={errors}
+              register={register}
+            /> */}
+            <FormSelectController
+              xs={12}
+              md={12}
+              control_form={control}
+              control_name="activo"
+              default_value={activo}
+              rules={{ required_rule: { rule: true, message: 'requerido' } }}
+              label="Activo"
+              disabled={false}
+              helper_text=""
+              select_options={activo_opt}
+              option_label="label"
+              option_key="value"
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
@@ -481,7 +507,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               size="small"
               label="Fecha ultimo cambio"
               value={data_register.activo_fecha_ultimo_cambio}
-              {...register('activo_fecha_ultimo_cambio')}
+              {...register_admin_user('activo_fecha_ultimo_cambio')}
               onChange={handle_change}
             />
           </Grid>
@@ -493,28 +519,26 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               label="Justificación del cambio"
               multiline
               value={data_register.activo_justificacion_cambio}
-              {...register('activo_justificacion_cambio')}
+              {...register_admin_user('activo_justificacion_cambio')}
               onChange={handle_change}
             />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <TextField
+            <FormSelectController
+              xs={12}
+              md={12}
+              control_form={control}
+              control_name="bloqueado"
+              default_value={bloqueado}
+              rules={{ required_rule: { rule: true, message: 'requerido' } }}
               label="Bloqueado"
-              select
-              fullWidth
-              size="small"
-              margin="dense"
-              required
-              autoFocus
-              defaultValue={activo}
-            >
-              {activo_opt.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
+              disabled={false}
+              helper_text=""
+              select_options={bloqueado_opt}
+              option_label="label"
+              option_key="value"
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
@@ -524,7 +548,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               size="small"
               label="Fecha ultimo cambio"
               value={data_register.bloqueado_fecha_ultimo_cambio}
-              {...register('bloqueado_fecha_ultimo_cambio')}
+              {...register_admin_user('bloqueado_fecha_ultimo_cambio')}
               onChange={handle_change}
             />
           </Grid>
@@ -536,7 +560,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               label="Justificación del cambio"
               multiline
               value={data_register.bloqueado_justificacion_cambio}
-              {...register('bloqueado_justificacion_cambio')}
+              {...register_admin_user('bloqueado_justificacion_cambio')}
               onChange={handle_change}
             />
           </Grid>
@@ -563,7 +587,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('fecha_creacion')}
+              {...register_admin_user('fecha_creacion')}
               onChange={handle_change}
               disabled
             />
@@ -579,7 +603,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('fecha_activación_inicial')}
+              {...register_admin_user('fecha_activación_inicial')}
               onChange={handle_change}
               disabled
             />
@@ -595,7 +619,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('creado_desde_portal')}
+              {...register_admin_user('creado_desde_portal')}
               onChange={handle_change}
               disabled
             />
@@ -611,7 +635,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   ? 'Este campo es obligatorio'
                   : ''
               }
-              {...register('persona_que_creo')}
+              {...register_admin_user('persona_que_creo')}
               onChange={handle_change}
               disabled
             />

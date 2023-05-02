@@ -103,9 +103,11 @@ export const seguridad_slice = createSlice({
     },
     set_users: (state, {payload}) => {
       state.users = payload
+      state.user_info = initial_state_user_info
     },
     set_persons: (state, {payload}) => {
-      state.persons = payload
+      state.persons = payload;
+      state.user_info = initial_state_user_info
     },
     set_action_admin_users: (state, {payload}) => {
       state.action_admin_users = payload
