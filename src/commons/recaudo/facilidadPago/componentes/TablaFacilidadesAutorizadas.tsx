@@ -3,49 +3,26 @@
 import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox } from '@mui/material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuario: React.FC = () => {
+export const TablaFacilidadesAutorizadas: React.FC = () => {
   const [selected, set_selected] = useState<readonly string[]>([]);
-  const [capital, set_capital] = useState(0);
-  const [intereses, set_intereses] = useState(0);
-  const [abonado, set_abonado] = useState(0);
-  const [total, set_total] = useState(0);
 
-  const nurseries = [
+  const fac_pago = [
     {
       id: 1,
       nombreObligacion: 'Permiso 1',
-      fechaInicio: '01/01/2015',
-      expediente: '378765',
       nroResolucion: '378765-143',
-      valorCapital: 120000000,
-      valorIntereses: 35000000,
-      diasMora: 390,
-      valorAbonado: 21000000,
-      estado: 'En Curso'
+      valorTotal: 120000000,
+      estado: 'Aprobado'
     },
     {
       id: 2,
       nombreObligacion: 'Concesion Aguas',
-      fechaInicio: '01/04/2015',
-      expediente: '3342765',
       nroResolucion: '3342765-4546',
-      valorCapital: 190700000,
-      valorIntereses: 45000000,
-      diasMora: 180,
-      valorAbonado: 76000000,
+      valorTotal: 35000000,
       estado: 'En Curso'
-    },
-    {
-      id: 'total',
-      nroResolucion: <strong>Total</strong>,
-      valorCapital: capital,
-      valorIntereses: intereses,
-      valorAbonado: abonado,
-      estado: <strong>Gran Total a Deber</strong>,
-      acciones: total,
     },
   ];
 
@@ -54,39 +31,17 @@ export const TablaObligacionesUsuario: React.FC = () => {
       field: 'checkbox',
       headerName: 'Solicitar Fac. Pago',
       width: 150,
-      renderCell: (params) => {
-        return params.row.id !== 'total' ? (
-          <Checkbox
-            onClick={(event) => {
-              handle_click(event, params.row.nombreObligacion)
-            }}
-          />
-        ) : null
-      },
+      renderCell: (params) => (
+        <Checkbox
+          onClick={(event) => {
+            handle_click(event, params.row.nombreObligacion)
+          }}
+        />
+      )
     },
     {
       field: 'nombreObligacion',
-      headerName: 'Nombre Obligación',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'fechaInicio',
-      headerName: 'Fecha Inicio',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'expediente',
-      headerName: 'Expediente',
+      headerName: 'Facilidad de Pago',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -105,38 +60,8 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'valorCapital',
-      headerName: 'Valor Capital',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'valorIntereses',
-      headerName: 'Valor Intereses',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'diasMora',
-      headerName: 'Días Mora',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'valorAbonado',
-      headerName: 'Valor Abonado',
+      field: 'valorTotal',
+      headerName: 'Valor Total',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -207,30 +132,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
     set_selected(new_selected);
   };
 
-  useEffect(() => {
-    let sub_capital = 0
-    let sub_intereses = 0
-    let sub_abonado = 0
-    for(let i=0; i < nurseries.length; i++){
-      for(let j=0; j < selected.length; j++){
-        if(nurseries[i].nombreObligacion === selected[j]){
-          sub_capital = sub_capital + nurseries[i].valorCapital
-          sub_intereses = sub_intereses + nurseries[i].valorIntereses
-          sub_abonado = sub_abonado + nurseries[i].valorAbonado
-          set_capital(sub_capital)
-          set_intereses(sub_intereses)
-          set_abonado(sub_abonado)
-        }
-      }
-    }
-    if(selected.length === 0){
-      set_capital(0)
-      set_intereses(0)
-      set_abonado(0)
-    }
-    set_total(capital + intereses)
-  }, [selected, capital, intereses])
-
   return (
     <>
       <Grid
@@ -250,7 +151,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={nurseries}
+                rows={fac_pago}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}

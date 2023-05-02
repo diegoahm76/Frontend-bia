@@ -1,15 +1,26 @@
 import { Title } from '../../../../components/Title';
 import { InputsEncabezado } from '../componentes/InputsEncabezado';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, TextareaAutosize, Stack, Button, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { use_form } from '../../../../hooks/useForm';
+import { useFormLocal } from '../hooks/useFormLocal';
+import { faker } from '@faker-js/faker';
 
 interface event {
   target: {
     value: string;
     name: string;
   }
+}
+
+interface bien {
+  id: string;
+  identificacion: string;
+  avaluo: number;
+  direccion: string;
+  docImpuesto: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -19,8 +30,10 @@ export const SolicitudFacilidadPago: React.FC = () => {
   const [limite, set_limite] = useState(0);
   const [arr_periodicidad, set_arr_periodicidad] = useState(Array<number>);
   const [plazo, set_plazo] = useState('');
+  const [rows_bienes, set_rows_bienes] = useState(Array<bien>);
   const { form_state, on_input_change } = use_form({});
-  console.log(form_state)
+  const { form_local, handle_change_local } = useFormLocal({});
+  console.log('form', form_state)
 
   useEffect(()=>{
     let count:number = 0;
@@ -70,6 +83,59 @@ export const SolicitudFacilidadPago: React.FC = () => {
     { field: "diasMora", header: "Días Mora", visible: true },
     { field: "valorAbonado", header: "Valor Abonado", visible: true },
     { field: "estado", header: "Estado", visible: true },
+  ];
+
+  const columns_bienes: GridColDef[] = [
+    {
+      field: 'identificacion',
+      headerName: 'Identificación Bien',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'ubicacion',
+      headerName: 'Ubicación',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'avaluo',
+      headerName: 'Avalúo',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'direccion',
+      headerName: 'Dirección',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'docImpuesto',
+      headerName: 'Doc. Impuestos',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -588,15 +654,16 @@ export const SolicitudFacilidadPago: React.FC = () => {
           noValidate
           autoComplete="off"
         >
-          <Grid container spacing={2}>
+          <Grid container spacing={2} marginBottom={3}>
             <Grid item xs={12} sm={3} >
               <TextField
+                required
                 size="small"
                 fullWidth
                 label='Identificación'
                 helperText='Escribe Documento de Identidad'
                 variant="outlined"
-                onChange={on_input_change}
+                onChange={handle_change_local}
                 name='identificacion'
               />
             </Grid>
@@ -609,7 +676,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 size="small"
                 fullWidth
                 type='number'
-                onChange={on_input_change}
+                onChange={handle_change_local}
                 name='avaluo'
               />
             </Grid>
@@ -621,7 +688,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 helperText='Escribe la Dirección'
                 size="small"
                 fullWidth
-                onChange={on_input_change}
+                onChange={handle_change_local}
                 name='direccion'
               />
             </Grid>
@@ -633,7 +700,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 size="small"
                 fullWidth
                 type='file'
-                onChange={on_input_change}
+                onChange={handle_change_local}
                 name='docImpuesto'
               />
             </Grid>
@@ -642,12 +709,46 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 color='info'
                 variant='outlined'
                 size='small'
-                onClick={() => {}}
+                onClick={() => {
+                  set_rows_bienes(rows_bienes.concat({...form_local, id: faker.database.mongodbObjectId()}))
+                }}
               >
                 Agregar
               </Button>
             </Grid>
           </Grid>
+          {
+            rows_bienes.length !== 0 ? (
+              <Grid
+                container
+                sx={{
+                  position: 'relative',
+                  background: '#FAFAFA',
+                  borderRadius: '15px',
+                  p: '20px',
+                  mb: '20px',
+                  boxShadow: '0px 3px 6px #042F4A26',
+                }}
+              >
+                <Grid item xs={12}>
+                  <Grid item>
+                    <Box sx={{ width: '100%' }}>
+                      <DataGrid
+                        autoHeight
+                        disableSelectionOnClick
+                        rows={rows_bienes}
+                        columns={columns_bienes}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
+                        experimentalFeatures={{ newEditingApi: true }}
+                        getRowId={(row) => row.id}
+                      />
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Grid>
+            ) : null
+          }
         </Box>
       </Grid>
     </Grid>

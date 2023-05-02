@@ -5,6 +5,7 @@ import { ObligacionesAdmin } from '../screens/ObligacionesAdmin';
 import { ObligacionesAdminAsignadas } from '../screens/ObligacionesAdminAsignadas';
 import { VisualizarSolicitudAdmin } from '../screens/VisualizarSolicitudAdmin';
 import { ResolucionRespuesta } from '../screens/ResolucionRespuesta';
+import { FacilidadPagoAutorizadas } from '../screens/FacilidadPagoAutorizadas';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FacilidadPagoRoutes: React.FC = () => {
@@ -16,6 +17,7 @@ export const FacilidadPagoRoutes: React.FC = () => {
       <Route path='asignadas' element={<ObligacionesAdminAsignadas />} />
       <Route path='solicitadas' element={<VisualizarSolicitudAdmin />} />
       <Route path='resolucion' element={<ResolucionRespuesta />} />
+      <Route path='autorizadas' element={<FacilidadPagoAutorizadas />} />
     </Routes>
   )
 }
