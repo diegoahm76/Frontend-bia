@@ -50,8 +50,10 @@ const FormSelectController = ({
     const id_select = String(uuid())
 
     return (
+        
         <>
         {((!hidden_text)??false) &&
+            
         <Grid item xs={xs} md={md}>
             <Controller
                 name={control_name}
@@ -97,8 +99,8 @@ const FormSelectController = ({
                 )}
             />
         </Grid>
-    }
-    </>
+        }
+        </>
     );
 }
 
