@@ -1,8 +1,6 @@
 import { createTheme, type Theme } from '@mui/material/styles';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-// import { light_theme } from '../theme/LightTheme';
-// import { dark_theme } from '../theme/DarkTheme';
 import { esES as dataGridesES } from '@mui/x-data-grid';
 import { esES as coreesES } from '@mui/material/locale';
 import { esES as dataPickersesES } from '@mui/x-date-pickers';
