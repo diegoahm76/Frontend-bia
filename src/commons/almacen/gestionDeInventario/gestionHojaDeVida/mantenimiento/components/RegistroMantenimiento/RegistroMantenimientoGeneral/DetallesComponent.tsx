@@ -90,15 +90,15 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                             multiline
                             rows={4}
                             value={observaciones}
-                            label="Especificaciones tecnicas"
-                            helperText="Ingresar especificaciones tecnicas"
+                            label="Descripción"
+                            helperText="Ingresar descripción"
                             size="small"
                             required
                             fullWidth
                             onChange={on_change_observacion} />
                     </Grid>
                     <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={6} direction="column">
+                        <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Valor mantenimiento"
                                 size="small"
@@ -110,9 +110,7 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                                 }}
                             />
                         </Grid>
-                    </Grid>
-                    <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={6} direction="column">
+                        <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Contrato mantenimiento"
                                 size="small"
@@ -125,8 +123,9 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                             />
                         </Grid>
                     </Grid>
+
                     <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={6} direction="column">
+                        <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Realizado por"
                                 size="small"
@@ -138,9 +137,7 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                                 }}
                             />
                         </Grid>
-                    </Grid>
-                    <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={6} direction="column">
+                        <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Diligenciado por"
                                 size="small"

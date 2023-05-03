@@ -15,17 +15,22 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
     const navigate = useNavigate();
     const [limpiar_formulario, set_limpiar_formulario] = useState<boolean>(false);
     const {
+        programacion,
         detalle_seleccionado,
         set_detalle_seleccionado,
         set_tipo_mantenimiento,
         set_user_info,
-        set_especificacion
+        set_especificacion,
+        set_programacion
     } = use_previsualizacion();
 
     const set_details_state = useCallback((val: any) => {
         set_detalle_seleccionado(val);
-        console.log(detalle_seleccionado);
     }, [set_detalle_seleccionado]);
+
+    const set_prog_seleccionada = useCallback((val: any) => {
+        set_programacion(val);
+    }, [set_programacion]);
 
     const set_user_info_state = useCallback((val: string) => {
         set_user_info(val);
@@ -66,7 +71,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de programación" />
-                    <BusquedaProgramacionComponent />
+                    <BusquedaProgramacionComponent set_prog_seleccion={set_prog_seleccionada} parent_details={set_details_state} tipo_articulo={"computadores"} />
                 </Grid>
             </Grid>
             <Grid
@@ -82,7 +87,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de computadores" />
-                    <BusquedaArticuloComponent tipo_articulo={"computadores"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} />
+                    <BusquedaArticuloComponent tipo_articulo={"computadores"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} />
                 </Grid>
             </Grid>
             <Grid container
@@ -96,7 +101,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
                 }}>
                 <Grid item xs={12}>
                     <Title title='Mantenimiento'/>
-                    <MantenimientoComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} />
+                    <MantenimientoComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} programacion={programacion} />
                 </Grid>
             </Grid>
             <Grid container

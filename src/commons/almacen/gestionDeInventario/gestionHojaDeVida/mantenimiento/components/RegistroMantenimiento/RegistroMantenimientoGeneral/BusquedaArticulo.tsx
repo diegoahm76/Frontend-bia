@@ -16,10 +16,11 @@ interface IProps {
     tipo_articulo: string,
     parent_details: any,
     user_info_prop: any,
-    limpiar_formulario: boolean
+    limpiar_formulario: boolean,
+    detalle_programacion: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, user_info_prop, limpiar_formulario }: IProps) => {
+export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, user_info_prop, limpiar_formulario, detalle_programacion }: IProps) => {
     const {        // States
         title,
         consulta_buscar_articulo_is_active,
@@ -71,11 +72,14 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
 
     useEffect(() => {
         if (detalle_seleccionado !== undefined && detalle_seleccionado !== null) {
-            set_id_bien(detalle_seleccionado.id_bien);
+            set_id_bien(detalle_seleccionado.codigo_bien);
             set_nombre(detalle_seleccionado.nombre);
         }
     }, [detalle_seleccionado]);
 
+    useEffect(() => {
+        set_detalle_seleccionado(detalle_programacion);
+    }, [detalle_programacion]);
     return (
         <>
             <Box
