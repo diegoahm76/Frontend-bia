@@ -90,7 +90,8 @@ const FormSelectController = ({
                                 </MenuItem>
                             ))}
                         </Select>
-                        <FormHelperText>
+                        <FormHelperText
+                         error= {!(error == null)}>
                             {(error != null)
                                 ? rules.required_rule?.message
                                 : helper_text}

@@ -160,7 +160,7 @@ const SeleccionarModeloDialogForm = ({
                 </Grid>
                 {models.length > 0 &&
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
-                        <Box sx={{ width: '80%' }}>
+                        <Box sx={{ width: '100%' }}>
                             <Title title='Resultados de la busqueda'></Title>
                             <DataGrid
                                 onSelectionModelChange={handle_selection_change}

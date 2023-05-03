@@ -7,8 +7,8 @@ import {
 } from 'axios';
 // Slices
 import {
-  set_goods, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting, set_planting_person, set_persons, set_current_germination_beds
-} from '../slice/materialvegetalSlice';
+  set_nurseries, set_vegetal_materials, set_current_vegetal_material, set_stage_changes, set_current_stage_change, set_changing_person, set_persons
+} from '../slice/produccionSlice';
 import { api } from '../../../../../api/axios';
 
 
@@ -55,12 +55,26 @@ export const get_nurseries_service = (): any => {
   };
 };
 
-// Obtener material vegetal
-export const get_vegetal_materials_service = (): any => {
+// Obtener material vegetal filtro
+export const get_vegetal_materials_service = (
+  id: number,
+  code_bien: string,
+  name: string,
+  cod_etapa: string,
+  anio: number,
+): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('conservacion/camas-siembras/siembra/get-material-vegetal/');
+      const { data } = await api.get(`conservacion/etapas/filtro-material-vegetal/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote=${cod_etapa??""}&agno_lote=${anio??""}`);
       dispatch(set_vegetal_materials(data.data));
+      console.log(data)
+      if ("data" in data){
+        if (data.data.length>0){
+          control_success("Se encontraron materiales vegetales")
+        } else {
+          control_error("No se encontraron materiales vegetales")
+        }
+      }
       return data;
     } catch (error: any) {
       console.log('get_vegetal_materials_service');
@@ -70,102 +84,34 @@ export const get_vegetal_materials_service = (): any => {
   };
 };
 
-// Obtener camas germinacion
-export const get_germination_beds_service = (id: string | number): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(`conservacion/camas-siembras/siembra/get-camas-germinacion-siembra/${id}/`);
-      dispatch(set_germination_beds(data.data));
-      console.log(data.data)
-      return data;
-    } catch (error: any) {
-      console.log('get_germination_beds_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
 
-// Obtener camas germinacion
-export const get_germination_beds_id_service = (camas:number[]): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const camas_gemination_id: any = {"camas_list": camas}
-      const { data } = await api.post("conservacion/camas-siembras/siembra/get-camas-germinacion-by-id-list/", camas_gemination_id);
-      dispatch(set_current_germination_beds(data.data));
-      return data;
-    } catch (error: any) {
-      console.log('get_germination_beds_id_service');
-      console.log(error)
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-// Obtener bienes siembra
-export const get_planting_goods_service = (id: string | number): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-consumidos/${id}/`);
-      dispatch(set_planting_goods(data.data));
-      return data;
-    } catch (error: any) {
-      console.log('get_planting_goods_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-// Obtener bienes vivero
-export const get_goods_service = (id: string | number): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id}/`);
-      dispatch(set_goods(data.data));
-      return data;
-    } catch (error: any) {
-      console.log('get_planting_goods_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
 // obtener siembras
-export const get_plantings_service = (): any => {
+export const get_stage_changes_service = (
+  id: number,
+  code_bien: string,
+  name: string,
+  cod_etapa: string,
+  anio: number,
+): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('conservacion/camas-siembras/siembra/get/');
+      const { data } = await api.get(`conservacion/etapas/filtro-cambio-etapa/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote_origen=${cod_etapa??""}&agno_lote=${anio??""}`);
       console.log(data)
-      dispatch(set_plantings(data.data));
+      dispatch(set_stage_changes(data.data));
       if (data.data.length > 0) {
-        control_success("Se encontraron siembras")
+        control_success("Se encontraron cambios de etapa")
       } else {
-        control_error("No se encontraron siembras")
+        control_error("No se encontraron cambios de etapa")
       }
       return data;
     } catch (error: any) {
-      console.log('get_plantings_service');
+      console.log('set_stage_changes_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
 
-// Obtener siembra actual
-export const get_current_planting_service = (id: string | number): any => {
-  return async (dispatch: Dispatch<any>) => {
-    try {
-      const { data } = await api.get(`conservacion/camas-siembras/siembra/get/${id}/`);
-      dispatch(set_current_planting(data.data));
-      return data;
-    } catch (error: any) {
-      console.log('get_current_planting_service');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-}
 
 // obtener personas filtro
 export const get_persons_service = (
@@ -207,7 +153,7 @@ export const get_person_document_service = (
       const { data } = await api.get(`personas/get-personas-by-document/${type}/${document}/`);
       if ("data" in data) {
         if (data.data.length > 0) {
-          dispatch(set_planting_person(data.data))
+          dispatch(set_changing_person(data.data))
           control_success("Se selecciono la persona ")
         } else {
           control_error("No se encontro la persona")
@@ -233,7 +179,7 @@ export const get_person_id_service = (
       const { data } = await api.get(`personas/get-by-id/${id}/`);
  
       if ("data" in data) {
-        dispatch (set_planting_person({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
+        dispatch (set_changing_person({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
           nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido)}))
       } else {
         control_error(data.detail)
@@ -247,13 +193,14 @@ export const get_person_id_service = (
   };
 };
 
-// crear siembra
-export const add_siembra_service = (
-  siembra: any,
+// crear cambio de etapa
+export const add_stage_change_service = (
+  cambio: any,
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.post('conservacion/camas-siembras/siembra/create/', siembra);
+      const { data } = await api.post('conservacion/etapas/guardar-cambio-etapa/', cambio);
+      console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail)      
@@ -277,7 +224,9 @@ export const edit_siembra_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      console.log(siembra, id)
       const { data } = await api.put(`conservacion/camas-siembras/siembra/update/${id}/`, siembra);
+      console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail)      
@@ -287,6 +236,7 @@ export const edit_siembra_service = (
       return data;
     } catch (error: any) {
       console.log('add_siembra_service');
+      console.log(error)
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
