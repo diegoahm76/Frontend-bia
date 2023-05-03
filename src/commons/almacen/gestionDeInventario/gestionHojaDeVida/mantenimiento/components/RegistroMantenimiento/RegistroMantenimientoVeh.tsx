@@ -26,7 +26,6 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
 
     const set_details_state = useCallback((val: any) => {
         set_detalle_seleccionado(val);
-        console.log(detalle_seleccionado);
     }, [set_detalle_seleccionado]);
 
     const set_prog_seleccionada = useCallback((val: any) => {
