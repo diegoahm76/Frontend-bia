@@ -1,7 +1,9 @@
 import { Title } from '../../../../components/Title';
 import { InputsEncabezadoAdmin } from '../componentes/InputsEncabezadoAdmin';
+import { VistaSolicitud } from '../componentes/VistaSolicitud';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextareaAutosize, Button, Stack } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 interface event {
   target: {
@@ -13,9 +15,11 @@ interface event {
 export const VisualizarSolicitudAdmin: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
+  const navigate = useNavigate();
+
   return (
     <>
-      <Title title='Visualizar solicitud Facilidad de Pago - Usuario Cormacarena'/>
+      <Title title='Visualizar Solicitud Facilidad de Pago - Usuario Cormacarena'/>
       <InputsEncabezadoAdmin />
       <Grid
         container
@@ -36,8 +40,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
             noValidate
             autoComplete="off"
           >
-            <Grid container spacing={2}>
-            </Grid>
+            <VistaSolicitud />
           </Box>
         </Grid>
       </Grid>
@@ -69,8 +72,9 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     id="demo-simple-select"
                     label="Asignar Estado"
                   >
-                    <MenuItem>Ej 1</MenuItem>
-                    <MenuItem>Ej 2</MenuItem>
+                    <MenuItem value="aprobado">Aprobado</MenuItem>
+                    <MenuItem value="negado">Negado</MenuItem>
+                    <MenuItem value="enCurso">En Curso</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -88,7 +92,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                 </FormControl>
               </Grid>
               <Grid item>
-                <p>Observación</p>
+                <p>Observación Cormacarena</p>
                 <TextareaAutosize minRows={8} cols={153} />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -110,15 +114,26 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               </Grid>
               {
                 plan_pagos === "si" ? (
-                  <Grid item xs={12} sm={3}>
-                    <Button
-                      color='info'
-                      variant='contained'
-                      onClick={() => {}}
-                    >
-                    Crear Plan de Pagos
-                    </Button>
-                  </Grid>
+                  <>
+                    <Grid item>
+                      <Button
+                        color='info'
+                        variant='contained'
+                        onClick={() => {}}
+                      >
+                      Crear Plan de Pagos
+                      </Button>
+                    </Grid>
+                    <Grid item sm={5}>
+                      <Button
+                        color='info'
+                        variant='contained'
+                        onClick={() => {}}
+                      >
+                      Ver Plan de Pagos
+                      </Button>
+                    </Grid>
+                  </>
                 ) : null
               }
               <Grid item xs={12} sm={3}>
@@ -140,15 +155,28 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               </Grid>
               {
                 resolucion === "si" ? (
-                  <Grid item xs={12} sm={3}>
-                    <Button
-                      color='info'
-                      variant='contained'
-                      onClick={() => {}}
-                    >
-                    Crear Resolución
-                    </Button>
-                  </Grid>
+                  <>
+                    <Grid item>
+                      <Button
+                        color='info'
+                        variant='contained'
+                        onClick={() => {
+                          navigate('../resolucion')
+                        }}
+                      >
+                      Crear Resolución
+                      </Button>
+                    </Grid>
+                    <Grid item sm={5}>
+                      <Button
+                        color='info'
+                        variant='contained'
+                        onClick={() => {}}
+                      >
+                      Ver Resolución
+                      </Button>
+                    </Grid>
+                  </>
                 ) : null
               }
             </Grid>

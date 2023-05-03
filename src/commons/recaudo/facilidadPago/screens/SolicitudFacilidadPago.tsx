@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { InputsEncabezado } from '../componentes/InputsEncabezado';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, TextareaAutosize, Stack, Button, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, TextareaAutosize, Stack, Button, Checkbox, FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { use_form } from '../../../../hooks/useForm';
 import { useFormLocal } from '../hooks/useFormLocal';
@@ -33,7 +34,11 @@ export const SolicitudFacilidadPago: React.FC = () => {
   const [rows_bienes, set_rows_bienes] = useState(Array<bien>);
   const { form_state, on_input_change } = use_form({});
   const { form_local, handle_change_local } = useFormLocal({});
+  const [modal, set_modal] = useState(false);
+
   console.log('form', form_state)
+  const handle_open = () => { set_modal(true) };
+  const handle_close = () => { set_modal(false) };
 
   useEffect(()=>{
     let count:number = 0;
@@ -44,46 +49,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
     }
     set_arr_periodicidad(arr)
   },[limite])
-
-  const rows = [
-    {
-      id: '1',
-      nombreObligacion: 'Permiso 1',
-      fechaInicio: '01/01/2015',
-      expediente: '378765',
-      nroResolucion: '378765-143',
-      valorCapital: 120000000,
-      valorIntereses: 35000000,
-      diasMora: 390,
-      valorAbonado: 21000000,
-      estado: 'En Curso'
-    },
-    {
-      id: '2',
-      nombreObligacion: 'Concesion Aguas',
-      fechaInicio: '01/04/2015',
-      expediente: '3342765',
-      nroResolucion: '3342765-4546',
-      valorCapital: 190700000,
-      valorIntereses: 45000000,
-      diasMora: 180,
-      valorAbonado: 76000000,
-      estado: 'En Curso'
-    },
-  ];
-
-  const columns = [
-    { field: "id", header: "ID", visible: false },
-    { field: "nombreObligacion", header: "Nombre Obligación", visible: true },
-    { field: "fechaInicio", header: "Fecha Inicio", visible: true },
-    { field: "expediente", header: "Expediente", visible: true },
-    { field: "nroResolucion", header: "Nro. Resolución", visible: true },
-    { field: "valorCapital", header: "Valor Capital $", visible: true },
-    { field: "valorIntereses", header: "Valor Intereses $", visible: true },
-    { field: "diasMora", header: "Días Mora", visible: true },
-    { field: "valorAbonado", header: "Valor Abonado", visible: true },
-    { field: "estado", header: "Estado", visible: true },
-  ];
 
   const columns_bienes: GridColDef[] = [
     {
@@ -142,14 +107,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
     <>
       <Title title='Solicitud de Facilidad de Pago - Usuario Externo' />
       <InputsEncabezado />
-      <TablaObligacionesSolicitud
-        showButtonExport
-        tittle={'Solicitud de Facilidad de Pago - Usuario Externo: '}
-        columns={columns}
-        rowsData={rows}
-        staticscroll={true}
-        stylescroll={"780px"}
-      />
+      <TablaObligacionesSolicitud />
       <Grid
         container
         sx={{
@@ -792,11 +750,35 @@ export const SolicitudFacilidadPago: React.FC = () => {
         <Button
           color='info'
           variant='contained'
-          onClick={() => {}}
+          onClick={() => {
+            handle_open()
+          }}
         >
         Enviar Solicitud
         </Button>
       </Stack>
+      <Dialog
+        open={modal}
+        onClose={handle_close}
+        maxWidth="xs"
+      >
+        <Box component="form"
+          onSubmit={()=>{}}>
+          <DialogTitle align='center'>La solicitud de facilidad de pago fue registrada con éxito</DialogTitle>
+          <Divider />
+          <DialogContent sx={{ mb: '0px' }}>
+            <Grid container spacing={1}>
+              <p><strong>Número de radicación:</strong> {'WQEQ123154'}</p>
+              <p><strong>Fecha y Hora:</strong> {Date()}</p>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" color="primary" onClick={()=>{
+              handle_close()
+            }}>Cerrar</Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </>
   )
 }

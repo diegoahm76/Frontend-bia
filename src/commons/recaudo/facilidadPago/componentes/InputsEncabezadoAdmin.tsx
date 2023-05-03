@@ -1,7 +1,11 @@
-import { Grid, Box, TextField } from "@mui/material";
+import { Grid, Box, TextField, Button } from "@mui/material";
+import { useState } from "react";
+import { TablaObligacionesSolicitud } from "./TablaObligacionesSolicitud";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InputsEncabezadoAdmin: React.FC = () => {
+  const [obligaciones, set_obligaciones] = useState(false);
+
   return (
     <>
       <Grid
@@ -27,7 +31,7 @@ export const InputsEncabezadoAdmin: React.FC = () => {
               <Grid item xs={12} sm={3}>
                 <TextField
                   id="outlined-error-helper-text"
-                  label="Nombre Completo"
+                  label="Nombre o Razón Social"
                   size="small"
                   fullWidth
                   value="Maria Cardenas"
@@ -57,50 +61,10 @@ export const InputsEncabezadoAdmin: React.FC = () => {
               <Grid item xs={12} sm={3}>
                 <TextField
                   id="outlined-error-helper-text"
-                  label="Calidad en que actúa la persona"
-                  size="small"
-                  fullWidth
-                  value="Persona Natural"
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  id="outlined-error-helper-text"
-                  label="Dirección"
+                  label="Dirección Notificación"
                   size="small"
                   fullWidth
                   value="Cra 23 #203-901"
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  id="outlined-error-helper-text"
-                  label="Nombre Obligación"
-                  size="small"
-                  fullWidth
-                  value="Pago tasa TUA"
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  id="outlined-error-helper-text"
-                  label="Número Obligación"
-                  size="small"
-                  fullWidth
-                  value="9283812"
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  id="outlined-error-helper-text"
-                  label="Teléfono Contacto"
-                  size="small"
-                  fullWidth
-                  value="3154321234"
                   disabled
                 />
               </Grid>
@@ -114,9 +78,38 @@ export const InputsEncabezadoAdmin: React.FC = () => {
                   disabled
                 />
               </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  id="outlined-error-helper-text"
+                  label="Obligaciones asociadas al radicado nro:"
+                  size="small"
+                  fullWidth
+                  value="QWEO9283812"
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  color='info'
+                  variant='contained'
+                  onClick={() => {
+                    set_obligaciones(true)
+                  }}
+                >
+                Consultar listado obligaciones
+                </Button>
+              </Grid>
             </Grid>
           </Box>
         </Grid>
+        {
+          obligaciones ? (
+            <>
+              <p><strong>Obligaciones objeto de la solicitud</strong></p>
+              <TablaObligacionesSolicitud />
+            </>
+          ) : null
+        }
       </Grid>
     </>
   )

@@ -1,142 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* eslint-disable @typescript-eslint/naming-convention */
-import { useState, useEffect, useCallback } from 'react';
-import { Box, FormControl, InputLabel, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Paper, Modal, Typography, Stack, Button, TextField } from "@mui/material";
-import { visuallyHidden } from '@mui/utils';
+import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
-import { Link } from 'react-router-dom';
-
-interface Data {
-  name: string;
-  identificacion: string;
-  obligacion: string;
-  nroObligacion: string;
-  nroResolucion: string;
-  fechaRadicacion: string;
-}
-
-function createData(
-  name: string,
-  identificacion: string,
-  obligacion: string,
-  nroObligacion: string,
-  nroResolucion: string,
-  fechaRadicacion: string,
-): Data {
-  return {
-    name,
-    identificacion,
-    obligacion,
-    nroObligacion,
-    nroResolucion,
-    fechaRadicacion
-  };
-}
-
-const rows = [
-  createData('Koch and Sons', '10298723', 'Concesión Agua Superficial', '378765', '543', '01/01/2022'),
-  createData('Steuber LLC', '2346448723', 'Permiso Perforación', '412333', '432', '01/01/2022'),
-  createData('Konopelski Group', '43214134', 'Pago Tasa TUA', '7564332', '2543', '01/01/2022'),
-  createData('Harber Inc', '34545437', 'Uso Agua Subterranea', '59493285', '6543', '01/01/2022'),
-];
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 450,
-  bgcolor: 'background.paper',
-  border: '2px #000',
-  boxShadow: 24,
-  p: 4,
-};
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = 'asc' | 'desc';
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key,
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) {
-      return order;
-    }
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-interface HeadCell {
-  disablePadding: boolean;
-  id: keyof Data;
-  label: string;
-  numeric: boolean;
-}
-
-const headCells: readonly HeadCell[] = [
-  {
-    id: 'name',
-    numeric: false,
-    disablePadding: true,
-    label: 'Nombre Usuario',
-  },
-  {
-    id: 'identificacion',
-    numeric: false,
-    disablePadding: true,
-    label: 'Identificación',
-  },
-  {
-    id: 'obligacion',
-    numeric: false,
-    disablePadding: true,
-    label: 'Nombre Obligación',
-  },
-  {
-    id: 'nroObligacion',
-    numeric: false,
-    disablePadding: true,
-    label: 'Número Obligación',
-  },
-  {
-    id: 'nroResolucion',
-    numeric: false,
-    disablePadding: true,
-    label: 'Número Resolución',
-  },
-  {
-    id: 'fechaRadicacion',
-    numeric: false,
-    disablePadding: true,
-    label: 'Fecha Radicación',
-  },
-];
-
-const DEFAULT_ORDER = 'asc';
-const DEFAULT_ORDER_BY = 'nroObligacion';
-const DEFAULT_ROWS_PER_PAGE = 5;
+import ArticleIcon from '@mui/icons-material/Article';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface event {
   target: {
@@ -144,157 +12,165 @@ interface event {
   }
 }
 
-interface EnhancedTableProps {
-  numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
+interface Data {
+  nombre: string;
+  identificacion: string;
+  obligacion: string;
+  fechaRadicacion: string;
 }
 
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } =
-    props;
-  const createSortHandler =
-    (newOrderBy: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, newOrderBy);
-    };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align='left'
-            padding='normal'
-            sortDirection={orderBy === headCell.id ? order : false}
-
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <strong>{headCell.label}</strong>
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-        <TableCell
-          align='left'
-          padding='normal'
-        >
-          Ver
-        </TableCell>
-        <TableCell
-          align='left'
-          padding='normal'
-        >
-          Asignación
-        </TableCell>
-      </TableRow>
-    </TableHead>
-  );
-}
-
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaObligacionesAdmin: React.FC = () => {
-  const [order, setOrder] = useState<Order>(DEFAULT_ORDER);
-  const [orderBy, setOrderBy] = useState<keyof Data>(DEFAULT_ORDER_BY);
-  const [selected, setSelected] = useState<readonly string[]>([]);
-  const [page, setPage] = useState(0);
-  const [visibleRows, setVisibleRows] = useState<Data[] | null>(null);
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
-  const [paddingHeight, setPaddingHeight] = useState(0);
-  const [open, setOpen] = useState(false);
-  const [openSubModal, setOpenSubModal] = useState(false);
-  const [optionModal, setOptionModal] = useState('');
-  const handleOpen = () => { setOpen(true) };
-  const [filter, setFilter] = useState('');
-  const [search, setSearch] = useState('');
+  const [visible_rows, set_visible_rows] = useState(Array<Data>);
+  const [filter, set_filter] = useState('');
+  const [search, set_search] = useState('');
+  const [modal, set_modal] = useState(false);
+  const [sub_modal, set_sub_modal] = useState(false);
+  const [modal_option, set_modal_option] = useState('no');
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    let rowsOnMount = stableSort(
-      rows,
-      getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY),
-    );
-    rowsOnMount = rowsOnMount.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE,
-    );
+  const handle_open = () => { set_modal(true) };
+  const handle_close = () => { set_modal(false) };
 
-    setVisibleRows(rowsOnMount);
-  }, []);
+  const handle_open_sub = () => { set_sub_modal(true) };
+  const handle_close_sub = () => { set_sub_modal(false) };
 
-  const handleRequestSort = useCallback(
-    (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc';
-      const toggledOrder = isAsc ? 'desc' : 'asc';
-      setOrder(toggledOrder);
-      setOrderBy(newOrderBy);
-
-      const sortedRows = stableSort(rows, getComparator(toggledOrder, newOrderBy));
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage,
-      );
-      setVisibleRows(updatedRows);
+  const fac_pago = [
+    {
+      id: 1,
+      nombre: 'Koch and Sons',
+      identificacion: '10298723',
+      obligacion: 'Concesión Agua Superficial',
+      fechaRadicacion: '01/01/2022'
     },
-    [order, orderBy, page, rowsPerPage],
-  );
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleChangePage = useCallback(
-    (event: unknown, newPage: number) => {
-      setPage(newPage);
-
-      const sortedRows = stableSort(rows, getComparator(order, orderBy));
-      const updatedRows = sortedRows.slice(
-        newPage * rowsPerPage,
-        newPage * rowsPerPage + rowsPerPage,
-      );
-      setVisibleRows(updatedRows);
-
-      // Avoid a layout jump when reaching the last page with empty rows.
-      const numEmptyRows =
-        newPage > 0 ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length) : 0;
-
-      const newPaddingHeight = (53) * numEmptyRows;
-      setPaddingHeight(newPaddingHeight);
+    {
+      id: 2,
+      nombre: 'Steuber LLC',
+      identificacion: '2346448723',
+      obligacion: 'Permiso Perforación',
+      fechaRadicacion: '01/01/2022'
     },
-    [order, orderBy, rowsPerPage],
-  );
-
-  const handleChangeRowsPerPage = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const updatedRowsPerPage = parseInt(event.target.value, 10);
-      setRowsPerPage(updatedRowsPerPage);
-
-      setPage(0);
-
-      const sortedRows = stableSort(rows, getComparator(order, orderBy));
-      const updatedRows = sortedRows.slice(
-        0 * updatedRowsPerPage,
-        0 * updatedRowsPerPage + updatedRowsPerPage,
-      );
-      setVisibleRows(updatedRows);
-      setPaddingHeight(0);
+    {
+      id: 3,
+      nombre: 'Konopelski Group',
+      identificacion: '43214134',
+      obligacion: 'Pago Tasa TUA',
+      fechaRadicacion: '01/01/2022'
     },
-    [order, orderBy],
-  );
+    {
+      id: 4,
+      nombre: 'Harber Inc',
+      identificacion: '34545437',
+      obligacion: 'Uso Agua Subterranea',
+      fechaRadicacion: '01/01/2022'
+    },
+  ];
+
+  const columns: GridColDef[] = [
+    {
+      field: 'nombre',
+      headerName: 'Nombre Usuario',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'identificacion',
+      headerName: 'Identificación',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'obligacion',
+      headerName: 'Número Radicación F.P.',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'fechaRadicacion',
+      headerName: 'Fecha Radicación',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'acciones',
+      headerName: 'Ver',
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <>
+            <Tooltip title="Ver">
+                <IconButton
+                  onClick={() => {
+                    navigate('../solicitadas')
+                  }}
+                >
+                  <Avatar
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
+                    }}
+                    variant="rounded"
+                  >
+                    <ArticleIcon
+                      sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                    />
+
+                  </Avatar>
+                </IconButton>
+              </Tooltip>
+            </>
+        )
+      },
+    },
+    {
+      field: 'asignacion',
+      headerName: 'Asignación',
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <FormControl sx={{ minWidth: 110 }}>
+            <InputLabel id="demo-simple-select-label">Seleccionar</InputLabel>
+              <Select
+                size='small'
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Seleccionar"
+                onChange={()=>{
+                  handle_open()
+                }}
+              >
+                <MenuItem value='Olga'>Olga</MenuItem>
+                <MenuItem value='Diana'>Diana</MenuItem>
+                <MenuItem value='Juan'>Juan</MenuItem>
+                <MenuItem value='Fernando'>Fernando</MenuItem>
+              </Select>
+          </FormControl>
+        )
+      },
+    },
+  ];
+
+  useEffect(()=>{
+    set_visible_rows(fac_pago)
+  }, [])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -312,14 +188,12 @@ export const TablaObligacionesAdmin: React.FC = () => {
               label="Filtrar por: "
               onChange={(event: event)=>{
                 const { value } = event.target
-                setFilter(value)
+                set_filter(value)
               }}
             >
-              <MenuItem value='name'>Nombre Usuario</MenuItem>
+              <MenuItem value='nombre'>Nombre Usuario</MenuItem>
               <MenuItem value='identificacion'>Identificación</MenuItem>
-              <MenuItem value='obligacion'>Nombre Obligación</MenuItem>
-              <MenuItem value='nroObligacion'>Número Obligación</MenuItem>
-              <MenuItem value='nroResolucion'>Número Resolución</MenuItem>
+              <MenuItem value='obligacion'>Número Radicación F.P.</MenuItem>
             </Select>
         </FormControl>
         <TextField
@@ -329,53 +203,37 @@ export const TablaObligacionesAdmin: React.FC = () => {
           size="medium"
           onChange={(event: event)=>{
             const { value } = event.target
-            setSearch(value)
+            set_search(value)
           }}
         />
         <Button
           color='secondary'
           variant='contained'
           onClick={() => {
-            const newRows = [];
-            if(filter === 'name'){
-              for(let i=0; i < rows.length; i++){
-                if(rows[i].name.toLowerCase().includes(search.toLowerCase())){
-                  newRows.push(rows[i])
+            const new_rows = [];
+            if(filter === 'nombre'){
+              for(let i=0; i < fac_pago.length; i++){
+                if(fac_pago[i].nombre.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(fac_pago[i])
                 }
               }
-              setVisibleRows(newRows)
+              set_visible_rows(new_rows)
             }
             if(filter === 'identificacion'){
-              for(let i=0; i < rows.length; i++){
-                if(rows[i].identificacion.toLowerCase().includes(search.toLowerCase())){
-                  newRows.push(rows[i])
+              for(let i=0; i < fac_pago.length; i++){
+                if(fac_pago[i].identificacion.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(fac_pago[i])
                 }
               }
-              setVisibleRows(newRows)
+              set_visible_rows(new_rows)
             }
             if(filter === 'obligacion'){
-              for(let i=0; i < rows.length; i++){
-                if(rows[i].obligacion.toLowerCase().includes(search.toLowerCase())){
-                  newRows.push(rows[i])
+              for(let i=0; i < fac_pago.length; i++){
+                if(fac_pago[i].obligacion.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(fac_pago[i])
                 }
               }
-              setVisibleRows(newRows)
-            }
-            if(filter === 'nroObligacion'){
-              for(let i=0; i < rows.length; i++){
-                if(rows[i].nroObligacion.toLowerCase().includes(search.toLowerCase())){
-                  newRows.push(rows[i])
-                }
-              }
-              setVisibleRows(newRows)
-            }
-            if(filter === 'nroResolucion'){
-              for(let i=0; i < rows.length; i++){
-                if(rows[i].nroResolucion.toLowerCase().includes(search.toLowerCase())){
-                  newRows.push(rows[i])
-                }
-              }
-              setVisibleRows(newRows)
+              set_visible_rows(new_rows)
             }
           }}
         >
@@ -386,153 +244,82 @@ export const TablaObligacionesAdmin: React.FC = () => {
           color='secondary'
           variant='outlined'
           onClick={() => {
-            setVisibleRows(rows)
+            set_visible_rows(fac_pago)
           }}
         >
         Mostrar Todo
         <FilterAltOffOutlined />
         </Button>
       </Stack>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size='medium'
+      {
+        visible_rows.length !== 0 ? (
+          <Grid
+            container
+            sx={{
+              position: 'relative',
+              background: '#FAFAFA',
+              borderRadius: '15px',
+              p: '20px',
+              mb: '20px',
+              boxShadow: '0px 3px 6px #042F4A26',
+            }}
           >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {(visibleRows != null)
-                ? visibleRows.map((row, index) => {
-
-                    return (
-                      <TableRow
-                        hover
-                        key={row.name}
-                        sx={{ cursor: 'pointer' }}
-                      >
-                        <TableCell align="left" padding="normal">{row.name}</TableCell>
-                        <TableCell align="left" padding="normal">{row.identificacion}</TableCell>
-                        <TableCell align="left" padding="normal">{row.obligacion}</TableCell>
-                        <TableCell align="left" padding="normal">{row.nroObligacion}</TableCell>
-                        <TableCell align="left" padding="normal">{row.nroResolucion}</TableCell>
-                        <TableCell align="left" padding="normal">{row.fechaRadicacion}</TableCell>
-                        <TableCell align="left" padding="normal"><Link to={`../solicitadas`}>Ver</Link></TableCell>
-                        <TableCell align="left" padding="normal">
-                        <FormControl sx={{ minWidth: 110 }}>
-                          <InputLabel id="demo-simple-select-label">Seleccionar</InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            label="Seleccionar"
-                            onChange={handleOpen}
-                          >
-                            <MenuItem value='Olga'>Olga</MenuItem>
-                            <MenuItem value='Diana'>Diana</MenuItem>
-                            <MenuItem value='Juan'>Juan</MenuItem>
-                            <MenuItem value='Fernando'>Fernando</MenuItem>
-                          </Select>
-                        </FormControl>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                : null}
-              {paddingHeight > 0 && (
-                <TableRow
-                  style={{
-                    height: paddingHeight,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <Modal
-        open={open}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+            <Grid item xs={12}>
+              <Grid item>
+                <Box sx={{ width: '100%' }}>
+                  <DataGrid
+                    autoHeight
+                    disableSelectionOnClick
+                    rows={visible_rows}
+                    columns={columns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => row.id}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+          </Grid>
+        ) : null
+      }
+      <Dialog
+        open={modal}
+        onClose={handle_close}
+        maxWidth="xs"
       >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" component="h1" align='center'>
-            <strong>¿Está seguro de realizar la reasignación de usuario?</strong>
-          </Typography>
-          <Stack
-            direction="row"
-            justifyContent="center"
-            spacing={2}
-            marginTop='20px'
-          >
-            <Button
-              color='info'
-              variant='contained'
-              onClick={()=>{
-                setOpenSubModal(true)
-                setOptionModal('si')
-              }}
-            >
-            Si
-            </Button>
-            <Button
-              color='info'
-              variant='contained'
-              onClick={()=>{
-                setOpenSubModal(true)
-                setOptionModal('no')
-              }}
-            >
-            No
-            </Button>
-          </Stack>
+        <Box component="form"
+          onSubmit={()=>{}}>
+          <DialogTitle>¿Está seguro de realizar la reasignación de usuario?</DialogTitle>
+          <DialogActions>
+            <Button onClick={() => {
+                handle_open_sub();
+                set_modal_option('no')
+                handle_close()
+            }}>Cancelar</Button>
+            <Button variant="contained" color="primary" onClick={()=>{
+              handle_open_sub()
+              set_modal_option('si')
+              handle_close()
+            }}>Guardar</Button>
+          </DialogActions>
         </Box>
-      </Modal>
-      <Modal
-        open={openSubModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+      </Dialog>
+      <Dialog
+        open={sub_modal}
+        onClose={handle_close_sub}
+        maxWidth="xs"
       >
-        <Box sx={style}>
-          <Typography id="modal-modal-title" component="h1" align='center'>
-            <strong>{optionModal === 'si' ? 'Reasignación ejecutada con éxito' : 'Reasignación cancelada'}</strong>
-          </Typography>
-          <Stack
-            direction="row"
-            justifyContent="center"
-            spacing={2}
-            marginTop='20px'
-          >
-            <Button
-              color='info'
-              variant='contained'
-              onClick={()=>{
-                setOpenSubModal(false)
-                setOpen(false)
-              }}
-            >
-            Ok
-            </Button>
-          </Stack>
+        <Box component="form"
+          onSubmit={()=>{}}>
+          <DialogTitle>{modal_option === 'si' ? 'Reasignación ejecutada con éxito' : 'Reasignación cancelada'}</DialogTitle>
+          <DialogActions>
+            <Button variant="contained" color="primary" onClick={()=>{
+              handle_close_sub()
+            }}>Ok</Button>
+          </DialogActions>
         </Box>
-      </Modal>
+      </Dialog>
     </Box>
   );
 }
