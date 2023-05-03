@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type Dispatch } from 'react';
 import { type NavigateFunction } from 'react-router-dom';
 import { toast, type ToastContent } from 'react-toastify';

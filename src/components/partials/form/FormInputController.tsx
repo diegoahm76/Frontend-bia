@@ -98,7 +98,7 @@ const FormInputController = ({
                 defaultValue={default_value}
                 rules={{ required: rules.required_rule?.rule, min: rules.min_rule?.rule, max: rules.max_rule?.rule }}
                 render={({
-                    field: { onChange, value },
+                    field: { onChange },
                     fieldState: { error },
                 }) => (
                     <TextField
@@ -110,10 +110,7 @@ const FormInputController = ({
                         variant="outlined"
                         type={type}
                         disabled={disabled}
-                        multiline={multiline_text ?? false}
-                        rows={rows_text ?? 1}
-                        onChange={(event) => {(handle_file_input_change(event))}}
-                        onBlur={on_blur_function}
+                        onChange={handle_file_input_change}
                         error={!(error == null)}
                         helperText={
                             (error != null)

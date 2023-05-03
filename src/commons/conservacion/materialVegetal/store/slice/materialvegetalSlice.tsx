@@ -15,7 +15,7 @@ import { type Persona } from "../../../../../interfaces/globalModels";
 export const initial_state_planting: IObjPlanting = {
   id_siembra: null,
   nro_lote: null,
-  fecha_siembra: (new Date().toDateString()),
+  fecha_siembra: (new Date().toString()),
   agno_lote: null,
   id_vivero: null,
   cama_germinacion: [],
@@ -88,6 +88,7 @@ const initial_state: IMaterialVegetal = {
   current_nursery: initial_state_current_nursery,
   vegetal_materials: [],
   germination_beds: [],
+  current_germination_beds: [],
   planting_goods: [],
   goods: [],
   current_good: initial_state_current_good,
@@ -113,6 +114,10 @@ export const material_vegetal_slice = createSlice({
 
     set_germination_beds: (state: IMaterialVegetal, action: PayloadAction<IObjGerminationBed[]>) => {
       state.germination_beds = action.payload;
+    },
+
+    set_current_germination_beds: (state: IMaterialVegetal, action: PayloadAction<IObjGerminationBed[]>) => {
+      state.current_germination_beds = action.payload;
     },
 
     set_planting_goods: (state: IMaterialVegetal, action: PayloadAction<IObjPlantingGoods[]>) => {
@@ -143,4 +148,4 @@ export const material_vegetal_slice = createSlice({
     },
   },
 });
-export const { set_persons, set_current_good, set_goods, set_planting_person, set_current_nursery, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting } = material_vegetal_slice.actions;
+export const { set_persons, set_current_good, set_goods, set_planting_person, set_current_nursery, set_nurseries, set_vegetal_materials, set_germination_beds, set_current_germination_beds, set_planting_goods, set_plantings, set_current_planting } = material_vegetal_slice.actions;
