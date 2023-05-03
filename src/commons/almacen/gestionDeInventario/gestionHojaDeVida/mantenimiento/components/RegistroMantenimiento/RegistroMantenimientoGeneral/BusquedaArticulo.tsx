@@ -6,26 +6,21 @@ import {
     TextField
 } from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
-import BuscarArticuloComponent from './BuscarArticulo';
-import use_buscar_articulo from './hooks/useBuscarArticulo';
-import use_previsualizacion from "./hooks/usePrevisualizacion";
 import { useCallback, useEffect, useState } from "react";
-import { get_cv_vehicle_service } from "../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks";
-import { get_cv_computer_service } from "../../../hojaDeVidaComputo/store/thunks/cvComputoThunks";
-import { get_cv_others_service } from "../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks";
-import { useAppDispatch } from "../../../../../../../hooks";
+import use_buscar_articulo from "../../mantenimientoGeneral/hooks/useBuscarArticulo";
+import use_previsualizacion from "../../mantenimientoGeneral/hooks/usePrevisualizacion";
+import BuscarArticuloComponent from "../../mantenimientoGeneral/BuscarArticulo";
 
 // const tipo_articulo = [{ value: 'Com', label: 'Computo' }, { value: 'Veh', label: 'Vehiculo' }, { value: 'OAc', label: 'Otro' }]
 interface IProps {
     tipo_articulo: string,
     parent_details: any,
     user_info_prop: any,
-    limpiar_formulario: boolean
+    limpiar_formulario: boolean,
+    detalle_programacion: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, user_info_prop, limpiar_formulario}: IProps) => {
-  const dispatch = useAppDispatch();
-
+export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, user_info_prop, limpiar_formulario, detalle_programacion }: IProps) => {
     const {        // States
         title,
         consulta_buscar_articulo_is_active,
@@ -40,24 +35,8 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
         set_user_info
     } = use_previsualizacion();
 
-    const [codigo_bien, set_codigo_bien] = useState<string | null>("");
+    const [id_bien, set_id_bien] = useState<string | null>("");
     const [nombre, set_nombre] = useState<string | null>("");
-
-    const busqueda_articulo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(tipo_articulo ==='vehículos'){
-            dispatch(get_cv_vehicle_service(e.target.value)).then((response: any) => {
-              set_detalle_seleccionado(response);
-            })
-        }else if(tipo_articulo ==='computadores'){
-            dispatch(get_cv_computer_service(e.target.value)).then((response: any) => {
-                set_detalle_seleccionado(response.data);
-            })
-        }else{
-            dispatch(get_cv_others_service(e.target.value)).then((response: any) => {
-                set_detalle_seleccionado(response);
-            })
-        }
-    }
 
     const set_details_state = useCallback((val: any) => {
         set_detalle_seleccionado(val);
@@ -86,18 +65,21 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
 
     useEffect(() => {
         if (limpiar_formulario) {
-            set_codigo_bien('');
+            set_id_bien('');
             set_nombre('');
         }
     }, [limpiar_formulario]);
 
     useEffect(() => {
         if (detalle_seleccionado !== undefined && detalle_seleccionado !== null) {
-            set_codigo_bien(detalle_seleccionado.codigo_bien);
+            set_id_bien(detalle_seleccionado.codigo_bien);
             set_nombre(detalle_seleccionado.nombre);
         }
     }, [detalle_seleccionado]);
 
+    useEffect(() => {
+        set_detalle_seleccionado(detalle_programacion);
+    }, [detalle_programacion]);
     return (
         <>
             <Box
@@ -113,8 +95,7 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
                             helperText="Ingresar Código"
                             size="small"
                             required
-                            value={codigo_bien}
-                            onBlur={busqueda_articulo}
+                            value={id_bien}
                             fullWidth
                         />
                     </Grid>

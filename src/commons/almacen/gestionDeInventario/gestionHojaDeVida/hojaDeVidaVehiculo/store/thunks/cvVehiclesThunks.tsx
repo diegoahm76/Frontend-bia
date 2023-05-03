@@ -65,7 +65,7 @@ const control_success = (message: ToastContent) =>
 };
 
 // Obtener Hoja de Vida PC
-export const get_cv_vehicle_service = (id: any) => {
+export const get_cv_vehicle_service: (id: any) => any = (id: any) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

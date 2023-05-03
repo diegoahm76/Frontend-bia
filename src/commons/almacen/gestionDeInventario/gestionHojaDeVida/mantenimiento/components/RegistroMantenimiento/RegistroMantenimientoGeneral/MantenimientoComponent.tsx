@@ -13,12 +13,13 @@ import {
 interface IProps {
     parent_type_maintenance: any,
     parent_esp_maintenance: any,
-    limpiar_formulario: boolean
+    limpiar_formulario: boolean,
+    programacion: any
 }
 const tipo_mantenimiento = [{ value: "P", label: "Preventivo" }, { value: "C", label: "Correctivo" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario }: IProps) => {
+export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario, programacion }: IProps) => {
 
     const [tipo, set_tipo] = useState("");
     const [especificacion, set_especificacion] = useState("");
@@ -37,6 +38,12 @@ export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenan
             set_especificacion("");
         }
     }, [limpiar_formulario]);
+
+    useEffect(() => {
+        if(programacion !== null && programacion !== undefined){
+            set_tipo(programacion.tipo);
+        }
+    }, [programacion]);
 
     const handle_change: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tipo(e.target.value);
@@ -62,6 +69,7 @@ export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenan
                                 value={tipo}
                                 label="Tipo de mantenimiento"
                                 onChange={handle_change}
+                                readOnly={true}
                             >
                                 {tipo_mantenimiento.map(({ value, label }) => (
                                     <MenuItem key={value} value={value}>

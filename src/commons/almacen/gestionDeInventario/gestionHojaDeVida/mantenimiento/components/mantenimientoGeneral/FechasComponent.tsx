@@ -231,17 +231,17 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
             const data: crear_mantenimiento = {
                 tipo_programacion: "fecha",
                 cod_tipo_mantenimiento: tipo_matenimiento,
-                kilometraje_programado: "",
-                fecha_programada: cm.format("DD-MM-YYYY"),
+                kilometraje_programado: null,
+                fecha_programada: cm.format("YYYY-MM-DD"),
                 motivo_mantenimiento: especificacion,
                 observaciones: especificacion,
-                fecha_solicitud: dayjs().format("DD-MM-YYYY"),
-                fecha_anulacion: "",
-                justificacion_anulacion: "",
+                fecha_solicitud: dayjs().format("YYYY-MM-DD"),
+                fecha_anulacion: null,
+                justificacion_anulacion: null,
                 ejecutado: false,
                 id_articulo: detalle_seleccionado.id_bien,
                 id_persona_solicita: user_info.id_persona,
-                id_persona_anula: 0
+                id_persona_anula: null
             }
             rows_emit.push(data);
         })
