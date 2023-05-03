@@ -60,6 +60,7 @@ export const RegisterPersonaNatural: React.FC<Props> = ({
   tipo_persona,
   has_user,
 }: Props) => {
+  
   const {
     register,
     handleSubmit: handle_submit,

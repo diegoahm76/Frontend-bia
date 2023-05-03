@@ -205,4 +205,8 @@ export interface DataPersonas {
   cod_municipio_expedicion_id:              string;
   id_persona_crea:                          number;
   id_persona_ultim_actualiz_diferente_crea: number;
+  cod_departamento_expedicion: string;
+  cod_departamento_residencia: string;
+  cod_departamento_notificacion: string;
+  cod_departamento_laboral: string;
 }
