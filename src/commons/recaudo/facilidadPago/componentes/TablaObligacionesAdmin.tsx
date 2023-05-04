@@ -117,7 +117,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    navigate('../solicitadas')
+                    navigate('../solicitud')
                   }}
                 >
                   <Avatar

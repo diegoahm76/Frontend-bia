@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox } from '@mui/material';
+import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox, TextField, Stack } from '@mui/material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
@@ -38,15 +38,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
       valorAbonado: 76000000,
       estado: 'En Curso'
     },
-    {
-      id: 'total',
-      nroResolucion: <strong>Total</strong>,
-      valorCapital: capital,
-      valorIntereses: intereses,
-      valorAbonado: abonado,
-      estado: <strong>Gran Total a Deber</strong>,
-      acciones: total,
-    },
   ];
 
   const columns: GridColDef[] = [
@@ -55,13 +46,13 @@ export const TablaObligacionesUsuario: React.FC = () => {
       headerName: 'Solicitar Fac. Pago',
       width: 150,
       renderCell: (params) => {
-        return params.row.id !== 'total' ? (
+        return (
           <Checkbox
             onClick={(event) => {
               handle_click(event, params.row.nombreObligacion)
             }}
           />
-        ) : null
+        )
       },
     },
     {
@@ -159,7 +150,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       headerName: 'Acciones',
       width: 150,
       renderCell: (params) => {
-        return params.row.id !== 'total' ? (
+        return (
           <>
             <Tooltip title="Ver">
                 <IconButton
@@ -182,7 +173,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 </IconButton>
               </Tooltip>
             </>
-        ) : null
+        )
       },
     },
   ];
@@ -228,8 +219,8 @@ export const TablaObligacionesUsuario: React.FC = () => {
       set_intereses(0)
       set_abonado(0)
     }
-    set_total(capital + intereses)
-  }, [selected, capital, intereses])
+    set_total((capital + intereses) - abonado)
+  }, [selected, capital, intereses, abonado])
 
   return (
     <>
@@ -259,6 +250,48 @@ export const TablaObligacionesUsuario: React.FC = () => {
               />
             </Box>
           </Grid>
+          <Stack
+          direction="row"
+          display='flex'
+          justifyContent='flex-end'
+        >
+            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
+              <TextField
+                id="outlined-error-helper-text"
+                label="Total Capital"
+                size="small"
+                fullWidth
+                value={capital}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
+              <TextField
+                id="outlined-error-helper-text"
+                label="Total Intereses"
+                size="small"
+                fullWidth
+                value={intereses}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
+              <TextField
+                id="outlined-error-helper-text"
+                label="Total Abonado"
+                size="small"
+                fullWidth
+                value={abonado}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} mt='30px'>
+              <TextField
+                id="outlined-error-helper-text"
+                label={<strong>Gran Total a Deber</strong>}
+                size="small"
+                fullWidth
+                value={total}
+              />
+            </Grid>
+        </Stack>
         </Grid>
       </Grid>
     </>

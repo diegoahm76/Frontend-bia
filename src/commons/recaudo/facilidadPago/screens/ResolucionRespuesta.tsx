@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { Grid, Box, Button, Stack, TextField } from "@mui/material";
+import { Grid, Box, Button, Stack, TextField, Dialog, DialogTitle, DialogContent, Divider, DialogActions } from "@mui/material";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { useState } from 'react';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResolucionRespuesta: React.FC = () => {
+  const [modal, set_modal] = useState(false);
+  const handle_open = () => { set_modal(true) };
+  const handle_close = () => { set_modal(false) };
 
   return (
     <>
@@ -145,11 +150,34 @@ export const ResolucionRespuesta: React.FC = () => {
           color='info'
           variant='contained'
           sx={{ marginTop: '30px' }}
-          onClick={() => {}}
+          onClick={() => {
+            handle_open()
+          }}
         >
           Guardar Resolución
         </Button>
       </Stack>
+      <Dialog
+        open={modal}
+        onClose={handle_close}
+        maxWidth="xs"
+      >
+        <Box component="form"
+          onSubmit={()=>{}}>
+          <DialogTitle align='center'>Se ha registrado la resolución Nro. {'DSAS23141'} con éxito</DialogTitle>
+          <Divider />
+          <DialogContent sx={{ mb: '0px' }}>
+            <Grid container spacing={1}>
+              <p><strong>Fecha y Hora:</strong> {Date()}</p>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" color="primary" onClick={()=>{
+              handle_close()
+            }}>Cerrar</Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </>
   )
 }

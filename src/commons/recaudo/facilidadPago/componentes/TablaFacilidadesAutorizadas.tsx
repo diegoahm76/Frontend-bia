@@ -4,10 +4,12 @@ import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox } from '@mui/material'
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaFacilidadesAutorizadas: React.FC = () => {
   const [selected, set_selected] = useState<readonly string[]>([]);
+  const navigate = useNavigate();
 
   const fac_pago = [
     {
@@ -88,7 +90,9 @@ export const TablaFacilidadesAutorizadas: React.FC = () => {
           <>
             <Tooltip title="Ver">
                 <IconButton
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate('../seguimiento')
+                  }}
                 >
                   <Avatar
                     sx={{

@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
+import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Checkbox } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { TablaObligacionesUsuario } from './TablaObligacionesUsuario';
 
 interface event {
   target: {
@@ -13,65 +14,53 @@ interface event {
 }
 
 interface Data {
-  nombre: string;
   identificacion: string;
-  obligacion: string;
-  fechaRadicacion: string;
+  nombre: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesAdminAsignadas: React.FC = () => {
+export const TablaConsultaAdmin: React.FC = () => {
   const [visible_rows, set_visible_rows] = useState(Array<Data>);
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
+  const [obligaciones, set_obligaciones] =useState(false);
   const navigate = useNavigate();
 
-  const fac_pago = [
+  const contribuyente = [
     {
       id: 1,
-      nombre: 'Koch and Sons',
       identificacion: '10298723',
-      obligacion: 'Concesión Agua Superficial',
-      fechaRadicacion: '01/01/2022'
+      nombre: 'Juan Ortua',
     },
     {
       id: 2,
-      nombre: 'Steuber LLC',
       identificacion: '2346448723',
-      obligacion: 'Permiso Perforación',
-      fechaRadicacion: '01/01/2022'
+      nombre: 'Diana Vargas',
     },
     {
       id: 3,
-      nombre: 'Konopelski Group',
       identificacion: '43214134',
-      obligacion: 'Pago Tasa TUA',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 4,
-      nombre: 'Harber Inc',
-      identificacion: '34545437',
-      obligacion: 'Uso Agua Subterranea',
-      fechaRadicacion: '01/01/2022'
+      nombre: 'Multiservicios',
     },
   ];
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre',
-      headerName: 'Nombre Usuario',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      field: 'checkbox',
+      headerName: 'Seleccionar',
+      width: 150,
+      renderCell: (params) => {
+        return (
+          <Checkbox
+            onClick={() => {}}
+          />
+        )
+      },
     },
     {
       field: 'identificacion',
-      headerName: 'Identificación',
-      width: 150,
+      headerName: 'Número Identificación',
+      width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -79,19 +68,9 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
       ),
     },
     {
-      field: 'obligacion',
-      headerName: 'Número Radicación F.P.',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'fechaRadicacion',
-      headerName: 'Fecha Radicación',
-      width: 150,
+      field: 'nombre',
+      headerName: 'Nombre Contribuyente',
+      width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -108,7 +87,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    navigate('../solicitud')
+                    set_obligaciones(true)
                   }}
                 >
                   <Avatar
@@ -134,7 +113,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
   ];
 
   useEffect(()=>{
-    set_visible_rows(fac_pago)
+    set_visible_rows(contribuyente)
   }, [])
 
   return (
@@ -143,7 +122,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
         direction="row"
         justifyContent="left"
         spacing={2}
-        sx={{ mb: '20px' }}
+        sx={{ mb: '20px', mt: '20px' }}
       >
         <FormControl sx={{ minWidth: 130 }}>
           <InputLabel id="demo-simple-select-label">Filtrar por: </InputLabel>
@@ -156,9 +135,8 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
                 set_filter(value)
               }}
             >
-              <MenuItem value='nombre'>Nombre Usuario</MenuItem>
-              <MenuItem value='identificacion'>Identificación</MenuItem>
-              <MenuItem value='obligacion'>Número Radicación F.P.</MenuItem>
+              <MenuItem value='identificacion'>Número Identificación</MenuItem>
+              <MenuItem value='nombre'>Nombre Contribuyente</MenuItem>
             </Select>
         </FormControl>
         <TextField
@@ -176,26 +154,18 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           variant='contained'
           onClick={() => {
             const new_rows = [];
-            if(filter === 'nombre'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].nombre.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
-                }
-              }
-              set_visible_rows(new_rows)
-            }
             if(filter === 'identificacion'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].identificacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
+              for(let i=0; i < contribuyente.length; i++){
+                if(contribuyente[i].identificacion.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(contribuyente[i])
                 }
               }
               set_visible_rows(new_rows)
             }
-            if(filter === 'obligacion'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].obligacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
+            if(filter === 'nombre'){
+              for(let i=0; i < contribuyente.length; i++){
+                if(contribuyente[i].nombre.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(contribuyente[i])
                 }
               }
               set_visible_rows(new_rows)
@@ -209,7 +179,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           color='secondary'
           variant='outlined'
           onClick={() => {
-            set_visible_rows(fac_pago)
+            set_visible_rows(contribuyente)
           }}
         >
         Mostrar Todo
@@ -246,6 +216,31 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
               </Grid>
             </Grid>
           </Grid>
+        ) : null
+      }
+      {
+        obligaciones ? (
+          <>
+            <p>Las obligaciones pendientes por pago son las siguientes: </p>
+            <TablaObligacionesUsuario />
+            <Stack
+              direction="row"
+              justifyContent="right"
+              spacing={2}
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                color='info'
+                variant='contained'
+                sx={{ marginTop: '30px' }}
+                onClick={() => {
+                  navigate('../registro')
+                }}
+              >
+              Crear Facilidad de Pago
+              </Button>
+            </Stack>
+          </>
         ) : null
       }
     </Box>
