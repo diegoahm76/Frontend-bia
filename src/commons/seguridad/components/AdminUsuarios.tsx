@@ -4,9 +4,6 @@ import {
   Grid,
   Button,
   type SelectChangeEvent,
-  Alert,
-  Typography,
-  LinearProgress,
   TextField,
   Skeleton,
 } from '@mui/material';
@@ -29,7 +26,7 @@ import DialogUserXPerson from './DialogUserXPerson';
 
 export function AdminUsuarios(): JSX.Element {
   const dispatch = useDispatch();
-  const { user_info, data_user_search, data_person_search } = useSelector(
+  const { data_user_search, data_person_search } = useSelector(
     (state: SeguridadSlice) => state.seguridad
   );
   const [users_x_person_is_active, set_users_x_person_is_active] =
@@ -51,7 +48,6 @@ export function AdminUsuarios(): JSX.Element {
   } = useForm<DataAadminUser>();
   const {
     data_register,
-    is_search,
     loading,
     tipo_documento_opt,
     tipo_documento,
@@ -115,7 +111,7 @@ export function AdminUsuarios(): JSX.Element {
   }, [data_person_search]);
 
   useEffect(() => {
-    set_tipo_persona(user_info.tipo_persona);
+    set_tipo_persona(data_user_search.tipo_persona);
     // set_tipo_documento(user_info.tipo_documento);
     // set_numero_documento(user_info.numero_documento);
   }, [data_user_search]);
@@ -173,7 +169,6 @@ export function AdminUsuarios(): JSX.Element {
           </Button>
         </Grid>
       </Grid>
-
       <Grid container spacing={2} sx={{ mb: '20px' }}>
         <Grid item xs={12} sm={6} md={4}>
           <CustomSelect
@@ -227,31 +222,6 @@ export function AdminUsuarios(): JSX.Element {
             />
           )}
         </Grid>
-        {/* Muestra loading cuando esta buscando datos de la persona */}
-        {is_search && (
-          <Grid item xs={12}>
-            <Grid container justifyContent="center" textAlign="center">
-              <Alert icon={false} severity="info">
-                <LinearProgress />
-                <Typography>Buscando persona...</Typography>
-              </Alert>
-            </Grid>
-          </Grid>
-        )}
-        {has_user && (
-          <Grid item xs={12}>
-            <Grid container justifyContent="center" textAlign="center">
-              <Alert icon={false} severity="error">
-                <Typography>
-                  Lo sentimos, este documento ya tiene un usuario, puede iniciar
-                  sesión con su usuario y contraseña, si ha olvidado sus datos
-                  de acceso, dirigase al inicio de sesión y haga click en
-                  ¿Olvidó su contraseña?
-                </Typography>
-              </Alert>
-            </Grid>
-          </Grid>
-        )}
       </Grid>
       {tipo_persona === 'N' && <AdminUserPersonaNatural has_user={has_user} />}
       {tipo_persona === 'J' && (
