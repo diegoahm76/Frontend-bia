@@ -1285,7 +1285,7 @@ export const ReportesScreen: React.FC = () => {
                           void handle_download_pdf_dia();
                           return;
                         }
-                        void handle_download_pdf_migracion();
+                        control_error("Esta estación no tiene disponible este reporte");
                       }}>
                       Descargar PDF dia
                     </Button>
@@ -1386,7 +1386,7 @@ export const ReportesScreen: React.FC = () => {
                           void handle_download_pdf_rango();
                           return;
                         }
-                        void handle_download_pdf_migracion();
+                        control_error("Esta estación no tiene disponible este reporte");
                       }}>
                       Descargar PDF Rango
                     </Button>

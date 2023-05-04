@@ -1,6 +1,6 @@
   import { type Dispatch } from 'react';
-  import { roles_request, superuser_request } from '../request/seguridadRequest';
-  import { delegate_superuser_role, set_roles } from './seguridadSlice';
+  import { persons_request, roles_request, superuser_request, user_request, users_request } from '../request/seguridadRequest';
+  import { delegate_superuser_role, set_persons, set_roles, set_user_info, set_users } from './seguridadSlice';
   import { control_error, control_success } from '../../../helpers';
 
 export const get_roles: () => any = () => {
@@ -22,3 +22,42 @@ export const create_super_user: (id_persona: number) => (dispatch: Dispatch<any>
     console.log(data);
   }
 }
+
+export const get_users: (
+  nombre_de_usuario: string
+) => any = (nombre_de_usuario: string) => {
+  return async (dispatch: Dispatch<any>) => {
+    const resp = await users_request(nombre_de_usuario);
+    dispatch(set_users(resp.data));
+  };
+};
+
+export const get_persons: (
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  primer_apellido: string,
+) => any = (  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  primer_apellido: string,
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    const resp = await persons_request(
+      tipo_documento, 
+      numero_documento, 
+      primer_nombre,
+      primer_apellido,
+    );
+    dispatch(set_persons(resp.data));
+  };
+};
+
+export const get_data_user: (id:number) => any = (id: number) => {
+  return async (dispatch: Dispatch<any>) => {
+    const {data} = await user_request(id);
+    console.log(data);
+    dispatch(set_user_info(data.data));
+  }
+}
+
