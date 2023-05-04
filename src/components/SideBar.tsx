@@ -214,7 +214,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 unmountOnExit
                 in={e.expanded}
                 sx={{
-                  bgcolor: mod_dark ? '#2B3C46' : '#e7ffe7',
+                  bgcolor: mod_dark ? '#2B3C46' : '#F0F0F0',
                   borderRadius: '10px',
                 }}
               >

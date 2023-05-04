@@ -186,15 +186,15 @@ const DialogBusquedaAvanzada = ({
   ];
 
   const trigger_user_person_create_active = (data: any): void => {
-    console.log('punto 1 - CREATE', data);
-    dispatch(set_data_person_search(data));
+    // console.log('punto 1 - CREATE', data);
     dispatch(set_action_admin_users('CREATE'));
+    dispatch(set_data_person_search(data));
   };
 
   const trigger_user_edit_active = (data: any): void => {
-    console.log('punto 1 - EDIT', data);
-    dispatch(set_data_person_search(data));
+    // console.log('punto 1 - EDIT', data);
     dispatch(set_action_admin_users('EDIT'));
+    dispatch(set_data_person_search(data));
   };
 
   const handle_close_busqueda_avanzada = (): void => {

@@ -24,6 +24,9 @@ export const use_theme = (): {
             primary: {
               main: '#042F4A',
             },
+            secondary: {
+              main: '#fafafa',
+            },
           },
           typography: {
             fontFamily: 'Roboto',

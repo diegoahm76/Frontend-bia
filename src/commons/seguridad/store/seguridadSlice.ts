@@ -30,6 +30,10 @@ const initial_state_data_person_search: InfoPersonal = {
   razon_social: '',
   nombre_comercial: '',
   tiene_usuario: false,
+  usuarios: [ {
+    id_usuario: 0,
+    nombre_de_usuario: ''
+  }]
 };
 
 const initial_state_user_info: Users = {
@@ -91,12 +95,12 @@ export const seguridad_slice = createSlice({
   initialState: initial_state,
   reducers: {    
     set_roles: (state, { payload }) => {
-      console.log('payload', payload)
+      
       state.roles = payload;
     },
     set_rol: (state, {payload}) => {
       state.rol = payload
-      console.log("state_rol", state.rol);
+      
     },
     delegate_superuser_role: (state, { payload }) => {
       state.superUser = payload;
@@ -122,7 +126,7 @@ export const seguridad_slice = createSlice({
     },
     set_data_person_search: (state, {payload}) => {
       state.data_person_search = payload
-      console.log("state_rol", state.rol);
+      
     },
   }
 });

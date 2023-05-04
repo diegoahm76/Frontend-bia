@@ -22,14 +22,18 @@ import DialogBusquedaAvanzadaPersona from './DialogBusquedaAvanzadaPersona';
 import { CustomSelect } from '../../../components';
 import { AdminUserPersonaJuridica } from './AdminUserPersonaJuridica';
 import { AdminUserPersonaNatural } from './AdminUserPersonaNatural';
-import {
-  // useDispatch,
-  useSelector,
-} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { get_data_user } from '../store/thunks';
+import DialogUserXPerson from './DialogUserXPerson';
 // import { set_action_admin_users } from '../store/seguridadSlice';
 
 export function AdminUsuarios(): JSX.Element {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { user_info, data_user_search, data_person_search } = useSelector(
+    (state: SeguridadSlice) => state.seguridad
+  );
+  const [users_x_person_is_active, set_users_x_person_is_active] =
+    useState<boolean>(false);
   const [
     busqueda_avanzada_person_is_active,
     set_busqueda_avanzada_person_is_active,
@@ -38,9 +42,6 @@ export function AdminUsuarios(): JSX.Element {
     busqueda_avanzada_user_is_active,
     set_busqueda_avanzada_user_is_active,
   ] = useState<boolean>(false);
-  const { user_info, data_user_search, data_person_search } = useSelector(
-    (state: SeguridadSlice) => state.seguridad
-  );
 
   const {
     register: register_search_ini,
@@ -72,11 +73,18 @@ export function AdminUsuarios(): JSX.Element {
   }, [numero_documento]);
 
   useEffect(() => {
-    // reset();
     if (watch('tipo_persona') !== undefined) {
       set_tipo_persona(watch('tipo_persona'));
     }
   }, [watch('tipo_persona')]);
+
+  useEffect(() => {
+    set_value_form('tipo_documento', tipo_documento);
+  }, [tipo_documento]);
+
+  useEffect(() => {
+    set_value_form('tipo_persona', tipo_persona);
+  }, [tipo_persona]);
 
   useEffect(() => {
     if (watch('tipo_documento') !== undefined) {
@@ -96,6 +104,12 @@ export function AdminUsuarios(): JSX.Element {
 
   useEffect(() => {
     set_tipo_persona(data_person_search.tipo_persona);
+    if (data_person_search.usuarios.length === 1) {
+      dispatch(get_data_user(data_person_search.usuarios[0].id_usuario));
+    } else if (data_person_search.usuarios.length === 2) {
+      // Disparar modal con los 2 usuarios disponibles
+      set_users_x_person_is_active(true);
+    }
     // set_tipo_documento(data_person_search.tipo_documento);
     // set_numero_documento(data_person_search.numero_documento);
   }, [data_person_search]);
@@ -105,6 +119,12 @@ export function AdminUsuarios(): JSX.Element {
     // set_tipo_documento(user_info.tipo_documento);
     // set_numero_documento(user_info.numero_documento);
   }, [data_user_search]);
+
+  // Busca data de usuario despues de seleccionarlo en el modal cuando persona tiene mas de un usuario
+  const search_data_user_selected = (id_user: number): void => {
+    dispatch(get_data_user(id_user));
+    set_users_x_person_is_active(false);
+  };
 
   // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
@@ -236,10 +256,8 @@ export function AdminUsuarios(): JSX.Element {
       {tipo_persona === 'N' && <AdminUserPersonaNatural has_user={has_user} />}
       {tipo_persona === 'J' && (
         <AdminUserPersonaJuridica
-          numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
-          has_user={has_user}
         />
       )}
       <DialogBusquedaAvanzadaPersona
@@ -249,6 +267,12 @@ export function AdminUsuarios(): JSX.Element {
       <DialogBusquedaAvanzadaUsuario
         is_modal_active={busqueda_avanzada_user_is_active}
         set_is_modal_active={set_busqueda_avanzada_user_is_active}
+      />
+      <DialogUserXPerson
+        is_modal_active={users_x_person_is_active}
+        set_is_modal_active={set_users_x_person_is_active}
+        users_x_person={data_person_search.usuarios}
+        OnIdUser={search_data_user_selected}
       />
     </>
   );

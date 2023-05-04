@@ -1,11 +1,12 @@
 import { api } from '../../../api/axios';
 import type {
   HistoricoCambioEstadosUser,
-  DataAadminUser,
   UserCreate,
   SuperUser,
   Roles,
-  Users
+  Users,
+  DataCreateUser,
+  DataEditUser,
 } from '../interfaces';
 import type {
   ResponseServer,
@@ -113,14 +114,14 @@ export const user_historico_cambios_estado = async (
 }
 
 export const crear_user_admin_user = async (
-  data: DataAadminUser
+  data: DataCreateUser
 ): Promise<AxiosResponse<UserCreate>> => {
   return await api.post('users/register/', data);
 };
 
 export const update_user_admin_user = async (
   id_usuario: number,
-  data: DataAadminUser,
+  data: DataEditUser,
 ): Promise<AxiosResponse<UserCreate>> => {
   return await api.patch(`users/update/${id_usuario}}/`, data);
 };

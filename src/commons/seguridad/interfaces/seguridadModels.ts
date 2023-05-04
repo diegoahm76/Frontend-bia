@@ -36,6 +36,7 @@ export type keys_object_search_user =
 | 'nombre_usuario';
 export interface DataAadminUser {
   tipo_persona: string;
+  // id_persona: number;
   // Datos basicos
   tipo_documento: string;
   numero_documento: string;
@@ -66,6 +67,25 @@ export interface DataAadminUser {
   fecha_activación_inicial:string | null;
   creado_desde_portal:boolean;
   persona_que_creo: number | null;
+}
+
+export interface DataCreateUser {
+  nombre_de_usuario?: string,
+  persona: number, 
+  tipo_usuario: string,
+  roles: RolUser[], 
+  redirect_url: string,
+  profile_img: string
+}
+
+export interface DataEditUser {
+  is_active: boolean,
+  is_blocked: boolean,
+  tipo_usuario: string,
+  roles: RolUser[],
+  profile_img: string,
+  justificacion_activacion: string | null,
+  justificacion_bloqueo: string | null
 }
 
 export interface RolUser{
@@ -157,7 +177,13 @@ export interface InfoPersonal {
   nombre_completo:	string,
   razon_social:	string,
   nombre_comercial:	string,
-  tiene_usuario:	boolean
+  tiene_usuario:	boolean,
+  usuarios: UsersXPerson[],
+}
+
+export interface UsersXPerson {
+  id_usuario: number,
+  nombre_de_usuario: string,
 }
 
 export interface InfoUsuario {

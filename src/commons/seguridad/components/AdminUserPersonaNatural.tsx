@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import type { AxiosError } from 'axios';
+// import type { AxiosError } from 'axios';
 import {
   Box,
   Grid,
@@ -11,6 +11,7 @@ import {
   Button,
   Input,
   InputLabel,
+  type SelectChangeEvent,
   // type SelectChangeEvent,
   // Autocomplete,
 } from '@mui/material';
@@ -22,8 +23,8 @@ import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialC
 import type {
   keys_object,
   DataAadminUser,
-  UserCreate,
   SeguridadSlice,
+  Users,
 } from '../interfaces';
 import {
   crear_user_admin_user,
@@ -33,6 +34,44 @@ import { use_admin_users } from '../hooks/AdminUserHooks';
 import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../../helpers/controlSuccess';
 import FormSelectController from '../../../components/partials/form/FormSelectController';
+import { CustomSelect } from '../../../components/CustomSelect';
+import { set_user_info } from '../store';
+
+const initial_state_user_info: Users = {
+  id_usuario: 0,
+  nombre_de_usuario: '',
+  persona: 0,
+  tipo_persona: '',
+  tipo_documento: '',
+  numero_documento: '',
+  primer_nombre: '',
+  segundo_nombre: '',
+  primer_apellido: '',
+  segundo_apellido: '',
+  nombre_completo: '',
+  razon_social: '',
+  nombre_comercial: '',
+  is_active: false,
+  fecha_ultimo_cambio_activacion: '',
+  justificacion_ultimo_cambio_activacion: '',
+  is_blocked: false,
+  fecha_ultimo_cambio_bloqueo: '',
+  justificacion_ultimo_cambio_bloqueo: '',
+  tipo_usuario: '',
+  profile_img: '',
+  creado_por_portal: false,
+  created_at: '',
+  activated_at: '',
+  id_usuario_creador: 0,
+  primer_nombre_usuario_creador: '',
+  primer_apellido_usuario_creador: '',
+  roles: [
+    {
+      id_rol: 0,
+      nombre_rol: '',
+    },
+  ],
+};
 
 interface PropsSection {
   label: string;
@@ -56,8 +95,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   ] = useState<boolean>(false);
   const {
     data_register,
-    is_exists,
-    // loading,
+    loading,
     tipo_usuario,
     tipo_usuario_opt,
     activo,
@@ -66,9 +104,10 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     bloqueado_opt,
     // roles,
     // roles_opt,
+    set_activo,
+    set_bloqueado,
     set_tipo_usuario,
     set_data_register,
-    set_tipo_documento,
   } = use_admin_users();
 
   const {
@@ -77,37 +116,38 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
-    // reset: reset_admin_user,
+    reset: reset_admin_user,
     watch,
   } = useForm<DataAadminUser>();
 
   useEffect(() => {
-    // reset_admin_user();
-    // set_data_register({
-    //   tipo_persona: '',
-    //   tipo_documento: '',
-    //   numero_documento: '',
-    //   razon_social: '',
-    //   nombre_comercial: '',
-    //   primer_apellido: '',
-    //   primer_nombre: '',
-    //   segundo_apellido: '',
-    //   segundo_nombre: '',
-    //   nombre_de_usuario: '',
-    //   imagen_usuario: '',
-    //   tipo_usuario: '',
-    //   roles: [],
-    //   activo: false,
-    //   activo_fecha_ultimo_cambio: '',
-    //   activo_justificacion_cambio: '',
-    //   bloqueado: false,
-    //   bloqueado_fecha_ultimo_cambio: '',
-    //   bloqueado_justificacion_cambio: '',
-    //   fecha_creacion: '',
-    //   fecha_activación_inicial: '',
-    //   creado_desde_portal: false,
-    //   persona_que_creo: 0,
-    // });
+    reset_admin_user();
+    set_user_info(initial_state_user_info);
+    set_data_register({
+      tipo_persona: '',
+      tipo_documento: '',
+      numero_documento: '',
+      razon_social: '',
+      nombre_comercial: '',
+      primer_apellido: '',
+      primer_nombre: '',
+      segundo_apellido: '',
+      segundo_nombre: '',
+      nombre_de_usuario: '',
+      imagen_usuario: '',
+      tipo_usuario: '',
+      roles: [],
+      activo: false,
+      activo_fecha_ultimo_cambio: '',
+      activo_justificacion_cambio: '',
+      bloqueado: false,
+      bloqueado_fecha_ultimo_cambio: '',
+      bloqueado_justificacion_cambio: '',
+      fecha_creacion: '',
+      fecha_activación_inicial: '',
+      creado_desde_portal: false,
+      persona_que_creo: 0,
+    });
     if (action_admin_users === 'CREATE') {
       console.log('Punto 2', action_admin_users);
       console.log('Creación de usuario - persona natural');
@@ -146,6 +186,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         creado_desde_portal: user_info.creado_por_portal,
         persona_que_creo: user_info.id_usuario_creador,
       });
+      set_activo(data_register.activo.toString());
 
       set_value('primer_nombre', user_info.primer_nombre);
       set_value('segundo_nombre', user_info.segundo_nombre);
@@ -180,12 +221,6 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   }, [action_admin_users]);
 
   useEffect(() => {
-    if (watch('tipo_documento') !== undefined) {
-      set_tipo_documento(watch('tipo_documento'));
-    }
-  }, [watch('tipo_documento')]);
-
-  useEffect(() => {
     if (watch('tipo_usuario') !== undefined) {
       set_tipo_usuario(watch('tipo_usuario'));
     }
@@ -199,13 +234,24 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       [name]: value,
     });
     set_value(name as keys_object, value);
+    console.log(data_register);
   };
 
-  // // Se usa para escuchar los cambios de valor del componente CustomSelect
-  // const on_change = (e: SelectChangeEvent<string>): void => {
-  //   console.log(e.target.name, e.target.value);
-  //   set_value_form(e.target.name, e.target.value);
-  // };
+  const on_change = (e: SelectChangeEvent<string>): void => {
+    console.log(e.target.name, e.target.value);
+    switch (e.target.name) {
+      case 'tipo_usuario':
+        set_tipo_usuario(e.target.value);
+        break;
+      case 'activo':
+        set_activo(e.target.value);
+        break;
+      case 'bloqueado':
+        set_bloqueado(e.target.value);
+        break;
+    }
+    set_value_form(e.target.name, e.target.value);
+  };
 
   // Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -216,37 +262,43 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   const on_submit = handle_submit(async (fata) => {
     try {
       console.log(fata);
+      console.log(data_register);
       if (action_admin_users === 'CREATE') {
-        console.log('Onsubmit CREATE', data_register);
+        const data_send = {
+          nombre_de_usuario: data_register.nombre_de_usuario,
+          persona: user_info.persona,
+          tipo_usuario: data_register.tipo_usuario,
+          roles: data_register.roles,
+          redirect_url: '',
+          profile_img: data_register.imagen_usuario,
+        };
+        console.log('Onsubmit CREATE', data_send);
         // Creación de usuario Persona Natural
-        const { data } = await crear_user_admin_user(data_register);
+        const { data } = await crear_user_admin_user(data_send);
         control_success(data.detail);
       } else if (action_admin_users === 'EDIT') {
+        const data_send = {
+          is_active: data_register.activo,
+          is_blocked: data_register.bloqueado,
+          tipo_usuario: data_register.tipo_usuario,
+          roles: data_register.roles,
+          profile_img: data_register.imagen_usuario,
+          justificacion_activacion: data_register.activo_justificacion_cambio,
+          justificacion_bloqueo: data_register.bloqueado_justificacion_cambio,
+        };
         console.log('Onsubmit EDIT', data_register);
         // Actualización de usuario Persona Natural
         const { data } = await update_user_admin_user(
           user_info.id_usuario,
-          data_register
+          data_send
         );
         control_success(data.detail);
       }
     } catch (error) {
-      const temp_error = error as AxiosError;
-      const resp = temp_error.response?.data as UserCreate;
-      control_error(resp.detail);
+      console.log(error);
+      control_error(error);
     }
   });
-
-  // const handle_image_upload = (event: any): void => {
-  //   const file = event.target.files[0];
-  //   if (Boolean(file) && Boolean(file.type.startsWith('image/'))) {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       set_image(e.target.result);
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // };
 
   const datos_personales = (
     <>
@@ -255,7 +307,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       </Box>
       <Grid item xs={12} sm={6} md={3}>
         <TextField
-          disabled={is_exists}
+          disabled
           fullWidth
           size="small"
           label="Primer nombre *"
@@ -272,7 +324,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       </Grid>
       <Grid item xs={12} sm={6} md={3}>
         <TextField
-          disabled={is_exists}
+          disabled
           fullWidth
           size="small"
           label="Segundo nombre"
@@ -283,7 +335,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       </Grid>
       <Grid item xs={12} sm={6} md={3}>
         <TextField
-          disabled={is_exists}
+          disabled
           fullWidth
           size="small"
           label="Primer apellido *"
@@ -302,7 +354,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       </Grid>
       <Grid item xs={12} sm={6} md={3}>
         <TextField
-          disabled={is_exists}
+          disabled
           fullWidth
           size="small"
           value={data_register.segundo_apellido}
@@ -321,7 +373,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       </Box>
       <Grid item xs={12} sm={6} md={3}>
         <TextField
-          disabled={is_exists}
+          // disabled={is_exists}
           size="small"
           label="Nombre de usuario"
           fullWidth
@@ -472,7 +524,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
             </Grid>
           </Box>
           <Grid item xs={12} sm={6} md={3}>
-            {/* <CustomSelect
+            <CustomSelect
               onChange={on_change}
               label="Activo"
               name="activo"
@@ -482,9 +534,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               disabled={false}
               required={true}
               errors={errors}
-              register={register}
-            /> */}
-            <FormSelectController
+              register={register_admin_user}
+            />
+            {/* <FormSelectController
               xs={12}
               md={12}
               control_form={control}
@@ -497,7 +549,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               select_options={activo_opt}
               option_label="label"
               option_key="value"
-            />
+            /> */}
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
