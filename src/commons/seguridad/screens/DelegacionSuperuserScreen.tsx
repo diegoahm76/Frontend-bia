@@ -1,20 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import {
-<<<<<<< HEAD
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { Title } from '../../../components';
-import { change_super_user } from '../request/seguridadRequest';
-=======
     Alert,
     Box,
     Button,
@@ -29,22 +14,15 @@ import { change_super_user } from '../request/seguridadRequest';
 } from "@mui/material"
 import { Title } from "../../../components"
 import { change_super_user } from "../request/authRequest"
->>>>>>> Develop
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { type AuthSlice } from '../../auth/interfaces';
 import SearchIcon from '@mui/icons-material/Search';
-<<<<<<< HEAD
-import { get_person_by_document } from '../../../request';
-import { control_error } from '../../../helpers';
-import { create_super_user } from '../store';
-=======
 import { get_person_by_document } from "../../../request";
 import { control_error } from "../../../helpers";
 import { create_super_user } from "../store";
 import Swal from "sweetalert2";
->>>>>>> Develop
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DelegacionSuperuserScreen: React.FC = () => {
@@ -64,13 +42,6 @@ export const DelegacionSuperuserScreen: React.FC = () => {
     nombre: '',
   });
 
-<<<<<<< HEAD
-  useEffect(() => {
-    if (tipo_documento !== undefined) {
-      set_tipo_documento(tipo_documento);
-    }
-  }, [tipo_documento]);
-=======
     const [errorMessage, setErrorMessage] = useState('');
     const [showErrorAlert, setShowErrorAlert] = useState(false);
     const [ superUsuarioActual, setSuperUsuarioActual ] = useState(userinfo.nombre_de_usuario);
@@ -80,7 +51,6 @@ export const DelegacionSuperuserScreen: React.FC = () => {
         nombre: '',
         id_persona: 0
     })
->>>>>>> Develop
 
   const numero_documento = watch('numero_documento');
 
@@ -104,51 +74,6 @@ export const DelegacionSuperuserScreen: React.FC = () => {
       });
   };
 
-<<<<<<< HEAD
-  const handleSeleccionarNuevoSuperUsuario = (id_persona: number): void => {
-    dispatch(create_super_user(id_persona) as any);
-  };
-
-  return (
-    <>
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Title title="Delegacion de SuperUsuario"></Title>
-          <Box
-            component="form"
-            sx={{ mt: '20px' }}
-            noValidate
-            autoComplete="off"
-          >
-            <Grid
-              container
-              spacing={1}
-              sx={{
-                justifyContent: 'center',
-              }}
-            >
-              <Grid item sx={{ display: 'flex' }}>
-                <Typography variant="body2" sx={{ pr: '20px' }}>
-                  SuperUsuarioActual:
-                </Typography>
-                <TextField
-                  value={superUsuarioActual}
-                  size="small"
-                  fullWidth
-                  disabled
-                />
-              </Grid>
-=======
     const numero_documento = watch('numero_documento');
 
     const handleSearchSuperUsuario = (tipo_documento:string, numero_documento:string):void => {
@@ -315,7 +240,6 @@ export const DelegacionSuperuserScreen: React.FC = () => {
                         Guardar
                     </Button>
                 </Stack>
->>>>>>> Develop
             </Grid>
 
             <Grid container spacing={2} sx={{ my: '10px' }}>

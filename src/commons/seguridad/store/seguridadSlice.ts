@@ -82,13 +82,10 @@ const initial_state: ISeguridadInfo = {
   superUser: [],
   roles: [],
   rol: {
-    rol: {
-      id_rol: 0,
-      nombre_rol: '',
-      descripcion_rol: '',
-      Rol_sistema: false
-    },
-    permisos: []
+    id_rol: 0,
+    nombre_rol: '',
+    descripcion_rol: '',
+    Rol_sistema: false
   },
   users: [],
   persons: [],
