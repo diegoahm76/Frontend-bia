@@ -5,11 +5,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import HomeIcon from '@mui/icons-material/Home';
 import {
   open_drawer_desktop,
   open_drawer_mobile,
   handle_mod_dark,
 } from '../store/layoutSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   drawer_width: number;
@@ -20,6 +22,7 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   // const color_mode = useContext(color_mode_context);
   // const theme = useTheme();
 
@@ -45,6 +48,10 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
     dispatch(handle_mod_dark(!mod_dark));
   };
 
+  const handle_direct_home = (): void => {
+    navigate('/');
+  };
+
   return (
     <>
       <AppBar
@@ -55,7 +62,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
             : { md: `100%` },
           ml: { sm: `${drawer_width}px` },
           transition: 'width 0.15s',
-          bgcolor: 'background.default',
+          bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
           position: 'absolute',
         }}
       >
@@ -92,6 +99,9 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
                   ml: '0 !import',
                 }}
               />
+            </IconButton>
+            <IconButton onClick={handle_direct_home}>
+              <HomeIcon sx={{ color: mod_dark ? '#FAFAFA' : '#707070' }} />
             </IconButton>
           </Stack>
           <Stack spacing={2} direction="row">

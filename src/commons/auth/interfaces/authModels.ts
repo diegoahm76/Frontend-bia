@@ -30,7 +30,7 @@ export interface ResponseAuth {
 
 export interface IUserInfo {
   userinfo: UserData;
-  permisos: Permisos[];
+  permisos: Menu[];
   representante_legal: any[];
   user_sesion: string;
   status: 'checking' | 'not-authenticated' | 'authenticated';
@@ -50,6 +50,7 @@ export interface UserData {
   tipo_usuario: string;
   id_persona: number;
   tipo_persona: string;
+  nombre?: string;
 }
 
 export interface Tokens {
@@ -212,28 +213,45 @@ export interface AuthSlice {
   auth: IUserInfo;
 }
 
-export interface Permisos {
+export interface Menu {
   subsistema: string;
   desc_subsistema: string;
   expanded: boolean;
+  menus: MenuElement[];
+}
+
+export interface MenuElement {
+  id_menu: number;
+  desc_subsistema: string;
+  nombre: string;
+  nivel_jerarquico: number;
+  orden_por_padre: number;
+  subsistema: string;
+  id_menu_padre: number | null;
   modulos: Modulo[];
+  expanded: boolean;
+  submenus: MenuElement[];
 }
 
 export interface Modulo {
   id_modulo: number;
   nombre_modulo: string;
   descripcion: string;
+  subsistema: string;
+  desc_subsistema: string;
   ruta_formulario: string;
   nombre_icono: string;
-  permisos: Acciones;
+  id_menu: number;
+  permisos: Permisos;
+  expanded: boolean;
 }
 
-export interface Acciones {
-  actualizar?: boolean;
-  consultar: boolean;
-  ejecutar?: boolean;
+export interface Permisos {
   crear?: boolean;
+  consultar: boolean;
+  actualizar?: boolean;
   borrar?: boolean;
+  ejecutar?: boolean;
 }
 
 export interface ReisterHook {

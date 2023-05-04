@@ -22,7 +22,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import CircleIcon from '@mui/icons-material/Circle';
 import { open_drawer_desktop, open_drawer_mobile } from '../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
-import type { AuthSlice, Permisos } from '../commons/auth/interfaces';
+import type { AuthSlice, Menu, MenuElement } from '../commons/auth/interfaces';
 import { logout } from '../commons/auth/store';
 import { SuperUserScreen } from '../commons/seguridad/screens/SuperUserScreen';
 interface Props {
@@ -39,7 +39,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   const { userinfo, permisos: permisos_store } = useSelector(
     (state: AuthSlice) => state.auth
   );
-  const [permisos, set_permisos] = useState<Permisos[]>([]);
+  const [permisos, set_permisos] = useState<Menu[]>([]);
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
@@ -69,10 +69,22 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
     set_dialog_open(false);
   };
 
-  const open_collapse = (obj: Permisos, key: number): void => {
+  const open_collapse = (obj: Menu, key: number): void => {
     const temp_permisos = [...permisos];
     temp_permisos[key] = { ...obj, expanded: !obj.expanded };
-    set_permisos([...temp_permisos]);
+    set_permisos(temp_permisos);
+  };
+
+  const open_collapse_sbm = (
+    obj: MenuElement,
+    key: number,
+    key_modulo: number
+  ): void => {
+    const temp_permisos = [...permisos];
+    const menus = [...temp_permisos[key_modulo].menus];
+    menus[key] = { ...obj, expanded: !obj.expanded };
+    temp_permisos[key_modulo].menus = [...menus];
+    set_permisos(temp_permisos);
   };
 
   const container =
@@ -112,7 +124,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         />
       </Toolbar>
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      <List sx={{ margin: '0 20px', color: 'secondary.main' }}>
+      <List sx={{ margin: '0 20px', color: mod_dark ? '#fafafa' : '#141415' }}>
         <ListItemButton onClick={handle_click} sx={{ borderRadius: '10px' }}>
           <ListItemIcon>
             <Avatar alt="Cristian Mendoza" src="/static/images/avatar/1.jpg" />
@@ -125,7 +137,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           timeout="auto"
           unmountOnExit
           sx={{
-            bgcolor: 'background.default',
+            bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
             mt: '5px',
             borderRadius: '10px',
           }}
@@ -133,7 +145,12 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <CircleIcon sx={{ color: 'secondary.main', height: '10px' }} />
+                <CircleIcon
+                  sx={{
+                    color: mod_dark ? '#fafafa' : '#141415',
+                    height: '10px',
+                  }}
+                />
               </ListItemIcon>
               <ListItemText primary="Starred" />
             </ListItemButton>
@@ -146,7 +163,10 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
               >
                 <ListItemIcon>
                   <CircleIcon
-                    sx={{ color: 'secondary.main', height: '10px' }}
+                    sx={{
+                      color: mod_dark ? '#fafafa' : '#141415',
+                      height: '10px',
+                    }}
                   />
                 </ListItemIcon>
                 <ListItemText primary="Delegacion de Super Usuario" />
@@ -162,7 +182,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
               }}
             >
               <ListItemIcon>
-                <LogoutIcon sx={{ color: 'secondary.main' }} />
+                <LogoutIcon sx={{ color: mod_dark ? '#fafafa' : '#141415' }} />
               </ListItemIcon>
               <ListItemText primary="Cerrar Sesión" />
             </ListItemButton>
@@ -173,7 +193,13 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
       {!is_loading ? (
         permisos.map((e, k) => {
           return (
-            <List sx={{ margin: '0 20px', color: 'secondary.main' }} key={k}>
+            <List
+              sx={{
+                margin: '0 20px',
+                color: mod_dark ? '#fafafa' : '#141415',
+              }}
+              key={k}
+            >
               <ListItemButton
                 onClick={() => {
                   open_collapse(e, k);
@@ -183,23 +209,55 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 {e.expanded ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
 
-              <Collapse timeout="auto" unmountOnExit in={e.expanded}>
-                <List component="div" disablePadding>
-                  {e.modulos.map((m, km) => {
-                    return (
+              <Collapse
+                timeout="auto"
+                unmountOnExit
+                in={e.expanded}
+                sx={{
+                  bgcolor: mod_dark ? '#2B3C46' : '#F0F0F0',
+                  borderRadius: '10px',
+                }}
+              >
+                {e.menus.map((m, km) => {
+                  return (
+                    <List
+                      component="div"
+                      disablePadding
+                      key={km}
+                      sx={{
+                        pl: '10px',
+                      }}
+                    >
                       <ListItemButton
-                        sx={{ pl: 4 }}
-                        key={km}
-                        href={m.ruta_formulario}
+                        onClick={() => {
+                          open_collapse_sbm(m, km, k);
+                        }}
                       >
-                        <ListItemIcon sx={{ minWidth: '25px' }}>
-                          <Icon sx={{ fontSize: '10px' }}>circle</Icon>
-                        </ListItemIcon>
-                        <ListItemText primary={m.nombre_modulo} />
+                        <ListItemText primary={m.nombre} />
+                        {m.expanded ? <ExpandLess /> : <ExpandMore />}
                       </ListItemButton>
-                    );
-                  })}
-                </List>
+
+                      <Collapse timeout="auto" unmountOnExit in={m.expanded}>
+                        <List component="div" disablePadding>
+                          {m.modulos.map((mo, km2) => {
+                            return (
+                              <ListItemButton
+                                sx={{ pl: 4 }}
+                                key={km2}
+                                href={mo.ruta_formulario}
+                              >
+                                <ListItemIcon sx={{ minWidth: '25px' }}>
+                                  <Icon sx={{ fontSize: '10px' }}>circle</Icon>
+                                </ListItemIcon>
+                                <ListItemText primary={mo.nombre_modulo} />
+                              </ListItemButton>
+                            );
+                          })}
+                        </List>
+                      </Collapse>
+                    </List>
+                  );
+                })}
               </Collapse>
             </List>
           );
@@ -249,7 +307,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawer_width,
-              bgcolor: 'background.default',
+              bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
             },
           }}
         >
@@ -264,7 +322,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawer_width,
-              bgcolor: 'background.default',
+              bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
               borderRight: 'none',
             },
           }}
@@ -277,8 +335,9 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           padding: '0px 20px 0 20px',
           mt: 8,
           width: '100vw',
+          height: '100vh',
           ml: { sm: desktop_open ? `${drawer_width}px` : '0px' },
-          bgcolor: 'background.default',
+          bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
         }}
       >
         <Outlet />

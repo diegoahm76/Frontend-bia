@@ -3,7 +3,6 @@ import type {
   ResponseAuth,
   LoginUser,
   IUserInfo,
-  Permisos,
   DataRegistePortal,
   UserCreate,
   DataUnlockUser,
@@ -11,7 +10,8 @@ import type {
   ChangePassword,
   DataUserRecover,
   ResponseRecover,
-  DataRegisterPersonaN
+  DataRegisterPersonaN,
+  Menu
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -50,12 +50,12 @@ export const login_post = async (
 export const permissions_request = async (
   id_usuario: number,
   tipo_entorno: string
-): Promise<ResponseThunks<Permisos[]>> => {
+): Promise<ResponseThunks<Menu[]>> => {
   try {
     const {
       data: { data }
-    } = await api.get<ResponseServer<Permisos[]>>(
-      `permisos/permisos-rol/get-by-entorno/?id_usuario=${id_usuario}&tipo_entorno=${tipo_entorno}`
+    } = await api.get<ResponseServer<Menu[]>>(
+      `permisos/permisos-rol/get-estructura-menu/?id_usuario=${id_usuario}&tipo_entorno=${tipo_entorno}`
     );
 
     return {
