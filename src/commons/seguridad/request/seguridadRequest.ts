@@ -1,11 +1,23 @@
 import { api } from '../../../api/axios';
 import type {
+  HistoricoCambioEstadosUser,
+  UserCreate,
+  SuperUser,
+  Roles,
+  Users,
+  DataCreateUser,
+  DataEditUser,
+  PermisosRol,
+  Rol
+} from '../interfaces';
+
+import type {
   ResponseServer,
   HistoricoDatosRestringidos,
-  IList
+  IList,
+  ResponseThunks
 } from '../../../interfaces/globalModels';
-import type { PermisosRol, Rol, Roles, SuperUser } from '../interfaces';
-import type { AxiosResponse } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
 import { get_tipo_documento } from '../../../request/getRequest';
 import { control_error } from '../../../helpers/controlError';
@@ -118,6 +130,92 @@ export const editar_datos_restringidos_persona = async (
     datos
   );
   return response.data;
+};
+// busqueda de usuarios por nombre
+export const users_request = async (
+  nombre_de_usuario: string
+): Promise<ResponseThunks<Users[]>> => {
+  try {
+    const {
+      data: { data }
+    } = await api.get<ResponseServer<Users[]>>(
+      `users/get-user-by-nombre-de-usuario/?nombre_de_usuario=${nombre_de_usuario}`
+    );
+    return {
+      ok: true,
+      data
+    };
+  } catch (error: any) {
+    const { response } = error as AxiosError<AxiosResponse>;
+    const { data } = response as unknown as ResponseThunks;
+    control_error(data.detail);
+    return {
+      ok: false,
+      error_message: data.detail
+    };
+  }
+};
+
+// Busqueda avanzada de personas por varios parametros
+export const persons_request = async (
+  tipo_documento: string,
+  numero_documento: string,
+  primer_nombre: string,
+  primer_apellido: string
+): Promise<ResponseThunks<Users[]>> => {
+  try {
+    const {
+      data: { data }
+    } = await api.get<ResponseServer<Users[]>>(
+      `personas/get-personas-filters-admin-user/?tipo_documento=${tipo_documento}&numero_documento=${numero_documento}&primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}&razon_social&nombre_comercial`
+    );
+    return {
+      ok: true,
+      data
+    };
+  } catch (error: any) {
+    const { response } = error as AxiosError<AxiosResponse>;
+    const { data } = response as unknown as ResponseThunks;
+    control_error(data.detail);
+    return {
+      ok: false,
+      error_message: data.detail
+    };
+  }
+};
+
+// Trae todos los datos de un usuario
+export const user_request = async (
+  id_usuario: number
+): Promise<AxiosResponse<ResponseServer<Users>>> => {
+  return await api.get(`users/get-by-pk/${id_usuario}`);
+};
+
+// Trae historico de cambios de estado para cada usuario
+export const user_historico_cambios_estado = async (
+  id_usuario: number
+): Promise<HistoricoCambioEstadosUser[]> => {
+  console.log(id_usuario);
+
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const { data } = await api.get<ResponseServer<HistoricoCambioEstadosUser[]>>(
+    `users/historico-activacion/${id_usuario}/`
+  );
+  console.log(data);
+  return data.data;
+};
+
+export const crear_user_admin_user = async (
+  data: DataCreateUser
+): Promise<AxiosResponse<UserCreate>> => {
+  return await api.post('users/register/', data);
+};
+
+export const update_user_admin_user = async (
+  id_usuario: number,
+  data: DataEditUser
+): Promise<AxiosResponse<UserCreate>> => {
+  return await api.patch(`users/update/${id_usuario}}/`, data);
 };
 
 // editar datos persona restringida juridica

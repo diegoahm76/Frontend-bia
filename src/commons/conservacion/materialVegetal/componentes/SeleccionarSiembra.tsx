@@ -18,7 +18,7 @@ const SeleccionarSiembra = ({
 }: IProps) => {
 
   const dispatch= useAppDispatch()
-  const {  planting_person, current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery} = useAppSelector((state) => state.material_vegetal);
+  const {  current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery} = useAppSelector((state) => state.material_vegetal);
   const [file, set_file] = useState<any>(null);
 
   const columns_siembras: GridColDef[] = [
@@ -75,8 +75,8 @@ const SeleccionarSiembra = ({
     void dispatch(get_vegetal_materials_service());
   }, []);
 
-  useEffect(() => {
-    dispatch(set_current_planting({ ...current_planting, id_persona_siembra: planting_person?.id_persona, id_vivero: get_values("id_vivero"), id_bien_sembrado: get_values("id_bien_sembrado"), cama_germinacion: get_values("cama_germinacion"), distancia_entre_semillas: get_values("distancia_entre_semillas"), observaciones: get_values("observaciones") }))
+  useEffect(() => {console.log(file)
+    dispatch(set_current_planting({ ...current_planting, id_vivero: get_values("id_vivero"), id_bien_sembrado: get_values("id_bien_sembrado"), cama_germinacion: get_values("cama_germinacion"), distancia_entre_semillas: get_values("distancia_entre_semillas"), observaciones: get_values("observaciones"), ruta_archivo_soporte: file }))
   }, [file]);
 
   const get_siembras: any = (async () => {

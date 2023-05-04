@@ -134,6 +134,7 @@ const SeleccionarSolicitud = () => {
         }
     })
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const get_solicitudes: any = (async () => {
         try {
             const { data } = await api.get(
@@ -172,7 +173,7 @@ const SeleccionarSolicitud = () => {
                     row_id={"id_solicitud_consumible"}
                     columns_model={columns_solicitudes}
                     models={solicitudes}
-                    get_filters_models={get_solicitudes}
+                    get_filters_models={search_solicitud}
                     set_models={set_solicitudes}
                     reset_values={reset_solicitud}
                     button_submit_label='Buscar solicitud'

@@ -15,7 +15,7 @@ interface IProps {
     parent_esp_maintenance: any,
     limpiar_formulario: boolean
 }
-const tipo_mantenimiento = [{ value: "PR", label: "Preventivo" }, { value: "CO", label: "Correctivo" }, { value: "OT", label: "Otro" }]
+const tipo_mantenimiento = [{ value: "P", label: "Preventivo" }, { value: "C", label: "Correctivo" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario }: IProps) => {
