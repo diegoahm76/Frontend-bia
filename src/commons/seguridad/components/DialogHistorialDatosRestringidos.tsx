@@ -1,11 +1,12 @@
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Dialog, Grid } from '@mui/material';
+import { Button, Dialog, DialogTitle, Divider, Grid, Stack } from '@mui/material';
 import { Title } from '../../../components/Title';
 import type { HistoricoDatosRestringidos, InfoPersona } from '../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../helpers';
 import { consultar_historico_restringido } from '../request/Request';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 interface IProps {
     is_modal_active: boolean;
@@ -50,7 +51,7 @@ const columns: GridColDef[] = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, datos_historico, set_datos_historico }:IProps) => {
+export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, datos_historico, set_datos_historico }: IProps) => {
 
     const [rows, set_rows] = useState<HistoricoDatosRestringidos[]>([]);
 
@@ -60,7 +61,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({ is_modal_ac
 
     const historico = async (): Promise<void> => {
         try {
-          
+
             const response = await consultar_historico_restringido(datos_historico.id_persona);
             const new_historico = response.map((datos: HistoricoDatosRestringidos) => ({
                 id: datos.id,
@@ -81,7 +82,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({ is_modal_ac
     };
 
     useEffect(() => {
-        if(is_modal_active){
+        if (is_modal_active) {
 
             void historico()
         }
@@ -94,25 +95,41 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({ is_modal_ac
                 fullWidth
                 maxWidth={"lg"}
             >
-                <Grid container spacing={2}
+                <DialogTitle><Title title="HISTORICO DE CAMBIOS" /></DialogTitle>
+                <Divider />
+                <Grid container spacing={1} m={2} p={2}
                     sx={{
                         position: 'relative',
                         background: '#FAFAFA',
                         borderRadius: '15px',
                         p: '20px',
+                        m: '10px 0 20px 0',
                         mb: '20px',
                         boxShadow: '0px 3px 6px #042F4A26',
-                    }}>
-                    <Title title="HISTORICO DE CAMBIOS"></Title>
-
-                    <DataGrid
-                        autoHeight
-                        rows={rows}
-                        columns={columns}
-                        getRowId={(row) => row.historico_cambio_id_persona}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
-                    />
+                    }}
+                >
+                    <Grid item xs={12}>
+                        <DataGrid
+                            autoHeight
+                            rows={rows}
+                            columns={columns}
+                            getRowId={(row) => row.historico_cambio_id_persona}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Stack justifyContent="flex-end" sx={{ m: '10px 0 20px 0' }} direction="row" spacing={1}>
+                            <Button
+                                variant="outlined"
+                                // eslint-disable-next-line react/jsx-no-undef
+                                startIcon={<CancelIcon />}
+                                onClick={() => {
+                                    handle_close();
+                                }}>Cerrar
+                            </Button>
+                        </Stack>
+                    </Grid>
                 </Grid>
             </Dialog>
         </>

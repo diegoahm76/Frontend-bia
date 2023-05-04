@@ -1,10 +1,10 @@
 
-import { 
-  // useEffect, 
-  useState } from "react";
+import {
+  useState
+} from "react";
 import { BuscadorPersona } from "../../../components/BuscadorPersona";
 import type { InfoPersona } from "../../../interfaces/globalModels";
-import { Button, CircularProgress, Grid, Input, InputLabel, MenuItem, Stack, TextField } from "@mui/material";
+import { Button, CircularProgress, Grid, Input, MenuItem, Stack, TextField } from "@mui/material";
 import { Title } from "../../../components/Title";
 import { control_error } from "../../../helpers/controlError";
 import { control_success } from "../../../helpers/controlSuccess";
@@ -12,6 +12,7 @@ import { editar_datos_restringidos_juridica, editar_datos_restringidos_persona }
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CancelIcon from '@mui/icons-material/Cancel';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DialogHistorialDatosRestringidos } from "../components/DialogHistorialDatosRestringidos";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ActualizacionDatosRestringidosScreen: React.FC = () => {
@@ -36,6 +37,19 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
     digito_verificacion: "",
     cod_naturaleza_empresa: "",
   });
+  const [file_name, set_file_name] = useState("");
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_file_select = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected_file = (event.target.files != null) ? event.target.files[0] : null;
+    if (selected_file != null) {
+      console.log(selected_file.name);
+      set_file_name(selected_file.name);
+    }
+  }
+  const reset_file_state = ():void => {
+    set_file_name("");
+  }
 
   const handle_open_historico = (): void => {
     set_historico(true);
@@ -46,7 +60,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    // watch
   } = useForm();
 
   const on_result = (info_persona: InfoPersona): void => {
@@ -55,6 +68,8 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   };
   const cancelar = (): void => {
     set_persona(undefined);
+    reset_file_state();
+    reset();
   };
 
   const on_submit_persona: SubmitHandler<FieldValues> = async (data) => {
@@ -73,6 +88,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
 
       const id_persona: number | undefined = persona?.id_persona;
       await editar_datos_restringidos_persona(id_persona, datos_persona);
+      reset_file_state();
       set_loading_natural(false)
       control_success('Se actualizaron los datos correctamente')
     } catch (error) {
@@ -82,7 +98,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   };
   const on_submit_persona_juridica: SubmitHandler<FieldValues> = async (data) => {
     try {
-      
+
       set_loading_juridica(true);
       const datos_persona = new FormData();
 
@@ -91,10 +107,12 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
       datos_persona.append("nombre_comercial", data.nombre_comercial);
       datos_persona.append("cod_naturaleza_empresa", data.cod_naturaleza_empresa);
       datos_persona.append("ruta_archivo_soporte", data.ruta_archivo_soporte[0]);
+      console.log("file", data.ruta_archivo_soporte[0])
       datos_persona.append("justificacion", data.justificacion);
-      
+
       const id_persona: number | undefined = persona?.id_persona;
       await editar_datos_restringidos_juridica(id_persona, datos_persona);
+      reset_file_state();
       set_loading_juridica(false);
       control_success('Se actualizaron los datos correctamente');
     } catch (error) {
@@ -163,10 +181,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
       label: 'Mixta',
     },
   ];
-  // useEffect(() => {
-  //   const data = watch('ruta_archivo_soporte')
-  //   console.log(data[0])
-  // }, [watch('ruta_archivo_soporte')])
 
   return (
     <>
@@ -311,17 +325,22 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="archivo-de-soporte">Cargar Archivo de soporte</InputLabel>
-                  <Input
-                    id="archivo-de-soporte"
-                    type="file"
-                    required
-                    autoFocus
-                    {...register("ruta_archivo_soporte", {
-                      required: "Este campo es obligatorio",
-                    })}
-                    error={Boolean(errors.ruta_archivo_soporte)}
-                  />
+                  <Button variant="outlined" fullWidth component="label" startIcon={<CloudUploadIcon />}>
+                    {file_name !== "" ? file_name : "Seleccione archivo soporte"}
+                    <Input
+                      hidden
+                      id="archivo-de-soporte-natural"
+                      type="file"
+                      required
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      {...register("ruta_archivo_soporte", {
+                        required: "Este campo es obligatorio",
+                      })}
+                      error={Boolean(errors.ruta_archivo_soporte)}
+                      onChange={handle_file_select}
+                    />
+                  </Button>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -346,6 +365,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                       startIcon={<CancelIcon />}
                       onClick={() => {
                         cancelar();
+                        reset();
                       }}>Cancelar
                     </Button>
                     <Button
@@ -517,17 +537,22 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                   </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <InputLabel htmlFor="archivo-de-soporte">Cargar Archivo de soporte</InputLabel>
-                  <Input
-                    id="archivo-de-soporte"
-                    type="file"
-                    required
-                    autoFocus
-                    {...register("ruta_archivo_soporte", {
-                      required: "Este campo es obligatorio",
-                    })}
-                    error={Boolean(errors.ruta_archivo_soporte)}
-                  />|
+                  <Button variant="outlined" fullWidth component="label" startIcon={<CloudUploadIcon />}>
+                    {file_name !== "" ? file_name : "Seleccione archivo soporte"}
+                    <Input
+                      hidden
+                      id="archivo-de-soporte"
+                      type="file"
+                      required
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      {...register("ruta_archivo_soporte", {
+                        required: "Este campo es obligatorio",
+                      })}
+                      error={Boolean(errors.ruta_archivo_soporte)}
+                      onChange={handle_file_select}
+                    />
+                  </Button>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -552,6 +577,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                       startIcon={<CancelIcon />}
                       onClick={() => {
                         cancelar();
+                        reset();
                       }}>Cancelar
                     </Button>
                     <Button

@@ -17,11 +17,11 @@ interface IProps {
     detalle_seleccionado: any,
     tipo_matenimiento: string,
     especificacion: string,
-    limpiar_formulario: boolean
-
+    limpiar_formulario: boolean,
+    user_info: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, limpiar_formulario }: IProps) => {
+export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, limpiar_formulario, user_info }: IProps) => {
     // Hooks
     const {
         rows,
@@ -80,19 +80,19 @@ export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, det
         const cada_desde_int = parseInt(cada_desde);
         const cada_hasta_int = parseInt(cada_hasta);
         rows_emit.push({
-                    tipo_programacion: "Por Kilometros",
+                    tipo_programacion: "kilometro",
                     cod_tipo_mantenimiento: tipo_matenimiento,
                     kilometraje_programado: cada_desde,
-                    fecha_programada: "",
+                    fecha_programada: null,
                     motivo_mantenimiento: especificacion,
                     observaciones: especificacion,
-                    fecha_solicitud: dayjs().format("DD-MM-YYYY"),
-                    fecha_anulacion: "",
-                    justificacion_anulacion: "",
+                    fecha_solicitud: dayjs().format("YYYY-MM-DD"),
+                    fecha_anulacion: null,
+                    justificacion_anulacion: null,
                     ejecutado: false,
-                    id_articulo: 170,
-                    id_persona_solicita: 1,
-                    id_persona_anula: 0
+                    id_articulo: detalle_seleccionado.id_bien,
+                    id_persona_solicita: user_info.id_persona,
+                    id_persona_anula: null
                 })
         const cada_proximo = (cada_int + cada_desde_int);
         if(cada_proximo <= cada_hasta_int)    

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 // import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { Controller } from 'react-hook-form';
@@ -49,8 +50,10 @@ const FormSelectController = ({
     const id_select = String(uuid())
 
     return (
+        
         <>
         {((!hidden_text)??false) &&
+            
         <Grid item xs={xs} md={md}>
             <Controller
                 name={control_name}
@@ -96,8 +99,8 @@ const FormSelectController = ({
                 )}
             />
         </Grid>
-    }
-    </>
+        }
+        </>
     );
 }
 
