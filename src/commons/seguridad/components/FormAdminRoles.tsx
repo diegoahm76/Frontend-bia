@@ -18,9 +18,18 @@ import {
   create_rol,
   get_permisos_by_modulos,
   get_rol_by_id,
+  update_permiso_rol,
+  update_rol,
 } from '../request/seguridadRequest';
 import { control_error, control_success } from '../../../helpers';
-import type { Acciones, Modulo, PermisosRol, Rol, Roles } from '../interfaces';
+import type {
+  Acciones,
+  Modulo,
+  PermisosRol,
+  PermisosRolEdit,
+  Rol,
+  Roles,
+} from '../interfaces';
 import SaveIcon from '@mui/icons-material/Save';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { AxiosError } from 'axios';
@@ -30,6 +39,14 @@ interface Props {
   on_create: () => void;
   rol_edit?: Rol;
 }
+
+type key_obj =
+  | 'crear'
+  | 'actualizar'
+  | 'consultar'
+  | 'borrar'
+  | 'anular'
+  | 'ejecutar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
@@ -74,14 +91,32 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
   const on_submit = handle_submit(async (data_form) => {
     set_is_saving(true);
     try {
-      const { data } = await create_rol(data_form as Rol);
-      permisos_rol.forEach((e) => {
-        e.id_rol = data.id_rol;
-      });
+      if (rol_edit?.id_rol === 0) {
+        const { data } = await create_rol(data_form as Rol);
+        permisos_rol.forEach((e) => {
+          e.id_rol = data.id_rol;
+        });
 
-      await create_permiso_rol(permisos_rol);
+        await create_permiso_rol(permisos_rol);
 
-      control_success('Rol creado');
+        control_success('Rol creado');
+      } else {
+        const { data: res_rol } = await update_rol(
+          data_form as Rol,
+          rol_edit?.id_rol ?? 0
+        );
+
+        const temp_permisos: PermisosRolEdit[] = permisos_rol.map((e) => {
+          return { id_permisos_modulo: e.id_permiso_modulo };
+        });
+        const { data } = await update_permiso_rol(
+          temp_permisos,
+          rol_edit?.id_rol ?? 0
+        );
+
+        control_success(res_rol.detail);
+        control_success(data.detail);
+      }
 
       on_create();
     } catch (error) {
@@ -123,24 +158,23 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
       );
       set_permisos_rol([...new_array]);
     }
+    console.log(permisos_rol);
   };
 
   const render_actions = (actions: Acciones): JSX.Element[] => {
-    type key_obj =
-      | 'crear'
-      | 'actualizar'
-      | 'consultar'
-      | 'borrar'
-      | 'anular'
-      | 'ejecutar';
     const elements: JSX.Element[] = [];
     for (const index in actions) {
       const key = index as key_obj;
-      if (rol_edit?.id_rol !== 0 && actions[key]?.id !== undefined) {
+      if (rol_edit?.id_rol !== 0) {
         elements.push(
           <FormControlLabel
             key={key}
-            control={<Checkbox checked={true} onChange={select_permisos} />}
+            control={
+              <Checkbox
+                defaultChecked={actions[key]?.value}
+                onChange={select_permisos}
+              />
+            }
             label={key}
             value={actions[key]?.id}
           />
@@ -162,9 +196,12 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
   const get_permisos_rol = async (permisos: Roles[]): Promise<void> => {
     set_is_loading(true);
     try {
+      const temp_permisos: PermisosRol[] = [];
+      set_permisos_rol([]);
       const {
         data: { data },
       } = await get_rol_by_id(rol_edit?.id_rol ?? 0);
+
       permisos.forEach((e) => {
         e.checked = false;
         e.modulos.map((i) => {
@@ -179,20 +216,30 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
               (i) => i.id_modulo === m.id_modulo
             );
             if (module !== undefined) {
+              for (const key in module.permisos) {
+                const k = key as key_obj;
+                const element = module.permisos[k];
+                if (element?.id !== undefined) {
+                  temp_permisos.push({
+                    id_permiso_modulo: element?.id,
+                    id_rol: 0,
+                  });
+                }
+              }
               m.checked = true;
               m.permisos = {
                 crear: module.permisos.crear,
                 actualizar: module.permisos.actualizar,
-                // anular: module.permisos.anular,
                 borrar: module.permisos.borrar,
                 consultar: module.permisos.consultar,
+                // anular: module.permisos.anular,
                 // ejecutar: module.permisos.ejecutar,
               };
             }
           });
         }
       });
-      console.log('first');
+      set_permisos_rol(temp_permisos);
       set_permisos(permisos);
     } catch (error) {
       control_error(error);
@@ -230,7 +277,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
               }
             />
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={7}>
             <TextField
               label="Descripción"
               size="small"

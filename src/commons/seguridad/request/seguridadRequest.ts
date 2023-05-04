@@ -9,7 +9,10 @@ import type { AxiosResponse } from 'axios';
 import { useState, useEffect } from 'react';
 import { get_tipo_documento } from '../../../request/getRequest';
 import { control_error } from '../../../helpers/controlError';
-import type { DelegarSuper } from '../interfaces/seguridadModels';
+import type {
+  DelegarSuper,
+  PermisosRolEdit
+} from '../interfaces/seguridadModels';
 
 export const change_super_user = (): DelegarSuper => {
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
@@ -45,7 +48,7 @@ export const change_super_user = (): DelegarSuper => {
 };
 
 export const roles_request = async (): Promise<AxiosResponse<Rol[]>> => {
-  return await api.get<Rol[]>('roles/get-list/');
+  return await api.get('roles/get-list/');
 };
 
 export const delete_request = async (id_rol: number): Promise<any> => {
@@ -61,20 +64,32 @@ export const get_rol_by_id = async (
 export const get_permisos_by_modulos = async (): Promise<
   AxiosResponse<ResponseServer<Roles[]>>
 > => {
-  return await api.get<ResponseServer<Roles[]>>(
-    'permisos/permisos-modulos/get-list/'
-  );
+  return await api.get('permisos/permisos-modulos/get-list/');
 };
 
 export const create_rol = async (rol: Rol): Promise<AxiosResponse<Rol>> => {
-  return await api.post<Rol>('roles/create/', rol);
+  return await api.post('roles/create/', rol);
+};
+
+export const update_rol = async (
+  rol: Rol,
+  id_rol: number
+): Promise<AxiosResponse<ResponseServer<any>>> => {
+  return await api.put(`roles/update/${id_rol}/`, rol);
 };
 
 export const create_permiso_rol = async (
   permisos: PermisosRol[]
 ): Promise<AxiosResponse<PermisosRol[]>> => {
-  return await api.post<PermisosRol[]>(
-    'permisos/permisos-modulos-rol/create/',
+  return await api.post('permisos/permisos-modulos-rol/create/', permisos);
+};
+
+export const update_permiso_rol = async (
+  permisos: PermisosRolEdit[],
+  id_rol: number
+): Promise<AxiosResponse<ResponseServer<any>>> => {
+  return await api.put(
+    `permisos/permisos-modulos-rol/update/${id_rol}/`,
     permisos
   );
 };
@@ -83,7 +98,7 @@ export const superuser_request = async (
   id_persona: number
 ): Promise<ResponseServer<SuperUser[]> | undefined> => {
   try {
-    const { data } = await api.post<ResponseServer<SuperUser[]>>(
+    const { data } = await api.post(
       `users/delegate-rol-super-usuario/${id_persona}/`
     );
     return data;

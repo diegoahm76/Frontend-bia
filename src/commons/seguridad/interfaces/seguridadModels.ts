@@ -76,6 +76,10 @@ export interface PermisosRol {
   id_permiso_modulo_rol?: number;
 }
 
+export interface PermisosRolEdit {
+  id_permisos_modulo: number;
+}
+
 export interface Rol {
   id_rol: number;
   nombre_rol: string;
