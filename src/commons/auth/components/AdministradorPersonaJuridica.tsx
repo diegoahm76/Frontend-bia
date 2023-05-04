@@ -73,7 +73,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         is_search,
         loading,
         message_error_password,
-        pais_notificacion,
         show_password,
         nacionalidad_emp,
         tipo_documento_opt,
@@ -111,7 +110,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         set_pais_nacimiento,
         set_pais_residencia,
         set_tipo_persona,
-        set_pais_notificacion,
         set_tipo_documento_rep,
         set_message_no_person,
     } = use_register();
@@ -288,11 +286,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     }, [watch('municipio_residencia')]);
 
     // Datos de notificación
-    useEffect(() => {
-        if (watch('pais_notificacion') !== undefined) {
-            set_pais_notificacion(watch('pais_notificacion'));
-        }
-    }, [watch('pais_notificacion')]);
 
     useEffect(() => {
         if (watch('dpto_notifiacion') !== undefined) {
@@ -480,7 +473,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                             onChange={on_change}
                                             label="País de notificación"
                                             name="pais_notificacion"
-                                            value={pais_notificacion}
+                                            value={'CO'}
                                             options={paises_options}
                                             loading={loading}
                                             disabled={false}
@@ -490,18 +483,17 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={4}>
-                                        <CustomSelect
-                                            onChange={on_change}
-                                            label="Departamento"
-                                            name="dpto_notifiacion"
-                                            value={dpto_notifiacion}
-                                            options={dpto_notifiacion_opt}
-                                            loading={loading}
-                                            disabled={pais_notificacion === '' ?? true}
-                                            required={true}
-                                            errors={errors}
-                                            register={register}
-                                        />
+                                    <CustomSelect
+                                        onChange={on_change}
+                                        label="Departamento *"
+                                        name="dpto_notifiacion"
+                                        value={dpto_notifiacion}
+                                        options={dpto_notifiacion_opt}
+                                        loading={loading}
+                                        required={true}
+                                        errors={errors}
+                                        register={register}
+                                    />
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={4}>
                                         <CustomSelect
