@@ -8,7 +8,8 @@ const use_previsualizacion = () => {
     const [tipo_mantenimiento, set_tipo_mantenimiento] = useState<string>("");
     const [especificacion, set_especificacion] = useState<string>("");
     const [detalle_seleccionado, set_detalle_seleccionado] = useState<any>([]);
-    const [user_info, set_user_info] = useState<any>({nombre: ''});
+    const [user_info, set_user_info] = useState<any | null>(null);
+    const [programacion, set_programacion] = useState<any | null>(null);
     return {
         // States
         rows,
@@ -16,12 +17,14 @@ const use_previsualizacion = () => {
         tipo_mantenimiento,
         especificacion,
         user_info,
+        programacion,
         // Edita States
         set_rows,
         set_detalle_seleccionado,
         set_tipo_mantenimiento,
         set_especificacion,
-        set_user_info
+        set_user_info,
+        set_programacion
       };
 }
 // eslint-disable-next-line no-restricted-syntax
