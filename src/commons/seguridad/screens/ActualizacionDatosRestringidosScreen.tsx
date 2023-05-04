@@ -219,8 +219,9 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
           <BuscadorPersona onResult={on_result} />
           {persona?.tipo_persona === 'N' && (
             <form
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onSubmit={handleSubmit(on_submit_persona)}
+              onSubmit={() => {
+                void handleSubmit(on_submit_persona);
+              }}
               noValidate
               autoComplete="off"
             >
@@ -464,8 +465,9 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
           )}
           {persona?.tipo_persona === 'J' && (
             <form
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onSubmit={handleSubmit(on_submit_persona_juridica)}
+              onSubmit={() => {
+                void handleSubmit(on_submit_persona_juridica);
+              }}
               noValidate
               autoComplete="off"
             >
