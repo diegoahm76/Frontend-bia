@@ -7,10 +7,12 @@ export const control_error = (error: any | unknown): void => {
   if (error.message === 'Network Error') {
     message = 'Error de conexión';
     type = 'warning';
-  } else if ( error.response !== undefined && error.response.status === 401) {
+  } else if (error.response !== undefined && error.response.status === 401) {
     message = 'Su sesión ha vencido, por favor inicie sesión nuevamente';
     type = 'info';
     auto_close = false;
+    localStorage.clear();
+    location.reload();
   } else {
     message = error.toString();
   }
