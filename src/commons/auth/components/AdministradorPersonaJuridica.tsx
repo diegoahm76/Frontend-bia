@@ -196,15 +196,12 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             set_data_register({
                 ...data_register,
                 email: response?.email,
-            });
-            set_data_register({
-                ...data_register,
                 telefono_celular: response?.telefono_celular,
-            });
-            set_data_register({
-                ...data_register,
                 complemeto_direccion: response?.direccion_notificacion_referencia,
             });
+            set_direccion_notificacion(response?.direccion_notificaciones)
+            set_dpto_notifiacion(response?.cod_departamento_notificacion)
+            set_ciudad_notificacion(response?.cod_municipio_notificacion_nal)
 
             // Datos adicionales
         } catch (err) {
