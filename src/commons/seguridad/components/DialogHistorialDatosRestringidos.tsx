@@ -13,6 +13,7 @@ import type {
   HistoricoDatosRestringidos,
   InfoPersona,
 } from '../../../interfaces/globalModels';
+import { useState } from 'react';
 import { control_error } from '../../../helpers';
 import { consultar_historico_restringido } from '../request/Request';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -63,39 +64,17 @@ const columns: GridColDef[] = [
   },
 ];
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   datos_historico,
   set_datos_historico,
 }: IProps) => {
+  const [rows, set_rows] = useState<HistoricoDatosRestringidos[]>([]);
+
   const handle_close = (): void => {
     set_is_modal_active(false);
-  };
-
-  const historico = async (): Promise<void> => {
-    try {
-      const response = await consultar_historico_restringido(
-        datos_historico.id_persona
-      );
-      const new_historico = response.map(
-        (datos: HistoricoDatosRestringidos) => ({
-          id: datos.id,
-          historico_cambio_id_persona: datos.historico_cambio_id_persona,
-          nombre_campo_cambiado: datos.nombre_campo_cambiado,
-          valor_campo_cambiado: datos.valor_campo_cambiado,
-          ruta_archivo_soporte: datos.ruta_archivo_soporte,
-          fecha_cambio: datos.fecha_cambio,
-          justificacion_cambio: datos.justificacion_cambio,
-          id_persona: datos.id_persona,
-        })
-      );
-
-      set_rows(new_historico);
-    } catch (err) {
-      control_error(err);
-    }
   };
 
   const historico = async (): Promise<void> => {
