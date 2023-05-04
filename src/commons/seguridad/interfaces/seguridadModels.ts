@@ -227,7 +227,7 @@ export interface Persons {
 
 export interface ISeguridadInfo {
   superUser: SuperUser[];
-  roles: Roles[];
+  roles: RolUser[];
   rol: Rol;
   users: Users[];
   persons: Persons[];
