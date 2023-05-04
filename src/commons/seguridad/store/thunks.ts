@@ -1,6 +1,7 @@
 import { type Dispatch } from 'react';
 import {
   persons_request,
+  roles_request,
   superuser_request,
   user_request,
   users_request
@@ -8,10 +9,18 @@ import {
 import {
   delegate_superuser_role,
   set_persons,
+  set_roles,
   set_user_info,
   set_users
 } from './seguridadSlice';
 import { control_error, control_success } from '../../../helpers';
+
+export const get_roles: () => any = () => {
+  return async (dispatch: Dispatch<any>) => {
+    const data = await roles_request();
+    dispatch(set_roles(data));
+  };
+};
 
 export const create_super_user: (
   id_persona: number
