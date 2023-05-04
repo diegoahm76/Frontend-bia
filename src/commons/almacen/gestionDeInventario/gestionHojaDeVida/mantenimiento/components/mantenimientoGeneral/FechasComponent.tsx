@@ -17,28 +17,29 @@ import Button from '@mui/material/Button';
 import { CalendarPicker, DatePicker, LocalizationProvider, PickersDay } from '@mui/x-date-pickers/';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import use_previsualizacion from './hooks/usePrevisualizacion';
-import { type crear_mantenimiennto } from '../../interfaces/IProps';
+import { type crear_mantenimiento } from '../../interfaces/IProps';
 import dayjs, { type Dayjs } from 'dayjs';
-import { type IcvVehicles } from '../../../hojaDeVidaVehiculo/interfaces/CvVehiculo';
 import { isSameDay } from 'date-fns';
 import { getColombiaHolidaysByYear } from 'colombia-holidays';
 interface IProps {
     parent_state_setter: any,
-    detalle_vehiculo: IcvVehicles,
+    detalle_seleccionado: any,
     tipo_matenimiento: string,
-    especificacion: string
+    especificacion: string,
+    user_info: any,
+    limpiar_formulario: boolean
 }
 const opcion_programar = [{ value: "MA", label: "Manual" }, { value: "AU", label: "Automatica" }, { value: "OT", label: "Otro" }];
 
 const opcion_programar_fecha = [{ value: "W", label: "Semanas" }, { value: "M", label: "Meses" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_vehiculo, tipo_matenimiento, especificacion }: IProps) => {
+export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, user_info, limpiar_formulario }: IProps) => {
     // Hooks
     const {
         rows,
         set_rows,
-        set_detalle_vehiculo,
+        set_detalle_seleccionado,
         set_tipo_mantenimiento,
         set_especificacion,
     } = use_previsualizacion();
@@ -56,13 +57,30 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }, [especificacion]);
 
     useEffect(() => {
-        set_detalle_vehiculo(detalle_vehiculo);
-    }, [detalle_vehiculo]);
+        set_detalle_seleccionado(detalle_seleccionado);
+    }, [detalle_seleccionado]);
+
+    useEffect(() => {
+        if (limpiar_formulario) {
+            set_tipo("");
+            set_fecha("");
+            set_fecha_desde(null);
+            set_fecha_hasta(null);
+            set_fecha_min(dayjs());
+            set_cada("");
+            set_fechas_array([]);
+            set_check_isd(false);
+            set_check_if(false);
+            set_disabled_type(true);
+            set_selected_date([]);
+        }
+    }, [limpiar_formulario]);
 
     const [tipo, set_tipo] = useState("");
     const [fecha, set_fecha] = useState("");
     const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
     const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
+    const [fecha_min, set_fecha_min] = useState<Dayjs>(dayjs());
     const [cada, set_cada] = useState("");
     const [fechas_array, set_fechas_array] = useState<Dayjs[]>([]);
     const [check_isd, set_check_isd] = useState(false);
@@ -72,6 +90,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
     const handle_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
         set_tipo(event.target.value);
+        set_fecha_min(dayjs());
         set_disabled_type(event.target.value === "MA");
     }
 
@@ -85,6 +104,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
     const handle_change_fecha_desde = (date: Date | null): void => {
         set_fecha_desde(date);
+        set_fecha_min(dayjs());
     };
 
     const handle_change_fecha_hasta = (date: Date | null): void => {
@@ -101,7 +121,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
     useEffect(() => {
         set_fechas();
-    }, [fecha,cada,fecha_hasta,fecha_desde,check_isd,check_if]);
+    }, [fecha, cada, fecha_hasta, fecha_desde, check_isd, check_if]);
 
     const set_fechas = (): void => {
         if (fecha_desde !== null && fecha_hasta !== null && cada !== "" && fecha !== "") {
@@ -206,22 +226,22 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }
 
     const emit_new_data: () => void = () => {
-        const rows_emit: crear_mantenimiennto[] = [];
+        const rows_emit: crear_mantenimiento[] = [];
         selected_date.forEach(cm => {
-            const data: crear_mantenimiennto = {
-                tipo_programacion: "Por Fecha",
+            const data: crear_mantenimiento = {
+                tipo_programacion: "fecha",
                 cod_tipo_mantenimiento: tipo_matenimiento,
-                kilometraje_programado: "",
-                fecha_programada: cm.format("DD-MM-YYYY"),
+                kilometraje_programado: null,
+                fecha_programada: cm.format("YYYY-MM-DD"),
                 motivo_mantenimiento: especificacion,
                 observaciones: especificacion,
-                fecha_solicitud: dayjs().format("DD-MM-YYYY"),
-                fecha_anulacion: "",
-                justificacion_anulacion: "",
+                fecha_solicitud: dayjs().format("YYYY-MM-DD"),
+                fecha_anulacion: null,
+                justificacion_anulacion: null,
                 ejecutado: false,
-                id_articulo: 170,
-                id_persona_solicita: 1,
-                id_persona_anula: 0
+                id_articulo: detalle_seleccionado.id_bien,
+                id_persona_solicita: user_info.id_persona,
+                id_persona_anula: null
             }
             rows_emit.push(data);
         })
@@ -301,6 +321,8 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                                             {...params}
                                         />
                                     )}
+                                    minDate={fecha_min.toDate()}
+                                    maxDate={fecha_hasta}
                                     disabled={disabled_type}
                                 />
                             </LocalizationProvider>
@@ -319,7 +341,8 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                                             {...params}
                                         />
                                     )}
-                                    disabled={disabled_type}
+                                    minDate={fecha_desde}
+                                    disabled={disabled_type || fecha_desde == null}
                                 />
                             </LocalizationProvider>
                         </Grid>
@@ -337,7 +360,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                     </Grid>
                     <Grid item xs={12} sm={8}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <CalendarPicker date={null} onChange={onchange_calendar} disabled={tipo === ""} renderDay={custom_day_render} />
+                            <CalendarPicker date={null} onChange={onchange_calendar} disabled={tipo === ""} renderDay={custom_day_render} minDate={fecha_min} />
                         </LocalizationProvider>
                     </Grid>
                 </Grid>

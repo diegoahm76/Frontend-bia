@@ -18,19 +18,25 @@ export interface detalle_mantenimiento {
     tipo: string, 
     especificacion: string, 
 }
+export interface anular_mantenimiento { 
+    id_mantenimiento: number, 
+    id_funcionario: number, 
+    fecha_anulacion: string, 
+    motivo_anulacion: string 
+}
 
-export interface crear_mantenimiennto {
+export interface crear_mantenimiento {
     tipo_programacion: string,
     cod_tipo_mantenimiento: string,
-    kilometraje_programado: string,
-    fecha_programada: string,
+    kilometraje_programado: string | null,
+    fecha_programada: string | null,
     motivo_mantenimiento: string,
     observaciones: string,
     fecha_solicitud: string,
-    fecha_anulacion: string,
-    justificacion_anulacion: string,
+    fecha_anulacion: string | null,
+    justificacion_anulacion: string | null,
     ejecutado: boolean,
     id_articulo: number,
     id_persona_solicita: number,
-    id_persona_anula: number
+    id_persona_anula: number| null
 }

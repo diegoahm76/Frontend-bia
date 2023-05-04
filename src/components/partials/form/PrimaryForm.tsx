@@ -42,6 +42,8 @@ const PrimaryForm = ({
                 multiline_text={form_input.multiline_text}
                 rows_text={form_input.rows_text}
                 on_blur_function={form_input.on_blur_function}
+                set_value={form_input.set_value ?? null}
+                hidden_text={form_input.hidden_text ?? null}
             />;
         } else if (form_input.datum_type === "input_no_controller") {
             return <FormInputNoController
@@ -70,6 +72,9 @@ const PrimaryForm = ({
                 select_options={form_input.select_options}
                 option_label={form_input.option_label}
                 option_key={form_input.option_key}
+                multiple={form_input.multiple ?? false}
+                hidden_text={form_input.hidden_text ?? null}
+
             />
         } else if (form_input.datum_type === "title") {
             return <Title title={form_input.title_label}></Title>

@@ -3,7 +3,7 @@ import { HomeRoutes } from '../commons/home/routes/HomeRoutes';
 import { SeguridadRoutes } from '../commons/seguridad/routers/SeguridadRoutes';
 import { GestorDocumentalRoutes } from '../commons/gestorDocumental/routes/GestorDocumentalRoutes';
 import { MainLayout } from '../layouts/MainLayout';
-import { AlmacenRoutes } from '../commons/almacen/router/AlmacenRoutes';
+import { AlmacenRoutes } from '../commons/almacen/routes/AlmacenRoutes';
 import { ConservacionRoutes } from '../commons/conservacion/routes/ConservacionRoutes';
 import { RecaudoRoutes } from '../commons/recaudo/routes/RecaudoRoutes';
 import { RecursoHidricoRoutes } from '../commons/recursoHidrico/routers/RecursoHidricoRoutes';
