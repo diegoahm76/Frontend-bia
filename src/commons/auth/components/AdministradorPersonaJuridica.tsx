@@ -63,44 +63,57 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         watch,
     } = useForm<DataRegistePortal>();
     const {
-        ciudad_expedicion,
-        ciudad_residencia,
-        ciudades_opt,
         data_register,
-        departamento_expedicion,
-        departamento_residencia,
-        departamentos_opt,
         error_email,
+        error_password,
         error_phone,
-        estado_civil_opt,
-        estado_civil,
-        genero_opt,
-        genero,
         is_exists,
-        loading,
-        pais_nacimiento,
-        pais_notificacion,
-        pais_residencia,
+        is_saving,
         paises_options,
+        is_search,
+        loading,
+        message_error_password,
+        pais_notificacion,
+        show_password,
+        nacionalidad_emp,
+        tipo_documento_opt,
+        tipo_documento_rep,
+        naturaleza_emp,
+        naturaleza_emp_opt,
         dpto_notifiacion_opt,
         dpto_notifiacion,
         ciudad_notificacion_opt,
         ciudad_notificacion,
-        dpts_residencia_opt,
-        ciudades_residencia_opt,
+        message_no_person,
+        nombre_representante,
+        fecha_rep_legal,
+        documento_rep,
+        set_documento_rep,
+        set_nacionalidad_emp,
+        set_naturaleza_emp,
+        set_fecha_rep_legal,
+        validate_exits_representante,
         set_ciudad_notificacion,
-        // set_departamento_expedicion,
         set_dpto_notifiacion,
+        handle_click_show_password,
         set_ciudad_expedicion,
         set_ciudad_residencia,
         set_data_register,
         set_departamento,
         set_dpto_residencia,
+        set_error_email,
+        set_error_error_phone,
+        set_error_password,
         set_estado_civil,
         set_genero,
+        set_is_saving,
+        set_message_error_password,
         set_pais_nacimiento,
         set_pais_residencia,
+        set_tipo_persona,
         set_pais_notificacion,
+        set_tipo_documento_rep,
+        set_message_no_person,
     } = use_register();
 
     // Establece los valores del formulario
@@ -172,23 +185,15 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             const id_persona: number | undefined = persona?.id_persona;
             const response = await consultar_datos_persona(id_persona);
             console.log("Datos completos", response)
-            // datos basicos
+
             set_datos_persona(response);
-            set_fecha_nacimiento(response?.fecha_nacimiento)
-            set_pais_nacimiento(response?.pais_nacimiento)
-            set_genero(response?.sexo)
-            set_estado_civil(response?.estado_civil)
-            // datos expedicion documento 
-            set_ciudad_expedicion(response?.cod_municipio_expedicion_id)
-            set_departamento(response?.cod_departamento_expedicion)
-
-            // dirección residencia
-            set_pais_residencia(response?.pais_residencia)
-            set_ciudad_residencia(response?.municipio_residencia)
-            set_direccion(response?.direccion_residencia)
-
-
+            // datos basicos
+            set_nacionalidad_emp(response?.cod_pais_nacionalidad_empresa)
+           
             // dirección notificación
+            // set_pais_notificacion(response?.pais)
+            set_dpto_notifiacion(response?.cod_departamento_notificacion)
+            set_ciudad_notificacion(response?.cod_municipio_notificacion_nal)
             set_direccion_notificacion(response?.direccion_notificaciones)
             set_data_register({
                 ...data_register,
@@ -201,20 +206,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             set_data_register({
                 ...data_register,
                 complemeto_direccion: response?.direccion_notificacion_referencia,
-            });
-
-            // Autorización
-            set_data_register({
-                ...data_register,
-                acepta_notificacion_email: response?.acepta_notificacion_email,
-            });
-            set_data_register({
-                ...data_register,
-                acepta_notificacion_sms: response?.acepta_notificacion_sms,
-            });
-            set_data_register({
-                ...data_register,
-                acepta_tratamiento_datos: response?.acepta_tratamiento_datos,
             });
 
             // Datos adicionales
@@ -260,6 +251,11 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             label: 'Mixta',
         },
     ];
+    useEffect(() => {
+        if (watch('cod_pais_nacionalidad_empresa') !== undefined) {
+            set_nacionalidad_emp(watch('cod_pais_nacionalidad_empresa'));
+        }
+    }, [watch('cod_pais_nacionalidad_empresa')]);
     useEffect(() => {
         if (watch('departamento_expedicion') !== undefined) {
             set_departamento(watch('departamento_expedicion'));
@@ -336,124 +332,270 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                         {(datos_persona != null) && (
                             <Grid container spacing={2}>
                                 <>
-                                <Grid item xs={12}>
-                                    <Title title="DATOS DE IDENTIFICACIÓN" />
-                                </Grid>
-                                <Grid item xs={12} sm={3}>
-                                    <TextField
-                                        id="tipo_doc_comercial"
-                                        label="Tipo de Persona"
-                                        select
-                                        fullWidth
-                                        size="small"
-                                        margin="dense"
-                                        required
-                                        autoFocus
-                                        defaultValue={persona?.tipo_persona}
-                                        disabled
-                                    >
-                                        {tipo_persona.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                                <Grid item xs={12} sm={3}>
-                                    <TextField
-                                        label="Tipo de Documento"
-                                        select
-                                        fullWidth
-                                        size="small"
-                                        margin="dense"
-                                        required
-                                        autoFocus
-                                        disabled
-                                        defaultValue={persona?.tipo_documento}
-                                    >
-                                        {tipos_doc_comercial.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
-                                <Grid item xs={12} sm={3}>
-                                    <TextField
-                                        label="Número Identificación"
-                                        id="documento_juridico"
-                                        type="number"
-                                        fullWidth
-                                        size="small"
-                                        margin="dense"
-                                        required
-                                        defaultValue={persona?.numero_documento}
-                                        disabled
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={3}>
-                                    <TextField
-                                        label="Digito de verificación:"
-                                        type="number"
-                                        fullWidth
-                                        size="small"
-                                        margin="dense"
-                                        required
-                                        autoFocus
-                                        defaultValue={persona?.digito_verificacion}
-                                        disabled
-                                    />
-                                </Grid>
+                                    <Grid item xs={12}>
+                                        <Title title="DATOS DE IDENTIFICACIÓN" />
+                                    </Grid>
+                                    <Grid item xs={12} sm={3}>
+                                        <TextField
+                                            id="tipo_doc_comercial"
+                                            label="Tipo de Persona"
+                                            select
+                                            fullWidth
+                                            size="small"
+                                            margin="dense"
+                                            required
+                                            autoFocus
+                                            defaultValue={persona?.tipo_persona}
+                                            disabled
+                                        >
+                                            {tipo_persona.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item xs={12} sm={3}>
+                                        <TextField
+                                            label="Tipo de Documento"
+                                            select
+                                            fullWidth
+                                            size="small"
+                                            margin="dense"
+                                            required
+                                            autoFocus
+                                            disabled
+                                            defaultValue={persona?.tipo_documento}
+                                        >
+                                            {tipos_doc_comercial.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item xs={12} sm={3}>
+                                        <TextField
+                                            label="Número Identificación"
+                                            id="documento_juridico"
+                                            type="number"
+                                            fullWidth
+                                            size="small"
+                                            margin="dense"
+                                            required
+                                            defaultValue={persona?.numero_documento}
+                                            disabled
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={3}>
+                                        <TextField
+                                            label="Digito de verificación:"
+                                            type="number"
+                                            fullWidth
+                                            size="small"
+                                            margin="dense"
+                                            required
+                                            autoFocus
+                                            defaultValue={persona?.digito_verificacion}
+                                            disabled
+                                        />
+                                    </Grid>
                                 </>
                                 <>
-                                <Grid item xs={12}>
-                                    <Title title="DATOS EMPRESARIALES" />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="Razón social"
-                                        type="text"
-                                        fullWidth
-                                        size="small"
-                                        margin="dense"
-                                        required
-                                        autoFocus
-                                        defaultValue={datos_persona?.razon_social}
-                                        disabled
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="Nombre comercial"
-                                        type="text"
-                                        fullWidth
-                                        size="small"
-                                        margin="dense"
-                                        required
-                                        autoFocus
-                                        defaultValue={datos_persona?.nombre_comercial}
-                                        disabled
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        label="Naturaleza de la empresa"
-                                        select
-                                        fullWidth
-                                        size="small"
-                                        margin="dense"
-                                        required
-                                        autoFocus
-                                        defaultValue={persona?.cod_naturaleza_empresa}
-                                        disabled
-                                    >
-                                        {tipo_empresa.map((option) => (
-                                            <MenuItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </Grid>
+                                    <Grid item xs={12}>
+                                        <Title title="DATOS EMPRESARIALES" />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Razón social"
+                                            type="text"
+                                            fullWidth
+                                            size="small"
+                                            margin="dense"
+                                            required
+                                            autoFocus
+                                            defaultValue={datos_persona?.razon_social}
+                                            disabled
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Nombre comercial"
+                                            type="text"
+                                            fullWidth
+                                            size="small"
+                                            margin="dense"
+                                            required
+                                            autoFocus
+                                            defaultValue={datos_persona?.nombre_comercial}
+                                            disabled
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                            label="Naturaleza de la empresa"
+                                            select
+                                            fullWidth
+                                            size="small"
+                                            margin="dense"
+                                            required
+                                            autoFocus
+                                            defaultValue={persona?.cod_naturaleza_empresa}
+                                            disabled
+                                        >
+                                            {tipo_empresa.map((option) => (
+                                                <MenuItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <CustomSelect
+                                            onChange={on_change}
+                                            label="Nacionalidad empresa *"
+                                            name="cod_pais_nacionalidad_empresa"
+                                            value={nacionalidad_emp}
+                                            options={paises_options}
+                                            loading={loading}
+                                            disabled={false}
+                                            required={true}
+                                            errors={errors}
+                                            register={register}
+                                        />
+                                    </Grid>
+                                </>
+                                <>
+                                    <Grid item xs={12}>
+                                        <Title title="DATOS DE NOTIFICACIÓN" />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Divider />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Typography variant="subtitle1" fontWeight="bold">Datos de notificación nacional</Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <CustomSelect
+                                            onChange={on_change}
+                                            label="País de notificación"
+                                            name="pais_notificacion"
+                                            value={pais_notificacion}
+                                            options={paises_options}
+                                            loading={loading}
+                                            disabled={false}
+                                            required={true}
+                                            errors={errors}
+                                            register={register}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <CustomSelect
+                                            onChange={on_change}
+                                            label="Departamento"
+                                            name="dpto_notifiacion"
+                                            value={dpto_notifiacion}
+                                            options={dpto_notifiacion_opt}
+                                            loading={loading}
+                                            disabled={pais_notificacion === '' ?? true}
+                                            required={true}
+                                            errors={errors}
+                                            register={register}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <CustomSelect
+                                            onChange={on_change}
+                                            label="Ciudad"
+                                            name="cod_municipio_notificacion_nal"
+                                            value={ciudad_notificacion}
+                                            options={ciudad_notificacion_opt}
+                                            loading={loading}
+                                            disabled={dpto_notifiacion === '' ?? true}
+                                            required={true}
+                                            errors={errors}
+                                            register={register}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <TextField
+                                            fullWidth
+                                            size="small"
+                                            label="Dirección"
+                                            disabled
+                                            error={errors.direccion_notificaciones?.type === 'required'}
+                                            helperText={
+                                                errors.direccion_notificaciones?.type === 'required'
+                                                    ? 'Este campo es obligatorio'
+                                                    : ''
+                                            }
+                                            {...register('direccion_notificaciones', {
+                                                required: true,
+                                            })}
+                                            value={direccion_notificacion}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => {
+                                                open_modal(true);
+                                                set_type_direction('notificacion');
+                                            }}
+                                        >
+                                            Generar dirección
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <TextField
+                                            disabled={is_exists}
+                                            fullWidth
+                                            size="small"
+                                            label="Complemento dirección"
+                                            value={data_register.complemeto_direccion}
+                                            {...register('complemeto_direccion')}
+                                            onChange={handle_change}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Divider />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <TextField
+                                            disabled={is_exists}
+                                            fullWidth
+                                            size="small"
+                                            label="E-mail"
+                                            error={errors.email?.type === 'required' || error_email}
+                                            type="email"
+                                            value={data_register.email}
+                                            helperText={
+                                                errors.email?.type === 'required'
+                                                    ? 'Este campo es obligatorio'
+                                                    : error_email
+                                                        ? 'Los emails no coinciden'
+                                                        : ''
+                                            }
+                                            {...register('email', {
+                                                required: true,
+                                            })}
+                                            onChange={handle_change}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <TextField
+                                            disabled={is_exists}
+                                            fullWidth
+                                            size="small"
+                                            label="Celular"
+                                            onCopy={(e: any) => e.preventDefault()}
+                                            value={data_register.telefono_celular}
+                                            error={error_phone}
+                                            helperText={error_phone ? 'Los número de celular no son iguales' : ''}
+                                            {...register('telefono_celular')}
+                                            onChange={handle_change}
+                                        />
+                                    </Grid>
                                 </>
                                 <Grid item xs={12}>
                                     <Stack justifyContent="flex-end" sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
