@@ -1,27 +1,17 @@
-import { type Dispatch, type SetStateAction } from 'react';
+// import { useState } from 'react';
+// import { type Dispatch, type SetStateAction } from 'react';
 // Componentes de Material UI
-import {
-  Grid,
-  Box,
-  Button,
-  IconButton,
-  Avatar,
-  TextField,
-  MenuItem,
-} from '@mui/material';
+import { Grid, Box, Button, IconButton, Avatar } from '@mui/material';
 // Icons de Material UI
 import SearchIcon from '@mui/icons-material/Search';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-
-interface IProps {
-  set_position_tab_admin_personas: Dispatch<SetStateAction<string>>;
-}
+// import DialogBusquedaAvanzada from './DialogBusquedaAvanzada';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function ListPersonas({
-  set_position_tab_admin_personas,
-}: IProps): JSX.Element {
+export function AdminPersonas(): JSX.Element {
+  // const [busqueda_avanzada_is_active, set_busqueda_avanzada_is_active] =
+  //   useState<boolean>(false);
   const rows = [
     {
       id: 1,
@@ -139,71 +129,25 @@ export function ListPersonas({
     },
   ];
 
-  const tipos_documentos = [
-    {
-      value: '1',
-      label: 'Test',
-    },
-    {
-      value: 'EUR',
-      label: 'Test',
-    },
-    {
-      value: 'BTC',
-      label: '฿',
-    },
-    {
-      value: 'JPY',
-      label: '¥',
-    },
-  ];
-
   return (
     <>
       <Grid item xs={12}>
-        <Box sx={{ width: '100%', typography: 'body1', mb: '20px' }}>
-          <Box
-            component="form"
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            // onSubmit={handle_submit_unidades(submit_unidades)}
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  name="tipoUnidad"
-                  select
-                  label="Tipo de documento"
-                  defaultValue="Seleccione"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_documentos.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  margin="dense"
-                  fullWidth
-                  size="small"
-                  label="Número de documento"
-                  variant="outlined"
-                  // disabled={organigram_current.fecha_terminado !== null}
-                  // value={value}
-                  // onChange={onChange}
-                  // error={!(error == null)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <Button variant="outlined" startIcon={<SearchIcon />}>
-                  BUSCAR
-                </Button>
-              </Grid>
+        <Box
+          sx={{ width: '100%', typography: 'body1', mt: '20px', mb: '20px' }}
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={3}>
+              <Button
+                variant="outlined"
+                startIcon={<SearchIcon />}
+                // onClick={() => {
+                //   set_busqueda_avanzada_is_active(true);
+                // }}
+              >
+                BUSQUEDA AVANZADA
+              </Button>
             </Grid>
-          </Box>
+          </Grid>
         </Box>
       </Grid>
       <Grid item>
@@ -219,6 +163,10 @@ export function ListPersonas({
           />
         </Box>
       </Grid>
+      {/* <DialogBusquedaAvanzada
+        is_modal_active={busqueda_avanzada_is_active}
+        set_is_modal_active={set_busqueda_avanzada_is_active}
+      /> */}
     </>
   );
 }
