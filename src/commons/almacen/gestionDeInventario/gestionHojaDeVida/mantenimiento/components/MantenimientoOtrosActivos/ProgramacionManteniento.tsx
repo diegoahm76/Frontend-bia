@@ -204,7 +204,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                                 startIcon={<SearchIcon />}
                                 onClick={() => {
                                     set_buscar_programacion_is_active(true);
-                                    set_title_programacion('Buscar programación');
+                                    set_title_programacion('Buscar programación de otros activos');
                                 }}
                             >
                                 Buscar programación
@@ -237,7 +237,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                                 startIcon={<DeleteForeverIcon />}
                                 onClick={() => {
                                     set_anular_mantenimiento_is_active(true);
-                                    set_title('Anular mantenimiento');
+                                    set_title('Anular mantenimiento de otros activos');
                                 }}
                             >
                                 Anular
