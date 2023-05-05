@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Chip, Grid } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
