@@ -23,6 +23,7 @@ export function CambioEtapaScreen(): JSX.Element {
   const { control: control_material, reset: reset_material_vegetal, getValues: get_values_material } = useForm<IObjChange>();
   const [action, set_action] = useState<string>("Crear")
   const dispatch = useAppDispatch()
+  
 
   useEffect(() => {
     dispatch(set_current_stage_change({ ...current_stage_change, id_persona_cambia: changing_person?.id_persona, id_vivero: get_values_cambio("id_vivero"), id_bien: get_values_cambio("id_bien"), fecha_cambio: get_values_cambio("fecha_cambio"), cantidad_movida: get_values_cambio("cantidad_movida"), altura_lote_en_cms: get_values_cambio("altura_lote_en_cms"), observaciones: get_values_cambio("observaciones") }))
@@ -84,7 +85,7 @@ export function CambioEtapaScreen(): JSX.Element {
       void dispatch(add_stage_change_service(form_data));
     // }
   };
-
+  
   return (
     <>
       <Grid

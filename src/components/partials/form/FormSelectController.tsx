@@ -52,7 +52,7 @@ const FormSelectController = ({
     return (
         
         <>
-        {((!hidden_text)??false) &&
+        {(!(hidden_text ?? false)) &&
             
         <Grid item xs={xs} md={md}>
             <Controller

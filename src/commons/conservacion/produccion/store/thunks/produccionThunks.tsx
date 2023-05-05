@@ -7,7 +7,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  set_nurseries, set_vegetal_materials, set_current_vegetal_material, set_stage_changes, set_current_stage_change, set_changing_person, set_persons
+  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons
 } from '../slice/produccionSlice';
 import { api } from '../../../../../api/axios';
 

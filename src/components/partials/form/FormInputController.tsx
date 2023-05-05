@@ -54,7 +54,7 @@ const FormInputController = ({
       };
     return (
         <>
-        {((!hidden_text)??false) &&
+        {(!(hidden_text ?? false)) &&
         <Grid item xs={xs} md={md}>
             {type!== "file" ?
             <Controller

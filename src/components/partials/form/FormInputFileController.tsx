@@ -1,7 +1,7 @@
-import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import { Controller } from 'react-hook-form';
-import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
+import { Button, FormControl, FormHelperText, Input } from '@mui/material';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 interface IRuleMessage {
     rule: any;
@@ -23,7 +23,7 @@ interface IProps {
     label: string;
     disabled: boolean;
     helper_text: string;
-    id: string;
+    file_name: string | null;
     set_value?: any;
     hidden_text?: boolean | null,
 }
@@ -39,7 +39,7 @@ const FormInputFileController = ({
     disabled,
     helper_text,
     default_value,
-    id,
+    file_name,
     set_value,
     hidden_text
 }: IProps) => {
@@ -49,7 +49,7 @@ const FormInputFileController = ({
     };
     return (
         <>
-            {/* {((!hidden_text)??false) && */}
+            {(!(hidden_text ?? false)) &&
             <Grid item xs={xs} md={md}>
                 <Controller
                     name={control_name}
@@ -61,16 +61,21 @@ const FormInputFileController = ({
                         fieldState: { error },
                     }) => (
                         <FormControl fullWidth>
-                            <InputLabel htmlFor={id}>{label}</InputLabel>
+                            <Button 
+                            fullWidth
+                            size="small"
+                            variant="outlined" 
+                            startIcon={<CloudUploadIcon />}
+                            >
+                                {file_name!==""?file_name:label}
                             <Input
-                                id={id}
                                 type="file"
-                                fullWidth
                                 disabled={disabled}
-                                value={value}
-                                onChange={onChange}
+                                style={{ opacity: 0, width: 100 }}
+                                onChange={handle_file_input_change}
                                 error={!(error == null)}
                             />
+                            </Button>
                             <FormHelperText
                             error= {!(error == null)}>
                                 {(error != null)
@@ -81,7 +86,7 @@ const FormInputFileController = ({
                     )}
                 />
             </Grid>
-            {/* } */}
+            }
         </>
     );
 }
