@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-// import type { AxiosError } from 'axios';
 import {
   Box,
   Grid,
@@ -12,6 +11,9 @@ import {
   Input,
   InputLabel,
   type SelectChangeEvent,
+  Autocomplete,
+  type AutocompleteChangeReason,
+  type AutocompleteChangeDetails,
   // type SelectChangeEvent,
   // Autocomplete,
 } from '@mui/material';
@@ -24,6 +26,7 @@ import type {
   keys_object,
   DataAadminUser,
   SeguridadSlice,
+  RolUser,
   // Users,
 } from '../interfaces';
 import {
@@ -33,48 +36,8 @@ import {
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../../helpers/controlSuccess';
-import FormSelectController from '../../../components/partials/form/FormSelectController';
+// import FormSelectController from '../../../components/partials/form/FormSelectController';
 import { CustomSelect } from '../../../components/CustomSelect';
-// import {
-//   // set_action_admin_users,
-//   set_user_info,
-// } from '../store/seguridadSlice';
-
-// const initial_state_user_info: Users = {
-//   id_usuario: 0,
-//   nombre_de_usuario: '',
-//   persona: 0,
-//   tipo_persona: '',
-//   tipo_documento: '',
-//   numero_documento: '',
-//   primer_nombre: '',
-//   segundo_nombre: '',
-//   primer_apellido: '',
-//   segundo_apellido: '',
-//   nombre_completo: '',
-//   razon_social: '',
-//   nombre_comercial: '',
-//   is_active: false,
-//   fecha_ultimo_cambio_activacion: '',
-//   justificacion_ultimo_cambio_activacion: '',
-//   is_blocked: false,
-//   fecha_ultimo_cambio_bloqueo: '',
-//   justificacion_ultimo_cambio_bloqueo: '',
-//   tipo_usuario: '',
-//   profile_img: '',
-//   creado_por_portal: false,
-//   created_at: '',
-//   activated_at: '',
-//   id_usuario_creador: 0,
-//   primer_nombre_usuario_creador: '',
-//   primer_apellido_usuario_creador: '',
-//   roles: [
-//     {
-//       id_rol: 0,
-//       nombre_rol: '',
-//     },
-//   ],
-// };
 
 interface Props {
   has_user: boolean;
@@ -84,11 +47,10 @@ interface Props {
 export const AdminUserPersonaNatural: React.FC<Props> = ({
   has_user,
 }: Props) => {
-  // const dispatch = useDispatch();
+  const [data_disponible, set_data_disponible] = useState<boolean>(false);
   const { action_admin_users, data_person_search, user_info } = useSelector(
     (state: SeguridadSlice) => state.seguridad
   );
-  const [data_disponible, set_data_disponible] = useState<boolean>(false);
   const [
     historial_cambios_estado_is_active,
     set_historial_cambios_estado_is_active,
@@ -102,7 +64,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     activo_opt,
     bloqueado,
     bloqueado_opt,
-    // roles,
+    roles,
     // roles_opt,
     set_activo,
     set_bloqueado,
@@ -112,120 +74,107 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   } = use_admin_users();
 
   const {
-    control,
+    // control,
     register: register_admin_user,
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
-    // reset: reset_admin_user,
     watch,
   } = useForm<DataAadminUser>();
 
+  // Paso de datos a formulario para creacion de usuario persona natural
   useEffect(() => {
-    set_data_disponible(false);
-    if (action_admin_users === 'CREATE') {
-      console.log('Punto 2', action_admin_users);
-      console.log('Creación de usuario - persona natural');
-      console.log(data_person_search);
-      set_data_register({
-        ...data_register,
-        primer_nombre: data_person_search.primer_nombre,
-        segundo_nombre: data_person_search.segundo_nombre,
-        primer_apellido: data_person_search.primer_apellido,
-        segundo_apellido: data_person_search.segundo_apellido,
-      });
-      set_data_disponible(true);
-    }
+    set_data_register({
+      ...data_register,
+      primer_nombre: data_person_search.primer_nombre,
+      segundo_nombre: data_person_search.segundo_nombre,
+      primer_apellido: data_person_search.primer_apellido,
+      segundo_apellido: data_person_search.segundo_apellido,
+    });
+    set_data_disponible(true);
   }, [data_person_search]);
 
+  // Paso de datos a formulario para edición de usuario persona natural
   useEffect(() => {
-    // reset_admin_user();
-    // set_user_info(initial_state_user_info);
-    // set_data_register({
-    //   tipo_persona: '',
-    //   tipo_documento: '',
-    //   numero_documento: '',
-    //   razon_social: '',
-    //   nombre_comercial: '',
-    //   primer_apellido: '',
-    //   primer_nombre: '',
-    //   segundo_apellido: '',
-    //   segundo_nombre: '',
-    //   nombre_de_usuario: '',
-    //   imagen_usuario: '',
-    //   tipo_usuario: '',
-    //   roles: [],
-    //   activo: false,
-    //   activo_fecha_ultimo_cambio: '',
-    //   activo_justificacion_cambio: '',
-    //   bloqueado: false,
-    //   bloqueado_fecha_ultimo_cambio: '',
-    //   bloqueado_justificacion_cambio: '',
-    //   fecha_creacion: '',
-    //   fecha_activación_inicial: '',
-    //   creado_desde_portal: false,
-    //   persona_que_creo: 0,
-    // });
-    if (action_admin_users === 'EDIT') {
-      console.log('Punto 2', action_admin_users);
-      console.log(user_info);
-      console.log('Edicion de usuario - persona natural');
-      // Traer datos de usuario completos
-      set_data_register({
-        ...data_register,
-        primer_nombre: user_info.primer_nombre,
-        segundo_nombre: user_info.segundo_nombre,
-        primer_apellido: user_info.primer_apellido,
-        segundo_apellido: user_info.segundo_apellido,
-        nombre_de_usuario: user_info.nombre_de_usuario,
-        tipo_usuario: user_info.tipo_usuario,
-        roles: user_info.roles,
-        activo: user_info.is_active,
-        activo_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_activacion,
-        activo_justificacion_cambio:
-          user_info.justificacion_ultimo_cambio_activacion,
-        bloqueado: user_info.is_blocked,
-        bloqueado_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_bloqueo,
-        bloqueado_justificacion_cambio:
-          user_info.justificacion_ultimo_cambio_bloqueo,
-        fecha_creacion: user_info.created_at,
-        fecha_activación_inicial: user_info.activated_at,
-        creado_desde_portal: user_info.creado_por_portal,
-        persona_que_creo: user_info.id_usuario_creador,
-      });
-      set_activo(data_register.activo.toString());
-
-      set_value('primer_nombre', user_info.primer_nombre);
-      set_value('segundo_nombre', user_info.segundo_nombre);
-      set_value('primer_apellido', user_info.primer_apellido);
-      set_value('segundo_apellido', user_info.segundo_apellido);
-      set_value('nombre_de_usuario', user_info.nombre_de_usuario);
-      set_value('tipo_usuario', user_info.tipo_usuario);
-      set_value('roles', user_info.roles);
-      set_value('activo', user_info.is_active);
-      set_value(
-        'activo_fecha_ultimo_cambio',
-        user_info.fecha_ultimo_cambio_activacion
-      );
-      set_value(
-        'activo_justificacion_cambio',
-        user_info.justificacion_ultimo_cambio_activacion
-      );
-      set_value('bloqueado', user_info.is_blocked);
-      set_value(
-        'bloqueado_fecha_ultimo_cambio',
-        user_info.fecha_ultimo_cambio_bloqueo
-      );
-      set_value(
-        'bloqueado_justificacion_cambio',
-        user_info.justificacion_ultimo_cambio_bloqueo
-      );
-      set_value('fecha_creacion', user_info.created_at);
-      set_value('fecha_activación_inicial', user_info.activated_at);
-      set_value('creado_desde_portal', user_info.creado_por_portal);
-      set_value('persona_que_creo', user_info.id_usuario_creador);
-      set_data_disponible(true);
-    }
+    console.log('reset admin user');
+    set_data_register({
+      tipo_persona: '',
+      tipo_documento: '',
+      numero_documento: '',
+      razon_social: '',
+      nombre_comercial: '',
+      primer_apellido: '',
+      primer_nombre: '',
+      segundo_apellido: '',
+      segundo_nombre: '',
+      nombre_de_usuario: '',
+      imagen_usuario: '',
+      tipo_usuario: '',
+      roles: [],
+      activo: false,
+      activo_fecha_ultimo_cambio: '',
+      activo_justificacion_cambio: '',
+      bloqueado: false,
+      bloqueado_fecha_ultimo_cambio: '',
+      bloqueado_justificacion_cambio: '',
+      fecha_creacion: '',
+      fecha_activación_inicial: '',
+      creado_desde_portal: false,
+      persona_que_creo: 0,
+    });
+    set_data_register({
+      ...data_register,
+      primer_nombre: user_info.primer_nombre,
+      segundo_nombre: user_info.segundo_nombre,
+      primer_apellido: user_info.primer_apellido,
+      segundo_apellido: user_info.segundo_apellido,
+      nombre_de_usuario: user_info.nombre_de_usuario,
+      tipo_usuario: user_info.tipo_usuario,
+      roles: user_info.roles,
+      activo: user_info.is_active,
+      activo_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_activacion,
+      activo_justificacion_cambio:
+        user_info.justificacion_ultimo_cambio_activacion,
+      bloqueado: user_info.is_blocked,
+      bloqueado_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_bloqueo,
+      bloqueado_justificacion_cambio:
+        user_info.justificacion_ultimo_cambio_bloqueo,
+      fecha_creacion: user_info.created_at,
+      fecha_activación_inicial: user_info.activated_at,
+      creado_desde_portal: user_info.creado_por_portal,
+      persona_que_creo: user_info.id_usuario_creador,
+    });
+    set_activo(data_register.activo.toString());
+    set_value('primer_nombre', user_info.primer_nombre);
+    set_value('segundo_nombre', user_info.segundo_nombre);
+    set_value('primer_apellido', user_info.primer_apellido);
+    set_value('segundo_apellido', user_info.segundo_apellido);
+    set_value('nombre_de_usuario', user_info.nombre_de_usuario);
+    set_value('tipo_usuario', user_info.tipo_usuario);
+    set_value('roles', user_info.roles);
+    set_value('activo', user_info.is_active);
+    set_value(
+      'activo_fecha_ultimo_cambio',
+      user_info.fecha_ultimo_cambio_activacion
+    );
+    set_value(
+      'activo_justificacion_cambio',
+      user_info.justificacion_ultimo_cambio_activacion
+    );
+    set_value('bloqueado', user_info.is_blocked);
+    set_value(
+      'bloqueado_fecha_ultimo_cambio',
+      user_info.fecha_ultimo_cambio_bloqueo
+    );
+    set_value(
+      'bloqueado_justificacion_cambio',
+      user_info.justificacion_ultimo_cambio_bloqueo
+    );
+    set_value('fecha_creacion', user_info.created_at);
+    set_value('fecha_activación_inicial', user_info.activated_at);
+    set_value('creado_desde_portal', user_info.creado_por_portal);
+    set_value('persona_que_creo', user_info.id_usuario_creador);
+    set_data_disponible(true);
   }, [user_info]);
 
   useEffect(() => {
@@ -265,6 +214,18 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         break;
     }
     set_value_form(e.target.name, e.target.value);
+  };
+
+  const handle_change_autocomplete = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: RolUser[],
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<RolUser>
+  ): void => {
+    console.log(event);
+    console.log(value);
+    console.log(reason);
+    console.log(details);
   };
 
   // Cambio inputs
@@ -323,7 +284,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               void on_submit(e);
             }}
           >
-            <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
+            <Grid container spacing={2} sx={{ mt: '5px' }}>
               <Box sx={{ ml: '16px', width: '100%' }}>
                 <Title title="Datos personales N" />
               </Box>
@@ -385,7 +346,8 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   onChange={handle_change}
                 />
               </Grid>
-
+            </Grid>
+            <Grid container spacing={2} sx={{ mt: '20px' }}>
               <Box sx={{ ml: '16px', width: '100%' }}>
                 <Title title="Datos de acceso" />
               </Box>
@@ -419,98 +381,48 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   error={Boolean(errors.imagen_usuario)}
                 />
               </Grid>
-
+            </Grid>
+            <Grid container spacing={2} sx={{ mt: '20px' }}>
               <Box sx={{ ml: '16px', width: '100%' }}>
                 <Title title="Tipo de usuario y roles" />
               </Box>
               <Grid item xs={12} sm={6} md={3}>
-                <FormSelectController
-                  xs={12}
-                  md={12}
-                  control_form={control}
-                  control_name="tipo_usuario"
-                  default_value={tipo_usuario}
-                  select_options={tipo_usuario_opt}
-                  rules={{
-                    required_rule: { rule: true, message: 'requerido' },
-                  }}
+                <CustomSelect
+                  onChange={on_change}
                   label="Tipo de usuario"
+                  name="tipo_usuario"
+                  value={tipo_usuario}
+                  options={tipo_usuario_opt}
+                  loading={loading}
                   disabled={false}
-                  helper_text=""
-                  option_label="label"
-                  option_key="value"
+                  required={true}
+                  errors={errors}
+                  register={register_admin_user}
                 />
-                {/* <CustomSelect
-          onChange={on_change}
-          label="Tipo de usuario"
-          name="tipo_usuario"
-          value={tipo_usuario}
-          options={tipo_usuario_opt}
-          loading={loading}
-          disabled={false}
-          required={true}
-          errors={errors}
-          register={register}
-        /> */}
               </Grid>
-              {/* <Grid item xs={12} sm={6} md={3}>
-        <CustomSelect
-          onChange={on_change}
-          label="Roles"
-          name="roles"
-          multiple={true}
-          value={tipo_usuario}
-          options={roles}
-          loading={loading}
-          disabled={false}
-          required={true}
-          errors={errors}
-          register={register}
-        />
-      </Grid> */}
               <Grid item xs={12} sm={6} md={9}>
-                {/* <FormSelectController
-          xs={12}
-          md={6}
-          control_form={control}
-          control_name="roles"
-          default_value=""
-          rules={{ required_rule: { rule: true, message: 'requerido' } }}
-          label="Roles"
-          multiple={true}
-          disabled={false}
-          helper_text=""
-          select_options={roles}
-          option_label="nombre_rol"
-          option_key="id_rol"
-        /> */}
-                {/* <Autocomplete
-          multiple
-          fullWidth
-          id="tags-standard"
-          options={roles}
-          getOptionLabel={(option) => option.nombre_rol}
-          defaultValue={[roles[13]]}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Selección de roles"
-              placeholder="Roles asignados"
-            />
-          )}
-          {...register('roles')}
-        /> */}
+                <Autocomplete
+                  multiple
+                  fullWidth
+                  id="tags-standard"
+                  options={roles}
+                  getOptionLabel={(option) => option.nombre_rol}
+                  defaultValue={[roles[13]]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Selección de roles"
+                      placeholder="Roles asignados"
+                    />
+                  )}
+                  {...register_admin_user('roles')}
+                  onChange={handle_change_autocomplete}
+                />
               </Grid>
-              {/* <Grid item xs={12}>
-        <Typography variant="caption" fontWeight="bold">
-          NOTA: Se recomienda el registro de un número celular, este se usará
-          como medio de recuperación de la cuenta, en caso de que olvide sus
-          datos de acceso.
-        </Typography>
-      </Grid> */}
-
-              {action_admin_users === 'EDIT' && (
-                <>
+            </Grid>
+            {action_admin_users === 'EDIT' && (
+              <>
+                <Grid container spacing={2} sx={{ mt: '20px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
                     <Title title="Estado" />
                     <Grid container spacing={2}>
@@ -529,7 +441,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                               set_historial_cambios_estado_is_active(true);
                             }}
                           >
-                            HISTORIAL
+                            HISTORIAL DE ESTADO
                           </Button>
                         </Stack>
                       </Grid>
@@ -548,22 +460,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                       errors={errors}
                       register={register_admin_user}
                     />
-                    {/* <FormSelectController
-              xs={12}
-              md={12}
-              control_form={control}
-              control_name="activo"
-              default_value={activo}
-              rules={{ required_rule: { rule: true, message: 'requerido' } }}
-              label="Activo"
-              disabled={false}
-              helper_text=""
-              select_options={activo_opt}
-              option_label="label"
-              option_key="value"
-            /> */}
                   </Grid>
-
                   <Grid item xs={12} sm={6} md={3}>
                     <TextField
                       disabled
@@ -587,26 +484,20 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                       onChange={handle_change}
                     />
                   </Grid>
-
                   <Grid item xs={12} sm={6} md={3}>
-                    <FormSelectController
-                      xs={12}
-                      md={12}
-                      control_form={control}
-                      control_name="bloqueado"
-                      default_value={bloqueado}
-                      rules={{
-                        required_rule: { rule: true, message: 'requerido' },
-                      }}
+                    <CustomSelect
+                      onChange={on_change}
                       label="Bloqueado"
+                      name="bloqueado"
+                      value={bloqueado}
+                      options={bloqueado_opt}
+                      loading={loading}
                       disabled={false}
-                      helper_text=""
-                      select_options={bloqueado_opt}
-                      option_label="label"
-                      option_key="value"
+                      required={true}
+                      errors={errors}
+                      register={register_admin_user}
                     />
                   </Grid>
-
                   <Grid item xs={12} sm={6} md={3}>
                     <TextField
                       disabled
@@ -630,11 +521,8 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                       onChange={handle_change}
                     />
                   </Grid>
-                </>
-              )}
-
-              {action_admin_users === 'EDIT' && (
-                <>
+                </Grid>
+                <Grid container spacing={2} sx={{ mt: '20px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
                     <Title title="Otros datos" />
                   </Box>
@@ -704,14 +592,19 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                       disabled
                     />
                   </Grid>
-                </>
-              )}
-            </Grid>
-            <Stack direction="row" justifyContent="flex-end" spacing={2}>
+                </Grid>
+              </>
+            )}
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mt: '20px' }}
+            >
               <Button
                 type="submit"
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 startIcon={<SaveIcon />}
               >
                 {action_admin_users === 'EDIT'
