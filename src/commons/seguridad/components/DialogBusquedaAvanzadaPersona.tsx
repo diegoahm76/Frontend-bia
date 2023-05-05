@@ -25,7 +25,7 @@ import type {
   FormValuesSearchPerson,
   keys_object_search_person,
 } from '../interfaces';
-import { get_persons, get_data_user } from '../store/thunks';
+import { get_persons } from '../store/thunks';
 import {
   set_action_admin_users,
   set_data_person_search,
@@ -112,12 +112,12 @@ const DialogBusquedaAvanzada = ({
     {
       headerName: 'Razon social',
       field: 'razon_social',
-      width: 200,
+      width: 150,
     },
     {
       headerName: 'Nombre comercial',
       field: 'nombre_comercial',
-      width: 250,
+      width: 150,
     },
     {
       headerName: 'Usuario',
@@ -186,20 +186,15 @@ const DialogBusquedaAvanzada = ({
   ];
 
   const trigger_user_person_create_active = (data: any): void => {
-    dispatch(set_data_person_search(data));
+    // console.log('punto 1 - CREATE', data);
     dispatch(set_action_admin_users('CREATE'));
+    dispatch(set_data_person_search(data));
   };
 
   const trigger_user_edit_active = (data: any): void => {
-    dispatch(set_data_person_search(data));
-    console.log(data.usuarios);
-    if (data.usuarios.length === 1) {
-      console.log(data.usuarios[0].id_usuario);
-      dispatch(get_data_user(data.usuarios[0].id_usuario));
-    } else if (data.usuarios.length === 2) {
-      console.log('Disparar modal con los 2 usuarios disponibles');
-    }
+    // console.log('punto 1 - EDIT', data);
     dispatch(set_action_admin_users('EDIT'));
+    dispatch(set_data_person_search(data));
   };
 
   const handle_close_busqueda_avanzada = (): void => {
@@ -235,7 +230,8 @@ const DialogBusquedaAvanzada = ({
 
   return (
     <Dialog
-      maxWidth="sm"
+      fullWidth
+      maxWidth="lg"
       open={is_modal_active}
       onClose={handle_close_busqueda_avanzada}
     >
@@ -265,7 +261,7 @@ const DialogBusquedaAvanzada = ({
           autoComplete="off"
         >
           <Grid container sx={{ mb: '0px' }} spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={2}>
               <CustomSelect
                 onChange={on_change}
                 label="Tipo de persona *"
@@ -280,7 +276,7 @@ const DialogBusquedaAvanzada = ({
               />
               <Typography className="label_selects">Tipo de persona</Typography>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={2}>
               <CustomSelect
                 onChange={on_change}
                 label="Tipo de documento *"
@@ -297,7 +293,7 @@ const DialogBusquedaAvanzada = ({
                 Tipo de documento
               </Typography>
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={2}>
               <TextField
                 label="Número de documento"
                 helperText="Número de documento"
@@ -306,7 +302,7 @@ const DialogBusquedaAvanzada = ({
                 {...register_search_person('numero_documento')}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={2}>
               <TextField
                 {...register_search_person('primer_nombre')}
                 label="Primer nombre"
@@ -315,7 +311,7 @@ const DialogBusquedaAvanzada = ({
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={2}>
               <TextField
                 {...register_search_person('primer_apellido')}
                 label="Primer apellido"
@@ -324,7 +320,7 @@ const DialogBusquedaAvanzada = ({
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={2}>
               <Button
                 type="submit"
                 variant="outlined"
@@ -337,7 +333,7 @@ const DialogBusquedaAvanzada = ({
           </Grid>
         </Box>
         {buscando_persons && (
-          <Grid item xs={12}>
+          <Grid item xs={12} sx={{ mt: '15px' }}>
             <DataGrid
               density="compact"
               autoHeight

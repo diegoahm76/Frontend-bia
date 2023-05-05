@@ -59,6 +59,7 @@ export interface PropsSelect {
   disabled?: boolean;
   value?: string;
   required?: boolean;
+  multiple?: boolean;
   errors: FieldErrors<FieldValues>;
   register: UseFormRegister<any>;
   onChange?: (e: SelectChangeEvent<string>) => void;
@@ -228,7 +229,7 @@ export interface CompleteInfoPersona {
 }
 
 export interface HistoricoDatosRestringidos {
-  id: number,
+  id: number;
   historico_cambio_id_persona: number;
   nombre_campo_cambiado: string;
   valor_campo_cambiado: string;
