@@ -290,7 +290,7 @@ export interface DataPersonas {
   estado_civil:                             string;
   id_cargo:                                 number;
   id_unidad_organizacional_actual:          number;
-  representante_legal:                      string;
+  representante_legal:                      number;
   cod_municipio_expedicion_id:              string;
   id_persona_crea:                          number;
   id_persona_ultim_actualiz_diferente_crea: number;
