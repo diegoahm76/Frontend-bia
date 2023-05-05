@@ -1,6 +1,5 @@
 import { AppRouter } from './router/AppRouter';
 import { AppTheme } from './theme';
-import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './css/App.css';
@@ -10,7 +9,6 @@ export const App: React.FC = () => {
   return (
     <AppTheme>
       <AppRouter />
-      <ToastContainer />
     </AppTheme>
   );
 };
