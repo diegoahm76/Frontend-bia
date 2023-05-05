@@ -170,11 +170,11 @@ const SeleccionarBodega = ({
                             control_form: control_bodega,
                             control_name: "es_principal",
                             default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Es Principal",
+                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            label: "Es principal",
                             disabled: false,
                             helper_text: "debe seleccionar campo",
-                            select_options: [{ label: "SI", value: true }, { label: "NO", value: false }],
+                            select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
                             option_label: "label",
                             option_key: "value"
                         },
@@ -182,7 +182,7 @@ const SeleccionarBodega = ({
 
 
                     ]}
-                    modal_select_model_title='Buscar solicitud'
+                    modal_select_model_title='Buscar bodega'
                     modal_form_filters={[
                         {
                             datum_type: "input_controller",
@@ -192,7 +192,7 @@ const SeleccionarBodega = ({
                             control_name: "id_bodega",
                             default_value: "",
                             rules: {},
-                            label: "Número de solicitud",
+                            label: "Número de bodega",
                             type: "number",
                             disabled: false,
                             helper_text: "",

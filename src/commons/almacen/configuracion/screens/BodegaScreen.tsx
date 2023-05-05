@@ -15,7 +15,7 @@ import FormButton from "../../../../components/partials/form/FormButton";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { type IBodega } from "../interfaces/Bodega";
-import { add_bodega_service, edit_bodega_service } from "../store/thunks/BodegaThunks";
+import { add_bodega_service, delete_bodega_service, edit_bodega_service } from "../store/thunks/BodegaThunks";
 
 
 
@@ -37,7 +37,18 @@ export function BodegaScreen(): JSX.Element {
   const on_submit = (data: IBodega) => {
     if (bodega_seleccionada.id_bodega !== null && bodega_seleccionada.id_bodega !== undefined) {
       console.log("editar")
-      void dispatch(edit_bodega_service(data))
+      void dispatch(edit_bodega_service(data, bodega_seleccionada.id_bodega))
+    } else {
+      void dispatch(add_bodega_service(data));
+    }
+
+
+  };
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const on_submit_delete = (data: IBodega) => {
+    if (bodega_seleccionada.id_bodega !== null && bodega_seleccionada.id_bodega !== undefined) {
+      console.log("eliminar")
+      void dispatch(delete_bodega_service(bodega_seleccionada.id_bodega))
     } else {
       void dispatch(add_bodega_service(data));
     }
@@ -74,7 +85,7 @@ export function BodegaScreen(): JSX.Element {
           padding={2}
           spacing={2}
         >
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={2}>
             {bodega_seleccionada.id_bodega !== null && bodega_seleccionada.id_bodega !== undefined ?
               <FormButton
                 variant_button="contained"
@@ -102,9 +113,10 @@ export function BodegaScreen(): JSX.Element {
             <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="contained"
-                on_click_function={null}
+                on_click_function={handle_submit(on_submit_delete)}
                 icon_class={<DeleteIcon />}
                 label={"Eliminar"}
+
                 type_button="button"
               />
             </Grid>
