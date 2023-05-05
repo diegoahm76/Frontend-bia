@@ -29,7 +29,10 @@ export const SeguridadRoutes: React.FC = () => {
         path="/administracion_personas"
         element={<AdministracionPersonasScreen />}
       />
-      <Route path="/delegacion_superusuario" element={<DelegacionSuperuserScreen />}/>
+      <Route
+        path="/delegacion_superusuario"
+        element={<DelegacionSuperuserScreen />}
+      />
       <Route path="/datos_personales" element={<DatosPersonalesScreen />} />
       <Route path="/datos_acceso" element={<DatosAccesoScreen />} />
 

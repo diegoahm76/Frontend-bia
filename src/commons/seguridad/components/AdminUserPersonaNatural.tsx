@@ -404,7 +404,6 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                 <Autocomplete
                   multiple
                   fullWidth
-                  id="tags-standard"
                   options={roles}
                   getOptionLabel={(option) => option.nombre_rol}
                   defaultValue={[roles[13]]}
