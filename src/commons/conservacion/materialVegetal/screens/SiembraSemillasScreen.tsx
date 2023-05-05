@@ -80,10 +80,13 @@ export function SiembraSemillasScreen(): JSX.Element {
       const data_edit = {
         ...data, distancia_entre_semillas: Number(data.distancia_entre_semillas)
       }
+      const data_update = {
+        data_siembra: data_edit,
+        data_bienes_consumidos: planting_goods
+      }
       console.log("editar")
-        form_data.append('data_siembra', JSON.stringify({...data_edit}));
-        form_data.append('data_bienes_consumidos', JSON.stringify(planting_goods));
-        void dispatch(edit_siembra_service(form_data, current_planting.id_siembra));
+      console.log(data_update)
+        void dispatch(edit_siembra_service(data_update, current_planting.id_siembra));
     } else {
       set_action("crear")
       const fecha = new Date(data.fecha_siembra??"").toISOString()
