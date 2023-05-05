@@ -106,7 +106,7 @@ const SeleccionarCambio = ({
         
         <BuscarModelo
           set_current_model={set_current_stage_change}
-          row_id={""}
+          row_id={"id_cambio_de_etapa"}
           columns_model={columns_cambios}
           models={stage_changes}
           get_filters_models={get_cambios}
