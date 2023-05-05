@@ -37,51 +37,28 @@ export const ResolucionRespuesta: React.FC = () => {
             <Grid container spacing={2}>
             <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value="1140239284"
+                  value={"1140239284"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Nombre Deudor"
                   size="small"
                   fullWidth
-                  value="Maria Cardenas"
+                  value={"Maria Cardenas"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
-                  label="Nombre Obligación"
+                  label="Número Facilidad Pago"
                   size="small"
                   fullWidth
-                  value="Pago tasa TUA"
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  id="outlined-error-helper-text"
-                  label="Número Obligación"
-                  size="small"
-                  fullWidth
-                  value="9283812"
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  id="outlined-error-helper-text"
-                  label="Teléfono Contacto"
-                  size="small"
-                  fullWidth
-                  value="3154321234"
+                  value={"SDWE2300"}
                   disabled
                 />
               </Grid>
@@ -112,7 +89,6 @@ export const ResolucionRespuesta: React.FC = () => {
             <Grid container spacing={2} mb='20px'>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   helperText="Cargar Resolución"
                   size="small"
                   fullWidth
@@ -147,7 +123,7 @@ export const ResolucionRespuesta: React.FC = () => {
         sx={{ mb: '20px' }}
       >
         <Button
-          color='info'
+          color='primary'
           variant='contained'
           sx={{ marginTop: '30px' }}
           onClick={() => {

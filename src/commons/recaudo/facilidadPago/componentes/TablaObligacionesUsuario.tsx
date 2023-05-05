@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox, TextField, Stack } from '@mui/material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -10,10 +9,9 @@ export const TablaObligacionesUsuario: React.FC = () => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
-  const [abonado, set_abonado] = useState(0);
   const [total, set_total] = useState(0);
 
-  const nurseries = [
+  const obligaciones = [
     {
       id: 1,
       nombreObligacion: 'Permiso 1',
@@ -23,8 +21,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
       valorCapital: 120000000,
       valorIntereses: 35000000,
       diasMora: 390,
-      valorAbonado: 21000000,
-      estado: 'En Curso'
     },
     {
       id: 2,
@@ -35,8 +31,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
       valorCapital: 190700000,
       valorIntereses: 45000000,
       diasMora: 180,
-      valorAbonado: 76000000,
-      estado: 'En Curso'
     },
   ];
 
@@ -126,26 +120,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'valorAbonado',
-      headerName: 'Valor Abonado',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'estado',
-      headerName: 'Estado',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
       field: 'acciones',
       headerName: 'Acciones',
       width: 150,
@@ -201,26 +175,22 @@ export const TablaObligacionesUsuario: React.FC = () => {
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    let sub_abonado = 0
-    for(let i=0; i < nurseries.length; i++){
+    for(let i=0; i < obligaciones.length; i++){
       for(let j=0; j < selected.length; j++){
-        if(nurseries[i].nombreObligacion === selected[j]){
-          sub_capital = sub_capital + nurseries[i].valorCapital
-          sub_intereses = sub_intereses + nurseries[i].valorIntereses
-          sub_abonado = sub_abonado + nurseries[i].valorAbonado
+        if(obligaciones[i].nombreObligacion === selected[j]){
+          sub_capital = sub_capital + obligaciones[i].valorCapital
+          sub_intereses = sub_intereses + obligaciones[i].valorIntereses
           set_capital(sub_capital)
           set_intereses(sub_intereses)
-          set_abonado(sub_abonado)
         }
       }
     }
     if(selected.length === 0){
       set_capital(0)
       set_intereses(0)
-      set_abonado(0)
     }
-    set_total((capital + intereses) - abonado)
-  }, [selected, capital, intereses, abonado])
+    set_total(capital + intereses)
+  }, [selected, capital, intereses])
 
   return (
     <>
@@ -241,7 +211,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={nurseries}
+                rows={obligaciones}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
@@ -251,13 +221,12 @@ export const TablaObligacionesUsuario: React.FC = () => {
             </Box>
           </Grid>
           <Stack
-          direction="row"
-          display='flex'
-          justifyContent='flex-end'
-        >
+            direction="row"
+            display='flex'
+            justifyContent='flex-end'
+          >
             <Grid item xs={12} sm={2} mt='30px' mr='10px'>
               <TextField
-                id="outlined-error-helper-text"
                 label="Total Capital"
                 size="small"
                 fullWidth
@@ -266,25 +235,14 @@ export const TablaObligacionesUsuario: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={2} mt='30px' mr='10px'>
               <TextField
-                id="outlined-error-helper-text"
                 label="Total Intereses"
                 size="small"
                 fullWidth
                 value={intereses}
               />
             </Grid>
-            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
-              <TextField
-                id="outlined-error-helper-text"
-                label="Total Abonado"
-                size="small"
-                fullWidth
-                value={abonado}
-              />
-            </Grid>
             <Grid item xs={12} sm={2} mt='30px'>
               <TextField
-                id="outlined-error-helper-text"
                 label={<strong>Gran Total a Deber</strong>}
                 size="small"
                 fullWidth

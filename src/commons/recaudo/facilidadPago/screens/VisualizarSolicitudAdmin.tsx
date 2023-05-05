@@ -17,7 +17,7 @@ interface event {
 export const VisualizarSolicitudAdmin: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
-  const [existe] = useState(true); // Mientras nos conectamos con el Backend
+  const [existe] = useState(false); // Mientras nos conectamos con el Backend
   const [modal, set_modal] = useState(false);
   const [modal_option, set_modal_option] = useState('');
   const { form_state, on_input_change } = use_form({});
@@ -75,10 +75,8 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">Asignar Estado</InputLabel>
+                  <InputLabel>Asignar Estado</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     label="Asignar Estado"
                     defaultValue={''}
                     name='estado'
@@ -92,10 +90,8 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">Aprobado</InputLabel>
+                  <InputLabel>Aprobado</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     label="Aprobado"
                     defaultValue={''}
                     name='isAprobado'
@@ -117,10 +113,8 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">¿Crear plan de pagos?</InputLabel>
+                  <InputLabel>¿Crear plan de pagos?</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     defaultValue={''}
                     label="¿Crear plan de pagos?"
                     onChange={(event: event)=>{
@@ -138,7 +132,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                   <>
                     <Grid item>
                       <Button
-                        color='info'
+                        color='primary'
                         variant='contained'
                         onClick={() => {
                           if(existe){
@@ -154,7 +148,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     </Grid>
                     <Grid item sm={5}>
                       <Button
-                        color='info'
+                        color='primary'
                         variant='contained'
                         onClick={() => {}}
                       >
@@ -166,10 +160,8 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               }
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">¿Crear Resolución?</InputLabel>
+                  <InputLabel>¿Crear Resolución?</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     defaultValue={''}
                     label="¿Crear Resolución?"
                     onChange={(event: event)=>{
@@ -187,7 +179,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                   <>
                     <Grid item>
                       <Button
-                        color='info'
+                        color='primary'
                         variant='contained'
                         onClick={() => {
                           if(existe){
@@ -203,7 +195,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     </Grid>
                     <Grid item sm={5}>
                       <Button
-                        color='info'
+                        color='primary'
                         variant='contained'
                         onClick={() => {}}
                       >
@@ -224,7 +216,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
         sx={{ mb: '20px' }}
       >
         <Button
-          color='info'
+          color='primary'
           variant='contained'
           sx={{ marginTop: '30px' }}
           onClick={() => {}}

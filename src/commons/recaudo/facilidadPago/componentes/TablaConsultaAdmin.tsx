@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Checkbox } from '@mui/material';
+import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -45,18 +45,6 @@ export const TablaConsultaAdmin: React.FC = () => {
   ];
 
   const columns: GridColDef[] = [
-    {
-      field: 'checkbox',
-      headerName: 'Seleccionar',
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <Checkbox
-            onClick={() => {}}
-          />
-        )
-      },
-    },
     {
       field: 'identificacion',
       headerName: 'Número Identificación',
@@ -125,10 +113,8 @@ export const TablaConsultaAdmin: React.FC = () => {
         sx={{ mb: '20px', mt: '20px' }}
       >
         <FormControl sx={{ minWidth: 130 }}>
-          <InputLabel id="demo-simple-select-label">Filtrar por: </InputLabel>
+          <InputLabel>Filtrar por: </InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="filter"
               label="Filtrar por: "
               onChange={(event: event)=>{
                 const { value } = event.target
@@ -141,7 +127,6 @@ export const TablaConsultaAdmin: React.FC = () => {
         </FormControl>
         <TextField
           required
-          id="outlined-error-helper-text"
           label="Búsqueda"
           size="medium"
           onChange={(event: event)=>{
@@ -230,7 +215,7 @@ export const TablaConsultaAdmin: React.FC = () => {
               sx={{ mb: '20px' }}
             >
               <Button
-                color='info'
+                color='primary'
                 variant='contained'
                 sx={{ marginTop: '30px' }}
                 onClick={() => {

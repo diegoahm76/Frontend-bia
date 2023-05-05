@@ -29,7 +29,6 @@ export const DetalleFacilidadPago: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Nombres"
                   size="small"
                   fullWidth
@@ -39,7 +38,6 @@ export const DetalleFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Identificación"
                   size="small"
                   fullWidth
@@ -49,7 +47,6 @@ export const DetalleFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Correo Electrónico"
                   size="small"
                   fullWidth
@@ -59,7 +56,6 @@ export const DetalleFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Nombre Facilidad Pago"
                   size="small"
                   fullWidth
@@ -69,7 +65,6 @@ export const DetalleFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Días Mora"
                   size="small"
                   fullWidth
@@ -79,7 +74,6 @@ export const DetalleFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Número Resolución"
                   size="small"
                   fullWidth
@@ -89,7 +83,6 @@ export const DetalleFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Fecha Solicitud"
                   size="small"
                   fullWidth
@@ -132,7 +125,6 @@ export const DetalleFacilidadPago: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Estado"
                   size="small"
                   fullWidth
@@ -152,7 +144,6 @@ export const DetalleFacilidadPago: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={2}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Plan de Pagos"
                   size="small"
                   fullWidth
@@ -162,7 +153,7 @@ export const DetalleFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={2}>
                 <Button
-                  color='info'
+                  color='primary'
                   variant='outlined'
                   size='medium'
                   onClick={() => {}}
@@ -172,7 +163,6 @@ export const DetalleFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={2}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Resolución"
                   size="small"
                   fullWidth
@@ -182,7 +172,7 @@ export const DetalleFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={2}>
                 <Button
-                  color='info'
+                  color='primary'
                   variant='outlined'
                   size='medium'
                   onClick={() => {}}

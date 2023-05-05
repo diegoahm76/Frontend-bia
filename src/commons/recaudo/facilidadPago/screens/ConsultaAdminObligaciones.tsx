@@ -6,7 +6,7 @@ export const ConsultaAdminObligaciones: React.FC = () => {
 
   return (
     <>
-      <Title title='Listado de Obligaciones - Usuario Interno Cormacarena'/>
+      <Title title='Listado de Deudores - Usuario Interno Cormacarena'/>
       <TablaConsultaAdmin />
     </>
   )

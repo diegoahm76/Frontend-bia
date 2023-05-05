@@ -146,10 +146,8 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
         sx={{ mb: '20px' }}
       >
         <FormControl sx={{ minWidth: 130 }}>
-          <InputLabel id="demo-simple-select-label">Filtrar por: </InputLabel>
+          <InputLabel>Filtrar por: </InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="filter"
               label="Filtrar por: "
               onChange={(event: event)=>{
                 const { value } = event.target
@@ -163,7 +161,6 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
         </FormControl>
         <TextField
           required
-          id="outlined-error-helper-text"
           label="Búsqueda"
           size="medium"
           onChange={(event: event)=>{
@@ -172,7 +169,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           }}
         />
         <Button
-          color='secondary'
+          color='primary'
           variant='contained'
           onClick={() => {
             const new_rows = [];
@@ -206,7 +203,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
         <SearchOutlined />
         </Button>
         <Button
-          color='secondary'
+          color='primary'
           variant='outlined'
           onClick={() => {
             set_visible_rows(fac_pago)
