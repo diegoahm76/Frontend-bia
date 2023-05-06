@@ -23,6 +23,7 @@ export interface SolicitudConsumo {
   solicitud_bienes_consumo: ItemSolicitudConsumible[];
   unidad_organizacional: UnidadOrganizacional[];
   funcionario_responsable: FuncionarioResponsable[];
+  aprobacion_solicitud: AprobacionRechazo;
 }
 
 export interface IList {
@@ -57,4 +58,10 @@ export interface FuncionarioResponsable {
   tiene_usuario: true;
   id_unidad_organizacional_actual: number;
   nombre_unidad_organizacional_actual: string;
+}
+
+// interfaz para aprobacion de bienes
+export interface AprobacionRechazo {
+  estado_aprobacion_responsable: string;
+  justificacion_rechazo_responsable: string;
 }

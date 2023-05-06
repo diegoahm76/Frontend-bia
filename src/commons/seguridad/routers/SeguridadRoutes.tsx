@@ -17,7 +17,10 @@ export const SeguridadRoutes: React.FC = () => {
     <Routes>
       <Route path="/auditoria" element={<AuditoriaScreen />} />
       <Route path="/roles" element={<RolesScreen />} />
-      <Route path="/datos_restringidos" element={<ActualizacionDatosRestringidosScreen />} />
+      <Route
+        path="/datos_restringidos"
+        element={<ActualizacionDatosRestringidosScreen />}
+      />
       <Route
         path="/administracion_usuarios"
         element={<AdminUsuariosScreen />}

@@ -37,18 +37,14 @@ interface PropsSection {
 }
 
 interface Props {
-  numero_documento: string;
   tipo_documento: string;
   tipo_persona: string;
-  has_user: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUserPersonaJuridica: React.FC<Props> = ({
-  numero_documento,
   tipo_documento,
   tipo_persona,
-  has_user,
 }: Props) => {
   const {
     action_admin_users,
@@ -58,14 +54,13 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   } = useSelector((state: SeguridadSlice) => state.seguridad);
   const {
     data_register,
-    is_exists,
     loading,
     tipo_usuario,
     tipo_usuario_opt,
     activo,
     activo_opt,
     set_data_register,
-    set_tipo_persona,
+    // set_tipo_persona,
     set_tipo_usuario,
     set_tipo_documento,
   } = use_admin_users();
@@ -75,7 +70,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
-    reset,
+    // reset,
     watch,
   } = useForm<DataAadminUser>();
 
@@ -101,16 +96,33 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   const on_submit = handle_submit(async () => {
     try {
       if (action_admin_users === 'CREATE') {
+        const data_send = {
+          nombre_de_usuario: data_register.nombre_de_usuario,
+          persona: user_info.persona,
+          tipo_usuario: data_register.tipo_usuario,
+          roles: data_register.roles,
+          redirect_url: '',
+          profile_img: data_register.imagen_usuario,
+        };
         console.log('Onsubmit', data_register);
         // Hacemos el registro de la persona JURIDICA
-        const { data } = await crear_user_admin_user(data_register);
+        const { data } = await crear_user_admin_user(data_send);
         control_success(data.detail);
       } else if (action_admin_users === 'EDIT') {
+        const data_send = {
+          is_active: data_register.activo,
+          is_blocked: data_register.bloqueado,
+          tipo_usuario: data_register.tipo_usuario,
+          roles: data_register.roles,
+          profile_img: data_register.imagen_usuario,
+          justificacion_activacion: data_register.activo_justificacion_cambio,
+          justificacion_bloqueo: data_register.bloqueado_justificacion_cambio,
+        };
         console.log('Onsubmit EDIT', data_register);
         // Actualización de usuario Persona Natural
         const { data } = await update_user_admin_user(
           user_info.id_usuario,
-          data_register
+          data_send
         );
         control_success(data.detail);
       }
@@ -122,18 +134,8 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   });
 
   useEffect(() => {
-    if (watch('tipo_persona') !== undefined) {
-      set_tipo_persona(watch('tipo_persona'));
-    }
-  }, [watch('tipo_persona')]);
-
-  useEffect(() => {
     set_value_form('tipo_documento', tipo_documento);
   }, [tipo_documento]);
-
-  useEffect(() => {
-    set_value_form('tipo_persona', tipo_persona);
-  }, [tipo_persona]);
 
   useEffect(() => {
     if (watch('tipo_usuario') !== undefined) {
@@ -142,7 +144,32 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   }, [watch('tipo_usuario')]);
 
   useEffect(() => {
-    reset();
+    // reset();
+    // set_data_register({
+    //   tipo_persona: '',
+    //   tipo_documento: '',
+    //   numero_documento: '',
+    //   razon_social: '',
+    //   nombre_comercial: '',
+    //   primer_apellido: '',
+    //   primer_nombre: '',
+    //   segundo_apellido: '',
+    //   segundo_nombre: '',
+    //   nombre_de_usuario: '',
+    //   imagen_usuario: '',
+    //   tipo_usuario: '',
+    //   roles: [],
+    //   activo: false,
+    //   activo_fecha_ultimo_cambio: '',
+    //   activo_justificacion_cambio: '',
+    //   bloqueado: false,
+    //   bloqueado_fecha_ultimo_cambio: '',
+    //   bloqueado_justificacion_cambio: '',
+    //   fecha_creacion: '',
+    //   fecha_activación_inicial: '',
+    //   creado_desde_portal: false,
+    //   persona_que_creo: 0,
+    // });
     console.log(action_admin_users);
     if (action_admin_users === 'CREATE') {
       console.log('Creación de usuario - persona juridica');
@@ -221,7 +248,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
       </Box>{' '}
       <Grid item xs={12} sm={6} md={3}>
         <TextField
-          disabled={is_exists}
+          disabled
           fullWidth
           size="small"
           label="Razon social *"
@@ -238,7 +265,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
       </Grid>
       <Grid item xs={12} sm={6} md={3}>
         <TextField
-          disabled={is_exists}
+          disabled
           fullWidth
           size="small"
           label="Nombre comercial"

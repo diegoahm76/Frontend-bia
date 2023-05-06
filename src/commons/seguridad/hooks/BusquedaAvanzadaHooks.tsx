@@ -56,7 +56,6 @@ export const use_busqueda_avanzada = () => {
       const {
         data: { data: res_tipo_usuario },
       } = await get_tipo_usuario();
-      console.log(res_tipo_usuario);
       set_tipo_usuario_opt(res_tipo_usuario ?? []);
 
       const {

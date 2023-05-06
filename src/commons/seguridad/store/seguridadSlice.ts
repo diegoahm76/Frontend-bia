@@ -1,7 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import produce from 'immer';
-import type {  ISeguridadInfo,InfoUsuario,InfoPersonal } from '../interfaces/seguridadModels';
-
+import type {
+  ISeguridadInfo,
+  InfoUsuario,
+  InfoPersonal,
+  Users
+} from '../interfaces/seguridadModels';
 
 const initial_state_data_user_search: InfoUsuario = {
   id_usuario: 0,
@@ -14,7 +18,7 @@ const initial_state_data_user_search: InfoUsuario = {
   nombre_completo: '',
   razon_social: '',
   nombre_comercial: '',
-  is_superuser: false,
+  is_superuser: false
 };
 
 const initial_state_data_person_search: InfoPersonal = {
@@ -30,9 +34,15 @@ const initial_state_data_person_search: InfoPersonal = {
   razon_social: '',
   nombre_comercial: '',
   tiene_usuario: false,
+  usuarios: [
+    {
+      id_usuario: 0,
+      nombre_de_usuario: ''
+    }
+  ]
 };
 
-const initial_state_user_info = {
+const initial_state_user_info: Users = {
   id_usuario: 0,
   nombre_de_usuario: '',
   persona: 0,
@@ -60,80 +70,77 @@ const initial_state_user_info = {
   id_usuario_creador: 0,
   primer_nombre_usuario_creador: '',
   primer_apellido_usuario_creador: '',
-  roles:[ {
-    id_rol: 0,
-    nombre_rol: ''
-  }]
-}
+  roles: [
+    {
+      id_rol: 0,
+      nombre_rol: ''
+    }
+  ]
+};
 
 const initial_state: ISeguridadInfo = {
-  superUser:[],
+  superUser: [],
   roles: [],
   rol: {
-    rol:{
-      id_rol: 0,
-      nombre_rol: '',
-      descripcion_rol: '',
-      Rol_sistema: false,
-    },
-    permisos: [],
+    id_rol: 0,
+    nombre_rol: '',
+    descripcion_rol: '',
+    Rol_sistema: false
   },
   users: [],
   persons: [],
   action_admin_users: '',
   data_user_search: initial_state_data_user_search,
   data_person_search: initial_state_data_person_search,
-  user_info: initial_state_user_info,
+  user_info: initial_state_user_info
 };
 
 export const seguridad_slice = createSlice({
   name: 'seguridad',
   initialState: initial_state,
-  reducers: {    
+  reducers: {
     set_roles: (state, { payload }) => {
-      console.log('payload', payload)
       state.roles = payload;
     },
-    set_rol: (state, {payload}) => {
-      state.rol = payload
-      console.log("state_rol", state.rol);
+    set_rol: (state, { payload }) => {
+      state.rol = payload;
     },
     delegate_superuser_role: (state, { payload }) => {
       state.superUser = payload;
     },
-    set_users: (state, {payload}) => {
-      state.users = payload
+    set_users: (state, { payload }) => {
+      state.users = payload;
+      state.user_info = initial_state_user_info;
     },
-    set_persons: (state, {payload}) => {
-      state.persons = payload
+    set_persons: (state, { payload }) => {
+      state.persons = payload;
+      state.user_info = initial_state_user_info;
     },
-    set_action_admin_users: (state, {payload}) => {
-      state.action_admin_users = payload
+    set_action_admin_users: (state, { payload }) => {
+      state.action_admin_users = payload;
     },
-    set_user_info: (state, {payload}) => {
-      return produce(state, draftState => {
+    set_user_info: (state, { payload }) => {
+      return produce(state, (draftState) => {
         draftState.user_info = payload;
       });
     },
-    set_data_user_search: (state, {payload}) => {
-      state.data_user_search = payload
+    set_data_user_search: (state, { payload }) => {
+      state.data_user_search = payload;
     },
-    set_data_person_search: (state, {payload}) => {
-      state.data_person_search = payload
+    set_data_person_search: (state, { payload }) => {
+      state.data_person_search = payload;
     }
-
   }
 });
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const {
   set_roles,
   set_rol,
-  delegate_superuser_role,
   set_users,
   set_persons,
-  set_action_admin_users,
   set_user_info,
   set_data_user_search,
-  set_data_person_search
+  set_action_admin_users,
+  set_data_person_search,
+  delegate_superuser_role
 } = seguridad_slice.actions;

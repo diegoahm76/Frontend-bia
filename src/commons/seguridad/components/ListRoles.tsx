@@ -1,124 +1,62 @@
-import { api } from '../../../api/axios';
-import { type Dispatch, type SetStateAction, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 // Componentes de Material UI
-import { Grid, Box, IconButton, Avatar, Chip } from '@mui/material';
+import {
+  Grid,
+  Box,
+  IconButton,
+  Avatar,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
+  Typography,
+  Alert,
+} from '@mui/material';
 // Icons de Material UI
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { get_roles } from '../store/thunks';
-import { useDispatch, useSelector } from 'react-redux';
-import { type SeguridadSlice } from '../interfaces/seguridadModels';
-import { set_rol } from '../store/seguridadSlice';
-import { type ToastContent, toast } from 'react-toastify';
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
+import { control_error, control_success } from '../../../helpers';
+import type { AxiosError } from 'axios';
+import type { ResponseServer } from '../../../interfaces/globalModels';
+import type { Rol } from '../interfaces';
+import { delete_request, roles_request } from '../request/seguridadRequest';
 interface IProps {
-  set_position_tab_admin_roles: Dispatch<SetStateAction<string>>;
+  on_edit: (tab: string, rol: Rol) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function ListRoles({
-  set_position_tab_admin_roles,
-}: IProps): JSX.Element {
-  const { roles } = useSelector((state: SeguridadSlice) => state.seguridad);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(get_roles());
-  }, []);
-
-  const handle_edit_rol = async (id: number): Promise<void> => {
-    console.log(id);
-    const { data: data_rol } = await api.get(`roles/get-by-id/${id}/`);
-    const { data: data_permisos } = await api.get(
-      `permisos/permisos-modulos-rol/get-by-rol/${id}/`
-    );
-
-    console.log(data_permisos.data);
-    const data_rol_edit = {
-      rol: {
-        id_rol: data_rol.id_rol,
-        nombre_rol: data_rol.nombre_rol,
-        descripcion_rol: data_rol.descripcion_rol,
-        Rol_sistema: data_rol.Rol_sistema,
-      },
-      permisos: [],
-    };
-
-    dispatch(set_rol(data_rol_edit));
-  };
-
-  const confirm_delete_rol = async (id_rol: any): Promise<void> => {
-    // Swal.fire({
-    //   title: "Estas seguro?",
-    //   text: "Un rol que se elimina no se puede recuperar",
-    //   icon: "warning",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#3085d6",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Si, elminar!",
-    //   cancelButtonText: "Cancelar",
-    // }).then(async (result) => {
-    // if (result.isConfirmed) {
-    await api
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      .delete(`roles/delete/${id_rol}`)
-      .then((res) => {
-        control_success('Eliminado correctamente');
-      })
-      .catch((err) => {
-        control_error(err.response.data.detail);
-      })
-      .finally(() => {
-        dispatch(get_roles());
-      });
-    // }
-    // });
-  };
+export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
+  const [roles, set_roles] = useState<Rol[]>([]);
+  const [is_loading, set_is_loading] = useState(false);
+  const [message_error, set_message_error] = useState('');
+  const [open, set_open] = useState(false);
+  const [rol, set_rol] = useState<Rol>({
+    id_rol: 0,
+    nombre_rol: '',
+    descripcion_rol: '',
+    Rol_sistema: false,
+  });
 
   const columns: GridColDef[] = [
     {
       headerName: 'ID',
       field: 'id_rol',
       minWidth: 150,
-      // visible: true,
     },
     {
       headerName: 'Nombre',
       field: 'nombre_rol',
       minWidth: 300,
-      // visible: true,
     },
     {
       headerName: 'Descripción',
       field: 'descripcion_rol',
       minWidth: 300,
-      // visible: true,
     },
     {
       headerName: 'Estado',
@@ -131,7 +69,6 @@ export function ListRoles({
           <Chip size="small" label="false" color="error" variant="outlined" />
         );
       },
-      // visible: true,
     },
     {
       headerName: 'Acciones',
@@ -140,8 +77,7 @@ export function ListRoles({
         <>
           <IconButton
             onClick={() => {
-              void handle_edit_rol(params.row.id_rol);
-              set_position_tab_admin_roles('2');
+              on_edit('2', params.row);
             }}
           >
             <Avatar
@@ -160,7 +96,7 @@ export function ListRoles({
           </IconButton>
           <IconButton
             onClick={() => {
-              void confirm_delete_rol(params.row.id_rol);
+              void confirm_delete_rol(params.row);
             }}
           >
             <Avatar
@@ -182,21 +118,120 @@ export function ListRoles({
     },
   ];
 
+  const handle_close = (): void => {
+    set_rol({
+      id_rol: 0,
+      nombre_rol: '',
+      descripcion_rol: '',
+      Rol_sistema: false,
+    });
+    set_open(false);
+  };
+
+  const get_data = async (): Promise<void> => {
+    set_is_loading(true);
+    try {
+      const { data } = await roles_request();
+      set_roles(data);
+    } catch (error) {
+      control_error(error);
+    } finally {
+      set_is_loading(false);
+    }
+  };
+
+  const confirm_delete_rol = async (rol: Rol): Promise<void> => {
+    set_rol(rol);
+    set_open(true);
+  };
+
+  const delete_rol = async (): Promise<void> => {
+    set_is_loading(true);
+    try {
+      await delete_request(rol.id_rol);
+      control_success('Eliminado correctamente');
+      set_message_error('');
+      handle_close();
+      void get_data();
+    } catch (error) {
+      const err = error as AxiosError<ResponseServer<any>>;
+      if (err.response?.status === 403) {
+        set_message_error(err.response?.data.detail);
+      } else {
+        control_error(err.response?.data.detail);
+      }
+    } finally {
+      set_is_loading(false);
+    }
+  };
+
+  useEffect(() => {
+    void get_data();
+  }, []);
+
   return (
     <>
-      <Grid item>
-        <Box sx={{ width: '100%' }}>
-          <DataGrid
-            density="compact"
-            autoHeight
-            rows={roles}
-            columns={columns}
-            pageSize={10}
-            rowsPerPageOptions={[10]}
-            getRowId={(row) => row.id_rol}
-          />
-        </Box>
+      <Grid container justifyContent="center">
+        {is_loading ? (
+          <CircularProgress />
+        ) : (
+          <Box sx={{ width: '100%' }}>
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={roles}
+              columns={columns}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              getRowId={(row) => row.id_rol}
+            />
+
+            <Dialog
+              open={open}
+              onClose={handle_close}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                Seguro que quieres eliminar el siguiente Rol?
+              </DialogTitle>
+              <DialogContent>
+                {message_error !== '' && (
+                  <Alert severity="error">{message_error}</Alert>
+                )}
+                <DialogContentText>
+                  <Typography variant="body1">
+                    <b>Nombre rol:</b> {rol.nombre_rol}
+                  </Typography>
+                  <Typography variant="body1">
+                    <b>Descripción:</b> {rol.descripcion_rol}
+                  </Typography>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handle_close}
+                  variant="outlined"
+                  color="success"
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={() => {
+                    void delete_rol();
+                  }}
+                  variant="outlined"
+                  color="error"
+                  autoFocus
+                  disabled={message_error !== ''}
+                >
+                  Eliminar
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Box>
+        )}
       </Grid>
     </>
   );
-}
+};
