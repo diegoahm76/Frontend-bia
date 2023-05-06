@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { Grid, Box, Button, Stack, TextField } from "@mui/material";
+import { Grid, Box, Button, Stack, TextField, Dialog, DialogTitle, DialogContent, Divider, DialogActions } from "@mui/material";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { useState } from 'react';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResolucionRespuesta: React.FC = () => {
+  const [modal, set_modal] = useState(false);
+  const handle_open = () => { set_modal(true) };
+  const handle_close = () => { set_modal(false) };
 
   return (
     <>
@@ -32,51 +37,28 @@ export const ResolucionRespuesta: React.FC = () => {
             <Grid container spacing={2}>
             <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value="1140239284"
+                  value={"1140239284"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Nombre Deudor"
                   size="small"
                   fullWidth
-                  value="Maria Cardenas"
+                  value={"Maria Cardenas"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
-                  label="Nombre Obligación"
+                  label="Número Facilidad Pago"
                   size="small"
                   fullWidth
-                  value="Pago tasa TUA"
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  id="outlined-error-helper-text"
-                  label="Número Obligación"
-                  size="small"
-                  fullWidth
-                  value="9283812"
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  id="outlined-error-helper-text"
-                  label="Teléfono Contacto"
-                  size="small"
-                  fullWidth
-                  value="3154321234"
+                  value={"SDWE2300"}
                   disabled
                 />
               </Grid>
@@ -107,7 +89,6 @@ export const ResolucionRespuesta: React.FC = () => {
             <Grid container spacing={2} mb='20px'>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   helperText="Cargar Resolución"
                   size="small"
                   fullWidth
@@ -142,14 +123,37 @@ export const ResolucionRespuesta: React.FC = () => {
         sx={{ mb: '20px' }}
       >
         <Button
-          color='info'
+          color='primary'
           variant='contained'
           sx={{ marginTop: '30px' }}
-          onClick={() => {}}
+          onClick={() => {
+            handle_open()
+          }}
         >
           Guardar Resolución
         </Button>
       </Stack>
+      <Dialog
+        open={modal}
+        onClose={handle_close}
+        maxWidth="xs"
+      >
+        <Box component="form"
+          onSubmit={()=>{}}>
+          <DialogTitle align='center'>Se ha registrado la resolución Nro. {'DSAS23141'} con éxito</DialogTitle>
+          <Divider />
+          <DialogContent sx={{ mb: '0px' }}>
+            <Grid container spacing={1}>
+              <p><strong>Fecha y Hora:</strong> {Date()}</p>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button variant="contained" color="primary" onClick={()=>{
+              handle_close()
+            }}>Cerrar</Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </>
   )
 }

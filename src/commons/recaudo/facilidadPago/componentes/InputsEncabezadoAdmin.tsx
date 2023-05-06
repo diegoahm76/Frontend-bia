@@ -30,67 +30,61 @@ export const InputsEncabezadoAdmin: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Nombre o Razón Social"
                   size="small"
                   fullWidth
-                  value="Maria Cardenas"
+                  value={"Maria Cardenas"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value="1140239284"
+                  value={"1140239284"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Correo Electrónico"
                   size="small"
                   fullWidth
-                  value="maria@gmail.com"
+                  value={"maria@gmail.com"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Dirección Notificación"
                   size="small"
                   fullWidth
-                  value="Cra 23 #203-901"
+                  value={"Cra 23 #203-901"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Fecha Solicitud"
                   size="small"
                   fullWidth
-                  value="04/26/2023"
+                  value={"04/26/2023"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  id="outlined-error-helper-text"
                   label="Obligaciones asociadas al radicado nro:"
                   size="small"
                   fullWidth
-                  value="QWEO9283812"
+                  value={"QWEO9283812"}
                   disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Button
-                  color='info'
+                  color='primary'
                   variant='contained'
                   onClick={() => {
                     set_obligaciones(true)
