@@ -2,6 +2,7 @@ import { api } from '../../../api/axios';
 import type {
   DataPersonas,
   HistoricoDatosRestringidos,
+  InfoPersona,
   ResponseServer
 } from '../../../interfaces/globalModels';
 
@@ -43,6 +44,16 @@ export const consultar_datos_persona = async (
 ): Promise<DataPersonas> => {
   const { data } = await api.get<ResponseServer<DataPersonas>>(
     `personas/get-by-id/${id ?? 0}/`
+  );
+  return data.data;
+};
+// consultar datos de una persona por id
+export const consultar_datos_persona_basicos = async (
+  tipo_doc: string, 
+  num_doc: string
+): Promise<InfoPersona> => {
+  const { data } = await api.get<ResponseServer<InfoPersona>>(
+    `personas/get-personas-by-document/${num_doc}/${tipo_doc}`
   );
   return data.data;
 };
