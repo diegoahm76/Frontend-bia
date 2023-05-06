@@ -299,3 +299,7 @@ export interface DataPersonas {
   cod_departamento_notificacion: string;
   cod_departamento_laboral: string;
 }
+export interface ClaseTercero {
+  value: number;
+  label: string;
+}

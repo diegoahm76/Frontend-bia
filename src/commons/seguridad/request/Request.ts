@@ -1,5 +1,6 @@
 import { api } from '../../../api/axios';
 import type {
+  ClaseTercero,
   DataPersonas,
   HistoricoDatosRestringidos,
   InfoPersona,
@@ -57,3 +58,20 @@ export const consultar_datos_persona_basicos = async (
   );
   return data.data;
 };
+// datos de clasificación cormacarena 
+export const consultar_clase_tercero = async (
+): Promise<ClaseTercero[]> => {
+  const { data } = await api.get<ResponseServer<ClaseTercero[]>>(
+    `listas/clase-tercero/`
+  );
+  return data.data;
+};
+// datos de clasificación cormacarena por persona
+export const consultar_clase_tercero_persona = async (
+  id: number | undefined
+  ): Promise<ClaseTercero[]> => {
+    const { data } = await api.get<ResponseServer<ClaseTercero[]>>(
+      `personas/get-clases-tercero-persona/${id ?? 0}/`
+    );
+    return data.data;
+  };
