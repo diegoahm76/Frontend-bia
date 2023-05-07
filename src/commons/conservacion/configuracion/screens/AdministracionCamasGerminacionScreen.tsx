@@ -1,13 +1,9 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 import { Box, Button, Grid, Stack, Tooltip, IconButton, Avatar } from "@mui/material";
 import { Title } from "../../../../components";
 import { get_germination_beds_service, update_germination_beds_service } from '../store/thunks/configuracionThunks';
-// // Hooks
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IObjGerminationBed, type IObjNursery } from "../interfaces/configuracion";
-
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import { useParams } from 'react-router-dom';
@@ -22,8 +18,6 @@ import ArticleIcon from '@mui/icons-material/Article';
 import CrearCamaGerminacionDialogForm from '../componentes/CrearCamaGerminacionDialogForm';
 import AutocompleteVivero from "../../componentes/AutocompleteVivero";
 
-
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdministracionCamasGerminacionScreen(): JSX.Element {
   const { germination_beds } = useAppSelector((state) => state.configuracion);
@@ -34,8 +28,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
   const [nursery, set_nursery] = useState<IObjNursery | null>(null);
   const [aux_germination_beds, set_aux_germination_beds] = useState<IObjGerminationBed[]>([]);
 
-  const [add_bed_is_active, set_add_bed_is_active] =
-    useState<boolean>(false);
+  const [add_bed_is_active, set_add_bed_is_active] =useState<boolean>(false);
   const columns: GridColDef[] = [
     { field: 'id_cama_germinacion_vivero', headerName: 'ID', width: 20 },
     {

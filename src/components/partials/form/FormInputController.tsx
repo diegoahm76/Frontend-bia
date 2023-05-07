@@ -53,6 +53,8 @@ const FormInputController = ({
         set_value(e.target.files!=null?e.target.files[0]:"");
       };
     return (
+        <>
+        {(!(hidden_text ?? false)) &&
         <Grid item xs={xs} md={md}>
             {type!== "file" ?
             <Controller
@@ -65,7 +67,6 @@ const FormInputController = ({
                     fieldState: { error },
                 }) => (
                     <TextField
-                        hidden = {hidden_text ?? false}
                         margin="dense"
                         fullWidth
                         size="small"
@@ -102,7 +103,6 @@ const FormInputController = ({
                     fieldState: { error },
                 }) => (
                     <TextField
-                        hidden = {hidden_text ?? false}
                         margin="dense"
                         fullWidth
                         size="small"
@@ -126,6 +126,8 @@ const FormInputController = ({
             />
             }
         </Grid>
+        }
+        </>
     );
 }
 

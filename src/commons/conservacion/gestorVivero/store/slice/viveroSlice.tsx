@@ -75,6 +75,7 @@ export const nursery_slice = createSlice({
     get_items_despacho: (state: INursery, action: PayloadAction<IObjItem[]>) => {
       state.items_despacho = action.payload;
     },
+    
     get_items_distribuidos: (state: INursery, action: PayloadAction<IObjDistribucion[]>) => {
       state.items_distribuidos = action.payload;
     },
