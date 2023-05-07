@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Grid,
@@ -12,6 +12,7 @@ import {
   InputLabel,
   type SelectChangeEvent,
   Autocomplete,
+  // type AutocompleteProps,
   type AutocompleteChangeReason,
   type AutocompleteChangeDetails,
   // type SelectChangeEvent,
@@ -26,19 +27,49 @@ import type {
   keys_object,
   DataAadminUser,
   SeguridadSlice,
-  RolUser,
+  // IList2,
+  // RolUser,
+  IList2,
+  // RolUser,
   // Users,
 } from '../interfaces';
-import {
-  crear_user_admin_user,
-  update_user_admin_user,
-} from '../request/seguridadRequest';
+// import {
+//   crear_user_admin_user,
+//   update_user_admin_user,
+// } from '../request/seguridadRequest';
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import { control_error } from '../../../helpers/controlError';
-import { control_success } from '../../../helpers/controlSuccess';
+// import { control_success } from '../../../helpers/controlSuccess';
 // import FormSelectController from '../../../components/partials/form/FormSelectController';
 import { CustomSelect } from '../../../components/CustomSelect';
+import { roles_choise_adapter } from '../adapters/roles_adapters';
+import { set_user_info } from '../store/seguridadSlice';
 
+export const initial_state_data_register: DataAadminUser = {
+  tipo_persona: '',
+  tipo_documento: '',
+  numero_documento: '',
+  razon_social: '',
+  nombre_comercial: '',
+  primer_apellido: '',
+  primer_nombre: '',
+  segundo_apellido: '',
+  segundo_nombre: '',
+  nombre_de_usuario: '',
+  imagen_usuario: '',
+  tipo_usuario: '',
+  roles: [],
+  activo: false,
+  activo_fecha_ultimo_cambio: '',
+  activo_justificacion_cambio: '',
+  bloqueado: false,
+  bloqueado_fecha_ultimo_cambio: '',
+  bloqueado_justificacion_cambio: '',
+  fecha_creacion: '',
+  fecha_activación_inicial: '',
+  creado_desde_portal: false,
+  persona_que_creo: 0,
+};
 interface Props {
   has_user: boolean;
 }
@@ -47,6 +78,7 @@ interface Props {
 export const AdminUserPersonaNatural: React.FC<Props> = ({
   has_user,
 }: Props) => {
+  const dispatch = useDispatch();
   const [data_disponible, set_data_disponible] = useState<boolean>(false);
   const { action_admin_users, data_person_search, user_info } = useSelector(
     (state: SeguridadSlice) => state.seguridad
@@ -56,6 +88,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     set_historial_cambios_estado_is_active,
   ] = useState<boolean>(false);
   const {
+    // initial_state_data_register,
     data_register,
     loading,
     tipo_usuario,
@@ -65,12 +98,13 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     bloqueado,
     bloqueado_opt,
     roles,
-    // roles_opt,
+    roles_opt,
     set_activo,
     set_bloqueado,
     set_tipo_usuario,
     set_data_register,
     set_tipo_documento,
+    set_roles,
   } = use_admin_users();
 
   const {
@@ -79,11 +113,15 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
+    reset: reset_admin_user,
     watch,
   } = useForm<DataAadminUser>();
 
   // Paso de datos a formulario para creacion de usuario persona natural
   useEffect(() => {
+    reset_admin_user();
+    // set_data_register(initial_state_data_register);
+
     set_data_register({
       ...data_register,
       primer_nombre: data_person_search.primer_nombre,
@@ -97,31 +135,11 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   // Paso de datos a formulario para edición de usuario persona natural
   useEffect(() => {
     console.log('reset admin user');
-    set_data_register({
-      tipo_persona: '',
-      tipo_documento: '',
-      numero_documento: '',
-      razon_social: '',
-      nombre_comercial: '',
-      primer_apellido: '',
-      primer_nombre: '',
-      segundo_apellido: '',
-      segundo_nombre: '',
-      nombre_de_usuario: '',
-      imagen_usuario: '',
-      tipo_usuario: '',
-      roles: [],
-      activo: false,
-      activo_fecha_ultimo_cambio: '',
-      activo_justificacion_cambio: '',
-      bloqueado: false,
-      bloqueado_fecha_ultimo_cambio: '',
-      bloqueado_justificacion_cambio: '',
-      fecha_creacion: '',
-      fecha_activación_inicial: '',
-      creado_desde_portal: false,
-      persona_que_creo: 0,
-    });
+    reset_admin_user();
+    // set_data_register(initial_state_data_register);
+
+    set_roles(roles_choise_adapter(user_info.roles));
+    console.log(roles);
     set_data_register({
       ...data_register,
       primer_nombre: user_info.primer_nombre,
@@ -144,7 +162,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       creado_desde_portal: user_info.creado_por_portal,
       persona_que_creo: user_info.id_usuario_creador,
     });
-    set_activo(data_register.activo.toString());
+    // set_activo(data_register.activo);
     set_value('primer_nombre', user_info.primer_nombre);
     set_value('segundo_nombre', user_info.segundo_nombre);
     set_value('primer_apellido', user_info.primer_apellido);
@@ -176,6 +194,11 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     set_value('persona_que_creo', user_info.id_usuario_creador);
     set_data_disponible(true);
   }, [user_info]);
+
+  useEffect(() => {
+    dispatch(set_user_info(initial_state_data_register));
+    set_roles([]);
+  }, [action_admin_users]);
 
   useEffect(() => {
     if (watch('tipo_documento') !== undefined) {
@@ -218,14 +241,15 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
 
   const handle_change_autocomplete = (
     event: React.SyntheticEvent<Element, Event>,
-    value: RolUser[],
+    value: IList2[],
     reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<RolUser>
+    details?: AutocompleteChangeDetails<IList2>
   ): void => {
     console.log(event);
     console.log(value);
     console.log(reason);
     console.log(details);
+    set_value('roles', value);
   };
 
   // Cambio inputs
@@ -239,41 +263,59 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       console.log(fata);
       console.log(data_register);
       if (action_admin_users === 'CREATE') {
-        const data_send = {
-          nombre_de_usuario: data_register.nombre_de_usuario,
-          persona: user_info.persona,
-          tipo_usuario: data_register.tipo_usuario,
-          roles: data_register.roles,
-          redirect_url: '',
-          profile_img: data_register.imagen_usuario,
-        };
-        console.log('Onsubmit CREATE', data_send);
-        // Creación de usuario Persona Natural
-        const { data } = await crear_user_admin_user(data_send);
-        control_success(data.detail);
+        // const data_send = {
+        //   nombre_de_usuario: data_register.nombre_de_usuario,
+        //   persona: user_info.persona,
+        //   tipo_usuario: data_register.tipo_usuario,
+        //   roles: data_register.roles,
+        //   redirect_url: '',
+        //   profile_img: data_register.imagen_usuario,
+        // };
+        // console.log('Onsubmit CREATE', data_send);
+        // // Creación de usuario Persona Natural
+        // const { data } = await crear_user_admin_user(data_send);
+        // control_success(data.detail);
       } else if (action_admin_users === 'EDIT') {
-        const data_send = {
-          is_active: data_register.activo,
-          is_blocked: data_register.bloqueado,
-          tipo_usuario: data_register.tipo_usuario,
-          roles: data_register.roles,
-          profile_img: data_register.imagen_usuario,
-          justificacion_activacion: data_register.activo_justificacion_cambio,
-          justificacion_bloqueo: data_register.bloqueado_justificacion_cambio,
-        };
-        console.log('Onsubmit EDIT', data_register);
-        // Actualización de usuario Persona Natural
-        const { data } = await update_user_admin_user(
-          user_info.id_usuario,
-          data_send
-        );
-        control_success(data.detail);
+        // const data_send = {
+        //   is_active: data_register.activo,
+        //   is_blocked: data_register.bloqueado,
+        //   tipo_usuario: data_register.tipo_usuario,
+        //   roles: data_register.roles,
+        //   profile_img: data_register.imagen_usuario,
+        //   justificacion_activacion: data_register.activo_justificacion_cambio,
+        //   justificacion_bloqueo: data_register.bloqueado_justificacion_cambio,
+        // };
+        // console.log('Onsubmit EDIT', data_register);
+        // // Actualización de usuario Persona Natural
+        // const { data } = await update_user_admin_user(
+        //   user_info.id_usuario,
+        //   data_send
+        // );
+        // control_success(data.detail);
       }
     } catch (error) {
       console.log(error);
       control_error(error);
     }
   });
+
+  // type GetOptionSelectedType = (option: IList2, value: IList2) => boolean;
+
+  // // eslint-disable-next-line @typescript-eslint/naming-convention
+  // const getOptionSelected: GetOptionSelectedType = (
+  //   option: IList2,
+  //   value: IList2
+  // ) => option.value === value.value;
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  // const getOptionSelected: Array<AutocompleteProps<
+  //   IList2,
+  //   true,
+  //   false,
+  //   false,
+  //   'div'
+  // >> = (option: IList2, value: IList2) =>
+  //   option.value === value.value;
 
   return (
     <>
@@ -294,13 +336,13 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   fullWidth
                   size="small"
                   label="Primer nombre *"
-                  error={errors.primer_nombre?.type === 'required'}
+                  // error={errors.primer_nombre?.type === 'required'}
                   value={data_register.primer_nombre}
-                  helperText={
-                    errors.primer_nombre?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
+                  // helperText={
+                  //   errors.primer_nombre?.type === 'required'
+                  //     ? 'Este campo es obligatorio'
+                  //     : ''
+                  // }
                   {...register_admin_user('primer_nombre', { required: true })}
                   onChange={handle_change}
                 />
@@ -323,12 +365,12 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   size="small"
                   label="Primer apellido *"
                   value={data_register.primer_apellido}
-                  error={errors.primer_apellido?.type === 'required'}
-                  helperText={
-                    errors.primer_apellido?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
+                  // error={errors.primer_apellido?.type === 'required'}
+                  // helperText={
+                  //   errors.primer_apellido?.type === 'required'
+                  //     ? 'Este campo es obligatorio'
+                  //     : ''
+                  // }
                   {...register_admin_user('primer_apellido', {
                     required: true,
                   })}
@@ -401,22 +443,28 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                 />
               </Grid>
               <Grid item xs={12} sm={6} md={9}>
-                <Autocomplete
-                  multiple
-                  fullWidth
-                  options={roles}
-                  getOptionLabel={(option) => option.nombre_rol}
-                  defaultValue={[roles[13]]}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Selección de roles"
-                      placeholder="Roles asignados"
-                    />
-                  )}
-                  {...register_admin_user('roles')}
-                  onChange={handle_change_autocomplete}
-                />
+                {roles_opt.length > 0 && (
+                  <Autocomplete
+                    multiple
+                    fullWidth
+                    id="roles"
+                    options={roles_opt}
+                    getOptionLabel={(option) => option?.label}
+                    isOptionEqualToValue={(option, value) =>
+                      option.value === value.value
+                    }
+                    defaultValue={roles}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Selección de roles"
+                        placeholder="Roles asignados"
+                      />
+                    )}
+                    {...register_admin_user('roles')}
+                    onChange={handle_change_autocomplete}
+                  />
+                )}
               </Grid>
             </Grid>
             {action_admin_users === 'EDIT' && (

@@ -18,7 +18,7 @@ import { control_error, control_success } from '../../../helpers';
 export const get_roles: () => any = () => {
   return async (dispatch: Dispatch<any>) => {
     const data = await roles_request();
-    dispatch(set_roles(data));
+    dispatch(set_roles(data.data));
   };
 };
 

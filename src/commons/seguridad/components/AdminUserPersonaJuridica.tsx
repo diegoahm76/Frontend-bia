@@ -22,13 +22,13 @@ import type {
   UserCreate,
   SeguridadSlice,
 } from '../interfaces';
-import {
-  crear_user_admin_user,
-  update_user_admin_user,
-} from '../request/seguridadRequest';
+// import {
+//   crear_user_admin_user,
+//   update_user_admin_user,
+// } from '../request/seguridadRequest';
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import { control_error } from '../../../helpers/controlError';
-import { control_success } from '../../../helpers/controlSuccess';
+// import { control_success } from '../../../helpers/controlSuccess';
 import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialCambiosEstadoUser';
 
 interface Props {
@@ -95,35 +95,35 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
   const on_submit = handle_submit(async () => {
     try {
       if (action_admin_users === 'CREATE') {
-        const data_send = {
-          nombre_de_usuario: data_register.nombre_de_usuario,
-          persona: user_info.persona,
-          tipo_usuario: data_register.tipo_usuario,
-          roles: data_register.roles,
-          redirect_url: '',
-          profile_img: data_register.imagen_usuario,
-        };
-        console.log('Onsubmit', data_register);
-        // Hacemos el registro de la persona JURIDICA
-        const { data } = await crear_user_admin_user(data_send);
-        control_success(data.detail);
+        // const data_send = {
+        //   nombre_de_usuario: data_register.nombre_de_usuario,
+        //   persona: user_info.persona,
+        //   tipo_usuario: data_register.tipo_usuario,
+        //   roles: data_register.roles,
+        //   redirect_url: '',
+        //   profile_img: data_register.imagen_usuario,
+        // };
+        // console.log('Onsubmit', data_register);
+        // // Hacemos el registro de la persona JURIDICA
+        // const { data } = await crear_user_admin_user(data_send);
+        // control_success(data.detail);
       } else if (action_admin_users === 'EDIT') {
-        const data_send = {
-          is_active: data_register.activo,
-          is_blocked: data_register.bloqueado,
-          tipo_usuario: data_register.tipo_usuario,
-          roles: data_register.roles,
-          profile_img: data_register.imagen_usuario,
-          justificacion_activacion: data_register.activo_justificacion_cambio,
-          justificacion_bloqueo: data_register.bloqueado_justificacion_cambio,
-        };
-        console.log('Onsubmit EDIT', data_register);
-        // Actualización de usuario Persona Natural
-        const { data } = await update_user_admin_user(
-          user_info.id_usuario,
-          data_send
-        );
-        control_success(data.detail);
+        // const data_send = {
+        //   is_active: data_register.activo,
+        //   is_blocked: data_register.bloqueado,
+        //   tipo_usuario: data_register.tipo_usuario,
+        //   roles: data_register.roles,
+        //   profile_img: data_register.imagen_usuario,
+        //   justificacion_activacion: data_register.activo_justificacion_cambio,
+        //   justificacion_bloqueo: data_register.bloqueado_justificacion_cambio,
+        // };
+        // console.log('Onsubmit EDIT', data_register);
+        // // Actualización de usuario Persona Natural
+        // const { data } = await update_user_admin_user(
+        //   user_info.id_usuario,
+        //   data_send
+        // );
+        // control_success(data.detail);
       }
     } catch (error) {
       const temp_error = error as AxiosError;

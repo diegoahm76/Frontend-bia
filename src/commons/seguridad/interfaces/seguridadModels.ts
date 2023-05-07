@@ -1,6 +1,11 @@
 import { type Dispatch, type SetStateAction } from 'react';
 import type { IList } from '../../../interfaces/globalModels';
 
+export interface IList2 {
+  value: number;
+  label: string ;
+}
+
 export interface FormValuesSearchPerson {
   tipo_persona: string;
   tipo_documento: string;
@@ -42,7 +47,7 @@ export interface DataAadminUser {
   imagen_usuario: string;
   // Tipo usuario y Roles
   tipo_usuario: string;
-  roles: RolUser[];
+  roles: IList2[];
   // Estatus
   activo: boolean;
   activo_fecha_ultimo_cambio: string | null;
@@ -112,6 +117,7 @@ export interface UserCreate {
 }
 
 export interface AdminUserHook {
+  // initial_state_data_register: DataAadminUser;
   data_register: DataAadminUser;
   has_user: boolean;
   is_exists: boolean;
@@ -129,7 +135,8 @@ export interface AdminUserHook {
   bloqueado: string;
   bloqueado_opt: IList[];
   tipo_usuario: string;
-  roles: RolUser[];
+  roles: IList2[];
+  roles_opt: IList2[];
   get_selects_options: () => Promise<void>;
   set_data_register: Dispatch<SetStateAction<DataAadminUser>>;
   set_has_user: Dispatch<SetStateAction<boolean>>;
@@ -140,6 +147,7 @@ export interface AdminUserHook {
   set_tipo_documento: Dispatch<SetStateAction<string>>;
   set_tipo_persona: Dispatch<SetStateAction<string>>;
   set_tipo_usuario: Dispatch<SetStateAction<string>>;
+  set_roles: Dispatch<SetStateAction<IList2[]>>;
   set_activo: Dispatch<SetStateAction<string>>;
   set_bloqueado: Dispatch<SetStateAction<string>>;
 }
@@ -204,10 +212,7 @@ export interface Users {
   id_usuario_creador: number | null;
   primer_nombre_usuario_creador: string | null;
   primer_apellido_usuario_creador: string | null;
-  roles: Array<{
-    id_rol: number;
-    nombre_rol: string;
-  }>;
+  roles: IList2[];
 }
 
 export interface Persons {
