@@ -3,7 +3,8 @@ import { Title } from '../../../../components/Title';
 import { InputsEncabezado } from '../componentes/InputsEncabezado';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, TextareaAutosize, Stack, Button, Checkbox, FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
+import SaveIcon from '@mui/icons-material/Save';
 import { useEffect, useState } from 'react';
 import { use_form } from '../../../../hooks/useForm';
 import { useFormLocal } from '../hooks/useFormLocal';
@@ -135,11 +136,10 @@ export const SolicitudFacilidadPago: React.FC = () => {
             noValidate
             autoComplete="off"
           >
-            <Grid container spacing={10}>
+            <Grid container spacing={2}>
               <Grid item xs={11} sm={3} >
                 <TextField
                   size="small"
-                  sx={{ width: '300px' }}
                   fullWidth
                   helperText='Cargar Documento Solicitud'
                   variant="outlined"
@@ -151,7 +151,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
               <Grid item xs={11} sm={3} >
                 <TextField
                   size="small"
-                  sx={{ width: '300px' }}
                   fullWidth
                   helperText="Cargar Soporte Consignación"
                   variant="outlined"
@@ -161,7 +160,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
-              <FormControl size='small' sx={{ width: '300px' }}>
+              <FormControl size='small' fullWidth>
                 <InputLabel>Calidad en que actúa la persona</InputLabel>
                 <Select
                   label="Calidad en que actúa la persona"
@@ -440,6 +439,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         helperText='Escribe la Ciudad'
                         size="small"
                         fullWidth
+                        onChange={on_input_change}
+                        name='ciudad'
                       />
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -714,7 +715,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
       </Grid>
         ) : null
       }
-
       <Grid
         container
         sx={{
@@ -727,41 +727,48 @@ export const SolicitudFacilidadPago: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-          width='350px'
-        >
-          <p>Observación</p>
-          <TextareaAutosize
-            minRows={8}
-            cols={153}
-            onChange={on_input_change}
-            name='observacion'
-          />
-        </Box>
+        <Grid item xs={12}>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+              <Grid item xs={12} sm={15} mb='20px'>
+                <TextField
+                  multiline
+                  rows={4}
+                  label="Observación"
+                  helperText="Escribe una observación"
+                  size="small"
+                  fullWidth
+                  name='observacion'
+                  onChange={on_input_change}
+                />
+              </Grid>
+              <FormGroup>
+                <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
+                <FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
+              </FormGroup>
+              <Stack
+                direction="row"
+                justifyContent="right"
+                spacing={2}
+                sx={{ mb: '20px', mt: '20px' }}
+              >
+                <Button
+                  color='primary'
+                  variant='contained'
+                  startIcon={<SaveIcon />}
+                  onClick={() => {
+                    handle_open()
+                  }}
+                >
+                Enviar Solicitud
+                </Button>
+              </Stack>
+          </Box>
+        </Grid>
       </Grid>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        spacing={2}
-        sx={{ mb: '20px', mt: '20px' }}
-      >
-        <FormGroup>
-          <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
-          <FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
-        </FormGroup>
-        <Button
-          color='primary'
-          variant='contained'
-          onClick={() => {
-            handle_open()
-          }}
-        >
-        Enviar Solicitud
-        </Button>
-      </Stack>
       <Dialog
         open={modal}
         onClose={handle_close}

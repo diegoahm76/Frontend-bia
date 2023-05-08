@@ -204,6 +204,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
         <Button
           color='primary'
           variant='contained'
+          startIcon={<SearchOutlined />}
           onClick={() => {
             const new_rows = [];
             if(filter === 'nombre'){
@@ -233,17 +234,16 @@ export const TablaObligacionesAdmin: React.FC = () => {
           }}
         >
         Buscar
-        <SearchOutlined />
         </Button>
         <Button
           color='primary'
           variant='outlined'
+          startIcon={<FilterAltOffOutlined />}
           onClick={() => {
             set_visible_rows(fac_pago)
           }}
         >
         Mostrar Todo
-        <FilterAltOffOutlined />
         </Button>
       </Stack>
       {

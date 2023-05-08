@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { Grid, Box, Button, Stack, TextField, Dialog, DialogTitle, DialogContent, Divider, DialogActions } from "@mui/material";
+import SaveIcon from '@mui/icons-material/Save';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useState } from 'react';
@@ -78,7 +79,6 @@ export const ResolucionRespuesta: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <h3>Crear Documento</h3>
         <Grid item xs={12}>
           <Box
             component="form"
@@ -86,6 +86,7 @@ export const ResolucionRespuesta: React.FC = () => {
             autoComplete="off"
             mb='40px'
           >
+            <h3>Crear Documento</h3>
             <Grid container spacing={2} mb='20px'>
               <Grid item xs={12} sm={3}>
                 <TextField
@@ -113,26 +114,27 @@ export const ResolucionRespuesta: React.FC = () => {
                   console.log( 'Focus.', editor );
               } }
             />
+            <Stack
+              direction="row"
+              justifyContent="right"
+              spacing={2}
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<SaveIcon />}
+                sx={{ marginTop: '30px' }}
+                onClick={() => {
+                  handle_open()
+                }}
+              >
+                Guardar Resolución
+              </Button>
+            </Stack>
           </Box>
         </Grid>
       </Grid>
-      <Stack
-        direction="row"
-        justifyContent="right"
-        spacing={2}
-        sx={{ mb: '20px' }}
-      >
-        <Button
-          color='primary'
-          variant='contained'
-          sx={{ marginTop: '30px' }}
-          onClick={() => {
-            handle_open()
-          }}
-        >
-          Guardar Resolución
-        </Button>
-      </Stack>
       <Dialog
         open={modal}
         onClose={handle_close}

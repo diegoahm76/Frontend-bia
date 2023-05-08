@@ -2,7 +2,8 @@
 import { Title } from '../../../../components/Title';
 import { InputsEncabezadoAdmin } from '../componentes/InputsEncabezadoAdmin';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextareaAutosize, Button, Stack, DialogContent, DialogActions, Dialog } from "@mui/material";
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogContent, DialogActions, Dialog, TextField } from "@mui/material";
+import SaveIcon from '@mui/icons-material/Save';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
@@ -102,11 +103,14 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item>
-                <p>Observación Cormacarena</p>
-                <TextareaAutosize
-                  minRows={8}
-                  cols={153}
+              <Grid item xs={12} sm={15}>
+                <TextField
+                  multiline
+                  rows={4}
+                  label="Observación Cormacarena"
+                  helperText="Escribe una observación"
+                  size="small"
+                  fullWidth
                   name='observacion'
                   onChange={on_input_change}
                 />
@@ -206,24 +210,25 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                 ) : null
               }
             </Grid>
+            <Stack
+              direction="row"
+              justifyContent="right"
+              spacing={2}
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<SaveIcon />}
+                sx={{ marginTop: '30px' }}
+                onClick={() => {}}
+              >
+              Actualizar / Enviar
+              </Button>
+            </Stack>
           </Box>
         </Grid>
       </Grid>
-      <Stack
-        direction="row"
-        justifyContent="right"
-        spacing={2}
-        sx={{ mb: '20px' }}
-      >
-        <Button
-          color='primary'
-          variant='contained'
-          sx={{ marginTop: '30px' }}
-          onClick={() => {}}
-        >
-        Actualizar / Enviar
-        </Button>
-      </Stack>
       <Dialog
         open={modal}
         onClose={handle_close}

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Grid, Box, TextField, TextareaAutosize, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
+import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
 import { PersonaNatural } from './CalidadPersona';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -174,14 +174,17 @@ export const VistaSolicitud: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <p>Observación Usuario</p>
-      <TextareaAutosize
-        minRows={8}
-        cols={153}
-        name='observacion'
-        value={'Aquí van todas las observaciones escritas por el usuario externo.'}
-        disabled
-      />
+      <Grid item xs={12} sm={15} mt='20px' mb='20px'>
+        <TextField
+          multiline
+          rows={4}
+          value={'Aquí van todas las observaciones escritas por el usuario externo.'}
+          label="Observación Usuario"
+          size="small"
+          disabled
+          fullWidth
+        />
+      </Grid>
       <FormGroup>
         <FormControlLabel checked disabled control={<Checkbox />} label="Aceptar términos y condiciones" />
         <FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
