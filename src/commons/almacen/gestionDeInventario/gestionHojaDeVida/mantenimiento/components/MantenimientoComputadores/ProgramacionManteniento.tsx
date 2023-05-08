@@ -74,10 +74,9 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
         set_user_info(val);
     }, [set_user_info]);
 
-    const crear_mantenimiento: () => void = () => {
-        dispatch(create_maintenance_service(rows)).then((response: any) => {
+    const crear_mantenimiento: () => void = () => { 
+        dispatch(create_maintenance_service(rows)).then(() => {
             limpiar();
-            console.log('Se creo el mantenimiento: ', response);
         });
     }
 
@@ -199,7 +198,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                                 startIcon={<SearchIcon />}
                                 onClick={() => {
                                     set_buscar_programacion_is_active(true);
-                                    set_title_programacion('Buscar programación');
+                                    set_title_programacion('Buscar programación de computadores');
                                 }}
                             >
                                 Buscar programación
@@ -232,7 +231,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                                 startIcon={<DeleteForeverIcon />}
                                 onClick={() => {
                                     set_anular_mantenimiento_is_active(true);
-                                    set_title('Anular mantenimiento');
+                                    set_title('Anular mantenimiento de computadores');
                                 }}
                             >
                                 Anular
