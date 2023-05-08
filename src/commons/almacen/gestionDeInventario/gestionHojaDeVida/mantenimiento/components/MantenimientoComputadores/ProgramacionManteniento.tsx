@@ -74,10 +74,9 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
         set_user_info(val);
     }, [set_user_info]);
 
-    const crear_mantenimiento: () => void = () => {
-        dispatch(create_maintenance_service(rows)).then((response: any) => {
+    const crear_mantenimiento: () => void = () => { 
+        dispatch(create_maintenance_service(rows)).then(() => {
             limpiar();
-            console.log('Se creo el mantenimiento: ', response);
         });
     }
 
