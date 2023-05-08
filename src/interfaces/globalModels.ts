@@ -303,3 +303,39 @@ export interface ClaseTercero {
   value: number;
   label: string;
 }
+export interface DatosVinculacionCormacarena {
+  id_unidad_organizacional_actual:        number;
+  id_cargo:                               number;
+  cargo_actual:                           string;
+  unidad_organizacional_actual:           string;
+  es_unidad_organizacional_actual:        boolean;
+  fecha_inicio_cargo_actual:              Date;
+  fecha_asignacion_unidad:                Date;
+  fecha_a_finalizar_cargo_actual:         Date;
+  observaciones_vinculacion_cargo_actual: string;
+  fecha_vencida:                          boolean;
+}
+export interface DataNaturaUpdate {
+  cod_municipio_expedicion_id:       string;
+  nombre_comercial:                  string;
+  fecha_nacimiento:                  Date;
+  email:                             string;
+  telefono_celular:                  string;
+  telefono_empresa_2:                string;
+  sexo:                              string;
+  estado_civil:                      string;
+  pais_nacimiento:                   string;
+  email_empresarial:                 string;
+  ubicacion_georeferenciada:         string;
+  telefono_fijo_residencial:         string;
+  pais_residencia:                   string;
+  municipio_residencia:              string;
+  direccion_residencia:              string;
+  direccion_laboral:                 string;
+  direccion_residencia_ref:          string;
+  direccion_notificaciones:          string;
+  direccion_notificacion_referencia: string;
+  cod_municipio_laboral_nal:         string;
+  cod_municipio_notificacion_nal:    string;
+  datos_clasificacion_persona:       number[];
+}
