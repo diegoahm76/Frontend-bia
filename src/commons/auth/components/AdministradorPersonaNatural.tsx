@@ -3,7 +3,7 @@ import {
     useEffect,
     useState
 } from "react";
-import type { DataPersonas, InfoPersona } from "../../../interfaces/globalModels";
+import type { ClaseTercero, DataPersonas, InfoPersona } from "../../../interfaces/globalModels";
 import {
     Button, Divider, Grid, MenuItem, Stack, TextField, Typography,
     type SelectChangeEvent,
@@ -11,6 +11,7 @@ import {
     Checkbox,
     FormControl,
     FormHelperText,
+    Autocomplete,
 } from "@mui/material";
 import { Title } from "../../../components/Title";
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -28,25 +29,27 @@ import { use_register } from '../../auth/hooks/registerHooks';
 import { type FieldErrors, useForm } from "react-hook-form";
 import type { keys_object, DataRegistePortal } from "../../auth/interfaces";
 import { DialogGeneradorDeDirecciones } from "../../../components/DialogGeneradorDeDirecciones";
-import { consultar_datos_persona } from "../../seguridad/request/Request";
+import { consultar_clase_tercero, consultar_clase_tercero_persona, consultar_datos_persona } from "../../seguridad/request/Request";
 
 interface PropsElement {
     errors: FieldErrors<DataRegistePortal>;
-  }
+}
 interface PropsStep {
     label: string;
     component: (props: PropsElement) => JSX.Element;
-  }
-  interface Props {
+}
+interface Props {
     data_all: InfoPersona;
-  }
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     data_all,
-  }: Props) => {
-    
+}: Props) => {
+
     const [datos_persona, set_datos_persona] = useState<DataPersonas>();
     const [persona, set_persona] = useState<InfoPersona>();
+    const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
+    const [clase_tercero_persona, set_clase_tercero_persona] = useState<ClaseTercero[]>([]);
     const [is_modal_active, open_modal] = useState(false);
     const [ver_datos_adicionales, set_ver_datos_adicionales] = useState(false);
     const [button_datos_adicionales, set_button_datos_adicionales] = useState(true);
@@ -165,6 +168,27 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     const cancelar = (): void => {
         set_persona(undefined);
     };
+    // trae todas las clase tercero
+    const get_datos_clase_tercero = async (): Promise<void> => {
+        try {
+            const response = await consultar_clase_tercero();
+            console.log("Datos clase tercero", response)
+            set_clase_tercero(response)
+        } catch (err) {
+            control_error(err);
+        }
+    };
+    // trae clase tercero por persona
+    const get_datos_clase_tercero_persona = async (): Promise<void> => {
+        try {
+            const id_persona: number | undefined = persona?.id_persona;
+            const response = await consultar_clase_tercero_persona(id_persona);
+            set_clase_tercero_persona(response)
+            console.log("Datos clase tercero persona", response)
+        } catch (err) {
+            control_error(err);
+        }
+    };
     const get_datos_persona = async (): Promise<void> => {
         try {
             const id_persona: number | undefined = persona?.id_persona;
@@ -191,29 +215,15 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             set_data_register({
                 ...data_register,
                 email: response?.email,
-            });
-            set_data_register({
-                ...data_register,
                 telefono_celular: response?.telefono_celular,
-            });
-            set_data_register({
-                ...data_register,
                 complemeto_direccion: response?.direccion_notificacion_referencia,
-            });
-
-            // Autorización
-            set_data_register({
-                ...data_register,
+                // Autorización
                 acepta_notificacion_email: response?.acepta_notificacion_email,
-            });
-            set_data_register({
-                ...data_register,
                 acepta_notificacion_sms: response?.acepta_notificacion_sms,
-            });
-            set_data_register({
-                ...data_register,
                 acepta_tratamiento_datos: response?.acepta_tratamiento_datos,
             });
+            set_dpto_notifiacion(response?.cod_departamento_notificacion)
+            set_ciudad_notificacion(response?.cod_municipio_notificacion_nal)
 
             // Datos adicionales
         } catch (err) {
@@ -222,8 +232,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     };
     useEffect(() => {
         if (persona?.numero_documento !== undefined) {
-            if(persona?.tipo_persona === "N"){
-                void get_datos_persona()
+            if (persona?.tipo_persona === "N") {
+                void get_datos_persona();
+                void get_datos_clase_tercero();
+                void get_datos_clase_tercero_persona();
             }
         }
     }, [persona?.numero_documento !== undefined])
@@ -630,7 +642,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                     <Typography variant="subtitle1" fontWeight="bold">Dirección de notificación Nacional</Typography>
                                 </Grid>
                                 <>
-                                <Grid item xs={12} sm={6} md={4}>
+                                    <Grid item xs={12} sm={6} md={4}>
                                         <CustomSelect
                                             onChange={on_change}
                                             label="País de notificación"
@@ -645,17 +657,17 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={4}>
-                                    <CustomSelect
-                                        onChange={on_change}
-                                        label="Departamento *"
-                                        name="dpto_notifiacion"
-                                        value={dpto_notifiacion}
-                                        options={dpto_notifiacion_opt}
-                                        loading={loading}
-                                        required={true}
-                                        errors={errors}
-                                        register={register}
-                                    />
+                                        <CustomSelect
+                                            onChange={on_change}
+                                            label="Departamento *"
+                                            name="dpto_notifiacion"
+                                            value={dpto_notifiacion}
+                                            options={dpto_notifiacion_opt}
+                                            loading={loading}
+                                            required={true}
+                                            errors={errors}
+                                            register={register}
+                                        />
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={4}>
                                         <CustomSelect
@@ -920,32 +932,32 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                             <Typography variant="subtitle1" fontWeight="bold">Dirección laboral nacional</Typography>
                                         </Grid>
                                         <Grid item xs={12} sm={6} md={4}>
-                                        <CustomSelect
-                                            onChange={on_change}
-                                            label="País de notificación"
-                                            name="pais_notificacion"
-                                            value={'CO'}
-                                            options={paises_options}
-                                            loading={loading}
-                                            disabled={false}
-                                            required={true}
-                                            errors={errors}
-                                            register={register}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} md={4}>
-                                    <CustomSelect
-                                        onChange={on_change}
-                                        label="Departamento *"
-                                        name="dpto_notifiacion"
-                                        value={dpto_notifiacion}
-                                        options={dpto_notifiacion_opt}
-                                        loading={loading}
-                                        required={true}
-                                        errors={errors}
-                                        register={register}
-                                    />
-                                    </Grid>
+                                            <CustomSelect
+                                                onChange={on_change}
+                                                label="País de notificación"
+                                                name="pais_notificacion"
+                                                value={'CO'}
+                                                options={paises_options}
+                                                loading={loading}
+                                                disabled={false}
+                                                required={true}
+                                                errors={errors}
+                                                register={register}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} md={4}>
+                                            <CustomSelect
+                                                onChange={on_change}
+                                                label="Departamento *"
+                                                name="dpto_notifiacion"
+                                                value={dpto_notifiacion}
+                                                options={dpto_notifiacion_opt}
+                                                loading={loading}
+                                                required={true}
+                                                errors={errors}
+                                                register={register}
+                                            />
+                                        </Grid>
                                         <Grid item xs={12} sm={6} md={4}>
                                             <CustomSelect
                                                 onChange={on_change}
@@ -1014,10 +1026,40 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                         </Grid>
                                     </>
                                 )}
-
-                                <Grid item xs={12}>
-                                    <Title title="DATOS DE CLASIFICACIÓN CORMACARENA" />
-                                </Grid>
+                                <>
+                                    <Grid item xs={12}>
+                                        <Title title="DATOS DE CLASIFICACIÓN CORMACARENA" />
+                                    </Grid>
+                                    < Grid item xs={12}>
+                                    {(clase_tercero.length > 0) && (
+                                                    <>
+                                                        <Grid item xs={12}>
+                                                            <Autocomplete
+                                                                multiple
+                                                                fullWidth
+                                                                id="Datos-Clasificación-cormacarena"
+                                                                size="medium"
+                                                                options={clase_tercero}
+                                                                getOptionLabel={(option) => option?.label}
+                                                                defaultValue={clase_tercero_persona}
+                                                                renderInput={(params) => (
+                                                                    <TextField
+                                                                        {...params}
+                                                                        label="Datos clasificación Cormacarena"
+                                                                        placeholder="Clasificacion Cormacarena"
+                                                                    />
+                                                                )}
+                                                            />
+                                                        </Grid>
+                                                    </>
+                                                )}
+                                    </Grid>
+                                </>
+                                <>
+                                    <Grid item xs={12}>
+                                        <Title title="DATOS DE VINCULACIÓN ACTUAL A CORMACARENA" />
+                                    </Grid>
+                                </>
                                 <Grid item xs={12} >
                                     <Stack justifyContent="flex-end" sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
                                         <Button

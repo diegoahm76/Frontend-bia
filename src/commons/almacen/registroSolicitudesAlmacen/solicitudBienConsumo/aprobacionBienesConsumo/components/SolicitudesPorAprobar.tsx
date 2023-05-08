@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { api } from '../../../../../../api/axios';
 import { useForm } from 'react-hook-form';
@@ -7,11 +6,12 @@ import { type ToastContent, toast } from 'react-toastify';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { type InfoSolicitud } from "../../interfaces/solicitudBienConsumo";
-import type { AuthSlice } from '../../../../../../commons/auth/interfaces';
+import type { AuthSlice } from '../../../../../auth/interfaces/authModels';
 import { useSelector } from 'react-redux';
 import { set_info_solicitud } from '../../store/slices/indexSolicitudBienesConsumo';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { get_uni_organizacional } from '../../store/solicitudBienConsumoThunks';
+
 
 
 const initial_state_solicitud: InfoSolicitud = {
@@ -27,10 +27,10 @@ const initial_state_solicitud: InfoSolicitud = {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarSolicitud = () => {
+const SolicitudPorAprobar = () => {
 
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-    const { control: control_solicitud, reset: reset_solicitud, getValues: get_values, watch } = useForm<InfoSolicitud>();
+    const { control: control_solicitud, reset: reset_solicitud, getValues: get_values } = useForm<InfoSolicitud>();
     const { unidad_organizacional } = useAppSelector((state) => state.solic_consumo);
     const [solicitudes, set_solicitudes] = useState<InfoSolicitud[]>([]);
     const dispatch = useAppDispatch();
@@ -39,13 +39,13 @@ const SeleccionarSolicitud = () => {
         void dispatch(get_uni_organizacional());
     }, [])
 
-    const unidad_selected = watch("id_unidad_para_la_que_solicita")
+    // const unidad_selected = watch("id_unidad_para_la_que_solicita")
 
     const columns_solicitudes: GridColDef[] = [
         { field: 'id_solicitud_consumible', headerName: 'ID', width: 20 },
         {
             field: 'numero_despacho_consumo',
-            headerName: '# despacho',
+            headerName: 'Número despacho',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -106,10 +106,38 @@ const SeleccionarSolicitud = () => {
         reset_solicitud({ ...initial_state_solicitud, persona_solicita: userinfo.nombre, id_persona_solicita: userinfo.id_persona })
     }, []);
 
-    useEffect(() => {
-        console.log(unidad_selected)
-    }, [unidad_selected]);
 
+    // const [municipalities, set_municipalities] = useState<IList[]>([]);
+    // const dispatch = useAppDispatch();
+
+    // const text_choise_adapter: any = (dataArray: string[]) => {
+    //     const data_new_format: IList[] = dataArray.map((dataOld) => ({
+    //         label: dataOld[1],
+    //         value: dataOld[0],
+    //     }));
+    //     return data_new_format;
+    // };
+
+    // useEffect(() => {
+
+    //     const get_selects_options: any = async () => {
+    //         try {
+    //             const { data: municipalities_no_format } = await api.get(
+    //                 'choices/municipios/'
+    //             );
+
+    //             const municipalities_format: IList[] = text_choise_adapter(
+    //                 municipalities_no_format
+    //             );
+
+    //             set_municipalities(municipalities_format);
+    //         } catch (err) {
+    //             console.log(err);
+    //         }
+    //     };
+
+    //     void get_selects_options();
+    // }, [])
 
     const search_solicitud: any = (async () => {
         const number_solicitud = get_values("id_solicitud_consumibles") ?? ""
@@ -134,7 +162,6 @@ const SeleccionarSolicitud = () => {
         }
     })
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const get_solicitudes: any = (async () => {
         try {
             const { data } = await api.get(
@@ -173,7 +200,7 @@ const SeleccionarSolicitud = () => {
                     row_id={"id_solicitud_consumible"}
                     columns_model={columns_solicitudes}
                     models={solicitudes}
-                    get_filters_models={search_solicitud}
+                    get_filters_models={get_solicitudes}
                     set_models={set_solicitudes}
                     reset_values={reset_solicitud}
                     button_submit_label='Buscar solicitud'
@@ -287,4 +314,4 @@ const SeleccionarSolicitud = () => {
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarSolicitud;
+export default SolicitudPorAprobar;

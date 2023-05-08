@@ -4,10 +4,11 @@ import { ConfiguracionRoutes } from "../configuracion/routes/ConfiguracionRoutes
 import { EntradaysalidArticulosRoutes } from "../gestionDeInventario/catalogoBienes/routes/EntradaysalidaArticulosRoutes";
 // import { GestionDeInventarioRoutes } from "../gestionDeInventario/routes/GestionDeInventarioRoutes";
 import { EntradaBienesAlmacenRoutes } from "../entradaDeAlmacen/routes/EntradaAlmacenRoutes";
-import { RegistroSolicitudesAlmacenRoutes } from "../registroSolicitudesAlmacen/routes/RegistroSolicitudesAlmacenRoutes";
+
 import { ReportesIndicadoresAnaliticaRoutes } from "../reportesIndicadoresAnalitca/routes/ReportesIndicadoresAnaliticaRoutes";
 import { GestionInventarioRoutes } from "../gestionDeInventario/gestionHojaDeVida/routes/GestionInventarioRoutes";
 import { SolicitudBienConsumoScreen } from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens";
+import { SolicitudDespachoScreen } from "../registroSolicitudesAlmacen/despacho/screens/SolicitudDespachoScreen";
 
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
@@ -25,10 +26,7 @@ export const AlmacenRoutes: React.FC = () => {
         path="entrada_almacen/*"
         element={<EntradaBienesAlmacenRoutes />}
       />
-      <Route
-        path="registro_solicitudes_almacen/*"
-        element={<RegistroSolicitudesAlmacenRoutes />}
-      />
+
       <Route
         path="reportes_indicadores_analitica/*"
         element={<ReportesIndicadoresAnaliticaRoutes />}
@@ -45,6 +43,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="solicitud_consumo/*"
         element={<SolicitudBienConsumoScreen />}
+      />
+      <Route
+        path="solicitud_despacho/*"
+        element={<SolicitudDespachoScreen />}
       />
       <Route path="/*" element={<Page404 />} />
     </Routes>

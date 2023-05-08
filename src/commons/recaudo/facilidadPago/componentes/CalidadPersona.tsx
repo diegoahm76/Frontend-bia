@@ -15,7 +15,7 @@ export const PersonaNatural: React.FC = () => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={3.2}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
                 onClick={() => {}}
@@ -26,7 +26,6 @@ export const PersonaNatural: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Dirección Notificación"
                 value={'Cl 45 # 302A-320'}
                 size="small"
@@ -36,7 +35,6 @@ export const PersonaNatural: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Ciudad"
                 value={'Bogotá'}
                 size="small"
@@ -46,7 +44,6 @@ export const PersonaNatural: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Teléfono Contacto"
                 value={'3123457865'}
                 size="small"
@@ -73,7 +70,7 @@ export const PersonaJuridica: React.FC = () => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4.3}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
                 onClick={() => {}}
@@ -83,7 +80,7 @@ export const PersonaJuridica: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={3}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
                 onClick={() => {}}
@@ -93,7 +90,7 @@ export const PersonaJuridica: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={4.7}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
                 onClick={() => {}}
@@ -104,7 +101,6 @@ export const PersonaJuridica: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Dirección Notificación"
                 value={'Cl 32 #201-305'}
                 size="small"
@@ -114,7 +110,6 @@ export const PersonaJuridica: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Ciudad"
                 value={'Bogotá'}
                 size="small"
@@ -124,7 +119,6 @@ export const PersonaJuridica: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Teléfono Contacto"
                 value={'3214932553'}
                 size="small"
@@ -152,7 +146,6 @@ export const DeudorSolidario: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Tipo Deudor Solidario"
                 value={'Ej 1'}
                 size="small"
@@ -161,7 +154,7 @@ export const DeudorSolidario: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={3.7}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
                 onClick={() => {}}
@@ -171,7 +164,7 @@ export const DeudorSolidario: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={3.4}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
                 onClick={() => {}}
@@ -181,7 +174,7 @@ export const DeudorSolidario: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={4.7}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
                 onClick={() => {}}
@@ -192,7 +185,6 @@ export const DeudorSolidario: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Dirección Notificación"
                 value={'Cra 34 #213-201'}
                 size="small"
@@ -202,7 +194,6 @@ export const DeudorSolidario: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Ciudad"
                 value={'Medellín'}
                 size="small"
@@ -212,7 +203,6 @@ export const DeudorSolidario: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Teléfono Contacto"
                 value={'3214923232'}
                 size="small"
