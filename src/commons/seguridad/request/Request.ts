@@ -42,7 +42,7 @@ export const consultar_historico_restringido = async (
 };
 // consultar datos de una persona por id
 export const consultar_datos_persona = async (
-  id: number | undefined
+  id: number | undefined | null
 ): Promise<DataPersonas> => {
   const { data } = await api.get<ResponseServer<DataPersonas>>(
     `personas/get-by-id/${id ?? 0}/`

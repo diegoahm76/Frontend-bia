@@ -208,9 +208,9 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         }
     };
     // trae datos del representante legal
-    const get_datos_representante_legal = async (id: number | undefined): Promise<void> => {
+    const get_datos_representante_legal = async (id: number | undefined | null): Promise<void> => {
         try {
-            const id_persona: number | undefined = id;
+            const id_persona: number | undefined | null = id;
             const response = await consultar_datos_persona(id_persona);
             set_datos_representante(response)
             console.log("Datos ", response)
@@ -249,7 +249,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
 
             //
             if (response?.representante_legal !== undefined) {
-                const id: number | undefined = response?.representante_legal
+                const id: number | undefined | null = response?.representante_legal
                 if (id !== 0) {
                     void get_datos_representante_legal(id)
                 }
