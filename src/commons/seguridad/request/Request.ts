@@ -1,7 +1,9 @@
 import { api } from '../../../api/axios';
 import type {
+  ClaseTercero,
   DataPersonas,
   HistoricoDatosRestringidos,
+  InfoPersona,
   ResponseServer
 } from '../../../interfaces/globalModels';
 
@@ -46,3 +48,30 @@ export const consultar_datos_persona = async (
   );
   return data.data;
 };
+// consultar datos de una persona por id
+export const consultar_datos_persona_basicos = async (
+  tipo_doc: string, 
+  num_doc: string
+): Promise<InfoPersona> => {
+  const { data } = await api.get<ResponseServer<InfoPersona>>(
+    `personas/get-personas-by-document/${num_doc}/${tipo_doc}`
+  );
+  return data.data;
+};
+// datos de clasificación cormacarena 
+export const consultar_clase_tercero = async (
+): Promise<ClaseTercero[]> => {
+  const { data } = await api.get<ResponseServer<ClaseTercero[]>>(
+    `listas/clase-tercero/`
+  );
+  return data.data;
+};
+// datos de clasificación cormacarena por persona
+export const consultar_clase_tercero_persona = async (
+  id: number | undefined
+  ): Promise<ClaseTercero[]> => {
+    const { data } = await api.get<ResponseServer<ClaseTercero[]>>(
+      `personas/get-clases-tercero-persona/${id ?? 0}/`
+    );
+    return data.data;
+  };

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import type { InfoPersona } from '../../../interfaces/globalModels';
 import {
+  Box,
   Button,
   CircularProgress,
   Grid,
@@ -218,12 +219,9 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
           <Title title="ACTUALIZACIÓN DE DATOS RESTRINGIDOS" />
           <BuscadorPersona onResult={on_result} />
           {persona?.tipo_persona === 'N' && (
-            <form
-              onSubmit={() => {
-                void handleSubmit(on_submit_persona);
-              }}
-              noValidate
-              autoComplete="off"
+            <Box component="form"
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onSubmit={handleSubmit(on_submit_persona)}
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -461,15 +459,12 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                   </Stack>
                 </Grid>
               </Grid>
-            </form>
+            </Box>
           )}
           {persona?.tipo_persona === 'J' && (
-            <form
-              onSubmit={() => {
-                void handleSubmit(on_submit_persona_juridica);
-              }}
-              noValidate
-              autoComplete="off"
+             <Box component="form"
+             // eslint-disable-next-line @typescript-eslint/no-misused-promises
+             onSubmit={handleSubmit(on_submit_persona_juridica)}
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -725,7 +720,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                   </Stack>
                 </Grid>
               </Grid>
-            </form>
+            </Box>
           )}
         </Grid>
         <DialogHistorialDatosRestringidos

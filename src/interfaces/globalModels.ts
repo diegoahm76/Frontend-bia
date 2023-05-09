@@ -278,7 +278,7 @@ export interface DataPersonas {
   acepta_tratamiento_datos:                 boolean;
   cod_naturaleza_empresa:                   string;
   direccion_notificacion_referencia:        string;
-  fecha_cambio_representante_legal:         Date;
+  fecha_cambio_representante_legal:         string;
   fecha_inicio_cargo_rep_legal:             string;
   fecha_inicio_cargo_actual:                Date;
   fecha_a_finalizar_cargo_actual:           string;
@@ -298,4 +298,8 @@ export interface DataPersonas {
   cod_departamento_residencia: string;
   cod_departamento_notificacion: string;
   cod_departamento_laboral: string;
+}
+export interface ClaseTercero {
+  value: number;
+  label: string;
 }
