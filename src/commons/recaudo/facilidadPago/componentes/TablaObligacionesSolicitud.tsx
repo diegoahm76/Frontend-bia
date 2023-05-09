@@ -1,11 +1,30 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { useSelector } from 'react-redux';
+
+interface RootState {
+  obligaciones: {
+    obligaciones: ObligacionesState[];
+  }
+}
+
+interface ObligacionesState {
+  id: number;
+  nombreObligacion: string;
+  fechaInicio: string;
+  expediente: string;
+  nroResolucion: string;
+  valorCapital: number;
+  valorIntereses: number;
+  diasMora: number;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaObligacionesSolicitud: React.FC = () => {
+  const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
 
-  const fac_pagos = [
+  /* const fac_pagos = [
     {
       id: 1,
       nombreObligacion: 'Permiso 1',
@@ -15,7 +34,6 @@ export const TablaObligacionesSolicitud: React.FC = () => {
       valorCapital: 120000000,
       valorIntereses: 35000000,
       diasMora: 390,
-      valorAbonado: 21000000,
     },
     {
       id: 2,
@@ -26,9 +44,8 @@ export const TablaObligacionesSolicitud: React.FC = () => {
       valorCapital: 190700000,
       valorIntereses: 45000000,
       diasMora: 180,
-      valorAbonado: 76000000,
     },
-  ];
+  ]; */
 
   const columns: GridColDef[] = [
     {
@@ -101,16 +118,6 @@ export const TablaObligacionesSolicitud: React.FC = () => {
         </div>
       ),
     },
-    {
-      field: 'valorAbonado',
-      headerName: 'Valor Abonado',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
   ];
 
   return (
@@ -132,7 +139,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={fac_pagos}
+                rows={obligaciones}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}

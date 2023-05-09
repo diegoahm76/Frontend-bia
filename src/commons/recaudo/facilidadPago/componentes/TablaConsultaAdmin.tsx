@@ -4,7 +4,6 @@ import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { TablaObligacionesUsuario } from './TablaObligacionesUsuario';
 
 interface event {
@@ -24,7 +23,29 @@ export const TablaConsultaAdmin: React.FC = () => {
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
   const [obligaciones, set_obligaciones] =useState(false);
-  const navigate = useNavigate();
+
+  const obligaciones_tabla = [
+    {
+      id: 1,
+      nombreObligacion: 'Permiso 1',
+      fecha_inicio: '01/01/2015',
+      id_expediente: 378765,
+      nroResolucion: '378765-143',
+      monto_inicial: 120000000,
+      valor_intereses: 35000000,
+      dias_mora: 390,
+    },
+    {
+      id: 2,
+      nombreObligacion: 'Concesion Aguas',
+      fecha_inicio: '01/04/2015',
+      id_expediente: 3342765,
+      nroResolucion: '3342765-4546',
+      monto_inicial: 190700000,
+      valor_intereses: 45000000,
+      dias_mora: 180,
+    },
+  ];
 
   const contribuyente = [
     {
@@ -246,24 +267,7 @@ export const TablaConsultaAdmin: React.FC = () => {
               autoComplete="off"
             >
                 <p>Las obligaciones pendientes por pago son las siguientes:</p>
-                <TablaObligacionesUsuario />
-                <Stack
-                  direction="row"
-                  justifyContent="right"
-                  spacing={2}
-                  sx={{ mb: '20px' }}
-                >
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    sx={{ marginTop: '30px' }}
-                    onClick={() => {
-                      navigate('../registro')
-                    }}
-                  >
-                  Crear Facilidad de Pago
-                  </Button>
-                </Stack>
+                <TablaObligacionesUsuario obligaciones={obligaciones_tabla} />
             </Box>
           </Grid>
         </Grid>

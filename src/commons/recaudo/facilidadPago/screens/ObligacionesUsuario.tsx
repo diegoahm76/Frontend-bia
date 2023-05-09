@@ -1,12 +1,37 @@
 import { Title } from '../../../../components/Title';
 import { TablaObligacionesUsuario } from '../componentes/TablaObligacionesUsuario';
-import { Grid, Box, TextField, Button, Stack } from "@mui/material";
-import { Add } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { Grid, Box, TextField } from "@mui/material";
+import { get_obligaciones_usuario } from '../services/services';
+import { useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ObligacionesUsuario: React.FC = () => {
-  const navigate = useNavigate();
+  const obligaciones = [
+    {
+      id: 1,
+      nombreObligacion: 'Permiso 1',
+      fecha_inicio: '01/01/2015',
+      id_expediente: 378765,
+      nroResolucion: '378765-143',
+      monto_inicial: 120000000,
+      valor_intereses: 35000000,
+      dias_mora: 390,
+    },
+    {
+      id: 2,
+      nombreObligacion: 'Concesion Aguas',
+      fecha_inicio: '01/04/2015',
+      id_expediente: 3342765,
+      nroResolucion: '3342765-4546',
+      monto_inicial: 190700000,
+      valor_intereses: 45000000,
+      dias_mora: 180,
+    },
+  ];
+
+  useEffect(() => {
+    void get_obligaciones_usuario()
+  }, [])
 
   return (
     <>
@@ -36,7 +61,7 @@ export const ObligacionesUsuario: React.FC = () => {
                   label="Nombres"
                   size="small"
                   fullWidth
-                  value={'Marcela Cardenas'}
+                  value={"nombre_completo"}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -45,7 +70,7 @@ export const ObligacionesUsuario: React.FC = () => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={'4394204323'}
+                  value={"numero_identificacion"}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -54,7 +79,7 @@ export const ObligacionesUsuario: React.FC = () => {
                   label="Correo Electrónico"
                   size="small"
                   fullWidth
-                  value={'marce@gmail.com'}
+                  value={"email"}
                 />
               </Grid>
             </Grid>
@@ -80,25 +105,7 @@ export const ObligacionesUsuario: React.FC = () => {
             autoComplete="off"
           >
               <p>Sus obligaciones pendientes por pago son las siguientes:</p>
-              <TablaObligacionesUsuario />
-              <Stack
-                direction="row"
-                justifyContent="right"
-                spacing={2}
-                sx={{ mb: '20px' }}
-              >
-                <Button
-                  color='primary'
-                  variant='contained'
-                  startIcon={<Add />}
-                  sx={{ marginTop: '30px' }}
-                  onClick={() => {
-                    navigate('registro')
-                  }}
-                >
-                Crear Facilidad de Pago
-                </Button>
-              </Stack>
+              <TablaObligacionesUsuario obligaciones={obligaciones} />
           </Box>
         </Grid>
       </Grid>

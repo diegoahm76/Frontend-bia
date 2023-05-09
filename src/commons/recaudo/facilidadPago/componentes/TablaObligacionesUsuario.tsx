@@ -1,38 +1,53 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox, TextField, Stack } from '@mui/material';
+import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox, TextField, Stack, Button } from '@mui/material';
+import { Add } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { obligaciones_seleccionadas } from '../store/slices/FacilidadPagoSlices';
+import { useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+
+interface Obligaciones {
+  obligaciones: ObligacionesState[];
+}
+
+interface ObligacionesState {
+  id: number;
+  nombreObligacion: string; // este parametro no esta contemplado en back
+  fecha_inicio: string;
+  id_expediente: number;
+  nroResolucion: string; // este parametro no esta contemplado en back
+  monto_inicial: number;
+  valor_intereses: number;
+  dias_mora: number;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuario: React.FC = () => {
+export const TablaObligacionesUsuario: React.FC<Obligaciones> = (props: Obligaciones) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
-  const obligaciones = [
-    {
-      id: 1,
-      nombreObligacion: 'Permiso 1',
-      fechaInicio: '01/01/2015',
-      expediente: '378765',
-      nroResolucion: '378765-143',
-      valorCapital: 120000000,
-      valorIntereses: 35000000,
-      diasMora: 390,
-    },
-    {
-      id: 2,
-      nombreObligacion: 'Concesion Aguas',
-      fechaInicio: '01/04/2015',
-      expediente: '3342765',
-      nroResolucion: '3342765-4546',
-      valorCapital: 190700000,
-      valorIntereses: 45000000,
-      diasMora: 180,
-    },
-  ];
+  const handle_submit = async () => {
+    const arr_registro = []
+    for(let i=0; i<props.obligaciones.length; i++){
+      for(let j=0; j<selected.length; j++){
+        if(props.obligaciones[i].nombreObligacion === selected[j]){
+          arr_registro.push(props.obligaciones[i])
+        }
+      }
+    }
+    try {
+      dispatch(obligaciones_seleccionadas(arr_registro));
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };
 
   const columns: GridColDef[] = [
     {
@@ -60,7 +75,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'fechaInicio',
+      field: 'fecha_inicio',
       headerName: 'Fecha Inicio',
       width: 150,
       renderCell: (params) => (
@@ -70,7 +85,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'expediente',
+      field: 'id_expediente',
       headerName: 'Expediente',
       width: 150,
       renderCell: (params) => (
@@ -90,7 +105,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'valorCapital',
+      field: 'monto_inicial',
       headerName: 'Valor Capital',
       width: 150,
       renderCell: (params) => (
@@ -100,7 +115,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'valorIntereses',
+      field: 'valor_intereses',
       headerName: 'Valor Intereses',
       width: 150,
       renderCell: (params) => (
@@ -110,7 +125,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'diasMora',
+      field: 'dias_mora',
       headerName: 'Días Mora',
       width: 150,
       renderCell: (params) => (
@@ -175,11 +190,11 @@ export const TablaObligacionesUsuario: React.FC = () => {
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    for(let i=0; i < obligaciones.length; i++){
+    for(let i=0; i < props.obligaciones.length; i++){
       for(let j=0; j < selected.length; j++){
-        if(obligaciones[i].nombreObligacion === selected[j]){
-          sub_capital = sub_capital + obligaciones[i].valorCapital
-          sub_intereses = sub_intereses + obligaciones[i].valorIntereses
+        if(props.obligaciones[i].nombreObligacion === selected[j]){
+          sub_capital = sub_capital + props.obligaciones[i].monto_inicial
+          sub_intereses = sub_intereses + props.obligaciones[i].valor_intereses
           set_capital(sub_capital)
           set_intereses(sub_intereses)
         }
@@ -211,7 +226,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={obligaciones}
+                rows={props.obligaciones}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
@@ -249,6 +264,25 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 value={total}
               />
             </Grid>
+        </Stack>
+        <Stack
+          direction="row"
+          justifyContent="right"
+          spacing={2}
+          sx={{ mb: '20px' }}
+        >
+          <Button
+            color='primary'
+            variant='contained'
+            startIcon={<Add />}
+            sx={{ marginTop: '30px' }}
+            onClick={() => {
+              navigate('../registro')
+              void handle_submit()
+            }}
+          >
+          Crear Facilidad de Pago
+          </Button>
         </Stack>
         </Grid>
       </Grid>
