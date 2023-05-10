@@ -109,7 +109,7 @@ const CrearCvOtrosActivosForm = ({
 
   return (
     <Dialog
-      maxWidth="md"
+      maxWidth="xl"
       open={is_modal_active}
       onClose={handle_close_cv_other_is_active}
     >
@@ -246,7 +246,7 @@ const CrearCvOtrosActivosForm = ({
                 <Title title="" />
 
 
-                <Grid item xs={11} sm={3} >
+                <Grid item xs={11} md={12} >
                   <Controller
                     name="caracteristicas_fisicas"
                     control={control_other}
@@ -276,7 +276,7 @@ const CrearCvOtrosActivosForm = ({
                   />
                 </Grid>
 
-                <Grid item xs={11} sm={3} >
+                <Grid item xs={11} md={12} >
                   <Controller
                     name="especificaciones_tecnicas"
                     control={control_other}
@@ -306,7 +306,7 @@ const CrearCvOtrosActivosForm = ({
                   />
                 </Grid>
 
-                <Grid item xs={11} sm={3} >
+                <Grid item xs={11} md={12} >
                   <Controller
                     name="observaciones_adicionales"
                     control={control_other}
@@ -335,6 +335,7 @@ const CrearCvOtrosActivosForm = ({
                     )}
                   />
                 </Grid>
+
 
 
 

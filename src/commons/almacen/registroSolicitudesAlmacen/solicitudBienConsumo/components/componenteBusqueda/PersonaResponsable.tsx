@@ -1,13 +1,23 @@
 import { useEffect, useState } from 'react';
 
 import { api } from '../../../../../../api/axios';
-import { type Persona } from "../../../../../../interfaces/globalModels";
+
 import { useForm } from 'react-hook-form';
 import { Grid } from '@mui/material';
-import { type ToastContent, toast } from 'react-toastify';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
+import { useSelector } from 'react-redux';
+import { type AuthSlice } from '../../../../../auth/interfaces';
 
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks/hooks';
+
+import { type IObjFuncionario } from '../../interfaces/solicitudBienConsumo';
+import { get_funcionario_document_service, get_funcionario_service, get_person_id_service } from '../../store/solicitudBienConsumoThunks';
+import { set_current_funcionario, set_funcionarios } from '../../store/slices/indexSolicitudBienesConsumo';
+
+interface IProps {
+    title?: string;
+}
 interface IList {
     value: string | number;
     label: string | number;
@@ -18,12 +28,21 @@ const initial_options: IList[] = [
         value: '',
     },
 ];
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const PersonaResponsable = () => {
 
-    const { control: control_persona, reset: reset_persona, getValues: get_values } = useForm<Persona>();
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
+const FuncionarioResponsable = ({
+    title
+
+}: IProps) => {
+
+    const dispatch = useAppDispatch();
+
+    const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+    const { control: control_persona, reset: reset_persona, getValues: get_values } = useForm<IObjFuncionario>();
+    const { funcionarios } = useAppSelector((state) => state.solic_consumo);
+
     const [document_type, set_document_type] = useState<IList[]>(initial_options);
-    const [personas, set_personas] = useState<Persona[]>([]);
+
 
     const columns_personas: GridColDef[] = [
         { field: 'id_persona', headerName: 'ID', width: 20 },
@@ -49,8 +68,8 @@ const PersonaResponsable = () => {
         },
 
         {
-            field: 'razon_social',
-            headerName: 'Razón social',
+            field: 'id_unidad_organizacional_actual',
+            headerName: 'unidad',
             width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -58,16 +77,7 @@ const PersonaResponsable = () => {
                 </div>
             ),
         },
-        {
-            field: 'nombre_comercial',
-            headerName: 'Nombre comercial',
-            width: 200,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-        }
+
     ];
 
     const text_choise_adapter: any = (dataArray: string[]) => {
@@ -95,78 +105,35 @@ const PersonaResponsable = () => {
             }
         };
         void get_selects_options();
+        void dispatch(get_person_id_service(userinfo.id_persona))
+
     }, []);
+
+    // useEffect(() => {
+    //     reset_persona(planting_person)
+    // }, [planting_person]);
+
+    // useEffect(() => {
+    //     if (current_planting.id_persona_siembra !== planting_person.id_persona) {
+    //         void dispatch(get_person_id_service(Number(current_planting.id_persona_siembra) ?? 0))
+    //     }
+    // }, [current_planting]);
 
     const search_person: any = (async () => {
         const document = get_values("numero_documento") ?? ""
         const type = get_values("tipo_documento") ?? ""
-        try {
-            const { data: persona_data } = await api.get(
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                `personas/get-personas-by-document/${type}/${document}/`
-            );
-            if ("data" in persona_data) {
-                reset_persona(persona_data.data)
-                control_success("Se selecciono la persona ")
-
-            } else {
-                control_error(persona_data.detail)
-            }
-        } catch (err) {
-            console.log(err);
-        }
+        void dispatch(get_funcionario_document_service(type, document, id_unidad_para_la_que_solicita))
     })
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-        toast.error(message, {
-            position: 'bottom-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light'
-        });
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const control_success = (message: ToastContent) =>
-        toast.success(message, {
-            position: 'bottom-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: 'light'
-        });
-
-    const get_personas: any = (async () => {
+    const get_funcionarios: any = (async () => {
         const document = get_values("numero_documento") ?? ""
         const type = get_values("tipo_documento") ?? ""
-        const comercial_name = get_values("nombre_comercial") ?? ""
         const primer_nombre = get_values("primer_nombre") ?? ""
         const primer_apellido = get_values("primer_apellido") ?? ""
-        const razon_social = get_values("razon_social") ?? ""
+        const id_unidad_organizacional_actual = get_values("id_unidad_organizacional_actual") ?? ""
+        const id_unidad_para_la_que_solicita = get_values("id_unidad_para_la_que_solicita") ?? ""
 
-        try {
-            const { data: persona_data } = await api.get(
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                `personas/get-personas-filters/?tipo_documento=${type}&numero_documento=${document}&primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}&razon_social=${razon_social}&nombre_comercial=${comercial_name}`
-            );
-            if ("data" in persona_data) {
-                if (persona_data.data.length > 0) {
-                    set_personas(persona_data.data)
-                    control_success("Se encontraron personas")
-                } else {
-                    control_error("No se encontraron personas")
-                    set_personas([])
-                }
-            }
-        } catch (err) {
-            console.log(err);
-        }
+        void dispatch(get_funcionario_service(type, document, primer_nombre, primer_apellido, id_unidad_organizacional_actual, id_unidad_para_la_que_solicita))
     })
 
 
@@ -179,17 +146,19 @@ const PersonaResponsable = () => {
                 borderRadius={2}
             >
                 <BuscarModelo
+
+                    set_current_model={set_current_funcionario}
                     row_id={"id_persona"}
                     columns_model={columns_personas}
-                    models={personas}
-                    get_filters_models={get_personas}
-                    set_models={set_personas}
+                    models={funcionarios}
+                    get_filters_models={get_funcionarios}
+                    set_models={set_funcionarios}
                     reset_values={reset_persona}
                     button_submit_label='BUSCAR'
                     form_inputs={[
                         {
                             datum_type: "title",
-                            title_label: "Seleccione persona"
+                            title_label: title ?? "hh"
 
                         },
                         {
@@ -224,7 +193,7 @@ const PersonaResponsable = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 5,
+                            md: 4,
                             control_form: control_persona,
                             control_name: "nombre_completo",
                             default_value: "",
@@ -326,4 +295,4 @@ const PersonaResponsable = () => {
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default PersonaResponsable;
+export default FuncionarioResponsable;

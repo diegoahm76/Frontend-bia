@@ -3,8 +3,8 @@ import { Chip, Grid } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
-import { set_current_planting,  set_plantings } from '../store/slice/materialvegetalSlice';
-import { get_nurseries_service, get_plantings_service,  get_vegetal_materials_service } from '../store/thunks/materialvegetalThunks';
+import { set_current_planting, set_plantings } from '../store/slice/materialvegetalSlice';
+import { get_nurseries_service, get_plantings_service, get_vegetal_materials_service } from '../store/thunks/materialvegetalThunks';
 
 
 interface IProps {
@@ -17,8 +17,8 @@ const SeleccionarSiembra = ({
   get_values
 }: IProps) => {
 
-  const dispatch= useAppDispatch()
-  const {  current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery} = useAppSelector((state) => state.material_vegetal);
+  const dispatch = useAppDispatch()
+  const { current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery } = useAppSelector((state) => state.material_vegetal);
   const [file, set_file] = useState<any>(null);
 
   const columns_siembras: GridColDef[] = [
@@ -75,12 +75,14 @@ const SeleccionarSiembra = ({
     void dispatch(get_vegetal_materials_service());
   }, []);
 
-  useEffect(() => {console.log(file)
+  useEffect(() => {
+    console.log(file)
     dispatch(set_current_planting({ ...current_planting, id_vivero: get_values("id_vivero"), id_bien_sembrado: get_values("id_bien_sembrado"), cama_germinacion: get_values("cama_germinacion"), distancia_entre_semillas: get_values("distancia_entre_semillas"), observaciones: get_values("observaciones"), ruta_archivo_soporte: file }))
   }, [file]);
 
   const get_siembras: any = (async () => {
     void dispatch(get_plantings_service());
+    console.log(get_siembras)
   })
 
   return (

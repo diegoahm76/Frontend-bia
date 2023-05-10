@@ -3,8 +3,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Grid, } from '@mui/material';
 // import { Title } from '../../../../../components/Title';
 import PersonaResponsable from './componenteBusqueda/PersonaResponsable';
-
+import CheckIcon from '@mui/icons-material/Check';
 import SeleccionarSolicitudVivero from "./componenteBusqueda/SeleccionarSolicitudVivero";
+import FormButton from "../../../../../components/partials/form/FormButton";
 
 
 
@@ -30,7 +31,17 @@ const SolicitudConsumoViveroDialog = () => {
         >
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitudVivero />
-                <PersonaResponsable />
+                <PersonaResponsable
+                    title={"Funcionario responsable"} />
+            </Grid>
+            <Grid item xs={12} md={4}>
+                <FormButton
+                    variant_button="contained"
+                    on_click_function={null}
+                    icon_class={<CheckIcon />}
+                    label={"Confirmar creación de solicitud"}
+                    type_button="button"
+                />
             </Grid>
         </Grid>
 

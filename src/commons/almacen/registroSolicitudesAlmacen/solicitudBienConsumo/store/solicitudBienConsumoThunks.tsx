@@ -8,10 +8,11 @@ import { type NavigateFunction } from 'react-router-dom';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
 // import { log } from 'console';
-import { set_info_solicitud, get_unidad_organizacional } from './slices/indexSolicitudBienesConsumo';
+import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, } from './slices/indexSolicitudBienesConsumo';
+
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+export const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
     toast.error(message, {
         position: 'bottom-right',
         autoClose: 3000,
@@ -35,21 +36,37 @@ const control_success = (message: ToastContent) =>
         progress: undefined,
         theme: 'light'
     });
-// obtener ultimo id bienes consumo
-export const get_solicitud_consumo_id = (): any => {
+
+
+
+
+
+
+
+
+
+// obtener numero de solicitud
+export const get_num_solicitud = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get('almacen/solicitudes/get-nro-documento-solicitudes-bienes-consumo');
-            console.log(data)
-            dispatch(set_info_solicitud(data.data));
+            const { data } = await api.get('almacen/solicitudes/get-nro-documento-solicitudes-bienes-consumo/');
+
+            if (data.success) {
+                dispatch(set_numero_solicitud(data["Número de solicitud"]))
+            }
             return data;
         } catch (error: any) {
-            console.log('solicitud');
-            control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };
 };
+
+
+
+
+
+
+
 
 // crear consumo
 export const crear_solicitud_bien_consumo: any = (
@@ -60,8 +77,8 @@ export const crear_solicitud_bien_consumo: any = (
         try {
             const { data } = await api
                 .post("almacen/solicitudes/crear-solicitud-bienes-de-consumo/", solic_consumo);
-            dispatch(get_solicitud_consumo_id());
-            control_success('El vivero se agrego correctamente');
+            //    dispatch(get_solicitud_consumo_id());
+            control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
@@ -86,4 +103,212 @@ export const get_uni_organizacional = (): any => {
         }
     };
 };
+
+
+// obtener medidas
+export const get_medida_service = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('almacen/unidades-medida/get-list/');
+            console.log("medida")
+            console.log(data)
+            dispatch(set_unidades_medida(data));
+            return data;
+        } catch (error: any) {
+            console.log('get_medida_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// obtener bienes de consumo 
+
+export const get_bienes_consumo = (id: string | null, nombre: string | null): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+
+            const { data } = await api.get(`almacen/solicitudes/filtro-bienes-solicitud/?nombre=${nombre ?? ""}&codigo_bien=${id ?? ""}`);
+            console.log(data)
+            if ('detail' in data) {
+                dispatch(set_bienes(data.detail));
+
+                if (data.detail.length > 0) {
+                    control_success("Se encontrarón bienes")
+                } else {
+                    control_error("No se encontrarón bienes")
+                }
+            } else {
+                control_error("No se encontrarón bienes")
+            }
+            return data;
+        } catch (error: any) {
+            console.log('data');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// obtener bienes de consumo 
+
+export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+
+            const { data } = await api.get(`almacen/solicitudes/get-bienes-solicitud/?codigo_bien=${codigo ?? ""}`);
+            console.log(data)
+            if ('detail' in data) {
+                dispatch(set_current_bien(data.detail[0]))
+                if (data.detail.length > 0) {
+                    control_success("Se encontró bien")
+                } else {
+                    control_error("No se encontrón bien")
+                }
+            } else {
+                control_error("No se encontrón bien")
+
+            }
+
+            return data;
+        } catch (error: any) {
+            console.log('data');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
+
+export const get_solicitud_service = (id: number | string): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/solicitudes/get-solicitud-by-id/${id ?? ""}/`);
+            console.log('Solicitudes recuperadas:', data);
+            dispatch(set_current_solicitud(data.detail.info_solicitud));
+            dispatch(set_bienes_solicitud(data.detail.info_items));
+            return data;
+        } catch (error: any) {
+            console.log('get_solicitud_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+export const get_solicitudes_id_persona_service = (id: number | string): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/solicitudes/get-solicitudes-no-aprobadas/${id ?? ""}`);
+            console.log('Solicitudes recuperadas:', data);
+            dispatch(set_solicitudes(data.data))
+            if ('data' in data) {
+                if (data.data.length > 0) {
+                    control_success("Se encontrarón solicitudes")
+                } else {
+                    control_error("No se encontrarón solicitudes")
+                }
+            } else {
+                control_error("No se encontrarón solicitudes")
+            }
+            return data;
+        } catch (error: any) {
+            console.log('get_solicitud_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// obtener persona por iddocumento
+export const get_person_id_service = (id: number,): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`personas/get-by-id/${id}/`);
+            console.log(data)
+            if ("data" in data) {
+                dispatch(set_persona_solicita({ id_persona: data.data.id_persona, unidad_organizacional: data.data.nombre_unidad_organizacional_actual, nombre: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
+
+            } else {
+                control_error(data.detail)
+            }
+            return data;
+        } catch (error: any) {
+            console.log('get_person_document_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// obtener persona por documento
+export const get_funcionario_document_service = (
+    type: string,
+    document: number,
+    id_unidad_para_la_que_solicita: string
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/solicitudes/search-funcionario/?tipo_documento=${type ?? ""}&numero_documento=${document ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? ""}`);
+            if ("data" in data) {
+                if (data.data.length > 0) {
+                    dispatch(set_current_funcionario(data.data))
+                    control_success("Se selecciono la persona ")
+                } else {
+                    control_error("No se encontro la persona")
+                }
+            } else {
+                control_error(data.detail)
+            }
+            return data;
+        } catch (error: any) {
+            console.log('get_person_document_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// obtener funcionario por filtro
+
+export const get_funcionario_service = (
+    type: string | null,
+    document: number | null,
+    primer_nombre: string | null,
+    primer_apellido: string | null,
+    id_unidad_organizacional_actual: string | null,
+    id_unidad_para_la_que_solicita: string | null,
+
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(
+
+
+                `almacen/solicitudes/search-funcionario-filtros/?tipo_documento=${type ?? ""}&numero_documento=${document ?? ""}&primer_nombre=${primer_nombre ?? ""}&primer_apellido=${primer_apellido ?? ""}&id_unidad_organizacional_actual=${id_unidad_organizacional_actual ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? "816"}`
+
+            );
+            dispatch(set_current_funcionario(data.data));
+            if (data.data.length > 0) {
+                control_success("Se selecciono persona")
+            } else {
+                control_error("No se encontro persona")
+            }
+            return data;
+        } catch (error: any) {
+            console.log('get_funcionario_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
 

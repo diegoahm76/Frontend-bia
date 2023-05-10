@@ -1,14 +1,14 @@
-import type { Dayjs } from 'dayjs';
-import type { Dispatch, SetStateAction } from 'react';
-import type { IList } from '../../../interfaces/globalModels';
+import type { Dayjs } from "dayjs";
+import type { Dispatch, SetStateAction } from "react";
+import type { IList } from "../../../interfaces/globalModels";
 import type {
   FieldErrors,
   FieldValues,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetValue,
-  UseFormWatch
-} from 'react-hook-form';
+  UseFormWatch,
+} from "react-hook-form";
 
 export interface UserRol {
   id_rol: number;
@@ -33,15 +33,16 @@ export interface IUserInfo {
   permisos: Menu[];
   representante_legal: any[];
   user_sesion: string;
-  status: 'checking' | 'not-authenticated' | 'authenticated';
+  status: "checking" | "not-authenticated" | "authenticated";
   error_message: string;
   open_dialog: boolean;
-  entorno: 'C' | 'L';
+  entorno: "C" | "L";
   dialog_representante: boolean;
   is_blocked: boolean;
 }
 
 export interface UserData {
+  nombre_unidad_organizacional: string | null;
   email: string;
   nombre_de_usuario: string;
   tokens: Tokens;
@@ -93,59 +94,59 @@ export interface IObjectSend {
 }
 
 export type keys_object =
-  | 'acepta_notificacion_email'
-  | 'acepta_notificacion_sms'
-  | 'acepta_tratamiento_datos'
-  | 'cod_municipio_expedicion_id'
-  | 'cod_municipio_laboral_nal'
-  | 'cod_municipio_notificacion_nal'
-  | 'confirmar_celular'
-  | 'confirmar_email'
-  | 'departamento_expedicion'
-  | 'departamento_nacimiento'
-  | 'departamento_residencia'
-  | 'digito_verificacion'
-  | 'direccion_laboral'
-  | 'direccion_notificaciones'
-  | 'direccion_residencia_ref'
-  | 'direccion_residencia'
-  | 'dpto_notifiacion'
-  | 'email_empresarial'
-  | 'email'
-  | 'estado_civil'
-  | 'fecha_nacimiento'
-  | 'municipio_residencia'
-  | 'nombre_comercial'
-  | 'nombre_de_usuario'
-  | 'numero_documento'
-  | 'pais_nacimiento'
-  | 'pais_notificacion'
-  | 'pais_residencia'
-  | 'password'
-  | 'primer_apellido'
-  | 'primer_nombre'
-  | 'razon_social'
-  | 'representante_legal'
-  | 'require_nombre_comercial'
-  | 'segundo_apellido'
-  | 'segundo_nombre'
-  | 'sexo'
-  | 'telefono_celular_empresa'
-  | 'telefono_celular'
-  | 'telefono_empresa_2'
-  | 'telefono_fijo_residencial'
-  | 'tipo_documento'
-  | 'tipo_persona'
-  | 'cod_naturaleza_empresa'
-  | 'cod_pais_nacionalidad_empresa'
-  | 'tipo_documento_rep'
-  | 'numero_documento_rep'
-  | 'nombre_rep'
-  | 'celular_rep'
-  | 'direccion_rep'
-  | 'ciudad_rep'
-  | 'email_rep'
-  | 'ubicacion_georeferenciada';
+  | "acepta_notificacion_email"
+  | "acepta_notificacion_sms"
+  | "acepta_tratamiento_datos"
+  | "cod_municipio_expedicion_id"
+  | "cod_municipio_laboral_nal"
+  | "cod_municipio_notificacion_nal"
+  | "confirmar_celular"
+  | "confirmar_email"
+  | "departamento_expedicion"
+  | "departamento_nacimiento"
+  | "departamento_residencia"
+  | "digito_verificacion"
+  | "direccion_laboral"
+  | "direccion_notificaciones"
+  | "direccion_residencia_ref"
+  | "direccion_residencia"
+  | "dpto_notifiacion"
+  | "email_empresarial"
+  | "email"
+  | "estado_civil"
+  | "fecha_nacimiento"
+  | "municipio_residencia"
+  | "nombre_comercial"
+  | "nombre_de_usuario"
+  | "numero_documento"
+  | "pais_nacimiento"
+  | "pais_notificacion"
+  | "pais_residencia"
+  | "password"
+  | "primer_apellido"
+  | "primer_nombre"
+  | "razon_social"
+  | "representante_legal"
+  | "require_nombre_comercial"
+  | "segundo_apellido"
+  | "segundo_nombre"
+  | "sexo"
+  | "telefono_celular_empresa"
+  | "telefono_celular"
+  | "telefono_empresa_2"
+  | "telefono_fijo_residencial"
+  | "tipo_documento"
+  | "tipo_persona"
+  | "cod_naturaleza_empresa"
+  | "cod_pais_nacionalidad_empresa"
+  | "tipo_documento_rep"
+  | "numero_documento_rep"
+  | "nombre_rep"
+  | "celular_rep"
+  | "direccion_rep"
+  | "ciudad_rep"
+  | "email_rep"
+  | "ubicacion_georeferenciada";
 
 export interface DataRegistePortal {
   acepta_notificacion_email: boolean;

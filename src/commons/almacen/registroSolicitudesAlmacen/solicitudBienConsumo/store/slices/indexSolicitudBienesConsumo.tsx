@@ -1,77 +1,155 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type UnidadOrganizacional, type InfoSolicitud, type ItemSolicitudConsumible, type SolicitudConsumo, type FuncionarioResponsable, type AprobacionRechazo } from "../../interfaces/solicitudBienConsumo"
+import { type UnidadOrganizacional, type ISolicitudConsumo, type AprobacionRechazo, type UnidadesMedida, type IObjSolicitud, type IObjBienConsumo, type IObjFuncionario, type IObjBienesSolicitud, type IObjPersonaSolicita } from "../../interfaces/solicitudBienConsumo"
 
 
-const initial_state_infosolicitud = {
-    id_solicitud_consumibles: 0,
+const initial_state_current_solicitud: IObjSolicitud = {
+    id_solicitud_consumibles: null,
     es_solicitud_de_conservacion: false,
-    id_unidad_para_la_que_solicita: 0,
-    id_funcionario_responsable_unidad: 0,
+    id_unidad_para_la_que_solicita: null,
+    id_funcionario_responsable_unidad: null,
     motivo: "",
     observacion: "",
 
 }
+const initial_state_current_bien: IObjBienConsumo = {
+    id_bien: null,
+    nombre: "",
+    codigo_bien: ""
+}
+
+const initial_state_current_funcionario: IObjFuncionario = {
+    id_persona: null,
+    tipo_documento: "string | null",
+    numero_documento: null,
+    primer_nombre: "",
+    segundo_nombre: "",
+    primer_apellido: "",
+    segundo_apellido: "",
+    nombre_completo: "",
+    id_unidad_organizacional_actual: null,
+    nombre_unidad_organizacional_actual: "",
+}
+
+
 
 const initial_state_aprobacion_solicitud = {
     estado_aprobacion_responsable: "",
     justificacion_rechazo_responsable: "",
 }
 
-
-
-
-const initial_state: SolicitudConsumo = {
-    solicitud: initial_state_infosolicitud,
-    solicitud_bienes_consumo: [],
-    unidad_organizacional: [],
-    funcionario_responsable: [],
-    aprobacion_solicitud: initial_state_aprobacion_solicitud
-
+const initial_state_persona_solicita = {
+    id_persona: null,
+    nombre: "",
+    unidad_organizacional: "",
 }
+
+
+const initial_state: ISolicitudConsumo = {
+    current_solicitud: initial_state_current_solicitud,
+    solicitudes: [],
+    bienes_solicitud: [],
+    bienes: [],
+    current_bien: initial_state_current_bien,
+    funcionarios: [],
+    current_funcionario: initial_state_current_funcionario,
+    persona_solicita: initial_state_persona_solicita,
+    unidad_organizacional: [],
+    aprobacion_solicitud: initial_state_aprobacion_solicitud,
+    nro_solicitud: null,
+    unidades_medida: [],
+}
+
 
 export const solicitud_consumo_slice = createSlice({
     name: "solic_consumo",
     initialState: initial_state,
     reducers: {
-        set_info_solicitud: (
-            state: SolicitudConsumo,
-            action: PayloadAction<InfoSolicitud>
+        set_solicitudes: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjSolicitud[]>
         ) => {
-            state.solicitud = action.payload;
+            state.solicitudes = action.payload;
         },
 
-        item_solicitud: (
-            state: SolicitudConsumo,
-            action: PayloadAction<ItemSolicitudConsumible[]>
+        set_current_solicitud: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjSolicitud>
         ) => {
-            state.solicitud_bienes_consumo = action.payload;
+            state.current_solicitud = action.payload;
         },
+
+        set_bienes_solicitud: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjBienesSolicitud[]>
+        ) => {
+            state.bienes_solicitud = action.payload;
+        },
+
+        set_bienes: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjBienConsumo[]>
+        ) => {
+            state.bienes = action.payload;
+        },
+
+        set_current_bien: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjBienConsumo>
+        ) => {
+            state.current_bien = action.payload;
+        },
+
         get_unidad_organizacional: (
-            state: SolicitudConsumo,
+            state: ISolicitudConsumo,
             action: PayloadAction<UnidadOrganizacional[]>
         ) => {
             state.unidad_organizacional = action.payload;
         },
 
-        get_funcionario_responsable: (
-            state: SolicitudConsumo,
-            action: PayloadAction<FuncionarioResponsable[]>
+        set_funcionarios: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjFuncionario[]>
         ) => {
-            state.funcionario_responsable = action.payload;
+            state.funcionarios = action.payload;
+        },
+
+        set_current_funcionario: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjFuncionario>
+        ) => {
+            state.current_funcionario = action.payload;
         },
 
         get_aprobacion_solicitud: (
-            state: SolicitudConsumo,
+            state: ISolicitudConsumo,
             action: PayloadAction<AprobacionRechazo>
         ) => {
             state.aprobacion_solicitud = action.payload;
         },
 
+        set_numero_solicitud: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<number>
+        ) => {
+            state.nro_solicitud = action.payload;
+        },
 
+        set_unidades_medida: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<UnidadesMedida[]>
+        ) => {
 
+            state.unidades_medida = action.payload;
+        },
+        set_persona_solicita: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjPersonaSolicita>
+        ) => {
+            state.persona_solicita = action.payload;
+        },
 
     }
 })
 
-export const { set_info_solicitud, item_solicitud, get_unidad_organizacional, get_funcionario_responsable, get_aprobacion_solicitud } = solicitud_consumo_slice.actions;
+export const { set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, get_aprobacion_solicitud, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita } = solicitud_consumo_slice.actions;
