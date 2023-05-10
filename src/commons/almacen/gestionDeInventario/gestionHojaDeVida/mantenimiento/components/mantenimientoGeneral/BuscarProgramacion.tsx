@@ -9,26 +9,33 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { get_programmed_maintenance } from "./thunks/maintenanceThunks";
-
+import { get_cv_vehicle_service } from "../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks";
+import { get_cv_computer_service } from "../../../hojaDeVidaComputo/store/thunks/cvComputoThunks";
+import { get_cv_others_service } from "../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks";
 
 interface IProps {
-  is_modal_active: boolean;
-  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  title: string;
-  parent_details: any;
+  is_modal_active: boolean,
+  set_is_modal_active: Dispatch<SetStateAction<boolean>>,
+  title: string,
+  parent_details: any,
+  prog_details: any,
+  tipo_articulo: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const BuscarProrgamacionComponent = ({
+const BuscarProgramacionComponent = ({
   is_modal_active,
   set_is_modal_active,
   title,
-  parent_details
+  parent_details,
+  prog_details,
+  tipo_articulo
 }: IProps) => {
   const dispatch = useAppDispatch();
   const [codigo, set_codigo] = useState<string>("");
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
-  const [selected_product, set_selected_product] = useState(null);
+  const [selected_product, set_selected_product] = useState<any | null>(null);
+  const [articulo, set_articulo] = useState<any | null>(null);
   const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
   const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
 
@@ -53,12 +60,34 @@ const BuscarProrgamacionComponent = ({
   }
 
   const selected_product_grid: any = () => {
-    set_is_modal_active(false);
+    if(selected_product !== null){
+      if(tipo_articulo ==='vehículos'){
+        dispatch(get_cv_vehicle_service(selected_product.articulo)).then((response: any) => {
+          set_articulo(response.data);
+          parent_details(response.data);
+        })
+    }else if(tipo_articulo ==='computadores'){
+        dispatch(get_cv_computer_service(selected_product.articulo)).then((response: any) => {
+          set_articulo(response.data);
+          parent_details(response.data);
+        })
+    }else{
+        dispatch(get_cv_others_service(selected_product.articulo)).then((response: any) => {
+          set_articulo(response.data);
+          parent_details(response.data);
+        })
+    }
+      set_is_modal_active(false);
+    }
   }
 
   useEffect(() => {
-    parent_details(selected_product);
+    prog_details(selected_product);
   }, [selected_product]);
+
+  useEffect(() => {
+    parent_details(articulo);
+  }, [articulo, parent_details]);
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -184,4 +213,4 @@ const BuscarProrgamacionComponent = ({
   )
 }
 // eslint-disable-next-line no-restricted-syntax
-export default BuscarProrgamacionComponent;
+export default BuscarProgramacionComponent;
