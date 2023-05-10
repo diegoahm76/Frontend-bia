@@ -4,27 +4,22 @@ import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IObjItem, type IObjDistribucion, type IObjNursery } from "../interfaces/vivero";
-import { get_items_despacho, set_current_bien } from '../store/slice/viveroSlice';
-import { confirmar_items_distribuidos_service, save_items_distribuidos_service, get_items_despacho_service, get_items_distribuidos_service, get_nurseries_closing_service, control_error } from '../store/thunks/gestorViveroThunks';
+import { get_items_despacho, set_current_bien, get_items_distribuidos } from '../store/slice/viveroSlice';
+import { get_items_despacho_service, get_items_distribuidos_service, get_nurseries_closing_service, control_error } from '../store/thunks/gestorViveroThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import FormButton from '../../../../components/partials/form/FormButton';
-import CloseIcon from '@mui/icons-material/Close';
-import CheckIcon from '@mui/icons-material/Check';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarBienDistribuir = () => {
 
 
     const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjItem>();
-    const { control: control_distribucion, reset: reset_distribucion, handleSubmit: handle_submit_distribucion, getValues: get_values_distribucion } = useForm<IObjDistribucion>();
+    const { control: control_distribucion, reset: reset_distribucion, handleSubmit: handle_submit_distribucion} = useForm<IObjDistribucion>();
     const [aux_items_distribuidos, set_aux_items_distribuidos] = useState<IObjDistribucion[]>([]);
     const [action, set_action] = useState<string>("agregar");
-    const [restante, set_restante] = useState<number>(0);
-
+   
     const { current_despacho, items_despacho, items_distribuidos, nurseries, current_bien } = useAppSelector((state) => state.nursery);
     const dispatch = useAppDispatch();
 
@@ -206,6 +201,11 @@ const SeleccionarBienDistribuir = () => {
     }, [items_distribuidos]);
 
     useEffect(() => {
+        dispatch(get_items_distribuidos(aux_items_distribuidos))
+    }, [aux_items_distribuidos]);
+
+
+    useEffect(() => {
         reset_bien(current_bien)
         set_action("agregar")
     }, [current_bien]);
@@ -218,17 +218,22 @@ const SeleccionarBienDistribuir = () => {
         if(current_bien.id_bien !== null){
             if(get_values_bien("codigo_bien") === current_bien.codigo_bien){
                 const bien: IObjDistribucion | undefined = aux_items_distribuidos.find((p) => p.id_bien === current_bien.id_bien && p.id_vivero === data.id_vivero)
-                let asignada = 0
+                let asignada = (bien?.cantidad_asignada ?? 0)
                 aux_items_distribuidos.forEach((option) => {
                     if (option.id_bien === current_bien.id_bien) {
                         asignada = asignada + (option.cantidad_asignada ?? 0)
+                        console.log(asignada)
                     } 
                 })
                 if (action === "editar") {
+                    asignada = asignada - ((bien?.cantidad_asignada ?? 0)*2)
+                    console.log(asignada, bien?.cantidad_asignada )
+                } else{
                     asignada = asignada - (bien?.cantidad_asignada ?? 0)
+
                 }
 
-                if ((data.cantidad_asignada??0) <= ((current_bien.cantidad_restante ?? 0) - asignada))
+                if ((data.cantidad_asignada??0) <= Math.abs(((current_bien.cantidad_restante ?? 0) - asignada)))
                 {   
                     const vivero: IObjNursery | undefined = nurseries.find((p) => p.id_vivero === data.id_vivero);
                     const new_bien: IObjDistribucion = {
@@ -263,7 +268,7 @@ const SeleccionarBienDistribuir = () => {
                         }
                     }
                 } else{
-                control_error("La cantidad asignada debe ser maximo "+ String((current_bien.cantidad_restante ?? 0) - asignada))
+                control_error("La cantidad asignada debe ser maximo "+ String(Math.abs(((current_bien.cantidad_restante ?? 0) - asignada))))
                 }
             } else{
                 control_error("Codigo de bien no coincide con el seleccionado")
@@ -274,7 +279,10 @@ const SeleccionarBienDistribuir = () => {
     };
 
     const edit_bien_distribuido = (item: IObjDistribucion): void => {
-        reset_bien(items_despacho.find((p: IObjItem) => p.id_item_despacho_entrante === item.id_item_despacho_entrante))
+        const bien: IObjItem| undefined = items_despacho.find((p: IObjItem) => p.id_item_despacho_entrante === item.id_item_despacho_entrante)
+        if(bien !== undefined){
+            dispatch(set_current_bien(bien))
+        }
         reset_distribucion(aux_items_distribuidos.find((p) => p.id_bien === item.id_bien && p.id_vivero === item.id_vivero))
         set_action("editar")
 
@@ -290,20 +298,7 @@ const SeleccionarBienDistribuir = () => {
         set_aux_items_distribuidos(aux_items)
     };
 
-    const save_items: any = (async () => {
-        const id_despacho = current_despacho.id_despacho_entrante
-        if (id_despacho !== null && id_despacho !== undefined) {
-            void dispatch(save_items_distribuidos_service(id_despacho, current_despacho.observacion_distribucion ?? "", aux_items_distribuidos));
-        }
-    });
-
-    const distribution_confirm_items: any = (async () => {
-        const id_despacho = current_despacho.id_despacho_entrante
-        if (id_despacho !== null && id_despacho !== undefined) {
-            void dispatch(confirmar_items_distribuidos_service(id_despacho, current_despacho.observacion_distribucion ?? "", aux_items_distribuidos));
-        }
-    });
-
+    
     return (
         <>
             <Grid
@@ -406,7 +401,7 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_distribucion,
                             control_name: "cantidad_asignada",
                             default_value: "",
-                            rules: {required_rule: { rule: true, message: "Ingrese cantidad" }, min_rule: { rule: 0.01, message: "Cantidad debe ser mayor que 0" }, max_rule: { rule: current_bien.cantidad_restante, message: "Cantidad debe ser menor que cantidad restante" } },
+                            rules: {required_rule: { rule: true, message: "Ingrese cantidad" }, min_rule: { rule: 0.01, message: "Cantidad debe ser mayor que 0" } },
                             label: "Cantidad",
                             type: "number",
                             disabled: false,
@@ -464,40 +459,7 @@ const SeleccionarBienDistribuir = () => {
                         },
                     ]}
                 />
-                <Grid
-                    container
-                    direction="row"
-                    padding={2}
-                    spacing={2}
-                >
-                    <Grid item xs={12} md={3}>
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={save_items}
-                            icon_class={<SaveIcon />}
-                            label={"guardar"}
-                            type_button="button"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={distribution_confirm_items}
-                            icon_class={<CheckIcon />}
-                            label={"Confirmar distribucion"}
-                            type_button="button"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormButton
-                            variant_button="outlined"
-                            on_click_function={null}
-                            icon_class={<CloseIcon />}
-                            label={"Cancelar"}
-                            type_button="button"
-                        />
-                    </Grid>
-                </Grid>
+                
             </Grid>
         </>
     );

@@ -4,11 +4,11 @@ import { Chip, Grid } from '@mui/material';
 import { type ToastContent, toast } from 'react-toastify';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { type IDespacho } from "../interfaces/vivero";
 
 import {  useAppDispatch } from '../../../../hooks';
 
 import { set_current_despacho } from '../store/slice/viveroSlice';
+import { type IDespacho } from "../interfaces/vivero";
 
 interface IProps {
   control_despacho: any;
@@ -102,10 +102,10 @@ const SeleccionarDespacho = ({
     });
 
     const search_despacho: any = (async () => {
-      const numero = get_values("numero_despacho_consumo")??""
+      const numero: string = get_values("numero_despacho_consumo")??""
       try {
         const { data } = await api.get(
-          `conservacion/despachos/get-list/?numero_despacho=${numero}`
+          `conservacion/despachos/get-list/?numero_despacho=${numero??""}`
         );
         console.log(data)
         if ("data" in data) {
