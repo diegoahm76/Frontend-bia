@@ -241,7 +241,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
     const emit_new_data: () => void = () => {
         const rows_emit: crear_mantenimiento[] = [];
-        if (tipo_matenimiento !== null && especificacion !== null && detalle_seleccionado !== null && user_info !== null) {
+        if ((tipo_matenimiento !== null && tipo_matenimiento !== "") && (especificacion !== null && especificacion !== "") && detalle_seleccionado !== null && user_info !== null) {
             if(selected_date.length > 0){
                 selected_date.forEach(cm => {
                     const data: crear_mantenimiento = {
