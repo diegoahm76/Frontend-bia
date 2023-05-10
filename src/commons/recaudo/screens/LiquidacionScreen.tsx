@@ -39,7 +39,7 @@ import './LiquidacionScreen.css'
 import { PruebasLiquidacionModal } from "../components/constructorLiquidador/modal/PruebasLiquidacionModal";
 import { AddParametroModal } from "../components/constructorLiquidador/modal/AddParametroModal";
 import axios from "axios";
-import type { Liquidacion } from "../interfaces/liquidacion";
+import type { Liquidacion, OpcionLiquidacion } from "../interfaces/liquidacion";
 
 interface Rows {
   id: number;
@@ -48,8 +48,8 @@ interface Rows {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionScreen: React.FC = () => {
-  const [liquidaciones, set_liquidaciones] = useState<Liquidacion[]>([]);
-  const [id_liquidacion, set_id_liquidacion] = useState('');
+  const [opciones_liquidaciones, set_opciones_liquidaciones] = useState<OpcionLiquidacion[]>([]);
+  const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState('');
   const [row, set_row] = useState<Rows[]>([]);
   const [variables, set_variables] = useState<string[]>([]);
   const [formData, setFormData] = useState({ variable: '', nombre_liquidacion: '' });
@@ -61,9 +61,9 @@ export const LiquidacionScreen: React.FC = () => {
   const [modal_pruebas, set_modal_pruebas] = useState<boolean>(false);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/liquidacion-base')
+    axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/opciones-liquidacion-base')
       .then((response) => {
-        set_liquidaciones(response.data.data);
+        set_opciones_liquidaciones(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -71,19 +71,19 @@ export const LiquidacionScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (id_liquidacion) {
-      const liquidacion: Liquidacion = liquidaciones.filter(liquidacion => liquidacion.id === Number(id_liquidacion))[0];
-      const new_rows: Rows[] = Object.keys(liquidacion?.id_opcion_liq?.variables).map((key, index) => ({
+    if (id_opcion_liquidacion) {
+      const opcion_liquidacion: OpcionLiquidacion = opciones_liquidaciones.filter(opc_liquidacion => opc_liquidacion.id === Number(id_opcion_liquidacion))[0];
+      const new_rows: Rows[] = Object.keys(opcion_liquidacion?.variables).map((key, index) => ({
         id: index,
         nombre: key,
       }));
       set_row(new_rows);
-      set_variables(Object.keys(liquidacion.id_opcion_liq.variables));
+      set_variables(Object.keys(opcion_liquidacion.variables));
     }
-  }, [id_liquidacion]);
+  }, [id_opcion_liquidacion]);
 
   const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
-    set_id_liquidacion(event.target.value);
+    set_id_opcion_liquidacion(event.target.value);
   };
 
   const column: GridColDef[] = [
@@ -246,6 +246,7 @@ export const LiquidacionScreen: React.FC = () => {
       variables: variables.reduce((acumulador, valor) => {
         return { ...acumulador, [valor]: '' };
       }, {}),
+      bloques: '1'
     })
       .then((response) => {
         console.log(response);
@@ -287,18 +288,18 @@ export const LiquidacionScreen: React.FC = () => {
               </Grid> */}
               <Grid item xs={12} sm={4}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel>Selecciona liquidación</InputLabel>
+                  <InputLabel>Selecciona opción liquidación</InputLabel>
                   <Select
-                    label='Selecciona liquidación'
-                    value={id_liquidacion}
+                    label='Selecciona opción liquidación'
+                    value={id_opcion_liquidacion}
                     onChange={handle_select_change}
                   >
-                    {liquidaciones.map((liquidacion) => (
+                    {opciones_liquidaciones.map((opc_liquidacion) => (
                       <MenuItem
-                        key={liquidacion?.id}
-                        value={liquidacion?.id}
+                        key={opc_liquidacion?.id}
+                        value={opc_liquidacion?.id}
                       >
-                        {liquidacion?.id_opcion_liq.nombre}
+                        {opc_liquidacion?.nombre}
                       </MenuItem>
                     ))}
                   </Select>
