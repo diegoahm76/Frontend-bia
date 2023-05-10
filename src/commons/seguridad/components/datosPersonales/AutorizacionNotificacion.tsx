@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -8,8 +9,7 @@ import {
   Select,
   Stack,
 } from '@mui/material';
-import { useState } from 'react';
-import { AutorizacionNotificacionConfiguracion } from '../../screens/AutorizacionNotificacionConfiguracion';
+import { AutorizacionNotificacionModal } from './AutorizacionNotificacionModal';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AutorizacionNotificacion: React.FC = () => {
@@ -56,7 +56,7 @@ export const AutorizacionNotificacion: React.FC = () => {
         </Stack>
       </Grid>
       {modal_notificacion && (
-        <AutorizacionNotificacionConfiguracion
+        <AutorizacionNotificacionModal
           is_modal_active={modal_notificacion}
           set_is_modal_active={set_modal_notificacion}
         />

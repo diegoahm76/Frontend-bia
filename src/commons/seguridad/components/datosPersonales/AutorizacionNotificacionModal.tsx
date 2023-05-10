@@ -21,7 +21,7 @@ interface Iprops {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-export const AutorizacionNotificacionConfiguracion = ({
+export const AutorizacionNotificacionModal = ({
   is_modal_active,
   set_is_modal_active,
 }: Iprops) => {
