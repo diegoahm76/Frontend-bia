@@ -19,10 +19,7 @@ export interface detalle_mantenimiento {
     especificacion: string, 
 }
 export interface anular_mantenimiento { 
-    id_mantenimiento: number, 
-    id_funcionario: number, 
-    fecha_anulacion: string, 
-    motivo_anulacion: string 
+    justificacion_anulacion: string 
 }
 
 export interface crear_mantenimiento {

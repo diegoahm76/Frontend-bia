@@ -117,7 +117,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    navigate('../solicitadas')
+                    navigate('../solicitud')
                   }}
                 >
                   <Avatar
@@ -147,11 +147,9 @@ export const TablaObligacionesAdmin: React.FC = () => {
       renderCell: (params) => {
         return (
           <FormControl sx={{ minWidth: 110 }}>
-            <InputLabel id="demo-simple-select-label">Seleccionar</InputLabel>
+            <InputLabel>Seleccionar</InputLabel>
               <Select
                 size='small'
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
                 label="Seleccionar"
                 onChange={()=>{
                   handle_open()
@@ -181,10 +179,8 @@ export const TablaObligacionesAdmin: React.FC = () => {
         sx={{ mb: '20px' }}
       >
         <FormControl sx={{ minWidth: 130 }}>
-          <InputLabel id="demo-simple-select-label">Filtrar por: </InputLabel>
+          <InputLabel>Filtrar por: </InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="filter"
               label="Filtrar por: "
               onChange={(event: event)=>{
                 const { value } = event.target
@@ -198,7 +194,6 @@ export const TablaObligacionesAdmin: React.FC = () => {
         </FormControl>
         <TextField
           required
-          id="outlined-error-helper-text"
           label="Búsqueda"
           size="medium"
           onChange={(event: event)=>{
@@ -207,7 +202,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
           }}
         />
         <Button
-          color='secondary'
+          color='primary'
           variant='contained'
           onClick={() => {
             const new_rows = [];
@@ -241,7 +236,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
         <SearchOutlined />
         </Button>
         <Button
-          color='secondary'
+          color='primary'
           variant='outlined'
           onClick={() => {
             set_visible_rows(fac_pago)

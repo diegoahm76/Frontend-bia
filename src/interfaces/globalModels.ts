@@ -1,4 +1,6 @@
 import type { SelectChangeEvent } from '@mui/material';
+import { type Dayjs } from 'dayjs';
+import { type SetStateAction, type Dispatch } from 'react';
 import type {
   FieldErrors,
   FieldValues,
@@ -238,6 +240,67 @@ export interface HistoricoDatosRestringidos {
   justificacion_cambio: string;
   id_persona: number;
 }
+export type keys_object =
+| "id_persona"
+| "nombre_unidad_organizacional_actual"
+| "tiene_usuario"
+| "primer_nombre"
+| "segundo_nombre"
+| "primer_apellido"
+| "segundo_apellido"
+| "tipo_persona"
+| "numero_documento"
+| "digito_verificacion"
+| "nombre_comercial"
+| "razon_social"
+| "pais_residencia"
+| "municipio_residencia"
+| "direccion_residencia"
+| "direccion_residencia_ref"
+| "ubicacion_georeferenciada"
+| "direccion_laboral"
+| "direccion_notificaciones"
+| "pais_nacimiento"
+| "fecha_nacimiento"
+| "sexo"
+| "fecha_asignacion_unidad"
+| "es_unidad_organizacional_actual"
+| "email"
+| "email_empresarial"
+| "telefono_fijo_residencial"
+| "telefono_celular"
+| "telefono_empresa"
+| "cod_municipio_laboral_nal"
+| "cod_municipio_notificacion_nal"
+| "telefono_celular_empresa"
+| "telefono_empresa_2"
+| "cod_pais_nacionalidad_empresa"
+| "acepta_notificacion_sms"
+| "acepta_notificacion_email"
+| "acepta_tratamiento_datos"
+| "cod_naturaleza_empresa"
+| "direccion_notificacion_referencia"
+| "fecha_cambio_representante_legal"
+| "fecha_inicio_cargo_rep_legal"
+| "fecha_inicio_cargo_actual"
+| "fecha_a_finalizar_cargo_actual"
+| "observaciones_vinculacion_cargo_actual"
+| "fecha_ultim_actualizacion_autorizaciones"
+| "fecha_creacion"
+| "fecha_ultim_actualiz_diferente_crea"
+| "tipo_documento"
+| "estado_civil"
+| "id_cargo"
+| "id_unidad_organizacional_actual"
+| "representante_legal"
+| "cod_municipio_expedicion_id"
+| "id_persona_crea"
+| "id_persona_ultim_actualiz_diferente_crea"
+| "cod_departamento_expedicion"
+| "cod_departamento_residencia"
+| "cod_departamento_notificacion"
+| "cod_departamento_laboral";
+
 export interface DataPersonas {
   id_persona:                               number;
   nombre_unidad_organizacional_actual:      string;
@@ -259,7 +322,7 @@ export interface DataPersonas {
   direccion_laboral:                        string;
   direccion_notificaciones:                 string;
   pais_nacimiento:                          string;
-  fecha_nacimiento:                         Date;
+  fecha_nacimiento:                         string | null | Date;
   sexo:                                     string;
   fecha_asignacion_unidad:                  string;
   es_unidad_organizacional_actual:          string;
@@ -278,19 +341,19 @@ export interface DataPersonas {
   acepta_tratamiento_datos:                 boolean;
   cod_naturaleza_empresa:                   string;
   direccion_notificacion_referencia:        string;
-  fecha_cambio_representante_legal:         Date;
+  fecha_cambio_representante_legal:         string;
   fecha_inicio_cargo_rep_legal:             string;
-  fecha_inicio_cargo_actual:                Date;
+  fecha_inicio_cargo_actual:                string;
   fecha_a_finalizar_cargo_actual:           string;
   observaciones_vinculacion_cargo_actual:   string;
-  fecha_ultim_actualizacion_autorizaciones: Date;
-  fecha_creacion:                           Date;
-  fecha_ultim_actualiz_diferente_crea:      Date;
+  fecha_ultim_actualizacion_autorizaciones: string;
+  fecha_creacion:                           string;
+  fecha_ultim_actualiz_diferente_crea:      string;
   tipo_documento:                           string;
   estado_civil:                             string;
   id_cargo:                                 number;
   id_unidad_organizacional_actual:          number;
-  representante_legal:                      number;
+  representante_legal:                      number | null;
   cod_municipio_expedicion_id:              string;
   id_persona_crea:                          number;
   id_persona_ultim_actualiz_diferente_crea: number;
@@ -298,4 +361,174 @@ export interface DataPersonas {
   cod_departamento_residencia: string;
   cod_departamento_notificacion: string;
   cod_departamento_laboral: string;
+  datos_clasificacion_persona?: number[]
+}
+export interface ClaseTercero {
+  value: number;
+  label: string;
+}
+export interface ClaseTerceroPersona {
+  id_clase_tercero: number;
+  nombre:           string;
+}
+
+export interface DatosVinculacionCormacarena {
+  id_unidad_organizacional_actual:        number;
+  id_cargo:                               number;
+  cargo_actual:                           string;
+  unidad_organizacional_actual:           string;
+  es_unidad_organizacional_actual:        boolean;
+  fecha_inicio_cargo_actual:              string;
+  fecha_asignacion_unidad:                string;
+  fecha_a_finalizar_cargo_actual:         string;
+  observaciones_vinculacion_cargo_actual: string;
+  fecha_vencida:                          boolean;
+}
+export interface DataNaturaUpdate {
+  cod_municipio_expedicion_id:       string;
+  nombre_comercial:                  string;
+  fecha_nacimiento:                  string;
+  email:                             string;
+  telefono_celular:                  string;
+  telefono_empresa_2:                string;
+  sexo:                              string;
+  estado_civil:                      string;
+  pais_nacimiento:                   string;
+  email_empresarial:                 string;
+  ubicacion_georeferenciada:         string;
+  telefono_fijo_residencial:         string;
+  pais_residencia:                   string;
+  municipio_residencia:              string;
+  direccion_residencia:              string;
+  direccion_laboral:                 string;
+  direccion_residencia_ref:          string;
+  direccion_notificaciones:          string;
+  direccion_notificacion_referencia: string;
+  cod_municipio_laboral_nal:         string;
+  cod_municipio_notificacion_nal:    string;
+  datos_clasificacion_persona:       number[];
+}
+export interface DataJuridicaUpdate {
+  email:                             string;
+  email_empresarial:                 string;
+  direccion_notificaciones:          string;
+  direccion_notificacion_referencia: string;
+  cod_municipio_notificacion_nal:    string;
+  cod_pais_nacionalidad_empresa:     string;
+  telefono_celular_empresa:          string;
+  telefono_empresa_2:                string;
+  telefono_empresa:                  string;
+  representante_legal:               number;
+  fecha_inicio_cargo_rep_legal:      string;
+  datos_clasificacion_persona:       number[];
+}
+export interface ReisterHookUpdate {
+  ciudad_expedicion: string;
+  ciudad_notificacion_opt: IList[];
+  ciudad_notificacion: string;
+  ciudad_residencia: string;
+  ciudades_opt: IList[];
+  ciudades_residencia_opt: IList[];
+  data_register: DataPersonas;
+  cod_departamento_expedicion: string;
+  cod_departamento_residencia: string;
+  departamentos_opt: IList[];
+  documento_rep: string;
+  dpto_notifiacion_opt: IList[];
+  dpto_notifiacion: string;
+  dpts_residencia_opt: IList[];
+  error_email: boolean;
+  error_password: boolean;
+  error_phone: boolean;
+  errors: FieldErrors<FieldValues>;
+  estado_civil_opt: IList[];
+  estado_civil: string;
+  fecha_nacimiento: Dayjs | null;
+  fecha_rep_legal: Dayjs | null;
+  genero_opt: IList[];
+  genero: string;
+  is_avaiable: boolean;
+  is_exists: boolean;
+  is_error: boolean;
+  is_saving: boolean;
+  is_search: boolean;
+  is_valid: boolean;
+  loading: boolean;
+  message_error_password: string;
+  message_no_person: string;
+  message_error: string;
+  nacionalidad_emp: string;
+  naturaleza_emp_opt: IList[];
+  naturaleza_emp: string;
+  nombre_representante: string;
+  numero_documento: string;
+  pais_nacimiento: string;
+  pais_residencia: string;
+  paises_options: IList[];
+  show_password: boolean;
+  tipo_documento_opt: IList[];
+  tipo_documento_rep: string;
+  tipo_documento: string;
+  tipo_persona_opt: IList[];
+  tipo_persona: string;
+  get_selects_options: () => Promise<void>;
+  handle_click_show_password: () => void;
+  handle_submit: UseFormHandleSubmit<FieldValues>;
+  register: UseFormRegister<FieldValues>;
+  set_ciudad_expedicion: Dispatch<SetStateAction<string>>;
+  set_ciudad_notificacion_opt: Dispatch<SetStateAction<IList[]>>;
+  set_ciudad_notificacion: Dispatch<SetStateAction<string>>;
+  set_ciudad_residencia: Dispatch<SetStateAction<string>>;
+  set_ciudades_opt: Dispatch<SetStateAction<IList[]>>;
+  set_ciudades_residencia_opt: Dispatch<SetStateAction<IList[]>>;
+  set_data_register: Dispatch<SetStateAction<DataPersonas>>;
+  set_departamento: Dispatch<SetStateAction<string>>;
+  set_departamentos_opt: Dispatch<SetStateAction<IList[]>>;
+  set_documento_rep: Dispatch<SetStateAction<string>>;
+  set_dpto_notifiacion_opt: Dispatch<SetStateAction<IList[]>>;
+  set_dpto_notifiacion: Dispatch<SetStateAction<string>>;
+  set_dpto_residencia_opt: Dispatch<SetStateAction<IList[]>>;
+  set_dpto_residencia: Dispatch<SetStateAction<string>>;
+  set_error_email: Dispatch<SetStateAction<boolean>>;
+  set_error_error_phone: Dispatch<SetStateAction<boolean>>;
+  set_error_password: Dispatch<SetStateAction<boolean>>;
+  set_estado_civil_opt: Dispatch<SetStateAction<IList[]>>;
+  set_estado_civil: Dispatch<SetStateAction<string>>;
+  set_fecha_nacimiento: Dispatch<SetStateAction<Dayjs | null>>;
+  set_fecha_rep_legal: Dispatch<SetStateAction<Dayjs | null>>;
+  set_genero_opt: Dispatch<SetStateAction<IList[]>>;
+  set_genero: Dispatch<SetStateAction<string>>;
+  set_is_exists: Dispatch<SetStateAction<boolean>>;
+  set_is_saving: Dispatch<SetStateAction<boolean>>;
+  set_is_search: Dispatch<SetStateAction<boolean>>;
+  set_message_error_password: Dispatch<SetStateAction<string>>;
+  set_message_no_person: Dispatch<SetStateAction<string>>;
+  set_nacionalidad_emp: Dispatch<SetStateAction<string>>;
+  set_naturaleza_emp: Dispatch<SetStateAction<string>>;
+  set_nombre_representante: Dispatch<SetStateAction<string>>;
+  set_numero_documento: Dispatch<SetStateAction<string>>;
+  set_pais_nacimiento: Dispatch<SetStateAction<string>>;
+  set_pais_residencia: Dispatch<SetStateAction<string>>;
+  set_show_password: Dispatch<SetStateAction<boolean>>;
+  set_tipo_documento_rep: Dispatch<SetStateAction<string>>;
+  set_tipo_documento: Dispatch<SetStateAction<string>>;
+  set_tipo_persona: Dispatch<SetStateAction<string>>;
+  set_value: UseFormSetValue<FieldValues>;
+  validate_exits: (numero_documento: string) => Promise<void>;
+  watch: UseFormWatch<FieldValues>;
+}
+export interface HistoricoDirecciones {
+  id_historico_direccion: number;
+  direccion:              string;
+  cod_municipio:          null | string;
+  cod_pais_exterior:      null;
+  tipo_direccion:         string;
+  fecha_cambio:           Date;
+  id_persona:             number;
+}
+export interface HistoricoEmail {
+  id_histo_email:     number;
+  email_notificacion: string;
+  fecha_cambio:       Date;
+  id_persona:         number;
 }

@@ -27,42 +27,38 @@ export const InputsEncabezado: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Nombre o Razón Social"
-                  helperText='Escribe Nombre o Razón Social'
                   size="small"
                   fullWidth
+                  value={'Marcela Cardenas'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Identificación"
-                  helperText='Escribe Número de Identificación'
                   size="small"
                   fullWidth
+                  value={'138223930'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Correo Electrónico"
-                  helperText='Escribe Correo Electrónico'
                   size="small"
                   fullWidth
+                  value={'marce@gmail.com'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Dirección Notificación"
-                  helperText='Escribe Dirección Notificación'
                   size="small"
                   fullWidth
+                  value={'Cl 56 #220-120'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -72,6 +68,7 @@ export const InputsEncabezado: React.FC = () => {
                   value={new Date()}
                   renderInput={(props) => <TextField {...props} />}
                   onChange={()=>{}}
+                  disabled
                 />
                 </LocalizationProvider>
               </Grid>
