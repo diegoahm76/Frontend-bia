@@ -7,6 +7,7 @@ export interface OpcionLiquidacion {
   variables: {
     [key: string]: string;
   };
+  bloques: string;
 }
 
 export interface Deudor {
@@ -23,21 +24,23 @@ export interface Expediente {
 }
 
 export interface Variable {
-  id: number;
   nombre: string;
   tipo: string;
-  valor_defecto: string;
-  estado: number;
+  valor: string;
 }
 
 export interface Detalle {
   id: number;
-  id_variable: Variable;
+  id_opcion_liq: OpcionLiquidacion;
+  variables: string;
+  valor: number;
+  estado: number;
+  concepto: string;
+  id_liquidacion: number;
 }
 
 export interface Liquidacion {
   id: number;
-  id_opcion_liq: OpcionLiquidacion;
   cod_deudor: Deudor;
   cod_expediente: Expediente;
   fecha_liquidacion: string;
@@ -46,4 +49,21 @@ export interface Liquidacion {
   valor: number;
   estado: string;
   detalles: Detalle[];
+}
+
+export interface FormDetalleLiquidacion {
+  variables: Record<string, string>;
+  id_opcion_liq: string;
+  valor: number;
+  estado: number;
+  concepto: string;
+}
+
+export interface FormLiquidacion {
+  cod_deudor: string;
+  cod_expediente: string;
+  fecha_liquidacion: string;
+  vencimiento: string;
+  periodo_liquidacion: string;
+  estado: string;
 }
