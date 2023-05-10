@@ -44,7 +44,7 @@ export const DatosIdentificacionComponent: ({
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
-            value={legal_person.digito_verificacion}
+            // value={legal_person.digito_verificacion}
             label="Digito de verificacion"
             type="number"
             size="small"
