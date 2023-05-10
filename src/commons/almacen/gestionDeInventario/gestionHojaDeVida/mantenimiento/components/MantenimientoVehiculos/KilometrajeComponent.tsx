@@ -80,7 +80,7 @@ export const KilometrajeComponent:React.FC<IProps> = ({ parent_state_setter, det
         const cada_desde_int = parseInt(cada_desde);
         const cada_hasta_int = parseInt(cada_hasta);
         rows_emit.push({
-                    tipo_programacion: "kilometro",
+                    tipo_programacion: "kilometraje",
                     cod_tipo_mantenimiento: tipo_matenimiento,
                     kilometraje_programado: cada_desde,
                     fecha_programada: null,

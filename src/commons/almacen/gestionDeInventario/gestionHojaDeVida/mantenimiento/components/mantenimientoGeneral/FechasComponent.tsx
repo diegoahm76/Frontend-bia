@@ -27,14 +27,26 @@ interface IProps {
     tipo_matenimiento: string,
     especificacion: string,
     user_info: any,
-    limpiar_formulario: boolean
+    limpiar_formulario: boolean,
+    programacion: any
 }
 const opcion_programar = [{ value: "MA", label: "Manual" }, { value: "AU", label: "Automatica" }, { value: "OT", label: "Otro" }];
 
 const opcion_programar_fecha = [{ value: "W", label: "Semanas" }, { value: "M", label: "Meses" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, user_info, limpiar_formulario }: IProps) => {
+export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, user_info, limpiar_formulario, programacion }: IProps) => {
+    const [tipo, set_tipo] = useState("");
+    const [fecha, set_fecha] = useState("");
+    const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
+    const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
+    const [fecha_min, set_fecha_min] = useState<Dayjs>(dayjs());
+    const [cada, set_cada] = useState("");
+    const [fechas_array, set_fechas_array] = useState<Dayjs[]>([]);
+    const [check_isd, set_check_isd] = useState(false);
+    const [check_if, set_check_if] = useState(false);
+    const [disabled_type, set_disabled_type] = useState(true);
+    const [selected_date, set_selected_date] = useState<Dayjs[]>([]);
     // Hooks
     const {
         rows,
@@ -51,6 +63,14 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     useEffect(() => {
         set_tipo_mantenimiento(tipo_matenimiento);
     }, [tipo_matenimiento]);
+
+    useEffect(() => {
+        if (programacion != null && programacion !== undefined){
+            const fecha_programada = dayjs(programacion.fecha);
+            set_fechas_array([fecha_programada]);
+            set_selected_date([fecha_programada]);
+        }
+    }, [programacion]);
 
     useEffect(() => {
         set_especificacion(especificacion);
@@ -75,18 +95,6 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
             set_selected_date([]);
         }
     }, [limpiar_formulario]);
-
-    const [tipo, set_tipo] = useState("");
-    const [fecha, set_fecha] = useState("");
-    const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
-    const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
-    const [fecha_min, set_fecha_min] = useState<Dayjs>(dayjs());
-    const [cada, set_cada] = useState("");
-    const [fechas_array, set_fechas_array] = useState<Dayjs[]>([]);
-    const [check_isd, set_check_isd] = useState(false);
-    const [check_if, set_check_if] = useState(false);
-    const [disabled_type, set_disabled_type] = useState(true);
-    const [selected_date, set_selected_date] = useState<Dayjs[]>([]);
 
     const handle_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
         set_tipo(event.target.value);
