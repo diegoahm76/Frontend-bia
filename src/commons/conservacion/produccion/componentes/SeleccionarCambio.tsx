@@ -153,7 +153,7 @@ const SeleccionarCambio = ({
               disabled: false,
               helper_text: "",
               set_value: set_file,
-              file_name: file_name
+              file_name: file_name,
             },
             {
               datum_type: "input_controller",

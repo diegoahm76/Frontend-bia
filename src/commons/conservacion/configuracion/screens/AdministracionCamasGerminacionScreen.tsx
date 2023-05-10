@@ -106,7 +106,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
               </Avatar>
             </IconButton>
           </Tooltip>
-          <Tooltip title={params.row.item_activo ? "Desactivar" : "Activar"}>
+          <Tooltip title={(params.row.item_activo === true) ? "Desactivar" : "Activar"}>
             <IconButton
               onClick={() => {
                 activate_deactivate_germination_bed(params.row.nro_de_orden);
@@ -122,7 +122,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                 }}
                 variant="rounded"
               >
-                {params.row.item_activo ?
+                {params.row.item_activo === true ?
                   <BlockIcon // icon desactivar
                     sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                   /> :
@@ -179,7 +179,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
     const aux_beds: IObjGerminationBed[] = []
     aux_germination_beds.forEach((option) => {
       if (option.nro_de_orden === id) {
-        const state = !option.item_activo
+        const state = !(option.item_activo??true)
         aux_beds.push({ ...option, item_activo: state })
       } else {
         aux_beds.push(option)
