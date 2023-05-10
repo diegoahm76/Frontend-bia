@@ -23,6 +23,7 @@ import { get_tipo_documento } from '../../../request/getRequest';
 import { control_error } from '../../../helpers/controlError';
 import type {
   DelegarSuper,
+  InfoPersonal,
   PermisosRolEdit
 } from '../interfaces/seguridadModels';
 
@@ -237,4 +238,14 @@ export const consultar_historico_restringido = async (
     `personas/buscar-historico-cambios/${id}/`
   );
   return data.data;
+};
+
+// Buscar persona por documento - Trae usuario o usuarios asignados
+export const get_person_user_or_users_by_document = async (
+  tipo_documento: string,
+  numero_documento: string
+): Promise<AxiosResponse<ResponseServer<InfoPersonal | null>>> => {
+  return await api.get(
+    `personas/get-personas-by-document-admin-user/${tipo_documento}/${numero_documento}`
+  );
 };

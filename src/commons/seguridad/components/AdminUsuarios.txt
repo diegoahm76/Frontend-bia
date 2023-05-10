@@ -39,7 +39,7 @@ export function AdminUsuarios(): JSX.Element {
     busqueda_avanzada_user_is_active,
     set_busqueda_avanzada_user_is_active,
   ] = useState<boolean>(false);
-
+  const [render_form, set_render_form] = useState<boolean>(false);
   const {
     register: register_search_ini,
     setValue: set_value,
@@ -141,6 +141,10 @@ export function AdminUsuarios(): JSX.Element {
     set_value_form(e.target.name, e.target.value);
   };
 
+  const handle_render_form = (render: boolean): void => {
+    set_render_form(render);
+  };
+
   return (
     <>
       <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
@@ -223,8 +227,13 @@ export function AdminUsuarios(): JSX.Element {
           )}
         </Grid>
       </Grid>
-      {tipo_persona === 'N' && <AdminUserPersonaNatural has_user={has_user} />}
-      {tipo_persona === 'J' && (
+      {tipo_persona === 'N' && Boolean(render_form) && (
+        <AdminUserPersonaNatural
+          has_user={has_user}
+          on_render={handle_render_form}
+        />
+      )}
+      {tipo_persona === 'J' && Boolean(render_form) && (
         <AdminUserPersonaJuridica
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}

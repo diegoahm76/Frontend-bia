@@ -1,56 +1,53 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import {
-  // useDispatch,
-  useSelector,
-} from 'react-redux';
+import { useSelector } from 'react-redux';
+import { type AxiosError } from 'axios';
 import {
   Box,
   Grid,
   TextField,
-  // MenuItem,
   Stack,
   Button,
   Input,
   InputLabel,
   type SelectChangeEvent,
   Autocomplete,
-  // type AutocompleteProps,
   type AutocompleteChangeReason,
   type AutocompleteChangeDetails,
   Avatar,
-  // type SelectChangeEvent,
-  // Autocomplete,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import HistoryIcon from '@mui/icons-material/History';
-// import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialCambiosEstadoUser';
 import type {
   keys_object,
   DataAadminUser,
   SeguridadSlice,
-  // IList2,
-  // RolUser,
   IList2,
-  // RolUser,
-  // Users,
 } from '../interfaces';
 import {
   crear_user_admin_user,
   update_user_admin_user,
 } from '../request/seguridadRequest';
 import { use_admin_users } from '../hooks/AdminUserHooks';
-import { control_error } from '../../../helpers/controlError';
+// import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../../helpers/controlSuccess';
-// import FormSelectController from '../../../components/partials/form/FormSelectController';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { roles_choise_adapter } from '../adapters/roles_adapters';
-// import { set_user_info } from '../store/seguridadSlice';
-// import FormInputFileController from '../../../components/partials/form/FormInputFileController';
-// import { v4 as uuid } from 'uuid';
-
+import { type ToastContent, toast } from 'react-toastify';
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+  toast.error(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
 export const initial_state_data_register: DataAadminUser = {
   tipo_persona: '',
   tipo_documento: '',
@@ -64,7 +61,12 @@ export const initial_state_data_register: DataAadminUser = {
   nombre_de_usuario: '',
   imagen_usuario: new File([], ''),
   tipo_usuario: '',
-  roles: [],
+  roles: [
+    {
+      value: 0,
+      label: '',
+    },
+  ],
   activo: false,
   activo_fecha_ultimo_cambio: '',
   activo_justificacion_cambio: '',
@@ -78,12 +80,14 @@ export const initial_state_data_register: DataAadminUser = {
 };
 interface Props {
   has_user: boolean;
+  // onRender: (render: boolean) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUserPersonaNatural: React.FC<Props> = ({
   has_user,
-}: Props) => {
+}: // onRender,
+Props) => {
   // const dispatch = useDispatch();
   const [data_disponible, set_data_disponible] = useState<boolean>(false);
   const { action_admin_users, data_person_search, user_info } = useSelector(
@@ -93,7 +97,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     historial_cambios_estado_is_active,
     set_historial_cambios_estado_is_active,
   ] = useState<boolean>(false);
-  const [selected_image, set_selected_image] = useState<string>();
+  const [selected_image, set_selected_image] = useState<
+    string | ArrayBuffer | null
+  >('');
   const [file_image, set_file_image] = useState<File>();
 
   const {
@@ -128,8 +134,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
 
   // Paso de datos a formulario para creacion de usuario persona natural
   useEffect(() => {
+    set_data_disponible(false);
     // reset_admin_user();
-    // set_data_register(initial_state_data_register);
+    set_data_register(initial_state_data_register);
 
     set_data_register({
       ...data_register,
@@ -138,11 +145,17 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       primer_apellido: data_person_search.primer_apellido,
       segundo_apellido: data_person_search.segundo_apellido,
     });
-    set_data_disponible(true);
+    if (data_person_search.id_persona !== 0) {
+      set_data_disponible(true);
+    }
+    // onRender(true);
   }, [data_person_search]);
 
   // Paso de datos a formulario para edición de usuario persona natural
   useEffect(() => {
+    set_data_disponible(false);
+    set_data_register(initial_state_data_register);
+
     console.log('reset admin user');
     // reset_admin_user();
     // set_data_register(initial_state_data_register);
@@ -201,7 +214,10 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     set_value('fecha_activación_inicial', user_info.activated_at);
     set_value('creado_desde_portal', user_info.creado_por_portal);
     set_value('persona_que_creo', user_info.id_usuario_creador);
-    set_data_disponible(true);
+    if (user_info.id_usuario !== 0) {
+      set_data_disponible(true);
+    }
+    // onRender(true);
   }, [user_info]);
 
   // useEffect(() => {
@@ -290,7 +306,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           'http://localhost:3000/#/app/seguridad/administracion_usuarios'
         );
         console.log(file_image);
-        data_create_user.append('profile_img', selected_image ?? '');
+        data_create_user.append('profile_img', file_image ?? '');
 
         // for (const [key, value] of data_create_user.entries()) {
         //   // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
@@ -299,7 +315,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
 
         // // Creación de usuario Persona Natural
         const { data } = await crear_user_admin_user(data_create_user);
+        // if (data.detail) {
         control_success(data.detail);
+        // }
       } else if (action_admin_users === 'EDIT') {
         const data_update_user = new FormData();
         data_update_user.append('is_active', data_register.activo.toString());
@@ -327,11 +345,15 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
           user_info.id_usuario,
           data_update_user
         );
+        console.log(data);
         control_success(data.detail);
       }
     } catch (error) {
-      console.log(error);
-      control_error(error);
+      const temp_error = error as AxiosError;
+      const resp = temp_error.response?.data as any;
+      control_error(resp.detail);
+      // console.log(error);
+      // control_error(error.);
     }
   });
 
@@ -372,11 +394,13 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
         // Obtener los datos de la imagen
         console.log(upload?.target?.result);
         if (upload?.target != null) {
-          set_selected_image(upload.target.result?.toString());
+          set_selected_image(upload.target.result);
         }
       };
       // Leer el contenido del archivo como una URL de datos
       reader.readAsDataURL(file);
+    } else {
+      set_selected_image('');
     }
   };
 
@@ -391,6 +415,10 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   //   // Enviar los datos del formulario a través de una solicitud POST
   //   // ...
   // };
+
+  useEffect(() => {
+    console.log(data_disponible);
+  }, [data_disponible]);
 
   return (
     <>
@@ -470,7 +498,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               </Box>
               <Grid item xs={12} sm={6} md={3}>
                 <TextField
-                  // disabled={is_exists}
+                  disabled={action_admin_users === 'EDIT' && true}
                   size="small"
                   label="Nombre de usuario"
                   fullWidth
@@ -493,7 +521,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   id="imagen_usuario"
                   type="file"
                   autoFocus
-                  {...register_admin_user('imagen_usuario', { required: true })}
+                  {...register_admin_user('imagen_usuario')}
                   error={Boolean(errors.imagen_usuario)}
                   inputProps={{ accept: 'image/*' }}
                   onChange={handle_image_select}
@@ -504,7 +532,8 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   <Avatar
                     variant="rounded"
                     sx={{ width: '200px', height: '200px' }}
-                    src={selected_image}
+                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                    src={selected_image.toString()}
                     alt="Imagen seleccionada"
                   />
                 )}

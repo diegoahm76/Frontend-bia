@@ -11,8 +11,12 @@ import {
   Input,
   InputLabel,
   type SelectChangeEvent,
+  Autocomplete,
+  type AutocompleteChangeReason,
+  type AutocompleteChangeDetails,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
+import HistoryIcon from '@mui/icons-material/History';
 // import dayjs, { type Dayjs } from 'dayjs';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
@@ -21,6 +25,7 @@ import type {
   DataAadminUser,
   UserCreate,
   SeguridadSlice,
+  IList2,
 } from '../interfaces';
 // import {
 //   crear_user_admin_user,
@@ -34,13 +39,15 @@ import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialC
 interface Props {
   tipo_documento: string;
   tipo_persona: string;
+  // onRender: (render: boolean) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUserPersonaJuridica: React.FC<Props> = ({
   tipo_documento,
   tipo_persona,
-}: Props) => {
+}: // onRender,
+Props) => {
   const [data_disponible, set_data_disponible] = useState<boolean>(false);
 
   const { action_admin_users, data_person_search, user_info } = useSelector(
@@ -59,6 +66,11 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     activo_opt,
     bloqueado,
     bloqueado_opt,
+    roles,
+    roles_opt,
+    set_activo,
+    set_bloqueado,
+    set_roles,
     set_data_register,
     // set_tipo_persona,
     set_tipo_usuario,
@@ -84,7 +96,32 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
 
   // Se usa para escuchar los cambios de valor del componente CustomSelect
   const on_change = (e: SelectChangeEvent<string>): void => {
+    switch (e.target.name) {
+      case 'tipo_usuario':
+        set_tipo_usuario(e.target.value);
+        break;
+      case 'activo':
+        set_activo(e.target.value);
+        break;
+      case 'bloqueado':
+        set_bloqueado(e.target.value);
+        break;
+    }
     set_value_form(e.target.name, e.target.value);
+  };
+
+  const handle_change_autocomplete = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: IList2[],
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<IList2>
+  ): void => {
+    set_value('roles', value);
+    set_data_register({
+      ...data_register,
+      roles: value,
+    });
+    set_roles(value);
   };
 
   // Cambio inputs
@@ -144,16 +181,19 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
 
   // Paso de datos a formulario para creacion de usuario persona juridica
   useEffect(() => {
+    set_data_disponible(false);
     set_data_register({
       ...data_register,
       razon_social: user_info.razon_social,
       nombre_comercial: user_info.nombre_comercial,
     });
     set_data_disponible(true);
+    // onRender(true);
   }, [data_person_search]);
 
   // Paso de datos a formulario para edición de usuario persona juridica
   useEffect(() => {
+    set_data_disponible(false);
     set_data_register({
       ...data_register,
       razon_social: user_info.razon_social,
@@ -204,7 +244,12 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     set_value('creado_desde_portal', user_info.creado_por_portal);
     set_value('persona_que_creo', user_info.id_usuario_creador);
     set_data_disponible(true);
+    // onRender(true);
   }, [user_info]);
+
+  useEffect(() => {
+    console.log(data_disponible);
+  }, [data_disponible]);
 
   useEffect(() => {
     if (watch('tipo_documento') !== undefined) {
@@ -221,7 +266,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
               void on_submit(e);
             }}
           >
-            <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
+            <Grid container spacing={2} sx={{ mt: '5px' }}>
               <Box sx={{ ml: '16px', width: '100%' }}>
                 <Title title="Datos personales J" />
               </Box>{' '}
@@ -253,6 +298,8 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                   onChange={handle_change}
                 />
               </Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ mt: '20px' }}>
               <Box sx={{ ml: '16px', width: '100%' }}>
                 <Title title="Datos de acceso" />
               </Box>
@@ -284,6 +331,8 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                   error={Boolean(errors.imagen_usuario)}
                 />
               </Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ mt: '20px' }}>
               <Box sx={{ ml: '16px', width: '100%' }}>
                 <Title title="Tipo de usuario y roles" />
               </Box>
@@ -301,33 +350,59 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                   register={register_admin_user}
                 />
               </Grid>
-              {/* <Grid item xs={12} sm={6} md={3}>
-        <CustomSelect
-          onChange={on_change}
-          label="Roles"
-          name="roles"
-          value={roles}
-          options={roles_opt}
-          loading={loading}
-          // disabled={pais_notificacion === '' ?? true}
-          required={true}
-          errors={errors}
-          register={register}
-        />
-      </Grid> */}
-              {/* <Grid item xs={12}>
-        <Typography variant="caption" fontWeight="bold">
-          NOTA: Se recomienda el registro de un número celular, este se usará
-          como medio de recuperación de la cuenta, en caso de que olvide sus
-          datos de acceso.
-        </Typography>
-      </Grid> */}
-              {action_admin_users === 'EDIT' && (
-                <>
+              <Grid item xs={12} sm={6} md={9}>
+                {roles_opt.length > 0 && (
+                  <Autocomplete
+                    multiple
+                    fullWidth
+                    options={roles_opt}
+                    getOptionLabel={(option) => option?.label}
+                    isOptionEqualToValue={(option, value) =>
+                      option.value === value.value
+                    }
+                    value={roles}
+                    renderInput={(params) => (
+                      <TextField
+                        key={params.id}
+                        {...params}
+                        label="Selección de roles"
+                        placeholder="Roles asignados"
+                      />
+                    )}
+                    {...register_admin_user('roles')}
+                    onChange={handle_change_autocomplete}
+                  />
+                )}
+              </Grid>
+            </Grid>
+
+            {action_admin_users === 'EDIT' && (
+              <>
+                <Grid container spacing={2} sx={{ mt: '20px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
                     <Title title="Estado" />
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} sm={6} md={3}>
+                        <Stack
+                          direction="row"
+                          justifyContent="flex-start"
+                          spacing={2}
+                          sx={{ mt: '20px' }}
+                        >
+                          <Button
+                            fullWidth
+                            variant="outlined"
+                            startIcon={<HistoryIcon />}
+                            onClick={() => {
+                              set_historial_cambios_estado_is_active(true);
+                            }}
+                          >
+                            HISTORIAL DE ESTADO
+                          </Button>
+                        </Stack>
+                      </Grid>
+                    </Grid>
                   </Box>
-
                   <Grid item xs={12} sm={6} md={3}>
                     <CustomSelect
                       onChange={on_change}
@@ -402,7 +477,8 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                       onChange={handle_change}
                     />
                   </Grid>
-
+                </Grid>
+                <Grid container spacing={2} sx={{ mt: '20px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
                     <Title title="Otros datos" />
                   </Box>
@@ -472,23 +548,16 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                       disabled
                     />
                   </Grid>
-                </>
-              )}
-              {/* Alertas */}
-              {/* {is_exists && data_register.email === '' && (
-              <>
-                <Grid item sx={{ pt: '10px !important' }}>
-                  <Alert severity="error">
-                    Lo sentimos, debe acercarse a <b>Cormacarena</b> para
-                    actualizar sus datos debido a que no tiene un correo
-                    electrónico asociado
-                  </Alert>
                 </Grid>
               </>
-            )} */}
-            </Grid>
+            )}
 
-            <Stack direction="row" justifyContent="flex-end" spacing={2}>
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mt: '20px' }}
+            >
               <Button
                 type="submit"
                 color="primary"
