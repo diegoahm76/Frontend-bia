@@ -1,5 +1,6 @@
 import { Box, Button, Grid, TextField } from '@mui/material';
 import { Title } from '../../../../components/Title';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DetalleFacilidadPago: React.FC = () => {
@@ -158,6 +159,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   size='medium'
+                  startIcon={<CloudDownloadIcon />}
                   onClick={() => {}}
                 >
                   Ver
@@ -177,6 +179,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   size='medium'
+                  startIcon={<CloudDownloadIcon />}
                   onClick={() => {}}
                 >
                   Ver

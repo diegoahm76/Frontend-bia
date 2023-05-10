@@ -1,7 +1,7 @@
 import { Title } from '../../../../components/Title';
 import { TablaObligacionesUsuario } from '../componentes/TablaObligacionesUsuario';
 import { Grid, Box, TextField } from "@mui/material";
-import { get_obligaciones_usuario } from '../services/services';
+import { get_obligaciones_usuario } from '../requests/requests';
 import { useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -14,8 +14,10 @@ export const ObligacionesUsuario: React.FC = () => {
       id_expediente: 378765,
       nroResolucion: '378765-143',
       monto_inicial: 120000000,
-      valor_intereses: 35000000,
-      dias_mora: 390,
+      carteras: {
+        valor_intereses: 35000000,
+        dias_mora: 390,
+      }
     },
     {
       id: 2,
@@ -24,8 +26,10 @@ export const ObligacionesUsuario: React.FC = () => {
       id_expediente: 3342765,
       nroResolucion: '3342765-4546',
       monto_inicial: 190700000,
-      valor_intereses: 45000000,
-      dias_mora: 180,
+      carteras: {
+        valor_intereses: 45000000,
+        dias_mora: 180,
+      }
     },
   ];
 

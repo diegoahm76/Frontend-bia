@@ -2,6 +2,7 @@
 import { Grid, Box } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
+import { type ObligacionesState } from '../interfaces/interfaces';
 
 interface RootState {
   obligaciones: {
@@ -9,43 +10,9 @@ interface RootState {
   }
 }
 
-interface ObligacionesState {
-  id: number;
-  nombreObligacion: string;
-  fechaInicio: string;
-  expediente: string;
-  nroResolucion: string;
-  valorCapital: number;
-  valorIntereses: number;
-  diasMora: number;
-}
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaObligacionesSolicitud: React.FC = () => {
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
-
-  /* const fac_pagos = [
-    {
-      id: 1,
-      nombreObligacion: 'Permiso 1',
-      fechaInicio: '01/01/2015',
-      expediente: '378765',
-      nroResolucion: '378765-143',
-      valorCapital: 120000000,
-      valorIntereses: 35000000,
-      diasMora: 390,
-    },
-    {
-      id: 2,
-      nombreObligacion: 'Concesion Aguas',
-      fechaInicio: '01/04/2015',
-      expediente: '3342765',
-      nroResolucion: '3342765-4546',
-      valorCapital: 190700000,
-      valorIntereses: 45000000,
-      diasMora: 180,
-    },
-  ]; */
 
   const columns: GridColDef[] = [
     {
@@ -59,7 +26,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'fechaInicio',
+      field: 'fecha_inicio',
       headerName: 'Fecha Inicio',
       width: 150,
       renderCell: (params) => (
@@ -69,7 +36,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'expediente',
+      field: 'id_expediente',
       headerName: 'Expediente',
       width: 150,
       renderCell: (params) => (
@@ -89,7 +56,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'valorCapital',
+      field: 'monto_inicial',
       headerName: 'Valor Capital',
       width: 150,
       renderCell: (params) => (
@@ -99,7 +66,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'valorIntereses',
+      field: 'valor_intereses',
       headerName: 'Valor Intereses',
       width: 150,
       renderCell: (params) => (
@@ -109,7 +76,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'diasMora',
+      field: 'dias_mora',
       headerName: 'Días Mora',
       width: 150,
       renderCell: (params) => (

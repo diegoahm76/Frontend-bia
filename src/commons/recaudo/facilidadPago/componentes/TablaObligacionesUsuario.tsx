@@ -8,20 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import { obligaciones_seleccionadas } from '../store/slices/FacilidadPagoSlices';
 import { useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { type ObligacionesState } from '../interfaces/interfaces';
 
 interface Obligaciones {
   obligaciones: ObligacionesState[];
-}
-
-interface ObligacionesState {
-  id: number;
-  nombreObligacion: string; // este parametro no esta contemplado en back
-  fecha_inicio: string;
-  id_expediente: number;
-  nroResolucion: string; // este parametro no esta contemplado en back
-  monto_inicial: number;
-  valor_intereses: number;
-  dias_mora: number;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -115,24 +105,14 @@ export const TablaObligacionesUsuario: React.FC<Obligaciones> = (props: Obligaci
       ),
     },
     {
-      field: 'valor_intereses',
-      headerName: 'Valor Intereses',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'dias_mora',
-      headerName: 'Días Mora',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      field: 'carteras',
+      headerName: 'Valor Intereses - Días Mora',
+      width: 200,
+      valueGetter: (params) => {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        return `${params.value.valor_intereses} - ${params.value.dias_mora}`
+
+      },
     },
     {
       field: 'acciones',
@@ -194,7 +174,7 @@ export const TablaObligacionesUsuario: React.FC<Obligaciones> = (props: Obligaci
       for(let j=0; j < selected.length; j++){
         if(props.obligaciones[i].nombreObligacion === selected[j]){
           sub_capital = sub_capital + props.obligaciones[i].monto_inicial
-          sub_intereses = sub_intereses + props.obligaciones[i].valor_intereses
+          sub_intereses = sub_intereses + props.obligaciones[i].carteras.valor_intereses
           set_capital(sub_capital)
           set_intereses(sub_intereses)
         }

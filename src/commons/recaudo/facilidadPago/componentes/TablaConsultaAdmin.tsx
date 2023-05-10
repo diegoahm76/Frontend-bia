@@ -5,12 +5,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { TablaObligacionesUsuario } from './TablaObligacionesUsuario';
-
-interface event {
-  target: {
-    value: string
-  }
-}
+import { type event } from '../interfaces/interfaces';
 
 interface Data {
   identificacion: string;
@@ -32,8 +27,10 @@ export const TablaConsultaAdmin: React.FC = () => {
       id_expediente: 378765,
       nroResolucion: '378765-143',
       monto_inicial: 120000000,
-      valor_intereses: 35000000,
-      dias_mora: 390,
+      carteras: {
+        valor_intereses: 35000000,
+        dias_mora: 390,
+      }
     },
     {
       id: 2,
@@ -42,8 +39,10 @@ export const TablaConsultaAdmin: React.FC = () => {
       id_expediente: 3342765,
       nroResolucion: '3342765-4546',
       monto_inicial: 190700000,
-      valor_intereses: 45000000,
-      dias_mora: 180,
+      carteras: {
+        valor_intereses: 45000000,
+        dias_mora: 180,
+      }
     },
   ];
 

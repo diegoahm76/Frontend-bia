@@ -2,17 +2,13 @@
 import { Title } from '../../../../components/Title';
 import { InputsEncabezadoAdmin } from '../componentes/InputsEncabezadoAdmin';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogContent, DialogActions, Dialog, TextField } from "@mui/material";
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle } from "@mui/material";
+import { Close } from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
-
-interface event {
-  target: {
-    value: string
-  }
-}
+import { type event } from '../interfaces/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VisualizarSolicitudAdmin: React.FC = () => {
@@ -143,7 +139,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                             set_modal_option('pago')
                             handle_open()
                           } else {
-                            navigate('../')
+                            navigate('../amortizacion')
                           }
                         }}
                       >
@@ -236,15 +232,22 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
       >
         <Box component="form"
           onSubmit={()=>{}}>
-          <DialogContent>
+          <DialogTitle>
             {
               modal_option === 'pago' ? `El radicado nro. ${'#RadicadoActual'} tiene Plan de Pagos creado, consulte presionando el botón Ver Plan de Pagos.` : `El radicado nro. ${'#RadicadoActual'} tiene Resolución creada, consulte presionando el botón Ver Resolución.`
             }
-          </DialogContent>
+          </DialogTitle>
           <DialogActions>
-            <Button variant="contained" color="primary" onClick={()=>{
-              handle_close()
-            }}>Cerrar</Button>
+            <Button
+              variant='outlined'
+              color="primary"
+              startIcon={<Close />}
+              onClick={() => {
+                handle_close()
+            }}
+            >
+              Cerrar
+            </Button>
           </DialogActions>
         </Box>
       </Dialog>

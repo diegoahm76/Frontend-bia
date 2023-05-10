@@ -5,12 +5,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface event {
-  target: {
-    value: string
-  }
-}
+import { type event } from '../interfaces/interfaces';
 
 interface Data {
   nombre: string;
