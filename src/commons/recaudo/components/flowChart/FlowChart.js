@@ -2,9 +2,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react/prop-types */
 import { useCallback, useEffect } from 'react';
-import ReactFlow, { Background, Controls, MiniMap, addEdge, useEdgesState, useNodesState } from 'reactflow';
+import ReactFlow, { Background, ConnectionLineType, Controls, MiniMap, addEdge, useEdgesState, useNodesState } from 'reactflow';
 import { FlowNode } from './CustomNode/FlowNode';
+import { getLayoutedElements } from './LayoutedElements/getLayoutedElements';
 import 'reactflow/dist/style.css';
+import './styles.css';
 
 // Nodos son los cuadros rectangulares, con coordenadas X y Y.
 // const initialNodes = [
@@ -16,29 +18,40 @@ import 'reactflow/dist/style.css';
 // const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
 // Este componente será la cuadrícula del diagrama de flujo de datos.
-export const FlowChart = ({ dataflow }) => {
+
+const nodeTypes = { infoFlujoNode: FlowNode };
+
+export const FlowChart = ({ initialNodes, initialEdges }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   useEffect(() => {
-    setNodes(dataflow?.nodes.map((node, index) => {
-      return {
-        ...node,
-        type: 'infoNode',
-        position: {x: (index * 270), y: (index * 200)}
-      }
-    }));
-    setEdges(dataflow?.edges.map((edge) => {
-      return {
-        ...edge,
-        style: {
-          stroke: 'black',
-        }
-      }
-    }));
-  }, [dataflow]);
+    setNodes(initialNodes);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges]);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+  const onConnect = useCallback(
+    (params) =>
+      setEdges((eds) =>
+        addEdge({ ...params, type: ConnectionLineType.SmoothStep }, eds)
+      ),
+    []
+  );
+
+  const onLayout = useCallback(
+    (direction) => {
+      const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+        nodes,
+        edges,
+        direction
+      );
+
+      setNodes([...layoutedNodes]);
+      setEdges([...layoutedEdges]);
+    },
+    [nodes, edges]
+  );
+
   return (
     <ReactFlow
       nodes={nodes}
@@ -46,13 +59,18 @@ export const FlowChart = ({ dataflow }) => {
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
-      nodeTypes={{infoNode: FlowNode}}
+      connectionLineType={ConnectionLineType.SmoothStep}
+      nodeTypes={nodeTypes}
       style={{ border: '1px solid #181818' }}
       fitView
     >
       <Controls />
       <MiniMap />
       <Background variant='dots' gap={12} size={1} />
+      <div className="verhor-controls">
+        <button onClick={() => onLayout('TB')}>vertical layout</button>
+        <button onClick={() => onLayout('LR')}>horizontal layout</button>
+      </div>
     </ReactFlow>
   );
 };
