@@ -104,7 +104,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
     }
 
     const calcular_kilometros = async (cada: any, cada_desde: any, cada_hasta: any, rows_emit: crear_mantenimiento[]): Promise<crear_mantenimiento[]> => {
-        if (tipo_matenimiento !== null && especificacion !== null && detalle_seleccionado !== null && user_info !== null) {
+        if ((tipo_matenimiento !== null && tipo_matenimiento !== "") && (especificacion !== null && especificacion !== "") && detalle_seleccionado !== null && user_info !== null) {
             const cada_int = parseInt(cada);
             const cada_desde_int = parseInt(cada_desde);
             const cada_hasta_int = parseInt(cada_hasta);
