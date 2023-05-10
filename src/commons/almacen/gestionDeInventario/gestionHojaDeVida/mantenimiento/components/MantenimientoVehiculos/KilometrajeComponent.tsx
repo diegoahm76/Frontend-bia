@@ -60,6 +60,9 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
         set_cada("");
         set_cada_desde("");
         set_cada_hasta("");
+        set_mensaje_error_cada("");
+        set_mensaje_error_desde("");
+        set_mensaje_error_hasta("");
     }, [limpiar_formulario]);
 
     const [cada, set_cada] = useState("");
