@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  // useDispatch,
+  useSelector,
+} from 'react-redux';
 import {
   Box,
   Grid,
@@ -15,6 +18,7 @@ import {
   // type AutocompleteProps,
   type AutocompleteChangeReason,
   type AutocompleteChangeDetails,
+  Avatar,
   // type SelectChangeEvent,
   // Autocomplete,
 } from '@mui/material';
@@ -33,17 +37,19 @@ import type {
   // RolUser,
   // Users,
 } from '../interfaces';
-// import {
-//   crear_user_admin_user,
-//   update_user_admin_user,
-// } from '../request/seguridadRequest';
+import {
+  crear_user_admin_user,
+  update_user_admin_user,
+} from '../request/seguridadRequest';
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import { control_error } from '../../../helpers/controlError';
-// import { control_success } from '../../../helpers/controlSuccess';
+import { control_success } from '../../../helpers/controlSuccess';
 // import FormSelectController from '../../../components/partials/form/FormSelectController';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { roles_choise_adapter } from '../adapters/roles_adapters';
-import { set_user_info } from '../store/seguridadSlice';
+// import { set_user_info } from '../store/seguridadSlice';
+// import FormInputFileController from '../../../components/partials/form/FormInputFileController';
+// import { v4 as uuid } from 'uuid';
 
 export const initial_state_data_register: DataAadminUser = {
   tipo_persona: '',
@@ -56,7 +62,7 @@ export const initial_state_data_register: DataAadminUser = {
   segundo_apellido: '',
   segundo_nombre: '',
   nombre_de_usuario: '',
-  imagen_usuario: '',
+  imagen_usuario: new File([], ''),
   tipo_usuario: '',
   roles: [],
   activo: false,
@@ -78,7 +84,7 @@ interface Props {
 export const AdminUserPersonaNatural: React.FC<Props> = ({
   has_user,
 }: Props) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [data_disponible, set_data_disponible] = useState<boolean>(false);
   const { action_admin_users, data_person_search, user_info } = useSelector(
     (state: SeguridadSlice) => state.seguridad
@@ -87,6 +93,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     historial_cambios_estado_is_active,
     set_historial_cambios_estado_is_active,
   ] = useState<boolean>(false);
+  const [selected_image, set_selected_image] = useState<string>();
+  const [file_image, set_file_image] = useState<File>();
+
   const {
     // initial_state_data_register,
     data_register,
@@ -113,13 +122,13 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
-    reset: reset_admin_user,
+    // reset: reset_admin_user,
     watch,
   } = useForm<DataAadminUser>();
 
   // Paso de datos a formulario para creacion de usuario persona natural
   useEffect(() => {
-    reset_admin_user();
+    // reset_admin_user();
     // set_data_register(initial_state_data_register);
 
     set_data_register({
@@ -135,7 +144,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   // Paso de datos a formulario para edición de usuario persona natural
   useEffect(() => {
     console.log('reset admin user');
-    reset_admin_user();
+    // reset_admin_user();
     // set_data_register(initial_state_data_register);
 
     set_roles(roles_choise_adapter(user_info.roles));
@@ -195,10 +204,10 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     set_data_disponible(true);
   }, [user_info]);
 
-  useEffect(() => {
-    dispatch(set_user_info(initial_state_data_register));
-    set_roles([]);
-  }, [action_admin_users]);
+  // useEffect(() => {
+  //   dispatch(set_user_info(initial_state_data_register));
+  //   set_roles([]);
+  // }, [action_admin_users]);
 
   useEffect(() => {
     if (watch('tipo_documento') !== undefined) {
@@ -245,53 +254,80 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<IList2>
   ): void => {
-    console.log(event);
-    console.log(value);
-    console.log(reason);
-    console.log(details);
     set_value('roles', value);
+    set_data_register({
+      ...data_register,
+      roles: value,
+    });
+    set_roles(value);
   };
 
   // Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    console.log(e.target.name, e.target.value);
     set_value_form(e.target.name, e.target.value);
   };
 
-  const on_submit = handle_submit(async (fata) => {
+  const on_submit = handle_submit(async (data_user) => {
     try {
-      console.log(fata);
+      console.log(data_user);
       console.log(data_register);
       if (action_admin_users === 'CREATE') {
-        // const data_send = {
-        //   nombre_de_usuario: data_register.nombre_de_usuario,
-        //   persona: user_info.persona,
-        //   tipo_usuario: data_register.tipo_usuario,
-        //   roles: data_register.roles,
-        //   redirect_url: '',
-        //   profile_img: data_register.imagen_usuario,
-        // };
-        // console.log('Onsubmit CREATE', data_send);
+        const data_create_user = new FormData();
+        data_create_user.append(
+          'nombre_de_usuario',
+          data_user.nombre_de_usuario
+        );
+        data_create_user.append(
+          'persona',
+          data_person_search.id_persona.toString()
+        );
+        data_create_user.append('tipo_usuario', data_user.tipo_usuario);
+        for (let i = 0; i < roles.length; i++) {
+          data_create_user.append('roles', `${roles[i].value}`);
+        }
+        data_create_user.append(
+          'redirect_url',
+          'http://localhost:3000/#/app/seguridad/administracion_usuarios'
+        );
+        console.log(file_image);
+        data_create_user.append('profile_img', selected_image ?? '');
+
+        // for (const [key, value] of data_create_user.entries()) {
+        //   // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        //   console.log(key + ': ' + value);
+        // }
+
         // // Creación de usuario Persona Natural
-        // const { data } = await crear_user_admin_user(data_send);
-        // control_success(data.detail);
+        const { data } = await crear_user_admin_user(data_create_user);
+        control_success(data.detail);
       } else if (action_admin_users === 'EDIT') {
-        // const data_send = {
-        //   is_active: data_register.activo,
-        //   is_blocked: data_register.bloqueado,
-        //   tipo_usuario: data_register.tipo_usuario,
-        //   roles: data_register.roles,
-        //   profile_img: data_register.imagen_usuario,
-        //   justificacion_activacion: data_register.activo_justificacion_cambio,
-        //   justificacion_bloqueo: data_register.bloqueado_justificacion_cambio,
-        // };
+        const data_update_user = new FormData();
+        data_update_user.append('is_active', data_register.activo.toString());
+        data_update_user.append(
+          'is_blocked',
+          data_register.bloqueado.toString()
+        );
+        data_update_user.append('tipo_usuario', data_register.tipo_usuario);
+        for (let i = 0; i < roles.length; i++) {
+          data_update_user.append('roles', `${roles[i].value}`);
+        }
+        data_update_user.append('profile_img', data_register.imagen_usuario);
+        data_update_user.append(
+          'justificacion_activacion',
+          data_register.activo_justificacion_cambio ?? ''
+        );
+        data_update_user.append(
+          'justificacion_bloqueo',
+          data_register.bloqueado_justificacion_cambio ?? ''
+        );
+
         // console.log('Onsubmit EDIT', data_register);
         // // Actualización de usuario Persona Natural
-        // const { data } = await update_user_admin_user(
-        //   user_info.id_usuario,
-        //   data_send
-        // );
-        // control_success(data.detail);
+        const { data } = await update_user_admin_user(
+          user_info.id_usuario,
+          data_update_user
+        );
+        control_success(data.detail);
       }
     } catch (error) {
       console.log(error);
@@ -316,6 +352,45 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
   //   'div'
   // >> = (option: IList2, value: IList2) =>
   //   option.value === value.value;
+
+  const handle_image_select = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    if (event.target.files?.[0] != null) {
+      // Obtener el archivo seleccionado
+      const file = event.target.files[0];
+      set_file_image(file);
+      // set_value('imagen_usuario', file);
+      // set_data_register({
+      //   ...data_register,
+      //   imagen_usuario: file,
+      // });
+      // Crear un objeto FileReader
+      const reader = new FileReader();
+      // // Definir la función que se ejecuta cuando se completa la lectura del archivo
+      reader.onload = (upload) => {
+        // Obtener los datos de la imagen
+        console.log(upload?.target?.result);
+        if (upload?.target != null) {
+          set_selected_image(upload.target.result?.toString());
+        }
+      };
+      // Leer el contenido del archivo como una URL de datos
+      reader.readAsDataURL(file);
+    }
+  };
+
+  useEffect(() => {
+    console.log(selected_image);
+  }, [selected_image]);
+
+  // const handleFormSubmit = (data) => {
+  //   // Agregar la imagen seleccionada a los datos del formulario
+  //   data.imagen_usuario = selectedImage;
+
+  //   // Enviar los datos del formulario a través de una solicitud POST
+  //   // ...
+  // };
 
   return (
     <>
@@ -417,11 +492,22 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                 <Input
                   id="imagen_usuario"
                   type="file"
-                  required
                   autoFocus
-                  {...register_admin_user('imagen_usuario')}
+                  {...register_admin_user('imagen_usuario', { required: true })}
                   error={Boolean(errors.imagen_usuario)}
+                  inputProps={{ accept: 'image/*' }}
+                  onChange={handle_image_select}
                 />
+              </Grid>
+              <Grid item xs={12} sm={3} md={3}>
+                {selected_image != null && (
+                  <Avatar
+                    variant="rounded"
+                    sx={{ width: '200px', height: '200px' }}
+                    src={selected_image}
+                    alt="Imagen seleccionada"
+                  />
+                )}
               </Grid>
             </Grid>
             <Grid container spacing={2} sx={{ mt: '20px' }}>
@@ -447,15 +533,15 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   <Autocomplete
                     multiple
                     fullWidth
-                    id="roles"
                     options={roles_opt}
                     getOptionLabel={(option) => option?.label}
                     isOptionEqualToValue={(option, value) =>
                       option.value === value.value
                     }
-                    defaultValue={roles}
+                    value={roles}
                     renderInput={(params) => (
                       <TextField
+                        key={params.id}
                         {...params}
                         label="Selección de roles"
                         placeholder="Roles asignados"

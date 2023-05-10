@@ -5,8 +5,8 @@ import type {
   SuperUser,
   Roles,
   Users,
-  DataCreateUser,
-  DataEditUser,
+  // DataCreateUser,
+  // DataEditUser,
   PermisosRol,
   Rol
 } from '../interfaces';
@@ -206,14 +206,14 @@ export const user_historico_cambios_estado = async (
 };
 
 export const crear_user_admin_user = async (
-  data: DataCreateUser
+  data: FormData
 ): Promise<AxiosResponse<UserCreate>> => {
   return await api.post('users/register/', data);
 };
 
 export const update_user_admin_user = async (
   id_usuario: number,
-  data: DataEditUser
+  data: FormData
 ): Promise<AxiosResponse<UserCreate>> => {
   return await api.patch(`users/update/${id_usuario}}/`, data);
 };

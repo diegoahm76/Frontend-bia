@@ -43,8 +43,8 @@ export interface DataAadminUser {
   segundo_apellido: string | null;
   segundo_nombre: string | null;
   // Datos de acceso
-  nombre_de_usuario?: string;
-  imagen_usuario: string;
+  nombre_de_usuario: string;
+  imagen_usuario: File;
   // Tipo usuario y Roles
   tipo_usuario: string;
   roles: IList2[];

@@ -38,7 +38,7 @@ export const initial_state_data_register: DataAadminUser = {
   segundo_apellido: '',
   segundo_nombre: '',
   nombre_de_usuario: '',
-  imagen_usuario: '',
+  imagen_usuario: new File([], ''),
   tipo_usuario: '',
   roles: [],
   activo: false,
