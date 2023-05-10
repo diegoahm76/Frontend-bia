@@ -361,11 +361,17 @@ export interface DataPersonas {
   cod_departamento_residencia: string;
   cod_departamento_notificacion: string;
   cod_departamento_laboral: string;
+  datos_clasificacion_persona?: number[]
 }
 export interface ClaseTercero {
   value: number;
   label: string;
 }
+export interface ClaseTerceroPersona {
+  id_clase_tercero: number;
+  nombre:           string;
+}
+
 export interface DatosVinculacionCormacarena {
   id_unidad_organizacional_actual:        number;
   id_cargo:                               number;
@@ -400,6 +406,20 @@ export interface DataNaturaUpdate {
   direccion_notificacion_referencia: string;
   cod_municipio_laboral_nal:         string;
   cod_municipio_notificacion_nal:    string;
+  datos_clasificacion_persona:       number[];
+}
+export interface DataJuridicaUpdate {
+  email:                             string;
+  email_empresarial:                 string;
+  direccion_notificaciones:          string;
+  direccion_notificacion_referencia: string;
+  cod_municipio_notificacion_nal:    string;
+  cod_pais_nacionalidad_empresa:     string;
+  telefono_celular_empresa:          string;
+  telefono_empresa_2:                string;
+  telefono_empresa:                  string;
+  representante_legal:               number;
+  fecha_inicio_cargo_rep_legal:      string;
   datos_clasificacion_persona:       number[];
 }
 export interface ReisterHookUpdate {
@@ -496,4 +516,19 @@ export interface ReisterHookUpdate {
   set_value: UseFormSetValue<FieldValues>;
   validate_exits: (numero_documento: string) => Promise<void>;
   watch: UseFormWatch<FieldValues>;
+}
+export interface HistoricoDirecciones {
+  id_historico_direccion: number;
+  direccion:              string;
+  cod_municipio:          null | string;
+  cod_pais_exterior:      null;
+  tipo_direccion:         string;
+  fecha_cambio:           Date;
+  id_persona:             number;
+}
+export interface HistoricoEmail {
+  id_histo_email:     number;
+  email_notificacion: string;
+  fecha_cambio:       Date;
+  id_persona:         number;
 }
