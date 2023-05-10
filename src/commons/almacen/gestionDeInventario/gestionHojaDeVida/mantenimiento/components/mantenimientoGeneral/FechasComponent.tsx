@@ -21,6 +21,7 @@ import { type crear_mantenimiento } from '../../interfaces/IProps';
 import dayjs, { type Dayjs } from 'dayjs';
 import { isSameDay } from 'date-fns';
 import { getColombiaHolidaysByYear } from 'colombia-holidays';
+import { DialogNoticacionesComponent } from '../../../../../../../components/DialogNotificaciones';
 interface IProps {
     parent_state_setter: any,
     detalle_seleccionado: any,
@@ -47,6 +48,11 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     const [check_if, set_check_if] = useState(false);
     const [disabled_type, set_disabled_type] = useState(true);
     const [selected_date, set_selected_date] = useState<Dayjs[]>([]);
+    const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
+    const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
+    const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
+    const [abrir_modal, set_abrir_modal] = useState<boolean>(false);
+    const [dialog_notificaciones_is_active, set_dialog_notificaciones_is_active] = useState<boolean>(false);
     // Hooks
     const {
         rows,
@@ -65,7 +71,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }, [tipo_matenimiento]);
 
     useEffect(() => {
-        if (programacion != null && programacion !== undefined){
+        if (programacion != null && programacion !== undefined) {
             const fecha_programada = dayjs(programacion.fecha);
             set_fechas_array([fecha_programada]);
             set_selected_date([fecha_programada]);
@@ -235,25 +241,41 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
 
     const emit_new_data: () => void = () => {
         const rows_emit: crear_mantenimiento[] = [];
-        selected_date.forEach(cm => {
-            const data: crear_mantenimiento = {
-                tipo_programacion: "fecha",
-                cod_tipo_mantenimiento: tipo_matenimiento,
-                kilometraje_programado: null,
-                fecha_programada: cm.format("YYYY-MM-DD"),
-                motivo_mantenimiento: especificacion,
-                observaciones: especificacion,
-                fecha_solicitud: dayjs().format("YYYY-MM-DD"),
-                fecha_anulacion: null,
-                justificacion_anulacion: null,
-                ejecutado: false,
-                id_articulo: detalle_seleccionado.id_bien,
-                id_persona_solicita: user_info.id_persona,
-                id_persona_anula: null
+        if (tipo_matenimiento !== null && especificacion !== null && detalle_seleccionado !== null && user_info !== null) {
+            if(selected_date.length > 0){
+                selected_date.forEach(cm => {
+                    const data: crear_mantenimiento = {
+                        tipo_programacion: "fecha",
+                        cod_tipo_mantenimiento: tipo_matenimiento,
+                        kilometraje_programado: null,
+                        fecha_programada: cm.format("YYYY-MM-DD"),
+                        motivo_mantenimiento: especificacion,
+                        observaciones: especificacion,
+                        fecha_solicitud: dayjs().format("YYYY-MM-DD"),
+                        fecha_anulacion: null,
+                        justificacion_anulacion: null,
+                        ejecutado: false,
+                        id_articulo: detalle_seleccionado.id_bien,
+                        id_persona_solicita: user_info.id_persona,
+                        id_persona_anula: null
+                    }
+                    rows_emit.push(data);
+                })
+                set_rows(rows_emit);
+            }else{
+                set_dialog_notificaciones_is_active(true);
+                set_titulo_notificacion("Notificación");
+                set_abrir_modal(true);
+                set_mensaje_notificacion("Debe seleccionar una o mas fechas para programar.");
+                set_tipo_notificacion("info");
             }
-            rows_emit.push(data);
-        })
-        set_rows(rows_emit)
+        } else {
+            set_dialog_notificaciones_is_active(true);
+            set_titulo_notificacion("Notificación");
+            set_abrir_modal(true);
+            set_mensaje_notificacion("Existen campos obligatorios por diligenciar.");
+            set_tipo_notificacion("error");
+        }
     }
 
     return (
@@ -387,6 +409,14 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
                     Agregar
                 </Button>
             </Stack>
+            {dialog_notificaciones_is_active && (
+                <DialogNoticacionesComponent
+                    titulo_notificacion={titulo_notificacion}
+                    abrir_modal={abrir_modal}
+                    tipo_notificacion={tipo_notificacion}
+                    mensaje_notificacion={mensaje_notificacion}
+                    abrir_dialog={set_abrir_modal} />
+            )}
         </>
     )
 }
