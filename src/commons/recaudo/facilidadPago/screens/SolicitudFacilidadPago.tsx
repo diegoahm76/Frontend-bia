@@ -3,18 +3,15 @@ import { Title } from '../../../../components/Title';
 import { InputsEncabezado } from '../componentes/InputsEncabezado';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, TextareaAutosize, Stack, Button, Checkbox, FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
+import SaveIcon from '@mui/icons-material/Save';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { Close } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { use_form } from '../../../../hooks/useForm';
 import { useFormLocal } from '../hooks/useFormLocal';
 import { faker } from '@faker-js/faker';
-
-interface event {
-  target: {
-    value: string;
-    name: string;
-  }
-}
+import { type event } from '../interfaces/interfaces';
 
 interface bien {
   id: string;
@@ -36,10 +33,20 @@ export const SolicitudFacilidadPago: React.FC = () => {
   const { form_state, on_input_change } = use_form({});
   const { form_local, handle_change_local } = useFormLocal({});
   const [modal, set_modal] = useState(false);
+  const [file_name, set_file_name] = useState('');
 
   console.log('form', form_state)
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
+
+  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected_file =
+      event.target.files != null ? event.target.files[0] : null;
+    if (selected_file != null) {
+      set_file_name(selected_file.name);
+    }
+  };
+
 
   useEffect(()=>{
     let count:number = 0;
@@ -128,63 +135,76 @@ export const SolicitudFacilidadPago: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-
         <Grid item xs={16}>
           <Box
             component="form"
             noValidate
             autoComplete="off"
           >
-            <Grid container spacing={10}>
-              <Grid item xs={11} sm={3} >
-                <TextField
-                  size="small"
-                  sx={{ width: '300px' }}
-                  fullWidth
-                  helperText='Cargar Documento Solicitud'
-                  variant="outlined"
-                  type="file"
-                  onChange={on_input_change}
-                  name='docSolicitud'
-                />
-              </Grid>
-              <Grid item xs={11} sm={3} >
-                <TextField
-                  size="small"
-                  sx={{ width: '300px' }}
-                  fullWidth
-                  helperText="Cargar Soporte Consignación"
-                  variant="outlined"
-                  type="file"
-                  onChange={on_input_change}
-                name='docConsignacion'
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-              <FormControl size='small' sx={{ width: '300px' }}>
-                <InputLabel>Calidad en que actúa la persona</InputLabel>
-                <Select
-                  label="Calidad en que actúa la persona"
-                  defaultValue={""}
-                  onChange={(event: event) => {
-                    const { value } = event.target
-                    if(value === 'Natural') {
-                      set_persona('1')
-                    }
-                    if(value === 'Juridica') {
-                      set_persona('2')
-                    }
-                    if(value === 'DeudorSolidario') {
-                      set_persona('3')
-                    }
-                  }}
-                >
-                  <MenuItem value='Natural'>Persona Natural</MenuItem>
-                  <MenuItem value='Juridica'>Persona Juridica / Apoderado</MenuItem>
-                  <MenuItem value='DeudorSolidario'>Deudor Solidario</MenuItem>
-                </Select>
-              </FormControl>
-              </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={11} sm={3}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    size='medium'
+                    component="label"
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    {file_name !== '' ? file_name : 'Carga Documento Solicitud'}
+                      <input
+                        hidden
+                        type="file"
+                        required
+                        autoFocus
+                        style={{ opacity: 0 }}
+                        onChange={handle_file_selected}
+                      />
+                  </Button>
+                </Grid>
+                <Grid item xs={11} sm={3.1}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    size='medium'
+                    component="label"
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    {file_name !== '' ? file_name : 'Carga Soporte Consignación'}
+                      <input
+                        hidden
+                        type="file"
+                        required
+                        autoFocus
+                        style={{ opacity: 0 }}
+                        onChange={handle_file_selected}
+                      />
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={3}>
+                  <FormControl size='small' fullWidth>
+                    <InputLabel>Calidad en que actúa la persona</InputLabel>
+                    <Select
+                      label="Calidad en que actúa la persona"
+                      defaultValue={""}
+                      onChange={(event: event) => {
+                        const { value } = event.target
+                        if(value === 'Natural') {
+                          set_persona('1')
+                        }
+                        if(value === 'Juridica') {
+                          set_persona('2')
+                        }
+                        if(value === 'DeudorSolidario') {
+                          set_persona('3')
+                        }
+                      }}
+                    >
+                      <MenuItem value='Natural'>Persona Natural</MenuItem>
+                      <MenuItem value='Juridica'>Persona Juridica / Apoderado</MenuItem>
+                      <MenuItem value='DeudorSolidario'>Deudor Solidario</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
             </Grid>
           </Box>
         </Grid>
@@ -212,16 +232,24 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={3} >
-                      <TextField
-                        size="small"
-                        fullWidth
-                        helperText='Carga Documento de Identidad'
+                    <Grid item xs={11} sm={3.2}>
+                      <Button
                         variant="outlined"
-                        type="file"
-                        onChange={on_input_change}
-                        name='docIdentidad'
-                      />
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Documento de Identidad'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <TextField
@@ -283,38 +311,62 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={3} >
-                      <TextField
-                        size="small"
-                        fullWidth
-                        helperText='Carga Documento de Identidad Apoderado'
+                    <Grid item xs={11} sm={4}>
+                      <Button
                         variant="outlined"
-                        type="file"
-                        onChange={on_input_change}
-                        name='docIdentidad'
-                      />
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Documento de Identidad Apoderado'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
-                    <Grid item xs={12} sm={3} >
-                      <TextField
-                        size="small"
-                        fullWidth
-                        helperText='Carga Documento Poder'
+                    <Grid item xs={11} sm={3}>
+                      <Button
                         variant="outlined"
-                        type="file"
-                        onChange={on_input_change}
-                        name='docPoder'
-                      />
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Documento Poder'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
-                    <Grid item xs={12} sm={3} >
-                      <TextField
-                        size="small"
-                        fullWidth
-                        helperText='Carga Cert. Existencia y Representación Legal'
+                    <Grid item xs={11} sm={4.4}>
+                      <Button
                         variant="outlined"
-                        type="file"
-                        onChange={on_input_change}
-                        name='docRepresentacionLegal'
-                      />
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Cert. Existencia y Representación Legal'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <TextField
@@ -389,38 +441,62 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={3} >
-                      <TextField
-                        size="small"
-                        fullWidth
-                        helperText='Carga Documento Deudor Solidario'
+                    <Grid item xs={11} sm={3.5}>
+                      <Button
                         variant="outlined"
-                        type="file"
-                        onChange={on_input_change}
-                        name='docIdentidad'
-                      />
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Documento Deudor Solidario'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
-                    <Grid item xs={12} sm={3} >
-                      <TextField
-                        size="small"
-                        fullWidth
-                        helperText='Carga Oficio Respaldando Deuda'
+                    <Grid item xs={11} sm={3.3}>
+                      <Button
                         variant="outlined"
-                        type="file"
-                        onChange={on_input_change}
-                        name='docRespaldoDeuda'
-                      />
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Oficio Respaldando Deuda'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
-                    <Grid item xs={12} sm={3} >
-                      <TextField
-                        size="small"
-                        fullWidth
-                        helperText='Carga Cert. Existencia y Representación Legal'
+                    <Grid item xs={11} sm={4.4}>
+                      <Button
                         variant="outlined"
-                        type="file"
-                        onChange={on_input_change}
-                        name='docRepresentacionLegal'
-                      />
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Cert. Existencia y Representación Legal'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
                     <Grid item xs={12} sm={3}>
                       <TextField
@@ -440,6 +516,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         helperText='Escribe la Ciudad'
                         size="small"
                         fullWidth
+                        onChange={on_input_change}
+                        name='ciudad'
                       />
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -553,30 +631,46 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={3}>
-                      <TextField
-                        size="small"
-                        fullWidth
-                        helperText='Carga Garantía Ofrecida'
+                    <Grid item xs={11} sm={3}>
+                      <Button
                         variant="outlined"
-                        type="file"
-                        onChange={on_input_change}
-                        name='docGarantias'
-                      />
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Garantía Ofrecida'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
                   </>
                 ) : null
               }
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  size="small"
-                  fullWidth
-                  helperText='Carga Documento No Enajenación'
+              <Grid item xs={11} sm={3.4}>
+                <Button
                   variant="outlined"
-                  type="file"
-                  onChange={on_input_change}
-                  name='docEnajenacion'
-                />
+                  fullWidth
+                  size='medium'
+                  component="label"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  {file_name !== '' ? file_name : 'Carga Documento No Enajenación'}
+                    <input
+                      hidden
+                      type="file"
+                      required
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      onChange={handle_file_selected}
+                          />
+                </Button>
               </Grid>
             </Grid>
           </Box>
@@ -653,16 +747,24 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   name='direccion'
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  required
-                  helperText='Carga el Documento Impuesto'
-                  size="small"
+              <Grid item xs={11} sm={3.1}>
+                <Button
+                  variant="outlined"
                   fullWidth
-                  type='file'
-                  onChange={handle_change_local}
-                  name='docImpuesto'
-                />
+                  size='medium'
+                  component="label"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  {file_name !== '' ? file_name : 'Carga el Documento Impuesto'}
+                    <input
+                      hidden
+                      type="file"
+                      required
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      onChange={handle_file_selected}
+                          />
+                </Button>
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Button
@@ -714,7 +816,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
       </Grid>
         ) : null
       }
-
       <Grid
         container
         sx={{
@@ -727,41 +828,48 @@ export const SolicitudFacilidadPago: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
-          width='350px'
-        >
-          <p>Observación</p>
-          <TextareaAutosize
-            minRows={8}
-            cols={153}
-            onChange={on_input_change}
-            name='observacion'
-          />
-        </Box>
+        <Grid item xs={12}>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+              <Grid item xs={12} sm={15} mb='20px'>
+                <TextField
+                  multiline
+                  rows={4}
+                  label="Observación"
+                  helperText="Escribe una observación"
+                  size="small"
+                  fullWidth
+                  name='observacion'
+                  onChange={on_input_change}
+                />
+              </Grid>
+              <FormGroup>
+                <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
+                <FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
+              </FormGroup>
+              <Stack
+                direction="row"
+                justifyContent="right"
+                spacing={2}
+                sx={{ mb: '20px', mt: '20px' }}
+              >
+                <Button
+                  color='primary'
+                  variant='contained'
+                  startIcon={<SaveIcon />}
+                  onClick={() => {
+                    handle_open()
+                  }}
+                >
+                Enviar Solicitud
+                </Button>
+              </Stack>
+          </Box>
+        </Grid>
       </Grid>
-      <Stack
-        direction="row"
-        justifyContent="space-between"
-        spacing={2}
-        sx={{ mb: '20px', mt: '20px' }}
-      >
-        <FormGroup>
-          <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
-          <FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
-        </FormGroup>
-        <Button
-          color='primary'
-          variant='contained'
-          onClick={() => {
-            handle_open()
-          }}
-        >
-        Enviar Solicitud
-        </Button>
-      </Stack>
       <Dialog
         open={modal}
         onClose={handle_close}
@@ -778,9 +886,16 @@ export const SolicitudFacilidadPago: React.FC = () => {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" color="primary" onClick={()=>{
-              handle_close()
-            }}>Cerrar</Button>
+            <Button
+              variant='outlined'
+              color="primary"
+              startIcon={<Close />}
+              onClick={() => {
+                handle_close()
+              }}
+            >
+              Cerrar
+            </Button>
           </DialogActions>
         </Box>
       </Dialog>

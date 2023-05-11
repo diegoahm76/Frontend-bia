@@ -12,6 +12,8 @@ import {
   Box,
   Divider,
   Avatar,
+  Chip,
+  Tooltip,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
@@ -35,7 +37,6 @@ const dialog_busqueda_avanzada_usuario = ({
 }: IProps): JSX.Element => {
   const dispatch = useDispatch();
   const { users } = useSelector((state: SeguridadSlice) => state.seguridad);
-  // const [buscar_por, set_buscar_por] = useState<string>('U');
   const [buscando_users, set_buscando_users] = useState<boolean>(false);
 
   const {
@@ -69,48 +70,57 @@ const dialog_busqueda_avanzada_usuario = ({
     {
       headerName: 'Nombre de usuario',
       field: 'nombre_de_usuario',
-    },
-    {
-      headerName: 'Super usuario',
-      field: 'is_superuser',
+      width: 150,
     },
     {
       headerName: 'Razón social',
       field: 'razon_social',
       width: 150,
     },
-
+    {
+      headerName: 'Super usuario',
+      field: 'is_superuser',
+      renderCell: (params) => {
+        return params.row.is_superuser === true ? (
+          <Chip size="small" label="Si" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
+    },
     {
       headerName: 'Acciones',
       field: 'accion',
       renderCell: (params: any) => (
         <>
-          <IconButton
-            onClick={() => {
-              trigger_user_edit_active(params.row);
-              set_is_modal_active(false);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+          <Tooltip title="Editar">
+            <IconButton
+              onClick={() => {
+                trigger_user_edit_active(params.row);
               }}
-              variant="rounded"
             >
-              <EditIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <EditIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
         </>
       ),
     },
   ];
 
   const trigger_user_edit_active = (data: any): void => {
+    set_is_modal_active(false);
     dispatch(set_data_user_search(data));
     dispatch(get_data_user(data.id_usuario));
     dispatch(set_action_admin_users('EDIT'));
@@ -121,7 +131,6 @@ const dialog_busqueda_avanzada_usuario = ({
   };
 
   const on_submit_search_user = (data: FormValuesSearchUser): void => {
-    // set_buscar_por('U');
     dispatch(get_users(data.nombre_usuario));
     set_buscando_users(true);
   };
@@ -157,7 +166,6 @@ const dialog_busqueda_avanzada_usuario = ({
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={handle_submit_search_user(on_submit_search_user)}
           autoComplete="off"
-          // sx={{ minWidth: '800px' }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={3}>

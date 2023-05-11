@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Grid, Box, TextField, TextareaAutosize, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
+import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { PersonaNatural } from './CalidadPersona';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -67,13 +68,14 @@ export const VistaSolicitud: React.FC = () => {
     {
       field: 'docImpuesto',
       headerName: 'Doc. Impuestos',
-      width: 150,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           <Button
             color='primary'
             variant='outlined'
             size='small'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Documento
@@ -91,6 +93,7 @@ export const VistaSolicitud: React.FC = () => {
             color='primary'
             variant='outlined'
             size='medium'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Documento Solicitud
@@ -101,6 +104,7 @@ export const VistaSolicitud: React.FC = () => {
             color='primary'
             variant='outlined'
             size='medium'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Soporte Consignación
@@ -136,11 +140,12 @@ export const VistaSolicitud: React.FC = () => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={3.15}>
+        <Grid item xs={12} sm={3.4}>
           <Button
             color='primary'
             variant='outlined'
             size='medium'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Documento No Enajenación
@@ -151,6 +156,7 @@ export const VistaSolicitud: React.FC = () => {
             color='primary'
             variant='outlined'
             size='medium'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Garantías Ofrecidas
@@ -174,14 +180,17 @@ export const VistaSolicitud: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <p>Observación Usuario</p>
-      <TextareaAutosize
-        minRows={8}
-        cols={153}
-        name='observacion'
-        value={'Aquí van todas las observaciones escritas por el usuario externo.'}
-        disabled
-      />
+      <Grid item xs={12} sm={15} mt='20px' mb='20px'>
+        <TextField
+          multiline
+          rows={4}
+          value={'Aquí van todas las observaciones escritas por el usuario externo.'}
+          label="Observación Usuario"
+          size="small"
+          disabled
+          fullWidth
+        />
+      </Grid>
       <FormGroup>
         <FormControlLabel checked disabled control={<Checkbox />} label="Aceptar términos y condiciones" />
         <FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />

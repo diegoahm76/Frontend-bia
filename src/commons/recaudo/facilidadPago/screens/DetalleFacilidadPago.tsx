@@ -1,5 +1,6 @@
-import { Box, Button, Grid, TextField, TextareaAutosize } from '@mui/material';
+import { Box, Button, Grid, TextField } from '@mui/material';
 import { Title } from '../../../../components/Title';
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DetalleFacilidadPago: React.FC = () => {
@@ -90,15 +91,17 @@ export const DetalleFacilidadPago: React.FC = () => {
                   disabled
                 />
               </Grid>
-            </Grid>
-            <Grid item xs={12} sm={3}>
-                <p>Observación</p>
-                <TextareaAutosize
-                  minRows={6}
-                  cols={153}
-                  value="Aquí van las observaciones escritas por el usuario."
+              <Grid item xs={12} sm={15}>
+                <TextField
+                  multiline
+                  rows={4}
+                  value={"Aquí van las observaciones escritas por el usuario."}
+                  label="Observación"
+                  size="small"
                   disabled
+                  fullWidth
                 />
+              </Grid>
             </Grid>
           </Box>
         </Grid>
@@ -156,6 +159,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   size='medium'
+                  startIcon={<CloudDownloadIcon />}
                   onClick={() => {}}
                 >
                   Ver
@@ -175,6 +179,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                   color='primary'
                   variant='outlined'
                   size='medium'
+                  startIcon={<CloudDownloadIcon />}
                   onClick={() => {}}
                 >
                   Ver

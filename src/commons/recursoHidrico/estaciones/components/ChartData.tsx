@@ -2,7 +2,6 @@
 import ReactApexChart from 'react-apexcharts';
 import { type ApexOptions } from 'apexcharts';
 
-
 interface IProps {
   data: number[][]|null,
   chart_id: string
@@ -87,7 +86,6 @@ const ChartData = ({
       
     };
 
-
   return (
     <>
        <div id="wrapper">
@@ -104,6 +102,5 @@ const ChartData = ({
   </>
   );
 };
-
 // eslint-disable-next-line no-restricted-syntax
 export default ChartData;

@@ -2,16 +2,13 @@
 import { Title } from '../../../../components/Title';
 import { InputsEncabezadoAdmin } from '../componentes/InputsEncabezadoAdmin';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextareaAutosize, Button, Stack, DialogContent, DialogActions, Dialog } from "@mui/material";
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle } from "@mui/material";
+import { Close } from '@mui/icons-material';
+import SaveIcon from '@mui/icons-material/Save';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
-
-interface event {
-  target: {
-    value: string
-  }
-}
+import { type event } from '../interfaces/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VisualizarSolicitudAdmin: React.FC = () => {
@@ -102,11 +99,14 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item>
-                <p>Observación Cormacarena</p>
-                <TextareaAutosize
-                  minRows={8}
-                  cols={153}
+              <Grid item xs={12} sm={15}>
+                <TextField
+                  multiline
+                  rows={4}
+                  label="Observación Cormacarena"
+                  helperText="Escribe una observación"
+                  size="small"
+                  fullWidth
                   name='observacion'
                   onChange={on_input_change}
                 />
@@ -139,7 +139,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                             set_modal_option('pago')
                             handle_open()
                           } else {
-                            navigate('../')
+                            navigate('../amortizacion')
                           }
                         }}
                       >
@@ -206,24 +206,25 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                 ) : null
               }
             </Grid>
+            <Stack
+              direction="row"
+              justifyContent="right"
+              spacing={2}
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<SaveIcon />}
+                sx={{ marginTop: '30px' }}
+                onClick={() => {}}
+              >
+              Actualizar / Enviar
+              </Button>
+            </Stack>
           </Box>
         </Grid>
       </Grid>
-      <Stack
-        direction="row"
-        justifyContent="right"
-        spacing={2}
-        sx={{ mb: '20px' }}
-      >
-        <Button
-          color='primary'
-          variant='contained'
-          sx={{ marginTop: '30px' }}
-          onClick={() => {}}
-        >
-        Actualizar / Enviar
-        </Button>
-      </Stack>
       <Dialog
         open={modal}
         onClose={handle_close}
@@ -231,15 +232,22 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
       >
         <Box component="form"
           onSubmit={()=>{}}>
-          <DialogContent>
+          <DialogTitle>
             {
               modal_option === 'pago' ? `El radicado nro. ${'#RadicadoActual'} tiene Plan de Pagos creado, consulte presionando el botón Ver Plan de Pagos.` : `El radicado nro. ${'#RadicadoActual'} tiene Resolución creada, consulte presionando el botón Ver Resolución.`
             }
-          </DialogContent>
+          </DialogTitle>
           <DialogActions>
-            <Button variant="contained" color="primary" onClick={()=>{
-              handle_close()
-            }}>Cerrar</Button>
+            <Button
+              variant='outlined'
+              color="primary"
+              startIcon={<Close />}
+              onClick={() => {
+                handle_close()
+            }}
+            >
+              Cerrar
+            </Button>
           </DialogActions>
         </Box>
       </Dialog>
