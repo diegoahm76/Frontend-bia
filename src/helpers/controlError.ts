@@ -1,15 +1,29 @@
 import { toast } from 'react-toastify';
 export const control_error = (error: any | unknown): void => {
+  let message = '';
+  let auto_close: number | boolean = 5000;
   console.error(error);
-  toast(error.toString(), {
+  let type: 'info' | 'success' | 'warning' | 'error' | 'default' = 'error';
+  if (error.message === 'Network Error') {
+    message = 'Error de conexión';
+    type = 'warning';
+  } else if (error.response !== undefined && error.response.status === 401) {
+    message = 'Su sesión ha vencido, por favor inicie sesión nuevamente';
+    type = 'info';
+    auto_close = false;
+    localStorage.clear();
+    location.reload();
+  } else {
+    message = error.toString();
+  }
+  toast(message, {
     position: 'bottom-right',
-    autoClose: 3000,
+    autoClose: auto_close,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    progress: undefined,
     theme: 'colored',
-    type: 'error'
+    type
   });
 };

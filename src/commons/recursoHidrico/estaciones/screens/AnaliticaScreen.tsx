@@ -58,10 +58,10 @@ export const AnaliticaScreen: React.FC = () => {
         { title: 'Humedad', chart_id: "humedad", data: [], data_comparacion: [], value: 2 },
         { title: 'Punto de rocio', chart_id: "punto-rocio", data: [], data_comparacion: [], value: 3 },
         { title: 'Presion atm abs', chart_id: "presion-atm-abs", data: [], data_comparacion: [], value: 4 },
-        { title: 'Presion atm rel', chart_id: "presion-atm-rel", data: [], data_comparacion: [], value: 5 },
+        { title: 'Nivel de Agua', chart_id: "nivel-agua", data: [], data_comparacion: [], value: 5 },
         { title: 'Precipitación', chart_id: "precipitacion", data: [], data_comparacion: [], value: 6 },
-        { title: 'Nivel de Agua', chart_id: "nivel-agua", data: [], data_comparacion: [], value: 7 },
-        { title: 'Velocidad del rio', chart_id: "nivel-agua", data: [], data_comparacion: [], value: 8 },
+        { title: 'Presion atm rel', chart_id: "presion-atm-rel", data: [], data_comparacion: [], value: 7 },
+        { title: 'Velocidad del rio', chart_id: "velocidad-rio", data: [], data_comparacion: [], value: 8 },
         { title: 'Caudal', chart_id: "caudal", data: [], data_comparacion: [], value: 9 },
     ]);
 
@@ -75,10 +75,8 @@ export const AnaliticaScreen: React.FC = () => {
         getOptionLabel: (option: Variables) => option.title,
     };
 
-    const [variable_selected, set_variable_selected] = useState<Variables>({ title: 'Temperatura', chart_id: "temperatura", data: [], data_comparacion: [], value: 1 });
-
-    const [variable_selected_migracion, set_variable_selected_migracion] = useState<Variables>({ title: 'Temperatura', chart_id: "temperatura", data: [], data_comparacion: [], value: 1 });
-
+    const [variable_selected, set_variable_selected] = useState<Variables>({ title: 'Nivel de Agua', chart_id: "Nivel de agua", data: [], data_comparacion: [], value: 5 });
+    const [variable_selected_migracion, set_variable_selected_migracion] = useState<Variables>({ title: 'Nivel de Agua', chart_id: "Nivel de agua", data: [], data_comparacion: [], value: 5 });
     const [start_date, set_start_date] = useState<Date | null>(new Date());
     const [end_date, set_end_date] = useState<Date | null>(new Date());
     const [start_date_comparacion, set_start_date_comparacion] = useState<Date | null>(new Date());
@@ -105,6 +103,11 @@ export const AnaliticaScreen: React.FC = () => {
     } = useForm();
     const get_datos_estaciones = async (): Promise<any> => {
         try {
+            if (selectdashboards.opc_dashboards === "0") {
+                control_error("Por favor seleccione una estación")
+                set_loading_busqueda(false);
+                return
+            }
             set_loading_busqueda(true);
             const fecha_1 = dayjs(start_date).format('YYYY-MM-DD')
             const fecha_2 = dayjs(end_date).format('YYYY-MM-DD')
@@ -117,6 +120,16 @@ export const AnaliticaScreen: React.FC = () => {
             }
             if (fecha_3 === fecha_4) {
                 control_error("Por favor seleccione un rango de fechas que no sea igual")
+                set_loading_busqueda(false);
+                return
+            }
+            if (fecha_1 > fecha_2) {
+                control_error("La fecha inicial 1 no puede ser mayor a la fecha final")
+                set_loading_busqueda(false);
+                return
+            }
+            if (fecha_3 > fecha_4) {
+                control_error("La fecha inicial 2 no puede ser mayor a la fecha final")
                 set_loading_busqueda(false);
                 return
             }
@@ -149,6 +162,11 @@ export const AnaliticaScreen: React.FC = () => {
     const get_datos_estaciones_migracion = async (): Promise<any> => {
         try {
             set_loading_busqueda(true);
+            if (selectdashboards.opc_dashboards === "0") {
+                control_error("Por favor seleccione una estación")
+                set_loading_busqueda(false);
+                return
+            }
             const fecha_1 = dayjs(start_date).format('YYYY-MM-DD')
             const fecha_2 = dayjs(end_date).format('YYYY-MM-DD')
             const fecha_3 = dayjs(start_date_comparacion).format('YYYY-MM-DD')
@@ -157,8 +175,18 @@ export const AnaliticaScreen: React.FC = () => {
                 control_error("Por favor seleccione un rango de fechas que no sea igual")
                 set_loading_busqueda(false);
                 return
-            }if (fecha_3 === fecha_4) {
+            } if (fecha_3 === fecha_4) {
                 control_error("Por favor seleccione un rango de fechas que no sea igual")
+                set_loading_busqueda(false);
+                return
+            }
+            if (fecha_1 > fecha_2) {
+                control_error("La fecha inicial 1 no puede ser mayor a la fecha final")
+                set_loading_busqueda(false);
+                return
+            }
+            if (fecha_3 > fecha_4) {
+                control_error("La fecha inicial 2 no puede ser mayor a la fecha final")
                 set_loading_busqueda(false);
                 return
             }
@@ -169,6 +197,8 @@ export const AnaliticaScreen: React.FC = () => {
                 `estaciones/migracion/consultar-migracion-estaciones-id/${selectdashboards.opc_dashboards}/?fecha-desde=${fecha_3}&fecha-hasta=${fecha_4}`
             );
             if ("data" in data && "data" in data_comparacion) {
+
+                // se formatea la respuesta de la api de string a number
                 const formatted_data = data.data.map((item: any) => {
                     const formatted_item = { ...item };
                     Object.keys(formatted_item).forEach((key) => {
@@ -187,8 +217,8 @@ export const AnaliticaScreen: React.FC = () => {
                     });
                     return formatted_item_compatacion;
                 });
-                console.log("data_comparacion",formatted_data_comparacion)
-                console.log("data",formatted_data)
+                console.log("data_comparacion", formatted_data_comparacion)
+                console.log("data", formatted_data)
                 formatdataforchart_migracion(formatted_data, formatted_data_comparacion);
                 set_loading_busqueda(false);
             } else {
@@ -212,6 +242,11 @@ export const AnaliticaScreen: React.FC = () => {
     const get_datos_primeros_migracion = async (): Promise<any> => {
         try {
             set_loading(true);
+            if (selectdashboards.opc_dashboards === "0") {
+                control_error("Por favor seleccione una estación")
+                set_loading(false);
+                return
+            }
             const { data } = await api.get(
                 `estaciones/migracion/consultar-migracion-estaciones-id/${selectdashboards.opc_dashboards}/`
             );
@@ -254,6 +289,11 @@ export const AnaliticaScreen: React.FC = () => {
     const get_datos_primeros = async (): Promise<any> => {
         try {
             set_loading(true);
+            if (selectdashboards.opc_dashboards === "0") {
+                control_error("Por favor seleccione una estación")
+                set_loading(false);
+                return
+            }
             const { data } = await api.get(
                 `estaciones/datos/consultar-datos-id-primeros/${selectdashboards.opc_dashboards}/`
             );
@@ -416,14 +456,14 @@ export const AnaliticaScreen: React.FC = () => {
         const data_aux: Variables[] = []
         opc_variables_migracion.forEach((item) => {
             item.value === 1 ? data_aux.push({ ...item, data: data_temperatura, data_comparacion: data_temperatura_comparacion }) :
-                item.value === 2 ? data_aux.push({ ...item, data: data_humedad, data_comparacion: data_humedad_comparacion}) :
-                    item.value === 3 ? data_aux.push({ ...item, data: data_pto_rocio, data_comparacion: data_pto_rocio_comparacion}) :
-                        item.value === 4 ? data_aux.push({ ...item, data: data_presion_rel, data_comparacion: data_presion_rel}) :
-                            item.value === 5 ? data_aux.push({ ...item, data: data_data_presion_abs, data_comparacion: data_data_presion_abs_comparacion}) :
-                                item.value === 6 ? data_aux.push({ ...item, data: data_precipitacion, data_comparacion:data_precipitacion_comparacion }) :
-                                    item.value === 7 ? data_aux.push({ ...item, data: data_nivel_agua, data_comparacion: data_nivel_agua_comparacion}) :
-                                        item.value === 8 ? data_aux.push({ ...item, data: data_velocidad_rio, data_comparacion: data_velocidad_rio_comparacion}) :
-                                            data_aux.push({ ...item, data: data_caudal, data_comparacion: data_caudal_comparacion})
+                item.value === 2 ? data_aux.push({ ...item, data: data_humedad, data_comparacion: data_humedad_comparacion }) :
+                    item.value === 3 ? data_aux.push({ ...item, data: data_pto_rocio, data_comparacion: data_pto_rocio_comparacion }) :
+                        item.value === 4 ? data_aux.push({ ...item, data: data_data_presion_abs, data_comparacion: data_data_presion_abs_comparacion }) :
+                            item.value === 5 ? data_aux.push({ ...item, data: data_nivel_agua, data_comparacion: data_nivel_agua_comparacion }) :
+                                item.value === 6 ? data_aux.push({ ...item, data: data_precipitacion, data_comparacion: data_precipitacion_comparacion }) :
+                                    item.value === 7 ? data_aux.push({ ...item, data: data_presion_rel, data_comparacion: data_presion_rel_comparacion }) :
+                                        item.value === 8 ? data_aux.push({ ...item, data: data_velocidad_rio, data_comparacion: data_velocidad_rio_comparacion }) :
+                                            data_aux.push({ ...item, data: data_caudal, data_comparacion: data_caudal_comparacion })
 
         })
         set_opc_variables_migracion(data_aux)
@@ -611,8 +651,9 @@ export const AnaliticaScreen: React.FC = () => {
                                                             set_variable_selected(newValue);
                                                         }}
                                                         renderInput={(params) => (
-                                                            <TextField {...params} label="Seleccione variable" variant="standard" />
+                                                            <TextField {...params} label="Variable" variant="standard" />
                                                         )}
+                                                        disableClearable={true}
                                                     />
                                                 </FormControl>
                                                 <FormControl fullWidth>
@@ -645,12 +686,12 @@ export const AnaliticaScreen: React.FC = () => {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <Grid border={0.5}>
-                                                <ChartData data={variable_selected.data} chart_id="principal" />
+                                                <ChartData data={variable_selected.data} chart_id={variable_selected.chart_id} />
                                             </Grid>
                                         </Grid>
                                         <Grid item xs={12} sm={6} >
                                             <Grid border={0.5} spacing={2}>
-                                                <ChartData data={variable_selected.data_comparacion} chart_id="comparacion"
+                                                <ChartData data={variable_selected.data_comparacion} chart_id={variable_selected.chart_id}
                                                 />
                                             </Grid>
                                         </Grid>
@@ -665,7 +706,7 @@ export const AnaliticaScreen: React.FC = () => {
                                         </Grid>
                                         <Grid item xs={12}>
                                             <Stack direction="row" spacing={1} alignItems="center" sx={{ m: '20px 0' }} >
-                                            <FormControl fullWidth>
+                                                <FormControl fullWidth>
                                                     <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
                                                         <DatePicker
                                                             label="Fecha Inical 1"
@@ -755,8 +796,9 @@ export const AnaliticaScreen: React.FC = () => {
                                                             set_variable_selected_migracion(newValue);
                                                         }}
                                                         renderInput={(params) => (
-                                                            <TextField {...params} label="Seleccione variable" variant="standard" />
+                                                            <TextField {...params} label="Variable" variant="standard" />
                                                         )}
+                                                        disableClearable={true}
                                                     />
                                                 </FormControl>
                                                 <FormControl fullWidth>
@@ -789,12 +831,12 @@ export const AnaliticaScreen: React.FC = () => {
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <Grid border={0.5}>
-                                                <ChartData data={variable_selected_migracion.data}  chart_id="principal" />
+                                                <ChartData data={variable_selected_migracion.data} chart_id={variable_selected_migracion.chart_id} />
                                             </Grid>
                                         </Grid>
                                         <Grid item xs={12} sm={6}>
                                             <Grid border={0.5}>
-                                                <ChartData data={variable_selected_migracion.data_comparacion} chart_id="comparacion" />
+                                                <ChartData data={variable_selected_migracion.data_comparacion} chart_id={variable_selected_migracion.chart_id} />
                                             </Grid>
                                         </Grid>
                                     </Grid>

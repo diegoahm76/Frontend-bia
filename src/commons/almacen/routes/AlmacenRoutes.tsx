@@ -1,13 +1,15 @@
 import { Route, Routes } from "react-router-dom";
 import { Page404 } from "../../../screens/404";
 import { ConfiguracionRoutes } from "../configuracion/routes/ConfiguracionRoutes";
-import { EntradaysalidArticulosRoutes } from "../catalogoBienes/routes/EntradaysalidaArticulosRoutes";
+import { EntradaysalidArticulosRoutes } from "../gestionDeInventario/catalogoBienes/routes/EntradaysalidaArticulosRoutes";
 // import { GestionDeInventarioRoutes } from "../gestionDeInventario/routes/GestionDeInventarioRoutes";
 import { EntradaBienesAlmacenRoutes } from "../entradaDeAlmacen/routes/EntradaAlmacenRoutes";
-import { RegistroSolicitudesAlmacenRoutes } from "../registroSolicitudesAlmacen/routes/RegistroSolicitudesAlmacenRoutes";
+
 import { ReportesIndicadoresAnaliticaRoutes } from "../reportesIndicadoresAnalitca/routes/ReportesIndicadoresAnaliticaRoutes";
-import { ConfiguracionDatosBasicosRoutes } from "../configuracionDatosBasicos/routes/ConfiguracionDatosBasicosRoutes";
 import { GestionInventarioRoutes } from "../gestionDeInventario/gestionHojaDeVida/routes/GestionInventarioRoutes";
+import { SolicitudBienConsumoScreen } from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens";
+import { SolicitudDespachoScreen } from "../registroSolicitudesAlmacen/despacho/screens/SolicitudDespachoScreen";
+
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -24,18 +26,12 @@ export const AlmacenRoutes: React.FC = () => {
         path="entrada_almacen/*"
         element={<EntradaBienesAlmacenRoutes />}
       />
-      <Route
-        path="registro_solicitudes_almacen/*"
-        element={<RegistroSolicitudesAlmacenRoutes />}
-      />
+
       <Route
         path="reportes_indicadores_analitica/*"
         element={<ReportesIndicadoresAnaliticaRoutes />}
       />
-      <Route
-        path="configuracion_datos_basicos/*"
-        element={<ConfiguracionDatosBasicosRoutes />}
-      />
+
       {/* <Route
         path="programacion_mantenimiento"
         element={<ProgramacionManteniento />}
@@ -43,6 +39,14 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="gestion_inventario/*"
         element={<GestionInventarioRoutes />}
+      />
+      <Route
+        path="solicitud_consumo/*"
+        element={<SolicitudBienConsumoScreen />}
+      />
+      <Route
+        path="solicitud_despacho/*"
+        element={<SolicitudDespachoScreen />}
       />
       <Route path="/*" element={<Page404 />} />
     </Routes>

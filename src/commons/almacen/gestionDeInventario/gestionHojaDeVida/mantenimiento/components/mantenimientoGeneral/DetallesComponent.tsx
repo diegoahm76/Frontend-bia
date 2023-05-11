@@ -3,63 +3,42 @@ import {
     Grid,
     TextField
 } from "@mui/material"
-import { useEffect } from "react";
-import { type IcvVehicles } from "../../../hojaDeVidaVehiculo/interfaces/CvVehiculo";
-import use_previsualizacion from "./hooks/usePrevisualizacion";
+import { useEffect, useState } from "react";
 interface IProps {
-    parent_details_veh: any
+    detalle_seleccionado_prop: any,
+    tipo_articulo: string,
+    limpiar_formulario: boolean
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const DetallesComponent: React.FC<IProps> = ({ parent_details_veh }) => {
-    const {
-        detalle_vehiculo,
-        set_detalle_vehiculo
-    } = use_previsualizacion();
+export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop, tipo_articulo, limpiar_formulario }: IProps) => {
+    const [marca, set_marca] = useState<string | null>("");
+    const [codigo_bien, set_codigo_bien] = useState<string | null>("");
+    const [descripcion, set_descripcion] = useState<string | null>("");
+    const [porcentaje_iva, set_porcentaje_iva] = useState<string | null>("");
+    const [tipo_columna, set_tipo_columna] = useState<string>("");
 
     useEffect(() => {
-        const data_veh: IcvVehicles = {
-            id_hoja_de_vida: 10,
-            codigo_bien: "110100100002",
-            nombre: "prueba vehículo",
-            doc_identificador_nro: "bbb111",
-            id_marca: 0,
-            marca: "HYUNDAI",
-            cod_tipo_vehiculo: "",
-            tiene_platon: true,
-            capacidad_pasajeros: 4,
-            color: "",
-            linea: "",
-            tipo_combustible: "",
-            es_arrendado: false,
-            ultimo_kilometraje: 35000,
-            fecha_ultimo_kilometraje: 0,
-            fecha_adquisicion: 0,
-            fecha_vigencia_garantia: 0,
-            numero_motor: "MO55543EE4444RRRR555TO56R",
-            numero_chasis: "ERTY45Y67Y8UU9990",
-            cilindraje: 4600,
-            transmision: "",
-            capacidad_extintor: 100,
-            tarjeta_operacion: "",
-            observaciones_adicionales: "",
-            es_agendable: false,
-            en_circulacion: true,
-            fecha_circulacion: 0,
-            ruta_imagen_foto: "",
-            id_articulo: 170,
-            id_vehiculo_arrendado: null,
-            id_proveedor: null,
-            estado: "Óptimo",
-            dimension_llantas: 0,
-            tipo_vehiculo: ""
+        console.log('LLega detalle_seleccionado_prop: ', detalle_seleccionado_prop)
+        if (detalle_seleccionado_prop !== undefined && detalle_seleccionado_prop !== null) {
+            set_marca(detalle_seleccionado_prop.marca);
+            set_codigo_bien(detalle_seleccionado_prop.codigo_bien);
+            set_descripcion(detalle_seleccionado_prop.descripcion);
+            set_porcentaje_iva(detalle_seleccionado_prop.porcentaje_iva);
         }
-        set_detalle_vehiculo(data_veh);
-    },[set_detalle_vehiculo]);
-    
-    useEffect(() => {
-        parent_details_veh(detalle_vehiculo);
-      }, [parent_details_veh, detalle_vehiculo]);
+    }, [detalle_seleccionado_prop]);
 
+    useEffect(() => {
+        tipo_articulo === 'vehículos' ? set_tipo_columna("Placa") : set_tipo_columna("Serial")
+    }, [tipo_articulo]);
+
+    useEffect(() => {
+        if (limpiar_formulario) {
+            set_marca('');
+            set_codigo_bien('');
+            set_descripcion('');
+            set_porcentaje_iva('');
+        }
+    }, [limpiar_formulario]);
 
     return (
         <>
@@ -73,45 +52,49 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_details_veh }) => {
                     <Grid item xs={12} sm={3}>
                         <TextField
                             label="Marca"
-                            helperText="Seleccione Marca"
                             size="small"
                             required
                             fullWidth
-                            value={detalle_vehiculo.marca}
-                            disabled={true}
+                            value={marca}
+                            InputProps={{
+                                readOnly: true,
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <TextField
-                            label="Serial/Placa"
-                            helperText="Seleccione Serial/Placa"
+                            label={tipo_columna}
                             size="small"
                             required
                             fullWidth
-                            value={detalle_vehiculo.numero_chasis}
-                            disabled={true}
+                            value={codigo_bien}
+                            InputProps={{
+                                readOnly: true,
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <TextField
                             label="Modelo"
-                            helperText="Seleccione Modelo"
                             size="small"
                             required
                             fullWidth
-                            value={detalle_vehiculo.numero_motor}
-                            disabled={true}
+                            value={descripcion}
+                            InputProps={{
+                                readOnly: true,
+                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <TextField
                             label="Kilometraje"
-                            helperText="Seleccione Kilometraje"
                             size="small"
                             required
                             fullWidth
-                            value={detalle_vehiculo.ultimo_kilometraje}
-                            disabled={true}
+                            value={porcentaje_iva}
+                            InputProps={{
+                                readOnly: true,
+                            }}
                         />
                     </Grid>
                 </Grid>
