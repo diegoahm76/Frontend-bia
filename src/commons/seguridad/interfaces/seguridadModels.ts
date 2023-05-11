@@ -1,14 +1,5 @@
-import type{ Dispatch,  SetStateAction } from 'react';
-import type { IList } from '../../../interfaces/globalModels';
-// import { type Dayjs } from 'dayjs';
-
-export interface DelegarSuper {
-  tipo_documento_opt: IList[];
-  tipo_documento: string;
-  loading: boolean;
-  get_selects_options: () => Promise<void>;
-  set_tipo_documento: Dispatch<SetStateAction<string>>;
-}
+import { type Dispatch, type SetStateAction } from 'react';
+import type { DataPersonas, IList } from '../../../interfaces/globalModels';
 
 export interface FormValuesSearchPerson {
   tipo_persona: string;
@@ -23,17 +14,14 @@ export interface FormValuesSearchUser {
   nombre_usuario: string;
 }
 
+export type keys_object_search_person =
+  | 'tipo_persona'
+  | 'tipo_documento'
+  | 'numero_documento'
+  | 'primer_nombre'
+  | 'primer_apellido';
 
-export type keys_object_search_person = 
-| 'tipo_persona'
-| 'tipo_documento'
-| 'numero_documento'
-| 'primer_nombre'
-| 'primer_apellido';
-
-export type keys_object_search_user = 
-| 'tipo_persona'
-| 'nombre_usuario';
+export type keys_object_search_user = 'tipo_persona' | 'nombre_usuario';
 export interface DataAadminUser {
   tipo_persona: string;
   // id_persona: number;
@@ -58,188 +46,135 @@ export interface DataAadminUser {
   // Estatus
   activo: boolean;
   activo_fecha_ultimo_cambio: string | null;
-  activo_justificacion_cambio:string | null;
+  activo_justificacion_cambio: string | null;
   bloqueado: boolean;
   bloqueado_fecha_ultimo_cambio: string | null;
-  bloqueado_justificacion_cambio:string | null;
+  bloqueado_justificacion_cambio: string | null;
   // Otros datos
-  fecha_creacion:string;
-  fecha_activación_inicial:string | null;
-  creado_desde_portal:boolean;
+  fecha_creacion: string;
+  fecha_activación_inicial: string | null;
+  creado_desde_portal: boolean;
   persona_que_creo: number | null;
 }
 
 export interface DataCreateUser {
-  nombre_de_usuario?: string,
-  persona: number, 
-  tipo_usuario: string,
-  roles: RolUser[], 
-  redirect_url: string,
-  profile_img: string
+  nombre_de_usuario?: string;
+  persona: number;
+  tipo_usuario: string;
+  roles: RolUser[];
+  redirect_url: string;
+  profile_img: string;
 }
 
 export interface DataEditUser {
-  is_active: boolean,
-  is_blocked: boolean,
-  tipo_usuario: string,
-  roles: RolUser[],
-  profile_img: string,
-  justificacion_activacion: string | null,
-  justificacion_bloqueo: string | null
+  is_active: boolean;
+  is_blocked: boolean;
+  tipo_usuario: string;
+  roles: RolUser[];
+  profile_img: string;
+  justificacion_activacion: string | null;
+  justificacion_bloqueo: string | null;
 }
 
-export interface RolUser{
+export interface RolUser {
   id_rol: number;
   nombre_rol: string;
 }
 
 export type keys_object =
-| 'tipo_persona'
-| 'tipo_documento'
-| 'numero_documento'
-| 'razon_social'
-| 'nombre_comercial'
-| 'primer_apellido'
-| 'primer_nombre'
-| 'segundo_apellido'
-| 'segundo_nombre'
-| 'nombre_de_usuario'
-| 'imagen_usuario'
-| 'tipo_usuario'
-| 'roles'
-| 'activo'
-| 'activo_fecha_ultimo_cambio'
-| 'activo_justificacion_cambio'
-| 'bloqueado'
-| 'bloqueado_fecha_ultimo_cambio'
-| 'bloqueado_justificacion_cambio'
-| 'fecha_creacion'
-| 'fecha_activación_inicial'
-| 'creado_desde_portal'
-| 'persona_que_creo';
+  | 'tipo_persona'
+  | 'tipo_documento'
+  | 'numero_documento'
+  | 'razon_social'
+  | 'nombre_comercial'
+  | 'primer_apellido'
+  | 'primer_nombre'
+  | 'segundo_apellido'
+  | 'segundo_nombre'
+  | 'nombre_de_usuario'
+  | 'imagen_usuario'
+  | 'tipo_usuario'
+  | 'roles'
+  | 'activo'
+  | 'activo_fecha_ultimo_cambio'
+  | 'activo_justificacion_cambio'
+  | 'bloqueado'
+  | 'bloqueado_fecha_ultimo_cambio'
+  | 'bloqueado_justificacion_cambio'
+  | 'fecha_creacion'
+  | 'fecha_activación_inicial'
+  | 'creado_desde_portal'
+  | 'persona_que_creo';
 
+export interface UserCreate {
+  detail: string;
+  success: boolean;
+}
 
-  export interface UserCreate {
-    detail: string;
-    success: boolean;
-  }
+export interface AdminUserHook {
+  data_register: DataAadminUser;
+  has_user: boolean;
+  is_exists: boolean;
+  is_saving: boolean;
+  is_search: boolean;
+  loading: boolean;
+  numero_documento: string;
+  tipo_documento_opt: IList[];
+  tipo_documento: string;
+  tipo_persona_opt: IList[];
+  tipo_persona: string;
+  tipo_usuario_opt: IList[];
+  activo: string;
+  activo_opt: IList[];
+  bloqueado: string;
+  bloqueado_opt: IList[];
+  tipo_usuario: string;
+  roles: RolUser[];
+  get_selects_options: () => Promise<void>;
+  set_data_register: Dispatch<SetStateAction<DataAadminUser>>;
+  set_has_user: Dispatch<SetStateAction<boolean>>;
+  set_is_exists: Dispatch<SetStateAction<boolean>>;
+  set_is_saving: Dispatch<SetStateAction<boolean>>;
+  set_is_search: Dispatch<SetStateAction<boolean>>;
+  set_numero_documento: Dispatch<SetStateAction<string>>;
+  set_tipo_documento: Dispatch<SetStateAction<string>>;
+  set_tipo_persona: Dispatch<SetStateAction<string>>;
+  set_tipo_usuario: Dispatch<SetStateAction<string>>;
+  set_activo: Dispatch<SetStateAction<string>>;
+  set_bloqueado: Dispatch<SetStateAction<string>>;
+}
 
-  export interface AdminUserHook {
-    data_register: DataAadminUser;
-    has_user: boolean;
-    is_exists: boolean;
-    is_saving: boolean;
-    is_search: boolean;
-    loading: boolean;
-    numero_documento: string;
-    tipo_documento_opt: IList[];
-    tipo_documento: string;
-    tipo_persona_opt: IList[];
-    tipo_persona: string;
-    tipo_usuario_opt: IList[];
-    activo: string;
-    activo_opt: IList[];
-    bloqueado: string;
-    bloqueado_opt: IList[];
-    tipo_usuario: string;
-    roles: RolUser[];
-    get_selects_options: () => Promise<void>;
-    set_data_register: Dispatch<SetStateAction<DataAadminUser>>;
-    set_has_user: Dispatch<SetStateAction<boolean>>;
-    set_is_exists: Dispatch<SetStateAction<boolean>>;
-    set_is_saving: Dispatch<SetStateAction<boolean>>;
-    set_is_search: Dispatch<SetStateAction<boolean>>;
-    set_numero_documento: Dispatch<SetStateAction<string>>  
-    set_tipo_documento: Dispatch<SetStateAction<string>>;
-    set_tipo_persona: Dispatch<SetStateAction<string>>;
-    set_tipo_usuario: Dispatch<SetStateAction<string>>;
-    set_activo: Dispatch<SetStateAction<string>>;
-    set_bloqueado: Dispatch<SetStateAction<string>>;
-  }
-
-  export interface EstadoCivil {
-    cod_estado_civil?: string;
-    nombre: string;
-    precargado: boolean;
-    activo: boolean;
-    item_ya_usado: boolean;
-    cod_tipo_documento?: string;
-  }
-export interface InfoPersonal {
-  id_persona:	number,
-  tipo_persona:	string,
-  tipo_documento:	string,
-  numero_documento:	string,
-  primer_nombre:	string,
-  segundo_nombre:	string,
-  primer_apellido:	string,
-  segundo_apellido:	string,
-  nombre_completo:	string,
-  razon_social:	string,
-  nombre_comercial:	string,
-  tiene_usuario:	boolean,
-  usuarios: UsersXPerson[],
+export interface EstadoCivil {
+  cod_estado_civil?: string;
+  nombre: string;
+  precargado: boolean;
+  activo: boolean;
+  item_ya_usado: boolean;
+  cod_tipo_documento?: string;
 }
 
 export interface UsersXPerson {
-  id_usuario: number,
-  nombre_de_usuario: string,
+  id_usuario: number;
+  nombre_de_usuario: string;
 }
 
 export interface InfoUsuario {
-  id_usuario: number,
-  nombre_de_usuario: string,
-  persona: number,
-  tipo_persona: string,
-  numero_documento: string,
-  primer_nombre: string,
-  primer_apellido: string,
-  nombre_completo: string,
-  razon_social: string,
-  nombre_comercial: string,
-  is_superuser: false
+  id_usuario: number;
+  nombre_de_usuario: string;
+  persona: number;
+  tipo_persona: string;
+  numero_documento: string;
+  primer_nombre: string;
+  primer_apellido: string;
+  nombre_completo: string;
+  razon_social: string;
+  nombre_comercial: string;
+  is_superuser: false;
 }
-
-export interface Roles {
-  id_rol: number;
-  nombre_rol: string;
-  descripcion_rol: string;
-  Rol_sistema: boolean;
-}
-
-export interface Rol {
-  rol: Roles;
-  permisos: Permisos[];
-}
-
-export interface Permisos {
-  subsistema: string,
-  desc_subsistema: string,
-  modulos: Modulos[]
-}
-
-export interface Modulos {
-  id_modulo: number,
-  nombre_modulo: string,
-  descripcion: string,
-  ruta_formulario: string,
-  nombre_icono: string,
-  permisos: Acciones[]
-}
-
-export interface Acciones {
-  name: string,
-  value: boolean,
-  id: number
-}
-
-
-
 
 export interface SeguridadSlice {
   seguridad: ISeguridadInfo;
 }
-
 
 export interface Users {
   id_usuario: number;
@@ -292,7 +227,7 @@ export interface Persons {
 
 export interface ISeguridadInfo {
   superUser: SuperUser[];
-  roles: Roles[]; 
+  roles: RolUser[];
   rol: Rol;
   users: Users[];
   persons: Persons[];
@@ -300,21 +235,22 @@ export interface ISeguridadInfo {
   data_user_search: InfoUsuario;
   data_person_search: InfoPersonal;
   user_info: Users;
+  legal_person: DataPersonas;
 }
 
 export interface SuperUser {
-  id_persona: number,
-  tipo_persona: string,
-  tipo_documento: string,
-  numero_documento: string,
-  primer_nombre: string,
-  segundo_nombre: string | null,
-  primer_apellido: string,
-  segundo_apellido: string | null,
-  nombre_completo: string,
-  razon_social: string | null,
-  nombre_comercial: string | null,
-  tiene_usuario: boolean
+  id_persona: number;
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string | null;
+  primer_apellido: string;
+  segundo_apellido: string | null;
+  nombre_completo: string;
+  razon_social: string | null;
+  nombre_comercial: string | null;
+  tiene_usuario: boolean;
 }
 
 export interface DatosRestringidos {
@@ -345,3 +281,105 @@ export interface HistoricoCambioEstadosUser {
   id_usuario_afectado: number;
   usuario_operador: number;
 }
+
+export interface DelegarSuper {
+  tipo_documento_opt: IList[];
+  tipo_documento: string;
+  loading: boolean;
+  get_selects_options: () => Promise<void>;
+  set_tipo_documento: Dispatch<SetStateAction<string>>;
+}
+
+export interface InfoPersonal {
+  id_persona: number;
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  primer_nombre: string;
+  segundo_nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  nombre_completo: string;
+  razon_social: string;
+  nombre_comercial: string;
+  tiene_usuario: boolean;
+  usuarios: UsersXPerson[];
+}
+
+export interface Roles {
+  subsistema: string;
+  desc_subsistema: string;
+  checked: boolean;
+  modulos: Modulo[];
+}
+
+export interface Modulo {
+  id_modulo: number;
+  nombre_modulo: string;
+  descripcion: string;
+  ruta_formulario: string;
+  nombre_icono: string;
+  permisos: Acciones;
+  checked: boolean;
+}
+
+export interface Acciones {
+  crear?: Accion;
+  actualizar?: Accion;
+  consultar?: Accion;
+  borrar?: Accion;
+  anular?: Accion;
+  ejecutar?: Accion;
+}
+
+export interface Accion {
+  value: boolean;
+  id: number;
+}
+
+export interface Permisos {
+  subsistema: string;
+  desc_subsistema: string;
+  modulos: Modulos[];
+}
+
+export interface Modulos {
+  id_modulo: number;
+  nombre_modulo: string;
+  descripcion: string;
+  ruta_formulario: string;
+  nombre_icono: string;
+  permisos: Acciones[];
+}
+
+export interface PermisosRol {
+  id_rol: number;
+  id_permiso_modulo: number;
+  id_permiso_modulo_rol?: number;
+}
+
+export interface PermisosRolEdit {
+  id_permisos_modulo: number;
+}
+
+export interface Rol {
+  id_rol: number;
+  nombre_rol: string;
+  descripcion_rol: string;
+  Rol_sistema: boolean;
+}
+
+export interface IRolesInfo {
+  superUser: SuperUser[];
+}
+
+export interface RolSlice {
+  rol: Rol;
+  permisos: Permisos[];
+}
+
+// export interface Acciones {
+//   name: string;
+//   value: boolean;
+//   id: number;
+// }

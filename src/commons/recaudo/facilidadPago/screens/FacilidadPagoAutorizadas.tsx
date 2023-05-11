@@ -30,32 +30,29 @@ export const FacilidadPagoAutorizadas: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Nombres"
-                  helperText='Escribe Nombre y Apellido'
                   size="small"
                   fullWidth
+                  value={'Marcela Cardenas'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Identificación"
-                  helperText='Escribe Número de Identificación'
                   size="small"
                   fullWidth
+                  value={'230232019'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Correo Electrónico"
-                  helperText='Escribe Correo Electrónico'
                   size="small"
                   fullWidth
+                  value={'marce@gmail.com'}
                 />
               </Grid>
             </Grid>

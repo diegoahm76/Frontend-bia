@@ -92,6 +92,7 @@ export const edit_bodega_service: any = (
         } catch (error: any) {
             control_error(error.response.data.detail);
             console.log(error.response.data);
+
             return error as AxiosError;
         }
     };

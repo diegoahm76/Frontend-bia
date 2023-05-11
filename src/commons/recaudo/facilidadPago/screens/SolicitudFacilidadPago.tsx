@@ -18,6 +18,7 @@ interface event {
 
 interface bien {
   id: string;
+  bien: string;
   identificacion: string;
   avaluo: number;
   direccion: string;
@@ -52,8 +53,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
 
   const columns_bienes: GridColDef[] = [
     {
-      field: 'identificacion',
-      headerName: 'Identificación Bien',
+      field: 'bien',
+      headerName: 'Tipo Bien',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -62,8 +63,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
       ),
     },
     {
-      field: 'ubicacion',
-      headerName: 'Ubicación',
+      field: 'identificacion',
+      headerName: 'Identificación',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -97,7 +98,14 @@ export const SolicitudFacilidadPago: React.FC = () => {
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          <Button
+            color='primary'
+            variant='outlined'
+            size='small'
+            onClick={() => {}}
+          >
+            Ver Documento
+          </Button>
         </div>
       ),
     },
@@ -154,10 +162,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
               <FormControl size='small' sx={{ width: '300px' }}>
-                <InputLabel id="demo-simple-select-label">Calidad en que actúa la persona</InputLabel>
+                <InputLabel>Calidad en que actúa la persona</InputLabel>
                 <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
                   label="Calidad en que actúa la persona"
                   defaultValue={""}
                   onChange={(event: event) => {
@@ -220,7 +226,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     <Grid item xs={12} sm={3}>
                       <TextField
                         required
-                        id="outlined-error-helper-text"
                         label="Dirección Notificación"
                         helperText='Escribe la Dirección de Notificación'
                         size="small"
@@ -232,7 +237,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     <Grid item xs={12} sm={3}>
                       <TextField
                         required
-                        id="outlined-error-helper-text"
                         label="Ciudad"
                         helperText='Escribe la Ciudad'
                         size="small"
@@ -244,7 +248,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     <Grid item xs={12} sm={3}>
                       <TextField
                         required
-                        id="outlined-error-helper-text"
                         label="Teléfono Contacto"
                         helperText='Escribe el Teléfono de Contacto'
                         size="small"
@@ -316,7 +319,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     <Grid item xs={12} sm={3}>
                       <TextField
                         required
-                        id="outlined-error-helper-text"
                         label="Dirección Notificación"
                         helperText='Escribe la Dirección de Notificación'
                         size="small"
@@ -328,7 +330,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     <Grid item xs={12} sm={3}>
                       <TextField
                         required
-                        id="outlined-error-helper-text"
                         label="Ciudad"
                         helperText='Escribe la Ciudad'
                         size="small"
@@ -340,7 +341,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     <Grid item xs={12} sm={3}>
                       <TextField
                         required
-                        id="outlined-error-helper-text"
                         label="Teléfono Contacto"
                         helperText='Escribe el Teléfono de Contacto'
                         size="small"
@@ -378,10 +378,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   <Grid container spacing={2}>
                     <Grid item xs={12} sm={3}>
                       <FormControl size="small" fullWidth>
-                        <InputLabel id="demo-simple-select-label">Tipo Deudor Solidario</InputLabel>
+                        <InputLabel>Tipo Deudor Solidario</InputLabel>
                         <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
                           label="Tipo Deudor Solidario"
                           onChange={on_input_change}
                           name='tipoDeudor'
@@ -427,7 +425,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     <Grid item xs={12} sm={3}>
                       <TextField
                         required
-                        id="outlined-error-helper-text"
                         label="Dirección Notificación"
                         helperText='Escribe la Dirección de Notificación'
                         size="small"
@@ -439,7 +436,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     <Grid item xs={12} sm={3}>
                       <TextField
                         required
-                        id="outlined-error-helper-text"
                         label="Ciudad"
                         helperText='Escribe la Ciudad'
                         size="small"
@@ -449,7 +445,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     <Grid item xs={12} sm={3}>
                       <TextField
                         required
-                        id="outlined-error-helper-text"
                         label="Teléfono Contacto"
                         helperText='Escribe el Teléfono de Contacto'
                         size="small"
@@ -486,10 +481,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">Periodicidad y Modalidad</InputLabel>
+                  <InputLabel>Periodicidad y Modalidad</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     label="Periodicidad y Modalidad"
                     name='periodicidadymodalidad'
                     defaultValue={""}
@@ -522,11 +515,9 @@ export const SolicitudFacilidadPago: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">{periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}</InputLabel>
+                  <InputLabel>{periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}</InputLabel>
                   <Select
                     required
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     label={periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}
                     name='plazo'
                     defaultValue={""}
@@ -548,11 +539,9 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   <>
                     <Grid item xs={12} sm={3} direction="row" rowSpacing={2}>
                       <FormControl size="small" fullWidth>
-                        <InputLabel id="demo-simple-select-label">Garantías Ofrecidas</InputLabel>
+                        <InputLabel>Garantía Ofrecida</InputLabel>
                         <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          label="Garantías Ofrecidas"
+                          label="Garantía Ofrecida"
                           onChange={on_input_change}
                           name='garantias'
                           defaultValue={""}
@@ -568,7 +557,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       <TextField
                         size="small"
                         fullWidth
-                        helperText='Carga Garantías Ofrecidas'
+                        helperText='Carga Garantía Ofrecida'
                         variant="outlined"
                         type="file"
                         onChange={on_input_change}
@@ -593,123 +582,139 @@ export const SolicitudFacilidadPago: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <Grid
-      container
-      sx={{
-        position: 'relative',
-        background: '#FAFAFA',
-        borderRadius: '15px',
-        mb: '20px',
-        mt: '20px',
-        p: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
-      }}
-    >
-      <h3>Relación de bienes</h3>
-      <Grid item xs={12}>
-        <Box
-          component="form"
-          noValidate
-          autoComplete="off"
+      {
+        periodicidad === 'años' && parseInt(plazo) > 1 || periodicidad === 'semestres' && parseInt(plazo) > 2 || periodicidad === 'trimestres' && parseInt(plazo) > 4 || periodicidad === 'meses' && parseInt(plazo) > 12 ? (
+          <Grid
+          container
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            mb: '20px',
+            mt: '20px',
+            p: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
         >
-          <Grid container spacing={2} marginBottom={3}>
-            <Grid item xs={12} sm={3} >
-              <TextField
-                required
-                size="small"
-                fullWidth
-                label='Identificación'
-                helperText='Escribe Documento de Identidad'
-                variant="outlined"
-                onChange={handle_change_local}
-                name='identificacion'
-              />
+        <h3>Relación de bienes</h3>
+        <Grid item xs={12}>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+            <Grid container spacing={2} marginBottom={3}>
+              <Grid item xs={12} sm={3} >
+              <FormControl size="small" fullWidth>
+                  <InputLabel>Tipo Bien</InputLabel>
+                  <Select
+                    label="Tipo Bien"
+                    name='bien'
+                    defaultValue={""}
+                    onChange={handle_change_local}
+                  >
+                    <MenuItem value="Casa">Casa</MenuItem>
+                    <MenuItem value="Auto">Auto</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={3} >
+                <TextField
+                  required
+                  size="small"
+                  fullWidth
+                  label='Identificación'
+                  helperText='Escribe el Documento de Identificación'
+                  variant="outlined"
+                  onChange={handle_change_local}
+                  name='identificacion'
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  required
+                  label="Avalúo"
+                  helperText='Escribe el Avalúo'
+                  size="small"
+                  fullWidth
+                  type='number'
+                  onChange={handle_change_local}
+                  name='avaluo'
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  required
+                  label="Dirección"
+                  helperText='Escribe la Dirección'
+                  size="small"
+                  fullWidth
+                  onChange={handle_change_local}
+                  name='direccion'
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  required
+                  helperText='Carga el Documento Impuesto'
+                  size="small"
+                  fullWidth
+                  type='file'
+                  onChange={handle_change_local}
+                  name='docImpuesto'
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  color='primary'
+                  variant='outlined'
+                  size='small'
+                  onClick={() => {
+                    set_rows_bienes(rows_bienes.concat({...form_local, id: faker.database.mongodbObjectId()}))
+                  }}
+                >
+                  Agregar
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                required
-                id="outlined-error-helper-text"
-                label="Avalúo"
-                helperText='Escribe el Avalúo'
-                size="small"
-                fullWidth
-                type='number'
-                onChange={handle_change_local}
-                name='avaluo'
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                required
-                id="outlined-error-helper-text"
-                label="Dirección"
-                helperText='Escribe la Dirección'
-                size="small"
-                fullWidth
-                onChange={handle_change_local}
-                name='direccion'
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                required
-                id="outlined-error-helper-text"
-                helperText='Carga el Documento Impuesto'
-                size="small"
-                fullWidth
-                type='file'
-                onChange={handle_change_local}
-                name='docImpuesto'
-              />
-            </Grid>
-            <Grid item xs={12} sm={3}>
-              <Button
-                color='info'
-                variant='outlined'
-                size='small'
-                onClick={() => {
-                  set_rows_bienes(rows_bienes.concat({...form_local, id: faker.database.mongodbObjectId()}))
-                }}
-              >
-                Agregar
-              </Button>
-            </Grid>
-          </Grid>
-          {
-            rows_bienes.length !== 0 ? (
-              <Grid
-                container
-                sx={{
-                  position: 'relative',
-                  background: '#FAFAFA',
-                  borderRadius: '15px',
-                  p: '20px',
-                  mb: '20px',
-                  boxShadow: '0px 3px 6px #042F4A26',
-                }}
-              >
-                <Grid item xs={12}>
-                  <Grid item>
-                    <Box sx={{ width: '100%' }}>
-                      <DataGrid
-                        autoHeight
-                        disableSelectionOnClick
-                        rows={rows_bienes}
-                        columns={columns_bienes}
-                        pageSize={10}
-                        rowsPerPageOptions={[10]}
-                        experimentalFeatures={{ newEditingApi: true }}
-                        getRowId={(row) => row.id}
-                      />
-                    </Box>
+            {
+              rows_bienes.length !== 0 ? (
+                <Grid
+                  container
+                  sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px',
+                    mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                  }}
+                >
+                  <Grid item xs={12}>
+                    <Grid item>
+                      <Box sx={{ width: '100%' }}>
+                        <DataGrid
+                          autoHeight
+                          disableSelectionOnClick
+                          rows={rows_bienes}
+                          columns={columns_bienes}
+                          pageSize={10}
+                          rowsPerPageOptions={[10]}
+                          experimentalFeatures={{ newEditingApi: true }}
+                          getRowId={(row) => row.id}
+                        />
+                      </Box>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            ) : null
-          }
-        </Box>
+              ) : null
+            }
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+        ) : null
+      }
+
       <Grid
         container
         sx={{
@@ -748,7 +753,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
           <FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
         </FormGroup>
         <Button
-          color='info'
+          color='primary'
           variant='contained'
           onClick={() => {
             handle_open()
