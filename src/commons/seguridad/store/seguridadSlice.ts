@@ -73,8 +73,8 @@ const initial_state_user_info: Users = {
   primer_apellido_usuario_creador: '',
   roles: [
     {
-      id_rol: 0,
-      nombre_rol: '',
+      value: 0,
+      label: '',
     },
   ],
 };

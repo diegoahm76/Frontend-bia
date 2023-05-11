@@ -3,7 +3,7 @@ import type { DataPersonas, IList } from '../../../interfaces/globalModels';
 
 export interface IList2 {
   value: number;
-  label: string ;
+  label: string;
 }
 
 export interface FormValuesSearchPerson {
