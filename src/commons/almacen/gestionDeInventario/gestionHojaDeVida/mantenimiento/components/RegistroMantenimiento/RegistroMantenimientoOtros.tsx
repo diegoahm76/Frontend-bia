@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Stack } from "@mui/material";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import use_previsualizacion from "../mantenimientoGeneral/hooks/usePrevisualizacion";
 import { BusquedaProgramacionComponent } from "./RegistroMantenimientoGeneral/BusquedaProgramacion";
 import { Title } from "../../../../../../../components";
@@ -17,12 +17,22 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
     const {
         detalle_seleccionado,
         programacion,
+        user_info,
         set_detalle_seleccionado,
         set_tipo_mantenimiento,
         set_user_info,
         set_especificacion,
         set_programacion
     } = use_previsualizacion();
+
+    useEffect(() => {
+        const data = localStorage.getItem('persist:macarenia_app');
+        if (data !== null) {
+            const data_json = JSON.parse(data);
+            const data_auth = JSON.parse(data_json.auth);
+            set_user_info(data_auth.userinfo);
+        }
+    }, []);
 
     const set_details_state = useCallback((val: any) => {
         set_detalle_seleccionado(val);
@@ -31,10 +41,6 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
     const set_prog_seleccionada = useCallback((val: any) => {
         set_programacion(val);
     }, [set_programacion]);
-
-    const set_user_info_state = useCallback((val: string) => {
-        set_user_info(val);
-    }, [set_user_info]);
 
     const set_type_maintenance_state = useCallback((val: string) => {
         set_tipo_mantenimiento(val);
@@ -87,7 +93,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de ostros activos" />
-                    <BusquedaArticuloComponent tipo_articulo={"otros activos"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} />
+                    <BusquedaArticuloComponent tipo_articulo={"otros activos"} parent_details={set_details_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} />
                 </Grid>
             </Grid>
             <Grid container
@@ -115,7 +121,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                 }}>
                 <Grid item xs={12}>
                     <Title title='Detalles'/>
-                    <DetallesComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} />
+                    <DetallesComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario}  user_info={user_info}/>
                 </Grid>
             </Grid>
             <Grid container>
