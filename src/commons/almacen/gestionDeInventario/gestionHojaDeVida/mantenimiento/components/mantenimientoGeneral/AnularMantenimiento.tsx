@@ -9,19 +9,15 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../../../../../hooks";
 import { override_maintenance } from "./thunks/maintenanceThunks";
 interface IProps {
-  is_modal_active: boolean;
-  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  title: string;
-  user_info: any;
+  is_modal_active: boolean,
+  set_is_modal_active: Dispatch<SetStateAction<boolean>>,
+  title: string,
+  user_info: any,
+  id_programado: number
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const AnularMantenimientoComponent = ({
-  is_modal_active,
-  set_is_modal_active,
-  title,
-  user_info
-}: IProps) => {
+const AnularMantenimientoComponent = ({ is_modal_active, set_is_modal_active, title, user_info, id_programado }: IProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -38,10 +34,12 @@ const AnularMantenimientoComponent = ({
   };
 
   const guardar_anulacion = (): void => {
-    dispatch(override_maintenance({ id_mantenimiento: 0, id_funcionario: user_info.id_usuario, fecha_anulacion: fecha, motivo_anulacion: motivo })).then((response:any) =>{
-      console.log('Se anula mantenimiento: ', response)
-      set_is_modal_active(false);
-      navigate('/home');
+    // const object_formulario = { id_mantenimiento: id_programado, id_funcionario: user_info.id_usuario, fecha_anulacion: fecha, motivo_anulacion: motivo };
+    dispatch(override_maintenance(id_programado, { justificacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
+      if (response.success) {
+        navigate('/home');
+        set_is_modal_active(false);
+      }
     })
   }
 
