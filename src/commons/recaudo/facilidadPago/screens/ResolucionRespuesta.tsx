@@ -25,7 +25,7 @@ export const ResolucionRespuesta: React.FC = () => {
 
   return (
     <>
-      <Title title='Crear Resolución de Respuesta - Usuario Cormacarena'/>
+      <Title title="Crear Resolución de Respuesta - Usuario Cormacarena"></Title>
       <Grid
         container
         sx={{
@@ -38,7 +38,7 @@ export const ResolucionRespuesta: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <h3>Datos de Encabezado</h3>
+        <Title title="Datos de Encabezado"></Title>
         <Grid item xs={12}>
           <Box
             component="form"
@@ -96,7 +96,7 @@ export const ResolucionRespuesta: React.FC = () => {
             autoComplete="off"
             mb='40px'
           >
-            <h3>Crear Documento</h3>
+            <Title title="Crear Documento"></Title>
             <Grid container spacing={2} mb='20px'>
               <Grid item xs={11} sm={3}>
                 <Button

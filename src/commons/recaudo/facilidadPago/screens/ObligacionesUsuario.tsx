@@ -108,7 +108,7 @@ export const ObligacionesUsuario: React.FC = () => {
             noValidate
             autoComplete="off"
           >
-              <p>Sus obligaciones pendientes por pago son las siguientes:</p>
+              <Title title='Sus obligaciones pendientes por pago son las siguientes:'/>
               <TablaObligacionesUsuario obligaciones={obligaciones} />
           </Box>
         </Grid>

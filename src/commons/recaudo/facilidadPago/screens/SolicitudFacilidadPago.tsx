@@ -847,8 +847,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 />
               </Grid>
               <FormGroup>
-                <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
-                <FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
+                <FormControlLabel sx={{color: 'black !important'}} control={<Checkbox />} label="Aceptar términos y condiciones" />
+                <FormControlLabel sx={{color: 'black !important'}} control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
               </FormGroup>
               <Stack
                 direction="row"
