@@ -1096,6 +1096,11 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@blockly/field-date@^6.0.12":
+  version "6.0.13"
+  resolved "https://registry.yarnpkg.com/@blockly/field-date/-/field-date-6.0.13.tgz#769f2a759de87e1ca63a3f4eda85a73574cbdd27"
+  integrity sha512-ficC1DKt8fLc7YD4vKEpkWZKJrWUx4mgzmhY1mcIWVJ55jy0pKAilG4cZATYal8ymCBHWOr2HkO0wRZxj40KjQ==
+
 "@ckeditor/ckeditor5-adapter-ckfinder@^37.1.0":
   version "37.1.0"
   resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-adapter-ckfinder/-/ckeditor5-adapter-ckfinder-37.1.0.tgz#215f1023fa6afde7ed8978c3db3fb08073b50022"
@@ -1381,10 +1386,6 @@
     "@ckeditor/ckeditor5-ui" "^37.1.0"
     "@ckeditor/ckeditor5-utils" "^37.1.0"
     lodash-es "^4.17.15"
-"@blockly/field-date@^6.0.12":
-  version "6.0.13"
-  resolved "https://registry.yarnpkg.com/@blockly/field-date/-/field-date-6.0.13.tgz#769f2a759de87e1ca63a3f4eda85a73574cbdd27"
-  integrity sha512-ficC1DKt8fLc7YD4vKEpkWZKJrWUx4mgzmhY1mcIWVJ55jy0pKAilG4cZATYal8ymCBHWOr2HkO0wRZxj40KjQ==
 
 "@csstools/normalize.css@*":
   version "12.0.0"
@@ -4414,6 +4415,11 @@ ckeditor5@^37.1.0:
     "@ckeditor/ckeditor5-utils" "^37.1.0"
     "@ckeditor/ckeditor5-watchdog" "^37.1.0"
     "@ckeditor/ckeditor5-widget" "^37.1.0"
+
+classcat@^5.0.3, classcat@^5.0.4:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/classcat/-/classcat-5.0.4.tgz#e12d1dfe6df6427f260f03b80dc63571a5107ba6"
+  integrity sha512-sbpkOw6z413p+HDGcBENe498WM9woqWHiJxCq7nvmxe9WmrUmqfAcxpIwAiMtM5Q3AhYkzXcNQHqsWq0mND51g==
 
 classnames@^2.2.5, classnames@^2.2.6:
   version "2.3.2"

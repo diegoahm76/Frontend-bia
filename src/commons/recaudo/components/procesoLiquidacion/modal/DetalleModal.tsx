@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, InputLabel, Stack, TextField } from "@mui/material"
 import CloseIcon from '@mui/icons-material/Close';
 import { useState, type Dispatch, type SetStateAction, type ChangeEvent } from 'react';

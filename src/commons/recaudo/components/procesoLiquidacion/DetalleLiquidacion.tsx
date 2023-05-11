@@ -1,3 +1,5 @@
+/* eslint-disable object-shorthand */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint no-new-func: 0 */
 import { useMemo, useState, type Dispatch, type SetStateAction } from "react"
 import { Box, Button, FormControl, Grid, MenuItem, Select, type SelectChangeEvent, Stack, InputLabel, TextField, List, ListItemText } from "@mui/material"

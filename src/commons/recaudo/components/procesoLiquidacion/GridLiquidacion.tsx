@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Avatar, Box, Grid, IconButton, TextField } from "@mui/material"
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { DataGrid, type GridColDef, type GridRenderCellParams } from "@mui/x-data-grid";

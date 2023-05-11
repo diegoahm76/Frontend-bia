@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable no-var */
 /* eslint-disable no-restricted-syntax */
 /**
  * @license
