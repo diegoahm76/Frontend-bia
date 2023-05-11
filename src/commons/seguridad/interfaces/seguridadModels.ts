@@ -1,5 +1,6 @@
 import { type Dispatch, type SetStateAction } from 'react';
 import type { IList } from '../../../interfaces/globalModels';
+import type{ FieldErrors,  UseFormHandleSubmit,  UseFormRegister,  UseFormSetValue,  UseFormWatch } from 'react-hook-form';
 
 export interface IList2 {
   value: number;
@@ -117,7 +118,22 @@ export interface UserCreate {
 }
 
 export interface AdminUserHook {
-  // initial_state_data_register: DataAadminUser;
+  register_admin_user: UseFormRegister<DataAadminUser>; 
+  handle_submit_admin_user: UseFormHandleSubmit<DataAadminUser>;
+  set_value_admin_user: UseFormSetValue<DataAadminUser>;
+  errors_admin_users: FieldErrors<DataAadminUser>;
+  watch_admin_user: UseFormWatch<DataAadminUser>;
+  get_selects_options: () => Promise<void>;
+  data_disponible: boolean;
+  action_admin_users: string;
+  data_person_search: InfoPersonal;
+  user_info: Users;
+  users_x_person_is_active: boolean;
+  selected_image: string | ArrayBuffer | null;
+  file_image: File | undefined;
+  check_user_is_active: boolean;
+  check_user_is_blocked: boolean;
+  historial_cambios_estado_is_active: boolean;
   data_register: DataAadminUser;
   has_user: boolean;
   is_exists: boolean;
@@ -137,7 +153,13 @@ export interface AdminUserHook {
   tipo_usuario: string;
   roles: IList2[];
   roles_opt: IList2[];
-  get_selects_options: () => Promise<void>;
+  set_users_x_person_is_active:Dispatch<SetStateAction<boolean>>; 
+  set_selected_image: Dispatch<SetStateAction<string | ArrayBuffer | null>>;
+  set_file_image: Dispatch<SetStateAction<File | undefined>>;
+  set_check_user_is_active: Dispatch<SetStateAction<boolean>>;
+  set_check_user_is_blocked: Dispatch<SetStateAction<boolean>>;
+  set_data_disponible: Dispatch<SetStateAction<boolean>>;
+  set_historial_cambios_estado_is_active: Dispatch<SetStateAction<boolean>>;
   set_data_register: Dispatch<SetStateAction<DataAadminUser>>;
   set_has_user: Dispatch<SetStateAction<boolean>>;
   set_is_exists: Dispatch<SetStateAction<boolean>>;

@@ -26,14 +26,52 @@ import type {
   SeguridadSlice,
   FormValuesSearchPerson,
   keys_object_search_person,
+  Users,
 } from '../interfaces';
 import { get_persons } from '../store/thunks';
 import {
   set_action_admin_users,
   set_data_person_search,
+  set_user_info,
 } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
+
+const initial_state_user_info: Users = {
+  id_usuario: 0,
+  nombre_de_usuario: '',
+  persona: 0,
+  tipo_persona: '',
+  tipo_documento: '',
+  numero_documento: '',
+  primer_nombre: '',
+  segundo_nombre: '',
+  primer_apellido: '',
+  segundo_apellido: '',
+  nombre_completo: '',
+  razon_social: '',
+  nombre_comercial: '',
+  is_active: false,
+  fecha_ultimo_cambio_activacion: '',
+  justificacion_ultimo_cambio_activacion: '',
+  is_blocked: false,
+  fecha_ultimo_cambio_bloqueo: '',
+  justificacion_ultimo_cambio_bloqueo: '',
+  tipo_usuario: '',
+  profile_img: '',
+  creado_por_portal: false,
+  created_at: '',
+  activated_at: '',
+  id_usuario_creador: 0,
+  primer_nombre_usuario_creador: '',
+  primer_apellido_usuario_creador: '',
+  roles: [
+    {
+      value: 0,
+      label: '',
+    },
+  ],
+};
 
 interface IProps {
   is_modal_active: boolean;
@@ -206,6 +244,7 @@ const DialogBusquedaAvanzada = ({
 
   const trigger_user_person_create_active = (data: any): void => {
     set_is_modal_active(false);
+    dispatch(set_user_info(initial_state_user_info));
     dispatch(set_action_admin_users('CREATE'));
     dispatch(set_data_person_search(data));
   };

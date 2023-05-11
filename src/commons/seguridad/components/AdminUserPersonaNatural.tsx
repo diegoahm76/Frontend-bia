@@ -1,6 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 import { type AxiosError } from 'axios';
 import {
   Box,
@@ -20,22 +18,16 @@ import SaveIcon from '@mui/icons-material/Save';
 import HistoryIcon from '@mui/icons-material/History';
 import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialCambiosEstadoUser';
-import type {
-  keys_object,
-  DataAadminUser,
-  SeguridadSlice,
-  IList2,
-} from '../interfaces';
+import type { keys_object, IList2 } from '../interfaces';
 import {
   crear_user_admin_user,
   update_user_admin_user,
 } from '../request/seguridadRequest';
 import { use_admin_users } from '../hooks/AdminUserHooks';
-// import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../../helpers/controlSuccess';
 import { CustomSelect } from '../../../components/CustomSelect';
-import { roles_choise_adapter } from '../adapters/roles_adapters';
 import { type ToastContent, toast } from 'react-toastify';
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
   toast.error(message, {
@@ -48,62 +40,36 @@ const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =
     progress: undefined,
     theme: 'light',
   });
-export const initial_state_data_register: DataAadminUser = {
-  tipo_persona: '',
-  tipo_documento: '',
-  numero_documento: '',
-  razon_social: '',
-  nombre_comercial: '',
-  primer_apellido: '',
-  primer_nombre: '',
-  segundo_apellido: '',
-  segundo_nombre: '',
-  nombre_de_usuario: '',
-  imagen_usuario: new File([], ''),
-  tipo_usuario: '',
-  roles: [
-    {
-      value: 0,
-      label: '',
-    },
-  ],
-  activo: false,
-  activo_fecha_ultimo_cambio: '',
-  activo_justificacion_cambio: '',
-  bloqueado: false,
-  bloqueado_fecha_ultimo_cambio: '',
-  bloqueado_justificacion_cambio: '',
-  fecha_creacion: '',
-  fecha_activación_inicial: '',
-  creado_desde_portal: false,
-  persona_que_creo: 0,
-};
 interface Props {
   has_user: boolean;
-  // onRender: (render: boolean) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUserPersonaNatural: React.FC<Props> = ({
   has_user,
-}: // onRender,
-Props) => {
-  // const dispatch = useDispatch();
-  const [data_disponible, set_data_disponible] = useState<boolean>(false);
-  const { action_admin_users, data_person_search, user_info } = useSelector(
-    (state: SeguridadSlice) => state.seguridad
-  );
-  const [
+}: Props) => {
+  const {
+    // Form
+    register_admin_user,
+    handle_submit_admin_user,
+    set_value_admin_user,
+    errors_admin_users,
+    watch_admin_user,
+    //
+    action_admin_users,
+    selected_image,
+    set_selected_image,
+    file_image,
+    set_file_image,
+    check_user_is_active,
+    set_check_user_is_active,
+    check_user_is_blocked,
+    set_check_user_is_blocked,
+    data_person_search,
+    user_info,
+    data_disponible,
     historial_cambios_estado_is_active,
     set_historial_cambios_estado_is_active,
-  ] = useState<boolean>(false);
-  const [selected_image, set_selected_image] = useState<
-    string | ArrayBuffer | null
-  >('');
-  const [file_image, set_file_image] = useState<File>();
-
-  const {
-    // initial_state_data_register,
     data_register,
     loading,
     tipo_usuario,
@@ -122,129 +88,26 @@ Props) => {
     set_roles,
   } = use_admin_users();
 
-  const {
-    // control,
-    register: register_admin_user,
-    handleSubmit: handle_submit,
-    setValue: set_value,
-    formState: { errors },
-    // reset: reset_admin_user,
-    watch,
-  } = useForm<DataAadminUser>();
-
-  // Paso de datos a formulario para creacion de usuario persona natural
   useEffect(() => {
-    set_data_disponible(false);
-    // reset_admin_user();
-    set_data_register(initial_state_data_register);
-
-    set_data_register({
-      ...data_register,
-      primer_nombre: data_person_search.primer_nombre,
-      segundo_nombre: data_person_search.segundo_nombre,
-      primer_apellido: data_person_search.primer_apellido,
-      segundo_apellido: data_person_search.segundo_apellido,
-    });
-    if (data_person_search.id_persona !== 0) {
-      set_data_disponible(true);
+    if (watch_admin_user('tipo_documento') !== undefined) {
+      set_tipo_documento(watch_admin_user('tipo_documento'));
     }
-    // onRender(true);
-  }, [data_person_search]);
-
-  // Paso de datos a formulario para edición de usuario persona natural
-  useEffect(() => {
-    set_data_disponible(false);
-    set_data_register(initial_state_data_register);
-
-    console.log('reset admin user');
-    // reset_admin_user();
-    // set_data_register(initial_state_data_register);
-
-    set_roles(roles_choise_adapter(user_info.roles));
-    console.log(roles);
-    set_data_register({
-      ...data_register,
-      primer_nombre: user_info.primer_nombre,
-      segundo_nombre: user_info.segundo_nombre,
-      primer_apellido: user_info.primer_apellido,
-      segundo_apellido: user_info.segundo_apellido,
-      nombre_de_usuario: user_info.nombre_de_usuario,
-      tipo_usuario: user_info.tipo_usuario,
-      roles: user_info.roles,
-      activo: user_info.is_active,
-      activo_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_activacion,
-      activo_justificacion_cambio:
-        user_info.justificacion_ultimo_cambio_activacion,
-      bloqueado: user_info.is_blocked,
-      bloqueado_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_bloqueo,
-      bloqueado_justificacion_cambio:
-        user_info.justificacion_ultimo_cambio_bloqueo,
-      fecha_creacion: user_info.created_at,
-      fecha_activación_inicial: user_info.activated_at,
-      creado_desde_portal: user_info.creado_por_portal,
-      persona_que_creo: user_info.id_usuario_creador,
-    });
-    // set_activo(data_register.activo);
-    set_value('primer_nombre', user_info.primer_nombre);
-    set_value('segundo_nombre', user_info.segundo_nombre);
-    set_value('primer_apellido', user_info.primer_apellido);
-    set_value('segundo_apellido', user_info.segundo_apellido);
-    set_value('nombre_de_usuario', user_info.nombre_de_usuario);
-    set_value('tipo_usuario', user_info.tipo_usuario);
-    set_value('roles', user_info.roles);
-    set_value('activo', user_info.is_active);
-    set_value(
-      'activo_fecha_ultimo_cambio',
-      user_info.fecha_ultimo_cambio_activacion
-    );
-    set_value(
-      'activo_justificacion_cambio',
-      user_info.justificacion_ultimo_cambio_activacion
-    );
-    set_value('bloqueado', user_info.is_blocked);
-    set_value(
-      'bloqueado_fecha_ultimo_cambio',
-      user_info.fecha_ultimo_cambio_bloqueo
-    );
-    set_value(
-      'bloqueado_justificacion_cambio',
-      user_info.justificacion_ultimo_cambio_bloqueo
-    );
-    set_value('fecha_creacion', user_info.created_at);
-    set_value('fecha_activación_inicial', user_info.activated_at);
-    set_value('creado_desde_portal', user_info.creado_por_portal);
-    set_value('persona_que_creo', user_info.id_usuario_creador);
-    if (user_info.id_usuario !== 0) {
-      set_data_disponible(true);
-    }
-    // onRender(true);
-  }, [user_info]);
-
-  // useEffect(() => {
-  //   dispatch(set_user_info(initial_state_data_register));
-  //   set_roles([]);
-  // }, [action_admin_users]);
+  }, [watch_admin_user('tipo_documento')]);
 
   useEffect(() => {
-    if (watch('tipo_documento') !== undefined) {
-      set_tipo_documento(watch('tipo_documento'));
+    if (watch_admin_user('tipo_usuario') !== undefined) {
+      set_tipo_usuario(watch_admin_user('tipo_usuario'));
     }
-  }, [watch('tipo_documento')]);
-
-  useEffect(() => {
-    if (watch('tipo_usuario') !== undefined) {
-      set_tipo_usuario(watch('tipo_usuario'));
-    }
-  }, [watch('tipo_usuario')]);
+  }, [watch_admin_user('tipo_usuario')]);
 
   // Establece los valores del formulario
   const set_value_form = (name: string, value: string): void => {
-    // value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
+    value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
     set_data_register({
       ...data_register,
       [name]: value,
     });
-    set_value(name as keys_object, value);
+    set_value_admin_user(name as keys_object, value);
     console.log(data_register);
   };
 
@@ -256,9 +119,11 @@ Props) => {
         break;
       case 'activo':
         set_activo(e.target.value);
+        set_check_user_is_active(false);
         break;
       case 'bloqueado':
         set_bloqueado(e.target.value);
+        set_check_user_is_blocked(false);
         break;
     }
     set_value_form(e.target.name, e.target.value);
@@ -270,7 +135,7 @@ Props) => {
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<IList2>
   ): void => {
-    set_value('roles', value);
+    set_value_admin_user('roles', value);
     set_data_register({
       ...data_register,
       roles: value,
@@ -283,7 +148,7 @@ Props) => {
     set_value_form(e.target.name, e.target.value);
   };
 
-  const on_submit = handle_submit(async (data_user) => {
+  const on_submit = handle_submit_admin_user(async (data_user) => {
     try {
       console.log(data_user);
       console.log(data_register);
@@ -315,9 +180,8 @@ Props) => {
 
         // // Creación de usuario Persona Natural
         const { data } = await crear_user_admin_user(data_create_user);
-        // if (data.detail) {
+
         control_success(data.detail);
-        // }
       } else if (action_admin_users === 'EDIT') {
         const data_update_user = new FormData();
         data_update_user.append('is_active', data_register.activo.toString());
@@ -339,8 +203,7 @@ Props) => {
           data_register.bloqueado_justificacion_cambio ?? ''
         );
 
-        // console.log('Onsubmit EDIT', data_register);
-        // // Actualización de usuario Persona Natural
+        // Actualización de usuario Persona Natural
         const { data } = await update_user_admin_user(
           user_info.id_usuario,
           data_update_user
@@ -352,28 +215,8 @@ Props) => {
       const temp_error = error as AxiosError;
       const resp = temp_error.response?.data as any;
       control_error(resp.detail);
-      // console.log(error);
-      // control_error(error.);
     }
   });
-
-  // type GetOptionSelectedType = (option: IList2, value: IList2) => boolean;
-
-  // // eslint-disable-next-line @typescript-eslint/naming-convention
-  // const getOptionSelected: GetOptionSelectedType = (
-  //   option: IList2,
-  //   value: IList2
-  // ) => option.value === value.value;
-
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  // const getOptionSelected: Array<AutocompleteProps<
-  //   IList2,
-  //   true,
-  //   false,
-  //   false,
-  //   'div'
-  // >> = (option: IList2, value: IList2) =>
-  //   option.value === value.value;
 
   const handle_image_select = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -382,11 +225,7 @@ Props) => {
       // Obtener el archivo seleccionado
       const file = event.target.files[0];
       set_file_image(file);
-      // set_value('imagen_usuario', file);
-      // set_data_register({
-      //   ...data_register,
-      //   imagen_usuario: file,
-      // });
+
       // Crear un objeto FileReader
       const reader = new FileReader();
       // // Definir la función que se ejecuta cuando se completa la lectura del archivo
@@ -422,7 +261,7 @@ Props) => {
 
   return (
     <>
-      {data_disponible && (
+      {Boolean(data_disponible) && (
         <>
           <form
             onSubmit={(e) => {
@@ -439,7 +278,7 @@ Props) => {
                   fullWidth
                   size="small"
                   label="Primer nombre *"
-                  // error={errors.primer_nombre?.type === 'required'}
+                  // error={errors_admin_users.primer_nombre?.type === 'required'}
                   value={data_register.primer_nombre}
                   // helperText={
                   //   errors.primer_nombre?.type === 'required'
@@ -468,7 +307,7 @@ Props) => {
                   size="small"
                   label="Primer apellido *"
                   value={data_register.primer_apellido}
-                  // error={errors.primer_apellido?.type === 'required'}
+                  // error={errors_admin_users.primer_apellido?.type === 'required'}
                   // helperText={
                   //   errors.primer_apellido?.type === 'required'
                   //     ? 'Este campo es obligatorio'
@@ -502,10 +341,12 @@ Props) => {
                   size="small"
                   label="Nombre de usuario"
                   fullWidth
-                  value={data_register.nombre_de_usuario}
-                  error={errors.nombre_de_usuario?.type === 'required'}
+                  value={user_info.nombre_de_usuario}
+                  error={
+                    errors_admin_users.nombre_de_usuario?.type === 'required'
+                  }
                   helperText={
-                    errors.nombre_de_usuario?.type === 'required'
+                    errors_admin_users.nombre_de_usuario?.type === 'required'
                       ? 'Este campo es obligatorio'
                       : ''
                   }
@@ -521,8 +362,9 @@ Props) => {
                   id="imagen_usuario"
                   type="file"
                   autoFocus
+                  // value={user_info.profile_img}
                   {...register_admin_user('imagen_usuario')}
-                  error={Boolean(errors.imagen_usuario)}
+                  error={Boolean(errors_admin_users.imagen_usuario)}
                   inputProps={{ accept: 'image/*' }}
                   onChange={handle_image_select}
                 />
@@ -553,7 +395,7 @@ Props) => {
                   loading={loading}
                   disabled={false}
                   required={true}
-                  errors={errors}
+                  errors={errors_admin_users}
                   register={register_admin_user}
                 />
               </Grid>
@@ -619,7 +461,7 @@ Props) => {
                       loading={loading}
                       disabled={false}
                       required={true}
-                      errors={errors}
+                      errors={errors_admin_users}
                       register={register_admin_user}
                     />
                   </Grid>
@@ -629,19 +471,19 @@ Props) => {
                       fullWidth
                       size="small"
                       label="Fecha ultimo cambio"
-                      value={data_register.activo_fecha_ultimo_cambio}
+                      value={user_info.fecha_ultimo_cambio_activacion}
                       {...register_admin_user('activo_fecha_ultimo_cambio')}
                       onChange={handle_change}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={6}>
                     <TextField
-                      disabled
+                      disabled={check_user_is_active}
                       fullWidth
                       size="small"
                       label="Justificación del cambio"
                       multiline
-                      value={data_register.activo_justificacion_cambio}
+                      value={user_info.justificacion_ultimo_cambio_activacion}
                       {...register_admin_user('activo_justificacion_cambio')}
                       onChange={handle_change}
                     />
@@ -656,7 +498,7 @@ Props) => {
                       loading={loading}
                       disabled={false}
                       required={true}
-                      errors={errors}
+                      errors={errors_admin_users}
                       register={register_admin_user}
                     />
                   </Grid>
@@ -666,19 +508,19 @@ Props) => {
                       fullWidth
                       size="small"
                       label="Fecha ultimo cambio"
-                      value={data_register.bloqueado_fecha_ultimo_cambio}
+                      value={user_info.fecha_ultimo_cambio_bloqueo}
                       {...register_admin_user('bloqueado_fecha_ultimo_cambio')}
                       onChange={handle_change}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={6}>
                     <TextField
-                      disabled
+                      disabled={check_user_is_blocked}
                       fullWidth
                       size="small"
                       label="Justificación del cambio"
                       multiline
-                      value={data_register.bloqueado_justificacion_cambio}
+                      value={user_info.justificacion_ultimo_cambio_bloqueo}
                       {...register_admin_user('bloqueado_justificacion_cambio')}
                       onChange={handle_change}
                     />
@@ -693,9 +535,11 @@ Props) => {
                       fullWidth
                       size="small"
                       label="Fecha de creación"
-                      error={errors.fecha_creacion?.type === 'required'}
+                      error={
+                        errors_admin_users.fecha_creacion?.type === 'required'
+                      }
                       helperText={
-                        errors.fecha_creacion?.type === 'required'
+                        errors_admin_users.fecha_creacion?.type === 'required'
                           ? 'Este campo es obligatorio'
                           : ''
                       }
@@ -710,10 +554,12 @@ Props) => {
                       size="small"
                       label="Fecha de activación inicial"
                       error={
-                        errors.fecha_activación_inicial?.type === 'required'
+                        errors_admin_users.fecha_activación_inicial?.type ===
+                        'required'
                       }
                       helperText={
-                        errors.fecha_activación_inicial?.type === 'required'
+                        errors_admin_users.fecha_activación_inicial?.type ===
+                        'required'
                           ? 'Este campo es obligatorio'
                           : ''
                       }
@@ -727,9 +573,13 @@ Props) => {
                       fullWidth
                       size="small"
                       label="Creado desde portal"
-                      error={errors.creado_desde_portal?.type === 'required'}
+                      error={
+                        errors_admin_users.creado_desde_portal?.type ===
+                        'required'
+                      }
                       helperText={
-                        errors.creado_desde_portal?.type === 'required'
+                        errors_admin_users.creado_desde_portal?.type ===
+                        'required'
                           ? 'Este campo es obligatorio'
                           : ''
                       }
@@ -742,10 +592,12 @@ Props) => {
                     <TextField
                       fullWidth
                       size="small"
-                      label="Persona que creo el usario"
-                      error={errors.persona_que_creo?.type === 'required'}
+                      label="Persona que creo el usuario"
+                      error={
+                        errors_admin_users.persona_que_creo?.type === 'required'
+                      }
                       helperText={
-                        errors.persona_que_creo?.type === 'required'
+                        errors_admin_users.persona_que_creo?.type === 'required'
                           ? 'Este campo es obligatorio'
                           : ''
                       }
