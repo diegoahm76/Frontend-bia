@@ -17,7 +17,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { create_maintenance_service } from '../mantenimientoGeneral/thunks/maintenanceThunks';
 import { useAppDispatch } from '../../../../../../../hooks';
 import { useNavigate } from 'react-router-dom';
-import BuscarProrgamacionComponent from '../mantenimientoGeneral/BuscarProgramacion';
+import BuscarProgramacionComponent from '../mantenimientoGeneral/BuscarProgramacion';
 import use_buscar_programacion from '../mantenimientoGeneral/hooks/useBuscarProgramacion';
 import SearchIcon from '@mui/icons-material/Search';
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -32,11 +32,13 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
         tipo_mantenimiento,
         especificacion,
         user_info,
+        programacion,
         set_rows,
         set_detalle_seleccionado,
         set_tipo_mantenimiento,
         set_especificacion,
-        set_user_info
+        set_user_info,
+        set_programacion
     } = use_previsualizacion();
 
     const {
@@ -60,6 +62,10 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
     const set_details_state = useCallback((val: any) => {
         set_detalle_seleccionado(val);
     }, [set_detalle_seleccionado]);
+
+    const set_prog_details = useCallback((val: any) => {
+        set_programacion(val);
+    }, [set_programacion]);
 
     const set_type_maintenance_state = useCallback((val: string) => {
         set_tipo_mantenimiento(val);
@@ -110,9 +116,10 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
                     <Title title="Búsqueda de artículo" />
-                    <ArticuloComponent tipo_articulo={"otros activos"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} />
+                    <ArticuloComponent detalle_seleccionado_prop={detalle_seleccionado} tipo_articulo={"otros activos"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
+
             <Grid
                 container
                 sx={{
@@ -145,7 +152,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* MANTENIMIENTO COMPONENT */}
                     <Title title='Detalles' />
-                    <MantenimientoComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} />
+                    <MantenimientoComponent programacion={programacion} parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
 
@@ -163,7 +170,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* FECHAS COMPONENT */}
                     <Title title='Programar por fechas' />
-                    <FechasComponent parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} user_info={user_info} limpiar_formulario={limpiar_formulario} />
+                    <FechasComponent programacion={programacion} parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} user_info={user_info} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
             <Grid
@@ -209,10 +216,13 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                                 Buscar programación
                             </Button>
                             {buscar_programacion_is_active && (
-                                <BuscarProrgamacionComponent
+                                <BuscarProgramacionComponent
                                     is_modal_active={buscar_programacion_is_active}
                                     set_is_modal_active={set_buscar_programacion_is_active}
-                                    title={title_programacion} parent_details={set_details_state} />
+                                    title={title_programacion}
+                                    prog_details={set_prog_details}
+                                    parent_details={set_details_state}
+                                    tipo_articulo={"otros activos"} />
                             )}
                         </Stack>
                     </Box>
@@ -238,6 +248,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                                     set_anular_mantenimiento_is_active(true);
                                     set_title('Anular mantenimiento de otros activos');
                                 }}
+                                disabled={programacion == null}
                             >
                                 Anular
                             </Button>
@@ -246,7 +257,8 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                                     is_modal_active={anular_mantenimiento_is_active}
                                     set_is_modal_active={set_anular_mantenimiento_is_active}
                                     title={title}
-                                    user_info={user_info} />
+                                    user_info={user_info}
+                                    id_programado={programacion.id_programacion_mantenimiento} />
                             )}
                             <Button
                                 color='inherit'

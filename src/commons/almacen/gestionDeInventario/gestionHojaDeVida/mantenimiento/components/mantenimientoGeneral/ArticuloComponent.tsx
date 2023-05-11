@@ -20,10 +20,11 @@ interface IProps {
     tipo_articulo: string,
     parent_details: any,
     user_info_prop: any,
-    limpiar_formulario: boolean
+    limpiar_formulario: boolean,
+    detalle_seleccionado_prop: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, user_info_prop, limpiar_formulario}: IProps) => {
+export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, user_info_prop, limpiar_formulario,detalle_seleccionado_prop}: IProps) => {
   const dispatch = useAppDispatch();
 
     const {        // States
@@ -44,20 +45,31 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
     const [nombre, set_nombre] = useState<string | null>("");
 
     const busqueda_articulo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(tipo_articulo ==='vehículos'){
-            dispatch(get_cv_vehicle_service(e.target.value)).then((response: any) => {
-              set_detalle_seleccionado(response);
-            })
-        }else if(tipo_articulo ==='computadores'){
-            dispatch(get_cv_computer_service(e.target.value)).then((response: any) => {
-                set_detalle_seleccionado(response.data);
-            })
-        }else{
-            dispatch(get_cv_others_service(e.target.value)).then((response: any) => {
-                set_detalle_seleccionado(response);
-            })
+        if(e.target.value !== null && e.target.value !== undefined && e.target.value !== ''){
+            if(tipo_articulo ==='vehículos'){
+                dispatch(get_cv_vehicle_service(e.target.value)).then((response: any) => {
+                  set_detalle_seleccionado(response);
+                })
+            }else if(tipo_articulo ==='computadores'){
+                dispatch(get_cv_computer_service(e.target.value)).then((response: any) => {
+                    set_detalle_seleccionado(response.data);
+                })
+            }else{
+                dispatch(get_cv_others_service(e.target.value)).then((response: any) => {
+                    set_detalle_seleccionado(response);
+                })
+            }
         }
     }
+    const set_form: any = (data: any) => {
+        set_nombre(data.nombre);
+        set_codigo_bien(data.codigo_bien);
+    }
+    useEffect(() => {
+        if (detalle_seleccionado_prop !== undefined && detalle_seleccionado_prop !== null) {
+            set_form(detalle_seleccionado_prop);
+        }
+    }, [detalle_seleccionado_prop]);
 
     const set_details_state = useCallback((val: any) => {
         set_detalle_seleccionado(val);
@@ -93,8 +105,7 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
 
     useEffect(() => {
         if (detalle_seleccionado !== undefined && detalle_seleccionado !== null) {
-            set_codigo_bien(detalle_seleccionado.codigo_bien);
-            set_nombre(detalle_seleccionado.nombre);
+            set_form(detalle_seleccionado);
         }
     }, [detalle_seleccionado]);
 
