@@ -1,20 +1,21 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import storage from 'redux-persist/lib/storage';
-import thunk from 'redux-thunk';
-import { persistReducer } from 'redux-persist';
-import { layout_slice } from './layoutSlice';
-import { auth_slice } from '../commons/auth/store/authSlice';
-import { seguridad_slice } from '../commons/seguridad/store/seguridadSlice';
-import { nursery_slice } from '../commons/conservacion/gestorVivero/store/slice/viveroSlice';
-import { material_vegetal_slice } from '../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice';
-import { configuracion_slice } from '../commons/conservacion/configuracion/store/slice/configuracionSlice';
-import { bien_slice } from '../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes';
-import { cv_computo_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo';
-import { organigrama_slice } from '../commons/gestorDocumental/organigrama/store/slices/organigramSlice';
-import { ccd_slice } from '../commons/gestorDocumental/ccd/store/slices/ccdSlice';
-import { series_slice } from '../commons/gestorDocumental/ccd/store/slices/seriesSlice';
-import { subseries_slice } from '../commons/gestorDocumental/ccd/store/slices/subseriesSlice';
-import { assignments_slice } from '../commons/gestorDocumental/ccd/store/slices/assignmentsSlice';
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import storage from "redux-persist/lib/storage";
+import thunk from "redux-thunk";
+import { persistReducer } from "redux-persist";
+import { layout_slice } from "./layoutSlice";
+import { auth_slice } from "../commons/auth/store/authSlice";
+import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
+import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
+import { material_vegetal_slice } from "../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice";
+import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
+import { produccion_slice } from "../commons/conservacion/produccion/store/slice/produccionSlice";
+import { bien_slice } from "../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes";
+import { cv_computo_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo";
+import { organigrama_slice } from "../commons/gestorDocumental/organigrama/store/slices/organigramSlice";
+import { ccd_slice } from "../commons/gestorDocumental/ccd/store/slices/ccdSlice";
+import { series_slice } from "../commons/gestorDocumental/ccd/store/slices/seriesSlice";
+import { subseries_slice } from "../commons/gestorDocumental/ccd/store/slices/subseriesSlice";
+import { assignments_slice } from "../commons/gestorDocumental/ccd/store/slices/assignmentsSlice";
 import {
   marcas_slice,
   porcentajes_slice,
@@ -47,6 +48,7 @@ const app_reducers = combineReducers({
   medida: medida_slice.reducer,
   bien: bien_slice.reducer,
   configuracion: configuracion_slice.reducer,
+  produccion: produccion_slice.reducer,
   cv: cv_computo_slice.reducer,
   material_vegetal: material_vegetal_slice.reducer,
   bodegas: bodegas_slice.reducer,
