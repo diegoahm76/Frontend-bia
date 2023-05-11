@@ -12,20 +12,17 @@ import {
   handle_mod_dark,
 } from '../store/layoutSlice';
 import { useNavigate } from 'react-router-dom';
+import type { AuthSlice } from '../commons/auth/interfaces';
 
 interface Props {
   drawer_width: number;
 }
 
-// const color_mode_context = createContext({ toggleColorMode: () => {} });
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const color_mode = useContext(color_mode_context);
-  // const theme = useTheme();
-
+  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
       layout: {
@@ -64,6 +61,7 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
           transition: 'width 0.15s',
           bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
           position: 'absolute',
+          mt: userinfo.tipo_usuario === 'E' ? '48px' : '0px',
         }}
       >
         <Toolbar sx={{ justifyContent: 'space-between' }}>
@@ -95,7 +93,6 @@ export const NavBar: React.FC<Props> = ({ drawer_width }: Props) => {
               <MenuIcon
                 sx={{
                   color: '#FAFAFA',
-                  // '&:hover': { color: '#042F4A' },
                   ml: '0 !import',
                 }}
               />

@@ -68,7 +68,7 @@ export const TablaFacilidadesAutorizadas: React.FC = () => {
     },
     {
       field: 'acciones',
-      headerName: 'Acciones',
+      headerName: 'Ver',
       width: 150,
       renderCell: (params) => {
         return params.row.id !== 'total' ? (

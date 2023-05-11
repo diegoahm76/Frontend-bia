@@ -96,7 +96,7 @@ const CrearCamaGerminacionDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={action==="create"? handle_submit(on_submit):handle_submit(on_submit)}
       >
-        <DialogTitle>{action==="create"? "Crear vivero": action==="detail"? "Detalle vivero": "Editar vivero" }</DialogTitle>
+        <DialogTitle>{action==="create"? "Crear cama de germinación": action==="detail"? "Detalle Cama de germinación": "Editar cama de germinación" }</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>

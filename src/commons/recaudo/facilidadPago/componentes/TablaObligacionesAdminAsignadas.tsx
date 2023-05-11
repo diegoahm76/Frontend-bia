@@ -5,12 +5,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface event {
-  target: {
-    value: string
-  }
-}
+import { type event } from '../interfaces/interfaces';
 
 interface Data {
   nombre: string;
@@ -171,6 +166,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
         <Button
           color='primary'
           variant='contained'
+          startIcon={<SearchOutlined />}
           onClick={() => {
             const new_rows = [];
             if(filter === 'nombre'){
@@ -200,17 +196,16 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           }}
         >
         Buscar
-        <SearchOutlined />
         </Button>
         <Button
           color='primary'
           variant='outlined'
+          startIcon={<FilterAltOffOutlined />}
           onClick={() => {
             set_visible_rows(fac_pago)
           }}
         >
         Mostrar Todo
-        <FilterAltOffOutlined />
         </Button>
       </Stack>
       {

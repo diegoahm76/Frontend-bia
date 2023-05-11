@@ -1,16 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
+import { SearchOutlined, FilterAltOffOutlined, Close } from '@mui/icons-material';
+import SaveIcon from '@mui/icons-material/Save';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface event {
-  target: {
-    value: string
-  }
-}
+import { type event } from '../interfaces/interfaces';
 
 interface Data {
   nombre: string;
@@ -204,6 +200,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
         <Button
           color='primary'
           variant='contained'
+          startIcon={<SearchOutlined />}
           onClick={() => {
             const new_rows = [];
             if(filter === 'nombre'){
@@ -233,17 +230,16 @@ export const TablaObligacionesAdmin: React.FC = () => {
           }}
         >
         Buscar
-        <SearchOutlined />
         </Button>
         <Button
           color='primary'
           variant='outlined'
+          startIcon={<FilterAltOffOutlined />}
           onClick={() => {
             set_visible_rows(fac_pago)
           }}
         >
         Mostrar Todo
-        <FilterAltOffOutlined />
         </Button>
       </Stack>
       {
@@ -287,16 +283,30 @@ export const TablaObligacionesAdmin: React.FC = () => {
           onSubmit={()=>{}}>
           <DialogTitle>¿Está seguro de realizar la reasignación de usuario?</DialogTitle>
           <DialogActions>
-            <Button onClick={() => {
+            <Button
+              variant='outlined'
+              color="primary"
+              startIcon={<Close />}
+              onClick={() => {
                 handle_open_sub();
                 set_modal_option('no')
                 handle_close()
-            }}>Cancelar</Button>
-            <Button variant="contained" color="primary" onClick={()=>{
-              handle_open_sub()
-              set_modal_option('si')
-              handle_close()
-            }}>Guardar</Button>
+            }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<SaveIcon />}
+              onClick={()=>{
+                handle_open_sub()
+                set_modal_option('si')
+                handle_close()
+            }}
+            >
+              Guardar
+            </Button>
           </DialogActions>
         </Box>
       </Dialog>
@@ -309,9 +319,16 @@ export const TablaObligacionesAdmin: React.FC = () => {
           onSubmit={()=>{}}>
           <DialogTitle>{modal_option === 'si' ? 'Reasignación ejecutada con éxito' : 'Reasignación cancelada'}</DialogTitle>
           <DialogActions>
-            <Button variant="contained" color="primary" onClick={()=>{
-              handle_close_sub()
-            }}>Ok</Button>
+            <Button
+              variant='outlined'
+              color="primary"
+              startIcon={<Close />}
+              onClick={()=>{
+                handle_close_sub()
+            }}
+            >
+              Cerrar
+            </Button>
           </DialogActions>
         </Box>
       </Dialog>

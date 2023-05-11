@@ -1,16 +1,27 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { Grid, Box, Button, Stack, TextField, Dialog, DialogTitle, DialogContent, Divider, DialogActions } from "@mui/material";
+import { Close } from '@mui/icons-material';
+import SaveIcon from '@mui/icons-material/Save';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useState } from 'react';
 
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResolucionRespuesta: React.FC = () => {
   const [modal, set_modal] = useState(false);
+  const [file_name, set_file_name] = useState('');
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
+
+  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selected_file =
+      event.target.files != null ? event.target.files[0] : null;
+    if (selected_file != null) {
+      set_file_name(selected_file.name);
+    }
+  };
 
   return (
     <>
@@ -78,7 +89,6 @@ export const ResolucionRespuesta: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <h3>Crear Documento</h3>
         <Grid item xs={12}>
           <Box
             component="form"
@@ -86,14 +96,26 @@ export const ResolucionRespuesta: React.FC = () => {
             autoComplete="off"
             mb='40px'
           >
+            <h3>Crear Documento</h3>
             <Grid container spacing={2} mb='20px'>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  helperText="Cargar Resolución"
-                  size="small"
+              <Grid item xs={11} sm={3}>
+                <Button
+                  variant="outlined"
                   fullWidth
-                  type='file'
-                />
+                  size='medium'
+                  component="label"
+                  startIcon={<CloudUploadIcon />}
+                >
+                  {file_name !== '' ? file_name : 'Cargar Resolución'}
+                    <input
+                      hidden
+                      type="file"
+                      required
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      onChange={handle_file_selected}
+                    />
+                </Button>
               </Grid>
             </Grid>
             <CKEditor
@@ -113,26 +135,27 @@ export const ResolucionRespuesta: React.FC = () => {
                   console.log( 'Focus.', editor );
               } }
             />
+            <Stack
+              direction="row"
+              justifyContent="right"
+              spacing={2}
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<SaveIcon />}
+                sx={{ marginTop: '30px' }}
+                onClick={() => {
+                  handle_open()
+                }}
+              >
+                Guardar Resolución
+              </Button>
+            </Stack>
           </Box>
         </Grid>
       </Grid>
-      <Stack
-        direction="row"
-        justifyContent="right"
-        spacing={2}
-        sx={{ mb: '20px' }}
-      >
-        <Button
-          color='primary'
-          variant='contained'
-          sx={{ marginTop: '30px' }}
-          onClick={() => {
-            handle_open()
-          }}
-        >
-          Guardar Resolución
-        </Button>
-      </Stack>
       <Dialog
         open={modal}
         onClose={handle_close}
@@ -148,9 +171,16 @@ export const ResolucionRespuesta: React.FC = () => {
             </Grid>
           </DialogContent>
           <DialogActions>
-            <Button variant="contained" color="primary" onClick={()=>{
-              handle_close()
-            }}>Cerrar</Button>
+            <Button
+              variant='outlined'
+              color="primary"
+              startIcon={<Close />}
+              onClick={() => {
+                handle_close()
+            }}
+            >
+              Cerrar
+            </Button>
           </DialogActions>
         </Box>
       </Dialog>

@@ -1,7 +1,7 @@
 import { Grid, Box, TextField, Button } from "@mui/material";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-
 export const PersonaNatural: React.FC = () => {
   return (
     <>
@@ -13,11 +13,12 @@ export const PersonaNatural: React.FC = () => {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={3.2}>
+            <Grid item xs={12} sm={3.5}>
               <Button
                 color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Documento de Identidad
@@ -68,11 +69,12 @@ export const PersonaJuridica: React.FC = () => {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={4.3}>
+            <Grid item xs={12} sm={4.6}>
               <Button
                 color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Documento de Identidad Apoderado
@@ -83,16 +85,18 @@ export const PersonaJuridica: React.FC = () => {
                 color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Documento Poder
               </Button>
             </Grid>
-            <Grid item xs={12} sm={4.7}>
+            <Grid item xs={12} sm={5}>
               <Button
                 color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Cert. Existencia y Representación Legal
@@ -152,31 +156,34 @@ export const DeudorSolidario: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3.7}>
+            <Grid item xs={12} sm={4}>
               <Button
                 color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Documento Deudor Solidario
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3.4}>
+            <Grid item xs={12} sm={3.7}>
               <Button
                 color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Oficio Respaldando Deuda
               </Button>
             </Grid>
-            <Grid item xs={12} sm={4.7}>
+            <Grid item xs={12} sm={5}>
               <Button
                 color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Cert. Existencia y Representación Legal
