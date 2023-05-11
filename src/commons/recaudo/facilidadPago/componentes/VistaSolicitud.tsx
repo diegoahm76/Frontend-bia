@@ -9,13 +9,15 @@ export const VistaSolicitud: React.FC = () => {
   const rows_bienes = [
     {
       id: 'jsjsjq939',
-      identificacion: 'Casa',
+      bien: 'Casa',
+      identificacion: 'reg-9233319',
       avaluo: 120000000,
       direccion: 'Cl 45 # 120 - 123',
     },
     {
       id: 'jfsmd30230',
-      identificacion: 'Auto',
+      bien: 'Auto',
+      identificacion: 'GMW-604',
       avaluo: 100000000,
       direccion: 'Cra 4 # 120 - 678',
     },
@@ -23,8 +25,8 @@ export const VistaSolicitud: React.FC = () => {
 
   const columns_bienes: GridColDef[] = [
     {
-      field: 'identificacion',
-      headerName: 'Identificación Bien',
+      field: 'bien',
+      headerName: 'Tipo Bien',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -33,8 +35,8 @@ export const VistaSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'ubicacion',
-      headerName: 'Ubicación',
+      field: 'identificacion',
+      headerName: 'Identificación',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -69,7 +71,7 @@ export const VistaSolicitud: React.FC = () => {
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='small'
             onClick={() => {}}
@@ -86,7 +88,7 @@ export const VistaSolicitud: React.FC = () => {
       <Grid container spacing={5}>
         <Grid item xs={12} sm={3}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='medium'
             onClick={() => {}}
@@ -96,7 +98,7 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3.1}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='medium'
             onClick={() => {}}
@@ -106,7 +108,6 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3.1}>
           <TextField
-             id="outlined-error-helper-text"
             label="Calidad en que actúa la persona"
             size="small"
             fullWidth
@@ -119,7 +120,6 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={2.9}>
           <TextField
-            id="outlined-error-helper-text"
             label="Periodicidad y Modalidad"
             size="small"
             fullWidth
@@ -129,7 +129,6 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={2.9}>
           <TextField
-            id="outlined-error-helper-text"
             label="Plazo"
             size="small"
             fullWidth
@@ -139,7 +138,7 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3.15}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='medium'
             onClick={() => {}}
@@ -149,7 +148,7 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={2.9}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='medium'
             onClick={() => {}}

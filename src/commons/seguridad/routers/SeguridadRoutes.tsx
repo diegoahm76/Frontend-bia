@@ -10,6 +10,7 @@ import AuditoriaScreen from '../screens/AuditoriaScreen';
 import { DelegacionSuperuserScreen } from '../screens/DelegacionSuperuserScreen';
 import { DatosPersonalesScreen } from '../screens/DatosPersonalesScreen';
 import { DatosAccesoScreen } from '../screens/DatosAccesoScreen';
+import { NotificacionPage } from '../screens/NotificacionPage';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeguridadRoutes: React.FC = () => {
@@ -33,6 +34,7 @@ export const SeguridadRoutes: React.FC = () => {
         path="/delegacion_superusuario"
         element={<DelegacionSuperuserScreen />}
       />
+      <Route path="/autorizacion_notificacion" element={<NotificacionPage />} />
       <Route path="/datos_personales" element={<DatosPersonalesScreen />} />
       <Route path="/datos_acceso" element={<DatosAccesoScreen />} />
 

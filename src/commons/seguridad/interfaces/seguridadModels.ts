@@ -1,5 +1,5 @@
 import { type Dispatch, type SetStateAction } from 'react';
-import type { IList } from '../../../interfaces/globalModels';
+import type { DataPersonas, IList } from '../../../interfaces/globalModels';
 
 export interface IList2 {
   value: number;
@@ -240,6 +240,7 @@ export interface ISeguridadInfo {
   data_user_search: InfoUsuario;
   data_person_search: InfoPersonal;
   user_info: Users;
+  legal_person: DataPersonas;
 }
 
 export interface SuperUser {

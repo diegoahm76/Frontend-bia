@@ -46,10 +46,10 @@ export const create_maintenance_service: any = (form_data: crear_mantenimiento[]
   };
 };
 // Anular mantenimiento
-export const override_maintenance: any = (form_data: anular_mantenimiento) => {
+export const override_maintenance: any = (id_programado: number,form_data: anular_mantenimiento) => {
   return async () => {
     try {
-      const { data } = await api.patch(`almacen/mantenimientos/programados/anular/0/`, form_data);
+      const { data } = await api.patch(`almacen/mantenimientos/programados/anular/${id_programado}/`, form_data);
       control_success('Se anulo el mantenimiento');
       return data;
     } catch (error: any) {
