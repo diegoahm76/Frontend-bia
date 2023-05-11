@@ -1,13 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
-import type {
-  DataPersonas,
-  InfoPersona,
-} from '../../../interfaces/globalModels';
-import {
-    useEffect,
-    useState
-} from "react";
 import type { ClaseTercero, ClaseTerceroPersona, DataNaturaUpdate, DataPersonas, DatosVinculacionCormacarena, InfoPersona, keys_object } from "../../../interfaces/globalModels";
 import {
     Button, Divider, Grid, MenuItem, Stack, TextField, Typography,
