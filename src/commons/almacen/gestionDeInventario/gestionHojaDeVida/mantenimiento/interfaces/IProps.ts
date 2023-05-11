@@ -43,15 +43,15 @@ export interface ejecutar_mantenimiento {
     "fecha_ejecutado": string,
     "cod_tipo_mantenimiento": string,
     "dias_empleados": number,
-    "fecha_estado_anterior": string,
+    "fecha_estado_anterior": string | null,
     "id_articulo": number,
     "cod_estado_final": string,
     "id_persona_realiza": number,
     "id_persona_diligencia": number,
-    "cod_estado_anterior": string,
+    "cod_estado_anterior": string | null,
     "acciones_realizadas": string,
-    "observaciones": string,
-    "valor_mantenimiento": number,
-    "contrato_mantenimiento": string,
-    "id_programacion_mtto": number
+    "observaciones": string | null,
+    "valor_mantenimiento": number | null,
+    "contrato_mantenimiento": string | null,
+    "id_programacion_mtto": number | null
   }

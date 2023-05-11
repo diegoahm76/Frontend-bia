@@ -16,14 +16,16 @@ interface IProps {
     parent_type_maintenance: any,
     parent_esp_maintenance: any,
     limpiar_formulario: boolean,
-    user_info: any
+    user_info: any,
+    detalles: any,
+    accion_guardar: boolean
 }
 const estados_mantenimiento = [{ value: "P", label: "Programada" }, { value: "E", label: "Ejecutada" }, { value: "A", label: "Anulada" }, { value: "V", label: "Vencida" }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario, user_info }: IProps) => {
+export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario, user_info, detalles, accion_guardar }: IProps) => {
     const [dias_empleados, set_dias_empleados] = useState<string | null>("1");
-    const [contrato, set_contrato] = useState<string | null>("");
-    const [valor, set_valor] = useState<string | null>("");
+    const [contrato, set_contrato] = useState<string | null>(null);
+    const [valor, set_valor] = useState<string | null>(null);
     const [estado, set_estado] = useState("");
     const [observaciones, set_observaciones] = useState<string | null>("");
     const [diligenciado, set_diligenciado] = useState<string | null>("");
@@ -48,9 +50,27 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
         if (limpiar_formulario) {
             set_estado("");
             set_observaciones("");
-            set_dias_empleados("");
+            set_dias_empleados("1");
+            set_valor(null);
+            set_contrato(null);
         }
     }, [limpiar_formulario]);
+
+    useEffect(() => {
+        if (accion_guardar) {
+            if(estado !== "" && dias_empleados !== "" && realizado !== "" && diligenciado !== ""){
+                detalles({
+                    dias_empleados,
+                    estado,
+                    realizado,
+                    diligenciado,
+                    observaciones,
+                    valor,
+                    contrato
+                })
+            }
+        }
+    }, [detalles,accion_guardar]);
 
     const handle_change: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_estado(e.target.value);

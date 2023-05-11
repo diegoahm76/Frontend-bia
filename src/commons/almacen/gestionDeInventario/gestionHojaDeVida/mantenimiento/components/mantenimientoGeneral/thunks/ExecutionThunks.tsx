@@ -33,7 +33,7 @@ const control_success = (message: ToastContent) =>
   });
 
 // Crear resgitro de mantenimiento
-export const create_maintenance_service: any = (form_data: ejecutar_mantenimiento) => {
+export const create_maintenance_record: any = (form_data: ejecutar_mantenimiento) => {
   return async () => {
     try {
       const { data } = await api.post('almacen/mantenimientos/ejecutados/create/', form_data);
