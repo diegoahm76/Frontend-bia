@@ -3,7 +3,7 @@ import {
     useEffect,
     useState
 } from "react";
-import type { ClaseTercero, DataPersonas, InfoPersona } from "../../../interfaces/globalModels";
+import type { ClaseTercero, ClaseTerceroPersona, DataPersonas, InfoPersona } from "../../../interfaces/globalModels";
 import {
     Button, Divider, Grid, MenuItem, Stack, TextField, Typography,
     type SelectChangeEvent,
@@ -201,16 +201,20 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         try {
             const id_persona: number | undefined = persona?.id_persona;
             const response = await consultar_clase_tercero_persona(id_persona);
-            set_clase_tercero_persona(response)
-            console.log("Datos clase tercero persona", response)
+            const data_persona_clase_tercero = response.map((item: ClaseTerceroPersona) => ({
+                value: item.id_clase_tercero,
+                label: item.nombre
+              }));
+            set_clase_tercero_persona(data_persona_clase_tercero);
+            console.log("Datos clase tercero persona", data_persona_clase_tercero);
         } catch (err) {
             control_error(err);
         }
-    };
+    }
     // trae datos del representante legal
-    const get_datos_representante_legal = async (id: number | undefined): Promise<void> => {
+    const get_datos_representante_legal = async (id: number | undefined | null): Promise<void> => {
         try {
-            const id_persona: number | undefined = id;
+            const id_persona: number | undefined | null = id;
             const response = await consultar_datos_persona(id_persona);
             set_datos_representante(response)
             console.log("Datos ", response)
@@ -249,7 +253,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
 
             //
             if (response?.representante_legal !== undefined) {
-                const id: number | undefined = response?.representante_legal
+                const id: number | undefined | null = response?.representante_legal
                 if (id !== 0) {
                     void get_datos_representante_legal(id)
                 }
