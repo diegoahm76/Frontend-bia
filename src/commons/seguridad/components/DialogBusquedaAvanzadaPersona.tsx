@@ -14,6 +14,8 @@ import {
   Avatar,
   type SelectChangeEvent,
   Typography,
+  Chip,
+  Tooltip,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
@@ -110,7 +112,7 @@ const DialogBusquedaAvanzada = ({
       width: 250,
     },
     {
-      headerName: 'Razon social',
+      headerName: 'Razón social',
       field: 'razon_social',
       width: 150,
     },
@@ -120,8 +122,15 @@ const DialogBusquedaAvanzada = ({
       width: 150,
     },
     {
-      headerName: 'Usuario',
+      headerName: 'Tiene usuario',
       field: 'tiene_usuario',
+      renderCell: (params) => {
+        return params.row.tiene_usuario === true ? (
+          <Chip size="small" label="Si" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
     },
 
     {
@@ -138,47 +147,57 @@ const DialogBusquedaAvanzada = ({
       renderCell: (params: any) => (
         <>
           {params.row.tiene_usuario === true ? (
-            <IconButton
-              onClick={() => {
-                trigger_user_edit_active(params.row);
-                set_is_modal_active(false);
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
+            <Tooltip title="Editar">
+              <IconButton
+                onClick={() => {
+                  trigger_user_edit_active(params.row);
                 }}
-                variant="rounded"
               >
-                <EditIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <EditIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           ) : (
-            <IconButton
-              onClick={() => {
-                trigger_user_person_create_active(params.row);
-                set_is_modal_active(false);
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
+            <Tooltip title="Crear">
+              <IconButton
+                onClick={() => {
+                  trigger_user_person_create_active(params.row);
                 }}
-                variant="rounded"
               >
-                <AddIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <AddIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           )}
         </>
       ),
@@ -186,13 +205,13 @@ const DialogBusquedaAvanzada = ({
   ];
 
   const trigger_user_person_create_active = (data: any): void => {
-    // console.log('punto 1 - CREATE', data);
+    set_is_modal_active(false);
     dispatch(set_action_admin_users('CREATE'));
     dispatch(set_data_person_search(data));
   };
 
   const trigger_user_edit_active = (data: any): void => {
-    // console.log('punto 1 - EDIT', data);
+    set_is_modal_active(false);
     dispatch(set_action_admin_users('EDIT'));
     dispatch(set_data_person_search(data));
   };

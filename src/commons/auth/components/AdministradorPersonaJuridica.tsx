@@ -1,8 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-    useEffect,
-    useState
-} from "react";
+import { useEffect, useState } from 'react';
 import type { ClaseTercero, ClaseTerceroPersona, DataPersonas, InfoPersona } from "../../../interfaces/globalModels";
 import {
     Button, Divider, Grid, MenuItem, Stack, TextField, Typography,
@@ -18,11 +15,11 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 // import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { control_error } from "../../../helpers";
+import { control_error } from '../../../helpers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_register } from '../../auth/hooks/registerHooks';
@@ -33,18 +30,18 @@ import { consultar_clase_tercero, consultar_clase_tercero_persona, consultar_dat
 import dayjs, { type Dayjs } from 'dayjs';
 
 interface PropsElement {
-    errors: FieldErrors<DataRegistePortal>;
+  errors: FieldErrors<DataRegistePortal>;
 }
 interface PropsStep {
-    label: string;
-    component: (props: PropsElement) => JSX.Element;
+  label: string;
+  component: (props: PropsElement) => JSX.Element;
 }
 interface Props {
-    data_all: InfoPersona;
+  data_all: InfoPersona;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
-    data_all,
+  data_all,
 }: Props) => {
 
     const [datos_persona, set_datos_persona] = useState<DataPersonas>();
@@ -121,34 +118,34 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         set_message_no_person,
     } = use_register();
 
-    // Establece los valores del formulario
-    const set_value_form = (name: string, value: string): void => {
-        value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
-        set_data_register({
-            ...data_register,
-            [name]: value,
-        });
-        set_value(name as keys_object, value);
-    };
-    const set_value_direction = (value: string, type: string): void => {
-        // direccion_laboral
-        // direccion_notificaciones
-        // direccion_residencia_ref
-        // direccion_residencia
-        switch (type_direction) {
-            case 'residencia':
-                set_direccion(value);
-                set_value_form('direccion_residencia', value);
+  // Establece los valores del formulario
+  const set_value_form = (name: string, value: string): void => {
+    value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
+    set_data_register({
+      ...data_register,
+      [name]: value,
+    });
+    set_value(name as keys_object, value);
+  };
+  const set_value_direction = (value: string, type: string): void => {
+    // direccion_laboral
+    // direccion_notificaciones
+    // direccion_residencia_ref
+    // direccion_residencia
+    switch (type_direction) {
+      case 'residencia':
+        set_direccion(value);
+        set_value_form('direccion_residencia', value);
 
-                break;
-            case 'notificacion':
-                set_direccion_notificacion(value);
-                set_value_form('direccion_notificaciones', value);
+        break;
+      case 'notificacion':
+        set_direccion_notificacion(value);
+        set_value_form('direccion_notificaciones', value);
 
-                break;
-        }
-        open_modal(false);
-    };
+        break;
+    }
+    open_modal(false);
+  };
 
     // Se usa para escuchar los cambios de valor del componente CustomSelect
     const on_change = (e: SelectChangeEvent<string>): void => {
@@ -298,134 +295,134 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         }
     }, [persona?.numero_documento !== undefined])
 
-    const tipos_doc = [
-        {
-            value: 'CC',
-            label: 'Cédula de ciudadanía'
-        },
-        {
-            value: 'CE',
-            label: 'Cédula extranjería',
-        },
-        {
-            value: 'TI',
-            label: 'Tarjeta de identidad',
-        },
-        {
-            value: 'RC',
-            label: 'Registro civil',
-        },
-        {
-            value: 'NU',
-            label: 'NUIP'
-        },
-        {
-            value: 'PA',
-            label: 'Pasaporte',
-        },
-        {
-            value: 'PE',
-            label: 'Permiso especial de permanencia',
-        },
-    ];
-    const tipos_doc_comercial = [
-        {
-            value: 'NT',
-            label: 'NIT',
-        },
-    ];
-    const tipo_persona = [
-        {
-            value: 'N',
-            label: 'Natural'
-        },
-        {
-            value: 'J',
-            label: 'Juridica',
-        },
-    ];
-    const tipo_empresa = [
-        {
-            value: 'PU',
-            label: 'Pública'
-        },
-        {
-            value: 'PR',
-            label: 'Privada',
-        },
-        {
-            value: 'MI',
-            label: 'Mixta',
-        },
-    ];
+  const tipos_doc = [
+    {
+      value: 'CC',
+      label: 'Cédula de ciudadanía',
+    },
+    {
+      value: 'CE',
+      label: 'Cédula extranjería',
+    },
+    {
+      value: 'TI',
+      label: 'Tarjeta de identidad',
+    },
+    {
+      value: 'RC',
+      label: 'Registro civil',
+    },
+    {
+      value: 'NU',
+      label: 'NUIP',
+    },
+    {
+      value: 'PA',
+      label: 'Pasaporte',
+    },
+    {
+      value: 'PE',
+      label: 'Permiso especial de permanencia',
+    },
+  ];
+  const tipos_doc_comercial = [
+    {
+      value: 'NT',
+      label: 'NIT',
+    },
+  ];
+  const tipo_persona = [
+    {
+      value: 'N',
+      label: 'Natural',
+    },
+    {
+      value: 'J',
+      label: 'Juridica',
+    },
+  ];
+  const tipo_empresa = [
+    {
+      value: 'PU',
+      label: 'Pública',
+    },
+    {
+      value: 'PR',
+      label: 'Privada',
+    },
+    {
+      value: 'MI',
+      label: 'Mixta',
+    },
+  ];
 
-    useEffect(() => {
-        if (watch('cod_pais_nacionalidad_empresa') !== undefined) {
-            set_nacionalidad_emp(watch('cod_pais_nacionalidad_empresa'));
-        }
-    }, [watch('cod_pais_nacionalidad_empresa')]);
-    useEffect(() => {
-        if (watch('departamento_expedicion') !== undefined) {
-            set_departamento(watch('departamento_expedicion'));
-        }
-    }, [watch('departamento_expedicion')]);
+  useEffect(() => {
+    if (watch('cod_pais_nacionalidad_empresa') !== undefined) {
+      set_nacionalidad_emp(watch('cod_pais_nacionalidad_empresa'));
+    }
+  }, [watch('cod_pais_nacionalidad_empresa')]);
+  useEffect(() => {
+    if (watch('departamento_expedicion') !== undefined) {
+      set_departamento(watch('departamento_expedicion'));
+    }
+  }, [watch('departamento_expedicion')]);
 
-    useEffect(() => {
-        if (watch('cod_municipio_expedicion_id') !== undefined) {
-            set_ciudad_expedicion(watch('cod_municipio_expedicion_id'));
-        }
-    }, [watch('cod_municipio_expedicion_id')]);
+  useEffect(() => {
+    if (watch('cod_municipio_expedicion_id') !== undefined) {
+      set_ciudad_expedicion(watch('cod_municipio_expedicion_id'));
+    }
+  }, [watch('cod_municipio_expedicion_id')]);
 
-    // Datos de residencia
-    useEffect(() => {
-        if (watch('pais_residencia') !== undefined) {
-            set_pais_residencia(watch('pais_residencia'));
-        }
-    }, [watch('pais_residencia')]);
+  // Datos de residencia
+  useEffect(() => {
+    if (watch('pais_residencia') !== undefined) {
+      set_pais_residencia(watch('pais_residencia'));
+    }
+  }, [watch('pais_residencia')]);
 
-    useEffect(() => {
-        if (watch('departamento_residencia') !== undefined) {
-            set_dpto_residencia(watch('departamento_residencia'));
-        }
-    }, [watch('departamento_residencia')]);
+  useEffect(() => {
+    if (watch('departamento_residencia') !== undefined) {
+      set_dpto_residencia(watch('departamento_residencia'));
+    }
+  }, [watch('departamento_residencia')]);
 
-    useEffect(() => {
-        if (watch('municipio_residencia') !== undefined) {
-            set_ciudad_residencia(watch('municipio_residencia'));
-        }
-    }, [watch('municipio_residencia')]);
+  useEffect(() => {
+    if (watch('municipio_residencia') !== undefined) {
+      set_ciudad_residencia(watch('municipio_residencia'));
+    }
+  }, [watch('municipio_residencia')]);
 
-    // Datos de notificación
+  // Datos de notificación
 
-    useEffect(() => {
-        if (watch('dpto_notifiacion') !== undefined) {
-            set_dpto_notifiacion(watch('dpto_notifiacion'));
-        }
-    }, [watch('dpto_notifiacion')]);
+  useEffect(() => {
+    if (watch('dpto_notifiacion') !== undefined) {
+      set_dpto_notifiacion(watch('dpto_notifiacion'));
+    }
+  }, [watch('dpto_notifiacion')]);
 
-    useEffect(() => {
-        if (watch('cod_municipio_notificacion_nal') !== undefined) {
-            set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
-        }
-    }, [watch('cod_municipio_notificacion_nal')]);
+  useEffect(() => {
+    if (watch('cod_municipio_notificacion_nal') !== undefined) {
+      set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
+    }
+  }, [watch('cod_municipio_notificacion_nal')]);
 
-    useEffect(() => {
-        if (watch('pais_nacimiento') !== undefined) {
-            set_pais_nacimiento(watch('pais_nacimiento'));
-        }
-    }, [watch('pais_nacimiento')]);
+  useEffect(() => {
+    if (watch('pais_nacimiento') !== undefined) {
+      set_pais_nacimiento(watch('pais_nacimiento'));
+    }
+  }, [watch('pais_nacimiento')]);
 
-    useEffect(() => {
-        if (watch('sexo') !== undefined) {
-            set_genero(watch('sexo'));
-        }
-    }, [watch('sexo')]);
+  useEffect(() => {
+    if (watch('sexo') !== undefined) {
+      set_genero(watch('sexo'));
+    }
+  }, [watch('sexo')]);
 
-    useEffect(() => {
-        if (watch('estado_civil') !== undefined) {
-            set_estado_civil(watch('estado_civil') as string);
-        }
-    }, [watch('estado_civil')]);
+  useEffect(() => {
+    if (watch('estado_civil') !== undefined) {
+      set_estado_civil(watch('estado_civil') as string);
+    }
+  }, [watch('estado_civil')]);
 
     return (
         <>
