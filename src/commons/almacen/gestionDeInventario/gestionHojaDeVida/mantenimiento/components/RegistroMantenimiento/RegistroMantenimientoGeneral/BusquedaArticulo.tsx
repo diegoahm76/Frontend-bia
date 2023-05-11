@@ -15,12 +15,11 @@ import BuscarArticuloComponent from "../../mantenimientoGeneral/BuscarArticulo";
 interface IProps {
     tipo_articulo: string,
     parent_details: any,
-    user_info_prop: any,
     limpiar_formulario: boolean,
     detalle_programacion: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, user_info_prop, limpiar_formulario, detalle_programacion }: IProps) => {
+export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, limpiar_formulario, detalle_programacion }: IProps) => {
     const {        // States
         title,
         consulta_buscar_articulo_is_active,
@@ -30,9 +29,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
 
     const {
         detalle_seleccionado,
-        user_info,
         set_detalle_seleccionado,
-        set_user_info
     } = use_previsualizacion();
 
     const [id_bien, set_id_bien] = useState<string | null>("");
@@ -51,19 +48,6 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
     }, [parent_details, detalle_seleccionado]);
 
     useEffect(() => {
-        const data = localStorage.getItem('persist:macarenia_app');
-        if (data !== null) {
-            const data_json = JSON.parse(data);
-            const data_auth = JSON.parse(data_json.auth);
-            set_user_info(data_auth.userinfo);
-        }
-    }, []);
-
-    useEffect(() => {
-        user_info_prop(user_info);
-    }, [user_info]);
-
-    useEffect(() => {
         if (limpiar_formulario) {
             set_id_bien('');
             set_nombre('');
@@ -71,6 +55,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
     }, [limpiar_formulario]);
 
     useEffect(() => {
+        console.log('selecionado en artiuclo: ', detalle_seleccionado);
         if (detalle_seleccionado !== undefined && detalle_seleccionado !== null) {
             set_id_bien(detalle_seleccionado.codigo_bien);
             set_nombre(detalle_seleccionado.nombre);
