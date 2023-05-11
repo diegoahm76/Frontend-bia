@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-
-import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox } from '@mui/material';
+import { Grid, Box, IconButton, Avatar, Tooltip } from '@mui/material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaFacilidadesAutorizadas: React.FC = () => {
-  const [selected, set_selected] = useState<readonly string[]>([]);
+  const navigate = useNavigate();
 
   const fac_pago = [
     {
@@ -27,18 +26,6 @@ export const TablaFacilidadesAutorizadas: React.FC = () => {
   ];
 
   const columns: GridColDef[] = [
-    {
-      field: 'checkbox',
-      headerName: 'Solicitar Fac. Pago',
-      width: 150,
-      renderCell: (params) => (
-        <Checkbox
-          onClick={(event) => {
-            handle_click(event, params.row.nombreObligacion)
-          }}
-        />
-      )
-    },
     {
       field: 'nombreObligacion',
       headerName: 'Facilidad de Pago',
@@ -81,14 +68,16 @@ export const TablaFacilidadesAutorizadas: React.FC = () => {
     },
     {
       field: 'acciones',
-      headerName: 'Acciones',
+      headerName: 'Ver',
       width: 150,
       renderCell: (params) => {
         return params.row.id !== 'total' ? (
           <>
             <Tooltip title="Ver">
                 <IconButton
-                  onClick={() => {}}
+                  onClick={() => {
+                    navigate('../seguimiento')
+                  }}
                 >
                   <Avatar
                     sx={{
@@ -111,26 +100,6 @@ export const TablaFacilidadesAutorizadas: React.FC = () => {
       },
     },
   ];
-
-  const handle_click = (event: React.MouseEvent<unknown>, name: string) => {
-    const selected_index = selected.indexOf(name);
-    let new_selected: readonly string[] = [];
-
-    if (selected_index === -1) {
-      new_selected = new_selected.concat(selected, name);
-    } else if (selected_index === 0) {
-      new_selected = new_selected.concat(selected.slice(1));
-    } else if (selected_index === selected.length - 1) {
-      new_selected = new_selected.concat(selected.slice(0, -1));
-    } else if (selected_index > 0) {
-      new_selected = new_selected.concat(
-        selected.slice(0, selected_index),
-        selected.slice(selected_index + 1),
-      );
-    }
-
-    set_selected(new_selected);
-  };
 
   return (
     <>

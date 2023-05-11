@@ -25,6 +25,7 @@ import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/Bode
 import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
 import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
 import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
+import { obligaciones_slice } from '../commons/recaudo/facilidadPago/store/slices/FacilidadPagoSlices';
 
 const persist_config = {
   key: 'macarenia_app',
@@ -53,7 +54,8 @@ const app_reducers = combineReducers({
   bodegas: bodegas_slice.reducer,
   cvo: cv_others_slice.reducer,
   cve: cve_vehicle_slice.reducer,
-  solic_consumo: solicitud_consumo_slice.reducer
+  solic_consumo: solicitud_consumo_slice.reducer,
+  obligaciones: obligaciones_slice.reducer
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

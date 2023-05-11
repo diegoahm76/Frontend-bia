@@ -5,12 +5,7 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-interface event {
-  target: {
-    value: string
-  }
-}
+import { type event } from '../interfaces/interfaces';
 
 interface Data {
   nombre: string;
@@ -108,7 +103,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    navigate('../solicitadas')
+                    navigate('../solicitud')
                   }}
                 >
                   <Avatar
@@ -146,10 +141,8 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
         sx={{ mb: '20px' }}
       >
         <FormControl sx={{ minWidth: 130 }}>
-          <InputLabel id="demo-simple-select-label">Filtrar por: </InputLabel>
+          <InputLabel>Filtrar por: </InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="filter"
               label="Filtrar por: "
               onChange={(event: event)=>{
                 const { value } = event.target
@@ -163,7 +156,6 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
         </FormControl>
         <TextField
           required
-          id="outlined-error-helper-text"
           label="Búsqueda"
           size="medium"
           onChange={(event: event)=>{
@@ -172,8 +164,9 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           }}
         />
         <Button
-          color='secondary'
+          color='primary'
           variant='contained'
+          startIcon={<SearchOutlined />}
           onClick={() => {
             const new_rows = [];
             if(filter === 'nombre'){
@@ -203,17 +196,16 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           }}
         >
         Buscar
-        <SearchOutlined />
         </Button>
         <Button
-          color='secondary'
+          color='primary'
           variant='outlined'
+          startIcon={<FilterAltOffOutlined />}
           onClick={() => {
             set_visible_rows(fac_pago)
           }}
         >
         Mostrar Todo
-        <FilterAltOffOutlined />
         </Button>
       </Stack>
       {

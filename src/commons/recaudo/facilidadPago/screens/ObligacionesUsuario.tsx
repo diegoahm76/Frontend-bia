@@ -1,15 +1,45 @@
 import { Title } from '../../../../components/Title';
 import { TablaObligacionesUsuario } from '../componentes/TablaObligacionesUsuario';
-import { Grid, Box, TextField, Button, Stack } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
+import { Grid, Box, TextField } from "@mui/material";
+import { get_obligaciones_usuario } from '../requests/requests';
+import { useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ObligacionesUsuario: React.FC = () => {
-  const navigate = useNavigate();
+  const obligaciones = [
+    {
+      id: 1,
+      nombreObligacion: 'Permiso 1',
+      fecha_inicio: '01/01/2015',
+      id_expediente: 378765,
+      nroResolucion: '378765-143',
+      monto_inicial: 120000000,
+      carteras: {
+        valor_intereses: 35000000,
+        dias_mora: 390,
+      }
+    },
+    {
+      id: 2,
+      nombreObligacion: 'Concesion Aguas',
+      fecha_inicio: '01/04/2015',
+      id_expediente: 3342765,
+      nroResolucion: '3342765-4546',
+      monto_inicial: 190700000,
+      carteras: {
+        valor_intereses: 45000000,
+        dias_mora: 180,
+      }
+    },
+  ];
+
+  useEffect(() => {
+    void get_obligaciones_usuario()
+  }, [])
 
   return (
     <>
-      <Title title='Listado de Obligaciones del usuario'/>
+      <Title title='Listado de Obligaciones del Usuario Externo'/>
       <Grid
         container
         sx={{
@@ -22,7 +52,6 @@ export const ObligacionesUsuario: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-
         <Grid item xs={12}>
           <Box
             component="form"
@@ -32,57 +61,58 @@ export const ObligacionesUsuario: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Nombres"
-                  helperText='Escribe Nombre y Apellido'
                   size="small"
                   fullWidth
+                  value={"nombre_completo"}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Identificación"
-                  helperText='Escribe Número de Identificación'
                   size="small"
                   fullWidth
+                  value={"numero_identificacion"}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Correo Electrónico"
-                  helperText='Escribe Correo Electrónico'
                   size="small"
                   fullWidth
+                  value={"email"}
                 />
               </Grid>
             </Grid>
           </Box>
         </Grid>
       </Grid>
-      <p>Sus obligaciones pendientes por pago son las siguientes:</p>
-      <TablaObligacionesUsuario />
-      <Stack
-        direction="row"
-        justifyContent="right"
-        spacing={2}
-        sx={{ mb: '20px' }}
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          mb: '20px',
+          mt: '20px',
+          p: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
       >
-        <Button
-          color='info'
-          variant='contained'
-          sx={{ marginTop: '30px' }}
-          onClick={() => {
-            navigate('registro')
-          }}
-        >
-        Crear Facilidad de Pago
-        </Button>
-      </Stack>
+        <Grid item xs={12}>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+              <p>Sus obligaciones pendientes por pago son las siguientes:</p>
+              <TablaObligacionesUsuario obligaciones={obligaciones} />
+          </Box>
+        </Grid>
+      </Grid>
     </>
   )
 }

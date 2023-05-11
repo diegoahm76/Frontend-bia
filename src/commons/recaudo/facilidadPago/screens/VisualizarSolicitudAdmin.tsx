@@ -1,21 +1,27 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
 import { InputsEncabezadoAdmin } from '../componentes/InputsEncabezadoAdmin';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextareaAutosize, Button, Stack } from "@mui/material";
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle } from "@mui/material";
+import { Close } from '@mui/icons-material';
+import SaveIcon from '@mui/icons-material/Save';
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-
-interface event {
-  target: {
-    value: string
-  }
-}
+import { use_form } from '../../../../hooks/useForm';
+import { type event } from '../interfaces/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VisualizarSolicitudAdmin: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
+  const [existe] = useState(false); // Mientras nos conectamos con el Backend
+  const [modal, set_modal] = useState(false);
+  const [modal_option, set_modal_option] = useState('');
+  const { form_state, on_input_change } = use_form({});
+  const handle_open = () => { set_modal(true) };
+  const handle_close = () => { set_modal(false) };
   const navigate = useNavigate();
+  console.log('form', form_state)
 
   return (
     <>
@@ -66,11 +72,12 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">Asignar Estado</InputLabel>
+                  <InputLabel>Asignar Estado</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     label="Asignar Estado"
+                    defaultValue={''}
+                    name='estado'
+                    onChange={on_input_change}
                   >
                     <MenuItem value="aprobado">Aprobado</MenuItem>
                     <MenuItem value="negado">Negado</MenuItem>
@@ -80,27 +87,35 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">Aprobado</InputLabel>
+                  <InputLabel>Aprobado</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     label="Aprobado"
+                    defaultValue={''}
+                    name='isAprobado'
+                    onChange={on_input_change}
                   >
                     <MenuItem value="si">Si</MenuItem>
                     <MenuItem value="no">No</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item>
-                <p>Observación Cormacarena</p>
-                <TextareaAutosize minRows={8} cols={153} />
+              <Grid item xs={12} sm={15}>
+                <TextField
+                  multiline
+                  rows={4}
+                  label="Observación Cormacarena"
+                  helperText="Escribe una observación"
+                  size="small"
+                  fullWidth
+                  name='observacion'
+                  onChange={on_input_change}
+                />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">¿Crear plan de pagos?</InputLabel>
+                  <InputLabel>¿Crear plan de pagos?</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
+                    defaultValue={''}
                     label="¿Crear plan de pagos?"
                     onChange={(event: event)=>{
                       const { value } = event.target
@@ -117,16 +132,23 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                   <>
                     <Grid item>
                       <Button
-                        color='info'
+                        color='primary'
                         variant='contained'
-                        onClick={() => {}}
+                        onClick={() => {
+                          if(existe){
+                            set_modal_option('pago')
+                            handle_open()
+                          } else {
+                            navigate('../amortizacion')
+                          }
+                        }}
                       >
                       Crear Plan de Pagos
                       </Button>
                     </Grid>
                     <Grid item sm={5}>
                       <Button
-                        color='info'
+                        color='primary'
                         variant='contained'
                         onClick={() => {}}
                       >
@@ -138,10 +160,9 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               }
               <Grid item xs={12} sm={3}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">¿Crear Resolución?</InputLabel>
+                  <InputLabel>¿Crear Resolución?</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
+                    defaultValue={''}
                     label="¿Crear Resolución?"
                     onChange={(event: event)=>{
                       const { value } = event.target
@@ -158,10 +179,15 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                   <>
                     <Grid item>
                       <Button
-                        color='info'
+                        color='primary'
                         variant='contained'
                         onClick={() => {
-                          navigate('../resolucion')
+                          if(existe){
+                            set_modal_option('resolucion')
+                            handle_open()
+                          } else {
+                            navigate('../resolucion')
+                          }
                         }}
                       >
                       Crear Resolución
@@ -169,7 +195,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     </Grid>
                     <Grid item sm={5}>
                       <Button
-                        color='info'
+                        color='primary'
                         variant='contained'
                         onClick={() => {}}
                       >
@@ -180,24 +206,51 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                 ) : null
               }
             </Grid>
+            <Stack
+              direction="row"
+              justifyContent="right"
+              spacing={2}
+              sx={{ mb: '20px' }}
+            >
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<SaveIcon />}
+                sx={{ marginTop: '30px' }}
+                onClick={() => {}}
+              >
+              Actualizar / Enviar
+              </Button>
+            </Stack>
           </Box>
         </Grid>
       </Grid>
-      <Stack
-        direction="row"
-        justifyContent="right"
-        spacing={2}
-        sx={{ mb: '20px' }}
+      <Dialog
+        open={modal}
+        onClose={handle_close}
+        maxWidth="xs"
       >
-        <Button
-          color='info'
-          variant='contained'
-          sx={{ marginTop: '30px' }}
-          onClick={() => {}}
-        >
-        Actualizar / Enviar
-        </Button>
-      </Stack>
+        <Box component="form"
+          onSubmit={()=>{}}>
+          <DialogTitle>
+            {
+              modal_option === 'pago' ? `El radicado nro. ${'#RadicadoActual'} tiene Plan de Pagos creado, consulte presionando el botón Ver Plan de Pagos.` : `El radicado nro. ${'#RadicadoActual'} tiene Resolución creada, consulte presionando el botón Ver Resolución.`
+            }
+          </DialogTitle>
+          <DialogActions>
+            <Button
+              variant='outlined'
+              color="primary"
+              startIcon={<Close />}
+              onClick={() => {
+                handle_close()
+            }}
+            >
+              Cerrar
+            </Button>
+          </DialogActions>
+        </Box>
+      </Dialog>
     </>
   )
 }

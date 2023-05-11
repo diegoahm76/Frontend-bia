@@ -20,7 +20,6 @@ export const FacilidadPagoAutorizadas: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-
         <Grid item xs={12}>
           <Box
             component="form"
@@ -30,40 +29,58 @@ export const FacilidadPagoAutorizadas: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Nombres"
-                  helperText='Escribe Nombre y Apellido'
                   size="small"
                   fullWidth
+                  value={'Marcela Cardenas'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Identificación"
-                  helperText='Escribe Número de Identificación'
                   size="small"
                   fullWidth
+                  value={'230232019'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  required
-                  id="outlined-error-helper-text"
+                  disabled
                   label="Correo Electrónico"
-                  helperText='Escribe Correo Electrónico'
                   size="small"
                   fullWidth
+                  value={'marce@gmail.com'}
                 />
               </Grid>
             </Grid>
           </Box>
         </Grid>
       </Grid>
-      <p>Sus facilidades de pago actuales son:</p>
-      <TablaFacilidadesAutorizadas />
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          mb: '20px',
+          mt: '20px',
+          p: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+            <p>Sus facilidades de pago actuales son:</p>
+            <TablaFacilidadesAutorizadas />
+          </Box>
+        </Grid>
+      </Grid>
     </>
   )
 }

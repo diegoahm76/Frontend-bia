@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Grid, Box, TextField, TextareaAutosize, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
+import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { PersonaNatural } from './CalidadPersona';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -9,13 +10,15 @@ export const VistaSolicitud: React.FC = () => {
   const rows_bienes = [
     {
       id: 'jsjsjq939',
-      identificacion: 'Casa',
+      bien: 'Casa',
+      identificacion: 'reg-9233319',
       avaluo: 120000000,
       direccion: 'Cl 45 # 120 - 123',
     },
     {
       id: 'jfsmd30230',
-      identificacion: 'Auto',
+      bien: 'Auto',
+      identificacion: 'GMW-604',
       avaluo: 100000000,
       direccion: 'Cra 4 # 120 - 678',
     },
@@ -23,8 +26,8 @@ export const VistaSolicitud: React.FC = () => {
 
   const columns_bienes: GridColDef[] = [
     {
-      field: 'identificacion',
-      headerName: 'Identificación Bien',
+      field: 'bien',
+      headerName: 'Tipo Bien',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -33,8 +36,8 @@ export const VistaSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'ubicacion',
-      headerName: 'Ubicación',
+      field: 'identificacion',
+      headerName: 'Identificación',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -65,13 +68,14 @@ export const VistaSolicitud: React.FC = () => {
     {
       field: 'docImpuesto',
       headerName: 'Doc. Impuestos',
-      width: 150,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='small'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Documento
@@ -86,9 +90,10 @@ export const VistaSolicitud: React.FC = () => {
       <Grid container spacing={5}>
         <Grid item xs={12} sm={3}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='medium'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Documento Solicitud
@@ -96,9 +101,10 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3.1}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='medium'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Soporte Consignación
@@ -106,7 +112,6 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3.1}>
           <TextField
-             id="outlined-error-helper-text"
             label="Calidad en que actúa la persona"
             size="small"
             fullWidth
@@ -119,7 +124,6 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={2.9}>
           <TextField
-            id="outlined-error-helper-text"
             label="Periodicidad y Modalidad"
             size="small"
             fullWidth
@@ -129,7 +133,6 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={2.9}>
           <TextField
-            id="outlined-error-helper-text"
             label="Plazo"
             size="small"
             fullWidth
@@ -137,11 +140,12 @@ export const VistaSolicitud: React.FC = () => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={3.15}>
+        <Grid item xs={12} sm={3.4}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='medium'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Documento No Enajenación
@@ -149,9 +153,10 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={2.9}>
           <Button
-            color='info'
+            color='primary'
             variant='outlined'
             size='medium'
+            startIcon={<CloudDownloadIcon />}
             onClick={() => {}}
           >
             Ver Garantías Ofrecidas
@@ -175,14 +180,17 @@ export const VistaSolicitud: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <p>Observación Usuario</p>
-      <TextareaAutosize
-        minRows={8}
-        cols={153}
-        name='observacion'
-        value={'Aquí van todas las observaciones escritas por el usuario externo.'}
-        disabled
-      />
+      <Grid item xs={12} sm={15} mt='20px' mb='20px'>
+        <TextField
+          multiline
+          rows={4}
+          value={'Aquí van todas las observaciones escritas por el usuario externo.'}
+          label="Observación Usuario"
+          size="small"
+          disabled
+          fullWidth
+        />
+      </Grid>
       <FormGroup>
         <FormControlLabel checked disabled control={<Checkbox />} label="Aceptar términos y condiciones" />
         <FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />

@@ -153,7 +153,8 @@ const SeleccionarCambio = ({
               disabled: false,
               helper_text: "",
               set_value: set_file,
-              file_name: file_name
+              // eslint-disable-next-line object-shorthand
+              file_name: file_name,
             },
             {
               datum_type: "input_controller",

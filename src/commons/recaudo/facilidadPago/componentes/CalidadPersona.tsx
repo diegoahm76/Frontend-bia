@@ -1,7 +1,7 @@
 import { Grid, Box, TextField, Button } from "@mui/material";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-
 export const PersonaNatural: React.FC = () => {
   return (
     <>
@@ -13,11 +13,12 @@ export const PersonaNatural: React.FC = () => {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={3.2}>
+            <Grid item xs={12} sm={3.5}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Documento de Identidad
@@ -26,7 +27,6 @@ export const PersonaNatural: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Dirección Notificación"
                 value={'Cl 45 # 302A-320'}
                 size="small"
@@ -36,7 +36,6 @@ export const PersonaNatural: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Ciudad"
                 value={'Bogotá'}
                 size="small"
@@ -46,7 +45,6 @@ export const PersonaNatural: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Teléfono Contacto"
                 value={'3123457865'}
                 size="small"
@@ -71,11 +69,12 @@ export const PersonaJuridica: React.FC = () => {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={4.3}>
+            <Grid item xs={12} sm={4.6}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Documento de Identidad Apoderado
@@ -83,19 +82,21 @@ export const PersonaJuridica: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={3}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Documento Poder
               </Button>
             </Grid>
-            <Grid item xs={12} sm={4.7}>
+            <Grid item xs={12} sm={5}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Cert. Existencia y Representación Legal
@@ -104,7 +105,6 @@ export const PersonaJuridica: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Dirección Notificación"
                 value={'Cl 32 #201-305'}
                 size="small"
@@ -114,7 +114,6 @@ export const PersonaJuridica: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Ciudad"
                 value={'Bogotá'}
                 size="small"
@@ -124,7 +123,6 @@ export const PersonaJuridica: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Teléfono Contacto"
                 value={'3214932553'}
                 size="small"
@@ -152,38 +150,40 @@ export const DeudorSolidario: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Tipo Deudor Solidario"
                 value={'Ej 1'}
                 size="small"
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3.7}>
+            <Grid item xs={12} sm={4}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Documento Deudor Solidario
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3.4}>
+            <Grid item xs={12} sm={3.7}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Oficio Respaldando Deuda
               </Button>
             </Grid>
-            <Grid item xs={12} sm={4.7}>
+            <Grid item xs={12} sm={5}>
               <Button
-                color='info'
+                color='primary'
                 variant='outlined'
                 size='medium'
+                startIcon={<CloudDownloadIcon />}
                 onClick={() => {}}
               >
                 Ver Cert. Existencia y Representación Legal
@@ -192,7 +192,6 @@ export const DeudorSolidario: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Dirección Notificación"
                 value={'Cra 34 #213-201'}
                 size="small"
@@ -202,7 +201,6 @@ export const DeudorSolidario: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Ciudad"
                 value={'Medellín'}
                 size="small"
@@ -212,7 +210,6 @@ export const DeudorSolidario: React.FC = () => {
             <Grid item xs={12} sm={3}>
               <TextField
                 disabled
-                id="outlined-error-helper-text"
                 label="Teléfono Contacto"
                 value={'3214923232'}
                 size="small"

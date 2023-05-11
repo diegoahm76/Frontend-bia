@@ -35,6 +35,7 @@ interface IProps {
     columns_list?: GridColDef[];
     row_list_id?: string |number;
     add_list_button_label?:string|null;
+    show_inputs?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -57,6 +58,7 @@ const BuscarModelo = ({
     columns_list,
     row_list_id,
     add_list_button_label,
+    show_inputs
 }: IProps) => {
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -161,26 +163,28 @@ const BuscarModelo = ({
             padding={2}
             borderRadius={2}
         >
-            {form_inputs.map((option, index) => (
-                <TypeDatum key={index} form_input={option} />
-            ))}
+            {(show_inputs ?? true) &&
+            <>
+                {form_inputs.map((option, index) => (
+                    <TypeDatum key={index} form_input={option} />
+                ))}
 
-            <Grid
-                item
-                xs={12}
-                md={3}
-            >
-                <FormButton
-                    variant_button="contained"
-                    on_click_function={handle_open_select_model}
-                    icon_class={<SearchIcon />}
-                    label={button_submit_label ?? "BUSCAR"}
-                    type_button="button"
-                />
-            </Grid>
-
+                <Grid
+                    item
+                    xs={12}
+                    md={3}
+                >
+                    <FormButton
+                        variant_button="contained"
+                        on_click_function={handle_open_select_model}
+                        icon_class={<SearchIcon />}
+                        label={button_submit_label ?? "BUSCAR"}
+                        type_button="button"
+                    />
+                </Grid>
+            </>
+            }
             <Divider />
-            
             {form_inputs_list !== undefined && 
                 <Grid
                 container
@@ -191,7 +195,10 @@ const BuscarModelo = ({
                 borderTop={1}
                 borderColor="lightgray"
                 >
+                    {(show_inputs ?? true) &&
+                    <>
                     {form_inputs_list?.map((option, index) => (
+
                         <TypeDatum key={index} form_input={option} />
                     ))}
                     <Grid
@@ -207,6 +214,9 @@ const BuscarModelo = ({
                             type_button="button"
                         />
                     </Grid>
+                    </>
+                    }
+
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '80%' }}>
                             <Title title={title_list??""}></Title>
@@ -222,7 +232,6 @@ const BuscarModelo = ({
                             />
                         </Box>
                     </Grid>
-
                 </Grid>
             }
             <SeleccionarModeloDialogForm

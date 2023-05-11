@@ -1,53 +1,43 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-
-import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox } from '@mui/material';
+import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox, TextField, Stack, Button } from '@mui/material';
+import { Add } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { obligaciones_seleccionadas } from '../store/slices/FacilidadPagoSlices';
+import { useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { type ObligacionesState } from '../interfaces/interfaces';
+
+interface Obligaciones {
+  obligaciones: ObligacionesState[];
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuario: React.FC = () => {
+export const TablaObligacionesUsuario: React.FC<Obligaciones> = (props: Obligaciones) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
-  const [abonado, set_abonado] = useState(0);
   const [total, set_total] = useState(0);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
-  const nurseries = [
-    {
-      id: 1,
-      nombreObligacion: 'Permiso 1',
-      fechaInicio: '01/01/2015',
-      expediente: '378765',
-      nroResolucion: '378765-143',
-      valorCapital: 120000000,
-      valorIntereses: 35000000,
-      diasMora: 390,
-      valorAbonado: 21000000,
-      estado: 'En Curso'
-    },
-    {
-      id: 2,
-      nombreObligacion: 'Concesion Aguas',
-      fechaInicio: '01/04/2015',
-      expediente: '3342765',
-      nroResolucion: '3342765-4546',
-      valorCapital: 190700000,
-      valorIntereses: 45000000,
-      diasMora: 180,
-      valorAbonado: 76000000,
-      estado: 'En Curso'
-    },
-    {
-      id: 'total',
-      nroResolucion: <strong>Total</strong>,
-      valorCapital: capital,
-      valorIntereses: intereses,
-      valorAbonado: abonado,
-      estado: <strong>Gran Total a Deber</strong>,
-      acciones: total,
-    },
-  ];
+  const handle_submit = async () => {
+    const arr_registro = []
+    for(let i=0; i<props.obligaciones.length; i++){
+      for(let j=0; j<selected.length; j++){
+        if(props.obligaciones[i].nombreObligacion === selected[j]){
+          arr_registro.push(props.obligaciones[i])
+        }
+      }
+    }
+    try {
+      dispatch(obligaciones_seleccionadas(arr_registro));
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };
 
   const columns: GridColDef[] = [
     {
@@ -55,13 +45,13 @@ export const TablaObligacionesUsuario: React.FC = () => {
       headerName: 'Solicitar Fac. Pago',
       width: 150,
       renderCell: (params) => {
-        return params.row.id !== 'total' ? (
+        return (
           <Checkbox
             onClick={(event) => {
               handle_click(event, params.row.nombreObligacion)
             }}
           />
-        ) : null
+        )
       },
     },
     {
@@ -75,7 +65,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'fechaInicio',
+      field: 'fecha_inicio',
       headerName: 'Fecha Inicio',
       width: 150,
       renderCell: (params) => (
@@ -85,7 +75,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'expediente',
+      field: 'id_expediente',
       headerName: 'Expediente',
       width: 150,
       renderCell: (params) => (
@@ -105,7 +95,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'valorCapital',
+      field: 'monto_inicial',
       headerName: 'Valor Capital',
       width: 150,
       renderCell: (params) => (
@@ -115,51 +105,21 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'valorIntereses',
-      headerName: 'Valor Intereses',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'diasMora',
-      headerName: 'Días Mora',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'valorAbonado',
-      headerName: 'Valor Abonado',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'estado',
-      headerName: 'Estado',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      field: 'carteras',
+      headerName: 'Valor Intereses - Días Mora',
+      width: 200,
+      valueGetter: (params) => {
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        return `${params.value.valor_intereses} - ${params.value.dias_mora}`
+
+      },
     },
     {
       field: 'acciones',
       headerName: 'Acciones',
       width: 150,
       renderCell: (params) => {
-        return params.row.id !== 'total' ? (
+        return (
           <>
             <Tooltip title="Ver">
                 <IconButton
@@ -182,7 +142,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 </IconButton>
               </Tooltip>
             </>
-        ) : null
+        )
       },
     },
   ];
@@ -210,23 +170,19 @@ export const TablaObligacionesUsuario: React.FC = () => {
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    let sub_abonado = 0
-    for(let i=0; i < nurseries.length; i++){
+    for(let i=0; i < props.obligaciones.length; i++){
       for(let j=0; j < selected.length; j++){
-        if(nurseries[i].nombreObligacion === selected[j]){
-          sub_capital = sub_capital + nurseries[i].valorCapital
-          sub_intereses = sub_intereses + nurseries[i].valorIntereses
-          sub_abonado = sub_abonado + nurseries[i].valorAbonado
+        if(props.obligaciones[i].nombreObligacion === selected[j]){
+          sub_capital = sub_capital + props.obligaciones[i].monto_inicial
+          sub_intereses = sub_intereses + props.obligaciones[i].carteras.valor_intereses
           set_capital(sub_capital)
           set_intereses(sub_intereses)
-          set_abonado(sub_abonado)
         }
       }
     }
     if(selected.length === 0){
       set_capital(0)
       set_intereses(0)
-      set_abonado(0)
     }
     set_total(capital + intereses)
   }, [selected, capital, intereses])
@@ -250,7 +206,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={nurseries}
+                rows={props.obligaciones}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
@@ -259,6 +215,55 @@ export const TablaObligacionesUsuario: React.FC = () => {
               />
             </Box>
           </Grid>
+          <Stack
+            direction="row"
+            display='flex'
+            justifyContent='flex-end'
+          >
+            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
+              <TextField
+                label="Total Capital"
+                size="small"
+                fullWidth
+                value={capital}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
+              <TextField
+                label="Total Intereses"
+                size="small"
+                fullWidth
+                value={intereses}
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} mt='30px'>
+              <TextField
+                label={<strong>Gran Total a Deber</strong>}
+                size="small"
+                fullWidth
+                value={total}
+              />
+            </Grid>
+        </Stack>
+        <Stack
+          direction="row"
+          justifyContent="right"
+          spacing={2}
+          sx={{ mb: '20px' }}
+        >
+          <Button
+            color='primary'
+            variant='contained'
+            startIcon={<Add />}
+            sx={{ marginTop: '30px' }}
+            onClick={() => {
+              navigate('../registro')
+              void handle_submit()
+            }}
+          >
+          Crear Facilidad de Pago
+          </Button>
+        </Stack>
         </Grid>
       </Grid>
     </>

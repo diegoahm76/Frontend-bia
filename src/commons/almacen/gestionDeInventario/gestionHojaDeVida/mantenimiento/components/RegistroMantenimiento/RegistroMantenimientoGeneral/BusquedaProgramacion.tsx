@@ -20,7 +20,9 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, 
 
     const {
         programacion,
-        set_programacion
+        // detalle_seleccionado,
+        set_programacion,
+        set_detalle_seleccionado
     } = use_previsualizacion();
     const {
         title_programacion,
@@ -32,6 +34,10 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, 
     const set_prog_seleccionada = useCallback((val: any) => {
         set_programacion(val);
     }, [set_programacion]);
+
+    const set_details_state = useCallback((val: any) => {
+        set_detalle_seleccionado(val);
+    }, [set_detalle_seleccionado]);
 
     useEffect(() => {
         set_prog_seleccion(programacion);
@@ -92,7 +98,10 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, 
                                 <BuscarProrgamacionComponent
                                     is_modal_active={buscar_programacion_is_active}
                                     set_is_modal_active={set_buscar_programacion_is_active}
-                                    title={title_programacion} parent_details={set_prog_seleccionada} />
+                                    title={title_programacion} 
+                                    parent_details={set_prog_seleccionada} 
+                                    prog_details={set_details_state} 
+                                    tipo_articulo={tipo_articulo} />
                             )}
                         </Stack>
                     </Box>
