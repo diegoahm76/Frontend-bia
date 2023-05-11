@@ -2,11 +2,11 @@
 import { Grid, Box } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { type ObligacionesState } from '../interfaces/interfaces';
+import { type Obligacion } from '../interfaces/interfaces';
 
 interface RootState {
   obligaciones: {
-    obligaciones: ObligacionesState[];
+    obligaciones: Obligacion[];
   }
 }
 

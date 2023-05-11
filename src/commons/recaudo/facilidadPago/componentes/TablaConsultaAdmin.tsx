@@ -4,65 +4,31 @@ import { SearchOutlined, FilterAltOffOutlined } from '@mui/icons-material';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { TablaObligacionesUsuario } from './TablaObligacionesUsuario';
+import { TablaObligacionesUsuarioConsulta } from './TablaObligacionesUsuarioConsulta';
 import { type event } from '../interfaces/interfaces';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { get_obligaciones_id } from '../slices/ObligacionesSlice';
 
-interface Data {
+interface Contribuyente {
   identificacion: string;
-  nombre: string;
+  nombre_contribuyente: string;
+}
+
+interface RootState {
+  deudores: {
+    deudores: Contribuyente[];
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaConsultaAdmin: React.FC = () => {
-  const [visible_rows, set_visible_rows] = useState(Array<Data>);
+  const [visible_rows, set_visible_rows] = useState(Array<Contribuyente>);
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
-  const [obligaciones, set_obligaciones] =useState(false);
-
-  const obligaciones_tabla = [
-    {
-      id: 1,
-      nombreObligacion: 'Permiso 1',
-      fecha_inicio: '01/01/2015',
-      id_expediente: 378765,
-      nroResolucion: '378765-143',
-      monto_inicial: 120000000,
-      carteras: {
-        valor_intereses: 35000000,
-        dias_mora: 390,
-      }
-    },
-    {
-      id: 2,
-      nombreObligacion: 'Concesion Aguas',
-      fecha_inicio: '01/04/2015',
-      id_expediente: 3342765,
-      nroResolucion: '3342765-4546',
-      monto_inicial: 190700000,
-      carteras: {
-        valor_intereses: 45000000,
-        dias_mora: 180,
-      }
-    },
-  ];
-
-  const contribuyente = [
-    {
-      id: 1,
-      identificacion: '10298723',
-      nombre: 'Juan Ortua',
-    },
-    {
-      id: 2,
-      identificacion: '2346448723',
-      nombre: 'Diana Vargas',
-    },
-    {
-      id: 3,
-      identificacion: '43214134',
-      nombre: 'Multiservicios',
-    },
-  ];
+  const [obligaciones_module, set_obligaciones_module] = useState(false);
+  const { deudores } = useSelector((state: RootState) => state.deudores);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const columns: GridColDef[] = [
     {
@@ -76,7 +42,7 @@ export const TablaConsultaAdmin: React.FC = () => {
       ),
     },
     {
-      field: 'nombre',
+      field: 'nombre_contribuyente',
       headerName: 'Nombre Contribuyente',
       width: 250,
       renderCell: (params) => (
@@ -95,7 +61,8 @@ export const TablaConsultaAdmin: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    set_obligaciones(true)
+                    void dispatch(get_obligaciones_id(params.row.identificacion))
+                    set_obligaciones_module(true)
                   }}
                 >
                   <Avatar
@@ -120,9 +87,9 @@ export const TablaConsultaAdmin: React.FC = () => {
     },
   ];
 
-  useEffect(()=>{
-    set_visible_rows(contribuyente)
-  }, [])
+  useEffect(() => {
+    set_visible_rows(deudores)
+  }, [deudores])
 
   return (
     <>
@@ -160,7 +127,7 @@ export const TablaConsultaAdmin: React.FC = () => {
                     }}
                   >
                     <MenuItem value='identificacion'>Número Identificación</MenuItem>
-                    <MenuItem value='nombre'>Nombre Contribuyente</MenuItem>
+                    <MenuItem value='nombre_contribuyente'>Nombre Contribuyente</MenuItem>
                   </Select>
               </FormControl>
               <TextField
@@ -179,17 +146,17 @@ export const TablaConsultaAdmin: React.FC = () => {
                 onClick={() => {
                   const new_rows = [];
                   if(filter === 'identificacion'){
-                    for(let i=0; i < contribuyente.length; i++){
-                      if(contribuyente[i].identificacion.toLowerCase().includes(search.toLowerCase())){
-                        new_rows.push(contribuyente[i])
+                    for(let i=0; i < deudores.length; i++){
+                      if(deudores[i].identificacion.toLowerCase().includes(search.toLowerCase())){
+                        new_rows.push(deudores[i])
                       }
                     }
                     set_visible_rows(new_rows)
                   }
-                  if(filter === 'nombre'){
-                    for(let i=0; i < contribuyente.length; i++){
-                      if(contribuyente[i].nombre.toLowerCase().includes(search.toLowerCase())){
-                        new_rows.push(contribuyente[i])
+                  if(filter === 'nombre_contribuyente'){
+                    for(let i=0; i < deudores.length; i++){
+                      if(deudores[i].nombre_contribuyente.toLowerCase().includes(search.toLowerCase())){
+                        new_rows.push(deudores[i])
                       }
                     }
                     set_visible_rows(new_rows)
@@ -203,7 +170,7 @@ export const TablaConsultaAdmin: React.FC = () => {
                 variant='outlined'
                 startIcon={<FilterAltOffOutlined />}
                 onClick={() => {
-                  set_visible_rows(contribuyente)
+                  set_visible_rows(deudores)
                 }}
               >
               Mostrar Todo
@@ -237,7 +204,7 @@ export const TablaConsultaAdmin: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id}
+                    getRowId={(row) => row.identificacion}
                   />
                 </Box>
               </Grid>
@@ -246,7 +213,7 @@ export const TablaConsultaAdmin: React.FC = () => {
         ) : null
       }
       {
-        obligaciones ? (
+        obligaciones_module ? (
         <Grid
           container
           sx={{
@@ -266,7 +233,7 @@ export const TablaConsultaAdmin: React.FC = () => {
               autoComplete="off"
             >
                 <p>Las obligaciones pendientes por pago son las siguientes:</p>
-                <TablaObligacionesUsuario obligaciones={obligaciones_tabla} />
+                <TablaObligacionesUsuarioConsulta />
             </Box>
           </Grid>
         </Grid>
