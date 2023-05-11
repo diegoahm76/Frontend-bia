@@ -3,7 +3,6 @@ import { control_error } from '../../../helpers/controlError';
 import type {
   IList,
   InfoPersona,
-  KeysInfoPersona,
   ResponseServer,
 } from '../../../interfaces/globalModels';
 import type { DataRegistePortal, ReisterHook } from '../interfaces';
@@ -31,6 +30,7 @@ export const use_register = (): ReisterHook => {
     setValue: set_value,
     formState: { errors, isValid: is_valid },
     getValues: get_values,
+    reset,
     watch,
   } = useForm();
   const [ciudad_expedicion, set_ciudad_expedicion] = useState('');
@@ -70,7 +70,8 @@ export const use_register = (): ReisterHook => {
   const [is_exists, set_is_exists] = useState(false);
   const [is_saving, set_is_saving] = useState(false);
   const [is_search, set_is_search] = useState(false);
-  const [is_avaiable, set_is_is_avaiable] = useState(false);
+  const [is_avaiable, set_is_avaiable] = useState(false);
+  const [no_has_user, set_no_has_user] = useState(false);
   const [message_error, set_message_error] = useState('');
   const [loading, set_loading] = useState<boolean>(false);
   const [message_error_password, set_message_error_password] = useState('');
@@ -213,36 +214,36 @@ export const use_register = (): ReisterHook => {
     set_is_search(true);
     try {
       set_is_error(false);
-      set_is_is_avaiable(true);
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
 
       if (data !== null && data !== undefined) {
         if (!data.tiene_usuario) {
-          set_data_register({ ...data_register, ...data });
-          for (const key in data) {
-            const temp_key = key as KeysInfoPersona;
-            set_value(key, data[temp_key]);
-            set_data_register({
-              ...data_register,
-              [temp_key]: data[temp_key],
-            });
-          }
+          // Habilitamos unicamente el formulario para registro de usuario y contraseña
+          set_value('primer_nombre', data.primer_nombre)
+          set_value('segundo_nombre', data.segundo_apellido)
+          set_value('primer_apellido', data.primer_apellido)
+          set_value('segundo_apellido', data.segundo_apellido)
+          set_is_avaiable(true);
+          set_no_has_user(true);
           return;
         } else {
           set_message_error(
             'Lo sentimos, este documento ya tiene un usuario, puede iniciar sesión con su usuario y contraseña, si ha olvidado sus datos de acceso, dirigase al inicio de sesión y haga click en ¿Olvidó su contraseña?'
           );
           set_is_error(true);
-          set_is_is_avaiable(false);
+          reset();
+          set_is_avaiable(false);
           return;
         }
       } else {
+        // Habilitamos todo el formulario
+        set_is_avaiable(true);
         set_is_error(false);
       }
     } catch (error) {
-      set_is_is_avaiable(false);
+      set_is_avaiable(false);
       const temp_err = error as AxiosError;
       if (temp_err.response?.status === 403) {
         const resp = temp_err.response.data as ResponseServer<InfoPersona>;
@@ -426,6 +427,7 @@ export const use_register = (): ReisterHook => {
     is_search,
     is_valid,
     loading,
+    no_has_user,
     message_error_password,
     message_no_person,
     message_error,

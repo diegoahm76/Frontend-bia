@@ -286,6 +286,7 @@ export interface ReisterHook {
   is_search: boolean;
   is_valid: boolean;
   loading: boolean;
+  no_has_user: boolean;
   message_error_password: string;
   message_no_person: string;
   message_error: string;

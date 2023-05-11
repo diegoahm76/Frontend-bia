@@ -26,11 +26,6 @@ export interface SolicitudConsumo {
   aprobacion_solicitud: AprobacionRechazo;
 }
 
-export interface IList {
-  label: string | number;
-  value: number | string;
-}
-
 export interface UnidadOrganizacional {
   id_unidad_organizacional: number;
   id_organigrama: number;

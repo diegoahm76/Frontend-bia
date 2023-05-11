@@ -14,6 +14,7 @@ import { RegisterPersonaNatural } from './RegisterPersonaNatural';
 // import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
 import { CustomSelect } from '../../../components';
 import { LoadingButton } from '@mui/lab';
+import { CreateUser } from './CreateUser';
 
 interface Props {
   uso_interno: boolean;
@@ -33,6 +34,7 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
+    no_has_user,
     handle_submit,
     register,
     set_numero_documento,
@@ -184,7 +186,7 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
           )}
         </Grid>
       </form>
-      {tipo_persona === 'N' && is_avaiable && (
+      {tipo_persona === 'N' && is_avaiable && !no_has_user && (
         <RegisterPersonaNatural
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
@@ -195,6 +197,19 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
           register={register}
           setValue={set_value}
           watch={watch}
+        />
+      )}
+      {no_has_user && (
+        <CreateUser
+          errors={errors}
+          handleSubmit={handle_submit}
+          isValid={is_valid}
+          register={register}
+          numero_documento=""
+          setValue={set_value}
+          watch={watch}
+          tipo_persona={tipo_persona}
+          tipo_documento={tipo_documento}
         />
       )}
       {/* {tipo_persona === 'J' && (
