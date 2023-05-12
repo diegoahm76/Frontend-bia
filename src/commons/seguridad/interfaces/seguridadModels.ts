@@ -5,7 +5,7 @@ export interface DelegarSuper {
   tipo_documento_opt: IList[];
   tipo_documento: string;
   loading: boolean;
-  get_selects_options: () => Promise<void>;
+  get_selects_options: () => Promise<void>; 
   set_tipo_documento: Dispatch<SetStateAction<string>>;
 }
 

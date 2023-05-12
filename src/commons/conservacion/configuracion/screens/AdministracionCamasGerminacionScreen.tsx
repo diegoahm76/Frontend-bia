@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Box, Button, Grid, Stack, Tooltip, IconButton, Avatar } from "@mui/material";
 import { Title } from "../../../../components";
 import { get_germination_beds_service, update_germination_beds_service } from '../store/thunks/configuracionThunks';
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 // // Hooks
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IObjGerminationBed, type IObjNursery } from "../interfaces/configuracion";
