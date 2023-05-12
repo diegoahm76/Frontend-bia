@@ -51,8 +51,8 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
             set_estado("");
             set_observaciones("");
             set_dias_empleados("1");
-            set_valor(null);
-            set_contrato(null);
+            set_valor("");
+            set_contrato("");
         }
     }, [limpiar_formulario]);
 
@@ -102,6 +102,7 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                             <TextField
                                 label="Días empleados"
                                 size="small"
+                                type={'number'}
                                 required
                                 fullWidth
                                 value={dias_empleados}

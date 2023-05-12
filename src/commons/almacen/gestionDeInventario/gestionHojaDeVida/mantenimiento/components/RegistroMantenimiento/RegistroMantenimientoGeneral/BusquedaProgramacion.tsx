@@ -8,10 +8,11 @@ import dayjs from "dayjs";
 interface IProps {
     tipo_articulo: string,
     set_prog_seleccion: any,
-    parent_details: any
+    parent_details: any,
+    limpiar_formulario: boolean
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, set_prog_seleccion, parent_details}: IProps) => {
+export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, set_prog_seleccion, parent_details, limpiar_formulario}: IProps) => {
     const [fecha_programada, set_fecha_programada] = useState<string | null>(dayjs().format("DD-MM-YYYY"));
 
     const {
@@ -47,12 +48,17 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, 
         parent_details(detalle_seleccionado);
     }, [parent_details, detalle_seleccionado]);
 
-
     useEffect(() => {
         if (programacion !== undefined && programacion !== null) {
             set_fecha_programada(dayjs(programacion.fecha).format("DD-MM-YYYY"));
         }
     }, [programacion]);
+
+    useEffect(() => {
+        if (limpiar_formulario) {
+            set_fecha_programada(dayjs().format("DD-MM-YYYY"));
+        }
+    }, [limpiar_formulario]);
 
     return (
         <>
