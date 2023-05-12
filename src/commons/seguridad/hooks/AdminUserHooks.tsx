@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { control_error } from '../../../helpers/controlError';
 import type { IList } from '../../../interfaces/globalModels';
 import type {
   IList2,
@@ -9,6 +8,7 @@ import type {
   AdminUserHook,
   SeguridadSlice,
   Users,
+  UserCreate,
 } from '../interfaces';
 import {
   get_tipo_documento,
@@ -18,9 +18,32 @@ import {
 // import { get_roles } from '../store/thunks';
 // import { roles_request } from '../request/seguridadRequest';
 import { roles_choise_adapter } from '../adapters/roles_adapters';
-import { roles_request } from '../request/seguridadRequest';
+import {
+  crear_user_admin_user,
+  roles_request,
+  update_user_admin_user,
+} from '../request/seguridadRequest';
 import { set_user_info } from '../store/seguridadSlice';
 import { get_data_user } from '../store/thunks';
+import dayjs from 'dayjs';
+import { control_success, control_error } from '../../../helpers';
+import { type AxiosError } from 'axios';
+import { toast, type ToastContent } from 'react-toastify';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const control_error2 = (
+  message: ToastContent = 'Algo pasó, intente de nuevo'
+) =>
+  toast.error(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
 
 const activo_opt: IList[] = [
   { value: 'false', label: 'No' },
@@ -191,6 +214,79 @@ export const use_admin_users = (): AdminUserHook => {
     }
   };
 
+  const on_submit = handle_submit_admin_user(async (data_user) => {
+    try {
+      set_loading_create_or_update(true);
+      if (action_admin_users === 'CREATE') {
+        const data_create_user = new FormData();
+        data_create_user.append(
+          'nombre_de_usuario',
+          data_user.nombre_de_usuario
+        );
+        data_create_user.append(
+          'persona',
+          data_person_search.id_persona.toString()
+        );
+        data_create_user.append('tipo_usuario', data_user.tipo_usuario);
+        for (let i = 0; i < roles.length; i++) {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          data_create_user.append('roles', `${roles[i].value}`);
+        }
+        data_create_user.append(
+          'redirect_url',
+          'http://localhost:3000/#/app/seguridad/administracion_usuarios'
+        );
+        console.log(file_image);
+        data_create_user.append('profile_img', file_image ?? '');
+
+        // for (const [key, value] of data_create_user.entries()) {
+        //   // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        //   console.log(key + ': ' + value);
+        // }
+
+        // // Creación de usuario Persona Natural
+        const { data } = await crear_user_admin_user(data_create_user);
+
+        control_success(data.detail);
+      } else if (action_admin_users === 'EDIT') {
+        const data_update_user = new FormData();
+        data_update_user.append('is_active', data_register.activo.toString());
+        data_update_user.append(
+          'is_blocked',
+          data_register.bloqueado.toString()
+        );
+        data_update_user.append('tipo_usuario', data_register.tipo_usuario);
+        for (let i = 0; i < roles.length; i++) {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          data_update_user.append('roles', `${roles[i].value}`);
+        }
+        data_update_user.append('profile_img', data_register.imagen_usuario);
+        data_update_user.append(
+          'justificacion_activacion',
+          data_register.activo_justificacion_cambio ?? ''
+        );
+        data_update_user.append(
+          'justificacion_bloqueo',
+          data_register.bloqueado_justificacion_cambio ?? ''
+        );
+
+        // Actualización de usuario Persona Natural
+        const { data } = await update_user_admin_user(
+          user_info.id_usuario,
+          data_update_user
+        );
+        console.log(data);
+        control_success(data.detail);
+      }
+    } catch (error) {
+      const temp_error = error as AxiosError;
+      const resp = temp_error.response?.data as UserCreate;
+      control_error2(resp.detail);
+    } finally {
+      set_loading_create_or_update(false);
+    }
+  });
+
   useEffect(() => {
     set_tipo_persona(data_user_search.tipo_persona);
     // set_tipo_documento(user_info.tipo_documento);
@@ -238,6 +334,7 @@ export const use_admin_users = (): AdminUserHook => {
     set_data_disponible(true);
     // set_tipo_documento(data_person_search.tipo_documento);
     // set_numero_documento(data_person_search.numero_documento);
+    console.log(data_register);
   }, [data_person_search]);
 
   // Paso de datos a formulario para edición de usuario persona natural
@@ -264,15 +361,28 @@ export const use_admin_users = (): AdminUserHook => {
       tipo_usuario: user_info.tipo_usuario,
       roles: user_info.roles,
       activo: user_info.is_active,
-      activo_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_activacion,
+      activo_fecha_ultimo_cambio:
+        user_info.fecha_ultimo_cambio_activacion !== null
+          ? dayjs(user_info.fecha_ultimo_cambio_activacion).format('DD-MM-YYYY')
+          : 'No disponible',
       activo_justificacion_cambio:
         user_info.justificacion_ultimo_cambio_activacion,
       bloqueado: user_info.is_blocked,
-      bloqueado_fecha_ultimo_cambio: user_info.fecha_ultimo_cambio_bloqueo,
+      bloqueado_fecha_ultimo_cambio:
+        user_info.fecha_ultimo_cambio_bloqueo !== null
+          ? dayjs(user_info.fecha_ultimo_cambio_bloqueo).format('DD-MM-YYYY')
+          : 'No disponible',
       bloqueado_justificacion_cambio:
         user_info.justificacion_ultimo_cambio_bloqueo,
-      fecha_creacion: user_info.created_at,
-      fecha_activación_inicial: user_info.activated_at,
+      fecha_creacion:
+        user_info.created_at !== null
+          ? dayjs(user_info.created_at).format('DD-MM-YYYY')
+          : 'No disponible',
+
+      fecha_activación_inicial:
+        user_info.activated_at !== null
+          ? dayjs(user_info.activated_at).format('DD-MM-YYYY')
+          : 'No disponible',
       creado_desde_portal: user_info.creado_por_portal,
       persona_que_creo: user_info.id_usuario_creador,
     });
@@ -290,7 +400,9 @@ export const use_admin_users = (): AdminUserHook => {
     set_value_admin_user('activo', user_info.is_active);
     set_value_admin_user(
       'activo_fecha_ultimo_cambio',
-      user_info.fecha_ultimo_cambio_activacion
+      user_info.fecha_ultimo_cambio_activacion !== null
+        ? dayjs(user_info.fecha_ultimo_cambio_activacion).format('DD-MM-YYYY')
+        : 'No disponible'
     );
     set_value_admin_user(
       'activo_justificacion_cambio',
@@ -299,19 +411,32 @@ export const use_admin_users = (): AdminUserHook => {
     set_value_admin_user('bloqueado', user_info.is_blocked);
     set_value_admin_user(
       'bloqueado_fecha_ultimo_cambio',
-      user_info.fecha_ultimo_cambio_bloqueo
+      user_info.fecha_ultimo_cambio_bloqueo !== null
+        ? dayjs(user_info.fecha_ultimo_cambio_bloqueo).format('DD-MM-YYYY')
+        : 'No disponible'
     );
     set_value_admin_user(
       'bloqueado_justificacion_cambio',
       user_info.justificacion_ultimo_cambio_bloqueo
     );
-    set_value_admin_user('fecha_creacion', user_info.created_at);
-    set_value_admin_user('fecha_activación_inicial', user_info.activated_at);
+    set_value_admin_user(
+      'fecha_creacion',
+      user_info.created_at !== null
+        ? dayjs(user_info.created_at).format('DD-MM-YYYY')
+        : 'No disponible'
+    );
+    set_value_admin_user(
+      'fecha_activación_inicial',
+      user_info.activated_at !== null
+        ? dayjs(user_info.activated_at).format('DD-MM-YYYY')
+        : 'No disponible'
+    );
     set_value_admin_user('creado_desde_portal', user_info.creado_por_portal);
     set_value_admin_user('persona_que_creo', user_info.id_usuario_creador);
     // if (user_info.id_usuario !== 0) {
     set_data_disponible(true);
     // }
+    console.log(data_register);
   }, [user_info]);
 
   useEffect(() => {
@@ -337,6 +462,7 @@ export const use_admin_users = (): AdminUserHook => {
   }, []);
 
   return {
+    on_submit,
     // Handle Form
     register_admin_user,
     handle_submit_admin_user,

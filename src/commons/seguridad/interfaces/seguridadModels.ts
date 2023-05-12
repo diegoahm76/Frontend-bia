@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from 'react';
+import { type BaseSyntheticEvent, type Dispatch, type SetStateAction } from 'react';
 import type{ FieldErrors,  UseFormHandleSubmit,  UseFormRegister,  UseFormSetValue,  UseFormWatch } from 'react-hook-form';
 import type { DataPersonas, IList } from '../../../interfaces/globalModels';
 
@@ -116,8 +116,8 @@ export interface UserCreate {
   detail: string;
   success: boolean;
 }
-
 export interface AdminUserHook {
+  on_submit: (e?: BaseSyntheticEvent<object, any,any> | undefined) => Promise<void>;
   register_admin_user: UseFormRegister<DataAadminUser>; 
   handle_submit_admin_user: UseFormHandleSubmit<DataAadminUser>;
   set_value_admin_user: UseFormSetValue<DataAadminUser>;
