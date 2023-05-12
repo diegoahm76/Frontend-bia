@@ -56,17 +56,17 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
         set_programacion(val);
     }, [set_programacion]);
 
-    useEffect(() => {
+    useEffect(()=>{
         validar_formulario();
-    }, [detalle])
+    },[detalle])
 
     const validar_formulario: () => void = () => {
-        if (user_info !== null && programacion !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null) {
+        if(user_info !== null && programacion !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null){
             const formulario: ejecutar_mantenimiento = {
                 fecha_registrado: programacion.fecha,
                 fecha_ejecutado: dayjs().format("YYYY-MM-DD"),
                 cod_tipo_mantenimiento: mantenimiento.tipo,
-                dias_empleados: parseInt(detalle.dias_empleados),
+                dias_empleados:parseInt(detalle.dias_empleados),
                 fecha_estado_anterior: null,
                 id_articulo: detalle_seleccionado.id_articulo,
                 cod_estado_final: detalle.estado,
@@ -79,7 +79,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                 contrato_mantenimiento: detalle.contrato,
                 id_programacion_mtto: programacion.id_programacion_mantenimiento
             };
-            registrar_mantenimiento(formulario);
+            registrar_mantenimiento(formulario); 
         }
     }
 
@@ -112,7 +112,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de programación" />
-                    <BusquedaProgramacionComponent set_prog_seleccion={set_prog_seleccionada} parent_details={set_details_state} tipo_articulo={"otros activos"} limpiar_formulario={limpiar_formulario} />
+                    <BusquedaProgramacionComponent set_prog_seleccion={set_prog_seleccionada} parent_details={set_details_state} tipo_articulo={"otros activos"}  limpiar_formulario={limpiar_formulario}/>
                 </Grid>
             </Grid>
             <Grid
@@ -128,7 +128,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de ostros activos" />
-                    <BusquedaArticuloComponent tipo_articulo={"otros activos"} parent_details={set_details_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} />
+                    <BusquedaArticuloComponent tipo_articulo={"otros activos"} parent_details={set_details_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
             <Grid container
@@ -141,8 +141,8 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}>
                 <Grid item xs={12}>
-                    <Title title='Mantenimiento' />
-                    <MantenimientoComponent limpiar_formulario={limpiar_formulario} programacion={programacion} mantenimiento={set_mantenimientos} accion_guardar={accion_guardar} />
+                    <Title title='Mantenimiento'/>
+                    <MantenimientoComponent limpiar_formulario={limpiar_formulario} programacion={programacion} mantenimiento={set_mantenimientos} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
             <Grid container
@@ -155,8 +155,8 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}>
                 <Grid item xs={12}>
-                    <Title title='Detalles' />
-                    <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalles} accion_guardar={accion_guardar} />
+                    <Title title='Detalles'/>
+                    <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalles} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
             <Grid container>

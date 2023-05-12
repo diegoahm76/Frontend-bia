@@ -7,7 +7,8 @@ import {
     MenuItem,
     Select,
     type SelectChangeEvent,
-    TextField
+    TextField,
+    FormHelperText
 } from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
 import { BuscadorPersonaDialog } from './BuscadorPersonaDialog';
@@ -21,7 +22,7 @@ interface IProps {
 const estados_mantenimiento = [{ value: "O", label: "óptimo" }, { value: "D", label: "Defectuoso" }, { value: "A", label: "Averiado" }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_info, detalles, accion_guardar }: IProps) => {
-    const [dias_empleados, set_dias_empleados] = useState<string | null>("1");
+    const [dias_empleados, set_dias_empleados] = useState<string>("1");
     const [contrato, set_contrato] = useState<string | null>(null);
     const [valor, set_valor] = useState<string | null>(null);
     const [estado, set_estado] = useState("");
@@ -29,7 +30,11 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
     const [diligenciado, set_diligenciado] = useState<string | null>("");
     const [realizado, set_realizado] = useState<string | null>("");
     const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
-
+    // Errors
+    const [mensaje_error_dias, set_mensaje_error_dias] = useState<string>("");
+    const [mensaje_error_estado, set_mensaje_error_estado] = useState<string>("");
+    const [mensaje_error_realizado, set_mensaje_error_realizado] = useState<string>("");
+    const [mensaje_error_diligenciado, set_mensaje_error_diligenciado] = useState<string>("");
     useEffect(() => {
         if (user_info !== null && user_info !== undefined) {
             set_diligenciado(user_info.nombre);
@@ -49,7 +54,7 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
 
     useEffect(() => {
         if (accion_guardar) {
-            if (estado !== "" && dias_empleados !== "" && realizado !== "" && diligenciado !== "") {
+            if (estado !== "" && dias_empleados !== null && realizado !== "" && diligenciado !== "") {
                 detalles({
                     dias_empleados,
                     estado,
@@ -59,12 +64,29 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
                     valor,
                     contrato
                 })
+            }else{
+                valida_formulario();
             }
         }
     }, [detalles, accion_guardar]);
 
+    const valida_formulario: () => void = () => {
+        if(dias_empleados === "")
+            set_mensaje_error_dias("El campo Días empleados es obligatorio.");
+        if(parseInt(dias_empleados) > 1)
+            set_mensaje_error_dias("El campo Días empleados es mayor a los dias disponibles.");
+        if(estado === "")
+            set_mensaje_error_estado("El campo Estado final es obligatorio.");
+        if(realizado === "")
+            set_mensaje_error_realizado("El campo Realizado por es obligatorio.");
+        if(diligenciado === "")
+            set_mensaje_error_diligenciado("El campo Diligenciado por es obligatorio.");
+    }
+
     const handle_change: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_estado(e.target.value);
+        if(e.target.value !== null && e.target.value !== "")
+            set_mensaje_error_estado("");
     }
 
     const on_change_contrato: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,6 +99,8 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
 
     const on_change_dias_empleados: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_dias_empleados(e.target.value);
+        if(e.target.value !== null && e.target.value !== "")
+            set_mensaje_error_dias("")
     };
 
     const on_change_observacion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,7 +126,9 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
                                 fullWidth
                                 value={dias_empleados}
                                 onChange={on_change_dias_empleados}
+                                error={mensaje_error_dias !== ""}
                             />
+                            {(mensaje_error_dias !== "") && (<FormHelperText error id="dias-error">{mensaje_error_dias}</FormHelperText>)}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <FormControl required size='small' fullWidth>
@@ -111,6 +137,7 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
                                     value={estado}
                                     label="Estado final"
                                     onChange={handle_change}
+                                    error={mensaje_error_estado !== ""}
                                 >
                                     {estados_mantenimiento.map(({ value, label }) => (
                                         <MenuItem key={value} value={value}>
@@ -119,6 +146,7 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
                                     ))}
                                 </Select>
                             </FormControl>
+                            {(mensaje_error_estado !== "") && (<FormHelperText error id="estado-error">{mensaje_error_estado}</FormHelperText>)}
                         </Grid>
                     </Grid>
                     <Grid item xs={12} sm={12}>
@@ -165,7 +193,9 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
                                 InputProps={{
                                     readOnly: true,
                                 }}
+                                error={mensaje_error_realizado !== ""}
                             />
+                           {(mensaje_error_realizado !== "") && (<FormHelperText error id="realizado-error">{mensaje_error_realizado}</FormHelperText>)}
                         </Grid>
                         <Grid item xs={12} sm={1} sx={{ mt: '10px' }}>
                             <SearchIcon style={{ cursor: 'pointer' }} onClick={() => { set_abrir_modal_persona(true) }} />
@@ -180,7 +210,9 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
                                 InputProps={{
                                     readOnly: true,
                                 }}
+                                error={mensaje_error_diligenciado !== ""}
                             />
+                           {(mensaje_error_diligenciado !== "") && (<FormHelperText error id="diligenciado-error">{mensaje_error_diligenciado}</FormHelperText>)}
                         </Grid>
                     </Grid>
                 </Grid>

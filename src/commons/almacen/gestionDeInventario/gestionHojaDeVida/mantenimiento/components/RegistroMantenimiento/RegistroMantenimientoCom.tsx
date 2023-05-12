@@ -130,7 +130,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de computadores" />
-                    <BusquedaArticuloComponent tipo_articulo={"computadores"} parent_details={set_details_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} />
+                    <BusquedaArticuloComponent tipo_articulo={"computadores"} parent_details={set_details_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} accion_guardar={accion_guardar} />
                 </Grid>
             </Grid>
             <Grid container
@@ -144,8 +144,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
                 }}>
                 <Grid item xs={12}>
                     <Title title='Mantenimiento' />
-                    <MantenimientoComponent limpiar_formulario={limpiar_formulario} programacion={programacion}
-                        mantenimiento={set_mantenimientos} accion_guardar={accion_guardar} />
+                    <MantenimientoComponent limpiar_formulario={limpiar_formulario} programacion={programacion} mantenimiento={set_mantenimientos} accion_guardar={accion_guardar} />
                 </Grid>
             </Grid>
             <Grid container

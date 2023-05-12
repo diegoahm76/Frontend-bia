@@ -128,7 +128,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de vehículos" />
-                    <BusquedaArticuloComponent tipo_articulo={"vehículos"} parent_details={set_details_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} />
+                    <BusquedaArticuloComponent tipo_articulo={"vehículos"} parent_details={set_details_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
             <Grid container
