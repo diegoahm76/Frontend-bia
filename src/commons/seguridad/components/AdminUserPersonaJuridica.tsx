@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-
 import type { AxiosError } from 'axios';
 import {
   Box,
@@ -23,6 +22,12 @@ import type { keys_object, UserCreate, IList2 } from '../interfaces';
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import { control_error } from '../../../helpers/controlError';
 import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialCambiosEstadoUser';
+import { LoadingButton } from '@mui/lab';
+import { control_success } from '../../../helpers';
+import {
+  crear_user_admin_user,
+  update_user_admin_user,
+} from '../request/seguridadRequest';
 
 interface Props {
   tipo_documento: string;
@@ -42,12 +47,14 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     errors_admin_users,
     watch_admin_user,
     // Use Selector
+    data_person_search,
     data_disponible,
     action_admin_users,
     user_info,
     historial_cambios_estado_is_active,
     set_historial_cambios_estado_is_active,
     data_register,
+    file_image,
     loading,
     tipo_usuario,
     tipo_usuario_opt,
@@ -57,6 +64,8 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     bloqueado_opt,
     roles,
     roles_opt,
+    loading_create_or_update,
+    set_loading_create_or_update,
     set_activo,
     set_bloqueado,
     set_roles,
@@ -110,43 +119,74 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
     set_value_form(e.target.name, e.target.value);
   };
 
-  const on_submit = handle_submit_admin_user(async () => {
+  const on_submit = handle_submit_admin_user(async (data_user) => {
     try {
+      set_loading_create_or_update(true);
       if (action_admin_users === 'CREATE') {
-        // const data_send = {
-        //   nombre_de_usuario: data_register.nombre_de_usuario,
-        //   persona: user_info.persona,
-        //   tipo_usuario: data_register.tipo_usuario,
-        //   roles: data_register.roles,
-        //   redirect_url: '',
-        //   profile_img: data_register.imagen_usuario,
-        // };
-        // console.log('Onsubmit', data_register);
-        // // Hacemos el registro de la persona JURIDICA
-        // const { data } = await crear_user_admin_user(data_send);
-        // control_success(data.detail);
+        const data_create_user = new FormData();
+        data_create_user.append(
+          'nombre_de_usuario',
+          data_user.nombre_de_usuario
+        );
+        data_create_user.append(
+          'persona',
+          data_person_search.id_persona.toString()
+        );
+        data_create_user.append('tipo_usuario', data_user.tipo_usuario);
+        for (let i = 0; i < roles.length; i++) {
+          data_create_user.append('roles', `${roles[i].value}`);
+        }
+        data_create_user.append(
+          'redirect_url',
+          'http://localhost:3000/#/app/seguridad/administracion_usuarios'
+        );
+        console.log(file_image);
+        data_create_user.append('profile_img', file_image ?? '');
+
+        // for (const [key, value] of data_create_user.entries()) {
+        //   // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        //   console.log(key + ': ' + value);
+        // }
+
+        // // Creación de usuario Persona Natural
+        const { data } = await crear_user_admin_user(data_create_user);
+
+        control_success(data.detail);
       } else if (action_admin_users === 'EDIT') {
-        // const data_send = {
-        //   is_active: data_register.activo,
-        //   is_blocked: data_register.bloqueado,
-        //   tipo_usuario: data_register.tipo_usuario,
-        //   roles: data_register.roles,
-        //   profile_img: data_register.imagen_usuario,
-        //   justificacion_activacion: data_register.activo_justificacion_cambio,
-        //   justificacion_bloqueo: data_register.bloqueado_justificacion_cambio,
-        // };
-        // console.log('Onsubmit EDIT', data_register);
-        // // Actualización de usuario Persona Natural
-        // const { data } = await update_user_admin_user(
-        //   user_info.id_usuario,
-        //   data_send
-        // );
-        // control_success(data.detail);
+        const data_update_user = new FormData();
+        data_update_user.append('is_active', data_register.activo.toString());
+        data_update_user.append(
+          'is_blocked',
+          data_register.bloqueado.toString()
+        );
+        data_update_user.append('tipo_usuario', data_register.tipo_usuario);
+        for (let i = 0; i < roles.length; i++) {
+          data_update_user.append('roles', `${roles[i].value}`);
+        }
+        data_update_user.append('profile_img', data_register.imagen_usuario);
+        data_update_user.append(
+          'justificacion_activacion',
+          data_register.activo_justificacion_cambio ?? ''
+        );
+        data_update_user.append(
+          'justificacion_bloqueo',
+          data_register.bloqueado_justificacion_cambio ?? ''
+        );
+
+        // Actualización de usuario Persona Natural
+        const { data } = await update_user_admin_user(
+          user_info.id_usuario,
+          data_update_user
+        );
+        console.log(data);
+        control_success(data.detail);
       }
     } catch (error) {
       const temp_error = error as AxiosError;
       const resp = temp_error.response?.data as UserCreate;
       control_error(resp.detail);
+    } finally {
+      set_loading_create_or_update(false);
     }
   });
 
@@ -483,7 +523,8 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
               spacing={2}
               sx={{ mt: '20px' }}
             >
-              <Button
+              <LoadingButton
+                loading={loading_create_or_update}
                 type="submit"
                 color="primary"
                 variant="outlined"
@@ -492,7 +533,7 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
                 {action_admin_users === 'EDIT'
                   ? 'EDITAR'
                   : action_admin_users === 'CREATE' && 'CREAR'}
-              </Button>
+              </LoadingButton>
             </Stack>
           </form>
           <DialogHistorialCambiosEstadoUser

@@ -36,6 +36,10 @@ import {
 } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
+import {
+  initial_state_data_register,
+  use_admin_users,
+} from '../hooks/AdminUserHooks';
 
 const initial_state_user_info: Users = {
   id_usuario: 0,
@@ -98,6 +102,7 @@ const DialogBusquedaAvanzada = ({
     set_tipo_documento,
     set_tipo_persona,
   } = use_busqueda_avanzada();
+  const { set_data_register } = use_admin_users();
   const {
     register: register_search_person,
     handleSubmit: handle_submit_search_person,
@@ -245,12 +250,15 @@ const DialogBusquedaAvanzada = ({
   const trigger_user_person_create_active = (data: any): void => {
     set_is_modal_active(false);
     dispatch(set_user_info(initial_state_user_info));
+    set_data_register(initial_state_data_register);
     dispatch(set_action_admin_users('CREATE'));
     dispatch(set_data_person_search(data));
   };
 
   const trigger_user_edit_active = (data: any): void => {
     set_is_modal_active(false);
+    dispatch(set_user_info(initial_state_user_info));
+    set_data_register(initial_state_data_register);
     dispatch(set_action_admin_users('EDIT'));
     dispatch(set_data_person_search(data));
   };

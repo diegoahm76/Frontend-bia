@@ -27,6 +27,7 @@ import { use_admin_users } from '../hooks/AdminUserHooks';
 import { control_success } from '../../../helpers/controlSuccess';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { type ToastContent, toast } from 'react-toastify';
+import { LoadingButton } from '@mui/lab';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -69,6 +70,8 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
     user_info,
     data_disponible,
     historial_cambios_estado_is_active,
+    loading_create_or_update,
+    set_loading_create_or_update,
     set_historial_cambios_estado_is_active,
     data_register,
     loading,
@@ -150,8 +153,9 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
 
   const on_submit = handle_submit_admin_user(async (data_user) => {
     try {
-      console.log(data_user);
-      console.log(data_register);
+      set_loading_create_or_update(true);
+      // console.log(data_user);
+      // console.log(data_register);
       if (action_admin_users === 'CREATE') {
         const data_create_user = new FormData();
         data_create_user.append(
@@ -215,6 +219,8 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
       const temp_error = error as AxiosError;
       const resp = temp_error.response?.data as any;
       control_error(resp.detail);
+    } finally {
+      set_loading_create_or_update(false);
     }
   });
 
@@ -341,7 +347,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   size="small"
                   label="Nombre de usuario"
                   fullWidth
-                  value={user_info.nombre_de_usuario}
+                  value={data_register.nombre_de_usuario}
                   error={
                     errors_admin_users.nombre_de_usuario?.type === 'required'
                   }
@@ -362,7 +368,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   id="imagen_usuario"
                   type="file"
                   autoFocus
-                  // value={user_info.profile_img}
+                  // value={data_register.imagen_usuario}
                   {...register_admin_user('imagen_usuario')}
                   error={Boolean(errors_admin_users.imagen_usuario)}
                   inputProps={{ accept: 'image/*' }}
@@ -471,7 +477,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                       fullWidth
                       size="small"
                       label="Fecha ultimo cambio"
-                      value={user_info.fecha_ultimo_cambio_activacion}
+                      value={data_register.activo_fecha_ultimo_cambio}
                       {...register_admin_user('activo_fecha_ultimo_cambio')}
                       onChange={handle_change}
                     />
@@ -483,7 +489,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                       size="small"
                       label="Justificación del cambio"
                       multiline
-                      value={user_info.justificacion_ultimo_cambio_activacion}
+                      value={data_register.activo_justificacion_cambio}
                       {...register_admin_user('activo_justificacion_cambio')}
                       onChange={handle_change}
                     />
@@ -508,7 +514,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                       fullWidth
                       size="small"
                       label="Fecha ultimo cambio"
-                      value={user_info.fecha_ultimo_cambio_bloqueo}
+                      value={data_register.bloqueado_fecha_ultimo_cambio}
                       {...register_admin_user('bloqueado_fecha_ultimo_cambio')}
                       onChange={handle_change}
                     />
@@ -520,7 +526,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                       size="small"
                       label="Justificación del cambio"
                       multiline
-                      value={user_info.justificacion_ultimo_cambio_bloqueo}
+                      value={data_register.bloqueado_justificacion_cambio}
                       {...register_admin_user('bloqueado_justificacion_cambio')}
                       onChange={handle_change}
                     />
@@ -615,7 +621,8 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
               spacing={2}
               sx={{ mt: '20px' }}
             >
-              <Button
+              <LoadingButton
+                loading={loading_create_or_update}
                 type="submit"
                 color="primary"
                 variant="contained"
@@ -624,7 +631,7 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                 {action_admin_users === 'EDIT'
                   ? 'EDITAR'
                   : action_admin_users === 'CREATE' && 'CREAR'}
-              </Button>
+              </LoadingButton>
             </Stack>
           </form>
           <DialogHistorialCambiosEstadoUser

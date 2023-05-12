@@ -150,6 +150,8 @@ export const use_admin_users = (): AdminUserHook => {
   // Mostrar modal usuarios por persona
   const [users_x_person_is_active, set_users_x_person_is_active] =
     useState<boolean>(false);
+  const [loading_create_or_update, set_loading_create_or_update] =
+    useState<boolean>(false);
 
   const {
     register: register_admin_user,
@@ -348,6 +350,7 @@ export const use_admin_users = (): AdminUserHook => {
     data_person_search,
     user_info,
     // UseState values
+    loading_create_or_update,
     users_x_person_is_active,
     selected_image,
     file_image,
@@ -375,6 +378,7 @@ export const use_admin_users = (): AdminUserHook => {
     roles,
     roles_opt,
     // UseState Sets
+    set_loading_create_or_update,
     set_users_x_person_is_active,
     set_selected_image,
     set_file_image,

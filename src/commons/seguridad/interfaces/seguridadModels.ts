@@ -128,6 +128,7 @@ export interface AdminUserHook {
   action_admin_users: string;
   data_person_search: InfoPersonal;
   user_info: Users;
+  loading_create_or_update: boolean;
   users_x_person_is_active: boolean;
   selected_image: string | ArrayBuffer | null;
   file_image: File | undefined;
@@ -153,6 +154,7 @@ export interface AdminUserHook {
   tipo_usuario: string;
   roles: IList2[];
   roles_opt: IList2[];
+  set_loading_create_or_update:Dispatch<SetStateAction<boolean>>; 
   set_users_x_person_is_active:Dispatch<SetStateAction<boolean>>; 
   set_selected_image: Dispatch<SetStateAction<string | ArrayBuffer | null>>;
   set_file_image: Dispatch<SetStateAction<File | undefined>>;
