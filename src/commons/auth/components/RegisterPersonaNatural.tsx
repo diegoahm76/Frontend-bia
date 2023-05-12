@@ -78,7 +78,7 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
     departamento_laboral_opt,
     handle_click_show_password,
     on_submit,
-  } = use_register_persona_n({ watch, set_value });
+  } = use_register_persona_n({ watch, setValue: set_value });
 
   const [is_modal_active, open_modal] = useState(false);
   const [direccion, set_direccion] = useState('');

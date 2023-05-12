@@ -8,13 +8,13 @@ import {
   LinearProgress,
   type SelectChangeEvent,
 } from '@mui/material';
-import { use_register } from '../hooks/registerHooks';
 import type { keys_object } from '../interfaces';
 import { RegisterPersonaNatural } from './RegisterPersonaNatural';
 // import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
 import { CustomSelect } from '../../../components';
 import { LoadingButton } from '@mui/lab';
 import { CreateUser } from './CreateUser';
+import { use_register } from '../hooks/registerHook';
 
 interface Props {
   uso_interno: boolean;
@@ -31,47 +31,24 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
     is_valid,
     loading,
     tipo_documento_opt,
-    tipo_documento,
     tipo_persona_opt,
-    tipo_persona,
     no_has_user,
     handle_submit,
     register,
-    set_numero_documento,
-    set_tipo_documento,
-    set_tipo_persona,
     set_value,
     validate_exits,
     watch,
   } = use_register();
 
-  const numero_documento = watch('numero_documento');
-
-  // Consultamos si el usuario existe
-  useEffect(() => {
-    if (numero_documento !== undefined && numero_documento !== '') {
-      set_numero_documento(numero_documento);
-    }
-  }, [numero_documento]);
-
-  useEffect(() => {
-    if (watch('tipo_persona') !== undefined) {
-      set_tipo_persona(watch('tipo_persona'));
-    }
-  }, [watch('tipo_persona')]);
-
-  useEffect(() => {
-    if (watch('tipo_documento') !== undefined) {
-      set_tipo_documento(watch('tipo_documento'));
-    }
-  }, [watch('tipo_documento')]);
+  const numero_documento = watch('numero_documento') ?? '';
+  const tipo_documento = watch('tipo_documento') ?? '';
+  const tipo_persona = watch('tipo_persona') ?? '';
 
   useEffect(() => {
     if (tipo_persona === 'J') {
       set_value('tipo_documento', 'NT');
-      set_tipo_documento('NT');
     } else {
-      set_tipo_documento('');
+      set_value('tipo_documento', '');
     }
   }, [tipo_persona]);
 
@@ -85,8 +62,8 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
     set_value_form(e.target.name, e.target.value);
   };
 
-  const on_submit = handle_submit(() => {
-    void validate_exits(numero_documento);
+  const on_submit = handle_submit((e) => {
+    void validate_exits(e);
   });
 
   return (

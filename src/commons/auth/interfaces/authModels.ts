@@ -352,6 +352,29 @@ export interface ReisterHook {
   watch: UseFormWatch<FieldValues>;
 }
 
+export interface ReisterHookNew {
+  errors: FieldErrors<FieldValues>;
+  is_avaiable: boolean;
+  is_exists: boolean;
+  is_error: boolean;
+  is_search: boolean;
+  is_valid: boolean;
+  loading: boolean;
+  no_has_user: boolean;
+  is_saving: boolean;
+  message_error: string;
+  message_no_person: string;
+  tipo_documento_opt: IList[];
+  tipo_persona_opt: IList[];
+  handle_submit: UseFormHandleSubmit<FieldValues>;
+  register: UseFormRegister<FieldValues>;
+  set_value: UseFormSetValue<FieldValues>;
+  validate_exits_representante: (data: FieldValues) => Promise<void>;
+  validate_exits: (data: FieldValues) => Promise<void>;
+  watch: UseFormWatch<FieldValues>;
+  on_submit: (data: FieldValues) => Promise<void>;
+}
+
 export interface DataRegisterPersonaN {
   tipo_persona: string;
   tipo_documento: string;
@@ -455,9 +478,11 @@ export interface EstadoCivil {
   cod_tipo_documento?: string;
 }
 
-export interface UserCreate {
-  detail: string;
-  success: boolean;
+export interface User {
+  nombre_de_usuario: string;
+  persona: number;
+  password: string;
+  redirect_url: string;
 }
 
 export interface DataUnlockUser {

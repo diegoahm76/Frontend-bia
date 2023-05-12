@@ -4,14 +4,14 @@ import type {
   LoginUser,
   IUserInfo,
   DataRegistePortal,
-  UserCreate,
   DataUnlockUser,
   InfoPersonaComplete,
   ChangePassword,
   DataUserRecover,
   ResponseRecover,
   DataRegisterPersonaN,
-  Menu
+  Menu,
+  User
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -84,13 +84,13 @@ export const get_info_person_by_document = async (
 
 export const crear_persona_natural_and_user = async (
   data: DataRegisterPersonaN
-): Promise<AxiosResponse<UserCreate>> => {
+): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.post('personas/persona-natural-and-usuario/create/', data);
 };
 
 export const crear_persona_juridica_and_user = async (
   data: DataRegistePortal
-): Promise<AxiosResponse<UserCreate>> => {
+): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.post('personas/persona-juridica-and-usuario/create/', data);
 };
 
@@ -122,4 +122,10 @@ export const recover_password = async (
   data: DataUserRecover
 ): Promise<AxiosResponse<ResponseServer<ResponseRecover>>> => {
   return await api.post('users/request-reset-email/', data);
+};
+
+export const create_user = async (
+  data: User
+): Promise<AxiosResponse<ResponseServer<User>>> => {
+  return await api.post<ResponseServer<User>>('users/register-externo/', data);
 };

@@ -11,14 +11,14 @@ import {
   control_success,
   validate_password,
 } from '../../../helpers';
-import type { IList } from '../../../interfaces/globalModels';
+import type { IList, ResponseServer } from '../../../interfaces/globalModels';
 import type {
   FieldValues,
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
 import { crear_persona_natural_and_user } from '../request/authRequest';
-import type { DataRegisterPersonaN, UserCreate } from '../interfaces';
+import type { DataRegisterPersonaN } from '../interfaces';
 import type { AxiosError } from 'axios';
 
 interface RegisterPersonHook {
@@ -62,13 +62,13 @@ type options = 'inicial' | 'residencia' | 'notificacion' | 'laboral';
 
 interface Props {
   watch: UseFormWatch<FieldValues>;
-  set_value: UseFormSetValue<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const use_register_persona_n = ({
   watch,
-  set_value,
+  setValue,
 }: Props): RegisterPersonHook => {
   const [is_saving, set_is_saving] = useState(false);
   const [loading, set_loading] = useState(false);
@@ -217,19 +217,20 @@ export const use_register_persona_n = ({
   const on_submit = async (values: FieldValues): Promise<void> => {
     set_is_saving(true);
     try {
-      console.log(values)
-      const is_send = false
-      if(is_send){
+      values.redirect_url =
+        'https://macareniafrontendevelopv2.netlify.app/#/auth/activacion_cuenta';
+      const is_send = false;
+      if (is_send) {
         const { data } = await crear_persona_natural_and_user(
           values as DataRegisterPersonaN
         );
         control_success(data.detail);
-  
+
         // window.location.href = '#/app/auth/login';
       }
     } catch (error) {
       const temp_error = error as AxiosError;
-      const resp = temp_error.response?.data as UserCreate;
+      const resp = temp_error.response?.data as ResponseServer<any>;
       control_error(resp.detail);
     } finally {
       set_is_saving(false);

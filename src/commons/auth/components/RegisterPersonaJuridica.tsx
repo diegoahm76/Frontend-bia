@@ -31,13 +31,14 @@ import { DialogGeneradorDeDirecciones } from '../../../components/DialogGenerado
 import { control_error } from '../../../helpers/controlError';
 import { control_success } from '../../recursoHidrico/requets/Request';
 import dayjs, { type Dayjs } from 'dayjs';
-import type { keys_object, DataRegistePortal, UserCreate } from '../interfaces';
+import type { keys_object, DataRegistePortal } from '../interfaces';
 import type { AxiosError } from 'axios';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import { validate_password } from '../../../helpers/ValidateFormatPassword';
 import { crear_persona_juridica_and_user } from '../request/authRequest';
 import { CustomSelect } from '../../../components/CustomSelect';
+import type { ResponseServer } from '../../../interfaces/globalModels';
 
 interface PropsStep {
   label: string;
@@ -338,7 +339,7 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
         window.location.href = '#/app/auth/login';
       } catch (error) {
         const temp_error = error as AxiosError;
-        const resp = temp_error.response?.data as UserCreate;
+        const resp = temp_error.response?.data as ResponseServer<any>;
         control_error(resp.detail);
       } finally {
         set_is_saving(false);
