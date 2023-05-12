@@ -137,8 +137,8 @@ const SeleccionarCambio = ({
 
   const get_cambios: any = (async () => {
     console.log("buscando...")
-    const code_bien = get_values("codigo_bien")
-    const nombre_bien = get_values("nombre_bien")
+    const code_bien = get_values("codigo")
+    const nombre_bien = get_values("nombre")
     const cod_etapa_lote_origen = get_values("cod_etapa_lote_origen")
     const agno_lote = get_values("agno_lote")
     if (current_nursery.id_vivero !== null) {
@@ -270,7 +270,7 @@ const SeleccionarCambio = ({
               xs: 12,
               md: 2,
               control_form: control_cambio,
-              control_name: "codigo_bien",
+              control_name: "codigo",
               default_value: "",
               rules: { required_rule: { rule: true, message: "Cantidad requerida" } },
               label: "Codigo de material vegetal",
@@ -283,7 +283,7 @@ const SeleccionarCambio = ({
               xs: 12,
               md: 3,
               control_form: control_cambio,
-              control_name: "nombre_bien",
+              control_name: "nombre",
               default_value: "",
               rules: { required_rule: { rule: true, message: "Cantidad requerida" } },
               label: "Nombre de material vegetal",
