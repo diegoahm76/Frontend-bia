@@ -21,8 +21,8 @@ import { consultar_historico_direcciones } from '../../seguridad/request/Request
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    datos_historico: InfoPersona;
-    set_datos_historico: Dispatch<SetStateAction<any>>;
+    historico_direcciones: InfoPersona;
+    set_historico_direcciones: Dispatch<SetStateAction<any>>;
 }
 
 const columns: GridColDef[] = [
@@ -65,11 +65,11 @@ const columns: GridColDef[] = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
+export const DialogHistorialDirecciones: React.FC<IProps> = ({
     is_modal_active,
     set_is_modal_active,
-    datos_historico,
-    set_datos_historico,
+    historico_direcciones,
+    set_historico_direcciones,
 }: IProps) => {
     const [rows, set_rows] = useState<HistoricoDirecciones[]>([]);
 
@@ -80,7 +80,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
     const historico = async (): Promise<void> => {
         try {
             const response = await consultar_historico_direcciones(
-                datos_historico.id_persona
+                historico_direcciones.id_persona
             );
             const new_historico = response.map(
                 (datos: HistoricoDirecciones) => ({
@@ -93,6 +93,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
                     id_persona: datos.id_persona,
                 })
             );
+            console.log("Data Historial",new_historico)
             set_rows(new_historico);
         } catch (err) {
             control_error(err);
@@ -113,7 +114,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
                 maxWidth={'lg'}
             >
                 <DialogTitle>
-                    <Title title="HISTORICO DE CAMBIOS" />
+                    <Title title="HISTORICO DE CAMBIOS DIRECCIONES" />
                 </DialogTitle>
                 <Divider />
                 <Grid

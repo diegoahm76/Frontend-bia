@@ -9,7 +9,8 @@ import type {
   HistoricoDirecciones,
   HistoricoEmail,
   InfoPersona,
-  ResponseServer
+  ResponseServer,
+  UpdateAutorizaNotificacion
 } from '../../../interfaces/globalModels';
 
 // editar datos persona restringida naturual
@@ -104,17 +105,37 @@ export const editar_persona_natural = async (
 export const consultar_historico_direcciones = async (
   id: number
 ): Promise<HistoricoDirecciones[]> => {
-  const { data } = await api.get<ResponseServer<HistoricoDirecciones[]>>(
+  const { data } = await api.get<HistoricoDirecciones[]>(
     `personas/historico-direccion/${id}/`
   );
-  return data.data;
+  return data;
 };
 // Historico Email
 export const consultar_historico_email = async (
   id: number
 ): Promise<HistoricoEmail[]> => {
-  const { data } = await api.get<ResponseServer<HistoricoEmail[]>>(
+  const { data } = await api.get<HistoricoEmail[]>(
     `personas/historico-emails/${id}/`
   );
+  return data;
+};
+// consulta autorizacion notificaciones
+export const consultar_notificaciones = async (
+  id: number | undefined | null
+): Promise<UpdateAutorizaNotificacion> => {
+  const { data } = await api.get<ResponseServer<UpdateAutorizaNotificacion>>(
+    `personas/get-by-id/${id ?? 0}/`
+  );
   return data.data;
+};
+// editar autorización de notificaciones
+export const editar_autorizacion_notificaciones = async (
+  id_persona: number | undefined,
+  datos: UpdateAutorizaNotificacion
+): Promise<any> => {
+  const response = await api.put(
+    `gestor/ventanilla/personas/autorizacion-notificaciones/${id_persona ?? 0}/`,
+    datos
+  );
+  return response.data;
 };

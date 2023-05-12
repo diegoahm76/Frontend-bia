@@ -371,6 +371,10 @@ export interface ClaseTerceroPersona {
   id_clase_tercero: number;
   nombre:           string;
 }
+export interface UpdateAutorizaNotificacion {
+  acepta_autorizacion_email: boolean;
+  acepta_autorizacion_sms:   boolean;
+}
 
 export interface DatosVinculacionCormacarena {
   id_unidad_organizacional_actual:        number;

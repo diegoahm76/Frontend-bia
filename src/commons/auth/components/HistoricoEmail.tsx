@@ -53,7 +53,7 @@ const columns: GridColDef[] = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
+export const DialogHistorialEmail: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   datos_historico,
@@ -96,10 +96,10 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
         open={is_modal_active}
         onClose={handle_close}
         fullWidth
-        maxWidth={'lg'}
+        maxWidth={'md'}
       >
         <DialogTitle>
-          <Title title="HISTORICO DE CAMBIOS" />
+          <Title title="HISTORICO DE CAMBIOS E-MAIL" />
         </DialogTitle>
         <Divider />
         <Grid
@@ -122,7 +122,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
               autoHeight
               rows={rows}
               columns={columns}
-              getRowId={(row) => row.historico_cambio_id_persona}
+              getRowId={(row) => row.id_histo_email}
               pageSize={5}
               rowsPerPageOptions={[5]}
             />

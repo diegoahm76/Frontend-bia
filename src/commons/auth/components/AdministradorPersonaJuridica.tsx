@@ -31,6 +31,7 @@ import type { keys_object, DataRegistePortal } from "../../auth/interfaces";
 import { DialogGeneradorDeDirecciones } from "../../../components/DialogGeneradorDeDirecciones";
 import { consultar_clase_tercero, consultar_clase_tercero_persona, consultar_datos_persona, consultar_datos_persona_basicos } from "../../seguridad/request/Request";
 import dayjs, { type Dayjs } from 'dayjs';
+import { DialogRepresentanteLegal } from "./DialogCambioRepresentanteLegal";
 
 interface PropsElement {
     errors: FieldErrors<DataRegistePortal>;
@@ -179,6 +180,10 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             set_persona(data_all);
         }
     };
+    const result_representante = (info_persona: InfoPersona): void => {
+        reset();
+        set_persona(info_persona);
+      };
     useEffect(() => {
         on_result()
     }, [])
@@ -1155,6 +1160,8 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                 onChange={set_value_direction}
                 type={type_direction}
             />
+            <DialogRepresentanteLegal
+            onResult={result_representante}/>
         </>
     );
 };
