@@ -189,6 +189,12 @@ export const use_admin_users = (): AdminUserHook => {
     }
   };
 
+  useEffect(() => {
+    set_tipo_persona(data_user_search.tipo_persona);
+    // set_tipo_documento(user_info.tipo_documento);
+    // set_numero_documento(user_info.numero_documento);
+  }, [data_user_search]);
+
   // Paso de datos a formulario para creacion de usuario persona Natural o Juridica
   useEffect(() => {
     set_data_disponible(false);
@@ -231,12 +237,6 @@ export const use_admin_users = (): AdminUserHook => {
     // set_tipo_documento(data_person_search.tipo_documento);
     // set_numero_documento(data_person_search.numero_documento);
   }, [data_person_search]);
-
-  useEffect(() => {
-    set_tipo_persona(data_user_search.tipo_persona);
-    // set_tipo_documento(user_info.tipo_documento);
-    // set_numero_documento(user_info.numero_documento);
-  }, [data_user_search]);
 
   // Paso de datos a formulario para edición de usuario persona natural
   useEffect(() => {

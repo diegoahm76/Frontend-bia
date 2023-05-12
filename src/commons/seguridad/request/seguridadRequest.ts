@@ -195,15 +195,27 @@ export const user_request = async (
 // Trae historico de cambios de estado para cada usuario
 export const user_historico_cambios_estado = async (
   id_usuario: number
-): Promise<HistoricoCambioEstadosUser[]> => {
+): Promise<ResponseThunks<HistoricoCambioEstadosUser[]>> => {
   console.log(id_usuario);
+  try{
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    const {data: { data }} = await api.get<ResponseServer<HistoricoCambioEstadosUser[]>>(
+      `users/historico-activacion/${id_usuario}/`
+    );
+    return {
+      ok: true,
+      data
+    };
+  }catch(error){
+    const { response } = error as AxiosError<AxiosResponse>;
+    const { data } = response as unknown as ResponseThunks;
+    control_error(data.detail);
+    return {
+      ok: false,
+      error_message: data.detail
+    };
+  }
 
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const { data } = await api.get<ResponseServer<HistoricoCambioEstadosUser[]>>(
-    `users/historico-activacion/${id_usuario}/`
-  );
-  console.log(data);
-  return data.data;
 };
 
 export const crear_user_admin_user = async (
