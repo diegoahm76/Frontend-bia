@@ -1,4 +1,4 @@
-import { Chip, Grid } from '@mui/material';
+import {  Grid } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
@@ -17,14 +17,34 @@ const SeleccionarMaterialVegetal = ({
 }: IProps) => {
 
   const dispatch= useAppDispatch()
-  const { vegetal_materials, current_nursery} = useAppSelector((state) => state.produccion);
+  const { vegetal_materials, current_nursery, current_stage_change} = useAppSelector((state) => state.produccion);
 
 
   const columns_material_vegetal: GridColDef[] = [
-    { field: 'id_despacho_entrante', headerName: 'ID', width: 20 },
+    { field: 'id_inventario_vivero', headerName: 'ID', width: 20 },
     {
-      field: 'numero_despacho_consumo',
-      headerName: '# despacho',
+      field: 'nro_lote',
+      headerName: '# lote',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'agno_lote',
+      headerName: 'Año lote',
+      width: 100,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'codigo_bien',
+      headerName: 'Codigo material vegetal',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -33,33 +53,30 @@ const SeleccionarMaterialVegetal = ({
       ),
     },
     {
-      field: 'fecha_ingreso',
-      headerName: 'Fecha ingreso',
+      field: 'nombre',
+      headerName: 'Material vegetal',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(params.value).toDateString()}
+          {params.value}
+        </div>
+      ),
+    },
+    
+    {
+      field: 'etapa_lote',
+      headerName: 'Etapa lote',
+      width: 100,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
         </div>
       ),
     },
     {
-      field: 'distribucion_confirmada',
-      headerName: '¿Despacho distribuido?',
-      width: 200,
-      renderCell: (params) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.activo ? (
-          <Chip size="small" label="SI" color="success" variant="outlined" />
-        ) : (
-          <Chip size="small" label="NO" color="error" variant="outlined" />
-
-        );
-      },
-    },
-    {
-      field: 'observacion_distribucion',
-      headerName: 'Observación',
-      width: 350,
+      field: 'cantidad_disponible',
+      headerName: 'Cantidad disponible',
+      width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -72,10 +89,10 @@ const SeleccionarMaterialVegetal = ({
  
 
   const get_vegetal_materials: any = (async () => {
-    const code_bien = get_values("codigo_bien")
-    const nombre_bien = get_values("nombre")
-    const cod_etapa_lote_origen = get_values("cod_etapa_lote")
-    const agno_lote = get_values("agno_lote")
+    const code_bien = get_values("codigo_bien")??""
+    const nombre_bien = get_values("nombre")??""
+    const cod_etapa_lote_origen = get_values("cod_etapa_lote")??""
+    const agno_lote = get_values("agno_lote")??""
     if (current_nursery.id_vivero !== null) {
     void dispatch(get_vegetal_materials_service(current_nursery.id_vivero, code_bien, nombre_bien, cod_etapa_lote_origen, agno_lote ));
     }
@@ -97,6 +114,7 @@ const SeleccionarMaterialVegetal = ({
           get_filters_models={get_vegetal_materials}
           set_models={set_vegetal_materials}
           button_submit_label='Buscar material vegetal'
+          button_submit_disabled = {current_stage_change.id_cambio_de_etapa !== null}
           form_inputs={[
             {
               datum_type: "input_controller",
