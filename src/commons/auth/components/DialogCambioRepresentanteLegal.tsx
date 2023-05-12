@@ -26,14 +26,13 @@ import type { AxiosError } from 'axios';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { LoadingButton } from '@mui/lab';
 import type { IList, InfoPersona, ResponseServer } from '../../../interfaces/globalModels';
-import { get_person_by_document, get_tipo_documento, search_avanzada } from '../../../request';
+import { get_tipo_documento, search_avanzada } from '../../../request';
 import { control_error } from '../../../helpers';
 import { CustomSelect, Title } from '../../../components';
 
 interface PropsBuscador {
     onResult: (data_persona: InfoPersona) => void;
 }
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
     onResult,
@@ -115,7 +114,7 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
             ),
         },
     ];
-    
+
     const {
         register,
         handleSubmit: handle_submit,
@@ -124,7 +123,6 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
     const [is_loading, set_is_loading] = useState(false);
     const [is_search, set_is_search] = useState(false);
     const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
-    const [tipo_documento, set_tipo_documento] = useState('');
     const [tipo_documento_av, set_tipo_documento_av] = useState('');
     const [open_dialog, set_open_dialog] = useState(false);
     const [rows, set_rows] = useState<InfoPersona[]>([]);
@@ -138,12 +136,8 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
     };
 
     const handle_change_select = (e: SelectChangeEvent<string>): void => {
-        if (!open_dialog) {
-            set_tipo_documento(e.target.value);
-        } else {
-            // Busqueda avanzada
-            set_tipo_documento_av(e.target.value);
-        }
+
+        set_tipo_documento_av(e.target.value);
     };
 
     const get_selects_options = async (): Promise<void> => {
@@ -159,24 +153,6 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
             set_is_loading(false);
         }
     };
-
-    const on_submit = handle_submit(async ({ numero_documento }) => {
-        set_is_search(true);
-        try {
-            const {
-                data: { data },
-            } = await get_person_by_document(tipo_documento, numero_documento);
-            if (data?.id_persona !== undefined) {
-                onResult(data);
-            }
-        } catch (error) {
-            const temp_error = error as AxiosError;
-            const resp = temp_error.response?.data as ResponseServer<any>;
-            control_error(resp.detail);
-        } finally {
-            set_is_search(false);
-        }
-    });
 
     const on_submit_advance = handle_submit(
         async ({
@@ -221,32 +197,26 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
 
     return (
         <>
-            <form
-                onSubmit={(e) => {
-                    void on_submit(e);
-                }}
-            >
-                <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={4}
-                        lg={2}
-                        container
-                        direction="column"
-                        justifyContent="center"
+            <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
+                <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={2}
+                    container
+                    direction="column"
+                    justifyContent="center"
+                >
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={handle_click_open}
                     >
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={handle_click_open}
-                        >
-                            Búsqueda avanzada
-                        </Button>
-                    </Grid>
+                        Búsqueda avanzada
+                    </Button>
                 </Grid>
-            </form>
+            </Grid>
             {/* Dialog para búsqueda avanzada */}
             <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
                 <DialogContent>

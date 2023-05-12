@@ -20,7 +20,6 @@ export const FacilidadPagoAutorizadas: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-
         <Grid item xs={12}>
           <Box
             component="form"
@@ -59,8 +58,29 @@ export const FacilidadPagoAutorizadas: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
-      <p>Sus facilidades de pago actuales son:</p>
-      <TablaFacilidadesAutorizadas />
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          mb: '20px',
+          mt: '20px',
+          p: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+            <p>Sus facilidades de pago actuales son:</p>
+            <TablaFacilidadesAutorizadas />
+          </Box>
+        </Grid>
+      </Grid>
     </>
   )
 }

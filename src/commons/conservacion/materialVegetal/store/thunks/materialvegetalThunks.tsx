@@ -254,7 +254,6 @@ export const add_siembra_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.post('conservacion/camas-siembras/siembra/create/', siembra);
-      console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail)      
@@ -279,7 +278,6 @@ export const edit_siembra_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(`conservacion/camas-siembras/siembra/update/${id}/`, siembra);
-      console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail)      
@@ -289,7 +287,6 @@ export const edit_siembra_service = (
       return data;
     } catch (error: any) {
       console.log('add_siembra_service');
-      console.log(error)
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

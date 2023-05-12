@@ -20,7 +20,7 @@ import { consultar_datos_persona } from '../request/Request';
 export const get_roles: () => any = () => {
   return async (dispatch: Dispatch<any>) => {
     const data = await roles_request();
-    dispatch(set_roles(data));
+    dispatch(set_roles(data.data));
   };
 };
 

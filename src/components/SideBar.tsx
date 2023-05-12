@@ -25,6 +25,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import type { AuthSlice, Menu, MenuElement } from '../commons/auth/interfaces';
 import { logout } from '../commons/auth/store';
 import { SuperUserScreen } from '../commons/seguridad/screens/SuperUserScreen';
+import { FooterGov } from '../components/goviernoEnLinea/FooterGov';
+import { HeaderGov } from '../components/goviernoEnLinea/HeaderGov';
+
 interface Props {
   window?: () => Window;
   drawer_width: number;
@@ -332,15 +335,24 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
       </Box>
       <Box
         sx={{
-          padding: '0px 20px 0 20px',
-          mt: 8,
           width: '100vw',
-          height: '100vh',
+          height: '100%',
           ml: { sm: desktop_open ? `${drawer_width}px` : '0px' },
           bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
         }}
       >
-        <Outlet />
+        {userinfo.tipo_usuario === 'E' && <HeaderGov />}
+        <Box
+          sx={{
+            padding: '0px 20px 20px 20px',
+            mt: '64px',
+            minHeight: '100vh',
+            height: '-webkit-fill-available',
+          }}
+        >
+          <Outlet />
+        </Box>
+        {userinfo.tipo_usuario === 'E' && <FooterGov />}
       </Box>
     </>
   );

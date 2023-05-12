@@ -42,11 +42,10 @@ const DialogUserXPerson = ({
         Seleccione usuario a editar
       </DialogTitle>
       <List sx={{ padding: 2 }}>
-        <ListItem disableGutters>
-          {users_x_person.map((user, index) => (
-            <>
+        {users_x_person.map((user, index) => (
+          <>
+            <ListItem key={index} disableGutters>
               <ListItemButton
-                key={index}
                 autoFocus
                 onClick={() => {
                   OnIdUser(user.id_usuario);
@@ -59,9 +58,9 @@ const DialogUserXPerson = ({
                 </ListItemAvatar>
                 <ListItemText primary={user.nombre_de_usuario} />
               </ListItemButton>
-            </>
-          ))}
-        </ListItem>
+            </ListItem>
+          </>
+        ))}
       </List>
     </Dialog>
   );

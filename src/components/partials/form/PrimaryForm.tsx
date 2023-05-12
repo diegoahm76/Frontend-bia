@@ -6,6 +6,8 @@ import FormInputNoController from "./FormInputNoController";
 import FormSelectController from "./FormSelectController";
 import FormButton from "./FormButton";
 import { Title } from '../../Title';
+import FormInputFileController from './FormInputFileController';
+import FormDatePickerController from './FormDatePickerController';
 
 
 interface IProps {
@@ -24,7 +26,7 @@ const PrimaryForm = ({
     button_submit_label,
     button_submit_icon_class
 }: IProps) => {
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
+    // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
     const TypeDatum: any = (input: any) => {
         const form_input = input.form_input
         if (form_input.datum_type === "input_controller") {
@@ -78,7 +80,37 @@ const PrimaryForm = ({
             />
         } else if (form_input.datum_type === "title") {
             return <Title title={form_input.title_label}></Title>
-
+        } else if (form_input.datum_type === "input_file_controller") {
+            return <FormInputFileController
+                xs={form_input.xs}
+                md={form_input.md}
+                control_form={form_input.control_form}
+                control_name={form_input.control_name}
+                default_value={form_input.default_value}
+                rules={form_input.rules}
+                label={form_input.label}
+                disabled={form_input.disabled}
+                helper_text={form_input.helper_text}
+                set_value={form_input.set_value ?? null}
+                hidden_text={form_input.hidden_text ?? null}
+                file_name={form_input.file_name ?? null}
+            />;
+        } else if (form_input.datum_type === "date_picker_controller") {
+            return <FormDatePickerController
+                xs={form_input.xs}
+                md={form_input.md}
+                control_form={form_input.control_form}
+                control_name={form_input.control_name}
+                default_value={form_input.default_value}
+                rules={form_input.rules}
+                label={form_input.label}
+                disabled={form_input.disabled}
+                helper_text={form_input.helper_text}
+                hidden_text={form_input.hidden_text ?? null}
+                min_date={form_input.min_date ?? ""}
+                max_date={form_input.max_date ?? ""}
+                format={form_input.max_date ?? null}
+            />;
         }
     }
 
@@ -93,7 +125,7 @@ const PrimaryForm = ({
 
             <Grid container spacing={2}>
                 {form_inputs.map((option, index) => (
-                    <TypeDatum key= {index} form_input= {option} />
+                    <TypeDatum key={index} form_input={option} />
                 ))}
             </Grid>
 
