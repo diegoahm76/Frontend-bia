@@ -30,7 +30,7 @@ import dayjs, { type Dayjs } from 'dayjs';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import type { PropsRegister } from '../../../interfaces/globalModels';
-import { use_register_persona_n } from '../hooks/registerPersonaNatural';
+import { use_register_persona_n } from '../hooks/registerPersonaNaturalHook';
 import type { keys_object } from '../interfaces';
 import { validate_error } from '../../../helpers';
 
@@ -42,6 +42,7 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
   errors,
   isValid: is_valid,
   watch,
+  getValues,
 }: PropsRegister) => {
   const {
     is_saving,
@@ -78,18 +79,19 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
     departamento_laboral_opt,
     handle_click_show_password,
     on_submit,
-  } = use_register_persona_n({ watch, setValue: set_value });
+  } = use_register_persona_n({ watch, setValue: set_value, getValues });
 
   const [is_modal_active, open_modal] = useState(false);
   const [direccion, set_direccion] = useState('');
+  const [direccion_laboral, set_direccion_laboral] = useState('');
   const [type_direction, set_type_direction] = useState('');
   const [active_step, set_active_step] = useState(0);
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
   // watchers
-  const misma_direccion = watch('misma_direccion');
-  const acepta_notificacion_email = watch('acepta_notificacion_email');
-  const acepta_notificacion_sms = watch('acepta_notificacion_sms');
-  const acepta_tratamiento_datos = watch('acepta_tratamiento_datos');
+  const misma_direccion = watch('misma_direccion') ?? false;
+  const acepta_notificacion_email = watch('acepta_notificacion_email') ?? false;
+  const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
+  const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
 
   const set_value_direction = (value: string, type: string): void => {
     // direccion_laboral
@@ -107,6 +109,7 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
         break;
       case 'laboral':
         set_value_form('direccion_laboral', value);
+        set_direccion_laboral(value);
         break;
     }
     open_modal(false);
@@ -753,7 +756,7 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
                     {...register('telefono_fijo_residencial')}
                   />
                 </Grid>
-                {/* Lugar de expedición del documento */}
+                {/* Dirección laboral */}
                 <Grid item xs={12}>
                   <Typography variant="subtitle1" fontWeight="bold">
                     Dirección laboral nacional
@@ -810,7 +813,7 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
                     {...register('direccion_laboral', {
                       required: true,
                     })}
-                    value={direccion}
+                    value={direccion_laboral}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>

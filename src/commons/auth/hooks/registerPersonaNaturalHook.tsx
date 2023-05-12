@@ -14,6 +14,7 @@ import {
 import type { IList, ResponseServer } from '../../../interfaces/globalModels';
 import type {
   FieldValues,
+  UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
 } from 'react-hook-form';
@@ -63,12 +64,14 @@ type options = 'inicial' | 'residencia' | 'notificacion' | 'laboral';
 interface Props {
   watch: UseFormWatch<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const use_register_persona_n = ({
   watch,
-  setValue,
+  setValue: set_value,
+  getValues: get_values,
 }: Props): RegisterPersonHook => {
   const [is_saving, set_is_saving] = useState(false);
   const [loading, set_loading] = useState(false);
@@ -110,13 +113,13 @@ export const use_register_persona_n = ({
   const [departamento_laboral, set_departamento_laboral] = useState('');
   const [municipio_laboral, set_municipio_laboral] = useState('');
 
-  const email = watch('email');
-  const confirmar_email = watch('confirmar_email');
-  const telefono_celular = watch('telefono_celular');
-  const confirmar_celular = watch('confirmar_celular');
-  const password = watch('password');
-  const confirmar_password = watch('confirmar_password');
-  const direccion_notificaciones = watch('direccion_notificaciones');
+  const email = watch('email') ?? '';
+  const confirmar_email = watch('confirmar_email') ?? '';
+  const telefono_celular = watch('telefono_celular') ?? '';
+  const confirmar_celular = watch('confirmar_celular') ?? '';
+  const password = watch('password') ?? '';
+  const confirmar_password = watch('confirmar_password') ?? '';
+  const direccion_notificaciones = watch('direccion_notificaciones') ?? '';
 
   const get_selects_options = async (): Promise<void> => {
     set_loading(true);

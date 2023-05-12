@@ -97,11 +97,17 @@ export const use_register = (): ReisterHookNew => {
       if (data !== null && data !== undefined) {
         if (!data.tiene_usuario) {
           // Habilitamos unicamente el formulario para registro de usuario y contraseña
-          set_value('primer_nombre', data.primer_nombre);
-          set_value('segundo_nombre', data.segundo_apellido);
-          set_value('primer_apellido', data.primer_apellido);
-          set_value('segundo_apellido', data.segundo_apellido);
           set_value('persona', data.id_persona);
+
+          if (tipo_persona === 'J') {
+            set_value('razon_social', 'razon_social');
+            set_value('nombre_comercial', 'razon_social');
+          } else {
+            set_value('primer_nombre', data.primer_nombre);
+            set_value('segundo_nombre', data.segundo_apellido);
+            set_value('primer_apellido', data.primer_apellido);
+            set_value('segundo_apellido', data.segundo_apellido);
+          }
           set_is_avaiable(true);
           set_no_has_user(true);
           return;
@@ -204,13 +210,11 @@ export const use_register = (): ReisterHookNew => {
   }, [tipo_persona]);
 
   useEffect(() => {
-    reset_field('primer_nombre');
-    reset_field('segundo_nombre');
-    reset_field('primer_apellido');
-    reset_field('segundo_apellido');
-    reset_field('nombre_de_usuario');
-    reset_field('password');
-    reset_field('confirmar_password');
+    set_no_has_user(false);
+    set_is_avaiable(false);
+    for (const key in errors) {
+      reset_field(key);
+    }
   }, [tipo_persona, tipo_documento, numero_documento]);
 
   useEffect(() => {
@@ -242,5 +246,6 @@ export const use_register = (): ReisterHookNew => {
     validate_exits,
     watch,
     on_submit,
+    get_values,
   };
 };

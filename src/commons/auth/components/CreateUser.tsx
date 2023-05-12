@@ -16,23 +16,25 @@ import { Title } from '../../../components/Title';
 import { LoadingButton } from '@mui/lab';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
-import { use_register_persona_n } from '../hooks/registerPersonaNatural';
+import { use_register_persona_n } from '../hooks/registerPersonaNaturalHook';
 import { use_register } from '../hooks/registerHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CreateUser: React.FC<PropsRegister> = ({
   register,
+  tipo_documento,
   handleSubmit,
   errors,
   watch,
   setValue,
+  getValues,
 }: PropsRegister) => {
   const {
     show_password,
     error_password,
     message_error_password,
     handle_click_show_password,
-  } = use_register_persona_n({ watch, setValue });
+  } = use_register_persona_n({ watch, setValue, getValues });
 
   const { on_submit, is_saving } = use_register();
 
@@ -56,44 +58,74 @@ export const CreateUser: React.FC<PropsRegister> = ({
           </Alert>
         </Grid>
         <Grid item xs={12}>
-          <Title title="Datos persona natural" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            fullWidth
-            size="small"
-            label="Primer nombre"
-            disabled
-            {...register('primer_nombre')}
+          <Title
+            title={`Datos persona ${
+              tipo_documento === 'N' ? 'natural' : 'jurídica'
+            }`}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            fullWidth
-            size="small"
-            label="Segundo nombre"
-            disabled
-            {...register('segundo_nombre')}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            fullWidth
-            size="small"
-            label="Primer apellido"
-            disabled
-            {...register('primer_apellido')}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            fullWidth
-            size="small"
-            label="Segundo apellido"
-            disabled
-            {...register('segundo_apellido')}
-          />
-        </Grid>
+
+        {tipo_documento === 'N' ? (
+          <>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Primer nombre"
+                disabled
+                {...register('primer_nombre')}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Segundo nombre"
+                disabled
+                {...register('segundo_nombre')}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Primer apellido"
+                disabled
+                {...register('primer_apellido')}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Segundo apellido"
+                disabled
+                {...register('segundo_apellido')}
+              />
+            </Grid>
+          </>
+        ) : (
+          <>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Razón social"
+                disabled
+                {...register('razon_social')}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                size="small"
+                label="Nombre comercial"
+                disabled
+                {...register('nombre_comercial')}
+              />
+            </Grid>
+          </>
+        )}
         <Grid item xs={12}>
           <Title title="Datos de acceso" />
         </Grid>

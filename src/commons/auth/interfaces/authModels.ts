@@ -4,6 +4,7 @@ import type { IList } from '../../../interfaces/globalModels';
 import type {
   FieldErrors,
   FieldValues,
+  UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetValue,
@@ -369,6 +370,7 @@ export interface ReisterHookNew {
   handle_submit: UseFormHandleSubmit<FieldValues>;
   register: UseFormRegister<FieldValues>;
   set_value: UseFormSetValue<FieldValues>;
+  get_values: UseFormGetValues<FieldValues>;
   validate_exits_representante: (data: FieldValues) => Promise<void>;
   validate_exits: (data: FieldValues) => Promise<void>;
   watch: UseFormWatch<FieldValues>;

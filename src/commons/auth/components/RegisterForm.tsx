@@ -33,6 +33,7 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
     tipo_documento_opt,
     tipo_persona_opt,
     no_has_user,
+    get_values,
     handle_submit,
     register,
     set_value,
@@ -173,6 +174,7 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
           isValid={is_valid}
           register={register}
           setValue={set_value}
+          getValues={get_values}
           watch={watch}
         />
       )}
@@ -187,6 +189,7 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
           watch={watch}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
+          getValues={get_values}
         />
       )}
       {/* {tipo_persona === 'J' && (

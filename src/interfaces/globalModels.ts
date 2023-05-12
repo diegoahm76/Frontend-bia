@@ -4,6 +4,7 @@ import { type SetStateAction, type Dispatch } from 'react';
 import type {
   FieldErrors,
   FieldValues,
+  UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetValue,
@@ -77,6 +78,7 @@ export interface PropsRegister {
   errors: FieldErrors<FieldValues>;
   isValid: boolean;
   watch: UseFormWatch<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
 }
 
 export interface Direccion {
