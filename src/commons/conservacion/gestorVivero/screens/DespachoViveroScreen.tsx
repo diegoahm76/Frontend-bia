@@ -12,7 +12,6 @@ import { set_current_despacho } from '../store/slice/viveroSlice';
 import { type IDespacho } from "../interfaces/vivero";
 import SaveIcon from '@mui/icons-material/Save';
 import FormButton from '../../../../components/partials/form/FormButton';
-import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import { confirmar_items_distribuidos_service, save_items_distribuidos_service } from '../store/thunks/gestorViveroThunks';
 
@@ -28,7 +27,6 @@ export function DespachoViveroScreen(): JSX.Element {
   const dispatch= useAppDispatch()
   
   useEffect(() => {
-    console.log(userinfo, current_despacho)
     set_current_despacho({...current_despacho, persona_distribuye: userinfo.nombre, id_persona_distribuye: userinfo.id_persona})
   }, []);
 
@@ -99,7 +97,6 @@ const on_submit_confirm = (data: IDespacho) => {
         <SeleccionarDespacho 
         control_despacho={control_despacho}
         get_values={get_values}/>
-        {/* <SeleccionarBienDistribuir/> */}
         {current_despacho.id_despacho_entrante !== null &&
           <SeleccionarBienDistribuir/>
         }
@@ -124,15 +121,6 @@ const on_submit_confirm = (data: IDespacho) => {
                             on_click_function={handle_submit(on_submit_confirm)}
                             icon_class={<CheckIcon />}
                             label={"Confirmar distribucion"}
-                            type_button="button"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormButton
-                            variant_button="outlined"
-                            on_click_function={null}
-                            icon_class={<CloseIcon />}
-                            label={"Cancelar"}
                             type_button="button"
                         />
                     </Grid>

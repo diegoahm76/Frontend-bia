@@ -34,6 +34,7 @@ const SeleccionarBienSiembra = () => {
     const { control: control_bien, reset: reset_bien, getValues: get_values_bien} = useForm<IObjGoods>();
     const { control: control_siembra, handleSubmit:handle_submit_siembra, reset: reset_siembra } = useForm<IObjPlantingGoods>();
     const [aux_planting_goods, set_aux_planting_goods] = useState<IObjPlantingGoods[]>([]);
+    
     const [action, set_action] = useState<string>("agregar");
 
     const { current_planting, goods, planting_goods, current_nursery, current_good } = useAppSelector((state) => state.material_vegetal);
@@ -217,17 +218,19 @@ const SeleccionarBienSiembra = () => {
 
     const get_bienes: any = (async () => {
         const id_vivero = current_nursery.id_vivero
-        console.log(current_nursery)
         if (id_vivero !== null && id_vivero !== undefined) {
-            void dispatch(get_goods_service(id_vivero));
+            const codigo_bien = get_values_bien("codigo_bien") ?? ""
+            const nombre = get_values_bien("nombre_bien")??""
+            const tipo_bien = get_values_bien("tipo_bien")??""
+            void dispatch(get_goods_service(id_vivero, codigo_bien, nombre, tipo_bien));
         }
     })
 
     useEffect(() => {
-        const id_vivero = current_nursery.id_vivero
-        if (id_vivero !== null && id_vivero !== undefined) {
-            void dispatch(get_goods_service(id_vivero));
-        }
+        // const id_vivero = current_nursery.id_vivero
+        // if (id_vivero !== null && id_vivero !== undefined) {
+        //     void dispatch(get_goods_service(id_vivero));
+        // }
         set_action("agregar")
     }, [current_nursery]);
 
@@ -248,57 +251,81 @@ const SeleccionarBienSiembra = () => {
         if(current_good.id_bien !== null){
             if(get_values_bien("codigo_bien") === current_good.codigo_bien){
                 const bien: IObjPlantingGoods | undefined = aux_planting_goods.find((p) => p.id_bien_consumido === current_good.id_bien )
-                const bien_semilla: IObjPlantingGoods | undefined = aux_planting_goods.find((p) => p.tipo_bien === "Semillas" )
-                const new_bien: IObjPlantingGoods = {
-                    id_consumo_siembra: null,
-                    id_siembra: current_planting.id_siembra,
-                    id_bien_consumido: current_good.id_bien,
-                    cantidad: Number(data.cantidad),
-                    observaciones: data.observaciones,
-                    id_mezcla_consumida: null,
-                    tipo_bien: current_good.tipo_bien,
-                    codigo_bien: current_good.codigo_bien,
-                    nombre_bien: current_good.nombre_bien,
-                }
-                if (bien === undefined) {
-                    if(bien_semilla === undefined){
-                        set_aux_planting_goods([...aux_planting_goods, new_bien])
-                    }else{
-                        control_error("Solo se puede agregar un bien de tipo semilla")
+                let asignada = 0
+                aux_planting_goods.forEach((option) => {
+                    if (option.id_bien_consumido !== bien?.id_bien_consumido ) {
+                        asignada = asignada + (option.cantidad ?? 0)
                     }
-                } else {
-                    if (action === "editar") {
-                        const aux_items: IObjPlantingGoods[] = []
-                        aux_planting_goods.forEach((option) => {
-                            if (option.id_bien_consumido === current_good.id_bien) {
-                                aux_items.push(new_bien)
-                            } else {
-                                aux_items.push(option)
-                            }
-                        })
-                        set_aux_planting_goods(aux_items)
-                        set_action("agregar")
+                })
+
+                if ((data.cantidad??0) <= (current_good.cantidad_disponible_bien ?? 0))
+                {  
+                    const bien_semilla: IObjPlantingGoods | undefined = aux_planting_goods.find((p) => p.tipo_bien === "Semillas" )
+                    const new_bien: IObjPlantingGoods = {
+                        id_consumo_siembra: null,
+                        id_siembra: current_planting.id_siembra,
+                        id_bien_consumido: current_good.id_bien,
+                        cantidad: Number(data.cantidad),
+                        observaciones: data.observaciones,
+                        id_mezcla_consumida: null,
+                        tipo_bien: current_good.tipo_bien,
+                        codigo_bien: current_good.codigo_bien,
+                        nombre_bien: current_good.nombre_bien,
+                    }
+                    if (bien === undefined) {
+                        if(bien_semilla === undefined){
+                            set_aux_planting_goods([...aux_planting_goods, new_bien])
+                            const restante = (current_good.cantidad_disponible_bien ?? 0) - (new_bien.cantidad ?? 0) 
+                            dispatch(set_current_good({...current_good, cantidad_disponible_bien: restante}))
+                        }else{
+                            control_error("Solo se puede agregar un bien de tipo semilla")
+                        }
                     } else {
-                        control_error("El bien ya fue agregado")
+                        if (action === "editar") {
+                            const aux_items: IObjPlantingGoods[] = []
+                            aux_planting_goods.forEach((option) => {
+                                if (option.id_bien_consumido === current_good.id_bien) {
+                                    aux_items.push(new_bien)
+                                } else {
+                                    aux_items.push(option)
+                                }
+                            })
+                            set_aux_planting_goods(aux_items)
+                            const restante = (current_good.cantidad_disponible_bien ?? 0) - (new_bien.cantidad ?? 0) 
+                            dispatch(set_current_good({...current_good, cantidad_disponible_bien: restante}))
+                            set_action("agregar")
+                        } else {
+                            control_error("El bien ya fue agregado")
+                        }
                     }
-                }
+                } else{
+                    control_error("La cantidad asignada debe ser maximo "+ String(current_good.cantidad_disponible_bien))
+                    }
             } else{
                 control_error("Codigo de bien no coincide con el seleccionado")
             }
         } else{
             control_error("Debe seleccionar el bien")
         }
-
     };
 
     const edit_bien_siembra = (item: IObjPlantingGoods): void => {
-        const bien: IObjGoods | undefined =goods.find((p: IObjGoods) => p.id_bien === item.id_bien_consumido)
-        if(bien !== undefined){
-            dispatch(set_current_good(bien))
-        }
-        reset_siembra(aux_planting_goods.find((p) => p.id_bien_consumido === item.id_bien_consumido))
         set_action("editar")
-
+        const bien: IObjGoods | undefined =goods.find((p: IObjGoods) => p.id_bien === item.id_bien_consumido)
+        const item_bien = aux_planting_goods.find((p) => p.id_bien_consumido === item.id_bien_consumido)
+        reset_siembra(item_bien)
+        const aux_items: IObjPlantingGoods[] = []
+        let restante = 0 
+        aux_planting_goods.forEach((option) => {
+            if (option.id_bien_consumido !== item.id_bien_consumido) {
+                aux_items.push(option)
+            }
+        })
+        if(bien !== undefined){
+            restante = (bien.cantidad_disponible_bien ?? 0) + (item_bien?.cantidad?? 0)
+            dispatch(set_current_good({...bien, cantidad_disponible_bien: restante}))
+        }
+        set_aux_planting_goods(aux_items)
     };
 
     const delete_bien_siembra = (item: IObjPlantingGoods): void => {
@@ -380,7 +407,7 @@ const SeleccionarBienSiembra = () => {
                             control_form: control_siembra,
                             control_name: "cantidad",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Ingrese cantidad" } },
+                            rules: { required_rule: { rule: true, message: "Ingrese cantidad" }, min_rule: { rule: 0.01, message: "Cantidad debe ser mayor que 0" }, max_rule: { rule: current_good.cantidad_disponible_bien, message: "La cantidad disponible es "+String(current_good.cantidad_disponible_bien) +"" }  },
                             label: "Cantidad",
                             type: "number",
                             disabled: false,
@@ -419,11 +446,26 @@ const SeleccionarBienSiembra = () => {
                     title_list='Bienes consumidos'
                     list={aux_planting_goods}
                     add_item_list={handle_submit_siembra(on_submit_siembra)}
-                    add_list_button_label={action}
+                    add_list_button_label={"agregar"}
                     columns_list={columns_bienes_siembra}
                     row_list_id={"id_consumo_siembra"}
                     modal_select_model_title='Buscar bien'
                     modal_form_filters={[
+                        {
+                            datum_type: "select_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "tipo_bien",
+                            default_value: "",
+                            rules: { },
+                            label: "Tipo de bien",
+                            disabled: false,
+                            helper_text: "",
+                            select_options: [{label: "Semillas", value: "Semillas"}, {label: "Insumos", value: "Insumos"}, {label: "Mezclas", value: "Mezclas"}],
+                            option_label: "label",
+                            option_key: "value",
+                        },
                         {
                             datum_type: "input_controller",
                             xs: 12,
@@ -434,7 +476,7 @@ const SeleccionarBienSiembra = () => {
                             rules: {},
                             label: "Codigo bien",
                             type: "number",
-                            disabled: false,
+                            disabled: (get_values_bien("tipo_bien") === "Mezclas"),
                             helper_text: "",
                         },
                         {

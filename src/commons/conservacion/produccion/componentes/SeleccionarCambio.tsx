@@ -23,10 +23,10 @@ const SeleccionarCambio = ({
   const [file_name, set_file_name] = useState<any>("");
 
   const columns_cambios: GridColDef[] = [
-    { field: 'id_despacho_entrante', headerName: 'ID', width: 20 },
+    { field: 'id_cambio_de_etapa', headerName: 'ID', width: 20 },
     {
-      field: 'numero_despacho_consumo',
-      headerName: '# despacho',
+      field: 'nro_lote',
+      headerName: '# lote',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -35,8 +35,58 @@ const SeleccionarCambio = ({
       ),
     },
     {
-      field: 'fecha_ingreso',
-      headerName: 'Fecha ingreso',
+      field: 'agno_lote',
+      headerName: 'Año lote',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'id_vivero',
+      headerName: 'Vivero',
+      width: 350,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {(nurseries.find((p) => p.id_vivero === params.value ))?.nombre??""}
+        </div>
+      ),
+    },
+    {
+      field: 'nombre',
+      headerName: 'Material vegetal',
+      width: 350,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'desc_etapa_lote_origen',
+      headerName: 'Etapa origen',
+      width: 350,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'desc_etapa_lote_destino',
+      headerName: 'Etapa destino',
+      width: 350,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'fecha_cambio',
+      headerName: 'Fecha de cambio',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -45,21 +95,21 @@ const SeleccionarCambio = ({
       ),
     },
     {
-      field: 'distribucion_confirmada',
-      headerName: '¿Despacho distribuido?',
+      field: 'cambio_anulado',
+      headerName: 'Estado de cambio de etapa',
       width: 200,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.activo ? (
-          <Chip size="small" label="SI" color="success" variant="outlined" />
+        return params.row.cambio_anulado ? (
+          <Chip size="small" label="ANULADO" color="error" variant="outlined" />
         ) : (
-          <Chip size="small" label="NO" color="error" variant="outlined" />
+          <Chip size="small" label="NO ANULADO" color="success" variant="outlined" />
 
         );
       },
     },
     {
-      field: 'observacion_distribucion',
+      field: 'observaciones',
       headerName: 'Observación',
       width: 350,
       renderCell: (params) => (
@@ -86,6 +136,7 @@ const SeleccionarCambio = ({
   }, [file]);
 
   const get_cambios: any = (async () => {
+    console.log("buscando...")
     const code_bien = get_values("codigo_bien")
     const nombre_bien = get_values("nombre_bien")
     const cod_etapa_lote_origen = get_values("cod_etapa_lote_origen")
@@ -122,7 +173,7 @@ const SeleccionarCambio = ({
               default_value: "",
               rules: { required_rule: { rule: true, message: "Vivero requerido" } },
               label: "Vivero",
-              disabled: false,
+              disabled: current_stage_change.id_cambio_de_etapa !== null,
               helper_text: "Seleccione Vivero",
               select_options: nurseries,
               option_label: "nombre",
@@ -189,7 +240,7 @@ const SeleccionarCambio = ({
               control_form: control_cambio,
               control_name: "altura_lote_en_cms",
               default_value: "",
-              rules: { required_rule: { rule: true, message: "Cantidad requerida" } },
+              rules: { required_rule: { rule: true, message: "Cantidad requerida"}, min_rule: {rule: 0.01, message: "La altura debe ser mayor que 0 cms"} },
               label: "Altura promedio",
               type: "number",
               disabled: false,
