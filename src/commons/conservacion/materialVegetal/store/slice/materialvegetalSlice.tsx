@@ -98,6 +98,7 @@ const initial_state: IMaterialVegetal = {
   planting_person: initial_state_person
 }
 
+
 export const material_vegetal_slice = createSlice({
   name: 'material_vegetal',
   initialState: initial_state,

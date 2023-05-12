@@ -27,6 +27,9 @@ export interface IObjChange {
   ruta_archivo_soporte: string | null;
   codigo_bien?: string | null;
   nombre_bien?: string | null;
+  desc_etapa_lote_destino?: string | null;
+  desc_etapa_lote_origen?: string | null;
+
 }
 
 export interface IObjVegetalMaterial {
