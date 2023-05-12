@@ -46,7 +46,7 @@ export const get_nurseries_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio');
-      console.log(data)
+      
       dispatch(get_nurseries(data.data));
       return data;
     } catch (error: any) {
@@ -147,7 +147,6 @@ export const get_nursery_service: any = (id: string | number)  => {
     try {
       if(id !== undefined)
       {const { data } = await api.get(`conservacion/viveros/get-by-id/${id}/`);
-      console.log(data)
       dispatch(current_nursery(data));
       return data;}
     } catch (error: any) {
@@ -163,7 +162,6 @@ export const get_nurseries_closing_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio');
-      console.log(data)
       dispatch(get_nurseries_closing(data.data));
       return data;
     } catch (error: any) {
@@ -179,7 +177,7 @@ export const get_nurseries_quarantine_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('/api/conservacion/viveros/get-by-nombre-municipio/cuarentena');
-      console.log(data)
+ 
       dispatch(get_nurseries_quarantine(data.data));
       return data;
     } catch (error: any) {
@@ -228,13 +226,11 @@ export const quarantine_nursery_service: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(nursery)
       const { data } = await api.put(
         `conservacion/viveros/cuarentena/${id}/`,
         nursery
       );
       dispatch(get_nursery_service(id));
-      control_success(data.detail);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -250,14 +246,10 @@ export const get_items_despacho_service = (id: string|number): any => {
     try {
       const { data } = await api.get(`conservacion/despachos/items-despacho/get-by-id/${id??""}/`);
       if (data.data.length > 0) {
-        console.log(data.data)
           dispatch(get_items_despacho(data.data));
-          control_success("Se encontraron bienes")
       } else {
-          control_error("No se encontraron bienes")
           dispatch(get_items_despacho([]));
       }
-      
       return data;
     } catch (error: any) {
       console.log('get_items_despacho_service');
@@ -323,6 +315,7 @@ export const confirmar_items_distribuidos_service = (
     try {
       const { data } = await api.put(`conservacion/despachos/confirmar-distribucion/${id??""}/?observaciones_distribucion=${observacion}`,
                                     items);
+      
       if (data.success){
         dispatch(get_items_distribuidos_service(id));
         control_success(data.detail)

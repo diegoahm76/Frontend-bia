@@ -11,7 +11,6 @@ import { useForm } from "react-hook-form";
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
-import CheckIcon from '@mui/icons-material/Check';
 import PersonaCambia from "../componentes/PersonaCambia";
 import { add_stage_change_service } from "../store/thunks/produccionThunks";
 
@@ -30,6 +29,10 @@ export function CambioEtapaScreen(): JSX.Element {
 
   useEffect(() => {
     reset_cambio(current_stage_change)
+    if(current_stage_change.id_cambio_de_etapa !== null){
+      console.log(current_stage_change)
+      // sdispatch(set_current_vegetal_material({ id_bien: current_stage_change.id_bien, codigo_bien: (current_stage_change.codigo??""), nombre: (current_stage_change.nombre??""), agno_lote: current_stage_change.agno_lote, nro_lote: current_stage_change.nro_lote, cod_etapa_lote: current_stage_change.cod_etapa_lote_origen, etapa_lote: (current_stage_change.desc_etapa_lote_origen??""), cantidad_disponible: current_stage_change.cantidad_disponible_al_crear }))
+    }                                                             
   }, [current_stage_change]);
 
   useEffect(() => {
@@ -128,15 +131,7 @@ export function CambioEtapaScreen(): JSX.Element {
               type_button="button"
             />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <FormButton
-              variant_button="contained"
-              on_click_function={null}
-              icon_class={<CheckIcon />}
-              label={"Confirmar distribucion"}
-              type_button="button"
-            />
-          </Grid>
+          
           <Grid item xs={12} md={3}>
             <FormButton
               variant_button="outlined"
