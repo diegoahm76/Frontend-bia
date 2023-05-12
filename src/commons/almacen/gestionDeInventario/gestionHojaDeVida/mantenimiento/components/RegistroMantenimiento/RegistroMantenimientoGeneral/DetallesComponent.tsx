@@ -9,19 +9,28 @@ import {
     type SelectChangeEvent,
     TextField
 } from "@mui/material"
+import SearchIcon from '@mui/icons-material/Search';
+import { BuscadorPersonaDialog } from './BuscadorPersonaDialog';
 
 interface IProps {
     parent_type_maintenance: any,
     parent_esp_maintenance: any,
-    limpiar_formulario: boolean
+    limpiar_formulario: boolean,
+    user_info: any,
+    detalles: any,
+    accion_guardar: boolean
 }
-const tipo_mantenimiento = [{ value: "P", label: "Preventivo" }, { value: "C", label: "Correctivo" }];
+const estados_mantenimiento = [{ value: "P", label: "Programada" }, { value: "E", label: "Ejecutada" }, { value: "A", label: "Anulada" }, { value: "V", label: "Vencida" }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario }: IProps) => {
-    const [dias_empleados, set_dias_empleados] = useState<string | null>("");
+export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario, user_info, detalles, accion_guardar }: IProps) => {
+    const [dias_empleados, set_dias_empleados] = useState<string | null>("1");
+    const [contrato, set_contrato] = useState<string | null>(null);
+    const [valor, set_valor] = useState<string | null>(null);
     const [estado, set_estado] = useState("");
-    const [observaciones, set_observaciones] = useState("");
-
+    const [observaciones, set_observaciones] = useState<string | null>("");
+    const [diligenciado, set_diligenciado] = useState<string | null>("");
+    const [realizado, set_realizado] = useState<string | null>("");
+    const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
     useEffect(() => {
         parent_type_maintenance(estado);
     }, [parent_type_maintenance, estado]);
@@ -31,16 +40,49 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
     }, [parent_esp_maintenance, observaciones]);
 
     useEffect(() => {
+        if (user_info !== null && user_info !== undefined){
+            set_diligenciado(user_info.nombre);
+            set_realizado(user_info.nombre); // Temporal
+        }
+    }, [user_info]);
+
+    useEffect(() => {
         if (limpiar_formulario) {
             set_estado("");
             set_observaciones("");
-            set_dias_empleados("");
+            set_dias_empleados("1");
+            set_valor(null);
+            set_contrato(null);
         }
     }, [limpiar_formulario]);
+
+    useEffect(() => {
+        if (accion_guardar) {
+            if(estado !== "" && dias_empleados !== "" && realizado !== "" && diligenciado !== ""){
+                detalles({
+                    dias_empleados,
+                    estado,
+                    realizado,
+                    diligenciado,
+                    observaciones,
+                    valor,
+                    contrato
+                })
+            }
+        }
+    }, [detalles,accion_guardar]);
 
     const handle_change: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_estado(e.target.value);
     }
+
+    const on_change_contrato: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_contrato(e.target.value);
+    };
+
+    const on_change_valor: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_valor(e.target.value);
+    };
 
     const on_change_observacion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_observaciones(e.target.value);
@@ -73,10 +115,10 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                                 <InputLabel>Estado final</InputLabel>
                                 <Select
                                     value={estado}
-                                    label="Tipo de mantenimiento"
+                                    label="Estado final"
                                     onChange={handle_change}
                                 >
-                                    {tipo_mantenimiento.map(({ value, label }) => (
+                                    {estados_mantenimiento.map(({ value, label }) => (
                                         <MenuItem key={value} value={value}>
                                             {label}
                                         </MenuItem>
@@ -93,7 +135,6 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                             label="Descripción"
                             helperText="Ingresar descripción"
                             size="small"
-                            required
                             fullWidth
                             onChange={on_change_observacion} />
                     </Grid>
@@ -102,40 +143,37 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                             <TextField
                                 label="Valor mantenimiento"
                                 size="small"
-                                required
                                 fullWidth
-                                value={dias_empleados}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
+                                value={valor}
+                                onChange={on_change_valor}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Contrato mantenimiento"
                                 size="small"
-                                required
                                 fullWidth
-                                value={dias_empleados}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
+                                value={contrato}
+                                onChange={on_change_contrato}
                             />
                         </Grid>
                     </Grid>
 
                     <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={5}>
                             <TextField
                                 label="Realizado por"
                                 size="small"
                                 required
                                 fullWidth
-                                value={dias_empleados}
+                                value={realizado}
                                 InputProps={{
                                     readOnly: true,
                                 }}
                             />
+                        </Grid>
+                        <Grid item xs={12} sm={1} sx={{ mt: '10px' }}>
+                            <SearchIcon style={{ cursor: 'pointer' }} onClick={() => { set_abrir_modal_persona(true) }} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -143,7 +181,7 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                                 size="small"
                                 required
                                 fullWidth
-                                value={dias_empleados}
+                                value={diligenciado}
                                 InputProps={{
                                     readOnly: true,
                                 }}
@@ -152,6 +190,12 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                     </Grid>
                 </Grid>
             </Box>
+            {abrir_modal_persona && (
+                <BuscadorPersonaDialog
+                    is_modal_active={abrir_modal_persona}
+                    set_is_modal_active={set_abrir_modal_persona}
+                    title={"Busqueda de persona"} />
+            )}
         </>
     )
 }

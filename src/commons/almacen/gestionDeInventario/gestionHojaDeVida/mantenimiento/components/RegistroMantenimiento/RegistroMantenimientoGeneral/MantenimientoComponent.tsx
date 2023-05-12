@@ -69,7 +69,6 @@ export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenan
                                 value={tipo}
                                 label="Tipo de mantenimiento"
                                 onChange={handle_change}
-                                readOnly={true}
                             >
                                 {tipo_mantenimiento.map(({ value, label }) => (
                                     <MenuItem key={value} value={value}>

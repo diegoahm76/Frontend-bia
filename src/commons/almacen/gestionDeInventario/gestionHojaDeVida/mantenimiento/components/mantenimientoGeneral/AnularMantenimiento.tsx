@@ -30,7 +30,6 @@ const AnularMantenimientoComponent = ({ is_modal_active, set_is_modal_active, ti
 
   const on_change_motivo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_motivo(e.target.value);
-    console.log(motivo);
   };
 
   const guardar_anulacion = (): void => {
