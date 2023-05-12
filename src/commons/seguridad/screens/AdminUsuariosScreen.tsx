@@ -20,7 +20,7 @@ import type {
 import DialogBusquedaAvanzadaUsuario from '../components/DialogBusquedaAvanzadaUsuario';
 import DialogBusquedaAvanzadaPersona from '../components/DialogBusquedaAvanzadaPersona';
 import { Title, CustomSelect } from '../../../components';
-import { AdminUserPersonaJuridica } from '../components/AdminUserPersonaJuridica';
+// import { AdminUserPersonaJuridica } from '../components/AdminUserPersonaJuridica';
 import { AdminUserPersonaNatural } from '../components/AdminUserPersonaNatural';
 import { useDispatch, useSelector } from 'react-redux';
 import { get_data_user } from '../store/thunks';
@@ -125,13 +125,14 @@ export const AdminUsuariosScreen: React.FC = () => {
   } = useForm<DataAadminUser>();
   const {
     users_x_person_is_active,
+    data_disponible,
     data_register,
     loading,
     tipo_documento_opt,
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
-    has_user,
+    // has_user,
     set_users_x_person_is_active,
     set_data_register,
     set_numero_documento,
@@ -231,15 +232,6 @@ export const AdminUsuariosScreen: React.FC = () => {
       control_error('No se encotraron resultados para esta persona');
     }
   };
-
-  // const handle_render_form = (render: boolean): void => {
-  //   console.log(render);
-  // set_render_form(true);
-  // };
-
-  // useEffect(() => {
-  //   console.log(render_form);
-  // }, [render_form]);
 
   return (
     <Grid container>
@@ -344,19 +336,7 @@ export const AdminUsuariosScreen: React.FC = () => {
               </Grid>
             </Grid>
           </Box>
-          {tipo_persona === 'N' && (
-            <AdminUserPersonaNatural
-              has_user={has_user}
-              // onRender={handle_render_form}
-            />
-          )}
-          {tipo_persona === 'J' && (
-            <AdminUserPersonaJuridica
-              tipo_persona={tipo_persona}
-              tipo_documento={tipo_documento}
-              // onRender={handle_render_form}
-            />
-          )}
+          {data_disponible && <AdminUserPersonaNatural />}
           <DialogBusquedaAvanzadaPersona
             is_modal_active={busqueda_avanzada_person_is_active}
             set_is_modal_active={set_busqueda_avanzada_person_is_active}

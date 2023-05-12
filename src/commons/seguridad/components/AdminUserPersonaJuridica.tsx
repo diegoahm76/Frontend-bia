@@ -1,162 +1,93 @@
-import { useEffect } from 'react';
 import {
   Box,
   Grid,
   TextField,
   Stack,
-  Avatar,
   Button,
   Input,
   InputLabel,
-  type SelectChangeEvent,
   Autocomplete,
-  type AutocompleteChangeReason,
-  type AutocompleteChangeDetails,
+  Avatar,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import HistoryIcon from '@mui/icons-material/History';
-// import dayjs, { type Dayjs } from 'dayjs';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
-import type { keys_object, IList2 } from '../interfaces';
-import { use_admin_users } from '../hooks/AdminUserHooks';
 import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialCambiosEstadoUser';
-import { LoadingButton } from '@mui/lab';
-
-interface Props {
-  tipo_documento: string;
-  tipo_persona: string;
-}
+import { use_admin_users } from '../hooks/AdminUserHooks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AdminUserPersonaJuridica: React.FC<Props> = ({
-  tipo_documento,
-  tipo_persona,
-}: Props) => {
+export const AdminUserPersonaJuridica: React.FC = () => {
   const {
     on_submit,
-    // Form
+    // set_value_form,
+    on_change,
+    handle_change_autocomplete,
+    handle_change,
+    handle_image_select,
+    // Handle Form
     register_admin_user,
-    set_value_admin_user,
+    // handle_submit_admin_user,
+    // set_value_admin_user,
     errors_admin_users,
-    watch_admin_user,
-    // Use Selector
-    data_disponible,
+    // watch_admin_user,
+    // Gets
+    // get_selects_options,
+    // UseSelector
     action_admin_users,
+    // data_person_search,
     user_info,
-    historial_cambios_estado_is_active,
-    set_historial_cambios_estado_is_active,
-    data_register,
+    // UseState values
+    loading_create_or_update,
+    // users_x_person_is_active,
     selected_image,
-    loading,
-    tipo_usuario,
-    tipo_usuario_opt,
-    activo,
-    activo_opt,
+    // file_image,
     check_user_is_active,
     check_user_is_blocked,
+    data_disponible,
+    historial_cambios_estado_is_active,
+    data_register,
+    // has_user,
+    // is_exists,
+    // is_saving,
+    // is_search,
+    loading,
+    // numero_documento,
+    // tipo_documento_opt,
+    // tipo_documento,
+    // tipo_persona_opt,
+    // tipo_persona,
+    tipo_usuario_opt,
+    tipo_usuario,
+    activo,
+    activo_opt,
     bloqueado,
     bloqueado_opt,
     roles,
     roles_opt,
-    loading_create_or_update,
-    set_file_image,
-    set_selected_image,
-    set_activo,
-    set_bloqueado,
-    set_roles,
-    set_data_register,
-    set_tipo_usuario,
-    set_tipo_documento,
+    // UseState Sets
+    // set_loading_create_or_update,
+    // set_users_x_person_is_active,
+    // set_selected_image,
+    // set_file_image,
+    // set_check_user_is_active,
+    // set_check_user_is_blocked,
+    // set_data_disponible,
+    set_historial_cambios_estado_is_active,
+    // set_data_register,
+    // set_has_user,
+    // set_is_exists,
+    // set_is_saving,
+    // set_is_search,
+    // set_roles,
+    // set_numero_documento,
+    // set_activo,
+    // set_bloqueado,
+    // set_tipo_documento,
+    // set_tipo_persona,
+    // set_tipo_usuario,
   } = use_admin_users();
-
-  useEffect(() => {
-    set_value_form('tipo_documento', tipo_documento);
-  }, [tipo_documento]);
-
-  useEffect(() => {
-    if (watch_admin_user('tipo_usuario') !== undefined) {
-      set_tipo_usuario(watch_admin_user('tipo_usuario'));
-    }
-  }, [watch_admin_user('tipo_usuario')]);
-
-  useEffect(() => {
-    console.log(data_disponible);
-  }, [data_disponible]);
-
-  useEffect(() => {
-    if (watch_admin_user('tipo_documento') !== undefined) {
-      set_tipo_documento(watch_admin_user('tipo_documento'));
-    }
-  }, [watch_admin_user('tipo_documento')]);
-
-  // Establece los valores del formulario
-  const set_value_form = (name: string, value: string): void => {
-    set_data_register({
-      ...data_register,
-      [name]: value,
-    });
-    set_value_admin_user(name as keys_object, value);
-  };
-
-  // Se usa para escuchar los cambios de valor del componente CustomSelect
-  const on_change = (e: SelectChangeEvent<string>): void => {
-    switch (e.target.name) {
-      case 'tipo_usuario':
-        set_tipo_usuario(e.target.value);
-        break;
-      case 'activo':
-        set_activo(e.target.value);
-        break;
-      case 'bloqueado':
-        set_bloqueado(e.target.value);
-        break;
-    }
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: IList2[],
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<IList2>
-  ): void => {
-    set_value_admin_user('roles', value);
-    set_data_register({
-      ...data_register,
-      roles: value,
-    });
-    set_roles(value);
-  };
-
-  // Cambio inputs
-  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  const handle_image_select = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    if (event.target.files?.[0] != null) {
-      // Obtener el archivo seleccionado
-      const file = event.target.files[0];
-      set_file_image(file);
-
-      // Crear un objeto FileReader
-      const reader = new FileReader();
-      // // Definir la función que se ejecuta cuando se completa la lectura del archivo
-      reader.onload = (upload) => {
-        // Obtener los datos de la imagen
-        if (upload?.target != null) {
-          set_selected_image(upload.target.result);
-        }
-      };
-      // Leer el contenido del archivo como una URL de datos
-      reader.readAsDataURL(file);
-    } else {
-      set_selected_image('');
-    }
-  };
 
   return (
     <>
@@ -171,28 +102,6 @@ export const AdminUserPersonaJuridica: React.FC<Props> = ({
               <Box sx={{ ml: '16px', width: '100%' }}>
                 <Title title="Datos personales J" />
               </Box>{' '}
-              <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  disabled
-                  fullWidth
-                  size="small"
-                  label="Razon social"
-                  value={data_register.razon_social}
-                  {...register_admin_user('razon_social', { required: true })}
-                  onChange={handle_change}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  disabled
-                  fullWidth
-                  size="small"
-                  label="Nombre comercial"
-                  value={data_register.nombre_comercial}
-                  {...register_admin_user('nombre_comercial')}
-                  onChange={handle_change}
-                />
-              </Grid>
             </Grid>
             <Grid container spacing={2} sx={{ mt: '20px' }}>
               <Box sx={{ ml: '16px', width: '100%' }}>

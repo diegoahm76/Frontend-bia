@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import {
   Box,
   Grid,
@@ -7,169 +6,102 @@ import {
   Button,
   Input,
   InputLabel,
-  type SelectChangeEvent,
   Autocomplete,
-  type AutocompleteChangeReason,
-  type AutocompleteChangeDetails,
   Avatar,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import HistoryIcon from '@mui/icons-material/History';
+import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialCambiosEstadoUser';
-import type { keys_object, IList2 } from '../interfaces';
 import { use_admin_users } from '../hooks/AdminUserHooks';
-import { CustomSelect } from '../../../components/CustomSelect';
-import { LoadingButton } from '@mui/lab';
-
-interface Props {
-  has_user: boolean;
-}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AdminUserPersonaNatural: React.FC<Props> = ({
-  has_user,
-}: Props) => {
+export const AdminUserPersonaNatural: React.FC = () => {
   const {
     on_submit,
-    // Form
+    // set_value_form,
+    on_change,
+    handle_change_autocomplete,
+    handle_change,
+    handle_image_select,
+    // Handle Form
     register_admin_user,
-    set_value_admin_user,
+    // handle_submit_admin_user,
+    // set_value_admin_user,
     errors_admin_users,
-    watch_admin_user,
-    //
+    // watch_admin_user,
+    // Gets
+    // get_selects_options,
+    // UseSelector
     action_admin_users,
-    selected_image,
-    set_selected_image,
-    set_file_image,
-    check_user_is_active,
-    set_check_user_is_active,
-    check_user_is_blocked,
-    set_check_user_is_blocked,
+    // data_person_search,
     user_info,
-    data_disponible,
-    historial_cambios_estado_is_active,
+    // UseState values
     loading_create_or_update,
-    set_historial_cambios_estado_is_active,
+    // users_x_person_is_active,
+    selected_image,
+    // file_image,
+    check_user_is_active,
+    check_user_is_blocked,
+    // data_disponible,
+    historial_cambios_estado_is_active,
     data_register,
+    // has_user,
+    // is_exists,
+    // is_saving,
+    // is_search,
     loading,
-    tipo_usuario,
+    // numero_documento,
+    // tipo_documento_opt,
+    // tipo_documento,
+    // tipo_persona_opt,
+    tipo_persona,
     tipo_usuario_opt,
+    tipo_usuario,
     activo,
     activo_opt,
     bloqueado,
     bloqueado_opt,
     roles,
     roles_opt,
-    set_activo,
-    set_bloqueado,
-    set_tipo_usuario,
-    set_data_register,
-    set_tipo_documento,
-    set_roles,
+    // UseState Sets
+    // set_loading_create_or_update,
+    // set_users_x_person_is_active,
+    // set_selected_image,
+    // set_file_image,
+    // set_check_user_is_active,
+    // set_check_user_is_blocked,
+    // set_data_disponible,
+    set_historial_cambios_estado_is_active,
+    // set_data_register,
+    // set_has_user,
+    // set_is_exists,
+    // set_is_saving,
+    // set_is_search,
+    // set_roles,
+    // set_numero_documento,
+    // set_activo,
+    // set_bloqueado,
+    // set_tipo_documento,
+    // set_tipo_persona,
+    // set_tipo_usuario,
   } = use_admin_users();
-
-  useEffect(() => {
-    if (watch_admin_user('tipo_documento') !== undefined) {
-      set_tipo_documento(watch_admin_user('tipo_documento'));
-    }
-  }, [watch_admin_user('tipo_documento')]);
-
-  useEffect(() => {
-    if (watch_admin_user('tipo_usuario') !== undefined) {
-      set_tipo_usuario(watch_admin_user('tipo_usuario'));
-    }
-  }, [watch_admin_user('tipo_usuario')]);
-
-  // Establece los valores del formulario
-  const set_value_form = (name: string, value: string): void => {
-    value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
-    set_data_register({
-      ...data_register,
-      [name]: value,
-    });
-    set_value_admin_user(name as keys_object, value);
-    console.log(data_register);
-  };
-
-  const on_change = (e: SelectChangeEvent<string>): void => {
-    console.log(e.target.name, e.target.value);
-    switch (e.target.name) {
-      case 'tipo_usuario':
-        set_tipo_usuario(e.target.value);
-        break;
-      case 'activo':
-        set_activo(e.target.value);
-        set_check_user_is_active(false);
-        break;
-      case 'bloqueado':
-        set_bloqueado(e.target.value);
-        set_check_user_is_blocked(false);
-        break;
-    }
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  const handle_change_autocomplete = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: IList2[],
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<IList2>
-  ): void => {
-    set_value_admin_user('roles', value);
-    set_data_register({
-      ...data_register,
-      roles: value,
-    });
-    set_roles(value);
-  };
-
-  // Cambio inputs
-  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
-
-  const handle_image_select = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    if (event.target.files?.[0] != null) {
-      // Obtener el archivo seleccionado
-      const file = event.target.files[0];
-      set_file_image(file);
-
-      // Crear un objeto FileReader
-      const reader = new FileReader();
-      // // Definir la función que se ejecuta cuando se completa la lectura del archivo
-      reader.onload = (upload) => {
-        // Obtener los datos de la imagen
-        if (upload?.target != null) {
-          set_selected_image(upload.target.result);
-        }
-      };
-      // Leer el contenido del archivo como una URL de datos
-      reader.readAsDataURL(file);
-    } else {
-      set_selected_image('');
-    }
-  };
-
-  useEffect(() => {
-    console.log(data_disponible);
-  }, [data_disponible]);
 
   return (
     <>
-      {Boolean(data_disponible) && (
-        <>
-          <form
-            onSubmit={(e) => {
-              void on_submit(e);
-            }}
-          >
-            <Grid container spacing={2} sx={{ mt: '5px' }}>
-              <Box sx={{ ml: '16px', width: '100%' }}>
-                <Title title="Datos personales N" />
-              </Box>
+      <form
+        onSubmit={(e) => {
+          void on_submit(e);
+        }}
+      >
+        <Grid container spacing={2} sx={{ mt: '5px' }}>
+          <Box sx={{ ml: '16px', width: '100%' }}>
+            <Title title={`Datos personales persona ${tipo_persona}`} />
+          </Box>
+          {tipo_persona === 'N' ? (
+            <>
               <Grid item xs={12} sm={6} md={3}>
                 <TextField
                   disabled
@@ -214,68 +146,163 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   onChange={handle_change}
                 />
               </Grid>
-            </Grid>
-            <Grid container spacing={2} sx={{ mt: '20px' }}>
-              <Box sx={{ ml: '16px', width: '100%' }}>
-                <Title title="Datos de acceso" />
-              </Box>
-              <Grid item xs={12} sm={6} md={3}>
-                <TextField
-                  disabled={action_admin_users === 'EDIT' && true}
-                  size="small"
-                  label="Nombre de usuario"
-                  fullWidth
-                  value={data_register.nombre_de_usuario}
-                  error={
-                    errors_admin_users.nombre_de_usuario?.type === 'required'
-                  }
-                  helperText={
-                    errors_admin_users.nombre_de_usuario?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  {...register_admin_user('nombre_de_usuario')}
-                  onChange={handle_change}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={6}>
-                <InputLabel htmlFor="imagen_usuario">
-                  Subir imagen de usuario
-                </InputLabel>
-                <Input
-                  id="imagen_usuario"
-                  type="file"
-                  autoFocus
-                  // value={data_register.imagen_usuario}
-                  {...register_admin_user('imagen_usuario')}
-                  error={Boolean(errors_admin_users.imagen_usuario)}
-                  inputProps={{ accept: 'image/*' }}
-                  onChange={handle_image_select}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3} md={3}>
-                {selected_image != null && (
-                  <Avatar
-                    variant="rounded"
-                    sx={{ width: '200px', height: '200px' }}
-                    // eslint-disable-next-line @typescript-eslint/no-base-to-string
-                    src={selected_image.toString()}
-                    alt="Imagen seleccionada"
+            </>
+          ) : (
+            tipo_persona === 'J' && (
+              <>
+                <Grid item xs={12} sm={6} md={3}>
+                  <TextField
+                    disabled
+                    fullWidth
+                    size="small"
+                    label="Razon social"
+                    value={data_register.razon_social}
+                    {...register_admin_user('razon_social', {
+                      required: true,
+                    })}
+                    onChange={handle_change}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <TextField
+                    disabled
+                    fullWidth
+                    size="small"
+                    label="Nombre comercial"
+                    value={data_register.nombre_comercial}
+                    {...register_admin_user('nombre_comercial')}
+                    onChange={handle_change}
+                  />
+                </Grid>
+              </>
+            )
+          )}
+        </Grid>
+        <Grid container spacing={2} sx={{ mt: '20px' }}>
+          <Box sx={{ ml: '16px', width: '100%' }}>
+            <Title title="Datos de acceso" />
+          </Box>
+          <Grid item xs={12} sm={6} md={3}>
+            <TextField
+              disabled={action_admin_users === 'EDIT' && true}
+              size="small"
+              label="Nombre de usuario"
+              fullWidth
+              value={data_register.nombre_de_usuario}
+              error={errors_admin_users.nombre_de_usuario?.type === 'required'}
+              helperText={
+                errors_admin_users.nombre_de_usuario?.type === 'required'
+                  ? 'Este campo es obligatorio'
+                  : ''
+              }
+              {...register_admin_user('nombre_de_usuario')}
+              onChange={handle_change}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={6}>
+            <InputLabel htmlFor="imagen_usuario">
+              Subir imagen de usuario
+            </InputLabel>
+            <Input
+              id="imagen_usuario"
+              type="file"
+              autoFocus
+              // value={data_register.imagen_usuario}
+              {...register_admin_user('imagen_usuario')}
+              error={Boolean(errors_admin_users.imagen_usuario)}
+              inputProps={{ accept: 'image/*' }}
+              onChange={handle_image_select}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3} md={3}>
+            {selected_image != null && (
+              <Avatar
+                variant="rounded"
+                sx={{ width: '200px', height: '200px' }}
+                // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                src={selected_image.toString()}
+                alt="Imagen seleccionada"
+              />
+            )}
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} sx={{ mt: '20px' }}>
+          <Box sx={{ ml: '16px', width: '100%' }}>
+            <Title title="Tipo de usuario y roles" />
+          </Box>
+          <Grid item xs={12} sm={6} md={3}>
+            <CustomSelect
+              onChange={on_change}
+              label="Tipo de usuario"
+              name="tipo_usuario"
+              value={tipo_usuario}
+              options={tipo_usuario_opt}
+              loading={loading}
+              disabled={false}
+              required={true}
+              errors={errors_admin_users}
+              register={register_admin_user}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={9}>
+            {roles_opt.length > 0 && (
+              <Autocomplete
+                multiple
+                fullWidth
+                options={roles_opt}
+                getOptionLabel={(option) => option?.label}
+                isOptionEqualToValue={(option, value) =>
+                  option.value === value.value
+                }
+                value={roles}
+                renderInput={(params) => (
+                  <TextField
+                    key={params.id}
+                    {...params}
+                    label="Selección de roles"
+                    placeholder="Roles asignados"
                   />
                 )}
-              </Grid>
-            </Grid>
+                {...register_admin_user('roles')}
+                onChange={handle_change_autocomplete}
+              />
+            )}
+          </Grid>
+        </Grid>
+        {action_admin_users === 'EDIT' && (
+          <>
             <Grid container spacing={2} sx={{ mt: '20px' }}>
               <Box sx={{ ml: '16px', width: '100%' }}>
-                <Title title="Tipo de usuario y roles" />
+                <Title title="Estado" />
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={6} md={3}>
+                    <Stack
+                      direction="row"
+                      justifyContent="flex-start"
+                      spacing={2}
+                      sx={{ mt: '20px' }}
+                    >
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        startIcon={<HistoryIcon />}
+                        onClick={() => {
+                          set_historial_cambios_estado_is_active(true);
+                        }}
+                      >
+                        HISTORIAL DE ESTADO
+                      </Button>
+                    </Stack>
+                  </Grid>
+                </Grid>
               </Box>
               <Grid item xs={12} sm={6} md={3}>
                 <CustomSelect
                   onChange={on_change}
-                  label="Tipo de usuario"
-                  name="tipo_usuario"
-                  value={tipo_usuario}
-                  options={tipo_usuario_opt}
+                  label="Activo"
+                  name="activo"
+                  value={activo}
+                  options={activo_opt}
                   loading={loading}
                   disabled={false}
                   required={true}
@@ -283,210 +310,142 @@ export const AdminUserPersonaNatural: React.FC<Props> = ({
                   register={register_admin_user}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={9}>
-                {roles_opt.length > 0 && (
-                  <Autocomplete
-                    multiple
-                    fullWidth
-                    options={roles_opt}
-                    getOptionLabel={(option) => option?.label}
-                    isOptionEqualToValue={(option, value) =>
-                      option.value === value.value
-                    }
-                    value={roles}
-                    renderInput={(params) => (
-                      <TextField
-                        key={params.id}
-                        {...params}
-                        label="Selección de roles"
-                        placeholder="Roles asignados"
-                      />
-                    )}
-                    {...register_admin_user('roles')}
-                    onChange={handle_change_autocomplete}
-                  />
-                )}
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  disabled
+                  fullWidth
+                  size="small"
+                  label="Fecha ultimo cambio"
+                  value={data_register.activo_fecha_ultimo_cambio}
+                  {...register_admin_user('activo_fecha_ultimo_cambio')}
+                  onChange={handle_change}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={6}>
+                <TextField
+                  disabled={check_user_is_active}
+                  fullWidth
+                  size="small"
+                  label="Justificación del cambio"
+                  multiline
+                  value={data_register.activo_justificacion_cambio}
+                  {...register_admin_user('activo_justificacion_cambio')}
+                  onChange={handle_change}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <CustomSelect
+                  onChange={on_change}
+                  label="Bloqueado"
+                  name="bloqueado"
+                  value={bloqueado}
+                  options={bloqueado_opt}
+                  loading={loading}
+                  disabled={false}
+                  required={true}
+                  errors={errors_admin_users}
+                  register={register_admin_user}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  disabled
+                  fullWidth
+                  size="small"
+                  label="Fecha ultimo cambio"
+                  value={data_register.bloqueado_fecha_ultimo_cambio}
+                  {...register_admin_user('bloqueado_fecha_ultimo_cambio')}
+                  onChange={handle_change}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={6}>
+                <TextField
+                  disabled={check_user_is_blocked}
+                  fullWidth
+                  size="small"
+                  label="Justificación del cambio"
+                  multiline
+                  value={data_register.bloqueado_justificacion_cambio}
+                  {...register_admin_user('bloqueado_justificacion_cambio')}
+                  onChange={handle_change}
+                />
               </Grid>
             </Grid>
-            {action_admin_users === 'EDIT' && (
-              <>
-                <Grid container spacing={2} sx={{ mt: '20px' }}>
-                  <Box sx={{ ml: '16px', width: '100%' }}>
-                    <Title title="Estado" />
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} sm={6} md={3}>
-                        <Stack
-                          direction="row"
-                          justifyContent="flex-start"
-                          spacing={2}
-                          sx={{ mt: '20px' }}
-                        >
-                          <Button
-                            fullWidth
-                            variant="outlined"
-                            startIcon={<HistoryIcon />}
-                            onClick={() => {
-                              set_historial_cambios_estado_is_active(true);
-                            }}
-                          >
-                            HISTORIAL DE ESTADO
-                          </Button>
-                        </Stack>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <CustomSelect
-                      onChange={on_change}
-                      label="Activo"
-                      name="activo"
-                      value={activo}
-                      options={activo_opt}
-                      loading={loading}
-                      disabled={false}
-                      required={true}
-                      errors={errors_admin_users}
-                      register={register_admin_user}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      disabled
-                      fullWidth
-                      size="small"
-                      label="Fecha ultimo cambio"
-                      value={data_register.activo_fecha_ultimo_cambio}
-                      {...register_admin_user('activo_fecha_ultimo_cambio')}
-                      onChange={handle_change}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      disabled={check_user_is_active}
-                      fullWidth
-                      size="small"
-                      label="Justificación del cambio"
-                      multiline
-                      value={data_register.activo_justificacion_cambio}
-                      {...register_admin_user('activo_justificacion_cambio')}
-                      onChange={handle_change}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <CustomSelect
-                      onChange={on_change}
-                      label="Bloqueado"
-                      name="bloqueado"
-                      value={bloqueado}
-                      options={bloqueado_opt}
-                      loading={loading}
-                      disabled={false}
-                      required={true}
-                      errors={errors_admin_users}
-                      register={register_admin_user}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      disabled
-                      fullWidth
-                      size="small"
-                      label="Fecha ultimo cambio"
-                      value={data_register.bloqueado_fecha_ultimo_cambio}
-                      {...register_admin_user('bloqueado_fecha_ultimo_cambio')}
-                      onChange={handle_change}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={6}>
-                    <TextField
-                      disabled={check_user_is_blocked}
-                      fullWidth
-                      size="small"
-                      label="Justificación del cambio"
-                      multiline
-                      value={data_register.bloqueado_justificacion_cambio}
-                      {...register_admin_user('bloqueado_justificacion_cambio')}
-                      onChange={handle_change}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ mt: '20px' }}>
-                  <Box sx={{ ml: '16px', width: '100%' }}>
-                    <Title title="Otros datos" />
-                  </Box>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      disabled
-                      fullWidth
-                      size="small"
-                      label="Fecha de creación"
-                      value={data_register.fecha_creacion}
-                      {...register_admin_user('fecha_creacion')}
-                      onChange={handle_change}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      disabled
-                      fullWidth
-                      size="small"
-                      label="Fecha de activación inicial"
-                      value={data_register.fecha_activación_inicial}
-                      {...register_admin_user('fecha_activación_inicial')}
-                      onChange={handle_change}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      value={data_register.creado_desde_portal ? 'Si' : 'No'}
-                      label="Creado desde portal"
-                      {...register_admin_user('creado_desde_portal')}
-                      onChange={handle_change}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      disabled
-                      fullWidth
-                      size="small"
-                      label="Persona que creo el usuario"
-                      value={data_register.persona_que_creo}
-                      {...register_admin_user('persona_que_creo')}
-                      onChange={handle_change}
-                    />
-                  </Grid>
-                </Grid>
-              </>
-            )}
-            <Stack
-              direction="row"
-              justifyContent="flex-end"
-              spacing={2}
-              sx={{ mt: '20px' }}
-            >
-              <LoadingButton
-                loading={loading_create_or_update}
-                type="submit"
-                color="primary"
-                variant="contained"
-                startIcon={<SaveIcon />}
-              >
-                {action_admin_users === 'EDIT'
-                  ? 'EDITAR'
-                  : action_admin_users === 'CREATE' && 'CREAR'}
-              </LoadingButton>
-            </Stack>
-          </form>
-          <DialogHistorialCambiosEstadoUser
-            is_modal_active={historial_cambios_estado_is_active}
-            set_is_modal_active={set_historial_cambios_estado_is_active}
-            id_usuario={user_info.id_usuario}
-          />
-        </>
-      )}
+            <Grid container spacing={2} sx={{ mt: '20px' }}>
+              <Box sx={{ ml: '16px', width: '100%' }}>
+                <Title title="Otros datos" />
+              </Box>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  disabled
+                  fullWidth
+                  size="small"
+                  label="Fecha de creación"
+                  value={data_register.fecha_creacion}
+                  {...register_admin_user('fecha_creacion')}
+                  onChange={handle_change}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  disabled
+                  fullWidth
+                  size="small"
+                  label="Fecha de activación inicial"
+                  value={data_register.fecha_activación_inicial}
+                  {...register_admin_user('fecha_activación_inicial')}
+                  onChange={handle_change}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={data_register.creado_desde_portal ? 'Si' : 'No'}
+                  label="Creado desde portal"
+                  {...register_admin_user('creado_desde_portal')}
+                  onChange={handle_change}
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <TextField
+                  disabled
+                  fullWidth
+                  size="small"
+                  label="Persona que creo el usuario"
+                  value={data_register.persona_que_creo}
+                  {...register_admin_user('persona_que_creo')}
+                  onChange={handle_change}
+                />
+              </Grid>
+            </Grid>
+          </>
+        )}
+        <Stack
+          direction="row"
+          justifyContent="flex-end"
+          spacing={2}
+          sx={{ mt: '20px' }}
+        >
+          <LoadingButton
+            loading={loading_create_or_update}
+            type="submit"
+            color="primary"
+            variant="contained"
+            startIcon={<SaveIcon />}
+          >
+            {action_admin_users === 'EDIT'
+              ? 'EDITAR'
+              : action_admin_users === 'CREATE' && 'CREAR'}
+          </LoadingButton>
+        </Stack>
+      </form>
+      <DialogHistorialCambiosEstadoUser
+        is_modal_active={historial_cambios_estado_is_active}
+        set_is_modal_active={set_historial_cambios_estado_is_active}
+        id_usuario={user_info.id_usuario}
+      />
     </>
   );
 };

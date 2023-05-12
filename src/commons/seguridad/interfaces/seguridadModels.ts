@@ -1,6 +1,7 @@
 import { type BaseSyntheticEvent, type Dispatch, type SetStateAction } from 'react';
 import type{ FieldErrors,  UseFormHandleSubmit,  UseFormRegister,  UseFormSetValue,  UseFormWatch } from 'react-hook-form';
 import type { DataPersonas, IList } from '../../../interfaces/globalModels';
+import { type AutocompleteChangeDetails, type AutocompleteChangeReason, type SelectChangeEvent } from '@mui/material';
 
 export interface IList2 {
   value: number;
@@ -118,6 +119,18 @@ export interface UserCreate {
 }
 export interface AdminUserHook {
   on_submit: (e?: BaseSyntheticEvent<object, any,any> | undefined) => Promise<void>;
+  set_value_form : (name: string, value: string) => void;
+  on_change: (e: SelectChangeEvent<string>)=> void;
+  handle_change_autocomplete: (
+    event: React.SyntheticEvent<Element, Event>,
+    value: IList2[],
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<IList2>
+  ) => void;
+  handle_change: (e: React.ChangeEvent<HTMLInputElement>) => void; 
+  handle_image_select: (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => void;
   register_admin_user: UseFormRegister<DataAadminUser>; 
   handle_submit_admin_user: UseFormHandleSubmit<DataAadminUser>;
   set_value_admin_user: UseFormSetValue<DataAadminUser>;
