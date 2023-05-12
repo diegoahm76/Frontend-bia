@@ -6,8 +6,7 @@ export interface event {
 }
 
 export interface Obligacion {
-  id: number;
-  nombreObligacion: string; // este parametro no esta contemplado en back
+  nombre: string;
   fecha_inicio: string;
   id_expediente: number;
   nroResolucion: string; // este parametro no esta contemplado en back
@@ -21,4 +20,11 @@ export interface ObligacionesUsuario {
   numero_identificacion: string;
   email: string;
   obligaciones: Obligacion[];
+}
+
+export interface FacilidadPago {
+  nombre_de_usuario: string;
+  identificacion: string;
+  obligacion: string;
+  fecha_generacion: string;
 }

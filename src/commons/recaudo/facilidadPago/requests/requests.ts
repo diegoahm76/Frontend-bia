@@ -15,3 +15,15 @@ export const get_deudores = async (): Promise<any> => {
 export const get_obligaciones_deudores = async (identificacion: string): Promise<any> => {
   return await api.get(`recaudo/pagos/consulta-deudores-obligaciones/${identificacion}`)
 }
+
+// Listar facilidades de pago ingresadas desde Pag. Usuario Admin
+export const get_fac_pago_ingresadas = async (): Promise<any> => {
+  const data = await api.get(`recaudo/pagos/listado-facilidades-pagos/`)
+  return data.data
+}
+
+// Listar facilidades de pago asignadas desde Pag. Usuario Interno
+export const get_fac_pago_asignadas = async (): Promise<any> => {
+  return await api.get(`recaudo/pagos/listado-facilidades-funcionarios/`)
+}
+

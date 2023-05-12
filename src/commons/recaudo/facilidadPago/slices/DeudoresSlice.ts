@@ -5,6 +5,7 @@ const initial_state = {
   deudores: [],
 };
 
+// Listar Deudores desde Pag. Usuario Interno
 export const get_deudores = createAsyncThunk('facilidades_pago/get_deudores', async () => {
   const { data } = await api.get(`recaudo/pagos/listado-deudores/`)
   return data.data
@@ -24,3 +25,6 @@ export const deudores_slice = createSlice({
     });
   },
 });
+
+export const { deudores } = deudores_slice.actions;
+

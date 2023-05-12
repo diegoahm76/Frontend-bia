@@ -35,7 +35,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
     const arr_registro = []
     for(let i=0; i<lista_obligaciones.length; i++){
       for(let j=0; j<selected.length; j++){
-        if(lista_obligaciones[i].nombreObligacion === selected[j]){
+        if(lista_obligaciones[i].nombre === selected[j]){
           arr_registro.push(lista_obligaciones[i])
         }
       }
@@ -56,14 +56,14 @@ export const TablaObligacionesUsuario: React.FC = () => {
         return (
           <Checkbox
             onClick={(event) => {
-              handle_click(event, params.row.nombreObligacion)
+              handle_click(event, params.row.nombre)
             }}
           />
         )
       },
     },
     {
-      field: 'nombreObligacion',
+      field: 'nombre',
       headerName: 'Nombre Obligación',
       width: 150,
       renderCell: (params) => (
@@ -190,7 +190,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
     let sub_intereses = 0
     for(let i=0; i< lista_obligaciones.length; i++){
       for(let j=0; j< selected.length; j++){
-        if(lista_obligaciones[i].nombreObligacion === selected[j]){
+        if(lista_obligaciones[i].nombre === selected[j]){
           sub_capital = sub_capital + parseFloat(lista_obligaciones[i].monto_inicial)
           sub_intereses = sub_intereses + parseFloat(lista_obligaciones[i].valor_intereses)
           set_capital(sub_capital)

@@ -5,23 +5,24 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { type event } from '../interfaces/interfaces';
+import { type event, type FacilidadPago } from '../interfaces/interfaces';
+import { useSelector } from 'react-redux';
 
-interface Data {
-  nombre: string;
-  identificacion: string;
-  obligacion: string;
-  fechaRadicacion: string;
+interface RootState {
+  facilidades: {
+    facilidades: FacilidadPago[];
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaObligacionesAdminAsignadas: React.FC = () => {
-  const [visible_rows, set_visible_rows] = useState(Array<Data>);
+  const [visible_rows, set_visible_rows] = useState(Array<FacilidadPago>);
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
+  const { facilidades } = useSelector((state: RootState) => state.facilidades);
   const navigate = useNavigate();
 
-  const fac_pago = [
+  /* const fac_pago = [
     {
       id: 1,
       nombre: 'Koch and Sons',
@@ -50,11 +51,11 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
       obligacion: 'Uso Agua Subterranea',
       fechaRadicacion: '01/01/2022'
     },
-  ];
+  ]; */
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre',
+      field: 'nombre_de_usuario',
       headerName: 'Nombre Usuario',
       width: 200,
       renderCell: (params) => (
@@ -84,7 +85,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
       ),
     },
     {
-      field: 'fechaRadicacion',
+      field: 'fecha_generacion',
       headerName: 'Fecha Radicación',
       width: 150,
       renderCell: (params) => (
@@ -129,8 +130,8 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
   ];
 
   useEffect(()=>{
-    set_visible_rows(fac_pago)
-  }, [])
+    set_visible_rows(facilidades)
+  }, [facilidades])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -170,25 +171,25 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           onClick={() => {
             const new_rows = [];
             if(filter === 'nombre'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].nombre.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
+              for(let i=0; i < facilidades.length; i++){
+                if(facilidades[i].nombre_de_usuario.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(facilidades[i])
                 }
               }
               set_visible_rows(new_rows)
             }
             if(filter === 'identificacion'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].identificacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
+              for(let i=0; i < facilidades.length; i++){
+                if(facilidades[i].identificacion.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(facilidades[i])
                 }
               }
               set_visible_rows(new_rows)
             }
             if(filter === 'obligacion'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].obligacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
+              for(let i=0; i < facilidades.length; i++){
+                if(facilidades[i].obligacion.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(facilidades[i])
                 }
               }
               set_visible_rows(new_rows)
@@ -202,7 +203,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           variant='outlined'
           startIcon={<FilterAltOffOutlined />}
           onClick={() => {
-            set_visible_rows(fac_pago)
+            set_visible_rows(facilidades)
           }}
         >
         Mostrar Todo
@@ -232,7 +233,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id}
+                    getRowId={(row) => row.identificacion}
                   />
                 </Box>
               </Grid>

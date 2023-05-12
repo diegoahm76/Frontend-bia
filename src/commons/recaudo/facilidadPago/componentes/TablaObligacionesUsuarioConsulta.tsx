@@ -30,7 +30,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
     const arr_registro = []
     for(let i=0; i<obligaciones.length; i++){
       for(let j=0; j<selected.length; j++){
-        if(obligaciones[i].nombreObligacion === selected[j]){
+        if(obligaciones[i].nombre === selected[j]){
           arr_registro.push(obligaciones[i])
         }
       }
@@ -51,14 +51,14 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
         return (
           <Checkbox
             onClick={(event) => {
-              handle_click(event, params.row.nombreObligacion)
+              handle_click(event, params.row.nombre)
             }}
           />
         )
       },
     },
     {
-      field: 'nombreObligacion',
+      field: 'nombre',
       headerName: 'Nombre Obligación',
       width: 150,
       renderCell: (params) => (
@@ -185,7 +185,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
     let sub_intereses = 0
     for(let i=0; i< obligaciones.length; i++){
       for(let j=0; j< selected.length; j++){
-        if(obligaciones[i].nombreObligacion === selected[j]){
+        if(obligaciones[i].nombre === selected[j]){
           sub_capital = sub_capital + parseFloat(obligaciones[i].monto_inicial)
           sub_intereses = sub_intereses + parseFloat(obligaciones[i].valor_intereses)
           set_capital(sub_capital)
@@ -224,7 +224,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id}
+                getRowId={(row) => row.id_expediente}
               />
             </Box>
           </Grid>
