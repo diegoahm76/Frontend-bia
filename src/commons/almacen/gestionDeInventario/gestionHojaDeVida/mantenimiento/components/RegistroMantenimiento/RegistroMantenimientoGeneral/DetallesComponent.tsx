@@ -49,6 +49,10 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
             set_dias_empleados("1");
             set_valor("");
             set_contrato("");
+            set_mensaje_error_dias("");
+            set_mensaje_error_estado("");
+            set_mensaje_error_realizado("");
+            set_mensaje_error_diligenciado("");
         }
     }, [limpiar_formulario]);
 

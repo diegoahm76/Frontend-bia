@@ -55,6 +55,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
         if (limpiar_formulario) {
             set_id_bien('');
             set_nombre('');
+            set_mensaje_error_codigo("");
         }
     }, [limpiar_formulario]);
 

@@ -31,6 +31,8 @@ export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, p
         if (limpiar_formulario) {
             set_tipo("");
             set_acciones("");
+            set_mensaje_error_tipo("");
+            set_mensaje_error_acciones("");
         }
     }, [limpiar_formulario]);
 
