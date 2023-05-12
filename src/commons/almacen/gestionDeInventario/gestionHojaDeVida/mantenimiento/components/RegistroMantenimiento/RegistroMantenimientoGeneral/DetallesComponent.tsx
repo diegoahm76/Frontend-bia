@@ -13,16 +13,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import { BuscadorPersonaDialog } from './BuscadorPersonaDialog';
 
 interface IProps {
-    parent_type_maintenance: any,
-    parent_esp_maintenance: any,
     limpiar_formulario: boolean,
     user_info: any,
     detalles: any,
     accion_guardar: boolean
 }
-const estados_mantenimiento = [{ value: "P", label: "Programada" }, { value: "E", label: "Ejecutada" }, { value: "A", label: "Anulada" }, { value: "V", label: "Vencida" }];
+const estados_mantenimiento = [{ value: "O", label: "óptimo" }, { value: "D", label: "Defectuoso" }, { value: "A", label: "Averiado" }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario, user_info, detalles, accion_guardar }: IProps) => {
+export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_info, detalles, accion_guardar }: IProps) => {
     const [dias_empleados, set_dias_empleados] = useState<string | null>("1");
     const [contrato, set_contrato] = useState<string | null>(null);
     const [valor, set_valor] = useState<string | null>(null);
@@ -31,16 +29,9 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
     const [diligenciado, set_diligenciado] = useState<string | null>("");
     const [realizado, set_realizado] = useState<string | null>("");
     const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
-    useEffect(() => {
-        parent_type_maintenance(estado);
-    }, [parent_type_maintenance, estado]);
 
     useEffect(() => {
-        parent_esp_maintenance(observaciones);
-    }, [parent_esp_maintenance, observaciones]);
-
-    useEffect(() => {
-        if (user_info !== null && user_info !== undefined){
+        if (user_info !== null && user_info !== undefined) {
             set_diligenciado(user_info.nombre);
             set_realizado(user_info.nombre); // Temporal
         }
@@ -58,7 +49,7 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
 
     useEffect(() => {
         if (accion_guardar) {
-            if(estado !== "" && dias_empleados !== "" && realizado !== "" && diligenciado !== ""){
+            if (estado !== "" && dias_empleados !== "" && realizado !== "" && diligenciado !== "") {
                 detalles({
                     dias_empleados,
                     estado,
@@ -70,7 +61,7 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                 })
             }
         }
-    }, [detalles,accion_guardar]);
+    }, [detalles, accion_guardar]);
 
     const handle_change: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_estado(e.target.value);
@@ -82,6 +73,10 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
 
     const on_change_valor: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_valor(e.target.value);
+    };
+
+    const on_change_dias_empleados: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_dias_empleados(e.target.value);
     };
 
     const on_change_observacion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,9 +101,7 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                                 required
                                 fullWidth
                                 value={dias_empleados}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
+                                onChange={on_change_dias_empleados}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -133,8 +126,8 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                             multiline
                             rows={4}
                             value={observaciones}
-                            label="Descripción"
-                            helperText="Ingresar descripción"
+                            label="Observaciones"
+                            helperText="Ingresar observaciones"
                             size="small"
                             fullWidth
                             onChange={on_change_observacion} />
@@ -143,6 +136,7 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Valor mantenimiento"
+                                type={'number'}
                                 size="small"
                                 fullWidth
                                 value={valor}

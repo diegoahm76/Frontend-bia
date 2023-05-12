@@ -11,8 +11,6 @@ import {
 } from "@mui/material"
 
 interface IProps {
-    parent_type_maintenance: any,
-    parent_esp_maintenance: any,
     limpiar_formulario: boolean,
     programacion: any,
     mantenimiento: any,
@@ -21,39 +19,31 @@ interface IProps {
 const tipo_mantenimiento = [{ value: "P", label: "Preventivo" }, { value: "C", label: "Correctivo" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario, programacion, mantenimiento, accion_guardar }: IProps) => {
+export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, programacion, mantenimiento, accion_guardar }: IProps) => {
 
     const [tipo, set_tipo] = useState("");
-    const [especificacion, set_especificacion] = useState("");
-
-    useEffect(() => {
-        parent_type_maintenance(tipo);
-    }, [parent_type_maintenance, tipo]);
-
-    useEffect(() => {
-        parent_esp_maintenance(especificacion);
-    }, [parent_esp_maintenance, especificacion]);
+    const [acciones, set_acciones] = useState("");
 
     useEffect(() => {
         if (limpiar_formulario) {
             set_tipo("");
-            set_especificacion("");
+            set_acciones("");
         }
     }, [limpiar_formulario]);
 
     useEffect(() => {
         if (accion_guardar) {
-            if(tipo !== ""){
+            if (tipo !== "") {
                 mantenimiento({
                     tipo,
-                    especificacion
+                    acciones
                 })
             }
         }
-    }, [mantenimiento,accion_guardar]);
+    }, [mantenimiento, accion_guardar]);
 
     useEffect(() => {
-        if(programacion !== null && programacion !== undefined){
+        if (programacion !== null && programacion !== undefined) {
             set_tipo(programacion.tipo);
         }
     }, [programacion]);
@@ -62,8 +52,8 @@ export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenan
         set_tipo(e.target.value);
     }
 
-    const on_change_especificacion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        set_especificacion(e.target.value);
+    const on_change_acciones: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_acciones(e.target.value);
     };
 
     return (
@@ -95,13 +85,13 @@ export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenan
                         <TextField
                             multiline
                             rows={4}
-                            value={especificacion}
-                            label="Especificaciones tecnicas"
-                            helperText="Ingresar especificaciones tecnicas"
+                            value={acciones}
+                            label="Acciones realizadas"
+                            helperText="Ingresar acciones realizadas"
                             size="small"
                             required
                             fullWidth
-                            onChange={on_change_especificacion} />
+                            onChange={on_change_acciones} />
                     </Grid>
                 </Grid>
             </Box>

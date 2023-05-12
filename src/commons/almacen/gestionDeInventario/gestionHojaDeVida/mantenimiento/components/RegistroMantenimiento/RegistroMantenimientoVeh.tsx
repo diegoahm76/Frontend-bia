@@ -27,9 +27,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
         detalle_seleccionado,
         user_info,
         set_detalle_seleccionado,
-        set_tipo_mantenimiento,
         set_user_info,
-        set_especificacion,
         set_programacion
     } = use_previsualizacion();
 
@@ -58,25 +56,17 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
         set_programacion(val);
     }, [set_programacion]);
 
-    const set_type_maintenance_state = useCallback((val: string) => {
-        set_tipo_mantenimiento(val);
-    }, [set_tipo_mantenimiento]);
-
-    const set_esp_maintenance_state = useCallback((val: string) => {
-        set_especificacion(val);
-    }, [set_especificacion]);
-
-    useEffect(()=>{
+    useEffect(() => {
         validar_formulario();
-    },[detalle])
+    }, [detalle])
 
     const validar_formulario: () => void = () => {
-        if(user_info !== null && programacion !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null){
+        if (user_info !== null && programacion !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null) {
             const formulario: ejecutar_mantenimiento = {
                 fecha_registrado: programacion.fecha,
                 fecha_ejecutado: dayjs().format("YYYY-MM-DD"),
                 cod_tipo_mantenimiento: mantenimiento.tipo,
-                dias_empleados:parseInt(detalle.dias_empleados),
+                dias_empleados: parseInt(detalle.dias_empleados),
                 fecha_estado_anterior: null,
                 id_articulo: detalle_seleccionado.id_articulo,
                 cod_estado_final: detalle.estado,
@@ -89,7 +79,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                 contrato_mantenimiento: detalle.contrato,
                 id_programacion_mtto: programacion.id_programacion_mantenimiento
             };
-            registrar_mantenimiento(formulario); 
+            registrar_mantenimiento(formulario);
         }
     }
 
@@ -122,7 +112,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de programación" />
-                    <BusquedaProgramacionComponent set_prog_seleccion={set_prog_seleccionada} parent_details={set_details_state} tipo_articulo={"vehículos"}  limpiar_formulario={limpiar_formulario}/>
+                    <BusquedaProgramacionComponent set_prog_seleccion={set_prog_seleccionada} parent_details={set_details_state} tipo_articulo={"vehículos"} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
             <Grid
@@ -151,9 +141,8 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}>
                 <Grid item xs={12}>
-                    <Title title='Mantenimiento'/>
-                    <MantenimientoComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} programacion={programacion} 
-                    mantenimiento={set_mantenimientos} accion_guardar={accion_guardar}/>
+                    <Title title='Mantenimiento' />
+                    <MantenimientoComponent limpiar_formulario={limpiar_formulario} programacion={programacion} mantenimiento={set_mantenimientos} accion_guardar={accion_guardar} />
                 </Grid>
             </Grid>
             <Grid container
@@ -166,9 +155,8 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}>
                 <Grid item xs={12}>
-                    <Title title='Detalles'/>
-                    <DetallesComponent parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} 
-                    user_info={user_info} detalles={set_detalles} accion_guardar={accion_guardar}/>
+                    <Title title='Detalles' />
+                    <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalles} accion_guardar={accion_guardar} />
                 </Grid>
             </Grid>
             <Grid container>
