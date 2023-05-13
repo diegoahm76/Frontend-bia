@@ -21,8 +21,7 @@ import { consultar_historico_representante } from '../../seguridad/request/Reque
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    historico_direcciones: InfoPersona;
-    set_historico_direcciones: Dispatch<SetStateAction<any>>;
+    historico_representante: InfoPersona;
 }
 
 const columns: GridColDef[] = [
@@ -66,7 +65,7 @@ const columns: GridColDef[] = [
         field: 'nombre_completo_replegal',
         headerName: 'NOMBRE',
         sortable: true,
-        width: 170,
+        width: 300,
     },
 ];
 
@@ -74,8 +73,7 @@ const columns: GridColDef[] = [
 export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
     is_modal_active,
     set_is_modal_active,
-    historico_direcciones,
-    set_historico_direcciones,
+    historico_representante,
 }: IProps) => {
     const [rows, set_rows] = useState<HistoricoRepresentanteLegal[]>([]);
 
@@ -86,7 +84,7 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
     const historico = async (): Promise<void> => {
         try {
             const response = await consultar_historico_representante(
-                historico_direcciones.id_persona
+                historico_representante.id_persona
             );
             const new_historico = response.map(
                 (datos: HistoricoRepresentanteLegal) => ({
@@ -101,7 +99,7 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
                     nombre_completo_replegal: datos.nombre_completo_replegal,
                 })
             );
-            console.log("Data Historial", new_historico)
+            console.log("historial representante legal", new_historico)
             set_rows(new_historico);
         } catch (err) {
             control_error(err);

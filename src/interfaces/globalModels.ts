@@ -529,12 +529,14 @@ export interface HistoricoDirecciones {
   tipo_direccion:         string;
   fecha_cambio:           Date;
   id_persona:             number;
+  nombre_completo:             string;
 }
 export interface HistoricoEmail {
   id_histo_email:     number;
   email_notificacion: string;
   fecha_cambio:       Date;
   id_persona:         number;
+  nombre_completo:             string;
 }
 export interface HistoricoRepresentanteLegal {
   id_historico_represent_legal: number;

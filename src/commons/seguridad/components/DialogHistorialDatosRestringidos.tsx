@@ -22,7 +22,6 @@ interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   datos_historico: InfoPersona;
-  set_datos_historico: Dispatch<SetStateAction<any>>;
 }
 
 const columns: GridColDef[] = [
@@ -69,7 +68,6 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   datos_historico,
-  set_datos_historico,
 }: IProps) => {
   const [rows, set_rows] = useState<HistoricoDatosRestringidos[]>([]);
 
@@ -92,6 +90,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
           fecha_cambio: datos.fecha_cambio,
           justificacion_cambio: datos.justificacion_cambio,
           id_persona: datos.id_persona,
+
         })
       );
 

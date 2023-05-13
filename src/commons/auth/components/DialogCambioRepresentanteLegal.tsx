@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 import { Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import type { AxiosError } from 'axios';
@@ -146,7 +147,7 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
         }
     };
     // trae datos del representante legal
-    const get_datos_representante_legal = async (data: InfoPersona ): Promise<void> => {
+    const get_datos_representante_legal = async (data: InfoPersona): Promise<void> => {
         try {
             const response = await consultar_datos_persona(data.id_persona);
             onResult(data, response);
@@ -199,26 +200,16 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
 
     return (
         <>
-            <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-                <Grid
-                    item
-                    xs={12}
-                    sm={6}
-                    md={4}
-                    lg={2}
-                    container
-                    direction="column"
-                    justifyContent="center"
-                >
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={handle_click_open}
-                    >
-                        Cambiar
-                    </Button>
-                </Grid>
-            </Grid>
+
+            <Button
+                variant="contained"
+                color="primary"
+                startIcon={<HowToRegIcon/>}
+                onClick={handle_click_open}
+            >
+                Cambiar
+            </Button>
+
             {/* Dialog para búsqueda avanzada */}
             <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
                 <DialogContent>

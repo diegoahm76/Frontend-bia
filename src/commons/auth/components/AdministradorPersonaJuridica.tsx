@@ -15,7 +15,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import UpdateIcon from '@mui/icons-material/Update';
-// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { control_error } from '../../../helpers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -31,6 +31,11 @@ import { consultar_clase_tercero, consultar_clase_tercero_persona, consultar_dat
 import dayjs, { type Dayjs } from 'dayjs';
 import { DialogRepresentanteLegal } from "./DialogCambioRepresentanteLegal";
 import { DialogAutorizaDatos } from '../../../components/DialogAutorizaDatos';
+import { DialogHistorialDatosRestringidos } from '../../seguridad/components/DialogHistorialDatosRestringidos';
+import { DialogHistorialEmail } from './HistoricoEmail';
+import { DialogHistorialDirecciones } from './HistoricoDirecciones';
+import { DialogHistoricoAutorizaNotificaciones } from './HistoricoAutorizaNotificaciones';
+import { DialogHistoricoRepresentanteLegal } from './HistoricoRepresentanteLegal';
 
 interface PropsElement {
     errors: FieldErrors<DataRegistePortal>;
@@ -48,23 +53,84 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
 }: Props) => {
 
     const [datos_persona, set_datos_persona] = useState<DataPersonas>();
-    const [datos_representante, set_datos_representante] = useState<DataPersonas>();
+    const [datos_representante, set_datos_representante] = useState<DataPersonas>({
+        id_persona: 0,
+        nombre_unidad_organizacional_actual: '',
+        tiene_usuario: false,
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        tipo_persona: '',
+        numero_documento: '',
+        digito_verificacion: '',
+        nombre_comercial: '',
+        razon_social: '',
+        pais_residencia: '',
+        municipio_residencia: '',
+        direccion_residencia: '',
+        direccion_residencia_ref: '',
+        ubicacion_georeferenciada: '',
+        direccion_laboral: '',
+        direccion_notificaciones: '',
+        pais_nacimiento: '',
+        fecha_nacimiento: '',
+        sexo: '',
+        fecha_asignacion_unidad: '',
+        es_unidad_organizacional_actual: '',
+        email: '',
+        email_empresarial: '',
+        telefono_fijo_residencial: '',
+        telefono_celular: '',
+        telefono_empresa: '',
+        cod_municipio_laboral_nal: '',
+        cod_municipio_notificacion_nal: '',
+        telefono_celular_empresa: '',
+        telefono_empresa_2: '',
+        cod_pais_nacionalidad_empresa: '',
+        acepta_notificacion_sms: false,
+        acepta_notificacion_email: false,
+        acepta_tratamiento_datos: false,
+        cod_naturaleza_empresa: '',
+        direccion_notificacion_referencia: '',
+        fecha_cambio_representante_legal: '',
+        fecha_inicio_cargo_rep_legal: '',
+        fecha_inicio_cargo_actual: '',
+        fecha_a_finalizar_cargo_actual: '',
+        observaciones_vinculacion_cargo_actual: '',
+        fecha_ultim_actualizacion_autorizaciones: '',
+        fecha_creacion: '',
+        fecha_ultim_actualiz_diferente_crea: '',
+        tipo_documento: '',
+        estado_civil: '',
+        id_cargo: 0,
+        id_unidad_organizacional_actual: 0,
+        representante_legal: 0,
+        cod_municipio_expedicion_id: '',
+        id_persona_crea: 0,
+        id_persona_ultim_actualiz_diferente_crea: 0,
+        cod_departamento_expedicion: '',
+        cod_departamento_residencia: '',
+        cod_departamento_notificacion: '',
+        cod_departamento_laboral: '',
+        datos_clasificacion_persona: [],
+    });
     const [datos_representante_basicos, set_datos_representante_basicos] = useState<InfoPersona>({
         id: 0,
-  id_persona: 0,
-  tipo_persona: '',
-  tipo_documento: '',
-  numero_documento: '',
-  primer_nombre: '',
-  segundo_nombre: '',
-  primer_apellido: '',
-  segundo_apellido: '',
-  nombre_completo: '',
-  razon_social: '',
-  nombre_comercial: '',
-  tiene_usuario: false,
-  digito_verificacion: '',
-  cod_naturaleza_empresa: '',
+        id_persona: 0,
+        tipo_persona: '',
+        tipo_documento: '',
+        numero_documento: '',
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        nombre_completo: '',
+        razon_social: '',
+        nombre_comercial: '',
+        tiene_usuario: false,
+        digito_verificacion: '',
+        cod_naturaleza_empresa: '',
     });
     const [persona, set_persona] = useState<InfoPersona>();
     const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
@@ -74,9 +140,99 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     const [ver_datos_representante, set_ver_datos_representante] = useState(false);
     const [button_datos_adicionales, set_button_datos_adicionales] = useState(true);
     const [dialog_notificaciones, set_dialog_notificaciones] = useState<boolean>(false);
+    const [historico, set_historico] = useState<boolean>(false);
+    const [historico_email, set_historico_email] = useState<boolean>(false);
+    const [historico_direcciones, set_historico_direcciones] = useState<boolean>(false);
     const [type_direction, set_type_direction] = useState('');
     const [direccion, set_direccion] = useState('');
     const [direccion_notificacion, set_direccion_notificacion] = useState('');
+    const [historico_autorizacion, set_historico_autorizacion] = useState<boolean>(false);
+    const [historico_representante, set_historico_representante] = useState<boolean>(false);
+    const [datos_historico_representante, set_datos_historico_representante] = useState<InfoPersona>({
+        id: 0,
+        id_persona: 0,
+        tipo_persona: '',
+        tipo_documento: '',
+        numero_documento: '',
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        nombre_completo: '',
+        razon_social: '',
+        nombre_comercial: '',
+        tiene_usuario: false,
+        digito_verificacion: '',
+        cod_naturaleza_empresa: '',
+    })
+    const [datos_historico_autorizacion, set_datos_historico_autorizacion] = useState<InfoPersona>({
+        id: 0,
+        id_persona: 0,
+        tipo_persona: '',
+        tipo_documento: '',
+        numero_documento: '',
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        nombre_completo: '',
+        razon_social: '',
+        nombre_comercial: '',
+        tiene_usuario: false,
+        digito_verificacion: '',
+        cod_naturaleza_empresa: '',
+    })
+    const [datos_historico_direcciones, set_datos_historico_direcciones] = useState<InfoPersona>({
+        id: 0,
+        id_persona: 0,
+        tipo_persona: '',
+        tipo_documento: '',
+        numero_documento: '',
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        nombre_completo: '',
+        razon_social: '',
+        nombre_comercial: '',
+        tiene_usuario: false,
+        digito_verificacion: '',
+        cod_naturaleza_empresa: '',
+    });
+    const [datos_historico, set_datos_historico] = useState<InfoPersona>({
+        id: 0,
+        id_persona: 0,
+        tipo_persona: '',
+        tipo_documento: '',
+        numero_documento: '',
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        nombre_completo: '',
+        razon_social: '',
+        nombre_comercial: '',
+        tiene_usuario: false,
+        digito_verificacion: '',
+        cod_naturaleza_empresa: '',
+    });
+    const [datos_historico_email, set_datos_historico_email] = useState<InfoPersona>({
+        id: 0,
+        id_persona: 0,
+        tipo_persona: '',
+        tipo_documento: '',
+        numero_documento: '',
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        nombre_completo: '',
+        razon_social: '',
+        nombre_comercial: '',
+        tiene_usuario: false,
+        digito_verificacion: '',
+        cod_naturaleza_empresa: '',
+    });
 
     const {
         register,
@@ -137,6 +293,27 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         set_tipo_documento_rep,
         set_message_no_person,
     } = use_register();
+
+    const handle_open_historico_representante = (): void => {
+        set_historico_representante(true);
+    };
+
+    const handle_open_historico_email = (): void => {
+        set_historico_email(true);
+    };
+
+    const handle_open_dialog_autorizacion = (): void => {
+        set_historico_autorizacion(true);
+    };
+
+    // abrir modal datos restringidos
+    const handle_open_historico = (): void => {
+        set_historico(true);
+    };
+
+    const handle_open_historico_direcciones = (): void => {
+        set_historico_direcciones(true);
+    };
 
     // abrir modal Notificaciones
     const handle_open_dialog_notificaciones = (): void => {
@@ -218,13 +395,74 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             id_persona: data_representante.id_persona,
             nombre_completo: data_representante.nombre_completo
         })
-        set_datos_representante(result_representante_datalle)
-        console.log("data_representante", datos_representante_basicos)
+        set_datos_representante({
+            ...datos_representante,
+            id_persona: datos_representante.id_persona,
+            nombre_unidad_organizacional_actual: datos_representante.nombre_unidad_organizacional_actual,
+            tiene_usuario: datos_representante.tiene_usuario,
+            primer_nombre: datos_representante.primer_nombre,
+            segundo_nombre: datos_representante.segundo_nombre,
+            primer_apellido: datos_representante.primer_apellido,
+            segundo_apellido: datos_representante.segundo_apellido,
+            tipo_persona: datos_representante.tipo_persona,
+            numero_documento: datos_representante.numero_documento,
+            digito_verificacion: datos_representante.digito_verificacion,
+            nombre_comercial: datos_representante.nombre_comercial,
+            razon_social: datos_representante.razon_social,
+            pais_residencia: datos_representante.pais_residencia,
+            municipio_residencia: datos_representante.municipio_residencia,
+            direccion_residencia: datos_representante.direccion_residencia,
+            direccion_residencia_ref: datos_representante.direccion_residencia_ref,
+            ubicacion_georeferenciada: datos_representante.ubicacion_georeferenciada,
+            direccion_laboral: datos_representante.direccion_laboral,
+            direccion_notificaciones: datos_representante.direccion_notificaciones,
+            pais_nacimiento: datos_representante.pais_nacimiento,
+            fecha_nacimiento: datos_representante.fecha_nacimiento,
+            sexo: datos_representante.sexo,
+            fecha_asignacion_unidad: datos_representante.fecha_asignacion_unidad,
+            es_unidad_organizacional_actual: datos_representante.es_unidad_organizacional_actual,
+            email: datos_representante.email,
+            email_empresarial: datos_representante.email_empresarial,
+            telefono_fijo_residencial: datos_representante.telefono_fijo_residencial,
+            telefono_celular: datos_representante.telefono_celular,
+            telefono_empresa: datos_representante.telefono_empresa,
+            cod_municipio_laboral_nal: datos_representante.cod_municipio_laboral_nal,
+            cod_municipio_notificacion_nal: datos_representante.cod_municipio_notificacion_nal,
+            telefono_celular_empresa: datos_representante.telefono_celular_empresa,
+            telefono_empresa_2: datos_representante.telefono_empresa_2,
+            cod_pais_nacionalidad_empresa: datos_representante.cod_pais_nacionalidad_empresa,
+            acepta_notificacion_sms: datos_representante.acepta_notificacion_sms,
+            acepta_notificacion_email: datos_representante.acepta_notificacion_email,
+            acepta_tratamiento_datos: datos_representante.acepta_tratamiento_datos,
+            cod_naturaleza_empresa: datos_representante.cod_naturaleza_empresa,
+            direccion_notificacion_referencia: datos_representante.direccion_notificacion_referencia,
+            fecha_cambio_representante_legal: datos_representante.fecha_cambio_representante_legal,
+            fecha_inicio_cargo_rep_legal: datos_representante.fecha_inicio_cargo_rep_legal,
+            fecha_inicio_cargo_actual: datos_representante.fecha_inicio_cargo_actual,
+            fecha_a_finalizar_cargo_actual: datos_representante.fecha_a_finalizar_cargo_actual,
+            observaciones_vinculacion_cargo_actual: datos_representante.observaciones_vinculacion_cargo_actual,
+            fecha_ultim_actualizacion_autorizaciones: datos_representante.fecha_ultim_actualizacion_autorizaciones,
+            fecha_creacion: datos_representante.fecha_creacion,
+            fecha_ultim_actualiz_diferente_crea: datos_representante.fecha_ultim_actualiz_diferente_crea,
+            tipo_documento: datos_representante.fecha_ultim_actualiz_diferente_crea,
+            estado_civil: datos_representante.estado_civil,
+            id_cargo: datos_representante.id_cargo,
+            id_unidad_organizacional_actual: datos_representante.id_unidad_organizacional_actual,
+            representante_legal: datos_representante.representante_legal,
+            cod_municipio_expedicion_id: datos_representante.cod_municipio_expedicion_id,
+            id_persona_crea: datos_representante.id_persona_crea,
+            id_persona_ultim_actualiz_diferente_crea: datos_representante.id_persona_ultim_actualiz_diferente_crea,
+            cod_departamento_expedicion: datos_representante.cod_departamento_expedicion,
+            cod_departamento_residencia: datos_representante.cod_departamento_residencia,
+            cod_departamento_notificacion: datos_representante.cod_departamento_notificacion,
+            cod_departamento_laboral: datos_representante.cod_departamento_laboral,
+            datos_clasificacion_persona: datos_representante.datos_clasificacion_persona,
+        })
     };
 
     useEffect(() => {
         console.log('cambios')
-        console.log( datos_representante_basicos)
+        console.log(datos_representante_basicos)
     }, [datos_representante_basicos])
     useEffect(() => {
         on_result()
@@ -479,6 +717,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                 <>
                                     {(datos_persona != null) && (
                                         <Grid container spacing={2}>
+                                            {/* datos de identificación */}
                                             <>
                                                 <Grid item xs={12}>
                                                     <Title title="DATOS DE IDENTIFICACIÓN" />
@@ -549,6 +788,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                     />
                                                 </Grid>
                                             </>
+                                            {/* datos empresariales */}
                                             <>
                                                 <Grid item xs={12}>
                                                     <Title title="DATOS EMPRESARIALES" />
@@ -612,7 +852,27 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                         register={register}
                                                     />
                                                 </Grid>
+                                                <Grid item xs={12}>
+                                                    <Stack
+                                                        justifyContent="flex-end"
+                                                        sx={{ m: '10px 0 20px 0' }}
+                                                        direction="row"
+                                                        spacing={2}
+                                                    >
+                                                        <Button
+                                                            variant="outlined"
+                                                            startIcon={<RemoveRedEyeIcon />}
+                                                            onClick={() => {
+                                                                set_datos_historico(persona);
+                                                                handle_open_historico();
+                                                            }}
+                                                        >
+                                                            Historico Datos Restringidos
+                                                        </Button>
+                                                    </Stack>
+                                                </Grid>
                                             </>
+                                            {/* datos de Notificación */}
                                             <>
                                                 <Grid item xs={12}>
                                                     <Title title="DATOS DE NOTIFICACIÓN" />
@@ -743,7 +1003,37 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                         onChange={handle_change}
                                                     />
                                                 </Grid>
+                                                <Grid item xs={12} sm={6} md={4}>
+                                                    <Stack
+                                                        justifyContent="flex-end"
+                                                        sx={{ m: '10px 0 20px 0' }}
+                                                        direction="row"
+                                                        spacing={2}
+                                                    >
+                                                        <Button
+                                                            variant="outlined"
+                                                            startIcon={<RemoveRedEyeIcon />}
+                                                            onClick={() => {
+                                                                set_datos_historico_email(persona);
+                                                                handle_open_historico_email();
+                                                            }}
+                                                        >
+                                                            Historico E-mail
+                                                        </Button>
+                                                        <Button
+                                                            variant="outlined"
+                                                            startIcon={<RemoveRedEyeIcon />}
+                                                            onClick={() => {
+                                                                set_datos_historico_direcciones(persona);
+                                                                handle_open_historico_direcciones();
+                                                            }}
+                                                        >
+                                                            Historico Direcciones
+                                                        </Button>
+                                                    </Stack>
+                                                </Grid>
                                             </>
+                                            {/* datos de representante legal */}
                                             <>
                                                 {(ver_datos_representante) && (
                                                     <>
@@ -879,6 +1169,19 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                                 direction="row"
                                                                 spacing={2}
                                                             >
+                                                                <Button
+                                                                    variant="outlined"
+                                                                    startIcon={<RemoveRedEyeIcon />}
+                                                                    onClick={() => {
+                                                                        if (datos_representante_basicos !== undefined && datos_representante_basicos !== null) {
+                                                                            set_datos_historico_representante(persona);
+                                                                            handle_open_historico_representante();
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    Historico Representante Legal
+                                                                </Button>
+
                                                                 <DialogRepresentanteLegal
                                                                     onResult={result_representante}
                                                                 />
@@ -887,6 +1190,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                     </>
                                                 )}
                                             </>
+                                            {/* Autorización de datos */}
                                             <>
                                                 <Grid item xs={12}>
                                                     <Title title="AUTORIZACIÓN DE NOTIFICACIONES" />
@@ -942,6 +1246,16 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                             spacing={2}
                                                         >
                                                             <Button
+                                                                variant="outlined"
+                                                                startIcon={<RemoveRedEyeIcon />}
+                                                                onClick={() => {
+                                                                    set_datos_historico_autorizacion(persona);
+                                                                    handle_open_dialog_autorizacion();
+                                                                }}
+                                                            >
+                                                                Historico Autorizaciones
+                                                            </Button>
+                                                            <Button
                                                                 variant="contained"
                                                                 startIcon={<UpdateIcon />}
                                                                 onClick={() => {
@@ -955,6 +1269,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                     </Grid>
                                                 </>
                                             </>
+                                            {/* Datos adicionales */}
                                             <>
                                                 {button_datos_adicionales && (
                                                     <>
@@ -1146,6 +1461,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                     </>
                                                 )}
                                             </>
+                                            {/* Datos de clasificación cormacarena */}
                                             <>
                                                 <Grid item xs={12}>
                                                     <Title title="DATOS DE CLASIFICACIÓN DE CORMACARENA" />
@@ -1231,6 +1547,31 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                 id_persona={persona?.id_persona}
                 data_autorizacion={{ acepta_autorizacion_email: data_register.acepta_notificacion_email, acepta_autorizacion_sms: data_register.acepta_notificacion_sms }}
                 on_result={respuesta_autorizacion}
+            />
+            <DialogHistorialDatosRestringidos
+                is_modal_active={historico}
+                set_is_modal_active={set_historico}
+                datos_historico={datos_historico}
+            />
+            <DialogHistorialEmail
+                is_modal_active={historico_email}
+                set_is_modal_active={set_historico_email}
+                datos_historico={datos_historico_email}
+            />
+            <DialogHistorialDirecciones
+                is_modal_active={historico_direcciones}
+                set_is_modal_active={set_historico_direcciones}
+                historico_direcciones={datos_historico_direcciones}
+            />
+            <DialogHistoricoAutorizaNotificaciones
+                is_modal_active={historico_autorizacion}
+                set_is_modal_active={set_historico_autorizacion}
+                historico_autorizaciones={datos_historico_autorizacion}
+            />
+            <DialogHistoricoRepresentanteLegal
+                is_modal_active={historico_representante}
+                set_is_modal_active={set_historico_representante}
+                historico_representante={datos_historico_representante}
             />
         </>
     );
