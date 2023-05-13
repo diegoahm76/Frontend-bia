@@ -371,6 +371,10 @@ export interface ClaseTerceroPersona {
   id_clase_tercero: number;
   nombre:           string;
 }
+export interface UpdateAutorizaNotificacion {
+  acepta_autorizacion_email: boolean;
+  acepta_autorizacion_sms:   boolean;
+}
 
 export interface DatosVinculacionCormacarena {
   id_unidad_organizacional_actual:        number;
@@ -531,4 +535,24 @@ export interface HistoricoEmail {
   email_notificacion: string;
   fecha_cambio:       Date;
   id_persona:         number;
+}
+export interface HistoricoRepresentanteLegal {
+  id_historico_represent_legal: number;
+  consec_representacion:        number;
+  fecha_cambio_sistema:         string;
+  fecha_inicio_cargo:           string;
+  id_persona_empresa:           number;
+  nombre_comercial:             string;
+  razon_social:                 string;
+  id_persona_represent_legal:   number;
+  nombre_completo_replegal:     string;
+}
+export interface HistoricoAutorizaNotificaciones {
+  id_historico_autoriza_noti:  number;
+  nombre_completo:             string;
+  respuesta_autorizacion_sms:  boolean;
+  respuesta_autorizacion_mail: boolean;
+  fecha_inicio:                string;
+  fecha_fin:                   string;
+  id_persona:                  number;
 }

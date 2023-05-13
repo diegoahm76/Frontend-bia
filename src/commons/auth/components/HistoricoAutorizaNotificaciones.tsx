@@ -10,13 +10,13 @@ import {
 } from '@mui/material';
 import { Title } from '../../../components/Title';
 import type {
-    HistoricoDirecciones,
+    HistoricoAutorizaNotificaciones,
     InfoPersona,
 } from '../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../helpers';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { consultar_historico_direcciones } from '../../seguridad/request/Request';
+import { consultar_historico_autorizaciones } from '../../seguridad/request/Request';
 
 interface IProps {
     is_modal_active: boolean;
@@ -27,51 +27,51 @@ interface IProps {
 
 const columns: GridColDef[] = [
     {
-        field: 'id_historico_direccion',
+        field: 'id_historico_autoriza_noti',
         headerName: '#',
         sortable: true,
         width: 70,
     },
     {
-        field: 'direccion',
-        headerName: 'DIRECCIÓN',
+        field: 'nombre_completo_replegal',
+        headerName: 'NOMBRE',
         sortable: true,
         width: 170,
     },
     {
-        field: 'cod_municipio',
-        headerName: 'MUNICIPIO',
+        field: 'respuesta_autorizacion_sms',
+        headerName: 'ESTADO SMS',
+        sortable: true,
+        width: 120,
+    },
+    {
+        field: 'respuesta_autorizacion_mail',
+        headerName: 'ESTADO E-MAIL',
         sortable: true,
         width: 170,
     },
     {
-        field: 'tipo_direccion',
-        headerName: 'TIPO DIRECCIÓN',
+        field: 'fecha_inicio',
+        headerName: 'FECHA DE INICIO',
         sortable: true,
         width: 170,
     },
     {
-        field: 'fecha_cambio',
-        headerName: 'FECHA DE CAMBIO',
-        sortable: true,
-        width: 170,
-    },
-    {
-        field: 'id_persona',
-        headerName: 'PERSONA',
+        field: 'fecha_fin',
+        headerName: 'FECHA DE FIN',
         sortable: true,
         width: 170,
     },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const DialogHistorialDirecciones: React.FC<IProps> = ({
+export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
     is_modal_active,
     set_is_modal_active,
     historico_direcciones,
     set_historico_direcciones,
 }: IProps) => {
-    const [rows, set_rows] = useState<HistoricoDirecciones[]>([]);
+    const [rows, set_rows] = useState<HistoricoAutorizaNotificaciones[]>([]);
 
     const handle_close = (): void => {
         set_is_modal_active(false);
@@ -79,21 +79,21 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
 
     const historico = async (): Promise<void> => {
         try {
-            const response = await consultar_historico_direcciones(
+            const response = await consultar_historico_autorizaciones(
                 historico_direcciones.id_persona
             );
             const new_historico = response.map(
-                (datos: HistoricoDirecciones) => ({
-                    id_historico_direccion: datos.id_historico_direccion,
-                    direccion: datos.direccion,
-                    cod_municipio: datos.cod_municipio,
-                    cod_pais_exterior: null,
-                    tipo_direccion: datos.tipo_direccion,
-                    fecha_cambio: datos.fecha_cambio,
+                (datos: HistoricoAutorizaNotificaciones) => ({
+                    id_historico_autoriza_noti: datos.id_historico_autoriza_noti,
+                    nombre_completo: datos.nombre_completo,
+                    respuesta_autorizacion_sms: datos.respuesta_autorizacion_sms,
+                    respuesta_autorizacion_mail: datos.respuesta_autorizacion_mail,
+                    fecha_inicio: datos.fecha_inicio,
+                    fecha_fin: datos.fecha_fin,
                     id_persona: datos.id_persona,
                 })
             );
-            console.log("Data Historial",new_historico)
+            console.log("Data Historial", new_historico)
             set_rows(new_historico);
         } catch (err) {
             control_error(err);
@@ -114,7 +114,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                 maxWidth={'lg'}
             >
                 <DialogTitle>
-                    <Title title="HISTORICO DE CAMBIOS DIRECCIONES" />
+                    <Title title="HISTORICO DE AUTORIZACIÓN DE NOTIFICACIONES" />
                 </DialogTitle>
                 <Divider />
                 <Grid
@@ -137,7 +137,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                             autoHeight
                             rows={rows}
                             columns={columns}
-                            getRowId={(row) => row.id_historico_direccion}
+                            getRowId={(row) => row.id_historico_autoriza_noti}
                             pageSize={5}
                             rowsPerPageOptions={[5]}
                         />

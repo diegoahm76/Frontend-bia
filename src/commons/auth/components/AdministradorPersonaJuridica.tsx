@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
-import type { ClaseTercero, ClaseTerceroPersona, DataPersonas, InfoPersona } from "../../../interfaces/globalModels";
+import type { ClaseTercero, ClaseTerceroPersona, DataPersonas, InfoPersona, UpdateAutorizaNotificacion } from "../../../interfaces/globalModels";
 import {
     Button, Divider, Grid, MenuItem, Stack, TextField, Typography,
     type SelectChangeEvent,
@@ -14,6 +14,7 @@ import { Title } from "../../../components/Title";
 import CancelIcon from '@mui/icons-material/Cancel';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import UpdateIcon from '@mui/icons-material/Update';
 // import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_error } from '../../../helpers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -28,25 +29,43 @@ import type { keys_object, DataRegistePortal } from "../../auth/interfaces";
 import { DialogGeneradorDeDirecciones } from "../../../components/DialogGeneradorDeDirecciones";
 import { consultar_clase_tercero, consultar_clase_tercero_persona, consultar_datos_persona, consultar_datos_persona_basicos } from "../../seguridad/request/Request";
 import dayjs, { type Dayjs } from 'dayjs';
+import { DialogRepresentanteLegal } from "./DialogCambioRepresentanteLegal";
+import { DialogAutorizaDatos } from '../../../components/DialogAutorizaDatos';
 
 interface PropsElement {
-  errors: FieldErrors<DataRegistePortal>;
+    errors: FieldErrors<DataRegistePortal>;
 }
 interface PropsStep {
-  label: string;
-  component: (props: PropsElement) => JSX.Element;
+    label: string;
+    component: (props: PropsElement) => JSX.Element;
 }
 interface Props {
-  data_all: InfoPersona;
+    data_all: InfoPersona;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
-  data_all,
+    data_all,
 }: Props) => {
 
     const [datos_persona, set_datos_persona] = useState<DataPersonas>();
     const [datos_representante, set_datos_representante] = useState<DataPersonas>();
-    const [datos_representante_basicos, set_datos_representante_basicos] = useState<InfoPersona>();
+    const [datos_representante_basicos, set_datos_representante_basicos] = useState<InfoPersona>({
+        id: 0,
+  id_persona: 0,
+  tipo_persona: '',
+  tipo_documento: '',
+  numero_documento: '',
+  primer_nombre: '',
+  segundo_nombre: '',
+  primer_apellido: '',
+  segundo_apellido: '',
+  nombre_completo: '',
+  razon_social: '',
+  nombre_comercial: '',
+  tiene_usuario: false,
+  digito_verificacion: '',
+  cod_naturaleza_empresa: '',
+    });
     const [persona, set_persona] = useState<InfoPersona>();
     const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
     const [clase_tercero_persona, set_clase_tercero_persona] = useState<ClaseTercero[]>([]);
@@ -54,6 +73,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     const [ver_datos_adicionales, set_ver_datos_adicionales] = useState(false);
     const [ver_datos_representante, set_ver_datos_representante] = useState(false);
     const [button_datos_adicionales, set_button_datos_adicionales] = useState(true);
+    const [dialog_notificaciones, set_dialog_notificaciones] = useState<boolean>(false);
     const [type_direction, set_type_direction] = useState('');
     const [direccion, set_direccion] = useState('');
     const [direccion_notificacion, set_direccion_notificacion] = useState('');
@@ -118,34 +138,39 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         set_message_no_person,
     } = use_register();
 
-  // Establece los valores del formulario
-  const set_value_form = (name: string, value: string): void => {
-    value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
-    set_data_register({
-      ...data_register,
-      [name]: value,
-    });
-    set_value(name as keys_object, value);
-  };
-  const set_value_direction = (value: string, type: string): void => {
-    // direccion_laboral
-    // direccion_notificaciones
-    // direccion_residencia_ref
-    // direccion_residencia
-    switch (type_direction) {
-      case 'residencia':
-        set_direccion(value);
-        set_value_form('direccion_residencia', value);
+    // abrir modal Notificaciones
+    const handle_open_dialog_notificaciones = (): void => {
+        set_dialog_notificaciones(true);
+    };
 
-        break;
-      case 'notificacion':
-        set_direccion_notificacion(value);
-        set_value_form('direccion_notificaciones', value);
+    // Establece los valores del formulario
+    const set_value_form = (name: string, value: string): void => {
+        value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
+        set_data_register({
+            ...data_register,
+            [name]: value,
+        });
+        set_value(name as keys_object, value);
+    };
+    const set_value_direction = (value: string, type: string): void => {
+        // direccion_laboral
+        // direccion_notificaciones
+        // direccion_residencia_ref
+        // direccion_residencia
+        switch (type_direction) {
+            case 'residencia':
+                set_direccion(value);
+                set_value_form('direccion_residencia', value);
 
-        break;
-    }
-    open_modal(false);
-  };
+                break;
+            case 'notificacion':
+                set_direccion_notificacion(value);
+                set_value_form('direccion_notificaciones', value);
+
+                break;
+        }
+        open_modal(false);
+    };
 
     // Se usa para escuchar los cambios de valor del componente CustomSelect
     const on_change = (e: SelectChangeEvent<string>): void => {
@@ -176,6 +201,31 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             set_persona(data_all);
         }
     };
+
+    const respuesta_autorizacion = (data: UpdateAutorizaNotificacion): void => {
+        set_data_register({
+            ...data_register,
+            acepta_notificacion_email: data.acepta_autorizacion_email,
+            acepta_notificacion_sms: data.acepta_autorizacion_sms,
+
+        });
+    }
+
+    const result_representante = (data_representante: InfoPersona, result_representante_datalle: DataPersonas): void => {
+        set_datos_representante_basicos({
+            ...datos_representante_basicos,
+            id: data_representante.id,
+            id_persona: data_representante.id_persona,
+            nombre_completo: data_representante.nombre_completo
+        })
+        set_datos_representante(result_representante_datalle)
+        console.log("data_representante", datos_representante_basicos)
+    };
+
+    useEffect(() => {
+        console.log('cambios')
+        console.log( datos_representante_basicos)
+    }, [datos_representante_basicos])
     useEffect(() => {
         on_result()
     }, [])
@@ -201,7 +251,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             const data_persona_clase_tercero = response.map((item: ClaseTerceroPersona) => ({
                 value: item.id_clase_tercero,
                 label: item.nombre
-              }));
+            }));
             set_clase_tercero_persona(data_persona_clase_tercero);
             console.log("Datos clase tercero persona", data_persona_clase_tercero);
         } catch (err) {
@@ -214,11 +264,8 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             const id_persona: number | undefined | null = id;
             const response = await consultar_datos_persona(id_persona);
             set_datos_representante(response)
-            console.log("Datos ", response)
             const tipo_doc: string = response?.tipo_documento
             const num_doc: string = response?.numero_documento
-            console.log("tipo", tipo_doc)
-            console.log("numero", num_doc)
             void get_datos_basicos_representante_legal(num_doc, tipo_doc)
             // Datos adicionales
         } catch (err) {
@@ -241,11 +288,9 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         }
     };
 
-    // trae datos de la persona juridica
-    const get_datos_persona = async (): Promise<void> => {
+    const get_datos_persona = async (id: number): Promise<void> => {
         try {
-            const id_persona: number | undefined = persona?.id_persona;
-            const response = await consultar_datos_persona(id_persona);
+            const response = await consultar_datos_persona(id);
             set_datos_persona(response);
 
             //
@@ -288,141 +333,141 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     useEffect(() => {
         if (persona?.numero_documento !== undefined) {
             if (persona?.tipo_persona === "J") {
-                void get_datos_persona();
+                void get_datos_persona(persona.id_persona);
                 void get_datos_clase_tercero();
                 void get_datos_clase_tercero_persona();
             }
         }
     }, [persona?.numero_documento !== undefined])
 
-  const tipos_doc = [
-    {
-      value: 'CC',
-      label: 'Cédula de ciudadanía',
-    },
-    {
-      value: 'CE',
-      label: 'Cédula extranjería',
-    },
-    {
-      value: 'TI',
-      label: 'Tarjeta de identidad',
-    },
-    {
-      value: 'RC',
-      label: 'Registro civil',
-    },
-    {
-      value: 'NU',
-      label: 'NUIP',
-    },
-    {
-      value: 'PA',
-      label: 'Pasaporte',
-    },
-    {
-      value: 'PE',
-      label: 'Permiso especial de permanencia',
-    },
-  ];
-  const tipos_doc_comercial = [
-    {
-      value: 'NT',
-      label: 'NIT',
-    },
-  ];
-  const tipo_persona = [
-    {
-      value: 'N',
-      label: 'Natural',
-    },
-    {
-      value: 'J',
-      label: 'Juridica',
-    },
-  ];
-  const tipo_empresa = [
-    {
-      value: 'PU',
-      label: 'Pública',
-    },
-    {
-      value: 'PR',
-      label: 'Privada',
-    },
-    {
-      value: 'MI',
-      label: 'Mixta',
-    },
-  ];
+    const tipos_doc = [
+        {
+            value: 'CC',
+            label: 'Cédula de ciudadanía',
+        },
+        {
+            value: 'CE',
+            label: 'Cédula extranjería',
+        },
+        {
+            value: 'TI',
+            label: 'Tarjeta de identidad',
+        },
+        {
+            value: 'RC',
+            label: 'Registro civil',
+        },
+        {
+            value: 'NU',
+            label: 'NUIP',
+        },
+        {
+            value: 'PA',
+            label: 'Pasaporte',
+        },
+        {
+            value: 'PE',
+            label: 'Permiso especial de permanencia',
+        },
+    ];
+    const tipos_doc_comercial = [
+        {
+            value: 'NT',
+            label: 'NIT',
+        },
+    ];
+    const tipo_persona = [
+        {
+            value: 'N',
+            label: 'Natural',
+        },
+        {
+            value: 'J',
+            label: 'Juridica',
+        },
+    ];
+    const tipo_empresa = [
+        {
+            value: 'PU',
+            label: 'Pública',
+        },
+        {
+            value: 'PR',
+            label: 'Privada',
+        },
+        {
+            value: 'MI',
+            label: 'Mixta',
+        },
+    ];
 
-  useEffect(() => {
-    if (watch('cod_pais_nacionalidad_empresa') !== undefined) {
-      set_nacionalidad_emp(watch('cod_pais_nacionalidad_empresa'));
-    }
-  }, [watch('cod_pais_nacionalidad_empresa')]);
-  useEffect(() => {
-    if (watch('departamento_expedicion') !== undefined) {
-      set_departamento(watch('departamento_expedicion'));
-    }
-  }, [watch('departamento_expedicion')]);
+    useEffect(() => {
+        if (watch('cod_pais_nacionalidad_empresa') !== undefined) {
+            set_nacionalidad_emp(watch('cod_pais_nacionalidad_empresa'));
+        }
+    }, [watch('cod_pais_nacionalidad_empresa')]);
+    useEffect(() => {
+        if (watch('departamento_expedicion') !== undefined) {
+            set_departamento(watch('departamento_expedicion'));
+        }
+    }, [watch('departamento_expedicion')]);
 
-  useEffect(() => {
-    if (watch('cod_municipio_expedicion_id') !== undefined) {
-      set_ciudad_expedicion(watch('cod_municipio_expedicion_id'));
-    }
-  }, [watch('cod_municipio_expedicion_id')]);
+    useEffect(() => {
+        if (watch('cod_municipio_expedicion_id') !== undefined) {
+            set_ciudad_expedicion(watch('cod_municipio_expedicion_id'));
+        }
+    }, [watch('cod_municipio_expedicion_id')]);
 
-  // Datos de residencia
-  useEffect(() => {
-    if (watch('pais_residencia') !== undefined) {
-      set_pais_residencia(watch('pais_residencia'));
-    }
-  }, [watch('pais_residencia')]);
+    // Datos de residencia
+    useEffect(() => {
+        if (watch('pais_residencia') !== undefined) {
+            set_pais_residencia(watch('pais_residencia'));
+        }
+    }, [watch('pais_residencia')]);
 
-  useEffect(() => {
-    if (watch('departamento_residencia') !== undefined) {
-      set_dpto_residencia(watch('departamento_residencia'));
-    }
-  }, [watch('departamento_residencia')]);
+    useEffect(() => {
+        if (watch('departamento_residencia') !== undefined) {
+            set_dpto_residencia(watch('departamento_residencia'));
+        }
+    }, [watch('departamento_residencia')]);
 
-  useEffect(() => {
-    if (watch('municipio_residencia') !== undefined) {
-      set_ciudad_residencia(watch('municipio_residencia'));
-    }
-  }, [watch('municipio_residencia')]);
+    useEffect(() => {
+        if (watch('municipio_residencia') !== undefined) {
+            set_ciudad_residencia(watch('municipio_residencia'));
+        }
+    }, [watch('municipio_residencia')]);
 
-  // Datos de notificación
+    // Datos de notificación
 
-  useEffect(() => {
-    if (watch('dpto_notifiacion') !== undefined) {
-      set_dpto_notifiacion(watch('dpto_notifiacion'));
-    }
-  }, [watch('dpto_notifiacion')]);
+    useEffect(() => {
+        if (watch('dpto_notifiacion') !== undefined) {
+            set_dpto_notifiacion(watch('dpto_notifiacion'));
+        }
+    }, [watch('dpto_notifiacion')]);
 
-  useEffect(() => {
-    if (watch('cod_municipio_notificacion_nal') !== undefined) {
-      set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
-    }
-  }, [watch('cod_municipio_notificacion_nal')]);
+    useEffect(() => {
+        if (watch('cod_municipio_notificacion_nal') !== undefined) {
+            set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
+        }
+    }, [watch('cod_municipio_notificacion_nal')]);
 
-  useEffect(() => {
-    if (watch('pais_nacimiento') !== undefined) {
-      set_pais_nacimiento(watch('pais_nacimiento'));
-    }
-  }, [watch('pais_nacimiento')]);
+    useEffect(() => {
+        if (watch('pais_nacimiento') !== undefined) {
+            set_pais_nacimiento(watch('pais_nacimiento'));
+        }
+    }, [watch('pais_nacimiento')]);
 
-  useEffect(() => {
-    if (watch('sexo') !== undefined) {
-      set_genero(watch('sexo'));
-    }
-  }, [watch('sexo')]);
+    useEffect(() => {
+        if (watch('sexo') !== undefined) {
+            set_genero(watch('sexo'));
+        }
+    }, [watch('sexo')]);
 
-  useEffect(() => {
-    if (watch('estado_civil') !== undefined) {
-      set_estado_civil(watch('estado_civil') as string);
-    }
-  }, [watch('estado_civil')]);
+    useEffect(() => {
+        if (watch('estado_civil') !== undefined) {
+            set_estado_civil(watch('estado_civil') as string);
+        }
+    }, [watch('estado_civil')]);
 
     return (
         <>
@@ -747,7 +792,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                                 margin="dense"
                                                                 required
                                                                 autoFocus
-                                                                defaultValue={datos_representante_basicos?.nombre_completo}
+                                                                value={datos_representante_basicos?.nombre_completo}
                                                                 disabled
                                                             />
                                                         </Grid>
@@ -801,9 +846,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                                 defaultValue={datos_representante?.email_empresarial}
                                                             />
                                                         </Grid>
-                                                        <Grid item xs={12}>
-                                                            <Typography variant="subtitle1" fontWeight="bold">Fecha en que inicio como representane legal de la empresa</Typography>
-                                                        </Grid>
                                                         <Grid item xs={12} sm={6}>
                                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                                 <DatePicker
@@ -830,12 +872,24 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                                 />
                                                             </LocalizationProvider>
                                                         </Grid>
+                                                        <Grid item xs={12}>
+                                                            <Stack
+                                                                justifyContent="flex-end"
+                                                                sx={{ m: '0 0 0 0' }}
+                                                                direction="row"
+                                                                spacing={2}
+                                                            >
+                                                                <DialogRepresentanteLegal
+                                                                    onResult={result_representante}
+                                                                />
+                                                            </Stack>
+                                                        </Grid>
                                                     </>
                                                 )}
                                             </>
                                             <>
                                                 <Grid item xs={12}>
-                                                    <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
+                                                    <Title title="AUTORIZACIÓN DE NOTIFICACIONES" />
                                                 </Grid>
                                                 <>
                                                     <Grid item xs={12}>
@@ -880,6 +934,25 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                             />
                                                         </FormControl>
                                                     </Grid>
+                                                    <Grid item xs={12}>
+                                                        <Stack
+                                                            justifyContent="flex-end"
+                                                            sx={{ m: '10px 0 20px 0' }}
+                                                            direction="row"
+                                                            spacing={2}
+                                                        >
+                                                            <Button
+                                                                variant="contained"
+                                                                startIcon={<UpdateIcon />}
+                                                                onClick={() => {
+                                                                    set_dialog_notificaciones(true);
+                                                                    handle_open_dialog_notificaciones();
+                                                                }}
+                                                            >
+                                                                Actualizar Notificaciones
+                                                            </Button>
+                                                        </Stack>
+                                                    </Grid>
                                                 </>
                                             </>
                                             <>
@@ -914,7 +987,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                                 fullWidth
                                                                 size="small"
                                                                 margin="dense"
-                                                                required = {datos_persona?.nombre_comercial !== ""}
+                                                                required={datos_persona?.nombre_comercial !== ""}
                                                                 autoFocus
                                                                 defaultValue={datos_persona?.nombre_comercial}
 
@@ -1091,7 +1164,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                                 renderInput={(params) => (
                                                                     <TextField
                                                                         {...params}
-                                                                        sx={{fontSize:"20px !important"}} 
+                                                                        sx={{ fontSize: "20px !important" }}
                                                                         label="Datos clasificación Cormacarena"
                                                                         placeholder="Clasificacion Cormacarena"
                                                                     />
@@ -1151,6 +1224,13 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                 openDialog={open_modal}
                 onChange={set_value_direction}
                 type={type_direction}
+            />
+            <DialogAutorizaDatos
+                is_modal_active={dialog_notificaciones}
+                set_is_modal_active={set_dialog_notificaciones}
+                id_persona={persona?.id_persona}
+                data_autorizacion={{ acepta_autorizacion_email: data_register.acepta_notificacion_email, acepta_autorizacion_sms: data_register.acepta_notificacion_sms }}
+                on_result={respuesta_autorizacion}
             />
         </>
     );
