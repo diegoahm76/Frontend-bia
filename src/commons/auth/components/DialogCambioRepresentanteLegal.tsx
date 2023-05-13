@@ -1,13 +1,8 @@
 import {
     Grid,
     type SelectChangeEvent,
-    // Skeleton,
     IconButton,
-    // FormControl,
-    // InputAdornment,
-    // OutlinedInput,
-    // InputLabel,
-    // CircularProgress,
+    CircularProgress,
     Button,
     Dialog,
     DialogContent,
@@ -18,20 +13,19 @@ import {
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
-// import { LoadingButton } from '@mui/lab';
 import { Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import type { AxiosError } from 'axios';
-// import SearchIcon from '@mui/icons-material/Search';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { LoadingButton } from '@mui/lab';
-import type { IList, InfoPersona, ResponseServer } from '../../../interfaces/globalModels';
+import type { DataPersonas, IList, InfoPersona, ResponseServer } from '../../../interfaces/globalModels';
 import { get_tipo_documento, search_avanzada } from '../../../request';
 import { control_error } from '../../../helpers';
 import { CustomSelect, Title } from '../../../components';
+import { consultar_datos_persona } from '../../seguridad/request/Request';
 
 interface PropsBuscador {
-    onResult: (data_persona: InfoPersona) => void;
+    onResult: (data_representante: InfoPersona, data_representante_detalle: DataPersonas) => void;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
@@ -102,10 +96,8 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
                                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                                 onClick={() => {
                                     if (params?.row !== undefined) {
-                                        console.log("params", params)
-                                        onResult(params.row);
+                                        void get_datos_representante_legal(params.row)
                                     }
-                                    console.log("Hola Mundo")
                                 }}
                             />
                         </Avatar>
@@ -153,6 +145,16 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
             set_is_loading(false);
         }
     };
+    // trae datos del representante legal
+    const get_datos_representante_legal = async (data: InfoPersona ): Promise<void> => {
+        try {
+            const response = await consultar_datos_persona(data.id_persona);
+            onResult(data, response);
+            handle_close()
+        } catch (err) {
+            control_error(err);
+        }
+    };
 
     const on_submit_advance = handle_submit(
         async ({
@@ -170,7 +172,7 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
                     data: { data },
                 } = await search_avanzada({
                     tipo_documento,
-                    numero_documento,
+                    numero_documento: numero_documento ?? '',
                     primer_nombre,
                     primer_apellido,
                     razon_social,
@@ -209,11 +211,11 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
                     justifyContent="center"
                 >
                     <Button
-                        variant="outlined"
+                        variant="contained"
                         color="primary"
                         onClick={handle_click_open}
                     >
-                        Búsqueda avanzada
+                        Cambiar
                     </Button>
                 </Grid>
             </Grid>
@@ -308,13 +310,17 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
                             </Grid>
                             <Grid item xs={12}>
                                 <Box sx={{ height: 400, width: '100%' }}>
-                                    <DataGrid
-                                        rows={rows}
-                                        columns={columns}
-                                        pageSize={5}
-                                        getRowId={(row) => row.id_persona}
-                                        rowsPerPageOptions={[5]}
-                                    />
+                                    {rows.length > 0 ? (
+                                        <DataGrid
+                                            rows={rows}
+                                            columns={columns}
+                                            pageSize={5}
+                                            getRowId={(row) => row.id_persona}
+                                            rowsPerPageOptions={[5]}
+                                        />
+                                    ) : (
+                                        <CircularProgress color="secondary" />
+                                    )}
                                 </Box>
                             </Grid>
                         </Grid>

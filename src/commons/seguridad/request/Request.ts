@@ -5,9 +5,11 @@ import type {
   DataNaturaUpdate,
   DataPersonas,
   DatosVinculacionCormacarena,
+  HistoricoAutorizaNotificaciones,
   HistoricoDatosRestringidos,
   HistoricoDirecciones,
   HistoricoEmail,
+  HistoricoRepresentanteLegal,
   InfoPersona,
   ResponseServer,
   UpdateAutorizaNotificacion
@@ -127,6 +129,24 @@ export const consultar_notificaciones = async (
     `personas/get-by-id/${id ?? 0}/`
   );
   return data.data;
+};
+// Historico autorizaciones
+export const consultar_historico_autorizaciones = async (
+  id: number
+): Promise<HistoricoAutorizaNotificaciones[]> => {
+  const { data } = await api.get<HistoricoAutorizaNotificaciones[]>(
+    `personas/historico-notificaciones/${id}/`
+  );
+  return data;
+};
+// Historico representante
+export const consultar_historico_representante = async (
+  id: number
+): Promise<HistoricoRepresentanteLegal[]> => {
+  const { data } = await api.get<HistoricoRepresentanteLegal[]>(
+    `personas/historico-representante-legal/${id}/`
+  );
+  return data;
 };
 // editar autorización de notificaciones
 export const editar_autorizacion_notificaciones = async (

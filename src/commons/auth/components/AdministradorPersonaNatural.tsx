@@ -1029,7 +1029,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                             spacing={2}
                                         >
                                             <Button
-                                                variant="outlined"
+                                                variant="contained"
                                                 startIcon={<UpdateIcon />}
                                                 onClick={() => {
                                                     set_dialog_notificaciones(true);
