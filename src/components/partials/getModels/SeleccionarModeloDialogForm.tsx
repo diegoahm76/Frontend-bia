@@ -34,6 +34,7 @@ interface IProps {
     columns_model: GridColDef[];
     row_id: string | number;
     set_current_model: any;
+    title_table_modal?: string | null;
 
 }
 
@@ -49,7 +50,8 @@ const SeleccionarModeloDialogForm = ({
     models,
     columns_model,
     row_id,
-    set_current_model
+    set_current_model,
+    title_table_modal
 }: IProps) => {
     const dispatch = useAppDispatch();
     const [selected_row, set_selected_row] = useState([]);
@@ -168,6 +170,7 @@ const SeleccionarModeloDialogForm = ({
             <DialogTitle>{modal_title}</DialogTitle>
             <Divider />
             <DialogContent sx={{ mb: '0px' }}>
+                {form_filters.length > 0 &&
                 <Grid container spacing={2} direction="row">
                     {form_filters.map((option, index) => (
                         <TypeDatum key={index} form_input={option} />
@@ -186,10 +189,11 @@ const SeleccionarModeloDialogForm = ({
                         />
                     </Grid>
                 </Grid>
+                }
                 {models.length > 0 &&
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '100%' }}>
-                            <Title title='Resultados de la busqueda'></Title>
+                            <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
                             <DataGrid
                                 onSelectionModelChange={handle_selection_change}
                                 density="compact"

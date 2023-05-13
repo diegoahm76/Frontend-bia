@@ -18,7 +18,6 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
     const [tipo_columna, set_tipo_columna] = useState<string>("");
 
     useEffect(() => {
-        console.log('LLega detalle_seleccionado_prop: ', detalle_seleccionado_prop)
         if (detalle_seleccionado_prop !== undefined && detalle_seleccionado_prop !== null) {
             set_marca(detalle_seleccionado_prop.marca);
             set_codigo_bien(detalle_seleccionado_prop.codigo_bien);
