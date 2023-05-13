@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 import { useEffect, useState } from 'react';
 import { Chip, Grid } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
