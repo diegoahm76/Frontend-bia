@@ -22,6 +22,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
     const [accion_guardar, set_accion_guardar] = useState<boolean>(false);
     const [detalle, set_detalle] = useState<any>(null);
     const [mantenimiento, set_mantenimiento] = useState<any>(null);
+    const [dias_posibles, set_dias_posibles] = useState<number>(1);
     const {
         detalle_seleccionado,
         programacion,
@@ -112,7 +113,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de programación" />
-                    <BusquedaProgramacionComponent set_prog_seleccion={set_prog_seleccionada} parent_details={set_details_state} tipo_articulo={"otros activos"}  limpiar_formulario={limpiar_formulario}/>
+                    <BusquedaProgramacionComponent set_prog_seleccion={set_prog_seleccionada} parent_details={set_details_state} tipo_articulo={"otros activos"}  limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles}/>
                 </Grid>
             </Grid>
             <Grid
@@ -156,7 +157,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                 }}>
                 <Grid item xs={12}>
                     <Title title='Detalles'/>
-                    <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalles} accion_guardar={accion_guardar}/>
+                    <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalles} accion_guardar={accion_guardar} dias_posibles={dias_posibles}/>
                 </Grid>
             </Grid>
             <Grid container>

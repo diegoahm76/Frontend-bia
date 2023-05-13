@@ -17,11 +17,12 @@ interface IProps {
     limpiar_formulario: boolean,
     user_info: any,
     detalles: any,
+    dias_posibles: any,
     accion_guardar: boolean
 }
 const estados_mantenimiento = [{ value: "O", label: "óptimo" }, { value: "D", label: "Defectuoso" }, { value: "A", label: "Averiado" }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_info, detalles, accion_guardar }: IProps) => {
+export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_info, detalles, accion_guardar, dias_posibles }: IProps) => {
     const [dias_empleados, set_dias_empleados] = useState<string>("1");
     const [contrato, set_contrato] = useState<string | null>(null);
     const [valor, set_valor] = useState<string | null>(null);
@@ -103,9 +104,22 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
 
     const on_change_dias_empleados: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_dias_empleados(e.target.value);
-        if(e.target.value !== null && e.target.value !== "")
-            set_mensaje_error_dias("")
+        if(e.target.value !== null && e.target.value !== ""){
+            set_mensaje_error_dias("");
+            validar_dias_empleados(parseInt(e.target.value));
+        }
     };
+
+    function validar_dias_empleados(dias_empleados: number): void {
+        if(dias_empleados > dias_posibles)
+            set_mensaje_error_dias("Los dias empleados superan los dias disponibles.");
+        else
+            set_mensaje_error_dias("");
+    }
+
+    useEffect(()=>{
+        validar_dias_empleados(parseInt(dias_empleados));
+    },[dias_posibles])
 
     const on_change_observacion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_observaciones(e.target.value);
