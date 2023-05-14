@@ -1,5 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, type Dispatch, type SetStateAction, useEffect } from 'react';
+import {
+  // useState,
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+} from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Grid,
@@ -26,70 +31,73 @@ import type {
   SeguridadSlice,
   FormValuesSearchPerson,
   keys_object_search_person,
-  Users,
+  // Users,
 } from '../interfaces';
 import { get_persons } from '../store/thunks';
 import {
-  set_action_admin_users,
+  // set_action_admin_users,
   set_data_person_search,
-  set_user_info,
+  // set_user_info,
 } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
-import {
-  initial_state_data_register,
-  use_admin_users,
-} from '../hooks/AdminUserHooks';
+// import {
+//   initial_state_data_register,
+//   use_admin_users,
+// } from '../hooks/AdminUserHooks';
 
-const initial_state_user_info: Users = {
-  id_usuario: 0,
-  nombre_de_usuario: '',
-  persona: 0,
-  tipo_persona: '',
-  tipo_documento: '',
-  numero_documento: '',
-  primer_nombre: '',
-  segundo_nombre: '',
-  primer_apellido: '',
-  segundo_apellido: '',
-  nombre_completo: '',
-  razon_social: '',
-  nombre_comercial: '',
-  is_active: false,
-  fecha_ultimo_cambio_activacion: '',
-  justificacion_ultimo_cambio_activacion: '',
-  is_blocked: false,
-  fecha_ultimo_cambio_bloqueo: '',
-  justificacion_ultimo_cambio_bloqueo: '',
-  tipo_usuario: '',
-  profile_img: '',
-  creado_por_portal: false,
-  created_at: '',
-  activated_at: '',
-  id_usuario_creador: 0,
-  primer_nombre_usuario_creador: '',
-  primer_apellido_usuario_creador: '',
-  roles: [
-    {
-      value: 0,
-      label: '',
-    },
-  ],
-};
+// const initial_state_user_info: Users = {
+//   id_usuario: 0,
+//   nombre_de_usuario: '',
+//   persona: 0,
+//   tipo_persona: '',
+//   tipo_documento: '',
+//   numero_documento: '',
+//   primer_nombre: '',
+//   segundo_nombre: '',
+//   primer_apellido: '',
+//   segundo_apellido: '',
+//   nombre_completo: '',
+//   razon_social: '',
+//   nombre_comercial: '',
+//   is_active: false,
+//   fecha_ultimo_cambio_activacion: '',
+//   justificacion_ultimo_cambio_activacion: '',
+//   is_blocked: false,
+//   fecha_ultimo_cambio_bloqueo: '',
+//   justificacion_ultimo_cambio_bloqueo: '',
+//   tipo_usuario: '',
+//   profile_img: '',
+//   creado_por_portal: false,
+//   created_at: '',
+//   activated_at: '',
+//   id_usuario_creador: 0,
+//   primer_nombre_usuario_creador: '',
+//   primer_apellido_usuario_creador: '',
+//   roles: [
+//     {
+//       value: 0,
+//       label: '',
+//     },
+//   ],
+// };
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  user_person_create_active: () => void;
+  user_edit_active: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogBusquedaAvanzada = ({
   is_modal_active,
   set_is_modal_active,
+  user_person_create_active,
+  user_edit_active,
 }: IProps) => {
   const dispatch = useDispatch();
   const { persons } = useSelector((state: SeguridadSlice) => state.seguridad);
-  const [buscando_persons, set_buscando_persons] = useState<boolean>(false);
   const {
     data_search_person,
     loading,
@@ -102,7 +110,6 @@ const DialogBusquedaAvanzada = ({
     set_tipo_documento,
     set_tipo_persona,
   } = use_busqueda_avanzada();
-  const { set_data_register } = use_admin_users();
   const {
     register: register_search_person,
     handleSubmit: handle_submit_search_person,
@@ -193,7 +200,7 @@ const DialogBusquedaAvanzada = ({
             <Tooltip title="Editar">
               <IconButton
                 onClick={() => {
-                  trigger_user_edit_active(params.row);
+                  void trigger_user_edit_active(params.row);
                 }}
               >
                 <Avatar
@@ -219,7 +226,7 @@ const DialogBusquedaAvanzada = ({
             <Tooltip title="Crear">
               <IconButton
                 onClick={() => {
-                  trigger_user_person_create_active(params.row);
+                  void trigger_user_person_create_active(params.row);
                 }}
               >
                 <Avatar
@@ -247,19 +254,21 @@ const DialogBusquedaAvanzada = ({
     },
   ];
 
-  const trigger_user_person_create_active = (data: any): void => {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const trigger_user_person_create_active = async (data: any) => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/no-confusing-void-expression
+    await user_person_create_active();
     set_is_modal_active(false);
-    dispatch(set_user_info(initial_state_user_info));
-    set_data_register(initial_state_data_register);
-    dispatch(set_action_admin_users('CREATE'));
+
+    // dispatch(set_action_admin_users('CREATE'));
     dispatch(set_data_person_search(data));
   };
-
-  const trigger_user_edit_active = (data: any): void => {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const trigger_user_edit_active = async (data: any) => {
+    // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/no-confusing-void-expression
+    await user_edit_active();
     set_is_modal_active(false);
-    dispatch(set_user_info(initial_state_user_info));
-    set_data_register(initial_state_data_register);
-    dispatch(set_action_admin_users('EDIT'));
+    // dispatch(set_action_admin_users('EDIT'));
     dispatch(set_data_person_search(data));
   };
 
@@ -276,7 +285,6 @@ const DialogBusquedaAvanzada = ({
         data.primer_apellido
       )
     );
-    set_buscando_persons(true);
   };
 
   // Establece los valores del formulario
@@ -398,19 +406,17 @@ const DialogBusquedaAvanzada = ({
             </Grid>
           </Grid>
         </Box>
-        {buscando_persons && (
-          <Grid item xs={12} sx={{ mt: '15px' }}>
-            <DataGrid
-              density="compact"
-              autoHeight
-              rows={persons}
-              columns={columns_persons}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
-              getRowId={(row) => row.id_persona}
-            />
-          </Grid>
-        )}
+        <Grid item xs={12} sx={{ mt: '15px' }}>
+          <DataGrid
+            density="compact"
+            autoHeight
+            rows={persons ?? []}
+            columns={columns_persons}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            getRowId={(row) => row.id_persona}
+          />
+        </Grid>
       </DialogContent>
     </Dialog>
   );

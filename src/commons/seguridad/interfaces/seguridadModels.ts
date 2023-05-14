@@ -1,5 +1,5 @@
 import { type BaseSyntheticEvent, type Dispatch, type SetStateAction } from 'react';
-import type{ FieldErrors,  UseFormHandleSubmit,  UseFormRegister,  UseFormSetValue,  UseFormWatch } from 'react-hook-form';
+import type{ FieldErrors,  UseFormHandleSubmit,  UseFormRegister,  UseFormReset,  UseFormSetValue,  UseFormWatch } from 'react-hook-form';
 import type { DataPersonas, IList } from '../../../interfaces/globalModels';
 import { type AutocompleteChangeDetails, type AutocompleteChangeReason, type SelectChangeEvent } from '@mui/material';
 
@@ -136,11 +136,14 @@ export interface AdminUserHook {
   set_value_admin_user: UseFormSetValue<DataAadminUser>;
   errors_admin_users: FieldErrors<DataAadminUser>;
   watch_admin_user: UseFormWatch<DataAadminUser>;
+  reset_admin_user: UseFormReset<DataAadminUser>;
   get_selects_options: () => Promise<void>;
   data_disponible: boolean;
   action_admin_users: string;
   data_person_search: InfoPersonal;
   user_info: Users;
+  asignacion_data_form:boolean;
+  loading_inputs:boolean;
   loading_create_or_update: boolean;
   users_x_person_is_active: boolean;
   selected_image: string | ArrayBuffer | null;
@@ -167,6 +170,8 @@ export interface AdminUserHook {
   tipo_usuario: string;
   roles: IList2[];
   roles_opt: IList2[];
+  set_asignacion_data_form :Dispatch<SetStateAction<boolean>>; 
+  set_loading_inputs:Dispatch<SetStateAction<boolean>>; 
   set_loading_create_or_update:Dispatch<SetStateAction<boolean>>; 
   set_users_x_person_is_active:Dispatch<SetStateAction<boolean>>; 
   set_selected_image: Dispatch<SetStateAction<string | ArrayBuffer | null>>;

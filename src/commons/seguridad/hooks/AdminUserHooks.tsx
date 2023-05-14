@@ -35,6 +35,7 @@ import type {
   AutocompleteChangeReason,
   SelectChangeEvent,
 } from '@mui/material';
+import { set_action_admin_users } from '../store';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error2 = (
@@ -60,42 +61,6 @@ const bloqueado_opt: IList[] = [
   { value: 'false', label: 'No' },
   { value: 'true', label: 'Si' },
 ];
-
-// const initial_state_user_info: Users = {
-//   id_usuario: 0,
-//   nombre_de_usuario: '',
-//   persona: 0,
-//   tipo_persona: '',
-//   tipo_documento: '',
-//   numero_documento: '',
-//   primer_nombre: '',
-//   segundo_nombre: '',
-//   primer_apellido: '',
-//   segundo_apellido: '',
-//   nombre_completo: '',
-//   razon_social: '',
-//   nombre_comercial: '',
-//   is_active: false,
-//   fecha_ultimo_cambio_activacion: '',
-//   justificacion_ultimo_cambio_activacion: '',
-//   is_blocked: false,
-//   fecha_ultimo_cambio_bloqueo: '',
-//   justificacion_ultimo_cambio_bloqueo: '',
-//   tipo_usuario: '',
-//   profile_img: '',
-//   creado_por_portal: false,
-//   created_at: '',
-//   activated_at: '',
-//   id_usuario_creador: 0,
-//   primer_nombre_usuario_creador: '',
-//   primer_apellido_usuario_creador: '',
-//   roles: [
-//     {
-//       value: 0,
-//       label: '',
-//     },
-//   ],
-// };
 
 export const initial_state_data_register: DataAadminUser = {
   tipo_persona: '',
@@ -155,12 +120,10 @@ export const use_admin_users = (): AdminUserHook => {
     initial_state_data_register
   );
   const [data_disponible, set_data_disponible] = useState<boolean>(false);
-  const {
-    action_admin_users,
-    // data_user_search,
-    data_person_search,
-    user_info,
-  } = useSelector((state: SeguridadSlice) => state.seguridad);
+  const [loading_inputs, set_loading_inputs] = useState<boolean>(false);
+  const { action_admin_users, data_person_search, user_info } = useSelector(
+    (state: SeguridadSlice) => state.seguridad
+  );
   const [
     historial_cambios_estado_is_active,
     set_historial_cambios_estado_is_active,
@@ -178,8 +141,8 @@ export const use_admin_users = (): AdminUserHook => {
     useState<boolean>(false);
   const [loading_create_or_update, set_loading_create_or_update] =
     useState<boolean>(false);
-  // const [asignacion_data_form, set_asignacion_data_form] =
-  // useState<boolean>(false);
+  const [asignacion_data_form, set_asignacion_data_form] =
+    useState<boolean>(false);
 
   const {
     register: register_admin_user,
@@ -187,6 +150,7 @@ export const use_admin_users = (): AdminUserHook => {
     setValue: set_value_admin_user,
     formState: { errors: errors_admin_users },
     watch: watch_admin_user,
+    reset: reset_admin_user,
   } = useForm<DataAadminUser>();
 
   const get_selects_options = async (): Promise<void> => {
@@ -204,7 +168,6 @@ export const use_admin_users = (): AdminUserHook => {
 
       const { data } = await roles_request();
       const res_roles_adapter: IList2[] = await roles_choise_adapter(data);
-      // dispatch(get_roles());
       set_roles_opt(res_roles_adapter);
 
       const {
@@ -249,7 +212,7 @@ export const use_admin_users = (): AdminUserHook => {
         //   console.log(key + ': ' + value);
         // }
 
-        // // Creación de usuario Persona Natural
+        // Creación de usuario Persona Natural
         const { data } = await crear_user_admin_user(data_create_user);
 
         control_success(data.detail);
@@ -299,6 +262,7 @@ export const use_admin_users = (): AdminUserHook => {
       ...data_register,
       [name]: value,
     });
+    console.log(`${name} : `, value);
     set_value_admin_user(name as keys_object, value);
   };
 
@@ -363,21 +327,15 @@ export const use_admin_users = (): AdminUserHook => {
     }
   };
 
-  // useEffect(() => {
-  //   // set_tipo_persona(data_user_search.tipo_persona);
-  //   // set_tipo_documento(user_info.tipo_documento);
-  //   // set_numero_documento(user_info.numero_documento);
-  // }, [data_user_search]);
-
   // Paso de datos a formulario para creacion de usuario persona Natural o Juridica
   useEffect(() => {
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (data_person_search.id_persona !== 0) {
-      // dispatch(set_user_info(initial_state_user_info));
+      set_tipo_documento(data_person_search.tipo_documento);
+      set_numero_documento(data_person_search.numero_documento);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
-      set_tipo_persona(data_person_search.tipo_persona);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       set_activo(`${data_register.activo}`);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -391,40 +349,57 @@ export const use_admin_users = (): AdminUserHook => {
           primer_apellido: data_person_search.primer_apellido,
           segundo_apellido: data_person_search.segundo_apellido,
         });
+        set_value_admin_user('primer_nombre', data_person_search.primer_nombre);
+        set_value_admin_user(
+          'segundo_nombre',
+          data_person_search.segundo_nombre
+        );
+        set_value_admin_user(
+          'primer_apellido',
+          data_person_search.primer_apellido
+        );
+        set_value_admin_user(
+          'segundo_apellido',
+          data_person_search.segundo_apellido
+        );
       } else if (data_person_search.tipo_persona === 'J') {
         set_data_register({
           ...data_register,
-          razon_social: user_info.razon_social,
-          nombre_comercial: user_info.nombre_comercial,
+          razon_social: data_person_search.razon_social,
+          nombre_comercial: data_person_search.nombre_comercial,
         });
+        set_value_admin_user('razon_social', data_person_search.razon_social);
+        set_value_admin_user(
+          'nombre_comercial',
+          data_person_search.nombre_comercial
+        );
       }
       if (data_person_search.usuarios.length === 1) {
-        // set_data_register(initial_state_data_register);
         dispatch(get_data_user(data_person_search.usuarios[0].id_usuario));
       } else if (data_person_search.usuarios.length === 2) {
         // Disparar modal con los 2 usuarios disponibles
         set_users_x_person_is_active(true);
       }
       console.log('Si hay data person');
+      set_tipo_persona(data_person_search.tipo_persona);
+      set_loading_inputs(false);
+      dispatch(set_action_admin_users('CREATE'));
+      console.log(action_admin_users);
 
       set_data_disponible(true);
-
-      // set_tipo_documento(data_person_search.tipo_documento);
-      // set_numero_documento(data_person_search.numero_documento);
-      console.log(data_register);
     } else {
-      set_data_disponible(false);
       console.log('No hay data person');
     }
   }, [data_person_search]);
 
   // Paso de datos a formulario para edición de usuario persona natural
-
   useEffect(() => {
-    console.log(action_admin_users);
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (user_info.id_usuario !== 0) {
+      console.log(action_admin_users);
+      set_tipo_documento(user_info.tipo_documento);
+      set_numero_documento(user_info.numero_documento);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -470,7 +445,6 @@ export const use_admin_users = (): AdminUserHook => {
         creado_desde_portal: user_info.creado_por_portal,
         persona_que_creo: user_info.id_usuario_creador,
       });
-
       set_value_admin_user('razon_social', user_info.razon_social);
       set_value_admin_user('nombre_comercial', user_info.nombre_comercial);
       set_value_admin_user('primer_nombre', user_info.primer_nombre);
@@ -479,7 +453,6 @@ export const use_admin_users = (): AdminUserHook => {
       set_value_admin_user('segundo_apellido', user_info.segundo_apellido);
       set_value_admin_user('nombre_de_usuario', user_info.nombre_de_usuario);
       set_value_admin_user('tipo_usuario', user_info.tipo_usuario);
-
       set_value_admin_user('roles', user_info.roles);
       set_value_admin_user('activo', user_info.is_active);
       set_value_admin_user(
@@ -520,8 +493,8 @@ export const use_admin_users = (): AdminUserHook => {
 
       console.log('Si hay data user');
       set_data_disponible(true);
+      dispatch(set_action_admin_users('EDIT'));
     } else {
-      set_data_disponible(false);
       console.log('No hay data user');
     }
   }, [user_info]);
@@ -553,21 +526,16 @@ export const use_admin_users = (): AdminUserHook => {
   useEffect(() => {
     if (watch_admin_user('tipo_usuario') !== undefined) {
       set_tipo_usuario(watch_admin_user('tipo_usuario'));
+    } else {
+      console.log('Tipo de usuario sin definir');
+      if (action_admin_users === 'CREATE') {
+        // Las Personas Jurídicas sólo pueden ser usuarios de tipo “EXTERNOS”.
+        if (tipo_persona === 'J') {
+          set_tipo_usuario('E');
+        }
+      }
     }
   }, [watch_admin_user('tipo_usuario')]);
-
-  // Consolaciones
-  // useEffect(() => {
-  //   console.log('DATA ROLES', data_roles);
-  // }, [data_roles]);
-
-  // useEffect(() => {
-  //   console.log('roles OPT', roles_opt);
-  // }, [roles_opt]);
-
-  useEffect(() => {
-    console.log(data_disponible);
-  }, [data_disponible]);
 
   return {
     on_submit,
@@ -582,6 +550,7 @@ export const use_admin_users = (): AdminUserHook => {
     set_value_admin_user,
     errors_admin_users,
     watch_admin_user,
+    reset_admin_user,
     // Gets
     get_selects_options,
     // UseSelector
@@ -589,6 +558,8 @@ export const use_admin_users = (): AdminUserHook => {
     data_person_search,
     user_info,
     // UseState values
+    asignacion_data_form,
+    loading_inputs,
     loading_create_or_update,
     users_x_person_is_active,
     selected_image,
@@ -617,6 +588,8 @@ export const use_admin_users = (): AdminUserHook => {
     roles,
     roles_opt,
     // UseState Sets
+    set_asignacion_data_form,
+    set_loading_inputs,
     set_loading_create_or_update,
     set_users_x_person_is_active,
     set_selected_image,

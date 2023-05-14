@@ -21,11 +21,12 @@ import DialogBusquedaAvanzadaUsuario from '../components/DialogBusquedaAvanzadaU
 import DialogBusquedaAvanzadaPersona from '../components/DialogBusquedaAvanzadaPersona';
 import { Title, CustomSelect } from '../../../components';
 // import { AdminUserPersonaJuridica } from '../components/AdminUserPersonaJuridica';
-import { AdminUserPersonaNatural } from '../components/AdminUserPersonaNatural';
+import { AdminUsers } from '../components/AdminUsers';
 import { useDispatch, useSelector } from 'react-redux';
 import { get_data_user } from '../store/thunks';
 import DialogUserXPerson from '../components/DialogUserXPerson';
 import {
+  // initial_state_data_person_search,
   set_action_admin_users,
   set_data_person_search,
   set_user_info,
@@ -125,19 +126,20 @@ export const AdminUsuariosScreen: React.FC = () => {
   } = useForm<DataAadminUser>();
   const {
     users_x_person_is_active,
-    data_disponible,
     data_register,
     loading,
     tipo_documento_opt,
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
-    // has_user,
     set_users_x_person_is_active,
     set_data_register,
     set_numero_documento,
     set_tipo_documento,
     set_tipo_persona,
+    set_data_disponible,
+    set_loading_inputs,
+    reset_admin_user,
   } = use_admin_users();
   const numero_documento = watch('numero_documento');
 
@@ -169,7 +171,6 @@ export const AdminUsuariosScreen: React.FC = () => {
   }, [watch('tipo_documento')]);
 
   useEffect(() => {
-    // dispatch(set_action_admin_users('CREATE'));
     if (tipo_persona === 'J') {
       set_value_ini('tipo_documento', 'NT');
       set_tipo_documento('NT');
@@ -181,9 +182,26 @@ export const AdminUsuariosScreen: React.FC = () => {
   // Busca data de usuario despues de seleccionarlo en el modal cuando persona tiene mas de un usuario
   const search_data_user_selected = (id_user: number): void => {
     dispatch(set_user_info(initial_state_user_info));
-    set_data_register(initial_state_data_register);
+    // set_data_register(initial_state_data_register);
     dispatch(get_data_user(id_user));
     set_users_x_person_is_active(false);
+  };
+
+  const handle_user_person_create_active = (): void => {
+    set_data_disponible(false);
+    // dispatch(set_data_person_search(initial_state_data_person_search));
+    set_loading_inputs(true);
+    dispatch(set_user_info(initial_state_user_info));
+    set_data_register(initial_state_data_register);
+    reset_admin_user();
+  };
+
+  const handle_user_edit_active = (): void => {
+    set_data_disponible(false);
+    set_loading_inputs(true);
+    dispatch(set_user_info(initial_state_user_info));
+    set_data_register(initial_state_data_register);
+    reset_admin_user();
   };
 
   // Establece los valores del formulario INICIAL
@@ -336,16 +354,21 @@ export const AdminUsuariosScreen: React.FC = () => {
               </Grid>
             </Grid>
           </Box>
-          {data_disponible && <AdminUserPersonaNatural />}
+
+          <AdminUsers tipo_de_persona={tipo_persona} />
+
           <DialogBusquedaAvanzadaPersona
             is_modal_active={busqueda_avanzada_person_is_active}
             set_is_modal_active={set_busqueda_avanzada_person_is_active}
+            user_person_create_active={handle_user_person_create_active}
+            user_edit_active={handle_user_edit_active}
           />
           <DialogBusquedaAvanzadaUsuario
             is_modal_active={busqueda_avanzada_user_is_active}
             set_is_modal_active={set_busqueda_avanzada_user_is_active}
           />
           <DialogUserXPerson
+            key={data_person_search.id_persona}
             is_modal_active={users_x_person_is_active}
             set_is_modal_active={set_users_x_person_is_active}
             users_x_person={data_person_search.usuarios}
