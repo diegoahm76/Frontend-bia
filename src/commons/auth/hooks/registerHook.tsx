@@ -100,8 +100,8 @@ export const use_register = (): ReisterHookNew => {
           set_value('persona', data.id_persona);
 
           if (tipo_persona === 'J') {
-            set_value('razon_social', 'razon_social');
-            set_value('nombre_comercial', 'razon_social');
+            set_value('razon_social', data.razon_social);
+            set_value('nombre_comercial', data.nombre_comercial);
           } else {
             set_value('primer_nombre', data.primer_nombre);
             set_value('segundo_nombre', data.segundo_apellido);
