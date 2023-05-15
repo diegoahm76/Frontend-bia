@@ -27,3 +27,8 @@ export const get_fac_pago_asignadas = async (): Promise<any> => {
   return await api.get(`recaudo/pagos/listado-facilidades-funcionarios/`)
 }
 
+// Ver la información de la facilidad de pago desde Pag. Usuario Interno
+export const get_fac_pago_solicitud = async (): Promise<any> => {
+  const data = await api.get(`https://backend-bia-beta-production.up.railway.app/api/recaudo/pagos/consulta-facilidades-pagos/1/`)
+  return data
+}

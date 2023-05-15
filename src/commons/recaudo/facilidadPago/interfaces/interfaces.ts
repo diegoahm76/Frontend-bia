@@ -28,3 +28,14 @@ export interface FacilidadPago {
   obligacion: string;
   fecha_generacion: string;
 }
+
+export interface FacilidadPagoSolicitud {
+  id: number;
+  fecha_generacion: string;
+  periodicidad: number;
+  cuotas: number;
+  consignacion_soporte: string;
+  documento_soporte: string;
+  observaciones: string;
+  notificaciones: boolean;
+}

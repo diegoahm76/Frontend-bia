@@ -5,16 +5,19 @@ import { VistaSolicitud } from '../componentes/VistaSolicitud';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle } from "@mui/material";
 import { Close } from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
 import { type event } from '../interfaces/interfaces';
+import { get_facilidad_solicitud } from '../slices/FacilidadesSlice';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VisualizarSolicitudAdmin: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
-  const [existe] = useState(false); // Mientras nos conectamos con el Backend
+  const [existe] = useState(true); // Mientras nos conectamos con el Backend
   const [modal, set_modal] = useState(false);
   const [modal_option, set_modal_option] = useState('');
   const { form_state, on_input_change } = use_form({});
@@ -22,6 +25,15 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   const handle_close = () => { set_modal(false) };
   const navigate = useNavigate();
   console.log('form', form_state)
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
+  useEffect(() => {
+    try {
+      void dispatch(get_facilidad_solicitud());
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }, [])
 
   return (
     <>

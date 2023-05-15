@@ -16,7 +16,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'nombreObligacion',
+      field: 'nombre',
       headerName: 'Nombre Obligación',
       width: 150,
       renderCell: (params) => (
@@ -111,7 +111,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id}
+                getRowId={(row) => row.id_expediente}
               />
             </Box>
           </Grid>

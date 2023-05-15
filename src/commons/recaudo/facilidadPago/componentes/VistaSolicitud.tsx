@@ -3,9 +3,18 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { PersonaNatural } from './CalidadPersona';
+import { useSelector } from 'react-redux';
+import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
+
+interface RootState {
+  facilidades: {
+    facilidades: FacilidadPagoSolicitud[];
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VistaSolicitud: React.FC = () => {
+  const { facilidades } = useSelector((state: RootState) => state.facilidades);
 
   const rows_bienes = [
     {
@@ -127,7 +136,7 @@ export const VistaSolicitud: React.FC = () => {
             label="Periodicidad y Modalidad"
             size="small"
             fullWidth
-            value={'Semestral'}
+            value={facilidades[0].periodicidad}
             disabled
           />
         </Grid>
@@ -136,7 +145,7 @@ export const VistaSolicitud: React.FC = () => {
             label="Plazo"
             size="small"
             fullWidth
-            value={2}
+            value={facilidades[0].cuotas}
             disabled
           />
         </Grid>
@@ -184,16 +193,17 @@ export const VistaSolicitud: React.FC = () => {
         <TextField
           multiline
           rows={4}
-          value={'Aquí van todas las observaciones escritas por el usuario externo.'}
+          value={facilidades[0].observaciones}
           label="Observación Usuario"
           size="small"
-          disabled
           fullWidth
         />
       </Grid>
       <FormGroup>
         <FormControlLabel checked disabled control={<Checkbox />} label="Aceptar términos y condiciones" />
-        <FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
+        {
+          facilidades[0].notificaciones ? (<FormControlLabel checked control={<Checkbox />} label="Autorizar notificación por correo electrónico" />)  : (<FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />)
+        }
       </FormGroup>
     </>
   )

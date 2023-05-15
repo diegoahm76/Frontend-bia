@@ -229,7 +229,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id}
+                getRowId={(row) => row.id_expediente}
               />
             </Box>
           </Grid>

@@ -14,6 +14,12 @@ export const get_facilidades_ingresadas = createAsyncThunk('facilidades_pago/adm
 // Listar facilidades de pago asignadas desde Pag. Usuario Interno
 export const get_facilidades_asignadas = createAsyncThunk('facilidades_pago/funcionario', async () => {
   const { data } = await api.get('recaudo/pagos/listado-facilidades-funcionarios/')
+  return data.data
+})
+
+// Ver la información de la facilidad de pago desde Pag. Usuario Interno
+export const get_facilidad_solicitud = createAsyncThunk('facilidades_pago/solicitud', async () => {
+  const { data } = await api.get(`https://backend-bia-beta-production.up.railway.app/api/recaudo/pagos/consulta-facilidades-pagos/1/`)
   return data
 })
 
@@ -30,6 +36,9 @@ export const facilidades_slice = createSlice({
       state.facilidades = action.payload;
     });
     builder.addCase(get_facilidades_asignadas.fulfilled, (state, action) => {
+      state.facilidades = action.payload;
+    });
+    builder.addCase(get_facilidad_solicitud.fulfilled, (state, action) => {
       state.facilidades = action.payload;
     });
   },
