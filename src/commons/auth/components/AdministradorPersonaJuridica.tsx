@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
-import type { ClaseTercero, ClaseTerceroPersona, DataPersonas, InfoPersona, UpdateAutorizaNotificacion } from "../../../interfaces/globalModels";
+import type { ClaseTercero, ClaseTerceroPersona, DataJuridicaUpdate, DataPersonas, InfoPersona, UpdateAutorizaNotificacion, keys_object } from "../../../interfaces/globalModels";
 import {
     Button, Divider, Grid, MenuItem, Stack, TextField, Typography,
     type SelectChangeEvent,
     FormControlLabel,
     Checkbox,
     FormControl,
-    FormHelperText,
     Autocomplete,
+    type AutocompleteChangeReason,
+    type AutocompleteChangeDetails,
 } from "@mui/material";
 import { Title } from "../../../components/Title";
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -16,18 +17,16 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import UpdateIcon from '@mui/icons-material/Update';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import { control_error } from '../../../helpers';
+import { control_error, control_success } from '../../../helpers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 import { CustomSelect } from '../../../components/CustomSelect';
-import { use_register } from '../../auth/hooks/registerHooks';
 import { type FieldErrors, useForm } from "react-hook-form";
-import type { keys_object, DataRegistePortal } from "../../auth/interfaces";
 import { DialogGeneradorDeDirecciones } from "../../../components/DialogGeneradorDeDirecciones";
-import { consultar_clase_tercero, consultar_clase_tercero_persona, consultar_datos_persona, consultar_datos_persona_basicos } from "../../seguridad/request/Request";
+import { consultar_clase_tercero, consultar_clase_tercero_persona, consultar_datos_persona, consultar_datos_persona_basicos, editar_persona_juridica } from "../../seguridad/request/Request";
 import dayjs, { type Dayjs } from 'dayjs';
 import { DialogRepresentanteLegal } from "./DialogCambioRepresentanteLegal";
 import { DialogAutorizaDatos } from '../../../components/DialogAutorizaDatos';
@@ -36,9 +35,10 @@ import { DialogHistorialEmail } from './HistoricoEmail';
 import { DialogHistorialDirecciones } from './HistoricoDirecciones';
 import { DialogHistoricoAutorizaNotificaciones } from './HistoricoAutorizaNotificaciones';
 import { DialogHistoricoRepresentanteLegal } from './HistoricoRepresentanteLegal';
+import { update_register } from '../hooks/updateHooks';
 
 interface PropsElement {
-    errors: FieldErrors<DataRegistePortal>;
+    errors: FieldErrors<DataPersonas>;
 }
 interface PropsStep {
     label: string;
@@ -113,7 +113,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         cod_departamento_residencia: '',
         cod_departamento_notificacion: '',
         cod_departamento_laboral: '',
-        datos_clasificacion_persona: [],
     });
     const [datos_representante_basicos, set_datos_representante_basicos] = useState<InfoPersona>({
         id: 0,
@@ -146,8 +145,10 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     const [type_direction, set_type_direction] = useState('');
     const [direccion, set_direccion] = useState('');
     const [direccion_notificacion, set_direccion_notificacion] = useState('');
+    const [loading_juridica, set_loading_juridica] = useState<boolean>(false);
     const [historico_autorizacion, set_historico_autorizacion] = useState<boolean>(false);
     const [historico_representante, set_historico_representante] = useState<boolean>(false);
+    const [fecha_inicio_representante, set_fecha_inicio_representante] = useState<Date | null | string>(new Date());
     const [datos_historico_representante, set_datos_historico_representante] = useState<InfoPersona>({
         id: 0,
         id_persona: 0,
@@ -241,58 +242,42 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         setValue: set_value,
         formState: { errors, isValid: is_valid },
         watch,
-    } = useForm<DataRegistePortal>();
+    } = useForm<DataPersonas>();
     const {
+        ciudad_expedicion,
+        ciudad_residencia,
+        ciudades_opt,
         data_register,
-        error_email,
-        error_password,
-        error_phone,
+        cod_departamento_expedicion,
+        cod_departamento_residencia,
+        departamentos_opt,
+        estado_civil_opt,
+        estado_civil,
+        genero_opt,
+        genero,
         is_exists,
-        is_saving,
-        paises_options,
-        is_search,
         loading,
-        message_error_password,
-        show_password,
-        nacionalidad_emp,
-        tipo_documento_opt,
-        tipo_documento_rep,
-        naturaleza_emp,
-        naturaleza_emp_opt,
+        pais_nacimiento,
+        pais_residencia,
+        paises_options,
         dpto_notifiacion_opt,
         dpto_notifiacion,
         ciudad_notificacion_opt,
         ciudad_notificacion,
-        message_no_person,
-        nombre_representante,
-        fecha_rep_legal,
-        documento_rep,
-        set_documento_rep,
-        set_nacionalidad_emp,
-        set_naturaleza_emp,
-        set_fecha_rep_legal,
-        validate_exits_representante,
+        dpts_residencia_opt,
+        ciudades_residencia_opt,
         set_ciudad_notificacion,
         set_dpto_notifiacion,
-        handle_click_show_password,
         set_ciudad_expedicion,
         set_ciudad_residencia,
         set_data_register,
         set_departamento,
         set_dpto_residencia,
-        set_error_email,
-        set_error_error_phone,
-        set_error_password,
         set_estado_civil,
         set_genero,
-        set_is_saving,
-        set_message_error_password,
         set_pais_nacimiento,
         set_pais_residencia,
-        set_tipo_persona,
-        set_tipo_documento_rep,
-        set_message_no_person,
-    } = use_register();
+    } = update_register();
 
     const handle_open_historico_representante = (): void => {
         set_historico_representante(true);
@@ -315,9 +300,27 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         set_historico_direcciones(true);
     };
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const handle_fecha_ini_repre_change = (date: Date | null) => {
+        set_fecha_inicio_representante(date);
+    };
+
     // abrir modal Notificaciones
     const handle_open_dialog_notificaciones = (): void => {
         set_dialog_notificaciones(true);
+    };
+
+    const datos_clasificacion = watch('datos_clasificacion_persona')
+
+    const handle_change_autocomplete = (
+        event: React.SyntheticEvent<Element, Event>,
+        value: ClaseTercero[],
+        reason: AutocompleteChangeReason,
+        details?: AutocompleteChangeDetails<ClaseTercero>
+    ): void => {
+        set_clase_tercero_persona(value);
+        set_value('datos_clasificacion_persona', value.map(e => e.value));
+        console.log("datos_clasificacion", datos_clasificacion)
     };
 
     // Establece los valores del formulario
@@ -353,14 +356,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     const on_change = (e: SelectChangeEvent<string>): void => {
         set_value_form(e.target.name, e.target.value);
     };
-    const on_change_fecha_rep = (value: Dayjs | null): void => {
-        if (value !== null) {
-            const date = dayjs(value).format('YYYY-MM-DD');
-            set_value('fecha_inicio_cargo_rep_legal', date);
-            set_value_form('fecha_inicio_cargo_rep_legal', date);
-            set_fecha_rep_legal(value);
-        }
-    };
     const on_change_checkbox = (e: React.ChangeEvent<HTMLInputElement>): void => {
         set_data_register({
             ...data_register,
@@ -387,7 +382,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
 
         });
     }
-
     const result_representante = (data_representante: InfoPersona, result_representante_datalle: DataPersonas): void => {
         set_datos_representante_basicos({
             ...datos_representante_basicos,
@@ -397,66 +391,65 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         })
         set_datos_representante({
             ...datos_representante,
-            id_persona: datos_representante.id_persona,
-            nombre_unidad_organizacional_actual: datos_representante.nombre_unidad_organizacional_actual,
-            tiene_usuario: datos_representante.tiene_usuario,
-            primer_nombre: datos_representante.primer_nombre,
-            segundo_nombre: datos_representante.segundo_nombre,
-            primer_apellido: datos_representante.primer_apellido,
-            segundo_apellido: datos_representante.segundo_apellido,
-            tipo_persona: datos_representante.tipo_persona,
-            numero_documento: datos_representante.numero_documento,
-            digito_verificacion: datos_representante.digito_verificacion,
-            nombre_comercial: datos_representante.nombre_comercial,
-            razon_social: datos_representante.razon_social,
-            pais_residencia: datos_representante.pais_residencia,
-            municipio_residencia: datos_representante.municipio_residencia,
-            direccion_residencia: datos_representante.direccion_residencia,
-            direccion_residencia_ref: datos_representante.direccion_residencia_ref,
-            ubicacion_georeferenciada: datos_representante.ubicacion_georeferenciada,
-            direccion_laboral: datos_representante.direccion_laboral,
-            direccion_notificaciones: datos_representante.direccion_notificaciones,
-            pais_nacimiento: datos_representante.pais_nacimiento,
-            fecha_nacimiento: datos_representante.fecha_nacimiento,
-            sexo: datos_representante.sexo,
-            fecha_asignacion_unidad: datos_representante.fecha_asignacion_unidad,
-            es_unidad_organizacional_actual: datos_representante.es_unidad_organizacional_actual,
-            email: datos_representante.email,
-            email_empresarial: datos_representante.email_empresarial,
-            telefono_fijo_residencial: datos_representante.telefono_fijo_residencial,
-            telefono_celular: datos_representante.telefono_celular,
-            telefono_empresa: datos_representante.telefono_empresa,
-            cod_municipio_laboral_nal: datos_representante.cod_municipio_laboral_nal,
-            cod_municipio_notificacion_nal: datos_representante.cod_municipio_notificacion_nal,
-            telefono_celular_empresa: datos_representante.telefono_celular_empresa,
-            telefono_empresa_2: datos_representante.telefono_empresa_2,
-            cod_pais_nacionalidad_empresa: datos_representante.cod_pais_nacionalidad_empresa,
-            acepta_notificacion_sms: datos_representante.acepta_notificacion_sms,
-            acepta_notificacion_email: datos_representante.acepta_notificacion_email,
-            acepta_tratamiento_datos: datos_representante.acepta_tratamiento_datos,
-            cod_naturaleza_empresa: datos_representante.cod_naturaleza_empresa,
-            direccion_notificacion_referencia: datos_representante.direccion_notificacion_referencia,
-            fecha_cambio_representante_legal: datos_representante.fecha_cambio_representante_legal,
-            fecha_inicio_cargo_rep_legal: datos_representante.fecha_inicio_cargo_rep_legal,
-            fecha_inicio_cargo_actual: datos_representante.fecha_inicio_cargo_actual,
-            fecha_a_finalizar_cargo_actual: datos_representante.fecha_a_finalizar_cargo_actual,
-            observaciones_vinculacion_cargo_actual: datos_representante.observaciones_vinculacion_cargo_actual,
-            fecha_ultim_actualizacion_autorizaciones: datos_representante.fecha_ultim_actualizacion_autorizaciones,
-            fecha_creacion: datos_representante.fecha_creacion,
-            fecha_ultim_actualiz_diferente_crea: datos_representante.fecha_ultim_actualiz_diferente_crea,
-            tipo_documento: datos_representante.fecha_ultim_actualiz_diferente_crea,
-            estado_civil: datos_representante.estado_civil,
-            id_cargo: datos_representante.id_cargo,
-            id_unidad_organizacional_actual: datos_representante.id_unidad_organizacional_actual,
-            representante_legal: datos_representante.representante_legal,
-            cod_municipio_expedicion_id: datos_representante.cod_municipio_expedicion_id,
-            id_persona_crea: datos_representante.id_persona_crea,
-            id_persona_ultim_actualiz_diferente_crea: datos_representante.id_persona_ultim_actualiz_diferente_crea,
-            cod_departamento_expedicion: datos_representante.cod_departamento_expedicion,
-            cod_departamento_residencia: datos_representante.cod_departamento_residencia,
-            cod_departamento_notificacion: datos_representante.cod_departamento_notificacion,
-            cod_departamento_laboral: datos_representante.cod_departamento_laboral,
-            datos_clasificacion_persona: datos_representante.datos_clasificacion_persona,
+            id_persona: result_representante_datalle.id_persona,
+            nombre_unidad_organizacional_actual: result_representante_datalle.nombre_unidad_organizacional_actual,
+            tiene_usuario: result_representante_datalle.tiene_usuario,
+            primer_nombre: result_representante_datalle.primer_nombre,
+            segundo_nombre: result_representante_datalle.segundo_nombre,
+            primer_apellido: result_representante_datalle.primer_apellido,
+            segundo_apellido: result_representante_datalle.segundo_apellido,
+            tipo_persona: result_representante_datalle.tipo_persona,
+            numero_documento: result_representante_datalle.numero_documento,
+            digito_verificacion: result_representante_datalle.digito_verificacion,
+            nombre_comercial: result_representante_datalle.nombre_comercial,
+            razon_social: result_representante_datalle.razon_social,
+            pais_residencia: result_representante_datalle.pais_residencia,
+            municipio_residencia: result_representante_datalle.municipio_residencia,
+            direccion_residencia: result_representante_datalle.direccion_residencia,
+            direccion_residencia_ref: result_representante_datalle.direccion_residencia_ref,
+            ubicacion_georeferenciada: result_representante_datalle.ubicacion_georeferenciada,
+            direccion_laboral: result_representante_datalle.direccion_laboral,
+            direccion_notificaciones: result_representante_datalle.direccion_notificaciones,
+            pais_nacimiento: result_representante_datalle.pais_nacimiento,
+            fecha_nacimiento: result_representante_datalle.fecha_nacimiento,
+            sexo: result_representante_datalle.sexo,
+            fecha_asignacion_unidad: result_representante_datalle.fecha_asignacion_unidad,
+            es_unidad_organizacional_actual: result_representante_datalle.es_unidad_organizacional_actual,
+            email: result_representante_datalle.email,
+            email_empresarial: result_representante_datalle.email_empresarial,
+            telefono_fijo_residencial: result_representante_datalle.telefono_fijo_residencial,
+            telefono_celular: result_representante_datalle.telefono_celular,
+            telefono_empresa: result_representante_datalle.telefono_empresa,
+            cod_municipio_laboral_nal: result_representante_datalle.cod_municipio_laboral_nal,
+            cod_municipio_notificacion_nal: result_representante_datalle.cod_municipio_notificacion_nal,
+            telefono_celular_empresa: result_representante_datalle.telefono_celular_empresa,
+            telefono_empresa_2: result_representante_datalle.telefono_empresa_2,
+            cod_pais_nacionalidad_empresa: result_representante_datalle.cod_pais_nacionalidad_empresa,
+            acepta_notificacion_sms: result_representante_datalle.acepta_notificacion_sms,
+            acepta_notificacion_email: result_representante_datalle.acepta_notificacion_email,
+            acepta_tratamiento_datos: result_representante_datalle.acepta_tratamiento_datos,
+            cod_naturaleza_empresa: result_representante_datalle.cod_naturaleza_empresa,
+            direccion_notificacion_referencia: result_representante_datalle.direccion_notificacion_referencia,
+            fecha_cambio_representante_legal: result_representante_datalle.fecha_cambio_representante_legal,
+            fecha_inicio_cargo_rep_legal: result_representante_datalle.fecha_inicio_cargo_rep_legal,
+            fecha_inicio_cargo_actual: result_representante_datalle.fecha_inicio_cargo_actual,
+            fecha_a_finalizar_cargo_actual: result_representante_datalle.fecha_a_finalizar_cargo_actual,
+            observaciones_vinculacion_cargo_actual: result_representante_datalle.observaciones_vinculacion_cargo_actual,
+            fecha_ultim_actualizacion_autorizaciones: result_representante_datalle.fecha_ultim_actualizacion_autorizaciones,
+            fecha_creacion: result_representante_datalle.fecha_creacion,
+            fecha_ultim_actualiz_diferente_crea: result_representante_datalle.fecha_ultim_actualiz_diferente_crea,
+            tipo_documento: result_representante_datalle.fecha_ultim_actualiz_diferente_crea,
+            estado_civil: result_representante_datalle.estado_civil,
+            id_cargo: result_representante_datalle.id_cargo,
+            id_unidad_organizacional_actual: result_representante_datalle.id_unidad_organizacional_actual,
+            representante_legal: result_representante_datalle.representante_legal,
+            cod_municipio_expedicion_id: result_representante_datalle.cod_municipio_expedicion_id,
+            id_persona_crea: result_representante_datalle.id_persona_crea,
+            id_persona_ultim_actualiz_diferente_crea: result_representante_datalle.id_persona_ultim_actualiz_diferente_crea,
+            cod_departamento_expedicion: result_representante_datalle.cod_departamento_expedicion,
+            cod_departamento_residencia: result_representante_datalle.cod_departamento_residencia,
+            cod_departamento_notificacion: result_representante_datalle.cod_departamento_notificacion,
+            cod_departamento_laboral: result_representante_datalle.cod_departamento_laboral,
         })
     };
 
@@ -475,7 +468,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     const get_datos_clase_tercero = async (): Promise<void> => {
         try {
             const response = await consultar_clase_tercero();
-            console.log("Datos clase tercero", response)
             set_clase_tercero(response)
         } catch (err) {
             control_error(err);
@@ -490,8 +482,8 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                 value: item.id_clase_tercero,
                 label: item.nombre
             }));
+            set_value('datos_clasificacion_persona', data_persona_clase_tercero.map(e => e.value))
             set_clase_tercero_persona(data_persona_clase_tercero);
-            console.log("Datos clase tercero persona", data_persona_clase_tercero);
         } catch (err) {
             control_error(err);
         }
@@ -502,6 +494,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             const id_persona: number | undefined | null = id;
             const response = await consultar_datos_persona(id_persona);
             set_datos_representante(response)
+            set_fecha_inicio_representante(response.fecha_inicio_cargo_rep_legal)
             const tipo_doc: string = response?.tipo_documento
             const num_doc: string = response?.numero_documento
             void get_datos_basicos_representante_legal(num_doc, tipo_doc)
@@ -515,7 +508,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         try {
             const response = await consultar_datos_persona_basicos(num_doc, tipo_doc);
             set_datos_representante_basicos(response)
-            console.log("Datos basicos representante", response)
             // Datos adicionales
             if (response !== null) {
                 set_ver_datos_representante(true)
@@ -541,7 +533,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                 control_error("Esta persona no tiene un representante legal")
             }
             // datos basicos
-            set_nacionalidad_emp(response?.cod_pais_nacionalidad_empresa)
+            // set_nacionalidad_emp(response?.cod_pais_nacionalidad_empresa)
 
             // dirección notificación
             set_dpto_notifiacion(response?.cod_departamento_notificacion)
@@ -551,7 +543,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                 ...data_register,
                 email: response?.email,
                 telefono_celular: response?.telefono_celular,
-                complemeto_direccion: response?.direccion_notificacion_referencia,
+                // complemeto_direccion: response?.direccion_notificacion_referencia,
                 // Autorización
                 acepta_notificacion_email: response?.acepta_notificacion_email,
                 acepta_notificacion_sms: response?.acepta_notificacion_sms,
@@ -567,6 +559,40 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
             control_error(err);
         }
     };
+    const on_submit_update_natural = handle_submit(async (data) => {
+        try {
+            // if (data.datos_clasificacion_persona === undefined || data.datos_clasificacion_persona.length === 0) {
+            //     control_error('Por favor complete los datos de clasificación');
+            //     console.log("datos clasificacion", data.datos_clasificacion_persona)
+            //     return;
+            // }
+
+
+            const id_representante = datos_representante_basicos.id_persona
+
+            set_loading_juridica(true)
+            const datos_persona = {
+                email: data.email,
+                email_empresarial: data.email_empresarial,
+                direccion_notificaciones: data.direccion_notificaciones,
+                direccion_notificacion_referencia: data.direccion_notificacion_referencia,
+                cod_municipio_notificacion_nal: data.cod_municipio_notificacion_nal,
+                cod_pais_nacionalidad_empresa: data.cod_pais_nacionalidad_empresa,
+                telefono_celular_empresa: data.telefono_celular_empresa,
+                telefono_empresa_2: data.telefono_empresa_2,
+                telefono_empresa: data.telefono_empresa,
+                representante_legal: id_representante,
+                fecha_inicio_cargo_rep_legal: data.fecha_inicio_cargo_rep_legal,
+                datos_clasificacion_persona: data.datos_clasificacion_persona
+            };
+            await editar_persona_juridica(persona?.id_persona, datos_persona as DataJuridicaUpdate);
+            control_success('la persona se actualizó correctamente');
+            set_loading_juridica(false)
+        } catch (error) {
+            control_error(error);
+            set_loading_juridica(false)
+        }
+    });
     // trer datos de la persona
     useEffect(() => {
         if (persona?.numero_documento !== undefined) {
@@ -640,15 +666,10 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     ];
 
     useEffect(() => {
-        if (watch('cod_pais_nacionalidad_empresa') !== undefined) {
-            set_nacionalidad_emp(watch('cod_pais_nacionalidad_empresa'));
+        if (watch('cod_departamento_expedicion') !== undefined) {
+            set_departamento(watch('cod_departamento_expedicion'));
         }
-    }, [watch('cod_pais_nacionalidad_empresa')]);
-    useEffect(() => {
-        if (watch('departamento_expedicion') !== undefined) {
-            set_departamento(watch('departamento_expedicion'));
-        }
-    }, [watch('departamento_expedicion')]);
+    }, [watch('cod_departamento_expedicion')]);
 
     useEffect(() => {
         if (watch('cod_municipio_expedicion_id') !== undefined) {
@@ -664,10 +685,10 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     }, [watch('pais_residencia')]);
 
     useEffect(() => {
-        if (watch('departamento_residencia') !== undefined) {
-            set_dpto_residencia(watch('departamento_residencia'));
+        if (watch('cod_departamento_residencia') !== undefined) {
+            set_dpto_residencia(watch('cod_departamento_residencia'));
         }
-    }, [watch('departamento_residencia')]);
+    }, [watch('cod_departamento_residencia')]);
 
     useEffect(() => {
         if (watch('municipio_residencia') !== undefined) {
@@ -678,10 +699,10 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
     // Datos de notificación
 
     useEffect(() => {
-        if (watch('dpto_notifiacion') !== undefined) {
-            set_dpto_notifiacion(watch('dpto_notifiacion'));
+        if (watch('cod_departamento_notificacion') !== undefined) {
+            set_dpto_notifiacion(watch('cod_departamento_notificacion'));
         }
-    }, [watch('dpto_notifiacion')]);
+    }, [watch('cod_departamento_notificacion')]);
 
     useEffect(() => {
         if (watch('cod_municipio_notificacion_nal') !== undefined) {
@@ -703,7 +724,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
 
     useEffect(() => {
         if (watch('estado_civil') !== undefined) {
-            set_estado_civil(watch('estado_civil') as string);
+            set_estado_civil(watch('estado_civil'));
         }
     }, [watch('estado_civil')]);
 
@@ -711,7 +732,10 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
         <>
             <Grid item xs={12} spacing={2}>
                 {(datos_persona?.representante_legal !== undefined) && (
-                    <form>
+                    <form
+                        onSubmit={(e) => {
+                            void on_submit_update_natural(e)
+                        }}>
                         <>
                             {(persona?.tipo_persona === "J") && (
                                 <>
@@ -843,7 +867,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                         onChange={on_change}
                                                         label="Nacionalidad empresa *"
                                                         name="cod_pais_nacionalidad_empresa"
-                                                        value={nacionalidad_emp}
+                                                        value={datos_persona.cod_pais_nacionalidad_empresa}
                                                         options={paises_options}
                                                         loading={loading}
                                                         disabled={false}
@@ -929,7 +953,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                         fullWidth
                                                         size="small"
                                                         label="Dirección"
-                                                        disabled
+                                                        // disabled
                                                         error={errors.direccion_notificaciones?.type === 'required'}
                                                         helperText={
                                                             errors.direccion_notificaciones?.type === 'required'
@@ -959,8 +983,8 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                         fullWidth
                                                         size="small"
                                                         label="Complemento dirección"
-                                                        value={data_register.complemeto_direccion}
-                                                        {...register('complemeto_direccion')}
+                                                        value={datos_persona.direccion_notificacion_referencia}
+                                                        {...register('direccion_notificacion_referencia')}
                                                         onChange={handle_change}
                                                     />
                                                 </Grid>
@@ -973,15 +997,13 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                         fullWidth
                                                         size="small"
                                                         label="E-mail"
-                                                        error={errors.email?.type === 'required' || error_email}
+                                                        error={errors.email?.type === 'required'}
                                                         type="email"
                                                         value={data_register.email}
                                                         helperText={
                                                             errors.email?.type === 'required'
                                                                 ? 'Este campo es obligatorio'
-                                                                : error_email
-                                                                    ? 'Los emails no coinciden'
-                                                                    : ''
+                                                                : ''
                                                         }
                                                         {...register('email', {
                                                             required: true,
@@ -997,8 +1019,8 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                         label="Celular"
                                                         onCopy={(e: any) => e.preventDefault()}
                                                         value={data_register.telefono_celular}
-                                                        error={error_phone}
-                                                        helperText={error_phone ? 'Los número de celular no son iguales' : ''}
+                                                        error={errors.telefono_celular?.type === 'required'}
+                                                        helperText={(errors.telefono_celular != null) ? 'Los número de celular no son iguales' : ''}
                                                         {...register('telefono_celular')}
                                                         onChange={handle_change}
                                                     />
@@ -1137,26 +1159,29 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                             />
                                                         </Grid>
                                                         <Grid item xs={12} sm={6}>
-                                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
                                                                 <DatePicker
                                                                     label="Fecha de inicio como representante legal"
-                                                                    value={fecha_rep_legal}
-                                                                    onChange={on_change_fecha_rep}
+                                                                    inputFormat="YYYY-MM-DD"
+                                                                    openTo="day"
+                                                                    value={fecha_inicio_representante}
+                                                                    onChange={handle_fecha_ini_repre_change}
+                                                                    views={['year', 'month', 'day']}
                                                                     renderInput={(params) => (
                                                                         <TextField
+                                                                            required
                                                                             fullWidth
+                                                                            // defaultValue={datos_persona?.fecha_nacimiento}
                                                                             size="small"
                                                                             {...params}
-                                                                            {...register('fecha_inicio_cargo_rep_legal', {
-                                                                                required: true,
-                                                                            })}
-                                                                            onChange={handle_change}
-                                                                            error={errors.fecha_inicio_cargo_rep_legal?.type === 'required'}
                                                                             helperText={
-                                                                                errors.fecha_inicio_cargo_rep_legal?.type === 'required'
+                                                                                errors.fecha_nacimiento?.type === 'required'
                                                                                     ? 'Este campo es obligatorio'
                                                                                     : ''
                                                                             }
+                                                                            {...register('fecha_inicio_cargo_rep_legal', {
+                                                                                required: true,
+                                                                            })}
                                                                         />
                                                                     )}
                                                                 />
@@ -1326,17 +1351,15 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                                 fullWidth
                                                                 size="small"
                                                                 label="E-mail laboral / personal"
-                                                                error={errors.email?.type === 'required' || error_email}
-                                                                type="email"
-                                                                value={data_register.email}
+                                                                error={errors.email_empresarial?.type === 'required'}
+                                                                type="email_empresarial"
+                                                                value={data_register.email_empresarial}
                                                                 helperText={
-                                                                    errors.email?.type === 'required'
+                                                                    errors.email_empresarial?.type === 'required'
                                                                         ? 'Este campo es obligatorio'
-                                                                        : error_email
-                                                                            ? 'Los emails no coinciden'
-                                                                            : ''
+                                                                        : ''
                                                                 }
-                                                                {...register('email', {
+                                                                {...register('email_empresarial', {
                                                                     required: true,
                                                                 })}
                                                                 onChange={handle_change}
@@ -1350,12 +1373,14 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                                 size="small"
                                                                 label="Telefono laboral"
                                                                 onCopy={(e: any) => e.preventDefault()}
-                                                                value={data_register.telefono_celular}
-                                                                error={error_phone}
+                                                                value={data_register.telefono_celular_empresa}
+                                                                error={errors.telefono_celular_empresa?.type === 'required'}
                                                                 helperText={
-                                                                    error_phone ? 'Los número de celular no son iguales' : ''
+                                                                    errors.telefono_celular_empresa?.type === 'required'
+                                                                        ? 'Este campo es obligatorio'
+                                                                        : ''
                                                                 }
-                                                                {...register('telefono_celular')}
+                                                                {...register('telefono_celular_empresa')}
                                                                 onChange={handle_change}
                                                             />
                                                         </Grid>
@@ -1441,8 +1466,8 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                                 fullWidth
                                                                 size="small"
                                                                 label="Complemento dirección"
-                                                                value={data_register.complemeto_direccion}
-                                                                {...register('complemeto_direccion')}
+                                                                value={datos_persona.direccion_laboral}
+                                                                {...register('direccion_laboral')}
                                                                 onChange={handle_change}
                                                             />
                                                         </Grid>
@@ -1472,19 +1497,25 @@ export const AdministracionPersonasScreenJuridica: React.FC<Props> = ({
                                                             <Autocomplete
                                                                 multiple
                                                                 fullWidth
-                                                                id="Datos-Clasificación-cormacarena"
                                                                 size="medium"
                                                                 options={clase_tercero}
-                                                                getOptionLabel={(option) => option?.label}
-                                                                defaultValue={clase_tercero_persona}
+                                                                getOptionLabel={(option) => option.label}
+                                                                isOptionEqualToValue={(option, value) => option.value === value?.value}
+                                                                value={clase_tercero_persona}
                                                                 renderInput={(params) => (
                                                                     <TextField
+                                                                        key={params.id}
                                                                         {...params}
-                                                                        sx={{ fontSize: "20px !important" }}
                                                                         label="Datos clasificación Cormacarena"
                                                                         placeholder="Clasificacion Cormacarena"
+                                                                        helperText={
+                                                                            clase_tercero_persona.length === 0 ? 'Este campo es obligatorio' : ''
+                                                                        }
+                                                                        value={clase_tercero_persona}
                                                                     />
                                                                 )}
+                                                                {...register('datos_clasificacion_persona')}
+                                                                onChange={handle_change_autocomplete}
                                                             />
                                                         </Grid>
                                                     </>

@@ -13,6 +13,7 @@ import {
     Autocomplete,
     type AutocompleteChangeReason,
     type AutocompleteChangeDetails,
+    CircularProgress,
 } from "@mui/material";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import UpdateIcon from '@mui/icons-material/Update';
@@ -70,6 +71,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     const [historico_direcciones, set_historico_direcciones] = useState<boolean>(false);
     const [historico, set_historico] = useState<boolean>(false);
     const [historico_autorizacion, set_historico_autorizacion] = useState<boolean>(false);
+    const [loading_natural, set_loading_natural] = useState<boolean>(false);
     const [datos_historico_autorizacion, set_datos_historico_autorizacion] = useState<InfoPersona>({
         id: 0,
         id_persona: 0,
@@ -162,17 +164,8 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             ...data_register,
             acepta_notificacion_email: data.acepta_autorizacion_email,
             acepta_notificacion_sms: data.acepta_autorizacion_sms,
-
         });
     }
-    const handle_change_autocomplete = (
-        event: React.SyntheticEvent<Element, Event>,
-        value: ClaseTercero[],
-        reason: AutocompleteChangeReason,
-        details?: AutocompleteChangeDetails<ClaseTercero>
-    ): void => {
-        set_clase_tercero_persona(value);
-    };
     const {
         register,
         handleSubmit: handle_submit,
@@ -216,9 +209,15 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         set_pais_residencia,
     } = update_register();
 
-    useEffect(() => {
-        console.log("datos_clasificacion_persona", watch('datos_clasificacion_persona'))
-    }, [watch('datos_clasificacion_persona')])
+    const handle_change_autocomplete = (
+        event: React.SyntheticEvent<Element, Event>,
+        value: ClaseTercero[],
+        reason: AutocompleteChangeReason,
+        details?: AutocompleteChangeDetails<ClaseTercero>
+    ): void => {
+        set_clase_tercero_persona(value);
+        set_value('datos_clasificacion_persona', value.map(e => e.value));
+    };
     // Establece los valores del formulario
     const set_value_form = (name: string, value: string): void => {
         value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
@@ -255,13 +254,6 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     // Se usa para escuchar los cambios de valor del componente CustomSelect
     const on_change = (e: SelectChangeEvent<string>): void => {
         set_value_form(e.target.name, e.target.value);
-    };
-    const on_change_checkbox = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        set_data_register({
-            ...data_register,
-            [e.target.name]: e.target.checked,
-        });
-        set_value(e.target.name as keys_object, e.target.checked);
     };
     // Cambio inputs
     const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -363,10 +355,14 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     };
     const on_submit_update_natural = handle_submit(async (data) => {
         try {
-            console.log("data.datos_clasificacion_persona", data.datos_clasificacion_persona)
+            if (data.datos_clasificacion_persona === undefined || data.datos_clasificacion_persona.length === 0) {
+                control_error('Por favor complete los datos de clasificación');
+                return;
+            }
+
+            set_loading_natural(true)
             const ubicacion: string = ""
             const datos_persona = {
-
                 cod_municipio_expedicion_id: data.cod_municipio_expedicion_id,
                 nombre_comercial: data.nombre_comercial,
                 fecha_nacimiento: data.fecha_nacimiento,
@@ -392,8 +388,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             };
             await editar_persona_natural(persona?.id_persona, datos_persona as DataNaturaUpdate);
             control_success('la persona se actualizó correctamente');
+            set_loading_natural(false)
         } catch (error) {
             control_error(error);
+            set_loading_natural(false)
         }
     });
     useEffect(() => {
@@ -1242,7 +1240,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     {...register('direccion_laboral', {
                                                         required: true,
                                                     })}
-                                                    value={datos_persona.direccion_laboral}
+                                                    value={direccion_laboral}
                                                 />
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={4}>
@@ -1250,7 +1248,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     variant="contained"
                                                     onClick={() => {
                                                         open_modal(true);
-                                                        set_type_direction('notificacion');
+                                                        set_type_direction('laboralDATOS DE RECIDENCIA');
                                                     }}
                                                 >
                                                     Generar dirección
@@ -1297,7 +1295,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                         options={clase_tercero}
                                                         getOptionLabel={(option) => option.label}
                                                         isOptionEqualToValue={(option, value) => option.value === value?.value}
-                                                        defaultValue={clase_tercero_persona}
+                                                        value={clase_tercero_persona}
                                                         renderInput={(params) => (
                                                             <TextField
                                                                 key={params.id}
@@ -1305,15 +1303,12 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                                 label="Datos clasificación Cormacarena"
                                                                 placeholder="Clasificacion Cormacarena"
                                                                 helperText={
-                                                                    clase_tercero_persona.length === 0
-                                                                        ? 'Este campo es obligatorio'
-                                                                        : ''
+                                                                    clase_tercero_persona.length === 0 ? 'Este campo es obligatorio' : ''
                                                                 }
+                                                                value={clase_tercero_persona}
                                                             />
                                                         )}
-                                                        {...register('datos_clasificacion_persona', {
-                                                            required: true,
-                                                        })}
+                                                        {...register('datos_clasificacion_persona')}
                                                         onChange={handle_change_autocomplete}
                                                     />
                                                 </Grid>
@@ -1432,13 +1427,13 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                             variant="contained"
                                             color="primary"
                                             type="submit"
-                                            // startIcon={
-                                            //     loading_natural
-                                            //         ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                            //         : ""
-                                            // }
+                                            startIcon={
+                                                loading_natural
+                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                                                    : ""
+                                            }
                                             aria-label="Actualizar"
-                                            // disabled={loading_natural}
+                                            disabled={loading_natural}
                                             size="large"
                                         >
                                             Actualizar</Button>

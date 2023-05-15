@@ -2,6 +2,7 @@ import { api } from '../../../api/axios';
 import type {
   ClaseTercero,
   ClaseTerceroPersona,
+  DataJuridicaUpdate,
   DataNaturaUpdate,
   DataPersonas,
   DatosVinculacionCormacarena,
@@ -99,6 +100,17 @@ export const editar_persona_natural = async (
 ): Promise<any> => {
   const response = await api.put(
     `personas/update-persona-natural-admin-personas/${id_persona ?? 0}/`,
+    datos
+  );
+  return response.data;
+};
+// editar datos persona naturual
+export const editar_persona_juridica = async (
+  id_persona: number | undefined,
+  datos: DataJuridicaUpdate
+): Promise<any> => {
+  const response = await api.put(
+    `personas/update-persona-juridica-admin-personas/${id_persona ?? 0}/`,
     datos
   );
   return response.data;
