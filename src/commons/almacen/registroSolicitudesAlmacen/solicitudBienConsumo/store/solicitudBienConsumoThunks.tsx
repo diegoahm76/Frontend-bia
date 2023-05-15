@@ -4,11 +4,11 @@ import { toast, type ToastContent } from 'react-toastify';
 import { api } from '../../../../../api/axios';
 // import { type AxiosError } from 'axios';
 
-import { type NavigateFunction } from 'react-router-dom';
+
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
 // import { log } from 'console';
-import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, } from './slices/indexSolicitudBienesConsumo';
+import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero, } from './slices/indexSolicitudBienesConsumo';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -38,13 +38,6 @@ const control_success = (message: ToastContent) =>
     });
 
 
-
-
-
-
-
-
-
 // obtener numero de solicitud
 export const get_num_solicitud = (): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -62,39 +55,90 @@ export const get_num_solicitud = (): any => {
 };
 
 
+// obtener numero de solicitud PARA  VIVERO
+export const get_num_solicitud_vivero = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('almacen/solicitudes-vivero/get-nro-documento-solicitudes-bienes-consumo-vivero/true/');
 
-
-
-
+            if (data.success) {
+                dispatch(set_numero_solicitud_vivero(data["Número de solicitud"]))
+            }
+            return data;
+        } catch (error: any) {
+            return error as AxiosError;
+        }
+    };
+};
 
 
 // crear consumo
 export const crear_solicitud_bien_consumo: any = (
-    solic_consumo: any,
-    navigate: NavigateFunction
+    solicitud: any,
+
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api
-                .post("almacen/solicitudes/crear-solicitud-bienes-de-consumo/", solic_consumo);
-            //    dispatch(get_solicitud_consumo_id());
-            control_success(' se agrego correctamente');
+            console.log(solicitud)
+            const { data } = await api.put('almacen/solicitudes/crear-solicitud-bienes-de-consumo/', solicitud);
+            //  dispatch(get_solicitud_consumo_id());
+            console.log(data)
+            if (data.success) {
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+            // control_success(' se agrego correctamente');
             return data;
         } catch (error: any) {
+            console.log(error);
             control_error(error.response.data.detail);
-            console.log(error.response.data);
+
             return error as AxiosError;
 
         };
     }
 }
 
+// crear consumo VIVERO
+export const crear_solicitud_bien_consumo_vivero: any = (
+    solicitud_vivero: any,
+
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(solicitud_vivero)
+            const { data } = await api.put('almacen/solicitudes-vivero/crear-solicitud/', solicitud_vivero);
+            //  dispatch(get_solicitud_consumo_id());
+            console.log(data)
+            if (data.success) {
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+
+        };
+    }
+}
+
+
+
+
+
+
 // obtener niveles organizacioneles
 
 export const get_uni_organizacional = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get('almacen/organigrama/unidades/get-list/organigrama-actual/');
+            const { data } = await api.get('transversal/organigrama/unidades/get-list/organigrama-actual/');
             console.log(data.data, "data")
             dispatch(get_unidad_organizacional(data.data));
             return data;
@@ -248,8 +292,8 @@ export const get_person_id_service = (id: number,): any => {
 // obtener persona por documento
 export const get_funcionario_document_service = (
     type: string,
-    document: number,
-    id_unidad_para_la_que_solicita: string
+    document: number | "",
+    id_unidad_para_la_que_solicita: number | null | string,
 
 ): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -279,31 +323,32 @@ export const get_funcionario_document_service = (
 
 export const get_funcionario_service = (
     type: string | null,
-    document: number | null,
+    document: number | null | string,
     primer_nombre: string | null,
     primer_apellido: string | null,
-    id_unidad_organizacional_actual: string | null,
-    id_unidad_para_la_que_solicita: string | null,
+    id_unidad_para_la_que_solicita: number | null | string,
 
 
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
+
             const { data } = await api.get(
 
 
-                `almacen/solicitudes/search-funcionario-filtros/?tipo_documento=${type ?? ""}&numero_documento=${document ?? ""}&primer_nombre=${primer_nombre ?? ""}&primer_apellido=${primer_apellido ?? ""}&id_unidad_organizacional_actual=${id_unidad_organizacional_actual ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? "816"}`
+                `almacen/solicitudes/search-funcionario-filtros/?tipo_documento=${type ?? ""}&numero_documento=${document ?? ""}&primer_nombre=${primer_nombre ?? ""}&primer_apellido=${primer_apellido ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? ""}`
 
             );
-            dispatch(set_current_funcionario(data.data));
+            console.log(data)
+            dispatch(set_funcionarios(data.data));
             if (data.data.length > 0) {
-                control_success("Se selecciono persona")
+                control_success("Se econtrarón funcionarios")
             } else {
-                control_error("No se encontro persona")
+                control_error("No se econtrarón funcionarios")
             }
             return data;
         } catch (error: any) {
-            console.log('get_funcionario_service');
+            console.log(error);
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
@@ -312,3 +357,24 @@ export const get_funcionario_service = (
 
 
 
+
+// anular solicitud 
+
+
+export const anular_solicitud: any = (id: string | number) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.delete(
+                `almacen/solicitudes/anular-solicitudes-bienes/${id}/`
+            );
+            dispatch(get_solicitud_service(id));
+            control_success('Se anulo la solicitud');
+
+            return data;
+        } catch (error: any) {
+            console.log('anular solicitud');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};

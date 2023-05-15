@@ -65,6 +65,7 @@ const CrearCvComputoForm = ({
     useForm<FormValues>();
   useEffect(() => {
     reset_computer(current_cv_computer);
+    console.log(current_cv_computer)
   }, [current_computer]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -84,11 +85,14 @@ const CrearCvComputoForm = ({
     form_data.append("observaciones_adicionales", data.observaciones_adicionales);
     form_data.append("otras_aplicaciones", data.otras_aplicaciones);
     form_data.append("id_marca", data.id_marca.toString());
-    form_data.append("id_articulo", current_computer.id_bien.toString());
+    form_data.append("id_articulo", (data.id_articulo ?? "").toString());
     // form_data.append('ruta_imagen_foto', file === null ? '' : file);
 
     void dispatch(create_cv_computers_service(form_data, navigate));
+
     handle_close_cv_com_is_active();
+
+
   };
   useEffect(() => {
     const get_selects_options: any = async () => {
@@ -112,13 +116,9 @@ const CrearCvComputoForm = ({
   }, [])
 
 
-  // const on_change_file: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   set_file(e.target.files!=null?e.target.files[0]:"")
-  // };
-
   return (
     <Dialog
-      maxWidth="md"
+      maxWidth="xl"
       open={is_modal_active}
       onClose={handle_close_cv_com_is_active}
     >
@@ -194,6 +194,39 @@ const CrearCvComputoForm = ({
                     fullWidth
                     size="small"
                     label="Serie"
+                    variant="outlined"
+                    disabled={action !== "create"}
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar la serie'
+                        : 'Ingrese serie'
+                    }
+                  >
+
+                  </TextField>
+
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={3}>
+              <Controller
+                name="id_articulo"
+                control={control_computo}
+                defaultValue={0}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="id articulo"
                     variant="outlined"
                     disabled={action !== "create"}
                     value={value}

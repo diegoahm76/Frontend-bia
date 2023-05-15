@@ -20,6 +20,7 @@ import { add_bien_service, get_code_bien_service, get_marca_service, get_medida_
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import { type IList, type IObjBien as FormValues } from "../interfaces/catalogodebienes";
 import { api } from "../../../../../api/axios";
+import FormSelectController from "../../../../../components/partials/form/FormSelectController";
 interface IProps {
   action: string,
   is_modal_active: boolean;
@@ -630,70 +631,36 @@ const CrearBienDialogForm = ({
             }
 
 
-            <Grid item xs={11} md={2} margin={1}>
-              <Controller
-                name="visible_solicitudes"
-                control={control_bien}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="¿Visible en solicitudes?"
-                    variant="outlined"
-                    defaultValue={value}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar una opción'
-                        : 'Seleccionar opción'
-                    }
-                  >
-                    <MenuItem value="true">SI</MenuItem>
-                    <MenuItem value="false">NO</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={2} margin={1}>
-              <Controller
-                name="maneja_hoja_vida"
-                control={control_bien}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="¿Hoja de vida?"
-                    variant="outlined"
-                    defaultValue={value}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar una opción'
-                        : 'Seleccionar opción'
-                    }
-                  >
-                    <MenuItem value="true">SI</MenuItem>
-                    <MenuItem value="false">NO</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
+
+            <FormSelectController
+              xs={12}
+              md={2}
+              control_form={control_bien}
+              control_name="visible_solicitudes"
+              default_value=""
+              rules={{ required_rule: { rule: true, message: "Es obligatorio seleccionar una opción" } }}
+              label="¿Visible en solicitudes?"
+              disabled={false}
+              helper_text="Seleccionar opción"
+              select_options={[{ label: "SI", value: true }, { label: "NO", value: false }]}
+              option_label="label"
+              option_key="value"
+            />
+            <FormSelectController
+              xs={12}
+              md={2}
+              control_form={control_bien}
+              control_name="maneja_hoja_vida"
+              default_value=""
+              rules={{ required_rule: { rule: true, message: "Es obligatorio seleccionar una opción" } }}
+              label="¿Maneja hoja de vida?"
+              disabled={false}
+              helper_text="Seleccionar opción"
+              select_options={[{ label: "SI", value: true }, { label: "NO", value: false }]}
+              option_label="label"
+              option_key="value"
+            />
+
             <Grid item xs={11} md={12} margin={1}>
               <Controller
                 name="descripcion"

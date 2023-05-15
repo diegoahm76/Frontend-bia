@@ -63,73 +63,6 @@ const SeleccionarBienConsumo = () => {
                 </div>
             ),
         },
-        // {
-        //     field: 'cantidad',
-        //     headerName: 'Cantidad',
-        //     width: 200,
-        //     renderCell: (params) => (
-        //         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-        //             {params.value}
-        //         </div>
-        //     ),
-        // },
-        // {
-        //     field: 'acciones',
-        //     headerName: 'Acciones',
-        //     width: 90,
-        //     renderCell: (params) => (
-        //         <>
-
-        //             {/* <Tooltip title="Editar">
-        //                     <IconButton
-        //                         onClick={() => {
-        //                             edit_bien_siembra(params.row)
-
-        //                         }}
-        //                     >
-        //                         <Avatar
-        //                             sx={{
-        //                                 width: 24,
-        //                                 height: 24,
-        //                                 background: '#fff',
-        //                                 border: '2px solid',
-        //                             }}
-        //                             variant="rounded"
-        //                         >
-        //                             <EditIcon
-        //                                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-        //                             />
-
-        //                         </Avatar>
-        //                     </IconButton>
-        //                 </Tooltip>
-        //              */}
-        //             {/* <Tooltip title="Borrar">
-        //                     <IconButton
-        //                         onClick={() => {
-        //                             delete_bien_siembra(params.row)
-        //                         }}
-        //                     >
-        //                         <Avatar
-        //                             sx={{
-        //                                 width: 24,
-        //                                 height: 24,
-        //                                 background: '#fff',
-        //                                 border: '2px solid',
-        //                             }}
-        //                             variant="rounded"
-        //                         >
-        //                             <DeleteIcon
-        //                                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-        //                             />
-
-        //                         </Avatar>
-        //                     </IconButton>
-        //                 </Tooltip> */}
-
-        //         </>
-        //     ),
-        // },
 
 
     ];
@@ -358,7 +291,7 @@ const SeleccionarBienConsumo = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
+                            md: 3,
                             control_form: control_bien_solicitud,
                             control_name: "cantidad",
                             default_value: "",

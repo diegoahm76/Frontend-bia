@@ -31,16 +31,16 @@ const SeleccionarSolicitud = ({
 
     const columns_solicitudes: GridColDef[] = [
         { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
-
         {
-            field: 'motivo',
-            headerName: 'Motivo',
-            width: 200,
+            field: 'fecha_solicitud',
+            headerName: 'Fecha de solicitud',
+            width: 100,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {new Date(params.value).toDateString()}
+                    {params.value}
                 </div>
             ),
+
         },
         {
             field: 'observacion',
@@ -51,6 +51,7 @@ const SeleccionarSolicitud = ({
                     {params.value}
                 </div>
             ),
+
         },
 
     ];
@@ -88,9 +89,9 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 4,
+                            md: 5,
                             control_form: control_solicitud,
-                            control_name: "id_solicitud_consumibles",
+                            control_name: "nro_solicitud_por_tipo",
                             default_value: "",
                             rules: {},
                             label: "Numero solicitud",
@@ -102,11 +103,11 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 6,
+                            md: 5,
                             control_form: control_solicitud,
                             control_name: "fecha_solicitud",
                             default_value: "",
-                            rules: {},
+                            rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Fecha de ingreso",
                             type: "text",
                             disabled: true,
@@ -119,7 +120,7 @@ const SeleccionarSolicitud = ({
                             control_form: control_solicitud,
                             control_name: "observacion",
                             default_value: "",
-                            rules: {},
+                            rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Observacion de solicitud",
                             type: "text",
                             multiline_text: true,
@@ -134,7 +135,7 @@ const SeleccionarSolicitud = ({
                             control_form: control_solicitud,
                             control_name: "motivo",
                             default_value: "",
-                            rules: {},
+                            rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Motivo de solicitud",
                             type: "text",
                             multiline_text: true,
@@ -166,7 +167,7 @@ const SeleccionarSolicitud = ({
                             control_form: control_solicitud,
                             control_name: "persona_solicita",
                             default_value: "",
-                            rules: {},
+                            rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Solicitud elaborada por:",
                             type: "text",
                             disabled: true,
@@ -179,7 +180,7 @@ const SeleccionarSolicitud = ({
                             control_form: control_solicitud,
                             control_name: "nombre_unidad_organizacional",
                             default_value: "",
-                            rules: {},
+                            rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Unidad a la que pertenece:",
                             type: "text",
                             disabled: true,
@@ -195,7 +196,7 @@ const SeleccionarSolicitud = ({
                             control_form: control_solicitud,
                             control_name: "id_solicitud_consumibles",
                             default_value: "",
-                            rules: {},
+                            rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Número de solicitud",
                             type: "number",
                             disabled: false,

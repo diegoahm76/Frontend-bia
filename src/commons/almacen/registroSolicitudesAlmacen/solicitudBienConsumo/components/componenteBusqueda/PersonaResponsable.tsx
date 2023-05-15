@@ -17,6 +17,7 @@ import { set_current_funcionario, set_funcionarios } from '../../store/slices/in
 
 interface IProps {
     title?: string;
+    get_values_solicitud: any;
 }
 interface IList {
     value: string | number;
@@ -31,7 +32,8 @@ const initial_options: IList[] = [
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const FuncionarioResponsable = ({
-    title
+    title,
+    get_values_solicitud
 
 }: IProps) => {
 
@@ -39,7 +41,7 @@ const FuncionarioResponsable = ({
 
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_persona, reset: reset_persona, getValues: get_values } = useForm<IObjFuncionario>();
-    const { funcionarios } = useAppSelector((state) => state.solic_consumo);
+    const { funcionarios, current_funcionario } = useAppSelector((state) => state.solic_consumo);
 
     const [document_type, set_document_type] = useState<IList[]>(initial_options);
 
@@ -64,11 +66,12 @@ const FuncionarioResponsable = ({
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
                 </div>
+
             ),
         },
 
         {
-            field: 'id_unidad_organizacional_actual',
+            field: 'id_unidad_para_la_que_solicita',
             headerName: 'unidad',
             width: 250,
             renderCell: (params) => (
@@ -109,31 +112,27 @@ const FuncionarioResponsable = ({
 
     }, []);
 
-    // useEffect(() => {
-    //     reset_persona(planting_person)
-    // }, [planting_person]);
+    useEffect(() => {
+        reset_persona(current_funcionario)
 
-    // useEffect(() => {
-    //     if (current_planting.id_persona_siembra !== planting_person.id_persona) {
-    //         void dispatch(get_person_id_service(Number(current_planting.id_persona_siembra) ?? 0))
-    //     }
-    // }, [current_planting]);
+    }, [current_funcionario]);
 
     const search_person: any = (async () => {
         const document = get_values("numero_documento") ?? ""
         const type = get_values("tipo_documento") ?? ""
-        void dispatch(get_funcionario_document_service(type, document, id_unidad_para_la_que_solicita))
-    })
+        void dispatch(get_funcionario_document_service(type, document, get_values_solicitud("id_unidad_para_la_que_solicita")))
 
+    })
     const get_funcionarios: any = (async () => {
+        console.log(get_values_solicitud("numero_documento"))
         const document = get_values("numero_documento") ?? ""
         const type = get_values("tipo_documento") ?? ""
         const primer_nombre = get_values("primer_nombre") ?? ""
         const primer_apellido = get_values("primer_apellido") ?? ""
-        const id_unidad_organizacional_actual = get_values("id_unidad_organizacional_actual") ?? ""
-        const id_unidad_para_la_que_solicita = get_values("id_unidad_para_la_que_solicita") ?? ""
+        if (get_values_solicitud("id_unidad_para_la_que_solicita") !== undefined) {
+            void dispatch(get_funcionario_service(type, document, primer_nombre, primer_apellido, get_values_solicitud("id_unidad_para_la_que_solicita")))
 
-        void dispatch(get_funcionario_service(type, document, primer_nombre, primer_apellido, id_unidad_organizacional_actual, id_unidad_para_la_que_solicita))
+        }
     })
 
 
@@ -179,7 +178,7 @@ const FuncionarioResponsable = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
+                            md: 3,
                             control_form: control_persona,
                             control_name: "numero_documento",
                             default_value: "",
@@ -193,7 +192,7 @@ const FuncionarioResponsable = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 4,
+                            md: 3,
                             control_form: control_persona,
                             control_name: "nombre_completo",
                             default_value: "",
@@ -203,7 +202,19 @@ const FuncionarioResponsable = ({
                             disabled: true,
                             helper_text: ""
                         },
-
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_persona,
+                            control_name: "nombre_unidad_organizacional_actual",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            label: "Nombre unidad organizacional",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
                     ]}
                     modal_select_model_title='Buscar persona'
                     modal_form_filters={[
@@ -261,32 +272,8 @@ const FuncionarioResponsable = ({
                             disabled: false,
                             helper_text: ""
                         },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 5,
-                            control_form: control_persona,
-                            control_name: "razon_social",
-                            default_value: "",
-                            rules: {},
-                            label: "Razon social",
-                            type: "text",
-                            disabled: false,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 5,
-                            control_form: control_persona,
-                            control_name: "nombre_comercial",
-                            default_value: "",
-                            rules: {},
-                            label: "Nombre comercial",
-                            type: "text",
-                            disabled: false,
-                            helper_text: ""
-                        },
+
+
                     ]}
                 />
             </Grid>

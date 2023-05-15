@@ -1,16 +1,12 @@
 export interface ISolicitudConsumo {
   current_solicitud: IObjSolicitud; // solicitud para crear
   solicitudes: IObjSolicitud[]; // solicitudes
-
   bienes_solicitud: IObjBienesSolicitud[]; // solicitud bienes por crear
   bienes: IObjBienConsumo[];
   current_bien: IObjBienConsumo;
-
   persona_solicita: IObjPersonaSolicita;
-
   funcionarios: IObjFuncionario[];
   current_funcionario: IObjFuncionario;
-
   nro_solicitud: number | null; //
   unidades_medida: UnidadesMedida[];
   unidad_organizacional: UnidadOrganizacional[];
@@ -112,7 +108,9 @@ export interface IObjFuncionario {
   tiene_usuario?: true | null;
   id_unidad_organizacional_actual?: number | null;
   nombre_unidad_organizacional_actual?: string | null;
-  id_unidad_para_la_que_solicita?: string | null;
+  id_unidad_para_la_que_solicita?: number | null;
+  digito_verificacion?: number | null;
+  cod_naturaleza_empresa?: string | null;
 }
 
 // interfaz para aprobacion de bienes
