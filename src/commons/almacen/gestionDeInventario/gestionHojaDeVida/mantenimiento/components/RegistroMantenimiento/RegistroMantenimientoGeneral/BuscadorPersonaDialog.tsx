@@ -14,7 +14,6 @@ export const BuscadorPersonaDialog: React.FC<IProps> = (props: IProps) => {
 
     const set_persona_modal = (data: InfoPersona): void => {
         set_seleccion_persona(data);
-        console.log(data);
     };
     const boton_seleccionar: any = () => {
         props.set_persona(seleccion_persona);
