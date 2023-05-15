@@ -952,9 +952,7 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
           </Step>
           {/* Datos de acceso */}
           <Step>
-            <StepLabel>
-              Autorización de notificación y tratamiento de datos
-            </StepLabel>
+            <StepLabel>Datos de acceso</StepLabel>
             <StepContent>
               <Grid container spacing={2} mt={0.1}>
                 <Grid item xs={12} sm={12}>
