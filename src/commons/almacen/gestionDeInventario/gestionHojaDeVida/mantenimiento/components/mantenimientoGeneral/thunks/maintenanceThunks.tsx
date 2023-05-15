@@ -58,11 +58,11 @@ export const override_maintenance: any = (id_programado: number,form_data: anula
     }
   };
 };
-// Consulta mantenimientos programados por fechas
-export const get_programmed_maintenance: any = (fecha_desde: string, fecha_hasta: string) => {
+// Consulta mantenimientos programados por fechas y tipo
+export const get_programmed_maintenance: any = (fecha_desde: string, fecha_hasta: string, tipo: string) => {
   return async () => {
     try {
-      const { data } = await api.get(`almacen/mantenimientos/programados/get-by-fechas/?rango-inicial-fecha=${fecha_desde}&rango-final-fecha=${fecha_hasta}`);
+      const { data } = await api.get(`almacen/mantenimientos/programados/get-by-fechas/?rango-inicial-fecha=${fecha_desde}&rango-final-fecha=${fecha_hasta}&cod_tipo_activo=${tipo}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

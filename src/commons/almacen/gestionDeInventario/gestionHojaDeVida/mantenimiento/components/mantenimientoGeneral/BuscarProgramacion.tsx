@@ -63,16 +63,41 @@ const BuscarProgramacionComponent = ({
   };
 
   const accionar_busqueda: any = () => {
-    dispatch(
-      get_programmed_maintenance(
-        dayjs(fecha_desde).format('DD-MM-YYYY'),
-        dayjs(fecha_hasta).format('DD-MM-YYYY')
-      )
-    ).then((response: any) => {
-      set_grid_busqueda(response.detail);
-      set_grid_busqueda_before([...response.detail]);
-      console.log(grid_busqueda_before);
-    });
+    if (tipo_articulo === 'vehículos') {
+      dispatch(
+        get_programmed_maintenance(
+          dayjs(fecha_desde).format('DD-MM-YYYY'),
+          dayjs(fecha_hasta).format('DD-MM-YYYY'),
+          'Veh'
+        )
+      ).then((response: any) => {
+        set_grid_busqueda(response.detail);
+        set_grid_busqueda_before([...response.detail]);
+      });
+    } else if (tipo_articulo === 'computadores') {
+      dispatch(
+        get_programmed_maintenance(
+          dayjs(fecha_desde).format('DD-MM-YYYY'),
+          dayjs(fecha_hasta).format('DD-MM-YYYY'),
+          'Com'
+        )
+      ).then((response: any) => {
+        set_grid_busqueda(response.detail);
+        set_grid_busqueda_before([...response.detail]);
+      });
+    } else {
+      dispatch(
+        get_programmed_maintenance(
+          dayjs(fecha_desde).format('DD-MM-YYYY'),
+          dayjs(fecha_hasta).format('DD-MM-YYYY'),
+          'OAc'
+        )
+      ).then((response: any) => {
+        set_grid_busqueda(response.detail);
+        set_grid_busqueda_before([...response.detail]);
+      });
+    }
+    console.log(grid_busqueda_before);
   };
 
   const selected_product_grid: any = () => {
@@ -99,13 +124,10 @@ const BuscarProgramacionComponent = ({
           }
         );
       }
+      prog_details(selected_product);
       set_is_modal_active(false);
     }
   };
-
-  useEffect(() => {
-    prog_details(selected_product);
-  }, [selected_product]);
 
   useEffect(() => {
     parent_details(articulo);

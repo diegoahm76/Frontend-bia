@@ -27,7 +27,7 @@ export function TrasladoScreen(): JSX.Element {
 
     return (
       <>
-      <h1>Traslado</h1>
+      <h1>Traslado test</h1>
       </>
     );
   }
