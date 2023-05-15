@@ -18,7 +18,6 @@ import {
   Step,
   StepLabel,
   StepContent,
-  type SelectChangeEvent,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -31,7 +30,6 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import type { PropsRegister } from '../../../interfaces/globalModels';
 import { use_register_persona_n } from '../hooks/registerPersonaNaturalHook';
-import type { keys_object } from '../interfaces';
 import { validate_error } from '../../../helpers';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -77,13 +75,16 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
     municipio_laboral,
     dpto_laboral_opt,
     departamento_laboral_opt,
+    is_modal_active,
+    direccion,
+    direccion_laboral,
     handle_click_show_password,
     on_submit,
+    set_value_direction,
+    on_change,
+    open_modal,
   } = use_register_persona_n({ watch, setValue: set_value, getValues });
 
-  const [is_modal_active, open_modal] = useState(false);
-  const [direccion, set_direccion] = useState('');
-  const [direccion_laboral, set_direccion_laboral] = useState('');
   const [type_direction, set_type_direction] = useState('');
   const [active_step, set_active_step] = useState(0);
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
@@ -92,28 +93,6 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
   const acepta_notificacion_email = watch('acepta_notificacion_email') ?? false;
   const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
   const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
-
-  const set_value_direction = (value: string, type: string): void => {
-    // direccion_laboral
-    // direccion_notificaciones
-    // direccion_residencia_ref
-    // direccion_residencia
-    switch (type_direction) {
-      case 'residencia':
-        set_direccion(value);
-        set_value_form('direccion_residencia', value);
-
-        break;
-      case 'notificacion':
-        set_value_form('direccion_notificaciones', value);
-        break;
-      case 'laboral':
-        set_value_form('direccion_laboral', value);
-        set_direccion_laboral(value);
-        break;
-    }
-    open_modal(false);
-  };
 
   // establece la fecha de nacimiento
   const on_change_birt_day = (value: Dayjs | null): void => {
@@ -183,16 +162,6 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
   // Paso anterior del stepper
   const handle_back = (): void => {
     set_active_step((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  // Establece los valores del formulario
-  const set_value_form = (name: string, value: string): void => {
-    set_value(name as keys_object, value);
-  };
-
-  // Se usa para escuchar los cambios de valor del componente CustomSelect
-  const on_change = (e: SelectChangeEvent<string>): void => {
-    set_value_form(e.target.name, e.target.value);
   };
 
   return (
@@ -834,7 +803,7 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
                     type="textarea"
                     rows="3"
                     label="Complemento dirección"
-                    {...register('direccion_laboral')}
+                    {...register('direccion_laboral_ref')}
                   />
                 </Grid>
 

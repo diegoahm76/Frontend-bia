@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import type { keys_object } from '../interfaces';
 import { RegisterPersonaNatural } from './RegisterPersonaNatural';
-// import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
+import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
 import { CustomSelect } from '../../../components';
 import { LoadingButton } from '@mui/lab';
 import { CreateUser } from './CreateUser';
@@ -192,14 +192,20 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
           getValues={get_values}
         />
       )}
-      {/* {tipo_persona === 'J' && (
+      {tipo_persona === 'J' && is_avaiable && !no_has_user && (
         <RegisterPersonaJuridica
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
-          has_user={has_user}
+          errors={errors}
+          handleSubmit={handle_submit}
+          isValid={is_valid}
+          register={register}
+          setValue={set_value}
+          getValues={get_values}
+          watch={watch}
         />
-      )} */}
+      )}
     </>
   );
 };

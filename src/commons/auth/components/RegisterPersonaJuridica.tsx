@@ -38,27 +38,22 @@ import Visibility from '@mui/icons-material/Visibility';
 import { validate_password } from '../../../helpers/ValidateFormatPassword';
 import { crear_persona_juridica_and_user } from '../request/authRequest';
 import { CustomSelect } from '../../../components/CustomSelect';
-import type { ResponseServer } from '../../../interfaces/globalModels';
+import type {
+  PropsRegister,
+  ResponseServer,
+} from '../../../interfaces/globalModels';
 
 interface PropsStep {
   label: string;
   component: JSX.Element;
 }
 
-interface Props {
-  numero_documento: string;
-  tipo_documento: string;
-  tipo_persona: string;
-  has_user: boolean;
-}
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterPersonaJuridica: React.FC<Props> = ({
+export const RegisterPersonaJuridica: React.FC<PropsRegister> = ({
   numero_documento,
   tipo_documento,
   tipo_persona,
-  has_user,
-}: Props) => {
+}: PropsRegister) => {
   const {
     register,
     handleSubmit: handle_submit,
@@ -998,7 +993,7 @@ export const RegisterPersonaJuridica: React.FC<Props> = ({
                           index === steps.length - 1 ? 'success' : 'primary'
                         }
                         loading={is_saving}
-                        disabled={is_saving || has_user}
+                        disabled={is_saving}
                         onClick={handle_next}
                       >
                         {index === steps.length - 1

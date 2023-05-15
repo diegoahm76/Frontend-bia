@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
 import {
   get_ciudades,
   get_departamentos,
@@ -19,8 +19,9 @@ import type {
   UseFormWatch,
 } from 'react-hook-form';
 import { crear_persona_natural_and_user } from '../request/authRequest';
-import type { DataRegisterPersonaN } from '../interfaces';
+import type { DataRegisterPersonaN, keys_object } from '../interfaces';
 import type { AxiosError } from 'axios';
+import type { SelectChangeEvent } from '@mui/material';
 
 interface RegisterPersonHook {
   error_email: boolean;
@@ -28,6 +29,7 @@ interface RegisterPersonHook {
   error_password: boolean;
   is_saving: boolean;
   loading: boolean;
+  is_modal_active: boolean;
   show_password: boolean;
   paises_options: IList[];
   departamentos_opt: IList[];
@@ -55,8 +57,13 @@ interface RegisterPersonHook {
   pais_laboral: string;
   departamento_laboral: string;
   municipio_laboral: string;
+  direccion: string;
+  direccion_laboral: string;
   handle_click_show_password: () => void;
+  on_change: (e: SelectChangeEvent<string>) => void;
+  set_value_direction: (value: string, type: string) => void;
   on_submit: (values: FieldValues) => Promise<void>;
+  open_modal: Dispatch<SetStateAction<boolean>>;
 }
 
 type options = 'inicial' | 'residencia' | 'notificacion' | 'laboral';
@@ -73,6 +80,7 @@ export const use_register_persona_n = ({
   setValue: set_value,
   getValues: get_values,
 }: Props): RegisterPersonHook => {
+  const [is_modal_active, open_modal] = useState(false);
   const [is_saving, set_is_saving] = useState(false);
   const [loading, set_loading] = useState(false);
   const [error_email, set_error_email] = useState(false);
@@ -112,6 +120,8 @@ export const use_register_persona_n = ({
   const [pais_laboral, set_pais_laboral] = useState('');
   const [departamento_laboral, set_departamento_laboral] = useState('');
   const [municipio_laboral, set_municipio_laboral] = useState('');
+  const [direccion, set_direccion] = useState('');
+  const [direccion_laboral, set_direccion_laboral] = useState('');
 
   const email = watch('email') ?? '';
   const confirmar_email = watch('confirmar_email') ?? '';
@@ -242,6 +252,39 @@ export const use_register_persona_n = ({
 
   const handle_click_show_password = (): void => {
     set_show_password((show) => !show);
+  };
+
+  // Establece la dirección generada en el generador de direcciones
+  const set_value_direction = (value: string, type: string): void => {
+    // direccion_laboral
+    // direccion_notificaciones
+    // direccion_residencia_ref
+    // direccion_residencia
+    switch (type) {
+      case 'residencia':
+        set_direccion(value);
+        set_value_form('direccion_residencia', value);
+
+        break;
+      case 'notificacion':
+        set_value_form('direccion_notificaciones', value);
+        break;
+      case 'laboral':
+        set_value_form('direccion_laboral', value);
+        set_direccion_laboral(value);
+        break;
+    }
+    open_modal(false);
+  };
+
+  // Establece los valores del formulario
+  const set_value_form = (name: string, value: string): void => {
+    set_value(name as keys_object, value);
+  };
+
+  // Se usa para escuchar los cambios de valor del componente CustomSelect
+  const on_change = (e: SelectChangeEvent<string>): void => {
+    set_value_form(e.target.name, e.target.value);
   };
 
   // USEEFECTS
@@ -402,6 +445,7 @@ export const use_register_persona_n = ({
     error_phone,
     error_password,
     show_password,
+    is_modal_active,
     ciudades_residencia_opt,
     ciudad_notificacion_opt,
     paises_options,
@@ -428,7 +472,12 @@ export const use_register_persona_n = ({
     municipio_laboral,
     dpto_laboral_opt,
     departamento_laboral_opt,
+    direccion,
+    direccion_laboral,
     handle_click_show_password,
+    set_value_direction,
     on_submit,
+    on_change,
+    open_modal,
   };
 };
