@@ -29,7 +29,7 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
     const [estado, set_estado] = useState("");
     const [observaciones, set_observaciones] = useState<string | null>("");
     const [diligenciado, set_diligenciado] = useState<string | null>("");
-    const [realizado, set_realizado] = useState<string | null>("");
+    const [realizado, set_realizado] = useState<any | null>({nombre_completo: ""});
     const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
     // Errors
     const [mensaje_error_dias, set_mensaje_error_dias] = useState<string>("");
@@ -39,7 +39,6 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
     useEffect(() => {
         if (user_info !== null && user_info !== undefined) {
             set_diligenciado(user_info.nombre);
-            set_realizado(user_info.nombre); // Temporal
         }
     }, [user_info]);
 
@@ -207,7 +206,7 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
                                 size="small"
                                 required
                                 fullWidth
-                                value={realizado}
+                                value={realizado.nombre_completo}
                                 InputProps={{
                                     readOnly: true,
                                 }}
@@ -239,7 +238,8 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
                 <BuscadorPersonaDialog
                     is_modal_active={abrir_modal_persona}
                     set_is_modal_active={set_abrir_modal_persona}
-                    title={"Busqueda de persona"} />
+                    title={"Busqueda de persona"} 
+                    set_persona={set_realizado}/>
             )}
         </>
     )

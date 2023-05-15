@@ -1,19 +1,24 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material"
-import { type Dispatch, type SetStateAction } from "react";
-import { BuscadorPersona } from "../../../../../../../../components/BuscadorPersona"
+import { useState, type Dispatch, type SetStateAction } from "react";
+import { BusquedaPersona } from "../../../../../../../../components/BusquedaPersona";
 import { type InfoPersona } from "../../../../../../../../interfaces/globalModels";
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
-    title: string
+    title: string,
+    set_persona: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 export const BuscadorPersonaDialog: React.FC<IProps> = (props: IProps) => {
-    const on_result = (data: InfoPersona): void => {
+    const [seleccion_persona, set_seleccion_persona] = useState<any>({});
+
+    const set_persona_modal = (data: InfoPersona): void => {
+        set_seleccion_persona(data);
         console.log(data);
     };
-    const seleccion_persona: any = () => {
-        
+    const boton_seleccionar: any = () => {
+        props.set_persona(seleccion_persona);
+        props.set_is_modal_active(false);
     }
     
     return (
@@ -26,14 +31,14 @@ export const BuscadorPersonaDialog: React.FC<IProps> = (props: IProps) => {
             <DialogTitle>{props.title}</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
-                            <BuscadorPersona onResult={on_result} />
+                    <BusquedaPersona set_persona={set_persona_modal} />
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button
                     color='primary'
                     variant='contained'
-                    onClick={seleccion_persona}>Seleccionar</Button>
+                    onClick={boton_seleccionar}>Seleccionar</Button>
                 <Button
                     color='inherit'
                     variant='contained'
