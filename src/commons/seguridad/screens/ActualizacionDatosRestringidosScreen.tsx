@@ -462,9 +462,9 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
             </Box>
           )}
           {persona?.tipo_persona === 'J' && (
-             <Box component="form"
-             // eslint-disable-next-line @typescript-eslint/no-misused-promises
-             onSubmit={handleSubmit(on_submit_persona_juridica)}
+            <Box component="form"
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onSubmit={handleSubmit(on_submit_persona_juridica)}
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -727,7 +727,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
           is_modal_active={historico}
           set_is_modal_active={set_historico}
           datos_historico={datos_historico}
-          set_datos_historico={set_datos_historico}
         />
       </Grid>
     </>

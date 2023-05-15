@@ -22,7 +22,6 @@ interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
     historico_direcciones: InfoPersona;
-    set_historico_direcciones: Dispatch<SetStateAction<any>>;
 }
 
 const columns: GridColDef[] = [
@@ -57,10 +56,10 @@ const columns: GridColDef[] = [
         width: 170,
     },
     {
-        field: 'id_persona',
-        headerName: 'PERSONA',
+        field: 'nombre_completo',
+        headerName: 'NOMBRE',
         sortable: true,
-        width: 170,
+        width: 300,
     },
 ];
 
@@ -69,7 +68,6 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
     is_modal_active,
     set_is_modal_active,
     historico_direcciones,
-    set_historico_direcciones,
 }: IProps) => {
     const [rows, set_rows] = useState<HistoricoDirecciones[]>([]);
 
@@ -91,9 +89,10 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                     tipo_direccion: datos.tipo_direccion,
                     fecha_cambio: datos.fecha_cambio,
                     id_persona: datos.id_persona,
+                    nombre_completo: datos.nombre_completo,
                 })
             );
-            console.log("Data Historial",new_historico)
+            console.log("Data Historial", new_historico)
             set_rows(new_historico);
         } catch (err) {
             control_error(err);

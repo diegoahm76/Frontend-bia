@@ -2,6 +2,7 @@ import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import {
     Button,
+    Chip,
     Dialog,
     DialogTitle,
     Divider,
@@ -21,56 +22,67 @@ import { consultar_historico_autorizaciones } from '../../seguridad/request/Requ
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    historico_direcciones: InfoPersona;
-    set_historico_direcciones: Dispatch<SetStateAction<any>>;
+    historico_autorizaciones: InfoPersona;
 }
-
-const columns: GridColDef[] = [
-    {
-        field: 'id_historico_autoriza_noti',
-        headerName: '#',
-        sortable: true,
-        width: 70,
-    },
-    {
-        field: 'nombre_completo_replegal',
-        headerName: 'NOMBRE',
-        sortable: true,
-        width: 170,
-    },
-    {
-        field: 'respuesta_autorizacion_sms',
-        headerName: 'ESTADO SMS',
-        sortable: true,
-        width: 120,
-    },
-    {
-        field: 'respuesta_autorizacion_mail',
-        headerName: 'ESTADO E-MAIL',
-        sortable: true,
-        width: 170,
-    },
-    {
-        field: 'fecha_inicio',
-        headerName: 'FECHA DE INICIO',
-        sortable: true,
-        width: 170,
-    },
-    {
-        field: 'fecha_fin',
-        headerName: 'FECHA DE FIN',
-        sortable: true,
-        width: 170,
-    },
-];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
     is_modal_active,
     set_is_modal_active,
-    historico_direcciones,
-    set_historico_direcciones,
+    historico_autorizaciones,
 }: IProps) => {
+    const columns: GridColDef[] = [
+        {
+            field: 'id_historico_autoriza_noti',
+            headerName: '#',
+            sortable: true,
+            width: 70,
+        },
+        {
+            field: 'nombre_completo',
+            headerName: 'NOMBRE',
+            sortable: true,
+            width: 300,
+        },
+        {
+            field: 'respuesta_autorizacion_sms',
+            headerName: 'ESTADO SMS',
+            sortable: true,
+            width: 120,
+            renderCell: (params) => {
+                return params.row.respuesta_autorizacion_sms === true ? (
+                <Chip size="small" label="Activo" color="success" variant="outlined" />
+                ) : (
+                  <Chip size="small" label="Inactivo" color="error" variant="outlined" />
+                );
+              },
+        },
+        {
+            field: 'respuesta_autorizacion_mail',
+            headerName: 'ESTADO E-MAIL',
+            sortable: true,
+            width: 170,
+            renderCell: (params) => {
+                return params.row.respuesta_autorizacion_mail === true ? (
+                <Chip size="small" label="Activo" color="success" variant="outlined" />
+                ) : (
+                  <Chip size="small" label="Inactivo" color="error" variant="outlined" />
+                );
+              },
+        },
+        {
+            field: 'fecha_inicio',
+            headerName: 'FECHA DE INICIO',
+            sortable: true,
+            width: 220,
+        },
+        {
+            field: 'fecha_fin',
+            headerName: 'FECHA DE FIN',
+            sortable: true,
+            width: 220,
+        },
+    ];
     const [rows, set_rows] = useState<HistoricoAutorizaNotificaciones[]>([]);
 
     const handle_close = (): void => {
@@ -80,7 +92,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
     const historico = async (): Promise<void> => {
         try {
             const response = await consultar_historico_autorizaciones(
-                historico_direcciones.id_persona
+                historico_autorizaciones.id_persona
             );
             const new_historico = response.map(
                 (datos: HistoricoAutorizaNotificaciones) => ({
@@ -93,7 +105,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                     id_persona: datos.id_persona,
                 })
             );
-            console.log("Data Historial", new_historico)
+            console.log("Historial Autorizaciones", new_historico)
             set_rows(new_historico);
         } catch (err) {
             control_error(err);
