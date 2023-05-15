@@ -49,12 +49,9 @@ const BuscarArticuloComponent = ({
   }
 
   const selected_product_grid: any = () => {
+    parent_details(selected_product);
     set_is_modal_active(false);
   }
-  
-  useEffect(() => {
-    parent_details(selected_product);
-  }, [selected_product]);
 
   useEffect(() => {
     if(title ==='Buscar vehículos'){

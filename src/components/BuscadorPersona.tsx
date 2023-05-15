@@ -2,20 +2,19 @@ import {
   Grid,
   type SelectChangeEvent,
   Skeleton,
-  IconButton,
   FormControl,
-  InputAdornment,
   OutlinedInput,
   InputLabel,
-  CircularProgress,
-  FormHelperText,
   Button,
   Dialog,
   DialogContent,
   DialogActions,
   TextField,
   Box,
+  IconButton,
+  Avatar,
 } from '@mui/material';
+import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useState, useEffect } from 'react';
 import { CustomSelect } from './CustomSelect';
 // import { LoadingButton } from '@mui/lab';
@@ -33,7 +32,6 @@ import type {
   ResponseServer,
 } from '../interfaces/globalModels';
 import type { AxiosError } from 'axios';
-import SearchIcon from '@mui/icons-material/Search';
 import { Title } from './Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { LoadingButton } from '@mui/lab';
@@ -42,68 +40,150 @@ interface PropsBuscador {
   onResult: (data_persona: InfoPersona) => void;
 }
 
-const columns: GridColDef[] = [
-  { field: 'id_persona', headerName: 'ID', sortable: true, width: 70 },
-  {
-    field: 'tipo_persona',
-    headerName: 'TIPO PERSONA',
-    sortable: true,
-    width: 170,
-  },
-  {
-    field: 'tipo_documento',
-    headerName: 'TIPO DOCUMENTO',
-    sortable: true,
-    width: 170,
-  },
-  {
-    field: 'numero_documento',
-    headerName: 'NÚMERO DOCUMENTO',
-    sortable: true,
-    width: 170,
-  },
-  {
-    field: 'primer_nombre',
-    headerName: 'PRIMER NOMBRE',
-    sortable: true,
-    width: 170,
-  },
-  {
-    field: 'segundo_nombre',
-    headerName: 'SEGUNDO NOMBRE',
-    sortable: true,
-    width: 170,
-  },
-  {
-    field: 'primer_apellido',
-    headerName: 'PRIMER APELLIDO',
-    sortable: true,
-    width: 170,
-  },
-  {
-    field: 'segundo_apellido',
-    headerName: 'SEGUNDO APELLIDO',
-    sortable: true,
-    width: 170,
-  },
-  {
-    field: 'razon_social',
-    headerName: 'RAZÓN SOCIAL',
-    sortable: true,
-    width: 170,
-  },
-  {
-    field: 'nombre_comercial',
-    headerName: 'NOMBRE COMERCIAL',
-    sortable: true,
-    width: 170,
-  },
-];
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BuscadorPersona: React.FC<PropsBuscador> = ({
   onResult,
 }: PropsBuscador) => {
+
+  const columns: GridColDef[] = [
+    { field: 'id_persona', headerName: 'ID', sortable: true, width: 70 },
+    {
+      field: 'tipo_persona',
+      headerName: 'TIPO PERSONA',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'tipo_documento',
+      headerName: 'TIPO DOCUMENTO',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'numero_documento',
+      headerName: 'NÚMERO DOCUMENTO',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'primer_nombre',
+      headerName: 'PRIMER NOMBRE',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'segundo_nombre',
+      headerName: 'SEGUNDO NOMBRE',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'primer_apellido',
+      headerName: 'PRIMER APELLIDO',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'segundo_apellido',
+      headerName: 'SEGUNDO APELLIDO',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 80,
+      renderCell: (params) => (
+        <>
+          <IconButton aria-label="Seleccionar">
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                onClick={() => {
+                  if (params.row !== undefined) {
+                    handle_close();
+                    onResult(params.row);
+                  }
+                }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+  const columns_juridica: GridColDef[] = [
+    { field: 'id_persona', headerName: 'ID', sortable: true, width: 70 },
+    {
+      field: 'tipo_persona',
+      headerName: 'TIPO PERSONA',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'tipo_documento',
+      headerName: 'TIPO DOCUMENTO',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'numero_documento',
+      headerName: 'NÚMERO DOCUMENTO',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'razon_social',
+      headerName: 'RAZÓN SOCIAL',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'nombre_comercial',
+      headerName: 'NOMBRE COMERCIAL',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 80,
+      renderCell: (params) => (
+        <>
+          <IconButton aria-label="Seleccionar">
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                onClick={() => {
+                  if (params.row !== undefined) {
+                    handle_close();
+                    onResult(params.row);
+                  }
+                }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+
   const {
     register,
     handleSubmit: handle_submit,
@@ -115,42 +195,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
   const [tipo_documento, set_tipo_documento] = useState('');
   const [tipo_documento_av, set_tipo_documento_av] = useState('');
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<InfoPersona[]>([
-    {
-      id: 1,
-      id_persona: 1,
-      tipo_persona: 'string',
-      tipo_documento: 'string',
-      numero_documento: 'string',
-      primer_nombre: 'string',
-      segundo_nombre: 'string',
-      primer_apellido: 'string',
-      segundo_apellido: 'string',
-      nombre_completo: 'string',
-      razon_social: 'string',
-      nombre_comercial: 'string',
-      tiene_usuario: false,
-      digito_verificacion: "",
-      cod_naturaleza_empresa: "",
-    },
-    {
-      id: 2,
-      id_persona: 2,
-      tipo_persona: 'string',
-      tipo_documento: 'string',
-      numero_documento: 'string',
-      primer_nombre: 'string',
-      segundo_nombre: 'string',
-      primer_apellido: 'string',
-      segundo_apellido: 'string',
-      nombre_completo: 'string',
-      razon_social: 'string',
-      nombre_comercial: 'string',
-      tiene_usuario: false,
-      digito_verificacion: "",
-      cod_naturaleza_empresa: "",
-    },
-  ]);
+  const [rows, set_rows] = useState<InfoPersona[]>([]);
   const handle_click_open = (): void => {
     set_open_dialog(true);
   };
@@ -262,59 +307,33 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
               register={register}
             />
           </Grid>
+
           <Grid item xs={12} sm={6} md={4} lg={3}>
             {is_loading ? (
               <Skeleton variant="rectangular" width="100%" height={45} />
             ) : (
-              <FormControl
-                size="small"
-                variant="outlined"
-                fullWidth
-                error={errors.numero_documento?.type === 'required'}
-              >
-                <InputLabel htmlFor="documento">
-                  Número de documento *
-                </InputLabel>
+              <FormControl size="small" variant="outlined" fullWidth error={errors.numero_documento?.type === 'required'}>
+                <InputLabel htmlFor="documento">Número de documento *</InputLabel>
                 <OutlinedInput
                   id="documento"
                   {...register('numero_documento', {
-                    required: true,
                   })}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      {is_search ? (
-                        <CircularProgress size={20} />
-                      ) : (
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          type="submit"
-                          edge="end"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      )}
-                    </InputAdornment>
-                  }
                   label="Número de documento *"
                 />
-                {errors.numero_documento?.type === 'required' && (
-                  <FormHelperText id="documento">
-                    Este campo es obligatorio
-                  </FormHelperText>
-                )}
               </FormControl>
             )}
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            lg={2}
-            container
-            direction="column"
-            justifyContent="center"
-          >
+          <Grid item xs={12} sm={6} md={4} lg={3}>
+            <LoadingButton
+              aria-label="toggle password visibility"
+              variant="contained"
+              type='submit'
+              style={{ marginRight: '10px' }}
+              loading={is_search}
+              disabled={is_search}
+            >
+              Buscar
+            </LoadingButton>
             <Button
               variant="outlined"
               color="primary"
@@ -418,20 +437,39 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   Buscar
                 </LoadingButton>
               </Grid>
-              <Grid item xs={12}>
-                <Typography>Resultados de la búsqueda</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Box sx={{ height: 400, width: '100%' }}>
-                  <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    checkboxSelection
-                  />
-                </Box>
-              </Grid>
+              {rows.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <Typography>Resultados de la búsqueda</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ height: 400, width: '100%' }}>
+                      {rows.every(row => row.tipo_persona === 'J') ? (
+                        <>
+                          <DataGrid
+                            rows={rows}
+                            columns={columns_juridica}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                            getRowId={(row) => row.id_persona}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                            getRowId={(row) => row.id_persona}
+                          />
+                        </>
+                      )}
+
+                    </Box>
+                  </Grid>
+                </>
+              )}
             </Grid>
           </form>
         </DialogContent>
