@@ -232,15 +232,12 @@ export const use_register_persona_n = ({
     try {
       values.redirect_url =
         'https://macareniafrontendevelopv2.netlify.app/#/auth/activacion_cuenta';
-      const is_send = false;
-      if (is_send) {
-        const { data } = await crear_persona_natural_and_user(
-          values as DataRegisterPersonaN
-        );
-        control_success(data.detail);
+      const { data } = await crear_persona_natural_and_user(
+        values as DataRegisterPersonaN
+      );
+      control_success(data.detail);
 
-        // window.location.href = '#/app/auth/login';
-      }
+      window.location.href = '#/app/auth/login';
     } catch (error) {
       const temp_error = error as AxiosError;
       const resp = temp_error.response?.data as ResponseServer<any>;
