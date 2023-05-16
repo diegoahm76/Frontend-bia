@@ -29,7 +29,6 @@ export const use_register = (): ReisterHookNew => {
   } = useForm();
 
   const [is_error, set_is_error] = useState(false);
-  const [is_exists, set_is_exists] = useState(false);
   const [is_search, set_is_search] = useState(false);
   const [is_saving, set_is_saving] = useState(false);
   const [is_avaiable, set_is_avaiable] = useState(false);
@@ -41,7 +40,6 @@ export const use_register = (): ReisterHookNew => {
     IList[]
   >([]);
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
-  const [message_no_person, set_message_no_person] = useState('');
 
   const tipo_persona = watch('tipo_persona') ?? '';
   const tipo_documento = watch('tipo_documento') ?? '';
@@ -140,40 +138,6 @@ export const use_register = (): ReisterHookNew => {
     }
   };
 
-  const validate_exits_representante: (
-    data: FieldValues
-  ) => Promise<void> = async ({
-    tipo_documento_rep,
-    numero_documento,
-  }): Promise<void> => {
-    set_is_search(true);
-    set_message_no_person('');
-    try {
-      const {
-        data: { data },
-      } = await get_person_by_document(tipo_documento_rep, numero_documento);
-
-      if (data !== null && data !== undefined) {
-        if (data.id_persona !== 0) {
-          set_value('tipo_documento_rep', data.tipo_documento);
-          set_value('numero_documento_rep', data.numero_documento);
-          set_value('nombre_rep', data.nombre_completo);
-          return;
-        } else {
-          set_is_exists(true);
-          return;
-        }
-      }
-      set_message_no_person(
-        'No existe ninguna persona registrada con esta cédula'
-      );
-    } catch (error) {
-      control_error(error);
-    } finally {
-      set_is_search(false);
-    }
-  };
-
   // Crea el usuario
   const on_submit = async ({
     nombre_de_usuario,
@@ -236,10 +200,7 @@ export const use_register = (): ReisterHookNew => {
     tipo_documento_opt,
     tipo_persona_opt,
     no_has_user,
-    is_exists,
-    message_no_person,
     is_saving,
-    validate_exits_representante,
     handle_submit,
     register,
     set_value,

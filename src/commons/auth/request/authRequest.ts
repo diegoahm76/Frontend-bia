@@ -3,7 +3,6 @@ import type {
   ResponseAuth,
   LoginUser,
   IUserInfo,
-  DataRegistePortal,
   DataUnlockUser,
   InfoPersonaComplete,
   ChangePassword,
@@ -11,7 +10,8 @@ import type {
   ResponseRecover,
   DataRegisterPersonaN,
   Menu,
-  User
+  User,
+  DataRegisterPersonaJ
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -89,7 +89,7 @@ export const crear_persona_natural_and_user = async (
 };
 
 export const crear_persona_juridica_and_user = async (
-  data: DataRegistePortal
+  data: DataRegisterPersonaJ
 ): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.post('personas/persona-juridica-and-usuario/create/', data);
 };
