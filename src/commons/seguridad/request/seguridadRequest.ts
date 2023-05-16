@@ -226,13 +226,8 @@ export const crear_user_admin_user = async (
 export const update_user_admin_user = async (
   id_usuario: number,
   data: FormData
-<<<<<<< HEAD
-): Promise<AxiosResponse<UserCreate>> => {
-  return await api.patch(`users/update/${id_usuario}/`, data);
-=======
 ): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.patch(`users/update/${id_usuario}}/`, data);
->>>>>>> Develop
 };
 
 // editar datos persona restringida juridica
