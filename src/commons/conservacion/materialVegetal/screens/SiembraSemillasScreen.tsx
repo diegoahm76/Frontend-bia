@@ -5,20 +5,22 @@ import SeleccionarBienSiembra from "../componentes/SeleccionarBienSiembra";
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { set_current_planting, set_current_nursery, set_germination_beds } from '../store/slice/materialvegetalSlice';
 import { useEffect, useState } from "react";
-import { add_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_planting_goods_service } from "../store/thunks/materialvegetalThunks";
+import { add_siembra_service, delete_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_planting_goods_service } from "../store/thunks/materialvegetalThunks";
 import { type IObjNursery, type IObjPlanting } from "../interfaces/materialvegetal";
 import { useForm } from "react-hook-form";
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
-import CheckIcon from '@mui/icons-material/Check';
 import PersonaSiembra from "../componentes/PersonaSiembra";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function SiembraSemillasScreen(): JSX.Element {
 
   const { current_planting, planting_person, nurseries, current_nursery, planting_goods, current_germination_beds, germination_beds} = useAppSelector((state) => state.material_vegetal);
+  
   const { control: control_siembra, handleSubmit: handle_submit, reset: reset_siembra, getValues: get_values, watch } = useForm<IObjPlanting>();
+  
+ 
   const [action, set_action] = useState<string>("Crear")
   const dispatch = useAppDispatch()
 
@@ -29,7 +31,9 @@ export function SiembraSemillasScreen(): JSX.Element {
   useEffect(() => {
     if(current_planting.id_siembra !== null){
       void dispatch(get_germination_beds_service(Number(current_planting.id_vivero)));  
-      void dispatch(get_planting_goods_service(current_planting.id_siembra));     
+      void dispatch(get_planting_goods_service(current_planting.id_siembra)); 
+      set_action("editar")   
+      console.log(current_planting) 
     }
     reset_siembra(current_planting)
   }, [current_planting]);
@@ -37,7 +41,6 @@ export function SiembraSemillasScreen(): JSX.Element {
   useEffect(() => {
     if(current_nursery.id_vivero !== null){
       if(current_planting.cama_germinacion !== null){
-        console.log("vivero")
         void dispatch(get_germination_beds_id_service(current_planting.cama_germinacion));
       }
   }
@@ -66,25 +69,26 @@ export function SiembraSemillasScreen(): JSX.Element {
         dispatch(set_current_planting({...current_planting, id_vivero: vivero.id_vivero}))
       void dispatch(get_germination_beds_service(Number(vivero.id_vivero)));      
       }
-      set_action("editar")
     }
   }, [watch("id_vivero")]);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const on_submit = (data: IObjPlanting) => {
-    const form_data:any = new FormData();
-    console.log("editar")
-     
+  const on_submit = (data: IObjPlanting): void => {
+    const form_data:any = new FormData();     
+    console.log("submit")
     if (current_planting.id_siembra !== null && current_planting.id_siembra !== undefined) {
       set_action("editar")
       const data_edit = {
         ...data, distancia_entre_semillas: Number(data.distancia_entre_semillas)
       }
+      const data_update = {
+        data_siembra: data_edit,
+        data_bienes_consumidos: planting_goods
+      }
       console.log("editar")
-        form_data.append('data_siembra', JSON.stringify({...data_edit}));
-        form_data.append('data_bienes_consumidos', JSON.stringify(planting_goods));
-        void dispatch(edit_siembra_service(form_data, current_planting.id_siembra));
+      console.log(data_update)
+        void dispatch(edit_siembra_service(data_update, current_planting.id_siembra));
     } else {
+      console.log("crear")
       set_action("crear")
       const fecha = new Date(data.fecha_siembra??"").toISOString()
 
@@ -96,6 +100,12 @@ export function SiembraSemillasScreen(): JSX.Element {
         form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
         void dispatch(add_siembra_service(form_data));
     }
+  };
+  const delete_siembra = (): void => {
+    
+    if (current_planting.id_siembra !== null && current_planting.id_siembra !== undefined) {
+      void dispatch(delete_siembra_service(current_planting.id_siembra));
+    } 
   };
 
   return (
@@ -140,21 +150,13 @@ export function SiembraSemillasScreen(): JSX.Element {
               type_button="button"
             />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <FormButton
-              variant_button="contained"
-              on_click_function={null}
-              icon_class={<CheckIcon />}
-              label={"Confirmar distribucion"}
-              type_button="button"
-            />
-          </Grid>
+          
           <Grid item xs={12} md={3}>
             <FormButton
               variant_button="outlined"
-              on_click_function={null}
+              on_click_function={delete_siembra}
               icon_class={<CloseIcon />}
-              label={"Cancelar"}
+              label={"Eliminar"}
               type_button="button"
             />
           </Grid>

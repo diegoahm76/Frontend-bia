@@ -12,6 +12,8 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import { Box, Divider } from '@mui/material';
 import { v4 as uuid } from 'uuid';
+import FormInputFileController from '../form/FormInputFileController';
+import FormDatePickerController from '../form/FormDatePickerController';
 
 
 interface IProps {
@@ -33,6 +35,9 @@ interface IProps {
     columns_list?: GridColDef[];
     row_list_id?: string |number;
     add_list_button_label?:string|null;
+    show_inputs?: boolean;
+    title_table_modal?: string | null;
+    button_submit_disabled?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -55,6 +60,9 @@ const BuscarModelo = ({
     columns_list,
     row_list_id,
     add_list_button_label,
+    show_inputs,
+    title_table_modal,
+    button_submit_disabled
 }: IProps) => {
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -111,7 +119,37 @@ const BuscarModelo = ({
             />
         } else if (form_input.datum_type === "title") {
             return <Title title={form_input.title_label}></Title>
-
+        } else if (form_input.datum_type === "input_file_controller"){
+            return <FormInputFileController
+            xs={form_input.xs}
+            md={form_input.md}
+            control_form={form_input.control_form}
+            control_name={form_input.control_name}
+            default_value={form_input.default_value}
+            rules={form_input.rules}
+            label={form_input.label}
+            disabled={form_input.disabled}
+            helper_text={form_input.helper_text}
+            set_value={form_input.set_value ?? null}
+            hidden_text={form_input.hidden_text ?? null}
+            file_name={form_input.file_name ?? null}
+        />; 
+        } else if (form_input.datum_type === "date_picker_controller"){
+            return <FormDatePickerController
+            xs={form_input.xs}
+            md={form_input.md}
+            control_form={form_input.control_form}
+            control_name={form_input.control_name}
+            default_value={form_input.default_value}
+            rules={form_input.rules}
+            label={form_input.label}
+            disabled={form_input.disabled}
+            helper_text={form_input.helper_text}
+            hidden_text={form_input.hidden_text ?? null}
+            min_date={form_input.min_date ?? ""}
+            max_date={form_input.max_date ?? ""}
+            format={form_input.max_date ?? null}
+        />; 
         }
     }
 
@@ -129,26 +167,29 @@ const BuscarModelo = ({
             padding={2}
             borderRadius={2}
         >
-            {form_inputs.map((option, index) => (
-                <TypeDatum key={index} form_input={option} />
-            ))}
+            {(show_inputs ?? true) &&
+            <>
+                {form_inputs.map((option, index) => (
+                    <TypeDatum key={index} form_input={option} />
+                ))}
 
-            <Grid
-                item
-                xs={12}
-                md={3}
-            >
-                <FormButton
-                    variant_button="contained"
-                    on_click_function={handle_open_select_model}
-                    icon_class={<SearchIcon />}
-                    label={button_submit_label ?? "BUSCAR"}
-                    type_button="button"
-                />
-            </Grid>
-
+                <Grid
+                    item
+                    xs={12}
+                    md={3}
+                >
+                    <FormButton
+                        variant_button="contained"
+                        on_click_function={handle_open_select_model}
+                        icon_class={<SearchIcon />}
+                        label={button_submit_label ?? "BUSCAR"}
+                        type_button="button"
+                        disabled = {button_submit_disabled ?? false}
+                    />
+                </Grid>
+            </>
+            }
             <Divider />
-            
             {form_inputs_list !== undefined && 
                 <Grid
                 container
@@ -159,7 +200,10 @@ const BuscarModelo = ({
                 borderTop={1}
                 borderColor="lightgray"
                 >
+                    {(show_inputs ?? true) &&
+                    <>
                     {form_inputs_list?.map((option, index) => (
+
                         <TypeDatum key={index} form_input={option} />
                     ))}
                     <Grid
@@ -175,6 +219,9 @@ const BuscarModelo = ({
                             type_button="button"
                         />
                     </Grid>
+                    </>
+                    }
+
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '80%' }}>
                             <Title title={title_list??""}></Title>
@@ -190,7 +237,6 @@ const BuscarModelo = ({
                             />
                         </Box>
                     </Grid>
-
                 </Grid>
             }
             <SeleccionarModeloDialogForm
@@ -204,6 +250,7 @@ const BuscarModelo = ({
                 models={models}
                 columns_model={columns_model}
                 row_id={row_id}
+                title_table_modal={title_table_modal ?? "Resultados de la busqueda"}
             />
         </Grid>
     );

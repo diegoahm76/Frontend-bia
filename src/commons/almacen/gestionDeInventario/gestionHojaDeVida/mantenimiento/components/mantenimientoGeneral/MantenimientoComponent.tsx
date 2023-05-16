@@ -13,12 +13,13 @@ import {
 interface IProps {
     parent_type_maintenance: any,
     parent_esp_maintenance: any,
-    limpiar_formulario: boolean
+    limpiar_formulario: boolean,
+    programacion: any
 }
-const tipo_mantenimiento = [{ value: "PR", label: "Preventivo" }, { value: "CO", label: "Correctivo" }, { value: "OT", label: "Otro" }]
+const tipo_mantenimiento = [{ value: "P", label: "Preventivo" }, { value: "C", label: "Correctivo" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario }: IProps) => {
+export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario, programacion }: IProps) => {
 
     const [tipo, set_tipo] = useState("");
     const [especificacion, set_especificacion] = useState("");
@@ -26,6 +27,14 @@ export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenan
     useEffect(() => {
         parent_type_maintenance(tipo);
     }, [parent_type_maintenance, tipo]);
+
+    useEffect(() => {
+        if(programacion != null && programacion !== undefined){
+            set_tipo(programacion.tipo);
+            // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+            set_especificacion( programacion.tipo_descripcion +" "+ programacion.estado);
+        }
+    }, [programacion]);
 
     useEffect(() => {
         parent_esp_maintenance(especificacion);

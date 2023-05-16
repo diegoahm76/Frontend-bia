@@ -52,7 +52,7 @@ const FormSelectController = ({
     return (
         
         <>
-        {((!hidden_text)??false) &&
+        {(!(hidden_text ?? false)) &&
             
         <Grid item xs={xs} md={md}>
             <Controller
@@ -90,7 +90,8 @@ const FormSelectController = ({
                                 </MenuItem>
                             ))}
                         </Select>
-                        <FormHelperText>
+                        <FormHelperText
+                         error= {!(error == null)}>
                             {(error != null)
                                 ? rules.required_rule?.message
                                 : helper_text}

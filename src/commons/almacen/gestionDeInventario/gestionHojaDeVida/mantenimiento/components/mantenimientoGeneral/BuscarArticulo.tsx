@@ -7,6 +7,7 @@ import { Title } from '../../../../../../../components';
 import { get_vehicles_all_service } from "../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks";
 import { useAppDispatch } from "../../../../../../../hooks";
 import { get_computers_all_service } from "../../../hojaDeVidaComputo/store/thunks/cvComputoThunks";
+import { get_others_all_service } from "../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks";
 
 
 interface IProps {
@@ -48,12 +49,9 @@ const BuscarArticuloComponent = ({
   }
 
   const selected_product_grid: any = () => {
+    parent_details(selected_product);
     set_is_modal_active(false);
   }
-  
-  useEffect(() => {
-    parent_details(selected_product);
-  }, [selected_product]);
 
   useEffect(() => {
     if(title ==='Buscar vehículos'){
@@ -70,7 +68,7 @@ const BuscarArticuloComponent = ({
       })
     }else{
       set_columna_hidden(true);
-      dispatch(get_computers_all_service()).then((response: any) => {
+      dispatch(get_others_all_service()).then((response: any) => {
         set_grid_busqueda(response.Elementos);
         set_grid_busqueda_before([...response.Elementos]);
       })

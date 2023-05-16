@@ -1,6 +1,6 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type UnidadOrganizacional, type InfoSolicitud, type ItemSolicitudConsumible, type SolicitudConsumo, type FuncionarioResponsable } from "../../interfaces/solicitudBienConsumo"
+import { type UnidadOrganizacional, type InfoSolicitud, type ItemSolicitudConsumible, type SolicitudConsumo, type FuncionarioResponsable, type AprobacionRechazo } from "../../interfaces/solicitudBienConsumo"
 
 
 const initial_state_infosolicitud = {
@@ -13,14 +13,20 @@ const initial_state_infosolicitud = {
 
 }
 
+const initial_state_aprobacion_solicitud = {
+    estado_aprobacion_responsable: "",
+    justificacion_rechazo_responsable: "",
+}
+
+
 
 
 const initial_state: SolicitudConsumo = {
     solicitud: initial_state_infosolicitud,
     solicitud_bienes_consumo: [],
     unidad_organizacional: [],
-    funcionario_responsable: []
-
+    funcionario_responsable: [],
+    aprobacion_solicitud: initial_state_aprobacion_solicitud
 
 }
 
@@ -55,8 +61,17 @@ export const solicitud_consumo_slice = createSlice({
             state.funcionario_responsable = action.payload;
         },
 
+        get_aprobacion_solicitud: (
+            state: SolicitudConsumo,
+            action: PayloadAction<AprobacionRechazo>
+        ) => {
+            state.aprobacion_solicitud = action.payload;
+        },
+
+
+
 
     }
 })
 
-export const { set_info_solicitud, item_solicitud, get_unidad_organizacional, get_funcionario_responsable } = solicitud_consumo_slice.actions;
+export const { set_info_solicitud, item_solicitud, get_unidad_organizacional, get_funcionario_responsable, get_aprobacion_solicitud } = solicitud_consumo_slice.actions;

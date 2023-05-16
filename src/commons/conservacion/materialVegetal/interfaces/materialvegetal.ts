@@ -15,6 +15,7 @@ export interface IMaterialVegetal {
   planting_person: Persona;
 }
 
+
 export interface IObjPlantingGoods {
   id_consumo_siembra: number|null;
   id_siembra: number|null;
@@ -94,7 +95,7 @@ export interface IObjVegetalMaterial {
 
 export interface IObjNursery {
   id_vivero: number | null;
-  nombre: string;
+  nombre: string ;
   cod_municipio: string | null;
   direccion: string | null;
   area_mt2: number | null;

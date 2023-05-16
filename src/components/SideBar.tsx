@@ -25,6 +25,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import type { AuthSlice, Menu, MenuElement } from '../commons/auth/interfaces';
 import { logout } from '../commons/auth/store';
 import { SuperUserScreen } from '../commons/seguridad/screens/SuperUserScreen';
+import { FooterGov } from '../components/goviernoEnLinea/FooterGov';
+import { HeaderGov } from '../components/goviernoEnLinea/HeaderGov';
+
 interface Props {
   window?: () => Window;
   drawer_width: number;
@@ -124,7 +127,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         />
       </Toolbar>
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
-      <List sx={{ margin: '0 20px', color: 'secondary.main' }}>
+      <List sx={{ margin: '0 20px', color: mod_dark ? '#fafafa' : '#141415' }}>
         <ListItemButton onClick={handle_click} sx={{ borderRadius: '10px' }}>
           <ListItemIcon>
             <Avatar alt="Cristian Mendoza" src="/static/images/avatar/1.jpg" />
@@ -137,7 +140,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           timeout="auto"
           unmountOnExit
           sx={{
-            bgcolor: 'background.default',
+            bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
             mt: '5px',
             borderRadius: '10px',
           }}
@@ -145,7 +148,12 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           <List component="div" disablePadding>
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
-                <CircleIcon sx={{ color: 'secondary.main', height: '10px' }} />
+                <CircleIcon
+                  sx={{
+                    color: mod_dark ? '#fafafa' : '#141415',
+                    height: '10px',
+                  }}
+                />
               </ListItemIcon>
               <ListItemText primary="Starred" />
             </ListItemButton>
@@ -158,7 +166,10 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
               >
                 <ListItemIcon>
                   <CircleIcon
-                    sx={{ color: 'secondary.main', height: '10px' }}
+                    sx={{
+                      color: mod_dark ? '#fafafa' : '#141415',
+                      height: '10px',
+                    }}
                   />
                 </ListItemIcon>
                 <ListItemText primary="Delegacion de Super Usuario" />
@@ -174,7 +185,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
               }}
             >
               <ListItemIcon>
-                <LogoutIcon sx={{ color: 'secondary.main' }} />
+                <LogoutIcon sx={{ color: mod_dark ? '#fafafa' : '#141415' }} />
               </ListItemIcon>
               <ListItemText primary="Cerrar Sesión" />
             </ListItemButton>
@@ -188,7 +199,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             <List
               sx={{
                 margin: '0 20px',
-                color: 'secondary.main',
+                color: mod_dark ? '#fafafa' : '#141415',
               }}
               key={k}
             >
@@ -205,7 +216,10 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 timeout="auto"
                 unmountOnExit
                 in={e.expanded}
-                sx={{ bgcolor: '#e7ffe7', borderRadius: '10px' }}
+                sx={{
+                  bgcolor: mod_dark ? '#2B3C46' : '#F0F0F0',
+                  borderRadius: '10px',
+                }}
               >
                 {e.menus.map((m, km) => {
                   return (
@@ -296,7 +310,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawer_width,
-              bgcolor: 'background.default',
+              bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
             },
           }}
         >
@@ -311,7 +325,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawer_width,
-              bgcolor: 'background.default',
+              bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
               borderRight: 'none',
             },
           }}
@@ -321,14 +335,24 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
       </Box>
       <Box
         sx={{
-          padding: '0px 20px 0 20px',
-          mt: 8,
           width: '100vw',
+          height: '100%',
           ml: { sm: desktop_open ? `${drawer_width}px` : '0px' },
-          bgcolor: 'background.default',
+          bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
         }}
       >
-        <Outlet />
+        {userinfo.tipo_usuario === 'E' && <HeaderGov />}
+        <Box
+          sx={{
+            padding: '0px 20px 20px 20px',
+            mt: '64px',
+            minHeight: '100vh',
+            height: '-webkit-fill-available',
+          }}
+        >
+          <Outlet />
+        </Box>
+        {userinfo.tipo_usuario === 'E' && <FooterGov />}
       </Box>
     </>
   );

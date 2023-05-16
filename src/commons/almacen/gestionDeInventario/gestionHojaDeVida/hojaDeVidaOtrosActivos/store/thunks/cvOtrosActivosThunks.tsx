@@ -64,11 +64,11 @@ export const get_others_all_service: any = () => {
 
 
 // Obtener Hoja de Vida otro
-export const get_cv_others_service = (id: any) => {
+export const get_cv_others_service: (id: any) => any = (id: any) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            const { data } = await api.get(`aalmacen/hoja-de-vida/otros/get-by-id/${id}/`);
+            const { data } = await api.get(`almacen/hoja-de-vida/otros/get-by-id/${id}/`);
             dispatch(get_cv_others(data.Elementos));
             return data;
         } catch (error: any) {

@@ -81,7 +81,7 @@ export const get_computers_all_service: any = () =>{
 };
 
 // Obtener Hoja de Vida PC
-export const get_cv_computer_service = (id: any) => {
+export const get_cv_computer_service: (id: any) => any = (id: any) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions

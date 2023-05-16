@@ -1,33 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { api } from '../../../../api/axios';
-import { useForm } from 'react-hook-form';
 import { Chip, Grid } from '@mui/material';
 import { type ToastContent, toast } from 'react-toastify';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { type IDespacho } from "../interfaces/vivero";
-import type { AuthSlice } from '../../../../commons/auth/interfaces';
-import {  useSelector } from 'react-redux';
-import { useAppSelector, useAppDispatch } from '../../../../hooks';
+
+import {  useAppDispatch } from '../../../../hooks';
 
 import { set_current_despacho } from '../store/slice/viveroSlice';
+import { type IDespacho } from "../interfaces/vivero";
 
-const initial_state_despacho: IDespacho = {
-  id_despacho_entrante: null,
-  numero_despacho_consumo: null,
-  fecha_ingreso: "",
-  observacion_distribucion: "",
-  persona_distribuye: "",
+interface IProps {
+  control_despacho: any;
+  get_values: any
 }
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarDespacho = () => {
+const SeleccionarDespacho = ({
+  control_despacho,
+  get_values
+}: IProps) => {
   const dispatch= useAppDispatch()
 
-  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { current_despacho } = useAppSelector((state) => state.nursery);
+  
 
-  const { control: control_despacho, reset: reset_despacho, getValues: get_values} = useForm<IDespacho>();
+
   const [despachos, set_despachos] = useState<IDespacho[]>([]);
 
   const columns_despachos: GridColDef[] = [
@@ -58,7 +54,7 @@ const SeleccionarDespacho = () => {
       width: 200,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.activo ? (
+        return params.row.distribucion_confirmada ? (
           <Chip size="small" label="SI" color="success" variant="outlined" />
         ) : (
           <Chip size="small" label="NO" color="error" variant="outlined" />
@@ -106,11 +102,12 @@ const SeleccionarDespacho = () => {
     });
 
     const search_despacho: any = (async () => {
-      const numero = get_values("numero_despacho_consumo")??""
+      const numero: string = get_values("numero_despacho_consumo")??""
       try {
         const { data } = await api.get(
-          `conservacion/despachos/get-list/?numero_despacho=${numero}`
+          `conservacion/despachos/get-list/?numero_despacho=${numero??""}`
         );
+        console.log(data)
         if ("data" in data) {
           if(data.data.length > 0){
           dispatch(set_current_despacho(data.data[0]))
@@ -127,25 +124,13 @@ const SeleccionarDespacho = () => {
       }
     })
 
-  useEffect(() => {
-    reset_despacho({...initial_state_despacho, persona_distribuye: userinfo.nombre, id_persona_distribuye: userinfo.id_persona})
-  }, []);
-
-  useEffect(() => {
-    if(current_despacho.id_persona_distribuye === null){
-    reset_despacho({...current_despacho, persona_distribuye: userinfo.nombre, id_persona_distribuye: userinfo.id_persona})
-  } else {
-    reset_despacho(current_despacho)
-  }
-  }, [current_despacho]);
-
-  
-
   const get_despachos: any = (async () => {
     try {
+      const despacho: string = get_values("numero_despacho_consumo")
       const { data } = await api.get(
-        `conservacion/despachos/get-list/`
+        `conservacion/despachos/get-list/?numero_despacho=${despacho??""}`
       );
+      console.log(data)
       if ("data" in data) {
         if (data.data.length > 0) {
           set_despachos(data.data)
@@ -175,7 +160,6 @@ const SeleccionarDespacho = () => {
           models={despachos}
           get_filters_models={get_despachos}
           set_models={set_despachos}
-          reset_values={reset_despacho}
           button_submit_label='Buscar despacho'
           form_inputs={[
             {
@@ -185,7 +169,7 @@ const SeleccionarDespacho = () => {
               control_form: control_despacho,
               control_name: "numero_despacho_consumo",
               default_value: "",
-              rules: {},
+              rules: {required_rule: { rule: true, message: "Debe seleccionar despacho" }},
               label: "Numero despacho",
               type: "number",
               disabled: false,
@@ -212,7 +196,7 @@ const SeleccionarDespacho = () => {
               control_form: control_despacho,
               control_name: "observacion_distribucion",
               default_value: "",
-              rules: {},
+              rules: {required_rule: { rule: true, message: "Observaciopn requerida" }},
               label: "Observacion de distribucion",
               type: "text",
               multiline_text: true,

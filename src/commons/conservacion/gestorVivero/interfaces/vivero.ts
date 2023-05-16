@@ -2,13 +2,9 @@ export interface INursery {
   nurseries: IObjNursery[];
   current_nursery: IObjNursery;
   items_despacho: IObjItem[];
+  current_bien: IObjItem;
   current_despacho: IDespacho;
   items_distribuidos: IObjDistribucion[];
-}
-
-export interface IList {
-  value: string | number;
-  label: string | number;
 }
 
 export interface IObjDistribucion {
@@ -40,6 +36,7 @@ export interface IObjItem {
   unidad_medida?: string | null;
   cantidad_restante?: number | null;
   cod_tipo_elemento_vivero?: string | null;
+  es_semilla_vivero?: boolean | null;
 }
 
 export interface IDespacho {

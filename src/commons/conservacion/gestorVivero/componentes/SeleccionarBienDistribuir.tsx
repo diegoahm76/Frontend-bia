@@ -4,43 +4,23 @@ import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IObjItem, type IObjDistribucion, type IObjNursery } from "../interfaces/vivero";
-import { get_items_despacho } from '../store/slice/viveroSlice';
-import { confirmar_items_distribuidos_service, save_items_distribuidos_service, get_items_despacho_service, get_items_distribuidos_service, get_nurseries_closing_service, control_error } from '../store/thunks/gestorViveroThunks';
+import { get_items_despacho, set_current_bien, get_items_distribuidos } from '../store/slice/viveroSlice';
+import { get_items_despacho_service, get_items_distribuidos_service, get_nurseries_closing_service, control_error } from '../store/thunks/gestorViveroThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import SaveIcon from '@mui/icons-material/Save';
-import FormButton from '../../../../components/partials/form/FormButton';
-import CloseIcon from '@mui/icons-material/Close';
-import CheckIcon from '@mui/icons-material/Check';
-
-// const initial_state_item: IObjItem = {
-//     id_item_despacho_entrante: null,
-//     id_despacho_entrante: null,
-//     id_bien: null,
-//     cantidad_entrante: null,
-//     cantidad_distribuida: null,
-//     codigo_bien: null,
-//     nombre_bien: "",
-//     cantidad_restante: null,
-// }
-
-// const initial_state_distribucion: IObjDistribucion = {
-//     id_vivero: null,
-//     cantidad_asignada: null,
-// }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarBienDistribuir = () => {
 
 
-    const { control: control_bien, reset: reset_bien, getValues: get_values_bien, watch } = useForm<IObjItem>();
-    const { control: control_distribucion, reset: reset_distribucion, getValues: get_values_distribucion } = useForm<IObjDistribucion>();
+    const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjItem>();
+    const { control: control_distribucion, reset: reset_distribucion, handleSubmit: handle_submit_distribucion} = useForm<IObjDistribucion>();
     const [aux_items_distribuidos, set_aux_items_distribuidos] = useState<IObjDistribucion[]>([]);
     const [action, set_action] = useState<string>("agregar");
-
-    const { current_despacho, items_despacho, items_distribuidos, nurseries } = useAppSelector((state) => state.nursery);
+   
+    const { current_despacho, items_despacho, items_distribuidos, nurseries, current_bien } = useAppSelector((state) => state.nursery);
     const dispatch = useAppDispatch();
 
     const columns_bienes: GridColDef[] = [
@@ -147,6 +127,7 @@ const SeleccionarBienDistribuir = () => {
             renderCell: (params) => (
                 <>
                     {current_despacho.distribucion_confirmada === false &&
+                    <>
                         <Tooltip title="Editar">
                             <IconButton
                                 onClick={() => {
@@ -170,8 +151,6 @@ const SeleccionarBienDistribuir = () => {
                                 </Avatar>
                             </IconButton>
                         </Tooltip>
-                    }
-                    {/* {params.row.id_distribucion_item_despacho_entrante === null && */}
                         <Tooltip title="Borrar">
                             <IconButton
                                 onClick={() => {
@@ -194,7 +173,8 @@ const SeleccionarBienDistribuir = () => {
                                 </Avatar>
                             </IconButton>
                         </Tooltip>
-                    {/* } */}
+                        </>
+                    }
                 </>
             ),
         },
@@ -211,6 +191,7 @@ const SeleccionarBienDistribuir = () => {
     useEffect(() => {
         const id_despacho = current_despacho.id_despacho_entrante
         if (id_despacho !== null && id_despacho !== undefined) {
+            void dispatch(get_items_despacho_service(id_despacho))
             void dispatch(get_items_distribuidos_service(id_despacho));
         }
         set_action("agregar")
@@ -221,56 +202,103 @@ const SeleccionarBienDistribuir = () => {
     }, [items_distribuidos]);
 
     useEffect(() => {
-        console.log(get_values_bien("cod_tipo_elemento_vivero"))
+        dispatch(get_items_distribuidos(aux_items_distribuidos))
+    }, [aux_items_distribuidos]);
+
+
+    useEffect(() => {
+        reset_bien(current_bien)
         set_action("agregar")
-    }, [watch("id_bien")]);
+    }, [current_bien]);
 
     useEffect(() => {
         void dispatch(get_nurseries_closing_service());
     }, []);
 
-    const add_bien_distribuido = (): void => {
-        const bien: IObjDistribucion | undefined = aux_items_distribuidos.find((p) => p.id_bien === get_values_bien("id_bien") && p.id_vivero === get_values_distribucion("id_vivero"))
-        const vivero: IObjNursery | undefined = nurseries.find((p) => p.id_vivero === get_values_distribucion("id_vivero"));
-        const new_bien: IObjDistribucion = {
-            id_distribucion_item_despacho_entrante: null,
-            id_vivero: get_values_distribucion("id_vivero"),
-            id_bien: get_values_bien("id_bien"),
-            cantidad_asignada: Number(get_values_distribucion("cantidad_asignada")),
-            cod_etapa_lote_al_ingresar: "G",// (get_values_bien("cod_tipo_elemento_vivero") !== "MV") ? "G" : get_values_distribucion("cod_etapa_lote_al_ingresar"),
-            id_item_despacho_entrante: get_values_bien("id_item_despacho_entrante"),
-            vivero_nombre: vivero?.nombre ?? "",
-            unidad_medida: get_values_bien("unidad_medida") ?? "",
-            codigo_bien: get_values_bien("codigo_bien") ?? "",
-            nombre_bien: get_values_bien("nombre_bien") ?? "",
-        }
-        if (bien === undefined) {
-            set_aux_items_distribuidos([...aux_items_distribuidos, new_bien])
-        } else {
-            if (action === "editar") {
-
-
-                const aux_items: IObjDistribucion[] = []
+    const on_submit_distribucion = (data: IObjDistribucion): void => {
+        if(current_bien.id_bien !== null){
+            if(get_values_bien("codigo_bien") === current_bien.codigo_bien){
+                const bien: IObjDistribucion | undefined = aux_items_distribuidos.find((p) => p.id_bien === current_bien.id_bien && p.id_vivero === data.id_vivero)
+                let asignada = 0
                 aux_items_distribuidos.forEach((option) => {
-                    if (option.id_bien === get_values_bien("id_bien")) {
-                        aux_items.push(new_bien)
-                    } else {
-                        aux_items.push(option)
+                    if (option.id_bien !== bien?.id_bien ) {
+                        asignada = asignada + (option.cantidad_asignada ?? 0)
                     }
                 })
-                set_aux_items_distribuidos(aux_items)
-                set_action("agregar")
-            } else {
-                control_error("el bien ya se asigno en el vivero, seleccione la opcion de editar")
+
+                if ((data.cantidad_asignada??0) <= (current_bien.cantidad_restante ?? 0))
+                {   
+                    const vivero: IObjNursery | undefined = nurseries.find((p) => p.id_vivero === data.id_vivero);
+                    const new_bien: IObjDistribucion = {
+                        id_distribucion_item_despacho_entrante: null,
+                        id_vivero: data.id_vivero,
+                        id_bien: current_bien.id_bien,
+                        cantidad_asignada: Number(data.cantidad_asignada),
+                        cod_etapa_lote_al_ingresar: (get_values_bien("es_semilla_vivero") !== false)?"G":data.cod_etapa_lote_al_ingresar,
+                        id_item_despacho_entrante: get_values_bien("id_item_despacho_entrante"),
+                        vivero_nombre: vivero?.nombre ?? "",
+                        unidad_medida: current_bien.unidad_medida ?? "",
+                        codigo_bien: current_bien.codigo_bien ?? "",
+                        nombre_bien: current_bien.nombre_bien ?? "",
+                    }
+                    if (bien === undefined) {
+                        set_aux_items_distribuidos([...aux_items_distribuidos, new_bien])
+                        const restante = (current_bien.cantidad_restante ?? 0) - (new_bien.cantidad_asignada ?? 0) 
+                        dispatch(set_current_bien({...current_bien, cantidad_restante: restante}))
+                    } else {
+                        if (action === "editar") {
+                            const aux_items: IObjDistribucion[] = []
+                            aux_items_distribuidos.forEach((option) => {
+                                if (option.id_bien === current_bien.id_bien && option.id_vivero === data.id_vivero) {
+                                    aux_items.push(new_bien)
+                                } else {
+                                    aux_items.push(option)
+                                }
+                            })
+                            set_aux_items_distribuidos(aux_items)
+                            const restante = (current_bien.cantidad_restante ?? 0) - (new_bien.cantidad_asignada ?? 0) 
+
+                            dispatch(set_current_bien({...current_bien, cantidad_restante: restante}))
+                            set_action("agregar")
+                        } else {
+                            control_error("el bien ya se asigno en el vivero, seleccione la opcion de editar")
+                        }
+                    }
+                } else{
+                control_error("La cantidad asignada debe ser maximo "+ String(current_bien.cantidad_restante))
+                }
+            } else{
+                control_error("Codigo de bien no coincide con el seleccionado")
             }
+        } else{
+            control_error("Debe seleccionar el bien")
         }
     };
 
     const edit_bien_distribuido = (item: IObjDistribucion): void => {
-        reset_bien(items_despacho.find((p: IObjItem) => p.id_item_despacho_entrante === item.id_item_despacho_entrante))
-        reset_distribucion(aux_items_distribuidos.find((p) => p.id_bien === item.id_bien && p.id_vivero === item.id_vivero))
         set_action("editar")
-
+        const bien: IObjItem| undefined = items_despacho.find((p: IObjItem) => p.id_item_despacho_entrante === item.id_item_despacho_entrante)
+        const item_bien = aux_items_distribuidos.find((p) => p.id_bien === item.id_bien && p.id_vivero === item.id_vivero)
+        reset_distribucion(item_bien)
+        const aux_items: IObjDistribucion[] = []
+        let asignada = 0
+        let restante = 0 
+        aux_items_distribuidos.forEach((option) => {
+            if (option.id_bien !== item.id_bien || option.id_vivero !== item.id_vivero) {
+                aux_items.push(option)
+            }
+        })
+        if(bien !== undefined){
+            aux_items.forEach((option) => {
+                if (option.id_bien === bien?.id_bien) {
+                    asignada = asignada + (option.cantidad_asignada ?? 0)
+                } 
+            })
+            restante = (bien.cantidad_entrante ?? 0) - asignada
+            console.log(asignada, restante)
+            dispatch(set_current_bien({...bien, cantidad_restante: restante}))
+        }
+        set_aux_items_distribuidos(aux_items)
     };
 
     const delete_bien_distribuido = (item: IObjDistribucion): void => {
@@ -283,20 +311,7 @@ const SeleccionarBienDistribuir = () => {
         set_aux_items_distribuidos(aux_items)
     };
 
-    const save_items: any = (async () => {
-        const id_despacho = current_despacho.id_despacho_entrante
-        if (id_despacho !== null && id_despacho !== undefined) {
-            void dispatch(save_items_distribuidos_service(id_despacho, current_despacho.observacion_distribucion ?? "", aux_items_distribuidos));
-        }
-    });
-
-    const distribution_confirm_items: any = (async () => {
-        const id_despacho = current_despacho.id_despacho_entrante
-        if (id_despacho !== null && id_despacho !== undefined) {
-            void dispatch(confirmar_items_distribuidos_service(id_despacho, current_despacho.observacion_distribucion ?? "", aux_items_distribuidos));
-        }
-    });
-
+    
     return (
         <>
             <Grid
@@ -306,13 +321,14 @@ const SeleccionarBienDistribuir = () => {
                 borderRadius={2}
             >
                 <BuscarModelo
+                set_current_model={set_current_bien}
                     row_id={"id_item_despacho_entrante"}
                     columns_model={columns_bienes}
                     models={items_despacho}
                     get_filters_models={get_bienes}
                     set_models={get_items_despacho}
                     reset_values={reset_bien}
-                    button_submit_label='Buscar bien'
+                    button_submit_label='Ver bienes'
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -325,10 +341,10 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: {},
+                            rules: {required_rule: { rule: true, message: "Codigo bien requerido" }},
                             label: "Codigo bien",
                             type: "number",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                         {
@@ -338,7 +354,7 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_bien,
                             control_name: "nombre_bien",
                             default_value: "",
-                            rules: {},
+                            rules: {required_rule: { rule: true, message: "Debe seleccionar un bien" }},
                             label: "Nombre",
                             type: "text",
                             disabled: true,
@@ -351,7 +367,7 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_bien,
                             control_name: "cantidad_restante",
                             default_value: "",
-                            rules: {},
+                            rules: {required_rule: { rule: true, message: "Debe seleccionar un bien" }},
                             label: "Cantidad restante",
                             type: "text",
                             disabled: true,
@@ -367,7 +383,7 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_distribucion,
                             control_name: "id_vivero",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "Seleccione vivero" } },
                             label: "Vivero",
                             disabled: action === "editar",
                             helper_text: "debe seleccionar campo",
@@ -382,14 +398,14 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_distribucion,
                             control_name: "cod_etapa_lote_al_ingresar",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "Seleccione etapa de material vegetal" } },
                             label: "Etapa a ingresar",
                             disabled: action === "editar",
                             helper_text: "debe seleccionar campo",
                             select_options: [{label: "Producción", value: "P"}, {label: "Distribución", value: "D"}],
                             option_label: "label",
                             option_key: "value",
-                            hidden_text: get_values_bien("cod_tipo_elemento_vivero") !== "MV"
+                            hidden_text: get_values_bien("es_semilla_vivero") !== false
                         }, 
                         {
                             datum_type: "input_controller",
@@ -398,7 +414,7 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_distribucion,
                             control_name: "cantidad_asignada",
                             default_value: "",
-                            rules: {},
+                            rules: {required_rule: { rule: true, message: "Ingrese cantidad" }, min_rule: { rule: 0.01, message: "Cantidad debe ser mayor que 0" }, max_rule: { rule: current_bien.cantidad_restante, message: "La cantidad restante es "+String(current_bien.cantidad_restante) +"" } },
                             label: "Cantidad",
                             type: "number",
                             disabled: false,
@@ -411,7 +427,7 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_bien,
                             control_name: "unidad_medida",
                             default_value: "",
-                            rules: {},
+                            rules: {required_rule: { rule: true, message: "Debe seleccionar bien" }},
                             label: "Unidad",
                             type: "text",
                             disabled: true,
@@ -419,76 +435,18 @@ const SeleccionarBienDistribuir = () => {
                         },
 
                     ]}
-                    title_list='Bienes pre-distribuidos'
+                    show_inputs= {(current_despacho.distribucion_confirmada !== true ?? true)}
+                    title_list= {(current_despacho.distribucion_confirmada ?? false)?'Bienes distribuidos':'Bienes pre-distribuidos'}
                     list={aux_items_distribuidos}
-                    add_item_list={add_bien_distribuido}
-                    add_list_button_label={action}
+                    add_item_list={handle_submit_distribucion(on_submit_distribucion)}
+                    add_list_button_label={"agregar"}
                     columns_list={columns_bienes_distribuidos}
                     row_list_id={"id_distribucion_item_despacho_entrante"}
-                    modal_select_model_title='Buscar bien'
-                    modal_form_filters={[
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "codigo_bien",
-                            default_value: "",
-                            rules: {},
-                            label: "Codigo bien",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "nombre_bien",
-                            default_value: "",
-                            rules: {},
-                            label: "Nombre",
-                            type: "text",
-                            disabled: false,
-                            helper_text: ""
-                        },
-                    ]}
+                    modal_select_model_title='Seleccionar bien a distribuir'
+                    modal_form_filters={[]}
+                    title_table_modal = "Lista de bienes en despacho"
                 />
-                <Grid
-                    container
-                    direction="row"
-                    padding={2}
-                    spacing={2}
-                >
-                    <Grid item xs={12} md={3}>
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={save_items}
-                            icon_class={<SaveIcon />}
-                            label={"guardar"}
-                            type_button="button"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={distribution_confirm_items}
-                            icon_class={<CheckIcon />}
-                            label={"Confirmar distribucion"}
-                            type_button="button"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={3}>
-                        <FormButton
-                            variant_button="outlined"
-                            on_click_function={null}
-                            icon_class={<CloseIcon />}
-                            label={"Cancelar"}
-                            type_button="button"
-                        />
-                    </Grid>
-                </Grid>
+                
             </Grid>
         </>
     );

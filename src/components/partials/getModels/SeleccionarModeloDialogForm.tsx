@@ -20,6 +20,8 @@ import FormSelectController from "../form/FormSelectController";
 import FormButton from "../form/FormButton";
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch } from '../../../hooks';
+import FormInputFileController from '../form/FormInputFileController';
+import FormDatePickerController from '../form/FormDatePickerController';
 
 interface IProps {
     set_models: any;
@@ -32,6 +34,7 @@ interface IProps {
     columns_model: GridColDef[];
     row_id: string | number;
     set_current_model: any;
+    title_table_modal?: string | null;
 
 }
 
@@ -47,7 +50,8 @@ const SeleccionarModeloDialogForm = ({
     models,
     columns_model,
     row_id,
-    set_current_model
+    set_current_model,
+    title_table_modal
 }: IProps) => {
     const dispatch = useAppDispatch();
     const [selected_row, set_selected_row] = useState([]);
@@ -72,9 +76,6 @@ const SeleccionarModeloDialogForm = ({
                 on_blur_function={form_input.on_blur_function}
                 set_value={form_input.set_value ?? null}
                 hidden_text={form_input.hidden_text ?? null}
-
-
-
             />;
         } else if (form_input.datum_type === "input_no_controller") {
             return <FormInputNoController
@@ -105,11 +106,40 @@ const SeleccionarModeloDialogForm = ({
                 option_key={form_input.option_key}
                 multiple={form_input.multiple ?? false}
                 hidden_text={form_input.hidden_text ?? null}
-
             />
         } else if (form_input.datum_type === "title") {
             return <Title title={form_input.title_label}></Title>
-
+        } else if (form_input.datum_type === "input_file_controller"){
+            return <FormInputFileController
+            xs={form_input.xs}
+            md={form_input.md}
+            control_form={form_input.control_form}
+            control_name={form_input.control_name}
+            default_value={form_input.default_value}
+            rules={form_input.rules}
+            label={form_input.label}
+            disabled={form_input.disabled}
+            helper_text={form_input.helper_text}
+            set_value={form_input.set_value ?? null}
+            hidden_text={form_input.hidden_text ?? null}
+            file_name={form_input.file_name ?? null}
+        />; 
+        } else if (form_input.datum_type === "date_picker_controller"){
+            return <FormDatePickerController
+            xs={form_input.xs}
+            md={form_input.md}
+            control_form={form_input.control_form}
+            control_name={form_input.control_name}
+            default_value={form_input.default_value}
+            rules={form_input.rules}
+            label={form_input.label}
+            disabled={form_input.disabled}
+            helper_text={form_input.helper_text}
+            hidden_text={form_input.hidden_text ?? null}
+            min_date={form_input.min_date ?? ""}
+            max_date={form_input.max_date ?? ""}
+            format={form_input.max_date ?? null}
+        />; 
         }
     }
 
@@ -140,6 +170,7 @@ const SeleccionarModeloDialogForm = ({
             <DialogTitle>{modal_title}</DialogTitle>
             <Divider />
             <DialogContent sx={{ mb: '0px' }}>
+                {form_filters.length > 0 &&
                 <Grid container spacing={2} direction="row">
                     {form_filters.map((option, index) => (
                         <TypeDatum key={index} form_input={option} />
@@ -158,10 +189,11 @@ const SeleccionarModeloDialogForm = ({
                         />
                     </Grid>
                 </Grid>
+                }
                 {models.length > 0 &&
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
-                        <Box sx={{ width: '80%' }}>
-                            <Title title='Resultados de la busqueda'></Title>
+                        <Box sx={{ width: '100%' }}>
+                            <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
                             <DataGrid
                                 onSelectionModelChange={handle_selection_change}
                                 density="compact"
