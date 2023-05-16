@@ -6,8 +6,8 @@ import dagre from 'dagre';
 const dagreGraph = new dagre.graphlib.Graph();
 dagreGraph.setDefaultEdgeLabel(() => ({}));
 
-const nodeWidth = 550;
-const nodeHeight = 230;
+const nodeWidth = 1200;
+const nodeHeight = 300;
 
 export const getLayoutedElements = (nodes = [], edges = [], direction = 'TB') => {
   const isHorizontal = direction === 'LR';
