@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Stack } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import use_previsualizacion from "../mantenimientoGeneral/hooks/usePrevisualizacion";
 import { BusquedaProgramacionComponent } from "./RegistroMantenimientoGeneral/BusquedaProgramacion";
 import { Title } from "../../../../../../../components";
@@ -40,22 +40,6 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
             set_user_info(data_auth.userinfo);
         }
     }, []);
-
-    const set_detalles = useCallback((val: any) => {
-        set_detalle(val);
-    }, [set_detalle]);
-
-    const set_mantenimientos = useCallback((val: any) => {
-        set_mantenimiento(val);
-    }, [set_mantenimiento]);
-
-    const set_details_state = useCallback((val: any) => {
-        set_detalle_seleccionado(val);
-    }, [set_detalle_seleccionado]);
-
-    const set_prog_seleccionada = useCallback((val: any) => {
-        set_programacion(val);
-    }, [set_programacion]);
 
     useEffect(() => {
         validar_formulario();
@@ -115,7 +99,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de programación" />
-                    <BusquedaProgramacionComponent set_prog_seleccion={set_prog_seleccionada} parent_details={set_details_state} tipo_articulo={"computadores"} limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles}/>
+                    <BusquedaProgramacionComponent set_prog_seleccion={set_programacion} parent_details={set_detalle_seleccionado} tipo_articulo={"computadores"} limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
             <Grid
@@ -131,7 +115,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de computadores" />
-                    <BusquedaArticuloComponent tipo_articulo={"computadores"} parent_details={set_details_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} accion_guardar={accion_guardar} />
+                    <BusquedaArticuloComponent tipo_articulo={"computadores"} parent_details={set_detalle_seleccionado} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} accion_guardar={accion_guardar} />
                 </Grid>
             </Grid>
             <Grid container
@@ -145,7 +129,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
                 }}>
                 <Grid item xs={12}>
                     <Title title='Mantenimiento' />
-                    <MantenimientoComponent limpiar_formulario={limpiar_formulario} programacion={programacion} mantenimiento={set_mantenimientos} accion_guardar={accion_guardar} />
+                    <MantenimientoComponent limpiar_formulario={limpiar_formulario} programacion={programacion} mantenimiento={set_mantenimiento} accion_guardar={accion_guardar} />
                 </Grid>
             </Grid>
             <Grid container
@@ -160,7 +144,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
                 <Grid item xs={12}>
                     <Title title='Detalles' />
                     <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info}
-                        detalles={set_detalles} accion_guardar={accion_guardar} dias_posibles={dias_posibles}/>
+                        detalles={set_detalle} accion_guardar={accion_guardar} dias_posibles={dias_posibles}/>
                 </Grid>
             </Grid>
             <Grid container>

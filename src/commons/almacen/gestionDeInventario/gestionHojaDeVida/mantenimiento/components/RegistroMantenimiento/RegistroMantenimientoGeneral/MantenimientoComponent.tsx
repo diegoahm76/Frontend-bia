@@ -57,8 +57,9 @@ export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, p
     }
 
     useEffect(() => {
-        if (tipo !== "" && (programacion !== undefined && programacion !== null)) {
+        if (programacion !== undefined && programacion !== null) {
             set_tipo(programacion.tipo);
+            set_mensaje_error_tipo("");
         }
     }, [programacion]);
 

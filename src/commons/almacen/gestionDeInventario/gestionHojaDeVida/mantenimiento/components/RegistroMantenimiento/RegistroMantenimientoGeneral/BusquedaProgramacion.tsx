@@ -1,8 +1,8 @@
-import { Box, Button, Grid, Stack, TextField } from "@mui/material";
+import { Box, Button, FormHelperText, Grid, Stack, TextField } from "@mui/material";
 import use_buscar_programacion from "../../mantenimientoGeneral/hooks/useBuscarProgramacion";
 import SearchIcon from '@mui/icons-material/Search';
 import BuscarProgramacionComponent from "../../mantenimientoGeneral/BuscarProgramacion";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import use_previsualizacion from "../../mantenimientoGeneral/hooks/usePrevisualizacion";
 import dayjs, { type Dayjs } from "dayjs";
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers/';
@@ -12,11 +12,13 @@ interface IProps {
     set_prog_seleccion: any,
     emit_dias_posibles: any,
     parent_details: any,
-    limpiar_formulario: boolean
+    limpiar_formulario: boolean,
+    accion_guardar: boolean
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo, set_prog_seleccion, parent_details, limpiar_formulario, emit_dias_posibles }: IProps) => {
+export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo, set_prog_seleccion, parent_details, limpiar_formulario, emit_dias_posibles, accion_guardar }: IProps) => {
     const [fecha_registro, set_fecha_registro] = useState<Dayjs | null>(dayjs());
+    const [mensaje_error_fecha, set_mensaje_error_fecha] = useState<string>("");
 
     const {
         programacion,
@@ -31,17 +33,9 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo,
         set_buscar_programacion_is_active
     } = use_buscar_programacion();
 
-    const set_details_state = useCallback((val: any) => {
-        set_detalle_seleccionado(val);
-    }, [set_detalle_seleccionado]);
-
-    const set_prog_details = useCallback((val: any) => {
-        set_programacion(val);
-    }, [set_programacion]);
-
     useEffect(() => {
         set_prog_seleccion(programacion);
-    }, [set_prog_seleccion]);
+    }, [set_prog_seleccion, programacion]);
 
     useEffect(() => {
         set_detalle_seleccionado(detalle_seleccionado);
@@ -57,8 +51,17 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo,
         }
     }, [limpiar_formulario]);
 
+    useEffect(() => {
+        if (accion_guardar) {
+            if(fecha_registro === null)
+                set_mensaje_error_fecha("El cammpo Fecha mantenimiento es obligatorio.");
+        }
+    }, [accion_guardar]);
+
     const handle_change_fecha_programada = (date: Dayjs | null): void => {
         set_fecha_registro(date);
+        if(date !== null)
+            set_mensaje_error_fecha("");
     };
     
     useEffect(()=>{
@@ -97,8 +100,8 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo,
                                     is_modal_active={buscar_programacion_is_active}
                                     set_is_modal_active={set_buscar_programacion_is_active}
                                     title={title_programacion}
-                                    prog_details={set_prog_details}
-                                    parent_details={set_details_state}
+                                    prog_details={set_programacion}
+                                    parent_details={set_detalle_seleccionado}
                                     tipo_articulo={tipo_articulo} />
                             )}
                         </Stack>
@@ -122,10 +125,12 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo,
                                         fullWidth
                                         size="small"
                                         {...params}
+                                        error={mensaje_error_fecha !== ""}
                                     />
                                 )}
                                 maxDate={dayjs()}
                             />
+                            {(mensaje_error_fecha !== "") && (<FormHelperText error id="dias-error">{mensaje_error_fecha}</FormHelperText>)}
                         </LocalizationProvider>
                     </Stack>
                 </Grid>

@@ -82,7 +82,7 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
             set_mensaje_error_dias("El campo Días empleados es mayor a los dias disponibles.");
         if(estado === "")
             set_mensaje_error_estado("El campo Estado final es obligatorio.");
-        if(realizado === "")
+        if(realizado.nombre_completo === "")
             set_mensaje_error_realizado("El campo Realizado por es obligatorio.");
         if(diligenciado === "")
             set_mensaje_error_diligenciado("El campo Diligenciado por es obligatorio.");
@@ -120,6 +120,11 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
     useEffect(()=>{
         validar_dias_empleados(parseInt(dias_empleados));
     },[dias_posibles])
+
+    useEffect(()=>{
+        if(realizado.nombre_completo !== "")
+            set_mensaje_error_realizado("");
+    },[realizado])
 
     const on_change_observacion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_observaciones(e.target.value);
