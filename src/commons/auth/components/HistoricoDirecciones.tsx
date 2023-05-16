@@ -7,6 +7,9 @@ import {
     Divider,
     Grid,
     Stack,
+    Alert,
+    LinearProgress,
+    Typography,
 } from '@mui/material';
 import { Title } from '../../../components/Title';
 import type {
@@ -164,7 +167,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                     }}
                 >
                     <Grid item xs={12}>
-                        {rows.length > 0 && (
+                        {rows.length > 0 ? (
                             <>
                                 {historico_direcciones.tipo_persona === 'J' && (
                                     <>
@@ -172,7 +175,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                                             autoHeight
                                             rows={rows}
                                             columns={columns_juridica}
-                                            getRowId={(row) => row.id_historico_autoriza_noti}
+                                            getRowId={(row) => row.id_historico_direccion}
                                             pageSize={5}
                                             rowsPerPageOptions={[5]}
                                         />
@@ -184,13 +187,22 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                                             autoHeight
                                             rows={rows}
                                             columns={columns}
-                                            getRowId={(row) => row.id_historico_autoriza_noti}
+                                            getRowId={(row) => row.id_historico_direccion}
                                             pageSize={5}
                                             rowsPerPageOptions={[5]}
                                         />
                                     </>
                                 )}
                             </>
+                        ) : (
+                            <Grid item xs={12}>
+                                <Grid container justifyContent="center" textAlign="center">
+                                    <Alert icon={false} severity="info">
+                                        <LinearProgress />
+                                        <Typography>No se encontraron resultados...</Typography>
+                                    </Alert>
+                                </Grid>
+                            </Grid>
                         )}
                     </Grid>
                     <Grid item xs={12}>

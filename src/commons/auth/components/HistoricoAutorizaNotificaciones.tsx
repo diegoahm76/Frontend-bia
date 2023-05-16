@@ -8,6 +8,9 @@ import {
     Divider,
     Grid,
     Stack,
+    Alert,
+    LinearProgress,
+    Typography,
 } from '@mui/material';
 import { Title } from '../../../components/Title';
 import type {
@@ -190,7 +193,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                     }}
                 >
                     <Grid item xs={12}>
-                        {rows.length > 0 && (
+                        {rows.length > 0 ? (
                             <>
                                 {historico_autorizaciones.tipo_persona === 'J' && (
                                     <>
@@ -217,6 +220,15 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                                     </>
                                 )}
                             </>
+                        ) : (
+                            <Grid item xs={12}>
+                                <Grid container justifyContent="center" textAlign="center">
+                                    <Alert icon={false} severity="info">
+                                        <LinearProgress />
+                                        <Typography>No se encontraron resultados...</Typography>
+                                    </Alert>
+                                </Grid>
+                            </Grid>
                         )}
 
                     </Grid>
