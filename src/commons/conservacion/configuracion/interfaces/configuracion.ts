@@ -10,15 +10,14 @@ export interface IConfiguration {
   current_germination_bed: IObjGerminationBed;
 }
 
-
 export interface IObjGerminationBed {
-  id_cama_germinacion_vivero: number|null;
-  nombre: string
-  nro_de_orden: number|null;
+  id_cama_germinacion_vivero: number | null;
+  nombre: string;
+  nro_de_orden: number | null;
   observacion: string;
-  item_activo: boolean|null;
-  item_ya_usado: boolean|null;
-  id_vivero: number|null;
+  item_activo: boolean | null;
+  item_ya_usado: boolean | null;
+  id_vivero: number | null;
 }
 
 export interface IObjNursery {
@@ -51,11 +50,6 @@ export interface IObjNursery {
   id_persona_abre: number | null;
   id_persona_cierra: number | null;
   id_persona_cuarentena: number | null;
-}
-
-export interface IList {
-  value: string | number;
-  label: string | number;
 }
 
 export interface IObjMixture {

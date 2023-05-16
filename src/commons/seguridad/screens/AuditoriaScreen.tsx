@@ -36,6 +36,7 @@ import {
 import { text_choise_adapter } from '../../auth/adapters/textChoices.adapter';
 import { TablaGeneral } from '../../../components/TablaGeneral';
 import { control_error } from '../../../helpers/controlError';
+import type { IList } from '../../../interfaces/globalModels';
 
 const columns = [
   {
@@ -97,11 +98,6 @@ interface IFormValues {
   subsistema: IList;
   modulo: IList;
   page: string;
-}
-
-export interface IList {
-  label: string;
-  value: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

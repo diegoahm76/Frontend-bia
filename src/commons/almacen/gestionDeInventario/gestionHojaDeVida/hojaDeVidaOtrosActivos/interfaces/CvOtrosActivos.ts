@@ -44,11 +44,6 @@ export interface IOthers {
   id_bien_padre?: number | null;
 }
 
-export interface IList {
-  label: string | number;
-  value: number | string;
-}
-
 export interface IMarca {
   id_marca: number;
   nombre: string;

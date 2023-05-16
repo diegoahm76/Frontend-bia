@@ -149,13 +149,12 @@ const PersonaSiembra = ({
                 borderRadius={2}
             >
                 <BuscarModelo
-
                     set_current_model={set_planting_person}
                     row_id={"id_persona"}
                     columns_model={columns_personas}
                     models={persons}
                     get_filters_models={get_personas}
-                    set_models={set_persons}
+                    set_models={set_persons} 
                     reset_values={reset_persona}
                     button_submit_label='BUSCAR'
                     form_inputs={[

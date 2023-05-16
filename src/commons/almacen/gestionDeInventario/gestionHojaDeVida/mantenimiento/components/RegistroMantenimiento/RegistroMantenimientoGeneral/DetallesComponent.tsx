@@ -7,40 +7,119 @@ import {
     MenuItem,
     Select,
     type SelectChangeEvent,
-    TextField
+    TextField,
+    FormHelperText
 } from "@mui/material"
+import SearchIcon from '@mui/icons-material/Search';
+import { BuscadorPersonaDialog } from './BuscadorPersonaDialog';
 
 interface IProps {
-    parent_type_maintenance: any,
-    parent_esp_maintenance: any,
-    limpiar_formulario: boolean
+    limpiar_formulario: boolean,
+    user_info: any,
+    detalles: any,
+    dias_posibles: any,
+    accion_guardar: boolean
 }
-const tipo_mantenimiento = [{ value: "P", label: "Preventivo" }, { value: "C", label: "Correctivo" }];
+const estados_mantenimiento = [{ value: "O", label: "óptimo" }, { value: "D", label: "Defectuoso" }, { value: "A", label: "Averiado" }];
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario }: IProps) => {
-    const [dias_empleados, set_dias_empleados] = useState<string | null>("");
+export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_info, detalles, accion_guardar, dias_posibles }: IProps) => {
+    const [dias_empleados, set_dias_empleados] = useState<string>("1");
+    const [contrato, set_contrato] = useState<string | null>(null);
+    const [valor, set_valor] = useState<string | null>(null);
     const [estado, set_estado] = useState("");
-    const [observaciones, set_observaciones] = useState("");
-
+    const [observaciones, set_observaciones] = useState<string | null>("");
+    const [diligenciado, set_diligenciado] = useState<string | null>("");
+    const [realizado, set_realizado] = useState<string | null>("");
+    const [abrir_modal_persona, set_abrir_modal_persona] = useState<boolean>(false);
+    // Errors
+    const [mensaje_error_dias, set_mensaje_error_dias] = useState<string>("");
+    const [mensaje_error_estado, set_mensaje_error_estado] = useState<string>("");
+    const [mensaje_error_realizado, set_mensaje_error_realizado] = useState<string>("");
+    const [mensaje_error_diligenciado, set_mensaje_error_diligenciado] = useState<string>("");
     useEffect(() => {
-        parent_type_maintenance(estado);
-    }, [parent_type_maintenance, estado]);
-
-    useEffect(() => {
-        parent_esp_maintenance(observaciones);
-    }, [parent_esp_maintenance, observaciones]);
+        if (user_info !== null && user_info !== undefined) {
+            set_diligenciado(user_info.nombre);
+            set_realizado(user_info.nombre); // Temporal
+        }
+    }, [user_info]);
 
     useEffect(() => {
         if (limpiar_formulario) {
             set_estado("");
             set_observaciones("");
-            set_dias_empleados("");
+            set_dias_empleados("1");
+            set_valor("");
+            set_contrato("");
+            set_mensaje_error_dias("");
+            set_mensaje_error_estado("");
+            set_mensaje_error_realizado("");
+            set_mensaje_error_diligenciado("");
         }
     }, [limpiar_formulario]);
 
+    useEffect(() => {
+        if (accion_guardar) {
+            if (estado !== "" && dias_empleados !== null && realizado !== "" && diligenciado !== "") {
+                detalles({
+                    dias_empleados,
+                    estado,
+                    realizado,
+                    diligenciado,
+                    observaciones,
+                    valor,
+                    contrato
+                })
+            }else{
+                valida_formulario();
+            }
+        }
+    }, [detalles, accion_guardar]);
+
+    const valida_formulario: () => void = () => {
+        if(dias_empleados === "")
+            set_mensaje_error_dias("El campo Días empleados es obligatorio.");
+        if(parseInt(dias_empleados) > 1)
+            set_mensaje_error_dias("El campo Días empleados es mayor a los dias disponibles.");
+        if(estado === "")
+            set_mensaje_error_estado("El campo Estado final es obligatorio.");
+        if(realizado === "")
+            set_mensaje_error_realizado("El campo Realizado por es obligatorio.");
+        if(diligenciado === "")
+            set_mensaje_error_diligenciado("El campo Diligenciado por es obligatorio.");
+    }
+
     const handle_change: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_estado(e.target.value);
+        if(e.target.value !== null && e.target.value !== "")
+            set_mensaje_error_estado("");
     }
+
+    const on_change_contrato: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_contrato(e.target.value);
+    };
+
+    const on_change_valor: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_valor(e.target.value);
+    };
+
+    const on_change_dias_empleados: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+        set_dias_empleados(e.target.value);
+        if(e.target.value !== null && e.target.value !== ""){
+            set_mensaje_error_dias("");
+            validar_dias_empleados(parseInt(e.target.value));
+        }
+    };
+
+    function validar_dias_empleados(dias_empleados: number): void {
+        if(dias_empleados > dias_posibles)
+            set_mensaje_error_dias("Los dias empleados superan los dias disponibles.");
+        else
+            set_mensaje_error_dias("");
+    }
+
+    useEffect(()=>{
+        validar_dias_empleados(parseInt(dias_empleados));
+    },[dias_posibles])
 
     const on_change_observacion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_observaciones(e.target.value);
@@ -60,29 +139,32 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                             <TextField
                                 label="Días empleados"
                                 size="small"
+                                type={'number'}
                                 required
                                 fullWidth
                                 value={dias_empleados}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
+                                onChange={on_change_dias_empleados}
+                                error={mensaje_error_dias !== ""}
                             />
+                            {(mensaje_error_dias !== "") && (<FormHelperText error id="dias-error">{mensaje_error_dias}</FormHelperText>)}
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <FormControl required size='small' fullWidth>
                                 <InputLabel>Estado final</InputLabel>
                                 <Select
                                     value={estado}
-                                    label="Tipo de mantenimiento"
+                                    label="Estado final"
                                     onChange={handle_change}
+                                    error={mensaje_error_estado !== ""}
                                 >
-                                    {tipo_mantenimiento.map(({ value, label }) => (
+                                    {estados_mantenimiento.map(({ value, label }) => (
                                         <MenuItem key={value} value={value}>
                                             {label}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
+                            {(mensaje_error_estado !== "") && (<FormHelperText error id="estado-error">{mensaje_error_estado}</FormHelperText>)}
                         </Grid>
                     </Grid>
                     <Grid item xs={12} sm={12}>
@@ -90,10 +172,9 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                             multiline
                             rows={4}
                             value={observaciones}
-                            label="Descripción"
-                            helperText="Ingresar descripción"
+                            label="Observaciones"
+                            helperText="Ingresar observaciones"
                             size="small"
-                            required
                             fullWidth
                             onChange={on_change_observacion} />
                     </Grid>
@@ -101,41 +182,41 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Valor mantenimiento"
+                                type={'number'}
                                 size="small"
-                                required
                                 fullWidth
-                                value={dias_empleados}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
+                                value={valor}
+                                onChange={on_change_valor}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Contrato mantenimiento"
                                 size="small"
-                                required
                                 fullWidth
-                                value={dias_empleados}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
+                                value={contrato}
+                                onChange={on_change_contrato}
                             />
                         </Grid>
                     </Grid>
 
                     <Grid item container spacing={2}>
-                        <Grid item xs={12} sm={6}>
+                        <Grid item xs={12} sm={5}>
                             <TextField
                                 label="Realizado por"
                                 size="small"
                                 required
                                 fullWidth
-                                value={dias_empleados}
+                                value={realizado}
                                 InputProps={{
                                     readOnly: true,
                                 }}
+                                error={mensaje_error_realizado !== ""}
                             />
+                           {(mensaje_error_realizado !== "") && (<FormHelperText error id="realizado-error">{mensaje_error_realizado}</FormHelperText>)}
+                        </Grid>
+                        <Grid item xs={12} sm={1} sx={{ mt: '10px' }}>
+                            <SearchIcon style={{ cursor: 'pointer' }} onClick={() => { set_abrir_modal_persona(true) }} />
                         </Grid>
                         <Grid item xs={12} sm={6}>
                             <TextField
@@ -143,15 +224,23 @@ export const DetallesComponent: React.FC<IProps> = ({ parent_type_maintenance, p
                                 size="small"
                                 required
                                 fullWidth
-                                value={dias_empleados}
+                                value={diligenciado}
                                 InputProps={{
                                     readOnly: true,
                                 }}
+                                error={mensaje_error_diligenciado !== ""}
                             />
+                           {(mensaje_error_diligenciado !== "") && (<FormHelperText error id="diligenciado-error">{mensaje_error_diligenciado}</FormHelperText>)}
                         </Grid>
                     </Grid>
                 </Grid>
             </Box>
+            {abrir_modal_persona && (
+                <BuscadorPersonaDialog
+                    is_modal_active={abrir_modal_persona}
+                    set_is_modal_active={set_abrir_modal_persona}
+                    title={"Busqueda de persona"} />
+            )}
         </>
     )
 }

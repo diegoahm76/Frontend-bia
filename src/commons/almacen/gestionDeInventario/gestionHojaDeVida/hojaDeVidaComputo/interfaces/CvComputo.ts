@@ -77,8 +77,3 @@ export interface ICvcomputers {
   nombre: string;
   id_marca: number;
 }
-
-export interface IList {
-  label: string | number;
-  value: number | string;
-}

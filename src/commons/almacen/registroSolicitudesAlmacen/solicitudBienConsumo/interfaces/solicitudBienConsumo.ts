@@ -31,11 +31,6 @@ export interface IObjBienesSolicitud {
   id_solicitud_consumibles: number | null;
 }
 
-export interface IList {
-  label: string | number;
-  value: number | string;
-}
-
 export interface UnidadOrganizacional {
   id_unidad_organizacional: number;
   id_organigrama: number;

@@ -7,11 +7,6 @@ export interface INursery {
   items_distribuidos: IObjDistribucion[];
 }
 
-export interface IList {
-  value: string | number;
-  label: string | number;
-}
-
 export interface IObjDistribucion {
   id_item_despacho_entrante?: number | null;
   id_vivero?: number | null;

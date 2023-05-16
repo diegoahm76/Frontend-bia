@@ -23,7 +23,6 @@ import { Title } from '../../../components/Title';
 import type {
   keys_object,
   DataAadminUser,
-  UserCreate,
   SeguridadSlice,
   IList2,
 } from '../interfaces';
@@ -35,6 +34,7 @@ import { use_admin_users } from '../hooks/AdminUserHooks';
 import { control_error } from '../../../helpers/controlError';
 // import { control_success } from '../../../helpers/controlSuccess';
 import { DialogHistorialCambiosEstadoUser } from '../components/DialogHistorialCambiosEstadoUser';
+import type { ResponseServer } from '../../../interfaces/globalModels';
 
 interface Props {
   tipo_documento: string;
@@ -164,7 +164,7 @@ Props) => {
       }
     } catch (error) {
       const temp_error = error as AxiosError;
-      const resp = temp_error.response?.data as UserCreate;
+      const resp = temp_error.response?.data as ResponseServer<any>;
       control_error(resp.detail);
     }
   });

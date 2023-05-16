@@ -4,6 +4,7 @@ import type { IList } from "../../../interfaces/globalModels";
 import type {
   FieldErrors,
   FieldValues,
+  UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetValue,
@@ -287,6 +288,7 @@ export interface ReisterHook {
   is_search: boolean;
   is_valid: boolean;
   loading: boolean;
+  no_has_user: boolean;
   message_error_password: string;
   message_no_person: string;
   message_error: string;
@@ -352,6 +354,27 @@ export interface ReisterHook {
   watch: UseFormWatch<FieldValues>;
 }
 
+export interface ReisterHookNew {
+  errors: FieldErrors<FieldValues>;
+  is_avaiable: boolean;
+  is_error: boolean;
+  is_search: boolean;
+  is_valid: boolean;
+  loading: boolean;
+  no_has_user: boolean;
+  is_saving: boolean;
+  message_error: string;
+  tipo_documento_opt: IList[];
+  tipo_persona_opt: IList[];
+  handle_submit: UseFormHandleSubmit<FieldValues>;
+  register: UseFormRegister<FieldValues>;
+  set_value: UseFormSetValue<FieldValues>;
+  get_values: UseFormGetValues<FieldValues>;
+  validate_exits: (data: FieldValues) => Promise<void>;
+  watch: UseFormWatch<FieldValues>;
+  on_submit: (data: FieldValues) => Promise<void>;
+}
+
 export interface DataRegisterPersonaN {
   tipo_persona: string;
   tipo_documento: string;
@@ -388,6 +411,30 @@ export interface DataRegisterPersonaN {
   redirect_url: string;
 }
 
+export interface DataRegisterPersonaJ {
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  digito_verificacion: string;
+  cod_naturaleza_empresa: string;
+  nombre_comercial: string;
+  razon_social: string;
+  email: string;
+  email_empresarial: null;
+  direccion_notificaciones: string;
+  cod_municipio_notificacion_nal: string;
+  cod_pais_nacionalidad_empresa: string;
+  telefono_celular_empresa: string;
+  telefono_empresa_2: string;
+  telefono_empresa: string;
+  acepta_notificacion_sms: boolean;
+  acepta_notificacion_email: boolean;
+  representante_legal: number;
+  fecha_inicio_cargo_rep_legal: string;
+  nombre_de_usuario: string;
+  password: string;
+  redirect_url: string;
+}
 export interface InfoPersonaComplete {
   id_persona: number;
   tipo_documento: EstadoCivil;
@@ -455,9 +502,11 @@ export interface EstadoCivil {
   cod_tipo_documento?: string;
 }
 
-export interface UserCreate {
-  detail: string;
-  success: boolean;
+export interface User {
+  nombre_de_usuario: string;
+  persona: number;
+  password: string;
+  redirect_url: string;
 }
 
 export interface DataUnlockUser {

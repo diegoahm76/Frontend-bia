@@ -3,7 +3,7 @@ import { api } from '../../../../../../../../api/axios';
 import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
-import { type anular_mantenimiento, type crear_mantenimiento } from '../../../interfaces/IProps';
+import { type ejecutar_mantenimiento } from '../../../interfaces/IProps';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -32,12 +32,12 @@ const control_success = (message: ToastContent) =>
     theme: 'light'
   });
 
-// Crear matenimiento
-export const create_maintenance_service: any = (form_data: crear_mantenimiento[]) => {
+// Crear resgitro de mantenimiento
+export const create_maintenance_record: any = (form_data: ejecutar_mantenimiento) => {
   return async () => {
     try {
-      const { data } = await api.post('almacen/mantenimientos/programados/create/', form_data);
-      control_success('El mantenimiento se creo correctamente');
+      const { data } = await api.post('almacen/mantenimientos/ejecutados/create/', form_data);
+      control_success('El registro de mantenimiento se creo correctamente');
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -45,12 +45,12 @@ export const create_maintenance_service: any = (form_data: crear_mantenimiento[]
     }
   };
 };
-// Anular mantenimiento
-export const override_maintenance: any = (id_programado: number,form_data: anular_mantenimiento) => {
+// Elimina registro de mantenimiento
+export const delete_maintenance_record: any = (id_registro_mtto: number) => {
   return async () => {
     try {
-      const { data } = await api.patch(`almacen/mantenimientos/programados/anular/${id_programado}/`, form_data);
-      control_success('Se anulo el mantenimiento');
+      const { data } = await api.delete(`almacen/mantenimientos/ejecutados/delete/${id_registro_mtto}/`);
+      control_success('Se eliminó el registro de mantenimiento');
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -58,11 +58,11 @@ export const override_maintenance: any = (id_programado: number,form_data: anula
     }
   };
 };
-// Consulta mantenimientos programados por fechas y tipo
-export const get_programmed_maintenance: any = (fecha_desde: string, fecha_hasta: string, tipo: string) => {
+// Consulta registro de mantenimiento por id
+export const get_by_id_record: any = (id_registro_mtto: number) => {
   return async () => {
     try {
-      const { data } = await api.get(`almacen/mantenimientos/programados/get-by-fechas/?rango-inicial-fecha=${fecha_desde}&rango-final-fecha=${fecha_hasta}&cod_tipo_activo=${tipo}`);
+      const { data } = await api.get(`almacen/mantenimientos/ejecutados/get-by-id/${id_registro_mtto}/`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
