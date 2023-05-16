@@ -62,6 +62,38 @@ const columns: GridColDef[] = [
         width: 300,
     },
 ];
+const columns_juridica: GridColDef[] = [
+    {
+        field: 'id_historico_direccion',
+        headerName: '#',
+        sortable: true,
+        width: 70,
+    },
+    {
+        field: 'direccion',
+        headerName: 'DIRECCIÓN',
+        sortable: true,
+        width: 170,
+    },
+    {
+        field: 'cod_municipio',
+        headerName: 'MUNICIPIO',
+        sortable: true,
+        width: 170,
+    },
+    {
+        field: 'tipo_direccion',
+        headerName: 'TIPO DIRECCIÓN',
+        sortable: true,
+        width: 170,
+    },
+    {
+        field: 'fecha_cambio',
+        headerName: 'FECHA DE CAMBIO',
+        sortable: true,
+        width: 170,
+    },
+];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const DialogHistorialDirecciones: React.FC<IProps> = ({
@@ -132,14 +164,34 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                     }}
                 >
                     <Grid item xs={12}>
-                        <DataGrid
-                            autoHeight
-                            rows={rows}
-                            columns={columns}
-                            getRowId={(row) => row.id_historico_direccion}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                        />
+                        {rows.length > 0 && (
+                            <>
+                                {historico_direcciones.tipo_persona === 'J' && (
+                                    <>
+                                        <DataGrid
+                                            autoHeight
+                                            rows={rows}
+                                            columns={columns_juridica}
+                                            getRowId={(row) => row.id_historico_autoriza_noti}
+                                            pageSize={5}
+                                            rowsPerPageOptions={[5]}
+                                        />
+                                    </>
+                                )}
+                                {historico_direcciones.tipo_persona === 'N' && (
+                                    <>
+                                        <DataGrid
+                                            autoHeight
+                                            rows={rows}
+                                            columns={columns}
+                                            getRowId={(row) => row.id_historico_autoriza_noti}
+                                            pageSize={5}
+                                            rowsPerPageOptions={[5]}
+                                        />
+                                    </>
+                                )}
+                            </>
+                        )}
                     </Grid>
                     <Grid item xs={12}>
                         <Stack

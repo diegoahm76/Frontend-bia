@@ -444,7 +444,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
-                      {rows.every(row => row.tipo_persona === 'J') ? (
+                    {tipo_documento_av === 'NT' ? (
                         <>
                           <DataGrid
                             rows={rows}
