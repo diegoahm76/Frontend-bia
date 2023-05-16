@@ -22,7 +22,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
     const [accion_guardar, set_accion_guardar] = useState<boolean>(false);
     const [detalle, set_detalle] = useState<any>(null);
     const [mantenimiento, set_mantenimiento] = useState<any>(null);
-    const [dias_posibles, set_dias_posibles] = useState<number>(1);
+    const [fecha_dias, set_dias_posibles] = useState<any>({});
     const {
         programacion,
         detalle_seleccionado,
@@ -48,8 +48,8 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
     const validar_formulario: () => void = () => {
         if (user_info !== null && programacion !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null) {
             const formulario: ejecutar_mantenimiento = {
-                fecha_registrado: programacion.fecha,
-                fecha_ejecutado: dayjs().format("YYYY-MM-DD"),
+                fecha_registrado: dayjs().format("YYYY-MM-DD"),
+                fecha_ejecutado: fecha_dias.fecha_mantenimiento.format("YYYY-MM-DD"),
                 cod_tipo_mantenimiento: mantenimiento.tipo,
                 dias_empleados: parseInt(detalle.dias_empleados),
                 fecha_estado_anterior: null,
@@ -62,7 +62,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                 observaciones: detalle.observaciones,
                 valor_mantenimiento: detalle.valor,
                 contrato_mantenimiento: detalle.contrato,
-                id_programacion_mtto: programacion.id_programacion_mantenimiento
+                id_programacion_mtto: programacion !== null ? programacion.id_programacion_mantenimiento : null
             };
             registrar_mantenimiento(formulario);
         }
@@ -80,7 +80,16 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
 
     const limpiar: () => void = () => {
         set_limpiar_formulario(true);
+        set_accion_guardar(false);
+        set_detalle(null);
+        set_mantenimiento(null);
+        set_detalle(null);
+        set_detalle_seleccionado(null);
+        set_programacion(null);
+        set_dias_posibles(1);
+        setTimeout(() => { set_limpiar_formulario(false); }, 500);
     }
+
     return (
         <>
             <h1>Registro mantenimiento de vehículos</h1>
@@ -141,7 +150,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                 }}>
                 <Grid item xs={12}>
                     <Title title='Detalles' />
-                    <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalle} accion_guardar={accion_guardar} dias_posibles={dias_posibles}/>
+                    <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalle} accion_guardar={accion_guardar} fecha_dias={fecha_dias}/>
                 </Grid>
             </Grid>
             <Grid container>

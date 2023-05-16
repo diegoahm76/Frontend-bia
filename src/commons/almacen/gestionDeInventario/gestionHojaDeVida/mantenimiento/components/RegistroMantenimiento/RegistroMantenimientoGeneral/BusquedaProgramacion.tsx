@@ -53,20 +53,27 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo,
 
     useEffect(() => {
         if (accion_guardar) {
-            if(fecha_registro === null)
-                set_mensaje_error_fecha("El cammpo Fecha mantenimiento es obligatorio.");
+            valida_formulario();
         }
     }, [accion_guardar]);
+
+    const valida_formulario: () => void = () => {
+        if(fecha_registro !== null)
+            emit_dias_posibles({dias_posibles:(dayjs().diff(fecha_registro,'days')+1), fecha_mantenimiento: fecha_registro});
+        else
+            set_mensaje_error_fecha("El campo Fecha mantenimiento es obligatorio.");
+    }
 
     const handle_change_fecha_programada = (date: Dayjs | null): void => {
         set_fecha_registro(date);
         if(date !== null)
             set_mensaje_error_fecha("");
+        else
+            set_mensaje_error_fecha("El campo Fecha mantenimiento es obligatorio.");
     };
     
     useEffect(()=>{
-        if(fecha_registro !== null)
-            emit_dias_posibles(dayjs().diff(fecha_registro,'days')+1);
+        valida_formulario();
     },[fecha_registro])
     return (
         <>
@@ -130,9 +137,9 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo,
                                 )}
                                 maxDate={dayjs()}
                             />
-                            {(mensaje_error_fecha !== "") && (<FormHelperText error id="dias-error">{mensaje_error_fecha}</FormHelperText>)}
                         </LocalizationProvider>
                     </Stack>
+                    {(mensaje_error_fecha !== "") && (<FormHelperText error id="dias-error">{mensaje_error_fecha}</FormHelperText>)}
                 </Grid>
             </Grid>
         </>

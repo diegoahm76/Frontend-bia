@@ -27,6 +27,14 @@ export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, p
     const [mensaje_error_tipo, set_mensaje_error_tipo] = useState<string>("");
     const [mensaje_error_acciones, set_mensaje_error_acciones] = useState<string>("");
 
+    const env_cambios: () => void = () => {
+        if (tipo !== "" && acciones !== "") {
+            mantenimiento({
+                tipo,
+                acciones
+            })
+        }
+    }
     useEffect(() => {
         if (limpiar_formulario) {
             set_tipo("");
@@ -37,23 +45,18 @@ export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, p
     }, [limpiar_formulario]);
 
     useEffect(() => {
-        if (accion_guardar) {
-            if (tipo !== "" && acciones !== "") {
-                mantenimiento({
-                    tipo,
-                    acciones
-                })
-            } else {
-                valida_formulario();
-            }
+        if (accion_guardar && valida_formulario()) {
+            env_cambios();
         }
     }, [mantenimiento, accion_guardar]);
 
-    const valida_formulario: () => void = () => {
+    const valida_formulario: () => boolean = () => {
         if (tipo === "")
             set_mensaje_error_tipo("El campo Tipo de mantenimiento es obligatorio.");
         if (acciones === "")
             set_mensaje_error_acciones("El campo Acciones realizadas es obligatorio.");
+        
+            return (mensaje_error_tipo === "" && mensaje_error_acciones === "")
     }
 
     useEffect(() => {
@@ -65,14 +68,18 @@ export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, p
 
     const handle_change: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tipo(e.target.value);
-        if(e.target.value !== null && e.target.value !== "")
+        if (e.target.value !== null && e.target.value !== "") {
             set_mensaje_error_tipo("");
+            env_cambios();
+        }
     }
 
     const on_change_acciones: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_acciones(e.target.value);
-        if(e.target.value !== null && e.target.value !== "")
+        if (e.target.value !== null && e.target.value !== "") {
             set_mensaje_error_acciones("");
+            env_cambios();
+        }
     };
 
     return (
