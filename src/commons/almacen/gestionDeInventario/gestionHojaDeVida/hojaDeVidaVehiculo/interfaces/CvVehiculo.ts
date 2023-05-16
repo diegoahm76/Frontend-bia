@@ -79,10 +79,7 @@ export interface IcvMaintenance {
   tipo: string;
 }
 
-export interface IList {
-  label: string | number;
-  value: number | string;
-}
+
 
 export interface IMarca {
   id_marca: number;

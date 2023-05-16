@@ -111,11 +111,6 @@ export type keys_object =
   | 'creado_desde_portal'
   | 'persona_que_creo';
 
-export interface UserCreate {
-  detail: string;
-  success: boolean;
-}
-
 export interface AdminUserHook {
   // initial_state_data_register: DataAadminUser;
   data_register: DataAadminUser;
