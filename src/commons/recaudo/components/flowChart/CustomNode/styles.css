@@ -1,6 +1,6 @@
 .custom-node-wrapper {
-  width: 250px;
-  height: 180px;
+  width: 200px;
+  min-height: 140px;
   border: 1px solid #181818;
   padding: 5px;
   border-radius: 5px;
