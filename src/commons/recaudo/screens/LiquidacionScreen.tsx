@@ -37,9 +37,9 @@ import { Modal } from "@material-ui/core";
 import { Liquidator } from "../components/liquidador/liquidator";
 import './LiquidacionScreen.css'
 import { PruebasLiquidacionModal } from "../components/constructorLiquidador/modal/PruebasLiquidacionModal";
-import { AddParametroModal } from "../components/constructorLiquidador/modal/AddParametroModal";
 import axios from "axios";
-import type { Liquidacion, OpcionLiquidacion } from "../interfaces/liquidacion";
+import type { OpcionLiquidacion } from "../interfaces/liquidacion";
+import { Add, AddCircleOutlineRounded, Build, Save, Science } from "@mui/icons-material";
 
 interface Rows {
   id: number;
@@ -57,7 +57,6 @@ export const LiquidacionScreen: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [enableTest, setEnableTest] = useState(false);
   const primaryWorkspace = useRef<any>();
-  const [add_parametro, set_add_parametro] = useState<boolean>(false);
   const [modal_pruebas, set_modal_pruebas] = useState<boolean>(false);
 
   useEffect(() => {
@@ -271,22 +270,16 @@ export const LiquidacionScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Liquidacion"></Title>
+          <Title title="Liquidación"></Title>
           <Box
             component='form'
             sx={{ mt: '20px' }}
             noValidate
             autoComplete="off"
           >
-            <Grid container spacing={1}>
-              {/* <Grid item xs={12} sm={4}>
-                <TextField
-                  placeholder="Liquidacion de intereses por mora"
-                  size="small"
-                  fullWidth
-                />
-              </Grid> */}
-              <Grid item xs={12} sm={4}>
+            {/* INICIO TEST */}
+            <Grid container spacing={2} sx={{ my: '10px' }}>
+              <Grid item xs={12} sm={4.5}>
                 <FormControl size="small" fullWidth>
                   <InputLabel>Selecciona opción liquidación</InputLabel>
                   <Select
@@ -305,47 +298,26 @@ export const LiquidacionScreen: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <IconButton size="large" color="primary">
-                  <FindInPageIcon fontSize="inherit" />
-                </IconButton>
-              </Grid>
-              <Stack
-                direction="row"
-                justifyContent="end"
-                spacing={2}
-                sx={{ mb: '20px' }}
-              >
-                <Button
-                  variant="outlined"
-                  startIcon={<AddIcon />}
-                  onClick={() => {
-                    set_add_parametro(true);
-                  }}
-                >
-                  Añadir parametro
-                </Button>
-              </Stack>
-            </Grid>
-            {/* INICIO TEST */}
-            <Grid container spacing={2} sx={{ my: '10px' }}>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={4.5}>
                 <TextField
-                  label="Variable"
+                  label="Ingresa una variable"
                   name="variable"
                   required
                   autoComplete="off"
                   value={formData.variable}
                   onChange={handleInputChange}
                   variant="outlined"
-                  margin="normal"
+                  size="small"
                   fullWidth
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={3}>
                 <Button
                   disabled={!formData.variable}
-                  variant="outlined" color="primary" onClick={handleSubmit}>
+                  variant="contained" color="primary" onClick={handleSubmit}
+                  startIcon={<Add />}
+                  fullWidth
+                >
                   Agregar variable
                 </Button>
               </Grid>
@@ -380,11 +352,26 @@ export const LiquidacionScreen: React.FC = () => {
               <TransitionAlerts configNotify={configNotify} setNotifications={setNotifications} />
             </Grid>
           </Box>
-          <Grid item xs={12}>
-            <Button variant="contained" color="primary" onClick={handleSubmitProcess}>
-              Procesar
-            </Button>
-          </Grid>
+          <Stack
+            direction='row'
+            justifyContent='center'
+            alignContent='center'
+            sx={{
+              margin: '30px 0'
+            }}
+          >
+            <Grid item xs={12} sm={3}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmitProcess}
+                startIcon={<Build />}
+                fullWidth
+              >
+                Probar las variables
+              </Button>
+            </Grid>
+          </Stack>
           <Stack
             direction="row"
             justifyContent="center"
@@ -394,32 +381,34 @@ export const LiquidacionScreen: React.FC = () => {
           >
             <Grid item xs={3}>
               <TextField
-                label="Nombre Liquidacion"
+                label="Ingrese nombre liquidacion"
                 name="nombre_liquidacion"
                 required
                 autoComplete="off"
                 onChange={handleInputChange}
                 variant="outlined"
-                margin="normal"
+                size="small"
                 fullWidth
               />
             </Grid>
             <Grid item xs={3}>
               <Button
-                color='success'
+                color='primary'
                 variant='contained'
                 onClick={handleSave}
+                startIcon={<Save />}
+                fullWidth
               >
-                Guardar
+                Guardar liquidación
               </Button>
             </Grid>
           </Stack>
         </Grid>
       </Grid>
-      <AddParametroModal
+      {/* <AddParametroModal
         is_modal_active={add_parametro}
         set_is_modal_active={set_add_parametro}
-      />
+      /> */}
       <PruebasLiquidacionModal
         is_modal_active={modal_pruebas}
         set_is_modal_active={set_modal_pruebas}
