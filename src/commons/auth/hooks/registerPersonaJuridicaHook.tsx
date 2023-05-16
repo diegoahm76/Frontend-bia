@@ -163,7 +163,6 @@ export const use_register_persona_j = ({
 
       if (data !== null && data !== undefined) {
         if (data.id_persona !== 0) {
-          console.log('first');
           set_value('representante_legal', data.id_persona);
           set_value('nombre_representante_legal', data.nombre_completo);
           return;
@@ -229,6 +228,7 @@ export const use_register_persona_j = ({
     try {
       values.redirect_url =
         'https://macareniafrontendevelopv2.netlify.app/#/auth/activacion_cuenta';
+      values.telefono_celular = `57${values.telefono_celular as string}`;
       const { data } = await crear_persona_juridica_and_user(
         values as DataRegisterPersonaJ
       );
