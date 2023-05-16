@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@blockly/field-date": "^6.0.12",
+    "@ckeditor/ckeditor5-build-classic": "^37.1.0",
+    "@ckeditor/ckeditor5-react": "^6.0.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@fontsource/roboto": "^4.5.8",

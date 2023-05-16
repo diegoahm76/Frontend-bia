@@ -82,11 +82,10 @@ export const get_computers_all_service: any = () => {
 };
 
 // Obtener Hoja de Vida PC
-export const get_cv_computer_service: any = (
-    id: any,
-    navigate: NavigateFunction
 
-) => {
+
+export const get_cv_computer_service: (id: any) => any = (id: any) => {
+
     return async (dispatch: Dispatch<any>) => {
         try {
 
@@ -114,7 +113,7 @@ export const create_cv_computers_service: any = (
             const { data } = await api.post(
                 'almacen/hoja-de-vida/computadores/create/', cv
             );
-            dispatch(get_cv_computer_service());
+            dispatch(get_cv_computer_service(id));
             control_success('La hoja de vida se creo correctamente');
             return data;
         } catch (error: any) {

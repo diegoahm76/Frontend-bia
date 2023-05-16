@@ -3,9 +3,6 @@ import { api } from '../../../../../../../../api/axios';
 import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
-import { type Dispatch } from 'react';
-import { get_computers_all_service } from '../../../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
-import { get_vehicles_all_service } from '../../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks';
 import { type anular_mantenimiento, type crear_mantenimiento } from '../../../interfaces/IProps';
 
 
@@ -37,28 +34,35 @@ const control_success = (message: ToastContent) =>
 
 // Crear matenimiento
 export const create_maintenance_service: any = (form_data: crear_mantenimiento[]) => {
-  return async (dispatch: Dispatch<any>) => {
-      try {
-        const { data } = await api.post('almacen/mantenimientos/programados/create/', form_data);
-        control_success('El mantenimiento se creo correctamente');
-          dispatch(get_computers_all_service());
-          dispatch(get_vehicles_all_service());
-          return data;
-      } catch (error: any) {
-          control_error(error.response.data.detail);
-          return error as AxiosError;
-      }
+  return async () => {
+    try {
+      const { data } = await api.post('almacen/mantenimientos/programados/create/', form_data);
+      control_success('El mantenimiento se creo correctamente');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
   };
 };
 // Anular mantenimiento
-export const override_maintenance: any = (form_data: anular_mantenimiento) => {
-  return async (dispatch: Dispatch<any>) => {
+export const override_maintenance: any = (id_programado: number,form_data: anular_mantenimiento) => {
+  return async () => {
     try {
-      const { data } = await api.patch(`almacen/mantenimientos/programados/anular/0/`,form_data);
-      dispatch(get_computers_all_service());
-      dispatch(get_vehicles_all_service());
+      const { data } = await api.patch(`almacen/mantenimientos/programados/anular/${id_programado}/`, form_data);
       control_success('Se anulo el mantenimiento');
-
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Consulta mantenimientos programados por fechas
+export const get_programmed_maintenance: any = (fecha_desde: string, fecha_hasta: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`almacen/mantenimientos/programados/get-by-fechas/?rango-inicial-fecha=${fecha_desde}&rango-final-fecha=${fecha_hasta}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

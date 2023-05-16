@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type Dispatch } from 'react';
 import { type NavigateFunction } from 'react-router-dom';
 import { toast, type ToastContent } from 'react-toastify';
@@ -294,7 +295,7 @@ export const save_items_distribuidos_service = (
   ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/despachos/guardar/${id??""}/?observaciones_distribucion=test/`,
+      const { data } = await api.put(`conservacion/despachos/guardar/${id??""}/?observaciones_distribucion=${observacion??""}`,
                                     items);
       if (data.success){
         dispatch(get_items_distribuidos_service(id));
@@ -315,12 +316,12 @@ export const save_items_distribuidos_service = (
 // confirmar items predistribuidos
 export const confirmar_items_distribuidos_service = (
   id: string|number,
-  observacion: string|null,
+  observacion: string,
   items: any
   ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/despachos/confirmar-distribucion/${id??""}/?observaciones_distribucion=test/`,
+      const { data } = await api.put(`conservacion/despachos/confirmar-distribucion/${id??""}/?observaciones_distribucion=${observacion}`,
                                     items);
       if (data.success){
         dispatch(get_items_distribuidos_service(id));
@@ -332,7 +333,7 @@ export const confirmar_items_distribuidos_service = (
     } catch (error: any) {
       console.log('save_items_despacho_service');
       console.log(error)
-      control_error(error);
+      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
