@@ -29,7 +29,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import CrearCvComputoForm from '../components/CrearCvComputoForm';
 // // Slices
 import { current_computer } from '../store/slices/indexCvComputo';
-import { get_cv_computer_service, } from '../store/thunks/cvComputoThunks';
+// import { get_cv_computer_service, } from '../store/thunks/cvComputoThunks';
 
 
 
@@ -181,7 +181,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
   ];
 
   useEffect(() => {
-    void dispatch(get_cv_computer_service())
+    // void dispatch(get_cv_computer_service())
 
   }, []);
 

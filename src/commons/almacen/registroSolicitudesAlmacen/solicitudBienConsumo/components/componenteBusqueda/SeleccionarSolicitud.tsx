@@ -88,15 +88,29 @@ const SeleccionarSolicitud = ({
                     form_inputs={[
                         {
                             datum_type: "input_controller",
-                            xs: 12,
-                            md: 5,
+                            xs: 5,
+                            md: 2,
+                            control_form: control_solicitud,
+                            control_name: "id_solicitud_consumibles",
+                            default_value: "",
+                            rules: {},
+                            label: "ID",
+                            type: "number",
+                            disabled: false,
+                            helper_text: "",
+                            on_blur_function: search_solicitud
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 5,
+                            md: 2,
                             control_form: control_solicitud,
                             control_name: "nro_solicitud_por_tipo",
                             default_value: "",
                             rules: {},
                             label: "Numero solicitud",
                             type: "number",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                             on_blur_function: search_solicitud
                         },
