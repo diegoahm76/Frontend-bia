@@ -95,13 +95,6 @@ export const initial_state_data_register: DataAadminUser = {
 
 export const use_admin_users = (): AdminUserHook => {
   const dispatch = useDispatch();
-
-  const [numero_documento, set_numero_documento] = useState('');
-
-  const [has_user, set_has_user] = useState(false);
-  const [is_exists, set_is_exists] = useState(false);
-  const [is_saving, set_is_saving] = useState(false);
-  const [is_search, set_is_search] = useState(false);
   const [loading, set_loading] = useState<boolean>(false);
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
   const [tipo_documento_opt_all, set_tipo_documento_opt_all] = useState<
@@ -110,8 +103,9 @@ export const use_admin_users = (): AdminUserHook => {
   const [tipo_documento, set_tipo_documento] = useState('');
   const [tipo_persona, set_tipo_persona] = useState('');
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
-  const [roles, set_roles] = useState<IList2[]>([]);
   const [roles_opt, set_roles_opt] = useState<IList2[]>([]);
+  const rol_fixed = [roles_opt[0]];
+  const [roles, set_roles] = useState<IList2[]>([...rol_fixed]);
   const [tipo_usuario, set_tipo_usuario] = useState('');
   const [activo, set_activo] = useState('');
   const [bloqueado, set_bloqueado] = useState('');
@@ -141,8 +135,6 @@ export const use_admin_users = (): AdminUserHook => {
     useState<boolean>(false);
   const [loading_create_or_update, set_loading_create_or_update] =
     useState<boolean>(false);
-  const [asignacion_data_form, set_asignacion_data_form] =
-    useState<boolean>(false);
 
   const {
     register: register_admin_user,
@@ -168,6 +160,7 @@ export const use_admin_users = (): AdminUserHook => {
 
       const { data } = await roles_request();
       const res_roles_adapter: IList2[] = await roles_choise_adapter(data);
+      console.log(res_roles_adapter);
       set_roles_opt(res_roles_adapter);
 
       const {
@@ -270,6 +263,7 @@ export const use_admin_users = (): AdminUserHook => {
     console.log(e.target.name, e.target.value);
     switch (e.target.name) {
       case 'tipo_usuario':
+        console.log(e.target.value);
         set_tipo_usuario(e.target.value);
         break;
       case 'activo':
@@ -333,7 +327,7 @@ export const use_admin_users = (): AdminUserHook => {
     set_check_user_is_blocked(true);
     if (data_person_search.id_persona !== 0) {
       set_tipo_documento(data_person_search.tipo_documento);
-      set_numero_documento(data_person_search.numero_documento);
+      // set_numero_documento(data_person_search.numero_documento);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -342,12 +336,15 @@ export const use_admin_users = (): AdminUserHook => {
       set_bloqueado(`${data_register.bloqueado}`);
 
       if (data_person_search.tipo_persona === 'N') {
+        // set_tipo_usuario('');
         set_data_register({
           ...data_register,
           primer_nombre: data_person_search.primer_nombre,
           segundo_nombre: data_person_search.segundo_nombre,
           primer_apellido: data_person_search.primer_apellido,
           segundo_apellido: data_person_search.segundo_apellido,
+          nombre_de_usuario: '',
+          tipo_usuario: '',
         });
         set_value_admin_user('primer_nombre', data_person_search.primer_nombre);
         set_value_admin_user(
@@ -362,17 +359,24 @@ export const use_admin_users = (): AdminUserHook => {
           'segundo_apellido',
           data_person_search.segundo_apellido
         );
+        set_value_admin_user('nombre_de_usuario', '');
+        set_value_admin_user('tipo_usuario', '');
       } else if (data_person_search.tipo_persona === 'J') {
+        set_roles([{ value: 2, label: 'Rol Usuarios Web' }]);
         set_data_register({
           ...data_register,
           razon_social: data_person_search.razon_social,
           nombre_comercial: data_person_search.nombre_comercial,
+          nombre_de_usuario: '',
+          tipo_usuario: 'E',
         });
         set_value_admin_user('razon_social', data_person_search.razon_social);
         set_value_admin_user(
           'nombre_comercial',
           data_person_search.nombre_comercial
         );
+        set_value_admin_user('nombre_de_usuario', '');
+        set_value_admin_user('tipo_usuario', 'E');
       }
       if (data_person_search.usuarios.length === 1) {
         dispatch(get_data_user(data_person_search.usuarios[0].id_usuario));
@@ -399,7 +403,7 @@ export const use_admin_users = (): AdminUserHook => {
     if (user_info.id_usuario !== 0) {
       console.log(action_admin_users);
       set_tipo_documento(user_info.tipo_documento);
-      set_numero_documento(user_info.numero_documento);
+      // set_numero_documento(user_info.numero_documento);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -437,7 +441,6 @@ export const use_admin_users = (): AdminUserHook => {
           user_info.created_at !== null
             ? dayjs(user_info.created_at).format('DD-MM-YYYY')
             : 'No disponible',
-
         fecha_activación_inicial:
           user_info.activated_at !== null
             ? dayjs(user_info.activated_at).format('DD-MM-YYYY')
@@ -527,57 +530,26 @@ export const use_admin_users = (): AdminUserHook => {
     if (watch_admin_user('tipo_usuario') !== undefined) {
       set_tipo_usuario(watch_admin_user('tipo_usuario'));
     } else {
-      console.log('Tipo de usuario sin definir');
-      if (action_admin_users === 'CREATE') {
-        // Las Personas Jurídicas sólo pueden ser usuarios de tipo “EXTERNOS”.
-        if (tipo_persona === 'J') {
-          set_tipo_usuario('E');
-        }
-      }
+      // console.log('Tipo de usuario sin definir');
+      // if (watch_admin_user('tipo_usuario') === 'I') {
+      //   set_roles([{ value: 2, label: 'Rol Usuarios Web' }]);
+      // }
     }
   }, [watch_admin_user('tipo_usuario')]);
 
   return {
-    on_submit,
-    set_value_form,
-    on_change,
-    handle_change_autocomplete,
-    handle_change,
-    handle_image_select,
-    // Handle Form
-    register_admin_user,
-    handle_submit_admin_user,
-    set_value_admin_user,
     errors_admin_users,
-    watch_admin_user,
-    reset_admin_user,
-    // Gets
-    get_selects_options,
-    // UseSelector
     action_admin_users,
-    data_person_search,
     user_info,
-    // UseState values
-    asignacion_data_form,
-    loading_inputs,
     loading_create_or_update,
-    users_x_person_is_active,
+    loading_inputs,
     selected_image,
-    file_image,
     check_user_is_active,
     check_user_is_blocked,
     data_disponible,
     historial_cambios_estado_is_active,
     data_register,
-    has_user,
-    is_exists,
-    is_saving,
-    is_search,
     loading,
-    numero_documento,
-    tipo_documento_opt,
-    tipo_documento,
-    tipo_persona_opt,
     tipo_persona,
     tipo_usuario_opt,
     tipo_usuario,
@@ -587,28 +559,24 @@ export const use_admin_users = (): AdminUserHook => {
     bloqueado_opt,
     roles,
     roles_opt,
-    // UseState Sets
-    set_asignacion_data_form,
-    set_loading_inputs,
-    set_loading_create_or_update,
-    set_users_x_person_is_active,
-    set_selected_image,
-    set_file_image,
-    set_check_user_is_active,
-    set_check_user_is_blocked,
-    set_data_disponible,
+    users_x_person_is_active,
+    tipo_documento_opt,
+    tipo_documento,
+    tipo_persona_opt,
+    rol_fixed,
     set_historial_cambios_estado_is_active,
+    set_users_x_person_is_active,
+    on_submit,
+    on_change,
+    handle_change_autocomplete,
+    handle_change,
+    handle_image_select,
+    register_admin_user,
     set_data_register,
-    set_has_user,
-    set_is_exists,
-    set_is_saving,
-    set_is_search,
-    set_roles,
-    set_numero_documento,
-    set_activo,
-    set_bloqueado,
     set_tipo_documento,
     set_tipo_persona,
-    set_tipo_usuario,
+    set_data_disponible,
+    set_loading_inputs,
+    reset_admin_user,
   };
 };

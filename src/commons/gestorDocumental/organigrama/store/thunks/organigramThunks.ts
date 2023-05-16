@@ -54,7 +54,7 @@ export const get_mold_organigrams_service: any = (id: string | number) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `almacen/organigrama/unidades/get-jerarquia/${id}/`
+        `transversal/organigrama/unidades/get-jerarquia/${id}/`
       );
       dispatch(get_mold_organigrams(data.data));
       return data;
@@ -71,7 +71,7 @@ export const get_organigrams_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     console.log(api);
     try {
-      const { data } = await api.get('almacen/organigrama/get/');
+      const { data } = await api.get('transversal/organigrama/get/');
       dispatch(get_organigrams(data.Organigramas));
       return data;
     } catch (error: any) {
@@ -86,7 +86,7 @@ export const add_organigrams_service:any = (organigrama: any, set_position_tab_o
     return async (dispatch: Dispatch<any>) => {
         try {
             console.log(organigrama);   
-            const { data } = await api.post("almacen/organigrama/create/", organigrama);
+            const { data } = await api.post("transversal/organigrama/create/", organigrama);
             
             dispatch(get_organigrams_service());
             dispatch(current_organigram(data.detail));
@@ -112,7 +112,7 @@ export const edit_organigrams_service: any = (
     try {
       console.log(api.defaults)
       const { data } = await api.patch(
-        `almacen/organigrama/update/${id}/`,
+        `transversal/organigrama/update/${id}/`,
         organigrama
       );
       dispatch(get_organigrams_service());
@@ -130,7 +130,7 @@ export const edit_organigrams_service: any = (
 export const to_finalize_organigram_service:any = (id: string, set_position_tab_organigrama:  Dispatch<SetStateAction<string>>) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.put(`almacen/organigrama/finalizar/${id}/`);
+            const { data } = await api.put(`transversal/organigrama/finalizar/${id}/`);
             dispatch(get_organigrams_service());
             void Swal.fire({
                 position: "center", icon: "info", title: "Atención", text: data.detail,
@@ -151,7 +151,7 @@ export const get_levels_service: any = (id: string | number) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `almacen/organigrama/niveles/get-by-organigrama/${id}/`
+        `transversal/organigrama/niveles/get-by-organigrama/${id}/`
       );
       dispatch(get_levels(data.data));
       return data;
@@ -171,7 +171,7 @@ export const update_levels_service: any = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(
-        `almacen/organigrama/niveles/update/${id}/`,
+        `transversal/organigrama/niveles/update/${id}/`,
         newLevels
       );
       dispatch(get_levels_service(id));
@@ -191,7 +191,7 @@ export const get_unitys_service: any = (id: string | number) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `almacen/organigrama/unidades/get-by-organigrama/${id}/`
+        `transversal/organigrama/unidades/get-by-organigrama/${id}/`
       );
       dispatch(get_unitys(data.data));
       return data;
@@ -211,7 +211,7 @@ export const update_unitys_service: any = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(
-        `almacen/organigrama/unidades/update/${id}/`,
+        `transversal/organigrama/unidades/update/${id}/`,
         new_unitys
       );
       dispatch(get_unitys_service(id));

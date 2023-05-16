@@ -1,9 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  // useState,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Grid,
@@ -195,7 +191,6 @@ const dialog_busqueda_avanzada_usuario = ({
           </Grid>
         </Box>
         <Grid item xs={12}>
-         
           <Grid item xs={12}>
             <DataGrid
               density="compact"
@@ -207,7 +202,6 @@ const dialog_busqueda_avanzada_usuario = ({
               getRowId={(row) => row.id_usuario}
             />
           </Grid>
-          
         </Grid>
       </DialogContent>
     </Dialog>

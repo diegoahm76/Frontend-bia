@@ -9,6 +9,7 @@ import {
   Autocomplete,
   Avatar,
   Skeleton,
+  Chip,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
@@ -18,52 +19,22 @@ import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from './DialogHistorialCambiosEstadoUser';
 import { use_admin_users } from '../hooks/AdminUserHooks';
 
-interface Props {
-  tipo_de_persona: string;
-}
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AdminUsers: React.FC<Props> = ({ tipo_de_persona }: Props) => {
+export const AdminUsers: React.FC = () => {
   const {
-    on_submit,
-    // set_value_form,
-    on_change,
-    handle_change_autocomplete,
-    handle_change,
-    handle_image_select,
-    // Handle Form
-    register_admin_user,
-    // handle_submit_admin_user,
-    // set_value_admin_user,
     errors_admin_users,
-    // watch_admin_user,
-    // Gets
-    // get_selects_options,
-    // UseSelector
     action_admin_users,
-    // data_person_search,
     user_info,
-    // UseState values
     loading_create_or_update,
     loading_inputs,
-    // users_x_person_is_active,
     selected_image,
-    // file_image,
     check_user_is_active,
     check_user_is_blocked,
     data_disponible,
     historial_cambios_estado_is_active,
     data_register,
-    // has_user,
-    // is_exists,
-    // is_saving,
-    // is_search,
     loading,
-    // numero_documento,
-    // tipo_documento_opt,
-    // tipo_documento,
-    // tipo_persona_opt,
-    // tipo_persona,
+    tipo_persona,
     tipo_usuario_opt,
     tipo_usuario,
     activo,
@@ -72,27 +43,14 @@ export const AdminUsers: React.FC<Props> = ({ tipo_de_persona }: Props) => {
     bloqueado_opt,
     roles,
     roles_opt,
-    // UseState Sets
-    // set_loading_create_or_update,
-    // set_users_x_person_is_active,
-    // set_selected_image,
-    // set_file_image,
-    // set_check_user_is_active,
-    // set_check_user_is_blocked,
-    // set_data_disponible,
+    rol_fixed,
+    on_submit,
+    on_change,
+    handle_change_autocomplete,
+    handle_change,
+    handle_image_select,
+    register_admin_user,
     set_historial_cambios_estado_is_active,
-    // set_data_register,
-    // set_has_user,
-    // set_is_exists,
-    // set_is_saving,
-    // set_is_search,
-    // set_roles,
-    // set_numero_documento,
-    // set_activo,
-    // set_bloqueado,
-    // set_tipo_documento,
-    // set_tipo_persona,
-    // set_tipo_usuario,
   } = use_admin_users();
 
   return (
@@ -109,11 +67,9 @@ export const AdminUsers: React.FC<Props> = ({ tipo_de_persona }: Props) => {
               <>
                 <Grid container spacing={2} sx={{ mt: '5px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
-                    <Title
-                      title={`Datos personales persona ${tipo_de_persona}`}
-                    />
+                    <Title title={`Datos personales persona ${tipo_persona}`} />
                   </Box>
-                  {tipo_de_persona === 'N' ? (
+                  {tipo_persona === 'N' ? (
                     <>
                       <Grid item xs={12} sm={6} md={3}>
                         {loading_inputs ? (
@@ -197,7 +153,7 @@ export const AdminUsers: React.FC<Props> = ({ tipo_de_persona }: Props) => {
                       </Grid>
                     </>
                   ) : (
-                    tipo_de_persona === 'J' && (
+                    tipo_persona === 'J' && (
                       <>
                         <Grid item xs={12} sm={6} md={3}>
                           {loading_inputs ? (
@@ -313,7 +269,7 @@ export const AdminUsers: React.FC<Props> = ({ tipo_de_persona }: Props) => {
                       value={tipo_usuario}
                       options={tipo_usuario_opt}
                       loading={loading}
-                      disabled={tipo_de_persona === 'J' && true}
+                      disabled={tipo_persona === 'J' && true}
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />
@@ -330,6 +286,16 @@ export const AdminUsers: React.FC<Props> = ({ tipo_de_persona }: Props) => {
                           option.value === value.value
                         }
                         value={roles ?? []}
+                        renderTags={(tagValue, getTagProps) =>
+                          tagValue.map((option, index) => (
+                            // eslint-disable-next-line react/jsx-key
+                            <Chip
+                              label={option.label}
+                              {...getTagProps({ index })}
+                              disabled={rol_fixed.includes(option)}
+                            />
+                          ))
+                        }
                         renderInput={(params) => (
                           <TextField
                             key={params.id}
@@ -381,7 +347,7 @@ export const AdminUsers: React.FC<Props> = ({ tipo_de_persona }: Props) => {
                       value={activo}
                       options={activo_opt}
                       loading={loading}
-                      disabled={false}
+                      disabled={tipo_usuario === 'E' && true}
                       required={true}
                       errors={errors_admin_users}
                       register={register_admin_user}

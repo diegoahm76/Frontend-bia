@@ -15,7 +15,6 @@ import type {
   DataAadminUser,
   keys_object,
   SeguridadSlice,
-  Users,
 } from '../interfaces';
 import DialogBusquedaAvanzadaUsuario from '../components/DialogBusquedaAvanzadaUsuario';
 import DialogBusquedaAvanzadaPersona from '../components/DialogBusquedaAvanzadaPersona';
@@ -26,49 +25,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { get_data_user } from '../store/thunks';
 import DialogUserXPerson from '../components/DialogUserXPerson';
 import {
-  // initial_state_data_person_search,
+  initial_state_user_info,
   set_action_admin_users,
   set_data_person_search,
   set_user_info,
 } from '../store/seguridadSlice';
 import { get_person_user_or_users_by_document } from '../request/seguridadRequest';
 import { control_error } from '../../../helpers';
-
-const initial_state_user_info: Users = {
-  id_usuario: 0,
-  nombre_de_usuario: '',
-  persona: 0,
-  tipo_persona: '',
-  tipo_documento: '',
-  numero_documento: '',
-  primer_nombre: '',
-  segundo_nombre: '',
-  primer_apellido: '',
-  segundo_apellido: '',
-  nombre_completo: '',
-  razon_social: '',
-  nombre_comercial: '',
-  is_active: false,
-  fecha_ultimo_cambio_activacion: '',
-  justificacion_ultimo_cambio_activacion: '',
-  is_blocked: false,
-  fecha_ultimo_cambio_bloqueo: '',
-  justificacion_ultimo_cambio_bloqueo: '',
-  tipo_usuario: '',
-  profile_img: '',
-  creado_por_portal: false,
-  created_at: '',
-  activated_at: '',
-  id_usuario_creador: 0,
-  primer_nombre_usuario_creador: '',
-  primer_apellido_usuario_creador: '',
-  roles: [
-    {
-      value: 0,
-      label: '',
-    },
-  ],
-};
 
 const initial_state_data_register: DataAadminUser = {
   tipo_persona: '',
@@ -104,7 +67,7 @@ const initial_state_data_register: DataAadminUser = {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsuariosScreen: React.FC = () => {
   const dispatch = useDispatch();
-  const { data_person_search } = useSelector(
+  const { data_user_search, data_person_search } = useSelector(
     (state: SeguridadSlice) => state.seguridad
   );
 
@@ -116,7 +79,6 @@ export const AdminUsuariosScreen: React.FC = () => {
     busqueda_avanzada_user_is_active,
     set_busqueda_avanzada_user_is_active,
   ] = useState<boolean>(false);
-  // const [render_form, set_render_form] = useState<boolean>();
   const {
     handleSubmit: handle_submit_ini,
     register: register_search_ini,
@@ -134,21 +96,24 @@ export const AdminUsuariosScreen: React.FC = () => {
     tipo_persona,
     set_users_x_person_is_active,
     set_data_register,
-    set_numero_documento,
     set_tipo_documento,
     set_tipo_persona,
     set_data_disponible,
     set_loading_inputs,
     reset_admin_user,
   } = use_admin_users();
-  const numero_documento = watch('numero_documento');
+  // const numero_documento = watch('numero_documento');
 
   // Consultamos si el usuario existe
+  // useEffect(() => {
+  //   if (numero_documento !== undefined && numero_documento !== '') {
+  //     set_numero_documento(numero_documento);
+  //     set_value_ini('numero_documento', numero_documento);
+  //   }
+  // }, [numero_documento]);
   useEffect(() => {
-    if (numero_documento !== undefined && numero_documento !== '') {
-      set_numero_documento(numero_documento);
-    }
-  }, [numero_documento]);
+    set_tipo_persona(data_user_search.tipo_persona);
+  }, [data_user_search]);
 
   useEffect(() => {
     if (watch('tipo_persona') !== undefined) {
@@ -182,26 +147,26 @@ export const AdminUsuariosScreen: React.FC = () => {
   // Busca data de usuario despues de seleccionarlo en el modal cuando persona tiene mas de un usuario
   const search_data_user_selected = (id_user: number): void => {
     dispatch(set_user_info(initial_state_user_info));
-    // set_data_register(initial_state_data_register);
     dispatch(get_data_user(id_user));
     set_users_x_person_is_active(false);
   };
 
+  // Limpia datos del formulario y permite mostrar la informacion de persona Natural o Juridica
   const handle_user_person_create_active = (): void => {
-    set_data_disponible(false);
-    // dispatch(set_data_person_search(initial_state_data_person_search));
-    set_loading_inputs(true);
-    dispatch(set_user_info(initial_state_user_info));
     set_data_register(initial_state_data_register);
+    dispatch(set_user_info(initial_state_user_info));
     reset_admin_user();
+    set_data_disponible(false);
+    set_loading_inputs(true);
   };
 
+  // Limpia datos del formulario y permite mostrar la informacion de persona Natural o Juridica
   const handle_user_edit_active = (): void => {
-    set_data_disponible(false);
-    set_loading_inputs(true);
     dispatch(set_user_info(initial_state_user_info));
     set_data_register(initial_state_data_register);
     reset_admin_user();
+    set_data_disponible(false);
+    set_loading_inputs(true);
   };
 
   // Establece los valores del formulario INICIAL
@@ -223,8 +188,10 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_value_form(e.target.name, e.target.value);
   };
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const on_submit_search_ini_persona = async (data_search_ini: any) => {
+  // Realiza buqueda por persona para editar o crear dependiendo si tiene usuario o no
+  const on_submit_search_ini_persona = async (
+    data_search_ini: any
+  ): Promise<void> => {
     console.log(data_search_ini.numero_documento);
     const { data: data_person_search } =
       await get_person_user_or_users_by_document(
@@ -354,9 +321,7 @@ export const AdminUsuariosScreen: React.FC = () => {
               </Grid>
             </Grid>
           </Box>
-
-          <AdminUsers tipo_de_persona={tipo_persona} />
-
+          <AdminUsers />
           <DialogBusquedaAvanzadaPersona
             is_modal_active={busqueda_avanzada_person_is_active}
             set_is_modal_active={set_busqueda_avanzada_person_is_active}

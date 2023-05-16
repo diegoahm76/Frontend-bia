@@ -1,5 +1,5 @@
 import { type BaseSyntheticEvent, type Dispatch, type SetStateAction } from 'react';
-import type{ FieldErrors,  UseFormHandleSubmit,  UseFormRegister,  UseFormReset,  UseFormSetValue,  UseFormWatch } from 'react-hook-form';
+import type{ FieldErrors,   UseFormRegister,  UseFormReset } from 'react-hook-form';
 import type { DataPersonas, IList } from '../../../interfaces/globalModels';
 import { type AutocompleteChangeDetails, type AutocompleteChangeReason, type SelectChangeEvent } from '@mui/material';
 
@@ -118,80 +118,53 @@ export interface UserCreate {
   success: boolean;
 }
 export interface AdminUserHook {
+  errors_admin_users: FieldErrors<DataAadminUser>;
+  action_admin_users: string;
+  user_info: Users;
+  loading_create_or_update: boolean;
+  loading_inputs:boolean;
+  selected_image: string | ArrayBuffer | null;
+  check_user_is_active: boolean;
+  check_user_is_blocked: boolean;
+  data_disponible: boolean;
+  historial_cambios_estado_is_active: boolean;
+  data_register: DataAadminUser;
+  loading: boolean;
+  tipo_documento: string;
+  tipo_documento_opt: IList[];
+  tipo_persona: string;
+  tipo_persona_opt: IList[];
+  tipo_usuario_opt: IList[];
+  tipo_usuario: string;
+  activo: string;
+  activo_opt: IList[];
+  bloqueado: string;
+  bloqueado_opt: IList[];
+  roles: IList2[];
+  roles_opt: IList2[];
+  rol_fixed: IList2[];
+  users_x_person_is_active: boolean;
+  set_historial_cambios_estado_is_active: Dispatch<SetStateAction<boolean>>;
+  set_users_x_person_is_active:Dispatch<SetStateAction<boolean>>; 
   on_submit: (e?: BaseSyntheticEvent<object, any,any> | undefined) => Promise<void>;
-  set_value_form : (name: string, value: string) => void;
   on_change: (e: SelectChangeEvent<string>)=> void;
   handle_change_autocomplete: (
     event: React.SyntheticEvent<Element, Event>,
     value: IList2[],
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<IList2>
-  ) => void;
+    ) => void;
   handle_change: (e: React.ChangeEvent<HTMLInputElement>) => void; 
   handle_image_select: (
     event: React.ChangeEvent<HTMLInputElement>
   ) => void;
   register_admin_user: UseFormRegister<DataAadminUser>; 
-  handle_submit_admin_user: UseFormHandleSubmit<DataAadminUser>;
-  set_value_admin_user: UseFormSetValue<DataAadminUser>;
-  errors_admin_users: FieldErrors<DataAadminUser>;
-  watch_admin_user: UseFormWatch<DataAadminUser>;
-  reset_admin_user: UseFormReset<DataAadminUser>;
-  get_selects_options: () => Promise<void>;
-  data_disponible: boolean;
-  action_admin_users: string;
-  data_person_search: InfoPersonal;
-  user_info: Users;
-  asignacion_data_form:boolean;
-  loading_inputs:boolean;
-  loading_create_or_update: boolean;
-  users_x_person_is_active: boolean;
-  selected_image: string | ArrayBuffer | null;
-  file_image: File | undefined;
-  check_user_is_active: boolean;
-  check_user_is_blocked: boolean;
-  historial_cambios_estado_is_active: boolean;
-  data_register: DataAadminUser;
-  has_user: boolean;
-  is_exists: boolean;
-  is_saving: boolean;
-  is_search: boolean;
-  loading: boolean;
-  numero_documento: string;
-  tipo_documento_opt: IList[];
-  tipo_documento: string;
-  tipo_persona_opt: IList[];
-  tipo_persona: string;
-  tipo_usuario_opt: IList[];
-  activo: string;
-  activo_opt: IList[];
-  bloqueado: string;
-  bloqueado_opt: IList[];
-  tipo_usuario: string;
-  roles: IList2[];
-  roles_opt: IList2[];
-  set_asignacion_data_form :Dispatch<SetStateAction<boolean>>; 
-  set_loading_inputs:Dispatch<SetStateAction<boolean>>; 
-  set_loading_create_or_update:Dispatch<SetStateAction<boolean>>; 
-  set_users_x_person_is_active:Dispatch<SetStateAction<boolean>>; 
-  set_selected_image: Dispatch<SetStateAction<string | ArrayBuffer | null>>;
-  set_file_image: Dispatch<SetStateAction<File | undefined>>;
-  set_check_user_is_active: Dispatch<SetStateAction<boolean>>;
-  set_check_user_is_blocked: Dispatch<SetStateAction<boolean>>;
-  set_data_disponible: Dispatch<SetStateAction<boolean>>;
-  set_historial_cambios_estado_is_active: Dispatch<SetStateAction<boolean>>;
   set_data_register: Dispatch<SetStateAction<DataAadminUser>>;
-  set_has_user: Dispatch<SetStateAction<boolean>>;
-  set_is_exists: Dispatch<SetStateAction<boolean>>;
-  set_is_saving: Dispatch<SetStateAction<boolean>>;
-  set_is_search: Dispatch<SetStateAction<boolean>>;
-  set_numero_documento: Dispatch<SetStateAction<string>>;
   set_tipo_documento: Dispatch<SetStateAction<string>>;
   set_tipo_persona: Dispatch<SetStateAction<string>>;
-  set_tipo_usuario: Dispatch<SetStateAction<string>>;
-  set_roles: Dispatch<SetStateAction<IList2[]>>;
-  set_activo: Dispatch<SetStateAction<string>>;
-  set_bloqueado: Dispatch<SetStateAction<string>>;
+  set_data_disponible: Dispatch<SetStateAction<boolean>>;
+  set_loading_inputs:Dispatch<SetStateAction<boolean>>; 
+  reset_admin_user: UseFormReset<DataAadminUser>;
 }
 
 export interface EstadoCivil {

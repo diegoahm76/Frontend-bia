@@ -1,10 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  // useState,
-  type Dispatch,
-  type SetStateAction,
-  useEffect,
-} from 'react';
+import { type Dispatch, type SetStateAction, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Grid,
@@ -31,57 +26,11 @@ import type {
   SeguridadSlice,
   FormValuesSearchPerson,
   keys_object_search_person,
-  // Users,
 } from '../interfaces';
 import { get_persons } from '../store/thunks';
-import {
-  // set_action_admin_users,
-  set_data_person_search,
-  // set_user_info,
-} from '../store/seguridadSlice';
+import { set_data_person_search } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
-// import {
-//   initial_state_data_register,
-//   use_admin_users,
-// } from '../hooks/AdminUserHooks';
-
-// const initial_state_user_info: Users = {
-//   id_usuario: 0,
-//   nombre_de_usuario: '',
-//   persona: 0,
-//   tipo_persona: '',
-//   tipo_documento: '',
-//   numero_documento: '',
-//   primer_nombre: '',
-//   segundo_nombre: '',
-//   primer_apellido: '',
-//   segundo_apellido: '',
-//   nombre_completo: '',
-//   razon_social: '',
-//   nombre_comercial: '',
-//   is_active: false,
-//   fecha_ultimo_cambio_activacion: '',
-//   justificacion_ultimo_cambio_activacion: '',
-//   is_blocked: false,
-//   fecha_ultimo_cambio_bloqueo: '',
-//   justificacion_ultimo_cambio_bloqueo: '',
-//   tipo_usuario: '',
-//   profile_img: '',
-//   creado_por_portal: false,
-//   created_at: '',
-//   activated_at: '',
-//   id_usuario_creador: 0,
-//   primer_nombre_usuario_creador: '',
-//   primer_apellido_usuario_creador: '',
-//   roles: [
-//     {
-//       value: 0,
-//       label: '',
-//     },
-//   ],
-// };
-
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -119,34 +68,6 @@ const DialogBusquedaAvanzada = ({
   } = useForm<FormValuesSearchPerson>();
   const numero_documento = watch_search_person('numero_documento');
 
-  // Consultamos si el usuario existe
-  useEffect(() => {
-    if (numero_documento !== undefined && numero_documento !== '') {
-      set_numero_documento(numero_documento);
-    }
-  }, [numero_documento]);
-
-  useEffect(() => {
-    if (watch_search_person('tipo_persona') !== undefined) {
-      set_tipo_persona(watch_search_person('tipo_persona'));
-    }
-  }, [watch_search_person('tipo_persona')]);
-
-  useEffect(() => {
-    if (watch_search_person('tipo_documento') !== undefined) {
-      set_tipo_documento(watch_search_person('tipo_documento'));
-    }
-  }, [watch_search_person('tipo_documento')]);
-
-  useEffect(() => {
-    if (tipo_persona === 'J') {
-      set_value_search_person('tipo_documento', 'NT');
-      set_tipo_documento('NT');
-    } else {
-      set_tipo_documento('');
-    }
-  }, [tipo_persona]);
-
   const columns_persons: GridColDef[] = [
     {
       headerName: 'ID persona',
@@ -182,7 +103,6 @@ const DialogBusquedaAvanzada = ({
         );
       },
     },
-
     {
       headerName: 'Tipo documento',
       field: 'tipo_documento',
@@ -200,7 +120,7 @@ const DialogBusquedaAvanzada = ({
             <Tooltip title="Editar">
               <IconButton
                 onClick={() => {
-                  void trigger_user_edit_active(params.row);
+                  trigger_user_edit_active(params.row);
                 }}
               >
                 <Avatar
@@ -226,7 +146,7 @@ const DialogBusquedaAvanzada = ({
             <Tooltip title="Crear">
               <IconButton
                 onClick={() => {
-                  void trigger_user_person_create_active(params.row);
+                  trigger_user_person_create_active(params.row);
                 }}
               >
                 <Avatar
@@ -254,21 +174,43 @@ const DialogBusquedaAvanzada = ({
     },
   ];
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const trigger_user_person_create_active = async (data: any) => {
-    // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/no-confusing-void-expression
-    await user_person_create_active();
-    set_is_modal_active(false);
+  // Consultamos si el usuario existe
+  useEffect(() => {
+    if (numero_documento !== undefined && numero_documento !== '') {
+      set_numero_documento(numero_documento);
+    }
+  }, [numero_documento]);
 
-    // dispatch(set_action_admin_users('CREATE'));
+  useEffect(() => {
+    if (watch_search_person('tipo_persona') !== undefined) {
+      set_tipo_persona(watch_search_person('tipo_persona'));
+    }
+  }, [watch_search_person('tipo_persona')]);
+
+  useEffect(() => {
+    if (watch_search_person('tipo_documento') !== undefined) {
+      set_tipo_documento(watch_search_person('tipo_documento'));
+    }
+  }, [watch_search_person('tipo_documento')]);
+
+  useEffect(() => {
+    if (tipo_persona === 'J') {
+      set_value_search_person('tipo_documento', 'NT');
+      set_tipo_documento('NT');
+    } else {
+      set_tipo_documento('');
+    }
+  }, [tipo_persona]);
+
+  const trigger_user_person_create_active = (data: any): void => {
+    user_person_create_active();
+    set_is_modal_active(false);
     dispatch(set_data_person_search(data));
   };
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const trigger_user_edit_active = async (data: any) => {
-    // eslint-disable-next-line @typescript-eslint/await-thenable, @typescript-eslint/no-confusing-void-expression
-    await user_edit_active();
+
+  const trigger_user_edit_active = (data: any): void => {
+    user_edit_active();
     set_is_modal_active(false);
-    // dispatch(set_action_admin_users('EDIT'));
     dispatch(set_data_person_search(data));
   };
 
@@ -298,7 +240,6 @@ const DialogBusquedaAvanzada = ({
 
   // Se usa para escuchar los cambios de valor del componente CustomSelect
   const on_change = (e: SelectChangeEvent<string>): void => {
-    // console.log(e);
     set_value_form_search_person(e.target.name, e.target.value);
   };
 
