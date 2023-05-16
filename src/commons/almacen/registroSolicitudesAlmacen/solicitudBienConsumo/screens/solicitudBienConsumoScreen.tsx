@@ -60,7 +60,7 @@ const SolicitudConsumoScreen = () => {
         const motivo = get_values("motivo")
         const id_unidad_para_la_que_solicita = get_values("id_unidad_para_la_que_solicita")
 
-        dispatch(set_current_solicitud({ ...current_solicitud, id_funcionario_responsable_unidad: current_funcionario.id_persona, observacion: observacion, motivo: motivo, id_unidad_para_la_que_solicita: id_unidad_para_la_que_solicita }))
+        dispatch(set_current_solicitud({ ...current_solicitud, id_funcionario_responsable_unidad: current_funcionario.id_persona, observacion, motivo, id_unidad_para_la_que_solicita }))
 
     }, [current_funcionario]);
 
