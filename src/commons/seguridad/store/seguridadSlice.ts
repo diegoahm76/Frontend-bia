@@ -8,7 +8,7 @@ import type {
   Users,
 } from '../interfaces/seguridadModels';
 
-const initial_state_data_user_search: InfoUsuario = {
+export const initial_state_data_user_search: InfoUsuario = {
   id_usuario: 0,
   nombre_de_usuario: '',
   persona: 0,
@@ -22,7 +22,7 @@ const initial_state_data_user_search: InfoUsuario = {
   is_superuser: false,
 };
 
-const initial_state_data_person_search: InfoPersonal = {
+export const initial_state_data_person_search: InfoPersonal = {
   id_persona: 0,
   tipo_persona: '',
   tipo_documento: '',
@@ -43,7 +43,7 @@ const initial_state_data_person_search: InfoPersonal = {
   ],
 };
 
-const initial_state_user_info: Users = {
+export const initial_state_user_info: Users = {
   id_usuario: 0,
   nombre_de_usuario: '',
   persona: 0,
@@ -163,9 +163,6 @@ export const seguridad_slice = createSlice({
   name: 'seguridad',
   initialState: initial_state,
   reducers: {
-    set_roles: (state, { payload }) => {
-      state.roles = payload;
-    },
     set_rol: (state, { payload }) => {
       state.rol = payload;
     },
@@ -192,7 +189,9 @@ export const seguridad_slice = createSlice({
       state.data_user_search = payload;
     },
     set_data_person_search: (state, { payload }) => {
-      state.data_person_search = payload;
+      return produce(state, (draftState) => {
+        draftState.data_person_search = payload;
+      });
     },
     set_data_legal_person: (state, { payload }) => {
       state.legal_person = payload;
@@ -201,7 +200,6 @@ export const seguridad_slice = createSlice({
 });
 
 export const {
-  set_roles,
   set_rol,
   set_users,
   set_persons,
