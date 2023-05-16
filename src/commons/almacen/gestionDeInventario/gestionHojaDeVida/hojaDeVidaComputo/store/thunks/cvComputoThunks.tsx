@@ -113,7 +113,7 @@ export const create_cv_computers_service: any = (
             const { data } = await api.post(
                 'almacen/hoja-de-vida/computadores/create/', cv
             );
-            dispatch(get_cv_computer_service(id));
+            //   dispatch(get_cv_computer_service());
             control_success('La hoja de vida se creo correctamente');
             return data;
         } catch (error: any) {
