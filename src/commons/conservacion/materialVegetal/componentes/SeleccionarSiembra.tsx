@@ -194,7 +194,7 @@ const SeleccionarSiembra = ({
               control_form: control_siembra,
               control_name: "ruta_archivo_soporte",
               default_value: "",
-              rules: { required_rule: { rule: true, message: "Archivo requerido" } },
+              rules: { required_rule: { rule: false, message: "Archivo requerido" } },
               label: "Archivo soporte",
               disabled: current_planting.id_siembra !== null,
               helper_text: "",
