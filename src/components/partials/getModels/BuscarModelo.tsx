@@ -36,6 +36,8 @@ interface IProps {
     row_list_id?: string |number;
     add_list_button_label?:string|null;
     show_inputs?: boolean;
+    title_table_modal?: string | null;
+    button_submit_disabled?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -58,7 +60,9 @@ const BuscarModelo = ({
     columns_list,
     row_list_id,
     add_list_button_label,
-    show_inputs
+    show_inputs,
+    title_table_modal,
+    button_submit_disabled
 }: IProps) => {
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -180,6 +184,7 @@ const BuscarModelo = ({
                         icon_class={<SearchIcon />}
                         label={button_submit_label ?? "BUSCAR"}
                         type_button="button"
+                        disabled = {button_submit_disabled ?? false}
                     />
                 </Grid>
             </>
@@ -245,6 +250,7 @@ const BuscarModelo = ({
                 models={models}
                 columns_model={columns_model}
                 row_id={row_id}
+                title_table_modal={title_table_modal ?? "Resultados de la busqueda"}
             />
         </Grid>
     );

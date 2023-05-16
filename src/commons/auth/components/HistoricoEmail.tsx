@@ -22,7 +22,6 @@ interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   datos_historico: InfoPersona;
-  set_datos_historico: Dispatch<SetStateAction<any>>;
 }
 
 const columns: GridColDef[] = [
@@ -36,28 +35,27 @@ const columns: GridColDef[] = [
     field: 'email_notificacion',
     headerName: 'E-MAIL NOTIFICACIÓN',
     sortable: true,
-    width: 170,
+    width: 250,
   },
   {
     field: 'fecha_cambio',
     headerName: 'FECHA DE CAMBIO',
     sortable: true,
-    width: 170,
+    width: 250,
   },
   {
-    field: 'id_persona',
-    headerName: 'PERSONA',
+    field: 'nombre_completo',
+    headerName: 'NOMBRE',
     sortable: true,
-    width: 170,
+    width: 300,
   },
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
-export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
+export const DialogHistorialEmail: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   datos_historico,
-  set_datos_historico,
 }: IProps) => {
   const [rows, set_rows] = useState<HistoricoEmail[]>([]);
 
@@ -76,6 +74,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
           email_notificacion: datos.email_notificacion,
           fecha_cambio: datos.fecha_cambio,
           id_persona: datos.id_persona,
+          nombre_completo: datos.nombre_completo,
         }
         )
       );
@@ -96,10 +95,10 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
         open={is_modal_active}
         onClose={handle_close}
         fullWidth
-        maxWidth={'lg'}
+        maxWidth={'md'}
       >
         <DialogTitle>
-          <Title title="HISTORICO DE CAMBIOS" />
+          <Title title="HISTORICO DE CAMBIOS E-MAIL" />
         </DialogTitle>
         <Divider />
         <Grid
@@ -122,7 +121,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
               autoHeight
               rows={rows}
               columns={columns}
-              getRowId={(row) => row.historico_cambio_id_persona}
+              getRowId={(row) => row.id_histo_email}
               pageSize={5}
               rowsPerPageOptions={[5]}
             />

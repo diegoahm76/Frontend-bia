@@ -1,14 +1,15 @@
-import type { Dayjs } from 'dayjs';
-import type { Dispatch, SetStateAction } from 'react';
-import type { IList } from '../../../interfaces/globalModels';
+import type { Dayjs } from "dayjs";
+import type { Dispatch, SetStateAction } from "react";
+import type { IList } from "../../../interfaces/globalModels";
 import type {
   FieldErrors,
   FieldValues,
+  UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetValue,
-  UseFormWatch
-} from 'react-hook-form';
+  UseFormWatch,
+} from "react-hook-form";
 
 export interface UserRol {
   id_rol: number;
@@ -33,15 +34,16 @@ export interface IUserInfo {
   permisos: Menu[];
   representante_legal: any[];
   user_sesion: string;
-  status: 'checking' | 'not-authenticated' | 'authenticated';
+  status: "checking" | "not-authenticated" | "authenticated";
   error_message: string;
   open_dialog: boolean;
-  entorno: 'C' | 'L';
+  entorno: "C" | "L";
   dialog_representante: boolean;
   is_blocked: boolean;
 }
 
 export interface UserData {
+  nombre_unidad_organizacional: string | null;
   email: string;
   nombre_de_usuario: string;
   tokens: Tokens;
@@ -93,59 +95,59 @@ export interface IObjectSend {
 }
 
 export type keys_object =
-  | 'acepta_notificacion_email'
-  | 'acepta_notificacion_sms'
-  | 'acepta_tratamiento_datos'
-  | 'cod_municipio_expedicion_id'
-  | 'cod_municipio_laboral_nal'
-  | 'cod_municipio_notificacion_nal'
-  | 'confirmar_celular'
-  | 'confirmar_email'
-  | 'departamento_expedicion'
-  | 'departamento_nacimiento'
-  | 'departamento_residencia'
-  | 'digito_verificacion'
-  | 'direccion_laboral'
-  | 'direccion_notificaciones'
-  | 'direccion_residencia_ref'
-  | 'direccion_residencia'
-  | 'dpto_notifiacion'
-  | 'email_empresarial'
-  | 'email'
-  | 'estado_civil'
-  | 'fecha_nacimiento'
-  | 'municipio_residencia'
-  | 'nombre_comercial'
-  | 'nombre_de_usuario'
-  | 'numero_documento'
-  | 'pais_nacimiento'
-  | 'pais_notificacion'
-  | 'pais_residencia'
-  | 'password'
-  | 'primer_apellido'
-  | 'primer_nombre'
-  | 'razon_social'
-  | 'representante_legal'
-  | 'require_nombre_comercial'
-  | 'segundo_apellido'
-  | 'segundo_nombre'
-  | 'sexo'
-  | 'telefono_celular_empresa'
-  | 'telefono_celular'
-  | 'telefono_empresa_2'
-  | 'telefono_fijo_residencial'
-  | 'tipo_documento'
-  | 'tipo_persona'
-  | 'cod_naturaleza_empresa'
-  | 'cod_pais_nacionalidad_empresa'
-  | 'tipo_documento_rep'
-  | 'numero_documento_rep'
-  | 'nombre_rep'
-  | 'celular_rep'
-  | 'direccion_rep'
-  | 'ciudad_rep'
-  | 'email_rep'
-  | 'ubicacion_georeferenciada';
+  | "acepta_notificacion_email"
+  | "acepta_notificacion_sms"
+  | "acepta_tratamiento_datos"
+  | "cod_municipio_expedicion_id"
+  | "cod_municipio_laboral_nal"
+  | "cod_municipio_notificacion_nal"
+  | "confirmar_celular"
+  | "confirmar_email"
+  | "departamento_expedicion"
+  | "departamento_nacimiento"
+  | "departamento_residencia"
+  | "digito_verificacion"
+  | "direccion_laboral"
+  | "direccion_notificaciones"
+  | "direccion_residencia_ref"
+  | "direccion_residencia"
+  | "dpto_notifiacion"
+  | "email_empresarial"
+  | "email"
+  | "estado_civil"
+  | "fecha_nacimiento"
+  | "municipio_residencia"
+  | "nombre_comercial"
+  | "nombre_de_usuario"
+  | "numero_documento"
+  | "pais_nacimiento"
+  | "pais_notificacion"
+  | "pais_residencia"
+  | "password"
+  | "primer_apellido"
+  | "primer_nombre"
+  | "razon_social"
+  | "representante_legal"
+  | "require_nombre_comercial"
+  | "segundo_apellido"
+  | "segundo_nombre"
+  | "sexo"
+  | "telefono_celular_empresa"
+  | "telefono_celular"
+  | "telefono_empresa_2"
+  | "telefono_fijo_residencial"
+  | "tipo_documento"
+  | "tipo_persona"
+  | "cod_naturaleza_empresa"
+  | "cod_pais_nacionalidad_empresa"
+  | "tipo_documento_rep"
+  | "numero_documento_rep"
+  | "nombre_rep"
+  | "celular_rep"
+  | "direccion_rep"
+  | "ciudad_rep"
+  | "email_rep"
+  | "ubicacion_georeferenciada";
 
 export interface DataRegistePortal {
   acepta_notificacion_email: boolean;
@@ -286,6 +288,7 @@ export interface ReisterHook {
   is_search: boolean;
   is_valid: boolean;
   loading: boolean;
+  no_has_user: boolean;
   message_error_password: string;
   message_no_person: string;
   message_error: string;
@@ -351,6 +354,27 @@ export interface ReisterHook {
   watch: UseFormWatch<FieldValues>;
 }
 
+export interface ReisterHookNew {
+  errors: FieldErrors<FieldValues>;
+  is_avaiable: boolean;
+  is_error: boolean;
+  is_search: boolean;
+  is_valid: boolean;
+  loading: boolean;
+  no_has_user: boolean;
+  is_saving: boolean;
+  message_error: string;
+  tipo_documento_opt: IList[];
+  tipo_persona_opt: IList[];
+  handle_submit: UseFormHandleSubmit<FieldValues>;
+  register: UseFormRegister<FieldValues>;
+  set_value: UseFormSetValue<FieldValues>;
+  get_values: UseFormGetValues<FieldValues>;
+  validate_exits: (data: FieldValues) => Promise<void>;
+  watch: UseFormWatch<FieldValues>;
+  on_submit: (data: FieldValues) => Promise<void>;
+}
+
 export interface DataRegisterPersonaN {
   tipo_persona: string;
   tipo_documento: string;
@@ -387,6 +411,30 @@ export interface DataRegisterPersonaN {
   redirect_url: string;
 }
 
+export interface DataRegisterPersonaJ {
+  tipo_persona: string;
+  tipo_documento: string;
+  numero_documento: string;
+  digito_verificacion: string;
+  cod_naturaleza_empresa: string;
+  nombre_comercial: string;
+  razon_social: string;
+  email: string;
+  email_empresarial: null;
+  direccion_notificaciones: string;
+  cod_municipio_notificacion_nal: string;
+  cod_pais_nacionalidad_empresa: string;
+  telefono_celular_empresa: string;
+  telefono_empresa_2: string;
+  telefono_empresa: string;
+  acepta_notificacion_sms: boolean;
+  acepta_notificacion_email: boolean;
+  representante_legal: number;
+  fecha_inicio_cargo_rep_legal: string;
+  nombre_de_usuario: string;
+  password: string;
+  redirect_url: string;
+}
 export interface InfoPersonaComplete {
   id_persona: number;
   tipo_documento: EstadoCivil;
@@ -454,9 +502,11 @@ export interface EstadoCivil {
   cod_tipo_documento?: string;
 }
 
-export interface UserCreate {
-  detail: string;
-  success: boolean;
+export interface User {
+  nombre_de_usuario: string;
+  persona: number;
+  password: string;
+  redirect_url: string;
 }
 
 export interface DataUnlockUser {

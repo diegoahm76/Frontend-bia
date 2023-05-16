@@ -14,7 +14,8 @@ const initial_state: IUserInfo = {
     id_usuario: 0,
     tipo_usuario: '',
     id_persona: 0,
-    tipo_persona: ''
+    tipo_persona: '',
+    nombre_unidad_organizacional: '',
   },
   user_sesion: '',
   permisos: [],

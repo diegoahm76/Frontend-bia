@@ -29,7 +29,6 @@ export const CatalogodeBienesScreen: React.FC = () => {
   const { nodo } = useAppSelector((state) => state.bien);
 
 
-
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const action_template = (
     node: INodo,
@@ -80,6 +79,8 @@ export const CatalogodeBienesScreen: React.FC = () => {
   };
   useEffect(() => {
     void dispatch(get_bienes_service());
+
+
   }, []);
 
   return (

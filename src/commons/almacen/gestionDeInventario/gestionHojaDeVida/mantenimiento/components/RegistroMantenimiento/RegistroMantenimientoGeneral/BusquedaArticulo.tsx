@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    FormHelperText,
     Grid,
     Stack,
     TextField
@@ -16,10 +17,11 @@ interface IProps {
     tipo_articulo: string,
     parent_details: any,
     limpiar_formulario: boolean,
-    detalle_programacion: any
+    detalle_programacion: any,
+    accion_guardar: boolean
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, limpiar_formulario, detalle_programacion }: IProps) => {
+export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, limpiar_formulario, detalle_programacion, accion_guardar }: IProps) => {
     const {        // States
         title,
         consulta_buscar_articulo_is_active,
@@ -34,14 +36,16 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
 
     const [id_bien, set_id_bien] = useState<string | null>("");
     const [nombre, set_nombre] = useState<string | null>("");
+    // Errors
+    const [mensaje_error_codigo, set_mensaje_error_codigo] = useState<string>("");
 
     const set_details_state = useCallback((val: any) => {
         set_detalle_seleccionado(val);
     }, [set_detalle_seleccionado]);
 
-    useEffect(() => {
-        set_detalle_seleccionado(detalle_seleccionado);
-    }, [set_detalle_seleccionado]);
+    // useEffect(() => {
+    //     set_detalle_seleccionado(detalle_seleccionado);
+    // }, [set_detalle_seleccionado]);
 
     useEffect(() => {
         parent_details(detalle_seleccionado);
@@ -51,20 +55,30 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
         if (limpiar_formulario) {
             set_id_bien('');
             set_nombre('');
+            set_mensaje_error_codigo("");
         }
     }, [limpiar_formulario]);
 
     useEffect(() => {
-        console.log('selecionado en artiuclo: ', detalle_seleccionado);
         if (detalle_seleccionado !== undefined && detalle_seleccionado !== null) {
             set_id_bien(detalle_seleccionado.codigo_bien);
             set_nombre(detalle_seleccionado.nombre);
+            if(detalle_seleccionado.codigo_bien !== null && detalle_seleccionado.codigo_bien !== "")
+                set_mensaje_error_codigo("");
         }
     }, [detalle_seleccionado]);
 
     useEffect(() => {
         set_detalle_seleccionado(detalle_programacion);
     }, [detalle_programacion]);
+
+    useEffect(() => {
+        if (accion_guardar) {
+            if (id_bien === "")
+                set_mensaje_error_codigo("El campo Código es obligatorio.");
+        }
+    }, [accion_guardar]);
+
     return (
         <>
             <Box
@@ -77,17 +91,17 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                     <Grid item xs={12} sm={5}>
                         <TextField
                             label="Código"
-                            helperText="Ingresar Código"
                             size="small"
                             required
                             value={id_bien}
                             fullWidth
+                            error={mensaje_error_codigo !== ""}
                         />
+                        {(mensaje_error_codigo !== "") && (<FormHelperText error id="tipo-error">{mensaje_error_codigo}</FormHelperText>)}
                     </Grid>
                     <Grid item xs={12} sm={5}>
                         <TextField
                             label="Nombre"
-                            helperText="Nombre"
                             size="small"
                             value={nombre}
                             fullWidth

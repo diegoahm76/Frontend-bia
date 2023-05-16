@@ -25,8 +25,11 @@ export interface IObjChange {
   observaciones: string | null;
   id_persona_cambia: string | number | null;
   ruta_archivo_soporte: string | null;
-  codigo_bien?: string | null;
-  nombre_bien?: string | null;
+  codigo?: string | null;
+  nombre?: string | null;
+  desc_etapa_lote_destino?: string | null;
+  desc_etapa_lote_origen?: string | null;
+
 }
 
 export interface IObjVegetalMaterial {
