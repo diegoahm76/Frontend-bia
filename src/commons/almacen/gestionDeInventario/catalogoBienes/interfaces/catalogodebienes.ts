@@ -60,3 +60,8 @@ export interface IObjBien {
   id_bien_padre?: number | null;
   nombre_padre?: string | null;
 }
+
+export interface IList {
+  value: string | number;
+  label: string | number;
+}
