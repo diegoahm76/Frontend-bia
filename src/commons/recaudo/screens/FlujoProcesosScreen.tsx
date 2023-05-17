@@ -11,13 +11,13 @@ import { FlowChart } from '../components/flowChart/FlowChart';
 import axios from "axios";
 import { getLayoutedElements } from "../components/flowChart/LayoutedElements/getLayoutedElements";
 import { AddFlujoProcesoModal } from "../components/flujoProcesos/modal/AddFlujoProcesoModal";
-import type { Etapa } from "../interfaces/proceso";
+import type { EtapaProceso } from "../interfaces/proceso";
 import type { Dataflow, FormDataFlujo } from "../interfaces/flujoProceso";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FlujoProcesosScreen: React.FC = () => {
   const [dataflow, set_dataflow] = useState<Dataflow>();
-  const [etapas_proceso, set_etapas_proceso] = useState<Etapa[]>([]);
+  const [etapas_proceso, set_etapas_proceso] = useState<EtapaProceso[]>([]);
   const [form_data_flujo, set_form_data_flujo] = useState<FormDataFlujo>({
     id_etapa_origen: '',
     id_etapa_destino: '',

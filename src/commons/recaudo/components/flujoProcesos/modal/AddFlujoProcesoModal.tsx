@@ -1,13 +1,13 @@
 import { Box, Dialog, DialogContent, DialogTitle, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, type SelectChangeEvent, DialogActions, Stack, Button } from "@mui/material";
 import { type Dispatch, type SetStateAction } from 'react';
-import type { Etapa } from "../../../interfaces/proceso";
+import type { EtapaProceso } from "../../../interfaces/proceso";
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  etapas_proceso: Etapa[];
+  etapas_proceso: EtapaProceso[];
   form_data_flujo: {
     id_etapa_origen: string;
     id_etapa_destino: string;
