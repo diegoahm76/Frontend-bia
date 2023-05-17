@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     FormControl,
     Grid,
@@ -9,6 +9,9 @@ import {
     Typography,
     Button,
     Divider,
+    Autocomplete,
+    type AutocompleteChangeReason,
+    type AutocompleteChangeDetails
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -17,14 +20,17 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
 import dayjs, { type Dayjs } from 'dayjs';
-import type { CrearPersonNaturalAdmin, PropsRegister } from '../../../interfaces/globalModels';
+import type { ClaseTercero, CrearPersonNaturalAdmin, PropsRegister } from '../../../interfaces/globalModels';
 import { use_register_persona_n } from '../hooks/registerPersonaNaturalHook';
 import { Title } from '../../../components/Title';
 import { control_error, control_success } from '../../../helpers';
-import { crear_persona_natural } from '../../seguridad/request/Request';
+import { consultar_clase_tercero, crear_persona_natural } from '../../seguridad/request/Request';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
+    numero_documento,
+    tipo_documento,
+    tipo_persona,
     register,
     handleSubmit: handle_submit,
     setValue: set_value,
@@ -73,11 +79,21 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
 
     const [type_direction, set_type_direction] = useState('');
     const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
+    const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
     // watchers
     const misma_direccion = watch('misma_direccion') ?? false;
     const acepta_notificacion_email = watch('acepta_notificacion_email') ?? false;
     const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
     const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
+
+    const handle_change_autocomplete = (
+        event: React.SyntheticEvent<Element, Event>,
+        value: ClaseTercero[],
+        reason: AutocompleteChangeReason,
+        details?: AutocompleteChangeDetails<ClaseTercero>
+    ): void => {
+        set_value('datos_clasificacion_persona', value.map(e => e.value));
+    };
 
     // establece la fecha de nacimiento
     const on_change_birt_day = (value: Dayjs | null): void => {
@@ -85,9 +101,26 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
         set_value('fecha_nacimiento', date);
         set_fecha_nacimiento(value);
     };
+    // trae todas las clase tercero
+    const get_datos_clase_tercero = async (): Promise<void> => {
+        try {
+            const response = await consultar_clase_tercero();
+            set_clase_tercero(response)
+        } catch (err) {
+            control_error(err);
+        }
+    };
+
+    useEffect(() => {
+        void get_datos_clase_tercero();
+    }, [])
+
     const on_submit_create_natural = handle_submit(async (data) => {
         try {
             data.ubicacion_georeferenciada = ''
+            data.numero_documento = numero_documento
+            data.tipo_documento = tipo_documento
+            data.tipo_persona = tipo_persona
             await crear_persona_natural(data as CrearPersonNaturalAdmin);
             control_success('la persona se creó correctamente');
         } catch (error) {
@@ -97,9 +130,9 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
     return (
         <>
             <form
-            onSubmit={(e) => {
-                void on_submit_create_natural(e)
-              }}
+                onSubmit={(e) => {
+                    void on_submit_create_natural(e)
+                }}
             >
                 {/* Datos personales */}
                 <>
@@ -680,6 +713,40 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
                                     </FormHelperText>
                                 )}
                             </FormControl>
+                        </Grid>
+                    </Grid>
+                </>
+                {/* Datos de clasificación Cormacarena */}
+                <>
+                    <Grid container spacing={2} mt={0.1}>
+                        <Grid item xs={12}>
+                            <Title title="DATOS DE CLASIFICACIÓN" />
+                        </Grid>
+                        < Grid item xs={12}>
+                            {(clase_tercero.length > 0) && (
+                                <>
+                                    <Grid item xs={12}>
+                                        <Autocomplete
+                                            multiple
+                                            fullWidth
+                                            size="medium"
+                                            options={clase_tercero}
+                                            getOptionLabel={(option) => option.label}
+                                            isOptionEqualToValue={(option, value) => option.value === value?.value}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    key={params.id}
+                                                    {...params}
+                                                    label="Datos clasificación Cormacarena"
+                                                    placeholder="Clasificacion Cormacarena"
+                                                />
+                                            )}
+                                            {...register('datos_clasificacion_persona')}
+                                            onChange={handle_change_autocomplete}
+                                        />
+                                    </Grid>
+                                </>
+                            )}
                         </Grid>
                         {/* BOTONES */}
                         <Grid item spacing={2} justifyContent="end" container>
