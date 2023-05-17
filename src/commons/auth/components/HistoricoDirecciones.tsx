@@ -7,6 +7,9 @@ import {
     Divider,
     Grid,
     Stack,
+    Alert,
+    LinearProgress,
+    Typography,
 } from '@mui/material';
 import { Title } from '../../../components/Title';
 import type {
@@ -60,6 +63,38 @@ const columns: GridColDef[] = [
         headerName: 'NOMBRE',
         sortable: true,
         width: 300,
+    },
+];
+const columns_juridica: GridColDef[] = [
+    {
+        field: 'id_historico_direccion',
+        headerName: '#',
+        sortable: true,
+        width: 70,
+    },
+    {
+        field: 'direccion',
+        headerName: 'DIRECCIÓN',
+        sortable: true,
+        width: 170,
+    },
+    {
+        field: 'cod_municipio',
+        headerName: 'MUNICIPIO',
+        sortable: true,
+        width: 170,
+    },
+    {
+        field: 'tipo_direccion',
+        headerName: 'TIPO DIRECCIÓN',
+        sortable: true,
+        width: 170,
+    },
+    {
+        field: 'fecha_cambio',
+        headerName: 'FECHA DE CAMBIO',
+        sortable: true,
+        width: 170,
     },
 ];
 
@@ -132,14 +167,43 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                     }}
                 >
                     <Grid item xs={12}>
-                        <DataGrid
-                            autoHeight
-                            rows={rows}
-                            columns={columns}
-                            getRowId={(row) => row.id_historico_direccion}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                        />
+                        {rows.length > 0 ? (
+                            <>
+                                {historico_direcciones.tipo_persona === 'J' && (
+                                    <>
+                                        <DataGrid
+                                            autoHeight
+                                            rows={rows}
+                                            columns={columns_juridica}
+                                            getRowId={(row) => row.id_historico_direccion}
+                                            pageSize={5}
+                                            rowsPerPageOptions={[5]}
+                                        />
+                                    </>
+                                )}
+                                {historico_direcciones.tipo_persona === 'N' && (
+                                    <>
+                                        <DataGrid
+                                            autoHeight
+                                            rows={rows}
+                                            columns={columns}
+                                            getRowId={(row) => row.id_historico_direccion}
+                                            pageSize={5}
+                                            rowsPerPageOptions={[5]}
+                                        />
+                                    </>
+                                )}
+                            </>
+                        ) : (
+                            <Grid item xs={12}>
+                                <Grid container justifyContent="center" textAlign="center">
+                                    <Alert icon={false} severity="info">
+                                        <LinearProgress />
+                                        <Typography>No se encontraron resultados...</Typography>
+                                    </Alert>
+                                </Grid>
+                            </Grid>
+                        )}
                     </Grid>
                     <Grid item xs={12}>
                         <Stack

@@ -6,17 +6,19 @@ import { Title } from '../../../components/Title';
 import 'react-datepicker/dist/react-datepicker.css';
 import { AdministracionPersonasScreenNatural } from '../../auth/components/AdministradorPersonaNatural';
 import { AdministracionPersonasScreenJuridica } from '../../auth/components/AdministradorPersonaJuridica';
+import { RegisterAdministradorPersona } from '../../auth/components/RegisterAdministradorPersona';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreen: React.FC = () => {
   const [persona, set_persona] = useState<InfoPersona>();
+  const [is_register, set_is_register] = useState(false);
 
   const on_result = (info_persona: InfoPersona): void => {
-    if (
-      info_persona !== null ||
-      info_persona !== undefined ||
-      info_persona !== ''
-    ) {
+    console.log("info_persona", info_persona)
+    set_is_register(false)
+    if (info_persona !== undefined) {
       set_persona(info_persona);
+    } else {
+      set_is_register(true);
     }
   };
 
@@ -42,6 +44,11 @@ export const AdministracionPersonasScreen: React.FC = () => {
           {persona?.tipo_persona === 'J' && (
             <>
               <AdministracionPersonasScreenJuridica data_all={persona} />
+            </>
+          )}
+          {is_register && (
+            <>
+              <RegisterAdministradorPersona uso_interno={false} />
             </>
           )}
         </Grid>

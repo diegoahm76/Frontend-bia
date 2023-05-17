@@ -64,6 +64,8 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     const [type_direction, set_type_direction] = useState('');
     const [fecha_nacimiento, set_fecha_nacimiento] = useState<Date | null | string>(new Date());
     const [direccion, set_direccion] = useState('');
+    const [departamento_laboral, set_departamento_laboral] = useState('');
+    const [ciudad_labral, set_ciudad_laboral] = useState('');
     const [direccion_notificacion, set_direccion_notificacion] = useState('');
     const [direccion_laboral, set_direccion_laboral] = useState('');
     const [dialog_notificaciones, set_dialog_notificaciones] = useState<boolean>(false);
@@ -337,6 +339,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             });
             set_dpto_notifiacion(response?.cod_departamento_notificacion)
             set_ciudad_notificacion(response?.cod_municipio_notificacion_nal)
+            set_departamento_laboral(response?.cod_departamento_laboral)
+            set_ciudad_laboral(response?.cod_municipio_laboral_nal)
+            set_direccion_laboral(response?.direccion_laboral)
+            set_dpto_residencia(response?.cod_departamento_residencia)
 
             // Datos adicionales
         } catch (err) {
@@ -357,6 +363,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         try {
             if (data.datos_clasificacion_persona === undefined || data.datos_clasificacion_persona.length === 0) {
                 control_error('Por favor complete los datos de clasificación');
+                return;
+            }
+            if (data.email === data.email_empresarial) {
+                control_error('E-mail empresarial debe ser diferente de E-mail personal');
                 return;
             }
 
@@ -475,6 +485,20 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             set_ciudad_residencia(watch('municipio_residencia'));
         }
     }, [watch('municipio_residencia')]);
+
+    // Datos laboral
+
+     useEffect(() => {
+        if (watch('cod_departamento_laboral') !== undefined) {
+            set_departamento_laboral(watch('cod_departamento_laboral'));
+        }
+    }, [watch('cod_departamento_laboral')]);
+
+    useEffect(() => {
+        if (watch('cod_municipio_laboral_nal') !== undefined) {
+            set_ciudad_laboral(watch('cod_municipio_laboral_nal'));
+        }
+    }, [watch('cod_municipio_laboral_nal')]);
 
     // Datos de notificación
 
@@ -1127,13 +1151,13 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     size="small"
                                                     margin="dense"
                                                     autoFocus
-                                                    defaultValue={datos_persona?.telefono_fijo_residencial}
+                                                    defaultValue={datos_persona?.telefono_celular_empresa}
                                                     helperText={
-                                                        errors.telefono_fijo_residencial?.type === 'required'
+                                                        errors.telefono_celular_empresa?.type === 'required'
                                                             ? 'Este campo es obligatorio'
                                                             : ''
                                                     }
-                                                    {...register('telefono_fijo_residencial', {
+                                                    {...register('telefono_celular_empresa', {
                                                         required: true,
                                                     })}
 
@@ -1167,10 +1191,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     size="small"
                                                     label="Telefono laboral"
                                                     onCopy={(e: any) => e.preventDefault()}
-                                                    defaultValue={datos_persona.telefono_celular_empresa}
-                                                    error={errors.telefono_celular_empresa?.type === 'required'}
+                                                    defaultValue={datos_persona.telefono_empresa_2}
+                                                    error={errors.telefono_empresa_2?.type === 'required'}
                                                     helperText={
-                                                        errors.telefono_celular_empresa?.type === 'required'
+                                                        errors.telefono_empresa_2?.type === 'required'
                                                             ? 'Este campo es obligatorio'
                                                             : ''
                                                     }
@@ -1204,7 +1228,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     onChange={on_change}
                                                     label="Departamento *"
                                                     name="cod_departamento_laboral"
-                                                    value={datos_persona.cod_departamento_laboral}
+                                                    value={departamento_laboral}
                                                     options={dpto_notifiacion_opt}
                                                     loading={loading}
                                                     required={true}
@@ -1217,10 +1241,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     onChange={on_change}
                                                     label="Ciudad"
                                                     name="cod_municipio_laboral_nal"
-                                                    value={datos_persona.cod_municipio_laboral_nal}
+                                                    value={ciudad_labral}
                                                     options={ciudad_notificacion_opt}
                                                     loading={loading}
-                                                    disabled={datos_persona.cod_departamento_laboral === '' ?? true}
+                                                    disabled={departamento_laboral === '' ?? true}
                                                     required={true}
                                                     errors={errors}
                                                     register={register}

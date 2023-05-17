@@ -142,7 +142,7 @@ const CrearCvVehiculoForm = ({
 
   return (
     <Dialog
-      maxWidth="md"
+      maxWidth="xl"
       open={is_modal_active}
       onClose={handle_close_cv_veh_is_active}
     >

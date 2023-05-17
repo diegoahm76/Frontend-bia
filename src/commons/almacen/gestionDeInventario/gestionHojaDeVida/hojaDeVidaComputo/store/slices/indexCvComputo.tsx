@@ -26,9 +26,18 @@ const initial_state_current_computer = {
   visible_solicitudes: false,
   id_marca: null,
   id_unidad_medida: null,
+  id_articulo: 0,
   id_porcentaje_iva: null,
   id_unidad_medida_vida_util: null,
   id_bien_padre: null,
+  cod_tipo_elemento_vivero: 0,
+  es_semilla_vivero: false,
+  estado: "",
+  marca: "",
+  nombre_padre: "",
+  porcentaje_iva: 0,
+  unidad_medida: "",
+  unidad_medida_vida_util: "",
 }
 
 const initial_state_current_cv_computer = {
@@ -62,7 +71,7 @@ const initial_state: Icv = {
 };
 
 export const cv_computo_slice = createSlice({
-  name: "cve",
+  name: "cv",
   initialState: initial_state,
   reducers: {
     get_computers: (

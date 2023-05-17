@@ -46,6 +46,14 @@ export interface IComputers {
   id_porcentaje_iva?: number | null;
   id_unidad_medida_vida_util?: number | null;
   id_bien_padre?: number | null;
+  cod_tipo_elemento_vivero: number | null;
+  es_semilla_vivero: boolean | null;
+  estado: string;
+  marca: string;
+  nombre_padre: string;
+  porcentaje_iva: number;
+  unidad_medida: string;
+  unidad_medida_vida_util: string;
 }
 
 export interface ICvcomputers {

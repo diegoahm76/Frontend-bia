@@ -233,9 +233,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
-      if (data?.id_persona !== undefined) {
-        onResult(data);
-      }
+      onResult(data);
     } catch (error) {
       const temp_error = error as AxiosError;
       const resp = temp_error.response?.data as ResponseServer<any>;
@@ -444,7 +442,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
-                      {rows.every(row => row.tipo_persona === 'J') ? (
+                    {tipo_documento_av === 'NT' ? (
                         <>
                           <DataGrid
                             rows={rows}
