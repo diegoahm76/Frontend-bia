@@ -32,7 +32,6 @@ import type {
   ResponseServer,
 } from '../interfaces/globalModels';
 import type { AxiosError } from 'axios';
-import SearchIcon from '@mui/icons-material/Search';
 import { Title } from './Title';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { LoadingButton } from '@mui/lab';
@@ -91,6 +90,57 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       width: 170,
     },
     {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 80,
+      renderCell: (params) => (
+        <>
+          <IconButton aria-label="Seleccionar">
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <ChecklistOutlinedIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                onClick={() => {
+                  if (params.row !== undefined) {
+                    handle_close();
+                    onResult(params.row);
+                  }
+                }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      ),
+    },
+  ];
+  const columns_juridica: GridColDef[] = [
+    { field: 'id_persona', headerName: 'ID', sortable: true, width: 70 },
+    {
+      field: 'tipo_persona',
+      headerName: 'TIPO PERSONA',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'tipo_documento',
+      headerName: 'TIPO DOCUMENTO',
+      sortable: true,
+      width: 170,
+    },
+    {
+      field: 'numero_documento',
+      headerName: 'NÚMERO DOCUMENTO',
+      sortable: true,
+      width: 170,
+    },
+    {
       field: 'razon_social',
       headerName: 'RAZÓN SOCIAL',
       sortable: true,
@@ -108,7 +158,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       width: 80,
       renderCell: (params) => (
         <>
-          <IconButton>
+          <IconButton aria-label="Seleccionar">
             <Avatar
               sx={{
                 width: 24,
@@ -183,9 +233,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
-      if (data?.id_persona !== undefined) {
-        onResult(data);
-      }
+      onResult(data);
     } catch (error) {
       const temp_error = error as AxiosError;
       const resp = temp_error.response?.data as ResponseServer<any>;
@@ -274,15 +322,16 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
             )}
           </Grid>
           <Grid item xs={12} sm={6} md={4} lg={3}>
-            <Button
+            <LoadingButton
               aria-label="toggle password visibility"
               variant="contained"
               type='submit'
               style={{ marginRight: '10px' }}
+              loading={is_search}
+              disabled={is_search}
             >
               Buscar
-              <SearchIcon />
-            </Button>
+            </LoadingButton>
             <Button
               variant="outlined"
               color="primary"
@@ -386,20 +435,39 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   Buscar
                 </LoadingButton>
               </Grid>
-              <Grid item xs={12}>
-                <Typography>Resultados de la búsqueda</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Box sx={{ height: 400, width: '100%' }}>
-                  <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
-                    getRowId={(row) => row.id_persona}
-                  />
-                </Box>
-              </Grid>
+              {rows.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <Typography>Resultados de la búsqueda</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ height: 400, width: '100%' }}>
+                    {tipo_documento_av === 'NT' ? (
+                        <>
+                          <DataGrid
+                            rows={rows}
+                            columns={columns_juridica}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                            getRowId={(row) => row.id_persona}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            pageSize={5}
+                            rowsPerPageOptions={[5]}
+                            getRowId={(row) => row.id_persona}
+                          />
+                        </>
+                      )}
+
+                    </Box>
+                  </Grid>
+                </>
+              )}
             </Grid>
           </form>
         </DialogContent>

@@ -7,8 +7,6 @@ import { Grid } from '@mui/material';
 import { type ToastContent, toast } from 'react-toastify';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { useSelector } from 'react-redux';
-import { type AuthSlice } from '../../../auth/interfaces';
 import { set_responsable } from '../store/slice/BodegaSlice';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 
@@ -37,7 +35,7 @@ const PersonaResponsable = ({
 
     const dispatch = useAppDispatch();
 
-    const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+
     const { control: control_persona, reset: reset_persona, getValues: get_values } = useForm<Persona>();
     const { id_responsable_bodega, bodega_seleccionada } = useAppSelector((state: { bodegas: any; }) => state.bodegas);
 
@@ -102,19 +100,13 @@ const PersonaResponsable = ({
                 const { data: document_type_no_format } = await api.get(
                     'choices/tipo-documento/'
                 );
-                const { data: persona_data } = await api.get(
 
-                    `personas/get-by-id/${userinfo.id_persona}/`
-                );
 
                 const document_type_format: IList[] = text_choise_adapter(
                     document_type_no_format
                 );
                 set_document_type(document_type_format);
-                dispatch(set_responsable({
-                    ...id_responsable_bodega, id_persona: persona_data.data.id_persona, tipo_documento: persona_data.data.tipo_documento, numero_documento: persona_data.data.numero_documento,
-                    nombre_completo: String(persona_data.data.primer_nombre) + " " + String(persona_data.data.primer_apellido)
-                }))
+
 
             } catch (err) {
                 console.log(err);
@@ -153,8 +145,8 @@ const PersonaResponsable = ({
         const type = get_values("tipo_documento") ?? ""
         try {
             const { data: persona_data } = await api.get(
-
-                `personas/get-personas-by-document/${type}/${document}/`
+                `conservacion/viveros/get-persona-viverista-nuevo-by-numero-documento/${type}/${document}`
+                // `personas/get-personas-by-document/${type}/${document}/`
             );
             if ("data" in persona_data) {
                 dispatch(set_responsable(persona_data.data))
@@ -196,15 +188,18 @@ const PersonaResponsable = ({
     const get_personas: any = (async () => {
         const document = get_values("numero_documento") ?? ""
         const type = get_values("tipo_documento") ?? ""
-        const comercial_name = get_values("nombre_comercial") ?? ""
         const primer_nombre = get_values("primer_nombre") ?? ""
+        const segundo_nombre = get_values("segundo_nombre") ?? ""
         const primer_apellido = get_values("primer_apellido") ?? ""
-        const razon_social = get_values("razon_social") ?? ""
+        const segundo_apellido = get_values("segundo_apellido") ?? ""
+
 
         try {
             const { data: persona_data } = await api.get(
 
-                `personas/get-personas-filters/?tipo_documento=${type}&numero_documento=${document}&primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}&razon_social=${razon_social}&nombre_comercial=${comercial_name}`
+                `conservacion/viveros/get-persona-viverista-nuevo-lupa/?tipo_documento=${type}&numero_documento=${document}&primer_nombre=${primer_nombre}&segundo_nombre=${segundo_nombre}&primer_apellido=${primer_apellido}&segundo_apellido=${segundo_apellido}`
+
+                //  `personas/get-personas-filters/?tipo_documento=${type}&numero_documento=${document}&primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}&razon_social=${razon_social}&nombre_comercial=${comercial_name}`
             );
             if ("data" in persona_data) {
                 if (persona_data.data.length > 0) {
@@ -337,6 +332,19 @@ const PersonaResponsable = ({
                             xs: 12,
                             md: 4,
                             control_form: control_persona,
+                            control_name: "segundo_nombre",
+                            default_value: "",
+                            rules: {},
+                            label: "Segundo nombre",
+                            type: "text",
+                            disabled: false,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 4,
+                            control_form: control_persona,
                             control_name: "primer_apellido",
                             default_value: "",
                             rules: {},
@@ -348,29 +356,18 @@ const PersonaResponsable = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 5,
+                            md: 4,
                             control_form: control_persona,
-                            control_name: "razon_social",
+                            control_name: "segundo_apellido",
                             default_value: "",
                             rules: {},
-                            label: "Razon social",
+                            label: "Segundo Apellido",
                             type: "text",
                             disabled: false,
                             helper_text: ""
                         },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 5,
-                            control_form: control_persona,
-                            control_name: "nombre_comercial",
-                            default_value: "",
-                            rules: {},
-                            label: "Nombre comercial",
-                            type: "text",
-                            disabled: false,
-                            helper_text: ""
-                        },
+
+
                     ]}
                 />
             </Grid>

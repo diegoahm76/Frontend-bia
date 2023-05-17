@@ -70,7 +70,7 @@ export const add_bien_service: any = (bien: any) => {
       control_success('El bien se agrego correctamente');
       return data;
     } catch (error: any) {
-      console.log('add_bien_service');
+      console.log('add_bien_service', bien);
       control_error(error.response.data.detail);
       console.log(error);
       return error as AxiosError;
@@ -140,7 +140,7 @@ export const delete_nodo_service: any = (id: number) => {
 // Eliminar nodo
 export const get_code_bien_service: any = (code: string | null) => {
   return async (dispatch: Dispatch<any>) => {
-   let codigo = 0;
+    let codigo = 0;
     let nivel = 1;
     let limit = 9;
     if (code == null) {
@@ -172,7 +172,7 @@ export const get_code_bien_service: any = (code: string | null) => {
         const { data } = await api.get(`almacen/bienes/catalogo-bienes/validar-codigo/${nivel}/${index}/`);
         if (data.success) {
           dispatch(get_code_bien(index.toString()))
-        return data;
+          return data;
         } else {
           if (index === limit) {
             control_error('No se pueden crear mas nodos en este nivel');
@@ -185,7 +185,7 @@ export const get_code_bien_service: any = (code: string | null) => {
 
     }
 
-};
+  };
 };
 
 // Eliminar bien

@@ -9,19 +9,18 @@ import {
   type SelectChangeEvent,
 } from '@mui/material';
 import type { keys_object } from '../interfaces';
-import { RegisterPersonaNatural } from './RegisterPersonaNatural';
-import { RegisterPersonaJuridica } from './RegisterPersonaJuridica';
 import { CustomSelect } from '../../../components';
 import { LoadingButton } from '@mui/lab';
-import { CreateUser } from './CreateUser';
 import { use_register } from '../hooks/registerHook';
+import { CrearPersonaNatAdmin } from './CrearPersonaNatAdmin';
+import { CrearPersonaJurAdmin } from './CrearPersonaJurAdmin';
 
 interface Props {
   uso_interno: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
+export const RegisterAdministradorPersona: React.FC<Props> = ({ uso_interno }: Props) => {
   const {
     errors,
     message_error,
@@ -165,7 +164,7 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
         </Grid>
       </form>
       {tipo_persona === 'N' && is_avaiable && !no_has_user && (
-        <RegisterPersonaNatural
+        <CrearPersonaNatAdmin
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}
@@ -178,22 +177,8 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
           watch={watch}
         />
       )}
-      {no_has_user && (
-        <CreateUser
-          errors={errors}
-          handleSubmit={handle_submit}
-          isValid={is_valid}
-          register={register}
-          numero_documento=""
-          setValue={set_value}
-          watch={watch}
-          tipo_persona={tipo_persona}
-          tipo_documento={tipo_documento}
-          getValues={get_values}
-        />
-      )}
       {tipo_persona === 'J' && is_avaiable && !no_has_user && (
-        <RegisterPersonaJuridica
+        <CrearPersonaJurAdmin
           numero_documento={numero_documento}
           tipo_persona={tipo_persona}
           tipo_documento={tipo_documento}

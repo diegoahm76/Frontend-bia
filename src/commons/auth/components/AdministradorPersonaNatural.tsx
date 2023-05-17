@@ -13,6 +13,7 @@ import {
     Autocomplete,
     type AutocompleteChangeReason,
     type AutocompleteChangeDetails,
+    CircularProgress,
 } from "@mui/material";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import UpdateIcon from '@mui/icons-material/Update';
@@ -35,16 +36,17 @@ import { DialogHistorialDirecciones } from "./HistoricoDirecciones";
 import { DialogHistorialDatosRestringidos } from "../../seguridad/components/DialogHistorialDatosRestringidos";
 import { DialogHistorialEmail } from "./HistoricoEmail";
 import { DialogAutorizaDatos } from "../../../components/DialogAutorizaDatos";
+import { DialogHistoricoAutorizaNotificaciones } from "./HistoricoAutorizaNotificaciones";
 
 interface PropsElement {
     errors: FieldErrors<DataPersonas>;
 }
 interface PropsStep {
-  label: string;
-  component: (props: PropsElement) => JSX.Element;
+    label: string;
+    component: (props: PropsElement) => JSX.Element;
 }
 interface Props {
-  data_all: InfoPersona;
+    data_all: InfoPersona;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
@@ -62,12 +64,33 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     const [type_direction, set_type_direction] = useState('');
     const [fecha_nacimiento, set_fecha_nacimiento] = useState<Date | null | string>(new Date());
     const [direccion, set_direccion] = useState('');
+    const [departamento_laboral, set_departamento_laboral] = useState('');
+    const [ciudad_labral, set_ciudad_laboral] = useState('');
     const [direccion_notificacion, set_direccion_notificacion] = useState('');
     const [direccion_laboral, set_direccion_laboral] = useState('');
     const [dialog_notificaciones, set_dialog_notificaciones] = useState<boolean>(false);
     const [historico_email, set_historico_email] = useState<boolean>(false);
     const [historico_direcciones, set_historico_direcciones] = useState<boolean>(false);
     const [historico, set_historico] = useState<boolean>(false);
+    const [historico_autorizacion, set_historico_autorizacion] = useState<boolean>(false);
+    const [loading_natural, set_loading_natural] = useState<boolean>(false);
+    const [datos_historico_autorizacion, set_datos_historico_autorizacion] = useState<InfoPersona>({
+        id: 0,
+        id_persona: 0,
+        tipo_persona: '',
+        tipo_documento: '',
+        numero_documento: '',
+        primer_nombre: '',
+        segundo_nombre: '',
+        primer_apellido: '',
+        segundo_apellido: '',
+        nombre_completo: '',
+        razon_social: '',
+        nombre_comercial: '',
+        tiene_usuario: false,
+        digito_verificacion: '',
+        cod_naturaleza_empresa: '',
+    })
     const [datos_historico_email, set_datos_historico_email] = useState<InfoPersona>({
         id: 0,
         id_persona: 0,
@@ -120,9 +143,14 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         cod_naturaleza_empresa: '',
     });
 
+    const handle_open_dialog_autorizacion = (): void => {
+        set_historico_autorizacion(true);
+    };
+
     const handle_open_dialog_notificaciones = (): void => {
         set_dialog_notificaciones(true);
     };
+
     const handle_open_historico = (): void => {
         set_historico(true);
     };
@@ -138,17 +166,8 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             ...data_register,
             acepta_notificacion_email: data.acepta_autorizacion_email,
             acepta_notificacion_sms: data.acepta_autorizacion_sms,
-
         });
     }
-    const handle_change_autocomplete = (
-        event: React.SyntheticEvent<Element, Event>,
-        value: ClaseTercero[],
-        reason: AutocompleteChangeReason,
-        details?: AutocompleteChangeDetails<ClaseTercero>
-    ): void => {
-        set_clase_tercero_persona(value);
-    };
     const {
         register,
         handleSubmit: handle_submit,
@@ -192,9 +211,15 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         set_pais_residencia,
     } = update_register();
 
-    useEffect(() => {
-        console.log("datos_clasificacion_persona", watch('datos_clasificacion_persona'))
-    }, [watch('datos_clasificacion_persona')])
+    const handle_change_autocomplete = (
+        event: React.SyntheticEvent<Element, Event>,
+        value: ClaseTercero[],
+        reason: AutocompleteChangeReason,
+        details?: AutocompleteChangeDetails<ClaseTercero>
+    ): void => {
+        set_clase_tercero_persona(value);
+        set_value('datos_clasificacion_persona', value.map(e => e.value));
+    };
     // Establece los valores del formulario
     const set_value_form = (name: string, value: string): void => {
         value = name === 'nombre_de_usuario' ? value.replace(/\s/g, '') : value;
@@ -228,25 +253,18 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         open_modal(false);
     };
 
-  // Se usa para escuchar los cambios de valor del componente CustomSelect
-  const on_change = (e: SelectChangeEvent<string>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
-  const on_change_checkbox = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_data_register({
-      ...data_register,
-      [e.target.name]: e.target.checked,
-    });
-    set_value(e.target.name as keys_object, e.target.checked);
-  };
-  // Cambio inputs
-  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handle_fecha_nacimiento_change = (date: Date | null) => {
-    set_fecha_nacimiento(date);
-  };
+    // Se usa para escuchar los cambios de valor del componente CustomSelect
+    const on_change = (e: SelectChangeEvent<string>): void => {
+        set_value_form(e.target.name, e.target.value);
+    };
+    // Cambio inputs
+    const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
+        set_value_form(e.target.name, e.target.value);
+    };
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    const handle_fecha_nacimiento_change = (date: Date | null) => {
+        set_fecha_nacimiento(date);
+    };
 
     const on_result = (): void => {
         if (data_all !== null || data_all !== undefined || data_all !== "") {
@@ -279,7 +297,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                 value: item.id_clase_tercero,
                 label: item.nombre
             }));
-            set_value('datos_clasificacion_persona', data_persona_clase_tercero.map(e=>e.value))
+            set_value('datos_clasificacion_persona', data_persona_clase_tercero.map(e => e.value))
             set_clase_tercero_persona(data_persona_clase_tercero);
         } catch (err) {
             control_error(err);
@@ -300,10 +318,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             set_ciudad_expedicion(response?.cod_municipio_expedicion_id)
             set_departamento(response?.cod_departamento_expedicion)
 
-      // dirección residencia
-      set_pais_residencia(response?.pais_residencia);
-      set_ciudad_residencia(response?.municipio_residencia);
-      set_direccion(response?.direccion_residencia);
+            // dirección residencia
+            set_pais_residencia(response?.pais_residencia);
+            set_ciudad_residencia(response?.municipio_residencia);
+            set_direccion(response?.direccion_residencia);
 
             // dirección notificación
             set_direccion_notificacion(response?.direccion_notificaciones)
@@ -321,6 +339,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             });
             set_dpto_notifiacion(response?.cod_departamento_notificacion)
             set_ciudad_notificacion(response?.cod_municipio_notificacion_nal)
+            set_departamento_laboral(response?.cod_departamento_laboral)
+            set_ciudad_laboral(response?.cod_municipio_laboral_nal)
+            set_direccion_laboral(response?.direccion_laboral)
+            set_dpto_residencia(response?.cod_departamento_residencia)
 
             // Datos adicionales
         } catch (err) {
@@ -339,10 +361,18 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     };
     const on_submit_update_natural = handle_submit(async (data) => {
         try {
-            console.log("data.datos_clasificacion_persona", data.datos_clasificacion_persona)
+            if (data.datos_clasificacion_persona === undefined || data.datos_clasificacion_persona.length === 0) {
+                control_error('Por favor complete los datos de clasificación');
+                return;
+            }
+            if (data.email === data.email_empresarial) {
+                control_error('E-mail empresarial debe ser diferente de E-mail personal');
+                return;
+            }
+
+            set_loading_natural(true)
             const ubicacion: string = ""
             const datos_persona = {
-
                 cod_municipio_expedicion_id: data.cod_municipio_expedicion_id,
                 nombre_comercial: data.nombre_comercial,
                 fecha_nacimiento: data.fecha_nacimiento,
@@ -368,8 +398,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             };
             await editar_persona_natural(persona?.id_persona, datos_persona as DataNaturaUpdate);
             control_success('la persona se actualizó correctamente');
+            set_loading_natural(false)
         } catch (error) {
             control_error(error);
+            set_loading_natural(false)
         }
     });
     useEffect(() => {
@@ -429,18 +461,18 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         }
     }, [watch('cod_departamento_expedicion')]);
 
-  useEffect(() => {
-    if (watch('cod_municipio_expedicion_id') !== undefined) {
-      set_ciudad_expedicion(watch('cod_municipio_expedicion_id'));
-    }
-  }, [watch('cod_municipio_expedicion_id')]);
+    useEffect(() => {
+        if (watch('cod_municipio_expedicion_id') !== undefined) {
+            set_ciudad_expedicion(watch('cod_municipio_expedicion_id'));
+        }
+    }, [watch('cod_municipio_expedicion_id')]);
 
-  // Datos de residencia
-  useEffect(() => {
-    if (watch('pais_residencia') !== undefined) {
-      set_pais_residencia(watch('pais_residencia'));
-    }
-  }, [watch('pais_residencia')]);
+    // Datos de residencia
+    useEffect(() => {
+        if (watch('pais_residencia') !== undefined) {
+            set_pais_residencia(watch('pais_residencia'));
+        }
+    }, [watch('pais_residencia')]);
 
     useEffect(() => {
         if (watch('cod_departamento_residencia') !== undefined) {
@@ -448,13 +480,27 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         }
     }, [watch('cod_departamento_residencia')]);
 
-  useEffect(() => {
-    if (watch('municipio_residencia') !== undefined) {
-      set_ciudad_residencia(watch('municipio_residencia'));
-    }
-  }, [watch('municipio_residencia')]);
+    useEffect(() => {
+        if (watch('municipio_residencia') !== undefined) {
+            set_ciudad_residencia(watch('municipio_residencia'));
+        }
+    }, [watch('municipio_residencia')]);
 
-  // Datos de notificación
+    // Datos laboral
+
+     useEffect(() => {
+        if (watch('cod_departamento_laboral') !== undefined) {
+            set_departamento_laboral(watch('cod_departamento_laboral'));
+        }
+    }, [watch('cod_departamento_laboral')]);
+
+    useEffect(() => {
+        if (watch('cod_municipio_laboral_nal') !== undefined) {
+            set_ciudad_laboral(watch('cod_municipio_laboral_nal'));
+        }
+    }, [watch('cod_municipio_laboral_nal')]);
+
+    // Datos de notificación
 
     useEffect(() => {
         if (watch('cod_departamento_notificacion') !== undefined) {
@@ -462,23 +508,23 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         }
     }, [watch('cod_departamento_notificacion')]);
 
-  useEffect(() => {
-    if (watch('cod_municipio_notificacion_nal') !== undefined) {
-      set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
-    }
-  }, [watch('cod_municipio_notificacion_nal')]);
+    useEffect(() => {
+        if (watch('cod_municipio_notificacion_nal') !== undefined) {
+            set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
+        }
+    }, [watch('cod_municipio_notificacion_nal')]);
 
-  useEffect(() => {
-    if (watch('pais_nacimiento') !== undefined) {
-      set_pais_nacimiento(watch('pais_nacimiento'));
-    }
-  }, [watch('pais_nacimiento')]);
+    useEffect(() => {
+        if (watch('pais_nacimiento') !== undefined) {
+            set_pais_nacimiento(watch('pais_nacimiento'));
+        }
+    }, [watch('pais_nacimiento')]);
 
-  useEffect(() => {
-    if (watch('sexo') !== undefined) {
-      set_genero(watch('sexo'));
-    }
-  }, [watch('sexo')]);
+    useEffect(() => {
+        if (watch('sexo') !== undefined) {
+            set_genero(watch('sexo'));
+        }
+    }, [watch('sexo')]);
 
     useEffect(() => {
         if (watch('estado_civil') !== undefined) {
@@ -1029,6 +1075,16 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                             spacing={2}
                                         >
                                             <Button
+                                                variant="outlined"
+                                                startIcon={<RemoveRedEyeIcon />}
+                                                onClick={() => {
+                                                    set_datos_historico_autorizacion(persona);
+                                                    handle_open_dialog_autorizacion();
+                                                }}
+                                            >
+                                                Historico Autorizaciones
+                                            </Button>
+                                            <Button
                                                 variant="contained"
                                                 startIcon={<UpdateIcon />}
                                                 onClick={() => {
@@ -1095,13 +1151,13 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     size="small"
                                                     margin="dense"
                                                     autoFocus
-                                                    defaultValue={datos_persona?.telefono_fijo_residencial}
+                                                    defaultValue={datos_persona?.telefono_celular_empresa}
                                                     helperText={
-                                                        errors.telefono_fijo_residencial?.type === 'required'
+                                                        errors.telefono_celular_empresa?.type === 'required'
                                                             ? 'Este campo es obligatorio'
                                                             : ''
                                                     }
-                                                    {...register('telefono_fijo_residencial', {
+                                                    {...register('telefono_celular_empresa', {
                                                         required: true,
                                                     })}
 
@@ -1135,10 +1191,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     size="small"
                                                     label="Telefono laboral"
                                                     onCopy={(e: any) => e.preventDefault()}
-                                                    defaultValue={datos_persona.telefono_celular_empresa}
-                                                    error={errors.telefono_celular_empresa?.type === 'required'}
+                                                    defaultValue={datos_persona.telefono_empresa_2}
+                                                    error={errors.telefono_empresa_2?.type === 'required'}
                                                     helperText={
-                                                        errors.telefono_celular_empresa?.type === 'required'
+                                                        errors.telefono_empresa_2?.type === 'required'
                                                             ? 'Este campo es obligatorio'
                                                             : ''
                                                     }
@@ -1172,7 +1228,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     onChange={on_change}
                                                     label="Departamento *"
                                                     name="cod_departamento_laboral"
-                                                    value={datos_persona.cod_departamento_laboral}
+                                                    value={departamento_laboral}
                                                     options={dpto_notifiacion_opt}
                                                     loading={loading}
                                                     required={true}
@@ -1185,10 +1241,10 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     onChange={on_change}
                                                     label="Ciudad"
                                                     name="cod_municipio_laboral_nal"
-                                                    value={datos_persona.cod_municipio_laboral_nal}
+                                                    value={ciudad_labral}
                                                     options={ciudad_notificacion_opt}
                                                     loading={loading}
-                                                    disabled={datos_persona.cod_departamento_laboral === '' ?? true}
+                                                    disabled={departamento_laboral === '' ?? true}
                                                     required={true}
                                                     errors={errors}
                                                     register={register}
@@ -1208,7 +1264,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     {...register('direccion_laboral', {
                                                         required: true,
                                                     })}
-                                                    value={datos_persona.direccion_laboral}
+                                                    value={direccion_laboral}
                                                 />
                                             </Grid>
                                             <Grid item xs={12} sm={6} md={4}>
@@ -1216,7 +1272,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     variant="contained"
                                                     onClick={() => {
                                                         open_modal(true);
-                                                        set_type_direction('notificacion');
+                                                        set_type_direction('laboralDATOS DE RECIDENCIA');
                                                     }}
                                                 >
                                                     Generar dirección
@@ -1263,7 +1319,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                         options={clase_tercero}
                                                         getOptionLabel={(option) => option.label}
                                                         isOptionEqualToValue={(option, value) => option.value === value?.value}
-                                                        defaultValue={clase_tercero_persona}
+                                                        value={clase_tercero_persona}
                                                         renderInput={(params) => (
                                                             <TextField
                                                                 key={params.id}
@@ -1271,15 +1327,12 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                                 label="Datos clasificación Cormacarena"
                                                                 placeholder="Clasificacion Cormacarena"
                                                                 helperText={
-                                                                    clase_tercero_persona.length === 0
-                                                                        ? 'Este campo es obligatorio'
-                                                                        : ''
+                                                                    clase_tercero_persona.length === 0 ? 'Este campo es obligatorio' : ''
                                                                 }
+                                                                value={clase_tercero_persona}
                                                             />
                                                         )}
-                                                        {...register('datos_clasificacion_persona', {
-                                                            required: true,
-                                                        })}
+                                                        {...register('datos_clasificacion_persona')}
                                                         onChange={handle_change_autocomplete}
                                                     />
                                                 </Grid>
@@ -1398,13 +1451,13 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                             variant="contained"
                                             color="primary"
                                             type="submit"
-                                            // startIcon={
-                                            //     loading_natural
-                                            //         ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                            //         : ""
-                                            // }
+                                            startIcon={
+                                                loading_natural
+                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                                                    : ""
+                                            }
                                             aria-label="Actualizar"
-                                            // disabled={loading_natural}
+                                            disabled={loading_natural}
                                             size="large"
                                         >
                                             Actualizar</Button>
@@ -1430,19 +1483,16 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                 is_modal_active={historico_direcciones}
                 set_is_modal_active={set_historico_direcciones}
                 historico_direcciones={datos_historico_direcciones}
-                set_historico_direcciones={set_datos_historico_direcciones}
             />
             <DialogHistorialDatosRestringidos
                 is_modal_active={historico}
                 set_is_modal_active={set_historico}
                 datos_historico={datos_historico}
-                set_datos_historico={set_datos_historico}
             />
             <DialogHistorialEmail
                 is_modal_active={historico_email}
                 set_is_modal_active={set_historico_email}
                 datos_historico={datos_historico_email}
-                set_datos_historico={set_datos_historico_email}
             />
             <DialogAutorizaDatos
                 is_modal_active={dialog_notificaciones}
@@ -1450,6 +1500,11 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                 id_persona={persona?.id_persona}
                 data_autorizacion={{ acepta_autorizacion_email: data_register.acepta_notificacion_email, acepta_autorizacion_sms: data_register.acepta_notificacion_sms }}
                 on_result={respuesta_autorizacion}
+            />
+            <DialogHistoricoAutorizaNotificaciones
+                is_modal_active={historico_autorizacion}
+                set_is_modal_active={set_historico_autorizacion}
+                historico_autorizaciones={datos_historico_autorizacion}
             />
         </>
     );

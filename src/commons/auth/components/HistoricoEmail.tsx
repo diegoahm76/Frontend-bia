@@ -7,6 +7,9 @@ import {
   Divider,
   Grid,
   Stack,
+  Alert,
+  LinearProgress,
+  Typography,
 } from '@mui/material';
 import { Title } from '../../../components/Title';
 import type {
@@ -22,7 +25,6 @@ interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   datos_historico: InfoPersona;
-  set_datos_historico: Dispatch<SetStateAction<any>>;
 }
 
 const columns: GridColDef[] = [
@@ -36,28 +38,46 @@ const columns: GridColDef[] = [
     field: 'email_notificacion',
     headerName: 'E-MAIL NOTIFICACIÓN',
     sortable: true,
-    width: 170,
+    width: 250,
   },
   {
     field: 'fecha_cambio',
     headerName: 'FECHA DE CAMBIO',
     sortable: true,
-    width: 170,
+    width: 250,
   },
   {
-    field: 'id_persona',
-    headerName: 'PERSONA',
+    field: 'nombre_completo',
+    headerName: 'NOMBRE',
     sortable: true,
-    width: 170,
+    width: 300,
   },
 ];
-
+const columns_juridica: GridColDef[] = [
+  {
+    field: 'id_histo_email',
+    headerName: '#',
+    sortable: true,
+    width: 70,
+  },
+  {
+    field: 'email_notificacion',
+    headerName: 'E-MAIL NOTIFICACIÓN',
+    sortable: true,
+    width: 250,
+  },
+  {
+    field: 'fecha_cambio',
+    headerName: 'FECHA DE CAMBIO',
+    sortable: true,
+    width: 250,
+  },
+];
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const DialogHistorialEmail: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
   datos_historico,
-  set_datos_historico,
 }: IProps) => {
   const [rows, set_rows] = useState<HistoricoEmail[]>([]);
 
@@ -76,6 +96,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
           email_notificacion: datos.email_notificacion,
           fecha_cambio: datos.fecha_cambio,
           id_persona: datos.id_persona,
+          nombre_completo: datos.nombre_completo,
         }
         )
       );
@@ -118,14 +139,43 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
           }}
         >
           <Grid item xs={12}>
-            <DataGrid
-              autoHeight
-              rows={rows}
-              columns={columns}
-              getRowId={(row) => row.id_histo_email}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-            />
+            {rows.length > 0 ? (
+              <>
+                {datos_historico.tipo_persona === 'J' && (
+                  <>
+                    <DataGrid
+                      autoHeight
+                      rows={rows}
+                      columns={columns_juridica}
+                      getRowId={(row) => row.id_histo_email}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                    />
+                  </>
+                )}
+                {datos_historico.tipo_persona === 'N' && (
+                  <>
+                    <DataGrid
+                      autoHeight
+                      rows={rows}
+                      columns={columns}
+                      getRowId={(row) => row.id_historico_direccion}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                    />
+                  </>
+                )}
+              </>
+            ) : (
+              <Grid item xs={12}>
+                <Grid container justifyContent="center" textAlign="center">
+                  <Alert icon={false} severity="info">
+                    <LinearProgress />
+                    <Typography>No se encontraron resultados...</Typography>
+                  </Alert>
+                </Grid>
+              </Grid>
+            )}
           </Grid>
           <Grid item xs={12}>
             <Stack
