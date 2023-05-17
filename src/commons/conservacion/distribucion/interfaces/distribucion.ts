@@ -80,7 +80,7 @@ export interface IObjTransferGoods {
   id_bien_origen: number|null;
 
   codigo_bien: string|null;
-  nombre: string|null;
+  nombre_bien: string|null;
   es_semilla_vivero: boolean | null;
 }
 
@@ -104,5 +104,6 @@ export interface IObjGoods {
   es_semilla_vivero: boolean | null;
   cod_tipo_elemento_vivero: string|null;
   saldo_disponible: number | null;
+  unidad_medida?: string | null;
 }
 

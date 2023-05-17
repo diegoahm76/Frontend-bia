@@ -110,6 +110,7 @@ const SeleccionarSiembra = ({
       if ('name' in file) {
         set_file_name(file.name)
         dispatch(set_current_transfer({ ...current_transfer,
+           persona_traslada: get_values("persona_traslada"), 
            id_vivero_destino: get_values("id_vivero_destino"),
            id_vivero_origen: get_values("id_vivero_origen"), 
            observaciones: get_values("observaciones"), 
@@ -119,7 +120,7 @@ const SeleccionarSiembra = ({
   }, [file]);
 
   useEffect(() => {
-    if(current_transfer.ruta_archivo_soporte !== null){  
+    if(current_transfer.id_traslado !== null){  
       set_file_name(current_transfer.ruta_archivo_soporte)
     }
   }, [current_transfer]);
@@ -147,7 +148,7 @@ const SeleccionarSiembra = ({
       >
         <BuscarModelo
           set_current_model={set_current_transfer}
-          row_id={"id_siembra"}
+          row_id={"id_traslado"}
           columns_model={columns_siembras}
           models={transfers_nurseries}
           get_filters_models={get_traslados}
@@ -194,9 +195,9 @@ const SeleccionarSiembra = ({
               rules: { required_rule: { rule: false, message: "requerida" }  },
               label: "# de traslado",
               type: "number",
-              disabled: false,
+              disabled: current_transfer.id_traslado !== null,
               helper_text: current_transfer.nro_traslado === null?"Ingrese para buscar traslado":"",
-              on_blur_function: {search_traslado}
+              on_blur_function: search_traslado
             },
             {
               datum_type: "input_controller",
@@ -206,7 +207,7 @@ const SeleccionarSiembra = ({
               control_name: "persona_traslada",
               default_value: "",
               rules: { required_rule: { rule: false, message: "requerido" } },
-              label: "Fecha de traslado",
+              label: "Persona que traslada",
               type: "text",
               disabled: true,
               helper_text: ""
@@ -220,7 +221,7 @@ const SeleccionarSiembra = ({
               default_value: "",
               rules: { required_rule: { rule: false, message: "Archivo requerido" } },
               label: "Archivo soporte",
-              disabled: current_transfer.id_traslado !== null,
+              disabled: false,
               helper_text: "",
               set_value: set_file,
               file_name: file_name,

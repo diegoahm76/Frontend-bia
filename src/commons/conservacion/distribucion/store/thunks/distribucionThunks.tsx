@@ -7,7 +7,8 @@ import {
 } from 'axios';
 // Slices
 import {
- // initial_state_transfer,
+  initial_state_current_good,
+  initial_state_transfer,
   set_goods, 
   set_nurseries, 
   set_transfer_goods, 
@@ -88,6 +89,7 @@ export const get_goods_service = (
   ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      console.log(`conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${cod_elemento??""}`)
       const { data } = await api.get(`conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${cod_elemento??""}`);
       dispatch(set_goods(data.data));
       console.log(data)
@@ -116,7 +118,7 @@ export const get_good_code_service = (
       
       if (data.data.length > 0) {
         if (data.data.length === 1){
-          dispatch(set_current_good(data.data));
+          dispatch(set_current_good(data.data[0]));
           control_success("Se selecciono el traslado")
         }else{
           dispatch(set_goods(data.data));
@@ -165,8 +167,9 @@ export const get_current_trasnfer_service = (id: string | number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`conservacion/traslados/get-traslados-por-nro-traslado/${id}/`);
-      dispatch(set_current_transfer(data.data));
-      if (data.data.length > 0) {
+    
+      dispatch(set_current_transfer(data.data.info_traslado));
+      if ('success' in data) {
         control_success("Se selecciono el traslado")
       } else {
         control_error("No se encontró el traslado")
@@ -208,51 +211,53 @@ export const get_person_id_service = (
 
 
 
-// // crear siembra
-// export const add_siembra_service = (
-//   siembra: any,
-// ): any => {
-//   return async (dispatch: Dispatch<any>) => {
-//     try {
-//       const { data } = await api.post('conservacion/camas-siembras/siembra/create/', siembra);
-//       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-//       if (data.success) {
-//         control_success(data.detail)      
-//       } else {
-//         control_error(data.detail)
-//       }
-//       return data;
-//     } catch (error: any) {
-//       console.log('add_siembra_service');
-//       console.log(error)
-//       control_error(error.response.data.detail);
-//       return error as AxiosError;
-//     }
-//   };
-// };
+// crear traslado
+export const add_transfer_service = (
+  traslado: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put('conservacion/traslados/create-traslados/', traslado);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        dispatch(set_current_transfer(initial_state_transfer))
+        dispatch(set_transfer_goods([]))
+        dispatch(set_current_good(initial_state_current_good))
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_trasladoa_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
-// // editar siembra
-// export const edit_siembra_service = (
-//   siembra: any,
-//   id: number
-// ): any => {
-//   return async (dispatch: Dispatch<any>) => {
-//     try {
-//       const { data } = await api.put(`conservacion/camas-siembras/siembra/update/${id}/`, siembra);
-//       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-//       if (data.success) {
-//         control_success(data.detail)      
-//       } else {
-//         control_error(data.detail)
-//       }
-//       return data;
-//     } catch (error: any) {
-//       console.log('add_siembra_service');
-//       control_error(error.response.data.detail);
-//       return error as AxiosError;
-//     }
-//   };
-// };
+// editar traslado
+export const edit_traslado_service = (
+  traslado: any
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put('conservacion/traslados/actualizar-traslados/', traslado);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('edit_traslado_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // // borrar siembra
 // export const delete_siembra_service = (

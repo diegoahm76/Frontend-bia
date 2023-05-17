@@ -70,7 +70,7 @@ const initial_state_person: Persona = {
   tiene_usuario: true,
 }
 
-const initial_state_current_good: IObjGoods = {
+export const initial_state_current_good: IObjGoods = {
   id_inventario_vivero: null,
   id_bien: null,
   agno_lote: null,

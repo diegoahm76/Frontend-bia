@@ -2,14 +2,16 @@
 import { useForm } from 'react-hook-form';
 import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
+import SeleccionarModeloDialogForm from "../../../../components/partials/getModels/SeleccionarModeloDialogForm";
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IObjGoods, type IObjTransferGoods } from "../interfaces/distribucion";
-import { set_transfer_goods, set_current_good } from '../store/slice/distribucionSlice';
-import { control_error, get_goods_service } from '../store/thunks/distribucionThunks';
+import { set_transfer_goods, set_current_good, set_goods } from '../store/slice/distribucionSlice';
+import { control_error, get_good_code_service, get_goods_service } from '../store/thunks/distribucionThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarBienSiembra = () => {
@@ -20,6 +22,9 @@ const SeleccionarBienSiembra = () => {
     const [aux_transfer_goods, set_aux_transfer_goods] = useState<IObjTransferGoods[]>([]);
     
     const [action, set_action] = useState<string>("agregar");
+    const [bienes, set_bienes] = useState<any[]>([]);
+    const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
+
 
     const { current_transfer, goods, transfer_goods, origin_nursery, current_good } = useAppSelector((state) => state.distribucion);
     const dispatch = useAppDispatch();
@@ -102,7 +107,7 @@ const SeleccionarBienSiembra = () => {
             ),
         },
         {
-            field: 'nombre',
+            field: 'nombre_bien',
             headerName: 'Nombre',
             width: 150,
             renderCell: (params) => (
@@ -250,7 +255,7 @@ const SeleccionarBienSiembra = () => {
             ),
         },
     ];
-
+   
     const get_bienes: any = (async () => {
         const id_vivero = origin_nursery.id_vivero
         if (id_vivero !== null && id_vivero !== undefined) {
@@ -261,6 +266,35 @@ const SeleccionarBienSiembra = () => {
         }
     })
 
+    const search_bien: any = (async () => {
+        try {
+            const id_vivero = origin_nursery.id_vivero
+            if (id_vivero !== null && id_vivero !== undefined) {
+                const codigo = get_values_bien("codigo_bien") ?? ""
+                const data = await dispatch(get_good_code_service(id_vivero, codigo));
+                set_bienes(data)
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        
+      })
+
+    useEffect(() => {
+        if('success' in bienes){
+            if(bienes.success === true){
+                if('modal' in bienes){
+                    if(bienes.modal){
+                        set_select_model_is_active(true);
+                    }
+                }
+            }
+        }
+    }, [bienes]);
+
+    
+
+
     useEffect(() => {
         // const id_vivero = origin_nursery.id_vivero
         // if (id_vivero !== null && id_vivero !== undefined) {
@@ -270,6 +304,7 @@ const SeleccionarBienSiembra = () => {
     }, [origin_nursery]);
 
     useEffect(() => {
+        console.log(transfer_goods)
         set_aux_transfer_goods(transfer_goods)
     }, [transfer_goods]);
 
@@ -295,19 +330,19 @@ const SeleccionarBienSiembra = () => {
                 if ((data.cantidad_a_trasladar??0) <= (current_good.saldo_disponible ?? 0))
                 {  
                     const new_bien: IObjTransferGoods = {
-                        id_item_traslado_viveros: null,
+                        id_item_traslado_viveros: current_transfer.id_traslado ?? null,
                         agno_lote_origen: current_good.agno_lote,
                         nro_lote_origen: current_good.nro_lote,
                         cod_etapa_lote_origen: current_good.cod_etapa_lote,
-                        agno_lote_destino_MV: data.agno_lote_destino_MV,
+                        agno_lote_destino_MV: data.agno_lote_destino_MV ?? null,
                         nro_lote_destino_MV: data.nro_lote_destino_MV ?? null,
-                        cod_etapa_lote_destino_MV: data.cod_etapa_lote_destino_MV,
+                        cod_etapa_lote_destino_MV: data.cod_etapa_lote_destino_MV ?? null,
                         cantidad_a_trasladar: Number(data.cantidad_a_trasladar),
-                        altura_lote_destion_en_cms: Number(data.altura_lote_destion_en_cms),
+                        altura_lote_destion_en_cms: (data.altura_lote_destion_en_cms??null) !== null ? Number(data.altura_lote_destion_en_cms): null,
                         id_traslado: current_transfer.id_traslado,
                         id_bien_origen: current_good.id_bien,
                         codigo_bien: current_good.codigo_bien,
-                        nombre: current_good.nombre,
+                        nombre_bien: current_good.nombre,
                         es_semilla_vivero: current_good.es_semilla_vivero,
                         nro_posicion: null
                     }
@@ -409,6 +444,7 @@ const SeleccionarBienSiembra = () => {
                             type: "number",
                             disabled: false,
                             helper_text: "",
+                            on_blur_function: search_bien,
                         },
                         {
                             datum_type: "input_controller",
@@ -447,7 +483,8 @@ const SeleccionarBienSiembra = () => {
                             label: "Año lote",
                             type: "text",
                             disabled: true,
-                            helper_text: ""
+                            helper_text: "",
+                            hidden_text: get_values_bien("es_semilla_vivero") !== false
                         },
                         {
                             datum_type: "select_controller",
@@ -463,6 +500,7 @@ const SeleccionarBienSiembra = () => {
                             select_options: [{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
                             option_label: "label",
                             option_key: "value",
+                            hidden_text: get_values_bien("es_semilla_vivero") !== false
                           },
                     ]}
                     form_inputs_list={[
@@ -479,7 +517,8 @@ const SeleccionarBienSiembra = () => {
                             select_options: [{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
                             option_label: "label",
                             option_key: "value",
-                            hidden_text: current_good.es_semilla_vivero !== false
+                            hidden_text: get_values_bien("es_semilla_vivero") !== false,
+                            disabled: current_transfer.id_traslado !== null,
                         },
                         {
                             datum_type: "input_controller",
@@ -493,7 +532,7 @@ const SeleccionarBienSiembra = () => {
                             type: "number",
                             disabled: false,
                             helper_text: "",
-                            hidden_text: current_good.es_semilla_vivero !== false
+                            hidden_text: get_values_bien("es_semilla_vivero") !== false
                         },
                         {
                             datum_type: "input_controller",
@@ -513,7 +552,7 @@ const SeleccionarBienSiembra = () => {
                             xs: 12,
                             md: 1,
                             control_form: control_bien,
-                            control_name: "unidad_disponible",
+                            control_name: "unidad_medida",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Debe seleccionar bien" } },
                             label: "Unidad",
@@ -564,7 +603,7 @@ const SeleccionarBienSiembra = () => {
                             xs: 12,
                             md: 3,
                             control_form: control_bien,
-                            control_name: "nombre_bien",
+                            control_name: "nombre",
                             default_value: "",
                             rules: {},
                             label: "Nombre",
@@ -573,6 +612,20 @@ const SeleccionarBienSiembra = () => {
                             helper_text: ""
                         },
                     ]}
+                />
+
+                <SeleccionarModeloDialogForm
+                    set_current_model={set_current_good}
+                    is_modal_active={select_model_is_active}
+                    set_is_modal_active={set_select_model_is_active}
+                    modal_title={"Seleccionar lote de material vegetal"}
+                    form_filters={[]}
+                    set_models={set_goods}
+                    get_filters_models={null}
+                    models={goods}
+                    columns_model={columns_bienes}
+                    row_id={"id_inventario_vivero"}
+                    title_table_modal={"Resultados de la busqueda"}
                 />
                 
             </Grid>
