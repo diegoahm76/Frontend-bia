@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Stack } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import use_previsualizacion from "../mantenimientoGeneral/hooks/usePrevisualizacion";
 import { BusquedaProgramacionComponent } from "./RegistroMantenimientoGeneral/BusquedaProgramacion";
 import { Title } from "../../../../../../../components";
@@ -22,7 +22,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
     const [accion_guardar, set_accion_guardar] = useState<boolean>(false);
     const [detalle, set_detalle] = useState<any>(null);
     const [mantenimiento, set_mantenimiento] = useState<any>(null);
-    const [dias_posibles, set_dias_posibles] = useState<number>(1);
+    const [fecha_dias, set_dias_posibles] = useState<any>({});
     const {
         programacion,
         detalle_seleccionado,
@@ -41,45 +41,29 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
         }
     }, []);
 
-    const set_detalles = useCallback((val: any) => {
-        set_detalle(val);
-    }, [set_detalle]);
-
-    const set_mantenimientos = useCallback((val: any) => {
-        set_mantenimiento(val);
-    }, [set_mantenimiento]);
-
-    const set_details_state = useCallback((val: any) => {
-        set_detalle_seleccionado(val);
-    }, [set_detalle_seleccionado]);
-
-    const set_prog_seleccionada = useCallback((val: any) => {
-        set_programacion(val);
-    }, [set_programacion]);
-
     useEffect(() => {
         validar_formulario();
         set_accion_guardar(false);
     }, [detalle])
 
     const validar_formulario: () => void = () => {
-        if (user_info !== null && programacion !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null) {
+        if (user_info !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null) {
             const formulario: ejecutar_mantenimiento = {
-                fecha_registrado: programacion.fecha,
-                fecha_ejecutado: dayjs().format("YYYY-MM-DD"),
+                fecha_registrado: dayjs().format("YYYY-MM-DD"),
+                fecha_ejecutado: fecha_dias.fecha_manenimiento.format("YYYY-MM-DD"),
                 cod_tipo_mantenimiento: mantenimiento.tipo,
                 dias_empleados: parseInt(detalle.dias_empleados),
                 fecha_estado_anterior: null,
                 id_articulo: detalle_seleccionado.id_articulo,
                 cod_estado_final: detalle.estado,
-                id_persona_realiza: user_info.id_persona,
+                id_persona_realiza: detalle.realizado.id_persona,
                 id_persona_diligencia: user_info.id_persona,
-                cod_estado_anterior: null,
+                cod_estado_anterior: detalle_seleccionado.estado,
                 acciones_realizadas: mantenimiento.acciones,
                 observaciones: detalle.observaciones,
                 valor_mantenimiento: parseFloat(detalle.valor),
                 contrato_mantenimiento: detalle.contrato,
-                id_programacion_mtto: programacion.id_programacion_mantenimiento
+                id_programacion_mtto: programacion !== null ? programacion.id_programacion_mantenimiento : null
             };
             registrar_mantenimiento(formulario);
         }
@@ -98,7 +82,16 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
 
     const limpiar: () => void = () => {
         set_limpiar_formulario(true);
+        set_accion_guardar(false);
+        set_detalle(null);
+        set_mantenimiento(null);
+        set_detalle(null);
+        set_detalle_seleccionado(null);
+        set_programacion(null);
+        set_dias_posibles(1);
+        setTimeout(() => { set_limpiar_formulario(false); }, 500);
     }
+
     return (
         <>
             <h1>Registro mantenimiento de computadores</h1>
@@ -115,7 +108,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de programación" />
-                    <BusquedaProgramacionComponent set_prog_seleccion={set_prog_seleccionada} parent_details={set_details_state} tipo_articulo={"computadores"} limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles}/>
+                    <BusquedaProgramacionComponent set_prog_seleccion={set_programacion} parent_details={set_detalle_seleccionado} tipo_articulo={"computadores"} limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
             <Grid
@@ -131,7 +124,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de computadores" />
-                    <BusquedaArticuloComponent tipo_articulo={"computadores"} parent_details={set_details_state} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} accion_guardar={accion_guardar} />
+                    <BusquedaArticuloComponent tipo_articulo={"computadores"} parent_details={set_detalle_seleccionado} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} accion_guardar={accion_guardar} />
                 </Grid>
             </Grid>
             <Grid container
@@ -145,7 +138,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
                 }}>
                 <Grid item xs={12}>
                     <Title title='Mantenimiento' />
-                    <MantenimientoComponent limpiar_formulario={limpiar_formulario} programacion={programacion} mantenimiento={set_mantenimientos} accion_guardar={accion_guardar} />
+                    <MantenimientoComponent limpiar_formulario={limpiar_formulario} programacion={programacion} mantenimiento={set_mantenimiento} accion_guardar={accion_guardar} />
                 </Grid>
             </Grid>
             <Grid container
@@ -160,7 +153,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
                 <Grid item xs={12}>
                     <Title title='Detalles' />
                     <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info}
-                        detalles={set_detalles} accion_guardar={accion_guardar} dias_posibles={dias_posibles}/>
+                        detalles={set_detalle} accion_guardar={accion_guardar} fecha_dias={fecha_dias}/>
                 </Grid>
             </Grid>
             <Grid container>

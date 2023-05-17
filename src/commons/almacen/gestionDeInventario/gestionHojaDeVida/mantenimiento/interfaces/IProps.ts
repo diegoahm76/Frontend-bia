@@ -39,7 +39,7 @@ export interface crear_mantenimiento {
 }
 
 export interface ejecutar_mantenimiento {
-    "fecha_registrado": string,
+    "fecha_registrado": string | null,
     "fecha_ejecutado": string,
     "cod_tipo_mantenimiento": string,
     "dias_empleados": number,
