@@ -184,13 +184,6 @@ export const persons_request = async (
   }
 };
 
-// Trae todos los datos de un usuario
-export const user_request = async (
-  id_usuario: number
-): Promise<AxiosResponse<ResponseServer<Users>>> => {
-  return await api.get(`users/get-by-pk/${id_usuario}`);
-};
-
 // Trae historico de cambios de estado para cada usuario
 export const user_historico_cambios_estado = async (
   id_usuario: number
@@ -227,7 +220,7 @@ export const update_user_admin_user = async (
   id_usuario: number,
   data: FormData
 ): Promise<AxiosResponse<ResponseServer<any>>> => {
-  return await api.patch(`users/update/${id_usuario}}/`, data);
+  return await api.patch(`users/update/${id_usuario}/`, data);
 };
 
 // editar datos persona restringida juridica

@@ -224,3 +224,34 @@ export const update_unitys_service: any = (
     }
   };
 };
+
+// Trae info de usuario para delegarle un organigrama posteriormente
+export const get_nuevo_user_organigrama: any = (tipo_documento:  string, numero_documento: number ) => {
+  return async () => {
+    try {
+      const { data } = await api.get(
+        `transversal/organigrama/get-nuevo-user-organigrama/${tipo_documento}/${numero_documento}/`
+      );
+      console.log('llego');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_busqueda_avanzada_user_organigrama: any = (primer_nombre:  string, primer_apellido: string ) => {
+  return async () => {
+    try {
+      const { data } = await api.get(
+        `transversal/organigrama/get-nuevo-user-organigrama-filters/${primer_nombre}/${primer_apellido}/`
+      );
+      console.log('llego');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};

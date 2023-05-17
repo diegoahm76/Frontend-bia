@@ -75,7 +75,7 @@ interface FormValues {
 type keys_object = 'tipo_documento' | 'numero_documento' | 'nombre';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const DialogDelegarOrganigrama = ({
+const DialogBusquedaAvanzadaUserOrganigrama = ({
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
@@ -397,4 +397,4 @@ const DialogDelegarOrganigrama = ({
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default DialogDelegarOrganigrama;
+export default DialogBusquedaAvanzadaUserOrganigrama;
