@@ -428,8 +428,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                         header="Valor total"
                         style={{ width: '20%' }}
                       ></Column>
-                      <Column header="Acciones" body={(rowData) => {
-                        return <Button startIcon={<DeleteForeverIcon />} onClick={() => { console.log(rowData); }}/>;
+                      <Column header="Acciones" align={'center'} body={(rowData) => {
+                        return <Button color="error" size="small" variant='contained'onClick={() => { console.log(rowData); }}><DeleteForeverIcon fontSize="small"/></Button>;
                       }}></Column>
                     </DataTable>
                   </div>
