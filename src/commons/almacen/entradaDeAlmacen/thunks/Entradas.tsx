@@ -104,8 +104,8 @@ export const anular_entradas: any = (id_entrada: number,form_data: anular_entrad
     }
   };
 };
-// Obtener bien por código de bien
-export const get_programmed_maintenance: any = (codigo_bien: number) => {
+// Obtener articulo por código de bien
+export const obtener_articulo_codigo: any = (codigo_bien: number) => {
   return async () => {
     try {
       const { data } = await api.get(`almacen/bienes/entradas/get-by-codigo/?codigo_bien=${codigo_bien}`);

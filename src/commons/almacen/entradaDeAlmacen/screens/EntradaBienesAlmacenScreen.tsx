@@ -15,12 +15,13 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useAppDispatch } from "../../../../hooks";
-import { obtener_bodegas, obtener_consecutivo, obtener_tipos_entrada } from "../thunks/Entradas";
+import { obtener_articulo_codigo, obtener_bodegas, obtener_consecutivo, obtener_tipos_entrada } from "../thunks/Entradas";
 import { control_error } from "../../../../helpers";
 import { get_tipo_documento } from "../../../../request";
 import { useDropzone } from "react-dropzone";
 import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
 import AnularEntradaComponent from "./AnularEntrada";
+import { toast, type ToastContent } from "react-toastify";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
@@ -46,6 +47,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [mensaje_error_bodega, set_mensaje_error_bodega] = useState<string>("");
   const [bodega_detalle, set_bodega_detalle] = useState<string>("");
   const [mensaje_error_bodega_detalle, set_mensaje_error_bodega_detalle] = useState<string>("");
+  const [mensaje_error, set_mensaje_error] = useState<string>("");
   const [buscar_articulo_is_active, set_buscar_articulo_is_active] = useState<boolean>(false);
   const [anular_entrada_is_active, set_anular_entrada_is_active] = useState<boolean>(false);
   const [file, set_file] = useState<any>(null);
@@ -132,6 +134,19 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     set_motivo(e.target.value);
   };
 
+  const buscar_x_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value !== null && e.target.value !== undefined) {
+      set_codigo_articulo(e.target.value);
+      dispatch(obtener_articulo_codigo(e.target.value)).then((response: {success: boolean,detail: string, data: any}) => {
+        if(response.success){
+          set_articulo(response.data);
+        }
+      }).catch((error: any) => {
+        control_error(error);
+      })
+    }
+  };
+
   const cambio_observacion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_observaciones(e.target.value);
   };
@@ -142,12 +157,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_mensaje_error_documento("");
   }
 
-  useEffect(()=>{
-    if(articulo !== null || articulo !== undefined){
+  useEffect(() => {
+    if (articulo !== null || articulo !== undefined) {
       set_codigo_articulo(articulo.codigo_bien);
       set_nombre_articulo(articulo.nombre);
     }
-  },[articulo])
+  }, [articulo])
 
   return (
     <>
@@ -392,6 +407,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   size="small"
                   fullWidth
                   value={codigo_articulo}
+                  onBlur={buscar_x_codigo}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -416,11 +432,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   Buscar articulo
                 </Button>
                 {buscar_articulo_is_active && (
-                                <BusquedaArticulos
-                                    is_modal_active={buscar_articulo_is_active}
-                                    set_is_modal_active={set_buscar_articulo_is_active}
-                                    articulo={set_articulo} />
-                            )}
+                  <BusquedaArticulos
+                    is_modal_active={buscar_articulo_is_active}
+                    set_is_modal_active={set_buscar_articulo_is_active}
+                    articulo={set_articulo} />
+                )}
               </Grid>
             </Grid>
           </Box>
@@ -614,9 +630,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
             >
               Anular
             </Button>
-            <AnularEntradaComponent is_modal_active={anular_entrada_is_active} 
-            set_is_modal_active={set_anular_entrada_is_active} 
-            title={"Anular entrada"} user_info={user_info} id_entrada={0}></AnularEntradaComponent>
+            <AnularEntradaComponent is_modal_active={anular_entrada_is_active}
+              set_is_modal_active={set_anular_entrada_is_active}
+              title={"Anular entrada"} user_info={user_info} id_entrada={0}></AnularEntradaComponent>
             <Button
               color='inherit'
               variant="contained"
