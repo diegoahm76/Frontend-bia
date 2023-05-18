@@ -78,8 +78,21 @@ export const obtener_bodegas: any = () => {
   };
 };
 
+// Obtiene todo el listado de bienes
+export const obtener_bienes: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/bienes/entradas/search-bienes/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Anular mantenimiento
-export const override_maintenance: any = (id_entrada: number,form_data: anular_entrada) => {
+export const anular_entradas: any = (id_entrada: number,form_data: anular_entrada) => {
   return async () => {
     try {
       const { data } = await api.put(`almacen/bienes/entradas/anular/${id_entrada}/`, form_data);

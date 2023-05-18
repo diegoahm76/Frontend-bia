@@ -19,11 +19,15 @@ import { obtener_bodegas, obtener_consecutivo, obtener_tipos_entrada } from "../
 import { control_error } from "../../../../helpers";
 import { get_tipo_documento } from "../../../../request";
 import { useDropzone } from "react-dropzone";
+import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [user_info, set_user_info] = useState<any>({});
+  const [articulo, set_articulo] = useState<any>({});
+  const [nombre_articulo, set_nombre_articulo] = useState<string>("");
+  const [codigo_articulo, set_codigo_articulo] = useState<string>("");
   const [numero_entrada, set_numero_entrada] = useState<string>("");
   const [fecha_entrada, set_fecha_entrada] = useState<Dayjs | null>(dayjs());
   const [tipo_entrada, set_tipo_entrada] = useState<string>("");
@@ -36,9 +40,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [numero_documento, set_numero_documento] = useState<string>("");
   const [mensaje_error_documento, set_mensaje_error_documento] = useState<string>("");
   const [nombre_proveedor, set_nombre_proveedor] = useState<string>("");
-  const [bodega_ingreso, set_bodega_ingreso] = useState<string>("");
   const [bodegas, set_bodegas] = useState<any>([]);
+  const [bodega_ingreso, set_bodega_ingreso] = useState<string>("");
   const [mensaje_error_bodega, set_mensaje_error_bodega] = useState<string>("");
+  const [bodega_detalle, set_bodega_detalle] = useState<string>("");
+  const [mensaje_error_bodega_detalle, set_mensaje_error_bodega_detalle] = useState<string>("");
+  const [buscar_articulo_is_active, set_buscar_articulo_is_active] = useState<boolean>(false);
   const [file, set_file] = useState<any>(null);
 
   useEffect(() => {
@@ -109,6 +116,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_mensaje_error_bodega("");
   }
 
+  const cambio_bodega_detalle: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+    set_bodega_detalle(e.target.value);
+    if (e.target.value !== null && e.target.value !== "")
+      set_mensaje_error_bodega_detalle("");
+  }
+
   const cambio_fecha_entrada = (date: Dayjs | null): void => {
     set_fecha_entrada(date);
   };
@@ -126,6 +139,13 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     if (e.target.value !== null && e.target.value !== "")
       set_mensaje_error_documento("");
   }
+
+  useEffect(()=>{
+    if(articulo !== null || articulo !== undefined){
+      set_codigo_articulo(articulo.codigo_bien);
+      set_nombre_articulo(articulo.nombre);
+    }
+  },[articulo])
 
   return (
     <>
@@ -369,7 +389,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   type={'number'}
                   size="small"
                   fullWidth
-                  value={nombre_proveedor}
+                  value={codigo_articulo}
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
@@ -378,7 +398,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   type={'text'}
                   size="small"
                   fullWidth
-                  value={nombre_proveedor}
+                  value={nombre_articulo}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -389,10 +409,16 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   color='primary'
                   variant='contained'
                   startIcon={<SearchIcon />}
-                  onClick={() => { }}
+                  onClick={() => { set_buscar_articulo_is_active(true) }}
                 >
                   Buscar articulo
                 </Button>
+                {buscar_articulo_is_active && (
+                                <BusquedaArticulos
+                                    is_modal_active={buscar_articulo_is_active}
+                                    set_is_modal_active={set_buscar_articulo_is_active}
+                                    articulo={set_articulo} />
+                            )}
               </Grid>
             </Grid>
           </Box>
@@ -455,14 +481,14 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 <FormControl required size='small' fullWidth>
                   <InputLabel>Bodega</InputLabel>
                   <Select
-                    value={tipo_documento}
+                    value={bodega_detalle}
                     label="Bodega"
-                    onChange={cambio_tipo_documento}
-                    error={mensaje_error_documento !== ""}
+                    onChange={cambio_bodega_detalle}
+                    error={mensaje_error_bodega_detalle !== ""}
                   >
-                    {tipos_entrada.map((te: any) => (
-                      <MenuItem key={te.cod_tipo_entrada} value={te.cod_tipo_entrada}>
-                        {te.nombre}
+                    {bodegas.map((bg: any) => (
+                      <MenuItem key={bg.id_bodega} value={bg.id_bodega}>
+                        {bg.nombre}
                       </MenuItem>
                     ))}
                   </Select>
@@ -621,6 +647,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           </Stack>
         </Box>
       </Grid>
+
     </>
   );
 }
