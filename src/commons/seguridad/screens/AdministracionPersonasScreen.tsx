@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import type { InfoPersona } from '../../../interfaces/globalModels';
-import { Divider, Grid, Typography } from '@mui/material';
+import { Alert, Divider, Grid, LinearProgress, Typography } from '@mui/material';
 import { Title } from '../../../components/Title';
 import 'react-datepicker/dist/react-datepicker.css';
 import { AdministracionPersonasScreenNatural } from '../../auth/components/AdministradorPersonaNatural';
@@ -9,6 +9,7 @@ import { AdministracionPersonasScreenJuridica } from '../../auth/components/Admi
 import { CrearPersonaNatAdmin } from '../../auth/components/CrearPersonaNatAdmin';
 import { CrearPersonaJurAdmin } from '../../auth/components/CrearPersonaJurAdmin';
 import { use_register } from '../../auth/hooks/registerHook';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreen: React.FC = () => {
   const [persona, set_persona] = useState<InfoPersona>();
@@ -36,7 +37,18 @@ export const AdministracionPersonasScreen: React.FC = () => {
       set_persona(info_persona);
     }
   };
-  
+
+  useEffect(() => {
+    set_is_update(false)
+    if (persona !== undefined) {
+      set_is_update(true)
+    }
+  }, [persona]);
+
+  useEffect(() => {
+    // Este efecto se ejecutará cada vez que se actualice is_update o is_register
+  }, [is_update, is_register]);
+
   return (
     <>
       <Grid
@@ -55,8 +67,17 @@ export const AdministracionPersonasScreen: React.FC = () => {
           <BuscadorPersona onResult={on_result} />
           {is_update && (
             <>
-              {persona?.tipo_persona === 'N' && (
+              {persona?.tipo_persona === 'N' ? (
                 <AdministracionPersonasScreenNatural data_all={persona} />
+                ) : (
+                  <Grid item xs={12}>
+                      <Grid container justifyContent="center" textAlign="center">
+                          <Alert icon={false} severity="info">
+                              <LinearProgress />
+                              <Typography>Cargando Información...</Typography>
+                          </Alert>
+                      </Grid>
+                  </Grid>
               )}
               {persona?.tipo_persona === 'J' && (
                 <>
@@ -64,11 +85,11 @@ export const AdministracionPersonasScreen: React.FC = () => {
                 </>
               )}
             </>
-          )}
+          
+        )}
           {is_register && (
             <>
-              <Grid
-                container spacing={2}>
+              <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Divider />
                 </Grid>

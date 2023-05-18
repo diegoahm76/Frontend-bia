@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import type { InfoPersona } from '../../../interfaces/globalModels';
 import {
@@ -27,6 +27,7 @@ import { DialogHistorialDatosRestringidos } from '../components/DialogHistorialD
 export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   const [historico, set_historico] = useState<boolean>(false);
   const [persona, set_persona] = useState<InfoPersona>();
+  const [new_tipo_persona, set_new_tipo_persona] = useState('');
   const [loading_natural, set_loading_natural] = useState(false);
   const [loading_juridica, set_loading_juridica] = useState(false);
   const [datos_historico, set_datos_historico] = useState<InfoPersona>({
@@ -140,6 +141,14 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
       set_loading_juridica(false);
     }
   };
+  useEffect(() => {
+    if (persona != null) {
+      // Aquí puedes renderizar la información de la persona correctamente
+      // o realizar cualquier otra acción necesaria cuando se detecta información nueva
+      set_new_tipo_persona(persona.tipo_persona)
+    }
+  }, [persona]);
+  
 
   const tipos_doc_comercial = [
     {
@@ -218,7 +227,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
         <Grid item xs={12} spacing={2}>
           <Title title="ACTUALIZACIÓN DE DATOS RESTRINGIDOS" />
           <BuscadorPersona onResult={on_result} />
-          {persona?.tipo_persona === 'N' && (
+          {new_tipo_persona === 'N' && (
             <Box component="form"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onSubmit={handleSubmit(on_submit_persona)}
@@ -461,7 +470,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
               </Grid>
             </Box>
           )}
-          {persona?.tipo_persona === 'J' && (
+          {new_tipo_persona === 'J' && (
             <Box component="form"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onSubmit={handleSubmit(on_submit_persona_juridica)}
