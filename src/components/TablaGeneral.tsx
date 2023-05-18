@@ -15,6 +15,7 @@ import { Tooltip } from 'primereact/tooltip';
 import { Button } from 'primereact/button';
 import { InputNumber } from 'primereact/inputnumber';
 import type { InputNumberChangeEvent } from 'primereact/inputnumber';
+import { ModalAtom } from './Modal/Modal';
 
 // Creando la interfaz de propiedades para la tabla general
 interface GeneralTableProps extends DataTableProps<any> {
@@ -26,9 +27,10 @@ interface GeneralTableProps extends DataTableProps<any> {
   stylescroll: string;
   on_edit?: (rowData?: any) => void;
 }
-interface ActionTemplateProps {
+/* 
+  interface ActionTemplateProps {
   rowData: any;
-}
+} */
 
 // Creando el componente TableGeneral
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -45,6 +47,9 @@ export const TablaGeneral = ({
   const table_ref = useRef<DataTable<any>>(null);
   const [global_filter, set_global_filter] = useState<string>('');
   const [filters, set_filters] = useState<Record<string, any>>({});
+
+  const [modal, set_modal] = useState(false);
+
   const { desktop_open } = useSelector(
     (state: {
       layout: {
@@ -405,10 +410,15 @@ export const TablaGeneral = ({
     return <div style={cell_color(rowData)}>{rowData[column.field]}</div>;
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention
-  const ActionTemplate: React.FC<ActionTemplateProps> = ({ rowData }) => (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
+  const ActionTemplate = () => (
     <div>
-      {/* <Button icon="pi pi-pencil" onClick={() => on_edit(rowData)} /> */}
+      <Button
+        icon="pi pi-pencil"
+        onClick={() => {
+          set_modal(!modal);
+        }}
+      />
     </div>
   );
 
@@ -456,11 +466,10 @@ export const TablaGeneral = ({
             />
           ) : null;
         })}
-        <Column
-          header="ACCIONES"
-          body={(rowData: any) => <ActionTemplate rowData={rowData} />}
-        />
+        <Column header="ACCIONES" body={(rowData: any) => <ActionTemplate />} />
       </DataTable>
+
+      <ModalAtom show={modal} onClose={set_modal} />
     </>
   );
 };
