@@ -4,10 +4,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Title } from '../../../../../../../components';
-import { get_vehicles_all_service } from "../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks";
 import { useAppDispatch } from "../../../../../../../hooks";
-import { get_computers_all_service } from "../../../hojaDeVidaComputo/store/thunks/cvComputoThunks";
-import { get_others_all_service } from "../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks";
+import { get_article_by_type } from "./thunks/maintenanceThunks";
 
 
 interface IProps {
@@ -16,6 +14,7 @@ interface IProps {
   title: string;
   parent_details: any;
 } 
+const tipos_articulos = [{value: "Veh", tipo: "vehículos"}, {value: "Com", tipo: "computadores"}, {value: "OAc", tipo: "otros activos"}];
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const BuscarArticuloComponent = ({
   is_modal_active,
@@ -54,28 +53,13 @@ const BuscarArticuloComponent = ({
   }
 
   useEffect(() => {
-    if(title ==='Buscar vehículos'){
+    const tipo = tipos_articulos.find(ta => ta.tipo === title);
       set_columna_hidden(false);
-      dispatch(get_vehicles_all_service()).then((response: any) => {
+      dispatch(get_article_by_type(tipo?.value)).then((response: any) => {
         const articulos = response.Elementos.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
         set_grid_busqueda(articulos);
         set_grid_busqueda_before([...articulos]);
       })
-    }else if(title ==='Buscar computadores'){
-      set_columna_hidden(true);
-      dispatch(get_computers_all_service()).then((response: any) => {
-        const articulos = response.Elementos.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
-        set_grid_busqueda(articulos);
-        set_grid_busqueda_before([...articulos]);
-      })
-    }else{
-      set_columna_hidden(true);
-      dispatch(get_others_all_service()).then((response: any) => {
-        const articulos = response.Elementos.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
-        set_grid_busqueda(articulos);
-        set_grid_busqueda_before([...articulos]);
-      })
-    }
   }, [title])
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -85,7 +69,7 @@ const BuscarArticuloComponent = ({
       open={is_modal_active}
       onClose={() => { set_is_modal_active(false); }}
     >
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle>Buscar {title}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
           <Box

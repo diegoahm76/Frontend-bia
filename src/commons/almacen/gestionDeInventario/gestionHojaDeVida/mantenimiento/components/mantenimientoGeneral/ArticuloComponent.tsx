@@ -154,7 +154,7 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
                                 startIcon={<SearchIcon />}
                                 onClick={() => {
                                     set_buscar_articulo_is_active(true);
-                                    set_title('Buscar ' + tipo_articulo);
+                                    set_title(tipo_articulo);
                                 }}
                             >
                                 Buscar {tipo_articulo}
