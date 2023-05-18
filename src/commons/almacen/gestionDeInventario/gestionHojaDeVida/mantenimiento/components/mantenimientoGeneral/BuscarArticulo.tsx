@@ -57,20 +57,23 @@ const BuscarArticuloComponent = ({
     if(title ==='Buscar vehículos'){
       set_columna_hidden(false);
       dispatch(get_vehicles_all_service()).then((response: any) => {
-        set_grid_busqueda(response.Elementos);
-        set_grid_busqueda_before([...response.Elementos]);
+        const articulos = response.Elementos.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
+        set_grid_busqueda(articulos);
+        set_grid_busqueda_before([...articulos]);
       })
     }else if(title ==='Buscar computadores'){
       set_columna_hidden(true);
       dispatch(get_computers_all_service()).then((response: any) => {
-        set_grid_busqueda(response.Elementos);
-        set_grid_busqueda_before([...response.Elementos]);
+        const articulos = response.Elementos.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
+        set_grid_busqueda(articulos);
+        set_grid_busqueda_before([...articulos]);
       })
     }else{
       set_columna_hidden(true);
       dispatch(get_others_all_service()).then((response: any) => {
-        set_grid_busqueda(response.Elementos);
-        set_grid_busqueda_before([...response.Elementos]);
+        const articulos = response.Elementos.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
+        set_grid_busqueda(articulos);
+        set_grid_busqueda_before([...articulos]);
       })
     }
   }, [title])
