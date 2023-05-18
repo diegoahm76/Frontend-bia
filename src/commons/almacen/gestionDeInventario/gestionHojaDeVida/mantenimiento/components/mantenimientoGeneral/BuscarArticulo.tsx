@@ -13,8 +13,8 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   title: string;
   parent_details: any;
-} 
-const tipos_articulos = [{value: "Veh", tipo: "vehículos"}, {value: "Com", tipo: "computadores"}, {value: "OAc", tipo: "otros activos"}];
+}
+const tipos_articulos = [{ value: "Veh", tipo: "vehículos" }, { value: "Com", tipo: "computadores" }, { value: "OAc", tipo: "otros activos" }];
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const BuscarArticuloComponent = ({
   is_modal_active,
@@ -39,7 +39,7 @@ const BuscarArticuloComponent = ({
   }
 
   const accionar_busqueda: any = () => {
-    if(nombre === '' && codigo === ''){
+    if (nombre === '' && codigo === '') {
       set_grid_busqueda(grid_busqueda_before);
       return
     }
@@ -54,12 +54,12 @@ const BuscarArticuloComponent = ({
 
   useEffect(() => {
     const tipo = tipos_articulos.find(ta => ta.tipo === title);
-      set_columna_hidden(false);
-      dispatch(get_article_by_type(tipo?.value)).then((response: any) => {
-        const articulos = response.Elementos.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
-        set_grid_busqueda(articulos);
-        set_grid_busqueda_before([...articulos]);
-      })
+    set_columna_hidden(false);
+    dispatch(get_article_by_type(tipo?.value)).then((response: any) => {
+      const articulos = response.Elementos.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
+      set_grid_busqueda(articulos);
+      set_grid_busqueda_before([...articulos]);
+    })
   }, [title])
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -130,8 +130,8 @@ const BuscarArticuloComponent = ({
                 <Title title='Resultados' />
                 <Box sx={{ width: '100%', mt: '20px' }}>
                   <div className="card">
-                    <DataTable value={grid_busqueda} sortField="nombre" stripedRows  paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
-                    selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value); }} dataKey="id_bien"
+                    <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+                      selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value); }} dataKey="id_bien"
                     >
                       <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
                       <Column field="codigo_bien" header="Código" style={{ width: '25%' }}></Column>

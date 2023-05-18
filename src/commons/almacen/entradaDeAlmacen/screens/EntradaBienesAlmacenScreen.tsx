@@ -20,6 +20,7 @@ import { control_error } from "../../../../helpers";
 import { get_tipo_documento } from "../../../../request";
 import { useDropzone } from "react-dropzone";
 import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
+import AnularEntradaComponent from "./AnularEntrada";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
@@ -46,6 +47,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [bodega_detalle, set_bodega_detalle] = useState<string>("");
   const [mensaje_error_bodega_detalle, set_mensaje_error_bodega_detalle] = useState<string>("");
   const [buscar_articulo_is_active, set_buscar_articulo_is_active] = useState<boolean>(false);
+  const [anular_entrada_is_active, set_anular_entrada_is_active] = useState<boolean>(false);
   const [file, set_file] = useState<any>(null);
 
   useEffect(() => {
@@ -607,11 +609,14 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               color='error'
               variant='contained'
               startIcon={<DeleteForeverIcon />}
-              onClick={() => { }}
+              onClick={() => { set_anular_entrada_is_active(true) }}
               disabled={false}
             >
               Anular
             </Button>
+            <AnularEntradaComponent is_modal_active={anular_entrada_is_active} 
+            set_is_modal_active={set_anular_entrada_is_active} 
+            title={"Anular entrada"} user_info={user_info} id_entrada={0}></AnularEntradaComponent>
             <Button
               color='inherit'
               variant="contained"
