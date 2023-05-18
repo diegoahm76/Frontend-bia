@@ -1,10 +1,11 @@
 
 import { api } from '../../../../api/axios';
 // Types
-import { type AxiosError, } from 'axios';
+import { type AxiosResponse, type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 import { type anular_entrada, type crear_entrada } from '../interfaces/entradas';
+import { type ResponseServer } from '../../../../interfaces/globalModels';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -58,6 +59,25 @@ export const obtener_consecutivo: any = () => {
     }
   };
 };
+
+// Obtiene los tipos de entrada
+export const obtener_tipos_entrada = async (): Promise<AxiosResponse<ResponseServer<any[]>>> => {
+  return await api.get<ResponseServer<any[]>>('almacen/bienes/entradas/tipos-entradas/');
+};
+
+// Obtiene listado de bodegas
+export const obtener_bodegas: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/bodega/get-list/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Anular mantenimiento
 export const override_maintenance: any = (id_entrada: number,form_data: anular_entrada) => {
   return async () => {
