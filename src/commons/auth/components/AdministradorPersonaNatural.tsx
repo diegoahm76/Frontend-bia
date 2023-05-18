@@ -273,6 +273,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         }
     };
     useEffect(() => {
+        console.log("data_all", data_all)
         on_result()
     }, [])
 
@@ -1133,14 +1134,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     required
                                                     autoFocus
                                                     defaultValue={datos_persona?.nombre_comercial}
-                                                    helperText={
-                                                        errors.nombre_comercial?.type === 'required'
-                                                            ? 'Este campo es obligatorio'
-                                                            : ''
-                                                    }
-                                                    {...register('nombre_comercial', {
-                                                        required: true,
-                                                    })}
+                                                    {...register('nombre_comercial')}
                                                 />
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
@@ -1152,14 +1146,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     margin="dense"
                                                     autoFocus
                                                     defaultValue={datos_persona?.telefono_celular_empresa}
-                                                    helperText={
-                                                        errors.telefono_celular_empresa?.type === 'required'
-                                                            ? 'Este campo es obligatorio'
-                                                            : ''
-                                                    }
-                                                    {...register('telefono_celular_empresa', {
-                                                        required: true,
-                                                    })}
+                                                    {...register('telefono_celular_empresa')}
 
                                                 />
                                             </Grid>
@@ -1172,14 +1159,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     error={errors.email_empresarial?.type === 'required'}
                                                     type="email"
                                                     defaultValue={datos_persona.email_empresarial}
-                                                    helperText={
-                                                        errors.email_empresarial?.type === 'required'
-                                                            ? 'Este campo es obligatorio'
-                                                            : ''
-                                                    }
-                                                    {...register('email_empresarial', {
-                                                        required: true,
-                                                    })}
+                                                    {...register('email_empresarial')}
                                                 />
                                             </Grid>
                                             <Grid item xs={12} sm={6}>
@@ -1192,15 +1172,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     label="Telefono laboral"
                                                     onCopy={(e: any) => e.preventDefault()}
                                                     defaultValue={datos_persona.telefono_empresa_2}
-                                                    error={errors.telefono_empresa_2?.type === 'required'}
-                                                    helperText={
-                                                        errors.telefono_empresa_2?.type === 'required'
-                                                            ? 'Este campo es obligatorio'
-                                                            : ''
-                                                    }
-                                                    {...register('telefono_empresa_2', {
-                                                        required: true,
-                                                    })}
+                                                    {...register('telefono_empresa_2')}
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
@@ -1256,14 +1228,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                     label="Direccion-laboral"
                                                     fullWidth
                                                     error={errors.direccion_laboral?.type === 'required'}
-                                                    helperText={
-                                                        errors.direccion_laboral?.type === 'required'
-                                                            ? 'Este campo es obligatorio'
-                                                            : ''
-                                                    }
-                                                    {...register('direccion_laboral', {
-                                                        required: true,
-                                                    })}
+                                                    {...register('direccion_laboral')}
                                                     value={direccion_laboral}
                                                 />
                                             </Grid>

@@ -25,10 +25,10 @@ export const AdministracionPersonasScreen: React.FC = () => {
   } = use_register();
 
   const on_result = (info_persona: InfoPersona): void => {
-    console.log("info_persona", info_persona)
     set_is_update(false)
     set_is_register(false)
     if (info_persona !== undefined && info_persona.id_persona !== 0) {
+      console.log("info_persona", info_persona)
       set_is_update(true)
       set_persona(info_persona);
     } else {
