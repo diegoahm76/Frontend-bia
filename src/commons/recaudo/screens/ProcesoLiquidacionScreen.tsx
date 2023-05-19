@@ -1,10 +1,53 @@
 import { type SyntheticEvent, useState, useEffect } from 'react';
 import { Box, Grid, type SelectChangeEvent, Tab } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { GridLiquidacion, GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiquidacion";
+import { GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiquidacion";
 import { Title } from "../../../components"
 import axios from 'axios';
 import type { FormDetalleLiquidacion, FormLiquidacion, Liquidacion, OpcionLiquidacion } from '../interfaces/liquidacion';
+import { TablaGeneral } from '../../../components/TablaGeneral';
+
+interface Row {
+  id: number;
+  deudor: string;
+  identificacion: string;
+  monto_inicial: number;
+  fecha_liquidacion: string;
+  periodo: string;
+}
+
+const columns = [
+  {
+    field: 'id',
+    header: 'ID Liquidación',
+    visible: true,
+  },
+  {
+    field: 'deudor',
+    header: 'Deudor',
+    visible: true,
+  },
+  {
+    field: 'identificacion',
+    header: 'Identificación',
+    visible: true,
+  },
+  {
+    field: 'monto_inicial',
+    header: 'Monto Inicial',
+    visible: true,
+  },
+  {
+    field: 'fecha_liquidacion',
+    header: 'Fecha Liquidación',
+    visible: true,
+  },
+  {
+    field: 'periodo',
+    header: 'Periodo',
+    visible: true,
+  }
+];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProcesoLiquidacionScreen: React.FC = () => {
@@ -21,6 +64,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [form_detalle_liquidacion, set_form_detalle_liquidacion] = useState<FormDetalleLiquidacion[]>([]);
   const [total_obligacion, set_total_obligacion] = useState<number>(0);
   const [position_tab, set_position_tab_organigrama] = useState('1');
+  const [rows, set_rows] = useState<Row[]>([]);
 
   useEffect(() => {
     axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/liquidacion-base')
@@ -41,6 +85,18 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         console.log(error);
       });
   }, []);
+
+  useEffect(() => {
+    const new_rows = liquidaciones.map((liquidacion) => ({
+      id: liquidacion.id,
+      deudor: liquidacion.cod_deudor.nombres.concat(' ', liquidacion.cod_deudor.apellidos),
+      identificacion: liquidacion.cod_deudor.identificacion,
+      monto_inicial: liquidacion.valor,
+      fecha_liquidacion: liquidacion.fecha_liquidacion,
+      periodo: liquidacion.periodo_liquidacion,
+    }));
+    set_rows(new_rows);
+  }, [liquidaciones]);
 
   const handle_change = (event: SyntheticEvent, newValue: string): void => {
     set_position_tab_organigrama(newValue)
@@ -121,7 +177,14 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
               <TabPanel value="1" sx={{ p: '20px 0' }}>
                 {/* DATAGRID LIQUIDACION */}
-                <GridLiquidacion set_position_tab_organigrama={set_position_tab_organigrama} liquidaciones={liquidaciones} />
+                <TablaGeneral
+                  showButtonExport
+                  columns={columns}
+                  rowsData={rows}
+                  tittle='Liquidaciones'
+                  staticscroll
+                  stylescroll='780px'
+                />
               </TabPanel>
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>

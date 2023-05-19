@@ -4,6 +4,7 @@
 import { useCallback, useEffect } from 'react';
 import ReactFlow, { Background, ConnectionLineType, Controls, MiniMap, addEdge, useEdgesState, useNodesState } from 'reactflow';
 import { FlowNode } from './CustomNode/FlowNode';
+import { FlowEdge } from './CustomEdge/FlowEdge';
 import { getLayoutedElements } from './LayoutedElements/getLayoutedElements';
 import 'reactflow/dist/style.css';
 import './styles.css';
@@ -20,6 +21,7 @@ import './styles.css';
 // Este componente será la cuadrícula del diagrama de flujo de datos.
 
 const nodeTypes = { infoFlujoNode: FlowNode };
+const edgeTypes = { infoFlujoEdge: FlowEdge };
 
 export const FlowChart = ({ initialNodes, initialEdges }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -61,6 +63,7 @@ export const FlowChart = ({ initialNodes, initialEdges }) => {
       onConnect={onConnect}
       connectionLineType={ConnectionLineType.SmoothStep}
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
       style={{ border: '1px solid #181818' }}
       fitView
     >

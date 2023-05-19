@@ -14,9 +14,8 @@ export const FlowNode = ({ data, isConnectable }) => {
       <Handle type="target" position={Position.Top} id="top" isConnectable={isConnectable} />
       {/* <Handle type="target" position={Position.Left} id="left" isConnectable={isConnectable} /> */}
       <div>
-        <p>{data.nombre}</p>
-        <p>{data.fecha}</p>
-        <p>{data.descripcion}</p>
+        <p><strong>Etapa:</strong> {data.etapa}</p>
+        <p><strong>Descripción:</strong> {data.descripcion}</p>
       </div>
       <Handle type="source" position={Position.Bottom} id="bottom" isConnectable={isConnectable} />
       {/* <Handle type="source" position={Position.Right} id="right" isConnectable={isConnectable} /> */}

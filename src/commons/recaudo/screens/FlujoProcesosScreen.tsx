@@ -12,42 +12,7 @@ import axios from "axios";
 import { getLayoutedElements } from "../components/flowChart/LayoutedElements/getLayoutedElements";
 import { AddFlujoProcesoModal } from "../components/flujoProcesos/modal/AddFlujoProcesoModal";
 import type { Etapa } from "../interfaces/proceso";
-
-interface Nodes {
-  id: number;
-  data: {
-    nombre: string;
-    fecha: string;
-    descripcion: string;
-  }
-}
-
-interface Edges {
-  id: string;
-  source: string;
-  target: string;
-}
-
-interface Dataflow {
-  nodes: Nodes[];
-  edges: Edges[];
-}
-
-interface FormDataFlujo {
-  id_etapa_origen: string;
-  id_etapa_destino: string;
-  fecha_flujo: string;
-  descripcion: string;
-  requisitos: string;
-}
-
-// const tipo_desde = [
-//   { value: 'cobro_coactivo', label: 'Cobro Coactivo' },
-//   { value: 'embargo', label: 'Embargo' },
-//   { value: 'mandamiento_pago', label: 'Mandamiento de Pago' },
-//   { value: 'remate', label: 'Remate' },
-//   { value: 'cobro_persuasivo', label: 'Cobro persuasivo' },
-// ]
+import type { Dataflow, FormDataFlujo } from "../interfaces/flujoProceso";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FlujoProcesosScreen: React.FC = () => {
@@ -62,7 +27,7 @@ export const FlujoProcesosScreen: React.FC = () => {
   });
   const [add_flujo_proceso, set_add_flujo_proceso] = useState<boolean>(false);
   const [is_submit, set_is_submit] = useState<boolean>(false);
-  
+
   useEffect(() => {
     axios.get('http://macarenia.bitpointer.co/api/recaudo/procesos/grafica')
       .then((response) => {
@@ -82,7 +47,7 @@ export const FlujoProcesosScreen: React.FC = () => {
         console.log(error);
       });
   }, []);
-  
+
   // const { nodes, edges } = getLayoutedElements(dataflow?.nodes, dataflow?.edges);
   const nodes_edges = useCallback(() => {
     const new_nodes = dataflow?.nodes.map((node) => ({
@@ -96,7 +61,8 @@ export const FlujoProcesosScreen: React.FC = () => {
       id: edge.id.toString(),
       source: edge.source.toString(),
       target: edge.target.toString(),
-      type: 'smoothstep',
+      type: 'infoFlujoEdge',
+      data: edge.data,
       style: {
         stroke: 'black',
         strokeWidth: 2
@@ -161,7 +127,7 @@ export const FlujoProcesosScreen: React.FC = () => {
             <Grid
               container
               sx={{
-                width: 1/1,
+                width: 1 / 1,
                 height: 600,
                 marginTop: 2,
                 marginBottom: 2
