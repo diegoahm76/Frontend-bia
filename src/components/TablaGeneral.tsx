@@ -27,10 +27,10 @@ interface GeneralTableProps extends DataTableProps<any> {
   stylescroll: string;
   on_edit?: (rowData?: any) => void;
 }
-/* 
-  interface ActionTemplateProps {
+
+interface ActionTemplateProps {
   rowData: any;
-} */
+}
 
 // Creando el componente TableGeneral
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -48,7 +48,10 @@ export const TablaGeneral = ({
   const [global_filter, set_global_filter] = useState<string>('');
   const [filters, set_filters] = useState<Record<string, any>>({});
 
-  const [modal, set_modal] = useState(false);
+  const [modal_data, set_modal] = useState({
+    show: false,
+    id: '',
+  });
 
   const { desktop_open } = useSelector(
     (state: {
@@ -411,16 +414,23 @@ export const TablaGeneral = ({
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-  const ActionTemplate = () => (
-    <div>
-      <Button
-        icon="pi pi-pencil"
-        onClick={() => {
-          set_modal(!modal);
-        }}
-      />
-    </div>
-  );
+  const ActionTemplate: React.FC<ActionTemplateProps> = ({ rowData }) => {
+    console.log(rowData);
+    return (
+      <div>
+        <Button
+          icon="pi pi-pencil"
+          onClick={() => {
+            set_modal({
+              ...modal_data,
+              show: true,
+              id: rowData.id_auditoria,
+            });
+          }}
+        />
+      </div>
+    );
+  };
 
   // Renderizando el componente TableGeneral
   return (
@@ -466,10 +476,17 @@ export const TablaGeneral = ({
             />
           ) : null;
         })}
-        <Column header="ACCIONES" body={(rowData: any) => <ActionTemplate />} />
+        <Column
+          header="ACCIONES"
+          body={(rowData: any) => <ActionTemplate rowData={rowData} />}
+        />
       </DataTable>
 
-      <ModalAtom show={modal} onClose={set_modal} />
+      <ModalAtom
+        data={modal_data}
+        arrayToRender={rowsData}
+        set_modal={set_modal}
+      />
     </>
   );
 };
@@ -513,6 +530,7 @@ export const TablaGeneral = ({
 
 * TODO: un breve ejemplo
 import TableGeneral from './components/TableGeneral';
+import { row } from './../commons/almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
 
 const columns = [
   {field: 'code', header: 'Code',visible: true},
