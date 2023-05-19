@@ -144,6 +144,23 @@ export const to_finalize_organigram_service:any = (id: string, set_position_tab_
     };
 };
 
+// Reanudar organigrama
+export const to_resume_organigram_service:any = (id: string) => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.put(`transversal/organigrama/reanudar-organigrama/${id}/`);
+          dispatch(get_organigrams_service());
+          void Swal.fire({
+              position: "center", icon: "info", title: "Atención", text: data.detail,
+          });
+          return data;
+      } catch (error: any) {
+          control_error(error.response.data.detail);
+          return error as AxiosError;
+      }
+  };
+};
+
 // Niveles
 // Obtener Niveles
 export const get_levels_service: any = (id: string | number) => {

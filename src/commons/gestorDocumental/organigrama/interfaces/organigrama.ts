@@ -11,6 +11,7 @@ export interface IObjOrganigram {
     nombre: string;
     fecha_terminado: string | Date | null;
     descripcion: string;
+    id_persona_cargo: number | null;
     fecha_puesta_produccion: string | Date | null;
     fecha_retiro_produccion: string | Date | null;
     justificacion_nueva_version: string | Date | null;

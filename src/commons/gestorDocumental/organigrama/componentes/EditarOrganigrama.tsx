@@ -25,7 +25,10 @@ import { OrganigramVisualizerDialog } from './OrganigramVisualizerDialog';
 import { type ILevelUnity } from '../interfaces/organigrama';
 import useEditarOrganigrama from '../hooks/useEditarOrganigrama';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { to_finalize_organigram_service } from '../store/thunks/organigramThunks';
+import {
+  to_finalize_organigram_service,
+  to_resume_organigram_service,
+} from '../store/thunks/organigramThunks';
 
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
@@ -558,6 +561,23 @@ export const EditarOrganigrama = ({
               FINALIZAR
             </Button>
           )}
+          {organigram_current.fecha_terminado !== null &&
+            organigram_current.id_persona_cargo === null && (
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<SaveIcon />}
+                onClick={() => {
+                  void dispatch(
+                    to_resume_organigram_service(
+                      String(organigram_current.id_organigrama)
+                    )
+                  );
+                }}
+              >
+                REANUDAR
+              </Button>
+            )}
         </Stack>
 
         <OrganigramVisualizerDialog
