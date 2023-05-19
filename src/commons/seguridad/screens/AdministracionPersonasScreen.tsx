@@ -68,16 +68,28 @@ export const AdministracionPersonasScreen: React.FC = () => {
           {is_update && (
             <>
               {persona?.tipo_persona === 'N' ? (
-                <AdministracionPersonasScreenNatural data_all={persona} />
-                ) : (
-                  <Grid item xs={12}>
-                      <Grid container justifyContent="center" textAlign="center">
-                          <Alert icon={false} severity="info">
-                              <LinearProgress />
-                              <Typography>Cargando Información...</Typography>
-                          </Alert>
-                      </Grid>
+                <AdministracionPersonasScreenNatural
+                  numero_documento={persona.numero_documento}
+                  id_persona={persona.id_persona}
+                  tipo_persona={persona.tipo_persona}
+                  tipo_documento={persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                />
+              ) : (
+                <Grid item xs={12}>
+                  <Grid container justifyContent="center" textAlign="center">
+                    <Alert icon={false} severity="info">
+                      <LinearProgress />
+                      <Typography>Cargando Información...</Typography>
+                    </Alert>
                   </Grid>
+                </Grid>
               )}
               {persona?.tipo_persona === 'J' && (
                 <>
@@ -85,8 +97,8 @@ export const AdministracionPersonasScreen: React.FC = () => {
                 </>
               )}
             </>
-          
-        )}
+
+          )}
           {is_register && (
             <>
               <Grid container spacing={2}>

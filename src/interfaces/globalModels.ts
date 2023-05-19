@@ -80,6 +80,19 @@ export interface PropsRegister {
   watch: UseFormWatch<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
 }
+export interface PropsUpdate {
+  numero_documento: string;
+  id_persona: number;
+  tipo_documento: string;
+  tipo_persona: string;
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  isValid: boolean;
+  watch: UseFormWatch<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+}
 
 export interface Direccion {
   via_principal: string;
