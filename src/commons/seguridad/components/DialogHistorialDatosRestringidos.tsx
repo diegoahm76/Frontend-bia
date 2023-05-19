@@ -24,7 +24,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  datos_historico: InfoPersona;
+  datos_historico: InfoPersona | undefined;
 }
 
 const columns: GridColDef[] = [

@@ -54,7 +54,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
 }: Props) => {
 
     const [datos_persona, set_datos_persona] = useState<DataPersonas>();
-    const [persona, set_persona] = useState<InfoPersona>();
+    // const [persona, set_persona] = useState<InfoPersona>();
     const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
     const [clase_tercero_persona, set_clase_tercero_persona] = useState<ClaseTercero[]>([]);
     const [datos_vinculacion, set_datos_vinculacion] = useState<DatosVinculacionCormacarena>();
@@ -266,20 +266,22 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         set_fecha_nacimiento(date);
     };
 
-    const on_result = (): void => {
-        if (data_all !== null || data_all !== undefined || data_all !== "") {
-            set_persona(data_all);
-            set_datos_historico_email(data_all);
-        }
-    };
+    // const on_result = (): void => {
+    //     if (data_all !== null || data_all !== undefined || data_all !== "") {
+    //         set_persona(data_all);
+    //         set_datos_historico_email(data_all);
+    //     }
+    // };
+
     useEffect(() => {
         console.log("data_all", data_all)
-        on_result()
-    }, [])
+        // set_persona(data_all);
+        set_datos_historico_email(data_all);
+    }, [data_all])
 
-    const cancelar = (): void => {
+    /* const cancelar = (): void => {
         set_persona(undefined);
-    };
+    }; */
     // trae todas las clase tercero
     const get_datos_clase_tercero = async (): Promise<void> => {
         try {
@@ -292,7 +294,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     // trae clase tercero por persona
     const get_datos_clase_tercero_persona = async (): Promise<void> => {
         try {
-            const id_persona: number | undefined = persona?.id_persona;
+            const id_persona: number | undefined = data_all?.id_persona;
             const response = await consultar_clase_tercero_persona(id_persona);
             const data_persona_clase_tercero = response.map((item: ClaseTerceroPersona) => ({
                 value: item.id_clase_tercero,
@@ -307,7 +309,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     // trae los datos de la persona
     const get_datos_persona = async (): Promise<void> => {
         try {
-            const id_persona: number | undefined = persona?.id_persona;
+            const id_persona: number | undefined = data_all?.id_persona;
             const response = await consultar_datos_persona(id_persona);
             // datos basicos
             set_datos_persona(response);
@@ -353,7 +355,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
     // trae los datos de vinculacion de una persona
     const get_datos_vinculación = async (): Promise<void> => {
         try {
-            const id_persona: number | undefined = persona?.id_persona;
+            const id_persona: number | undefined = data_all?.id_persona;
             const response = await consultar_vinculacion_persona(id_persona);
             set_datos_vinculacion(response)
         } catch (err) {
@@ -397,7 +399,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                 cod_municipio_notificacion_nal: data.cod_municipio_notificacion_nal,
                 datos_clasificacion_persona: data.datos_clasificacion_persona
             };
-            await editar_persona_natural(persona?.id_persona, datos_persona as DataNaturaUpdate);
+            await editar_persona_natural(data_all?.id_persona, datos_persona as DataNaturaUpdate);
             control_success('la persona se actualizó correctamente');
             set_loading_natural(false)
         } catch (error) {
@@ -406,15 +408,13 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
         }
     });
     useEffect(() => {
-        if (persona?.numero_documento !== undefined) {
-            if (persona?.tipo_persona === "N") {
-                void get_datos_persona();
-                void get_datos_clase_tercero();
-                void get_datos_clase_tercero_persona();
-                void get_datos_vinculación();
-            }
+        if (data_all?.numero_documento !== undefined) {
+            void get_datos_persona();
+            void get_datos_clase_tercero();
+            void get_datos_clase_tercero_persona();
+            void get_datos_vinculación();
         }
-    }, [persona?.numero_documento !== undefined])
+    }, [data_all?.numero_documento !== undefined])
 
     const tipos_doc = [
         {
@@ -489,7 +489,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
 
     // Datos laboral
 
-     useEffect(() => {
+    useEffect(() => {
         if (watch('cod_departamento_laboral') !== undefined) {
             set_departamento_laboral(watch('cod_departamento_laboral'));
         }
@@ -539,158 +539,362 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                 onSubmit={(e) => {
                     void on_submit_update_natural(e)
                 }}>
-                {(persona?.tipo_persona === "N") && (
-                    <>
-                        {(datos_persona != null) && (
-                            <Grid container spacing={2}>
-                                {/* datos de identificación */}
-                                <>
-                                    <Grid item xs={12}>
-                                        <Title title="DATOS DE IDENTIFICACIÓN" />
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <TextField
-                                            label="Tipo de Persona"
-                                            select
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            required
-                                            autoFocus
-                                            defaultValue={datos_persona?.tipo_persona}
-                                            disabled
+                <>
+                    {(datos_persona != null) && (
+                        <Grid container spacing={2}>
+                            {/* datos de identificación */}
+                            <>
+                                <Grid item xs={12}>
+                                    <Title title="DATOS DE IDENTIFICACIÓN" />
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <TextField
+                                        label="Tipo de Persona"
+                                        select
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        required
+                                        autoFocus
+                                        defaultValue={datos_persona?.tipo_persona}
+                                        disabled
+                                    >
+                                        {tipo_persona.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <TextField
+                                        id="tipo_doc_natural"
+                                        label="Tipo de Documento"
+                                        select
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        required
+                                        autoFocus
+                                        defaultValue={datos_persona?.tipo_documento}
+                                        disabled
+                                    >
+                                        {tipos_doc.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <TextField
+                                        label="Número Identificación"
+                                        id="documento_natural"
+                                        type="number"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        required
+                                        defaultValue={datos_persona?.numero_documento}
+                                        disabled
+                                    />
+                                </Grid>
+                            </>
+                            {/* datos personales */}
+                            <>
+                                <Grid item xs={12}>
+                                    <Title title="DATOS PERSONALES" />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        label="Primer Nombre"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        required
+                                        autoFocus
+                                        defaultValue={datos_persona?.primer_nombre}
+                                        disabled
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        label="Segundo Nombre"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        autoFocus
+                                        defaultValue={datos_persona?.segundo_nombre}
+                                        disabled
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        label="Primer Apeliido"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        required
+                                        autoFocus
+                                        defaultValue={datos_persona?.primer_apellido}
+                                        disabled
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        label="Segundo Apeliido"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        autoFocus
+                                        defaultValue={datos_persona?.segundo_apellido}
+                                        disabled
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                                        <DatePicker
+                                            label="Fecha Nacimiento "
+                                            inputFormat="YYYY-MM-DD"
+                                            openTo="day"
+                                            value={fecha_nacimiento}
+                                            onChange={handle_fecha_nacimiento_change}
+                                            views={['year', 'month', 'day']}
+                                            renderInput={(params) => (
+                                                <TextField
+                                                    required
+                                                    fullWidth
+                                                    // defaultValue={datos_persona?.fecha_nacimiento}
+                                                    size="small"
+                                                    {...params}
+                                                    helperText={
+                                                        errors.fecha_nacimiento?.type === 'required'
+                                                            ? 'Este campo es obligatorio'
+                                                            : ''
+                                                    }
+                                                    {...register('fecha_nacimiento', {
+                                                        required: true,
+                                                    })}
+                                                />
+                                            )}
+                                        />
+                                    </LocalizationProvider>
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <CustomSelect
+                                        onChange={on_change}
+                                        label="País de nacimiento "
+                                        name="pais_nacimiento"
+                                        value={pais_nacimiento}
+                                        options={paises_options}
+                                        loading={loading}
+                                        disabled={false}
+                                        required={true}
+                                        errors={errors}
+                                        register={register}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <CustomSelect
+                                        onChange={on_change}
+                                        label="Género *"
+                                        name="sexo"
+                                        value={genero}
+                                        options={genero_opt}
+                                        loading={loading}
+                                        disabled={false}
+                                        required={true}
+                                        errors={errors}
+                                        register={register}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <CustomSelect
+                                        onChange={on_change}
+                                        label="Estado civil "
+                                        name="estado_civil"
+                                        value={estado_civil}
+                                        options={estado_civil_opt}
+                                        loading={loading}
+                                        disabled={false}
+                                        required={true}
+                                        errors={errors}
+                                        register={register}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Stack
+                                        justifyContent="flex-end"
+                                        sx={{ m: '10px 0 20px 0' }}
+                                        direction="row"
+                                        spacing={2}
+                                    >
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<RemoveRedEyeIcon />}
+                                            onClick={() => {
+                                                set_datos_historico(data_all);
+                                                handle_open_historico();
+                                            }}
                                         >
-                                            {tipo_persona.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <TextField
-                                            id="tipo_doc_natural"
-                                            label="Tipo de Documento"
-                                            select
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            required
-                                            autoFocus
-                                            defaultValue={datos_persona?.tipo_documento}
-                                            disabled
-                                        >
-                                            {tipos_doc.map((option) => (
-                                                <MenuItem key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </MenuItem>
-                                            ))}
-                                        </TextField>
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <TextField
-                                            label="Número Identificación"
-                                            id="documento_natural"
-                                            type="number"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            required
-                                            defaultValue={datos_persona?.numero_documento}
-                                            disabled
-                                        />
-                                    </Grid>
-                                </>
-                                {/* datos personales */}
-                                <>
-                                    <Grid item xs={12}>
-                                        <Title title="DATOS PERSONALES" />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            label="Primer Nombre"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            required
-                                            autoFocus
-                                            defaultValue={datos_persona?.primer_nombre}
-                                            disabled
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            label="Segundo Nombre"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            autoFocus
-                                            defaultValue={datos_persona?.segundo_nombre}
-                                            disabled
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            label="Primer Apeliido"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            required
-                                            autoFocus
-                                            defaultValue={datos_persona?.primer_apellido}
-                                            disabled
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <TextField
-                                            label="Segundo Apeliido"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            autoFocus
-                                            defaultValue={datos_persona?.segundo_apellido}
-                                            disabled
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={3}>
-                                        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-                                            <DatePicker
-                                                label="Fecha Nacimiento "
-                                                inputFormat="YYYY-MM-DD"
-                                                openTo="day"
-                                                value={fecha_nacimiento}
-                                                onChange={handle_fecha_nacimiento_change}
-                                                views={['year', 'month', 'day']}
-                                                renderInput={(params) => (
-                                                    <TextField
-                                                        required
-                                                        fullWidth
-                                                        // defaultValue={datos_persona?.fecha_nacimiento}
-                                                        size="small"
-                                                        {...params}
-                                                        helperText={
-                                                            errors.fecha_nacimiento?.type === 'required'
-                                                                ? 'Este campo es obligatorio'
-                                                                : ''
-                                                        }
-                                                        {...register('fecha_nacimiento', {
-                                                            required: true,
-                                                        })}
-                                                    />
-                                                )}
+                                            Historico Datos Restringidos
+                                        </Button>
+                                    </Stack>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Divider />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="subtitle1" fontWeight="bold">Lugar expedición del documento</Typography>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <CustomSelect
+                                        onChange={on_change}
+                                        label="Departamento "
+                                        name="cod_departamento_expedicion"
+                                        value={cod_departamento_expedicion}
+                                        options={departamentos_opt}
+                                        loading={loading}
+                                        disabled={false}
+                                        required={true}
+                                        errors={errors}
+                                        register={register}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <CustomSelect
+                                        onChange={on_change}
+                                        label="Ciudad "
+                                        name="cod_municipio_expedicion_id"
+                                        value={ciudad_expedicion}
+                                        options={ciudades_opt}
+                                        loading={loading}
+                                        disabled={false}
+                                        required={true}
+                                        errors={errors}
+                                        register={register}
+                                    />
+                                </Grid>
+                            </>
+                            {/* datos de residencia */}
+                            <>
+                                <Grid item xs={12}>
+                                    <Title title="DATOS DE RECIDENCIA" />
+                                </Grid>
+                                <Grid item xs={12} sm={4}>
+                                    <CustomSelect
+                                        onChange={on_change}
+                                        label="País de residencia"
+                                        name="pais_residencia"
+                                        value={pais_residencia}
+                                        options={paises_options}
+                                        loading={loading}
+                                        required={true}
+                                        errors={errors}
+                                        register={register}
+                                    />
+                                </Grid>
+                                {pais_residencia === 'CO' && (
+                                    <>
+                                        <Grid item xs={12} sm={4}>
+                                            <CustomSelect
+                                                onChange={on_change}
+                                                label="Departamento *"
+                                                name="cod_departamento_residencia"
+                                                value={cod_departamento_residencia}
+                                                options={dpts_residencia_opt}
+                                                loading={loading}
+                                                required={true}
+                                                errors={errors}
+                                                register={register}
                                             />
-                                        </LocalizationProvider>
-                                    </Grid>
-                                    <Grid item xs={12} sm={3}>
+                                        </Grid>
+                                        <Grid item xs={12} sm={4}>
+                                            <CustomSelect
+                                                onChange={on_change}
+                                                label="Ciudad *"
+                                                name="municipio_residencia"
+                                                value={ciudad_residencia}
+                                                options={ciudades_residencia_opt}
+                                                loading={loading}
+                                                disabled={cod_departamento_residencia === '' ?? true}
+                                                required={true}
+                                                errors={errors}
+                                                register={register}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} md={4}>
+                                            <TextField
+                                                size="small"
+                                                label="Direccion"
+                                                fullWidth
+                                                error={errors.direccion_residencia?.type === 'required'}
+                                                helperText={
+                                                    errors.direccion_residencia?.type === 'required'
+                                                        ? 'Este campo es obligatorio'
+                                                        : ''
+                                                }
+                                                {...register('direccion_residencia', {
+                                                    required: true,
+                                                })}
+                                                value={direccion}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} md={4}>
+                                            <Button
+                                                variant="contained"
+                                                onClick={() => {
+                                                    open_modal(true);
+                                                    set_type_direction('residencia');
+                                                }}
+                                            >
+                                                Generar dirección
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={12} sm={6} md={4}>
+                                            <Stack
+                                                justifyContent="flex-end"
+                                                sx={{ m: '10px 0 20px 0' }}
+                                                direction="row"
+                                                spacing={2}
+                                            >
+                                                <Button
+                                                    variant="outlined"
+                                                    startIcon={<RemoveRedEyeIcon />}
+                                                    onClick={() => {
+                                                        set_datos_historico_direcciones(data_all);
+                                                        handle_open_historico_direcciones();
+                                                    }}
+                                                >
+                                                    Historico Direcciones
+                                                </Button>
+                                            </Stack>
+                                        </Grid>
+                                    </>
+                                )}
+                            </>
+                            {/* datos de notificación */}
+                            <>
+                                <Grid item xs={12}>
+                                    <Title title="DATOS DE NOTIFICACIÓN" />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Divider />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Typography variant="subtitle1" fontWeight="bold">Dirección de notificación Nacional</Typography>
+                                </Grid>
+                                <>
+                                    <Grid item xs={12} sm={6} md={4}>
                                         <CustomSelect
                                             onChange={on_change}
-                                            label="País de nacimiento "
-                                            name="pais_nacimiento"
-                                            value={pais_nacimiento}
+                                            label="País de notificación"
+                                            name="pais_notificacion"
+                                            value={'CO'}
                                             options={paises_options}
                                             loading={loading}
                                             disabled={false}
@@ -699,35 +903,110 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                             register={register}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={3}>
+                                    <Grid item xs={12} sm={6} md={4}>
                                         <CustomSelect
                                             onChange={on_change}
-                                            label="Género *"
-                                            name="sexo"
-                                            value={genero}
-                                            options={genero_opt}
+                                            label="Departamento *"
+                                            name="cod_departamento_notificacion"
+                                            value={dpto_notifiacion}
+                                            options={dpto_notifiacion_opt}
                                             loading={loading}
-                                            disabled={false}
                                             required={true}
                                             errors={errors}
                                             register={register}
                                         />
                                     </Grid>
-                                    <Grid item xs={12} sm={3}>
+                                    <Grid item xs={12} sm={6} md={4}>
                                         <CustomSelect
                                             onChange={on_change}
-                                            label="Estado civil "
-                                            name="estado_civil"
-                                            value={estado_civil}
-                                            options={estado_civil_opt}
+                                            label="Ciudad"
+                                            name="cod_municipio_notificacion_nal"
+                                            value={ciudad_notificacion}
+                                            options={ciudad_notificacion_opt}
                                             loading={loading}
-                                            disabled={false}
+                                            disabled={dpto_notifiacion === '' ?? true}
                                             required={true}
                                             errors={errors}
                                             register={register}
                                         />
                                     </Grid>
-                                    <Grid item xs={12}>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <TextField
+                                            size="small"
+                                            label="Direccion"
+                                            fullWidth
+                                            error={errors.direccion_notificaciones?.type === 'required'}
+                                            helperText={
+                                                errors.direccion_notificaciones?.type === 'required'
+                                                    ? 'Este campo es obligatorio'
+                                                    : ''
+                                            }
+                                            {...register('direccion_notificaciones', {
+                                                required: true,
+                                            })}
+                                            value={direccion_notificacion}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => {
+                                                open_modal(true);
+                                                set_type_direction('notificacion');
+                                            }}
+                                        >
+                                            Generar dirección
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <TextField
+                                            disabled={is_exists}
+                                            fullWidth
+                                            size="small"
+                                            label="Complemento dirección"
+                                            value={data_register.direccion_notificacion_referencia}
+                                            {...register('direccion_notificacion_referencia')}
+                                            onChange={handle_change}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <TextField
+                                            disabled={is_exists}
+                                            fullWidth
+                                            size="small"
+                                            id="email"
+                                            label="E-mail notificación"
+                                            error={errors.email?.type === 'required'}
+                                            type="email"
+                                            defaultValue={datos_persona.email}
+                                            helperText={
+                                                errors.email?.type === 'required'
+                                                    ? 'Este campo es obligatorio'
+                                                    : ''
+                                            }
+                                            {...register('email', {
+                                                required: true,
+                                            })}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
+                                        <TextField
+                                            disabled={is_exists}
+                                            fullWidth
+                                            type="number"
+                                            size="small"
+                                            label="Celular"
+                                            onCopy={(e: any) => e.preventDefault()}
+                                            defaultValue={data_register.telefono_celular}
+                                            error={errors.telefono_celular?.type === 'required'}
+                                            helperText={
+                                                errors.telefono_celular?.type === 'required'
+                                                    ? 'Este campo es obligatorio'
+                                                    : ''}
+                                            {...register('telefono_celular')}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4}>
                                         <Stack
                                             justifyContent="flex-end"
                                             sx={{ m: '10px 0 20px 0' }}
@@ -738,163 +1017,174 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                 variant="outlined"
                                                 startIcon={<RemoveRedEyeIcon />}
                                                 onClick={() => {
-                                                    set_datos_historico(persona);
-                                                    handle_open_historico();
+                                                    set_datos_historico_email(data_all);
+                                                    handle_open_historico_email();
                                                 }}
                                             >
-                                                Historico Datos Restringidos
+                                                Historico E-mail
                                             </Button>
                                         </Stack>
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <Divider />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography variant="subtitle1" fontWeight="bold">Lugar expedición del documento</Typography>
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <CustomSelect
-                                            onChange={on_change}
-                                            label="Departamento "
-                                            name="cod_departamento_expedicion"
-                                            value={cod_departamento_expedicion}
-                                            options={departamentos_opt}
-                                            loading={loading}
-                                            disabled={false}
-                                            required={true}
-                                            errors={errors}
-                                            register={register}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6}>
-                                        <CustomSelect
-                                            onChange={on_change}
-                                            label="Ciudad "
-                                            name="cod_municipio_expedicion_id"
-                                            value={ciudad_expedicion}
-                                            options={ciudades_opt}
-                                            loading={loading}
-                                            disabled={false}
-                                            required={true}
-                                            errors={errors}
-                                            register={register}
-                                        />
-                                    </Grid>
                                 </>
-                                {/* datos de residencia */}
-                                <>
-                                    <Grid item xs={12}>
-                                        <Title title="DATOS DE RECIDENCIA" />
-                                    </Grid>
-                                    <Grid item xs={12} sm={4}>
-                                        <CustomSelect
-                                            onChange={on_change}
-                                            label="País de residencia"
-                                            name="pais_residencia"
-                                            value={pais_residencia}
-                                            options={paises_options}
-                                            loading={loading}
-                                            required={true}
-                                            errors={errors}
-                                            register={register}
-                                        />
-                                    </Grid>
-                                    {pais_residencia === 'CO' && (
-                                        <>
-                                            <Grid item xs={12} sm={4}>
-                                                <CustomSelect
-                                                    onChange={on_change}
-                                                    label="Departamento *"
-                                                    name="cod_departamento_residencia"
-                                                    value={cod_departamento_residencia}
-                                                    options={dpts_residencia_opt}
-                                                    loading={loading}
-                                                    required={true}
-                                                    errors={errors}
-                                                    register={register}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={4}>
-                                                <CustomSelect
-                                                    onChange={on_change}
-                                                    label="Ciudad *"
-                                                    name="municipio_residencia"
-                                                    value={ciudad_residencia}
-                                                    options={ciudades_residencia_opt}
-                                                    loading={loading}
-                                                    disabled={cod_departamento_residencia === '' ?? true}
-                                                    required={true}
-                                                    errors={errors}
-                                                    register={register}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
-                                                <TextField
+                            </>
+                            {/* Autorización de datos */}
+                            <>
+                                <Grid item xs={12}>
+                                    <Title title="AUTORIZACIÓN DE NOTIFICACIÓN" />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl
+                                        error={errors.acepta_notificacion_email?.type === 'required'}
+                                        component="fieldset"
+                                        variant="standard"
+                                    >
+                                        <FormControlLabel
+                                            label="¿Autoriza notificaciones judiciales por correo electrónico?"
+                                            control={
+                                                <Checkbox
                                                     size="small"
-                                                    label="Direccion"
-                                                    fullWidth
-                                                    error={errors.direccion_residencia?.type === 'required'}
-                                                    helperText={
-                                                        errors.direccion_residencia?.type === 'required'
-                                                            ? 'Este campo es obligatorio'
-                                                            : ''
-                                                    }
-                                                    {...register('direccion_residencia', {
-                                                        required: true,
-                                                    })}
-                                                    value={direccion}
+                                                    disabled
+                                                    checked={data_register.acepta_notificacion_email}
                                                 />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
+                                            }
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl
+                                        component="fieldset"
+                                        variant="standard"
+                                    >
+                                        <FormControlLabel
+                                            label="¿Autoriza notifiaciones informativas a través de mensajes de texto?"
+                                            control={
+                                                <Checkbox
+                                                    disabled
+                                                    size="small"
+                                                    checked={data_register.acepta_notificacion_sms}
+                                                />
+                                            }
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Stack
+                                        justifyContent="flex-end"
+                                        sx={{ m: '10px 0 20px 0' }}
+                                        direction="row"
+                                        spacing={2}
+                                    >
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<RemoveRedEyeIcon />}
+                                            onClick={() => {
+                                                set_datos_historico_autorizacion(data_all);
+                                                handle_open_dialog_autorizacion();
+                                            }}
+                                        >
+                                            Historico Autorizaciones
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<UpdateIcon />}
+                                            onClick={() => {
+                                                set_dialog_notificaciones(true);
+                                                handle_open_dialog_notificaciones();
+                                            }}
+                                        >
+                                            Actualizar Notificaciones
+                                        </Button>
+                                    </Stack>
+                                </Grid>
+                            </>
+                            {/* Datos adicionales */}
+                            <>
+                                {button_datos_adicionales && (
+                                    <>
+                                        <Grid item xs={12}>
+                                            <Title title="DATOS ADICIONALES" />
+                                            <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
+
                                                 <Button
-                                                    variant="contained"
+                                                    fullWidth
+                                                    startIcon={<ExpandMoreIcon />}
                                                     onClick={() => {
-                                                        open_modal(true);
-                                                        set_type_direction('residencia');
+                                                        set_ver_datos_adicionales(true)
+                                                        set_button_datos_adicionales(false)
                                                     }}
                                                 >
-                                                    Generar dirección
+                                                    Ver más
                                                 </Button>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
-                                                <Stack
-                                                    justifyContent="flex-end"
-                                                    sx={{ m: '10px 0 20px 0' }}
-                                                    direction="row"
-                                                    spacing={2}
-                                                >
-                                                    <Button
-                                                        variant="outlined"
-                                                        startIcon={<RemoveRedEyeIcon />}
-                                                        onClick={() => {
-                                                            set_datos_historico_direcciones(persona);
-                                                            handle_open_historico_direcciones();
-                                                        }}
-                                                    >
-                                                        Historico Direcciones
-                                                    </Button>
-                                                </Stack>
-                                            </Grid>
-                                        </>
-                                    )}
-                                </>
-                                {/* datos de notificación */}
-                                <>
-                                    <Grid item xs={12}>
-                                        <Title title="DATOS DE NOTIFICACIÓN" />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Divider />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Typography variant="subtitle1" fontWeight="bold">Dirección de notificación Nacional</Typography>
-                                    </Grid>
+                                            </Stack>
+                                        </Grid>
+                                    </>)}
+                                {ver_datos_adicionales && (
                                     <>
+                                        <Grid item xs={12}>
+                                            <Title title="DATOS ADICIONALES" />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                label="Nombre Comercial"
+                                                type="text"
+                                                fullWidth
+                                                size="small"
+                                                margin="dense"
+                                                required
+                                                autoFocus
+                                                defaultValue={datos_persona?.nombre_comercial}
+                                                {...register('nombre_comercial')}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                label="Telefono fijo"
+                                                type="text"
+                                                fullWidth
+                                                size="small"
+                                                margin="dense"
+                                                autoFocus
+                                                defaultValue={datos_persona?.telefono_celular_empresa}
+                                                {...register('telefono_celular_empresa')}
+
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                disabled={is_exists}
+                                                fullWidth
+                                                size="small"
+                                                label="E-mail laboral"
+                                                error={errors.email_empresarial?.type === 'required'}
+                                                type="email"
+                                                defaultValue={datos_persona.email_empresarial}
+                                                {...register('email_empresarial')}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                disabled={is_exists}
+                                                fullWidth
+                                                type="number"
+                                                id="phone-laboral"
+                                                size="small"
+                                                label="Telefono laboral"
+                                                onCopy={(e: any) => e.preventDefault()}
+                                                defaultValue={datos_persona.telefono_empresa_2}
+                                                {...register('telefono_empresa_2')}
+                                            />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Divider />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Typography variant="subtitle1" fontWeight="bold">Dirección laboral nacional</Typography>
+                                        </Grid>
                                         <Grid item xs={12} sm={6} md={4}>
                                             <CustomSelect
                                                 onChange={on_change}
-                                                label="País de notificación"
-                                                name="pais_notificacion"
+                                                label="País laboral"
+                                                name="pais_laboral"
                                                 value={'CO'}
                                                 options={paises_options}
                                                 loading={loading}
@@ -908,8 +1198,8 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                             <CustomSelect
                                                 onChange={on_change}
                                                 label="Departamento *"
-                                                name="cod_departamento_notificacion"
-                                                value={dpto_notifiacion}
+                                                name="cod_departamento_laboral"
+                                                value={departamento_laboral}
                                                 options={dpto_notifiacion_opt}
                                                 loading={loading}
                                                 required={true}
@@ -921,11 +1211,11 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                             <CustomSelect
                                                 onChange={on_change}
                                                 label="Ciudad"
-                                                name="cod_municipio_notificacion_nal"
-                                                value={ciudad_notificacion}
+                                                name="cod_municipio_laboral_nal"
+                                                value={ciudad_labral}
                                                 options={ciudad_notificacion_opt}
                                                 loading={loading}
-                                                disabled={dpto_notifiacion === '' ?? true}
+                                                disabled={departamento_laboral === '' ?? true}
                                                 required={true}
                                                 errors={errors}
                                                 register={register}
@@ -934,18 +1224,11 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                         <Grid item xs={12} sm={6} md={4}>
                                             <TextField
                                                 size="small"
-                                                label="Direccion"
+                                                label="Direccion-laboral"
                                                 fullWidth
-                                                error={errors.direccion_notificaciones?.type === 'required'}
-                                                helperText={
-                                                    errors.direccion_notificaciones?.type === 'required'
-                                                        ? 'Este campo es obligatorio'
-                                                        : ''
-                                                }
-                                                {...register('direccion_notificaciones', {
-                                                    required: true,
-                                                })}
-                                                value={direccion_notificacion}
+                                                error={errors.direccion_laboral?.type === 'required'}
+                                                {...register('direccion_laboral')}
+                                                value={direccion_laboral}
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6} md={4}>
@@ -953,7 +1236,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                 variant="contained"
                                                 onClick={() => {
                                                     open_modal(true);
-                                                    set_type_direction('notificacion');
+                                                    set_type_direction('laboralDATOS DE RECIDENCIA');
                                                 }}
                                             >
                                                 Generar dirección
@@ -965,473 +1248,189 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
                                                 fullWidth
                                                 size="small"
                                                 label="Complemento dirección"
-                                                value={data_register.direccion_notificacion_referencia}
-                                                {...register('direccion_notificacion_referencia')}
-                                                onChange={handle_change}
+                                                defaultValue={datos_persona.direccion_residencia_ref}
+                                                {...register('direccion_residencia_ref')}
                                             />
                                         </Grid>
-                                        <Grid item xs={12} sm={6} md={4}>
-                                            <TextField
-                                                disabled={is_exists}
+                                        <Grid item xs={12}>
+                                            <Button
                                                 fullWidth
-                                                size="small"
-                                                id="email"
-                                                label="E-mail notificación"
-                                                error={errors.email?.type === 'required'}
-                                                type="email"
-                                                defaultValue={datos_persona.email}
-                                                helperText={
-                                                    errors.email?.type === 'required'
-                                                        ? 'Este campo es obligatorio'
-                                                        : ''
-                                                }
-                                                {...register('email', {
-                                                    required: true,
-                                                })}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6} md={4}>
-                                            <TextField
-                                                disabled={is_exists}
-                                                fullWidth
-                                                type="number"
-                                                size="small"
-                                                label="Celular"
-                                                onCopy={(e: any) => e.preventDefault()}
-                                                defaultValue={data_register.telefono_celular}
-                                                error={errors.telefono_celular?.type === 'required'}
-                                                helperText={
-                                                    errors.telefono_celular?.type === 'required'
-                                                        ? 'Este campo es obligatorio'
-                                                        : ''}
-                                                {...register('telefono_celular')}
-                                            />
-                                        </Grid>
-                                        <Grid item xs={12} sm={6} md={4}>
-                                            <Stack
-                                                justifyContent="flex-end"
-                                                sx={{ m: '10px 0 20px 0' }}
-                                                direction="row"
-                                                spacing={2}
+                                                startIcon={<ExpandLessIcon />}
+                                                onClick={() => {
+                                                    set_ver_datos_adicionales(false)
+                                                    set_button_datos_adicionales(true)
+                                                }}
                                             >
-                                                <Button
-                                                    variant="outlined"
-                                                    startIcon={<RemoveRedEyeIcon />}
-                                                    onClick={() => {
-                                                        set_datos_historico_email(persona);
-                                                        handle_open_historico_email();
-                                                    }}
-                                                >
-                                                    Historico E-mail
-                                                </Button>
-                                            </Stack>
+                                                ver menos
+                                            </Button>
                                         </Grid>
                                     </>
-                                </>
-                                {/* Autorización de datos */}
-                                <>
-                                    <Grid item xs={12}>
-                                        <Title title="AUTORIZACIÓN DE NOTIFICACIÓN" />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <FormControl
-                                            error={errors.acepta_notificacion_email?.type === 'required'}
-                                            component="fieldset"
-                                            variant="standard"
-                                        >
-                                            <FormControlLabel
-                                                label="¿Autoriza notificaciones judiciales por correo electrónico?"
-                                                control={
-                                                    <Checkbox
-                                                        size="small"
-                                                        disabled
-                                                        checked={data_register.acepta_notificacion_email}
-                                                    />
-                                                }
-                                            />
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <FormControl
-                                            component="fieldset"
-                                            variant="standard"
-                                        >
-                                            <FormControlLabel
-                                                label="¿Autoriza notifiaciones informativas a través de mensajes de texto?"
-                                                control={
-                                                    <Checkbox
-                                                        disabled
-                                                        size="small"
-                                                        checked={data_register.acepta_notificacion_sms}
-                                                    />
-                                                }
-                                            />
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Stack
-                                            justifyContent="flex-end"
-                                            sx={{ m: '10px 0 20px 0' }}
-                                            direction="row"
-                                            spacing={2}
-                                        >
-                                            <Button
-                                                variant="outlined"
-                                                startIcon={<RemoveRedEyeIcon />}
-                                                onClick={() => {
-                                                    set_datos_historico_autorizacion(persona);
-                                                    handle_open_dialog_autorizacion();
-                                                }}
-                                            >
-                                                Historico Autorizaciones
-                                            </Button>
-                                            <Button
-                                                variant="contained"
-                                                startIcon={<UpdateIcon />}
-                                                onClick={() => {
-                                                    set_dialog_notificaciones(true);
-                                                    handle_open_dialog_notificaciones();
-                                                }}
-                                            >
-                                                Actualizar Notificaciones
-                                            </Button>
-                                        </Stack>
-                                    </Grid>
-                                </>
-                                {/* Datos adicionales */}
-                                <>
-                                    {button_datos_adicionales && (
+                                )}
+                            </>
+                            {/* Datos de clasificación cormacarena */}
+                            <>
+                                <Grid item xs={12}>
+                                    <Title title="DATOS DE CLASIFICACIÓN CORMACARENA" />
+                                </Grid>
+                                < Grid item xs={12}>
+                                    {(clase_tercero.length > 0) && (
                                         <>
                                             <Grid item xs={12}>
-                                                <Title title="DATOS ADICIONALES" />
-                                                <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
-
-                                                    <Button
-                                                        fullWidth
-                                                        startIcon={<ExpandMoreIcon />}
-                                                        onClick={() => {
-                                                            set_ver_datos_adicionales(true)
-                                                            set_button_datos_adicionales(false)
-                                                        }}
-                                                    >
-                                                        Ver más
-                                                    </Button>
-                                                </Stack>
-                                            </Grid>
-                                        </>)}
-                                    {ver_datos_adicionales && (
-                                        <>
-                                            <Grid item xs={12}>
-                                                <Title title="DATOS ADICIONALES" />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    label="Nombre Comercial"
-                                                    type="text"
+                                                <Autocomplete
+                                                    multiple
                                                     fullWidth
-                                                    size="small"
-                                                    margin="dense"
-                                                    required
-                                                    autoFocus
-                                                    defaultValue={datos_persona?.nombre_comercial}
-                                                    {...register('nombre_comercial')}
+                                                    size="medium"
+                                                    options={clase_tercero}
+                                                    getOptionLabel={(option) => option.label}
+                                                    isOptionEqualToValue={(option, value) => option.value === value?.value}
+                                                    value={clase_tercero_persona}
+                                                    renderInput={(params) => (
+                                                        <TextField
+                                                            key={params.id}
+                                                            {...params}
+                                                            label="Datos clasificación Cormacarena"
+                                                            placeholder="Clasificacion Cormacarena"
+                                                            helperText={
+                                                                clase_tercero_persona.length === 0 ? 'Este campo es obligatorio' : ''
+                                                            }
+                                                            value={clase_tercero_persona}
+                                                        />
+                                                    )}
+                                                    {...register('datos_clasificacion_persona')}
+                                                    onChange={handle_change_autocomplete}
                                                 />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    label="Telefono fijo"
-                                                    type="text"
-                                                    fullWidth
-                                                    size="small"
-                                                    margin="dense"
-                                                    autoFocus
-                                                    defaultValue={datos_persona?.telefono_celular_empresa}
-                                                    {...register('telefono_celular_empresa')}
-
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    disabled={is_exists}
-                                                    fullWidth
-                                                    size="small"
-                                                    label="E-mail laboral"
-                                                    error={errors.email_empresarial?.type === 'required'}
-                                                    type="email"
-                                                    defaultValue={datos_persona.email_empresarial}
-                                                    {...register('email_empresarial')}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6}>
-                                                <TextField
-                                                    disabled={is_exists}
-                                                    fullWidth
-                                                    type="number"
-                                                    id="phone-laboral"
-                                                    size="small"
-                                                    label="Telefono laboral"
-                                                    onCopy={(e: any) => e.preventDefault()}
-                                                    defaultValue={datos_persona.telefono_empresa_2}
-                                                    {...register('telefono_empresa_2')}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <Divider />
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <Typography variant="subtitle1" fontWeight="bold">Dirección laboral nacional</Typography>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
-                                                <CustomSelect
-                                                    onChange={on_change}
-                                                    label="País laboral"
-                                                    name="pais_laboral"
-                                                    value={'CO'}
-                                                    options={paises_options}
-                                                    loading={loading}
-                                                    disabled={false}
-                                                    required={true}
-                                                    errors={errors}
-                                                    register={register}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
-                                                <CustomSelect
-                                                    onChange={on_change}
-                                                    label="Departamento *"
-                                                    name="cod_departamento_laboral"
-                                                    value={departamento_laboral}
-                                                    options={dpto_notifiacion_opt}
-                                                    loading={loading}
-                                                    required={true}
-                                                    errors={errors}
-                                                    register={register}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
-                                                <CustomSelect
-                                                    onChange={on_change}
-                                                    label="Ciudad"
-                                                    name="cod_municipio_laboral_nal"
-                                                    value={ciudad_labral}
-                                                    options={ciudad_notificacion_opt}
-                                                    loading={loading}
-                                                    disabled={departamento_laboral === '' ?? true}
-                                                    required={true}
-                                                    errors={errors}
-                                                    register={register}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
-                                                <TextField
-                                                    size="small"
-                                                    label="Direccion-laboral"
-                                                    fullWidth
-                                                    error={errors.direccion_laboral?.type === 'required'}
-                                                    {...register('direccion_laboral')}
-                                                    value={direccion_laboral}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
-                                                <Button
-                                                    variant="contained"
-                                                    onClick={() => {
-                                                        open_modal(true);
-                                                        set_type_direction('laboralDATOS DE RECIDENCIA');
-                                                    }}
-                                                >
-                                                    Generar dirección
-                                                </Button>
-                                            </Grid>
-                                            <Grid item xs={12} sm={6} md={4}>
-                                                <TextField
-                                                    disabled={is_exists}
-                                                    fullWidth
-                                                    size="small"
-                                                    label="Complemento dirección"
-                                                    defaultValue={datos_persona.direccion_residencia_ref}
-                                                    {...register('direccion_residencia_ref')}
-                                                />
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <Button
-                                                    fullWidth
-                                                    startIcon={<ExpandLessIcon />}
-                                                    onClick={() => {
-                                                        set_ver_datos_adicionales(false)
-                                                        set_button_datos_adicionales(true)
-                                                    }}
-                                                >
-                                                    ver menos
-                                                </Button>
                                             </Grid>
                                         </>
                                     )}
-                                </>
-                                {/* Datos de clasificación cormacarena */}
-                                <>
-                                    <Grid item xs={12}>
-                                        <Title title="DATOS DE CLASIFICACIÓN CORMACARENA" />
-                                    </Grid>
-                                    < Grid item xs={12}>
-                                        {(clase_tercero.length > 0) && (
-                                            <>
-                                                <Grid item xs={12}>
-                                                    <Autocomplete
-                                                        multiple
-                                                        fullWidth
-                                                        size="medium"
-                                                        options={clase_tercero}
-                                                        getOptionLabel={(option) => option.label}
-                                                        isOptionEqualToValue={(option, value) => option.value === value?.value}
-                                                        value={clase_tercero_persona}
-                                                        renderInput={(params) => (
-                                                            <TextField
-                                                                key={params.id}
-                                                                {...params}
-                                                                label="Datos clasificación Cormacarena"
-                                                                placeholder="Clasificacion Cormacarena"
-                                                                helperText={
-                                                                    clase_tercero_persona.length === 0 ? 'Este campo es obligatorio' : ''
-                                                                }
-                                                                value={clase_tercero_persona}
-                                                            />
-                                                        )}
-                                                        {...register('datos_clasificacion_persona')}
-                                                        onChange={handle_change_autocomplete}
-                                                    />
-                                                </Grid>
-                                            </>
-                                        )}
-                                    </Grid>
-                                </>
-                                {/* Datos de vinculación a cormacarena */}
-                                <>
-                                    <Grid item xs={12}>
-                                        <Title title="DATOS DE VINCULACIÓN ACTUAL A CORMACARENA" />
-                                    </Grid>
-                                    <Grid item xs={12} sm={3}>
-                                        <TextField
-                                            label="Cargo Actual"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            autoFocus
-                                            disabled
-                                            value={datos_vinculacion?.cargo_actual}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={3}>
-                                        <TextField
-                                            label="Fecha de inicio"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            autoFocus
-                                            disabled
-                                            value={datos_vinculacion?.fecha_inicio_cargo_actual}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={3}>
-                                        <TextField
-                                            label="Fecha a finalizar"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            disabled
-                                            autoFocus
-                                            value={datos_vinculacion?.fecha_a_finalizar_cargo_actual}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={3}>
-                                        <TextField
-                                            label="Observaciones de la vinculación"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            autoFocus
-                                            disabled
-                                            multiline
-                                            value={datos_vinculacion?.observaciones_vinculacion_cargo_actual}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <Divider />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} md={4}>
-                                        <TextField
-                                            label="Cargo del organigrama actual"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            autoFocus
-                                            disabled
-                                            multiline
-                                            value={datos_vinculacion?.unidad_organizacional_actual}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} md={4}>
-                                        <TextField
-                                            label="Es unidad del organigrama actual"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            autoFocus
-                                            disabled
-                                            multiline
-                                            value={datos_vinculacion?.es_unidad_organizacional_actual}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={6} md={4}>
-                                        <TextField
-                                            label="Fecha de asignación"
-                                            type="text"
-                                            fullWidth
-                                            size="small"
-                                            margin="dense"
-                                            autoFocus
-                                            disabled
-                                            multiline
-                                            value={datos_vinculacion?.fecha_asignacion_unidad}
-                                        />
-                                    </Grid>
-                                </>
-                                <Grid item xs={12} >
-                                    <Stack justifyContent="flex-end" sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
-                                        <Button
-                                            variant="outlined"
-                                            startIcon={<CancelIcon />}
-                                            onClick={() => {
-                                                cancelar();
-                                            }}>Cancelar
-                                        </Button>
-                                        <Button
-                                            id="actualiza-natural"
-                                            variant="contained"
-                                            color="primary"
-                                            type="submit"
-                                            startIcon={
-                                                loading_natural
-                                                    ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                                    : ""
-                                            }
-                                            aria-label="Actualizar"
-                                            disabled={loading_natural}
-                                            size="large"
-                                        >
-                                            Actualizar</Button>
-                                    </Stack>
                                 </Grid>
+                            </>
+                            {/* Datos de vinculación a cormacarena */}
+                            <>
+                                <Grid item xs={12}>
+                                    <Title title="DATOS DE VINCULACIÓN ACTUAL A CORMACARENA" />
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <TextField
+                                        label="Cargo Actual"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        autoFocus
+                                        disabled
+                                        value={datos_vinculacion?.cargo_actual}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <TextField
+                                        label="Fecha de inicio"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        autoFocus
+                                        disabled
+                                        value={datos_vinculacion?.fecha_inicio_cargo_actual}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <TextField
+                                        label="Fecha a finalizar"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        disabled
+                                        autoFocus
+                                        value={datos_vinculacion?.fecha_a_finalizar_cargo_actual}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={3}>
+                                    <TextField
+                                        label="Observaciones de la vinculación"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        autoFocus
+                                        disabled
+                                        multiline
+                                        value={datos_vinculacion?.observaciones_vinculacion_cargo_actual}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Divider />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <TextField
+                                        label="Cargo del organigrama actual"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        autoFocus
+                                        disabled
+                                        multiline
+                                        value={datos_vinculacion?.unidad_organizacional_actual}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <TextField
+                                        label="Es unidad del organigrama actual"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        autoFocus
+                                        disabled
+                                        multiline
+                                        value={datos_vinculacion?.es_unidad_organizacional_actual}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <TextField
+                                        label="Fecha de asignación"
+                                        type="text"
+                                        fullWidth
+                                        size="small"
+                                        margin="dense"
+                                        autoFocus
+                                        disabled
+                                        multiline
+                                        value={datos_vinculacion?.fecha_asignacion_unidad}
+                                    />
+                                </Grid>
+                            </>
+                            <Grid item xs={12} >
+                                <Stack justifyContent="flex-end" sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<CancelIcon />}
+                                        onClick={() => {
+                                            console.log("Cancelar")
+                                        }}
+                                        >Cancelar
+                                    </Button>
+                                    <Button
+                                        id="actualiza-natural"
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        startIcon={
+                                            loading_natural
+                                                ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                                                : ""
+                                        }
+                                        aria-label="Actualizar"
+                                        disabled={loading_natural}
+                                        size="large"
+                                    >
+                                        Actualizar</Button>
+                                </Stack>
                             </Grid>
-                        )}
-                    </>
-                )}
+                        </Grid>
+                    )}
+                </>
             </form>
             <Grid container>
                 <Grid item xs={12} spacing={2}>
@@ -1462,7 +1461,7 @@ export const AdministracionPersonasScreenNatural: React.FC<Props> = ({
             <DialogAutorizaDatos
                 is_modal_active={dialog_notificaciones}
                 set_is_modal_active={set_dialog_notificaciones}
-                id_persona={persona?.id_persona}
+                id_persona={data_all?.id_persona}
                 data_autorizacion={{ acepta_autorizacion_email: data_register.acepta_notificacion_email, acepta_autorizacion_sms: data_register.acepta_notificacion_sms }}
                 on_result={respuesta_autorizacion}
             />
