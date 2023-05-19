@@ -562,7 +562,8 @@ export const EditarOrganigrama = ({
             </Button>
           )}
           {organigram_current.fecha_terminado !== null &&
-            organigram_current.id_persona_cargo === null && (
+            organigram_current.id_persona_cargo === null &&
+            !organigram_current.usado && (
               <Button
                 color="success"
                 variant="contained"

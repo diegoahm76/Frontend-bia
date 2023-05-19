@@ -210,40 +210,46 @@ export function ListOrganigramas({
               </IconButton>
             </Tooltip>
           )}
-          <Tooltip title="Delegación">
-            <IconButton
-              onClick={() => {
-                console.log(params.row);
-                // Permitir delegar organigrama si es superusuario o si es el usuario delegado para ese organigrama
-                if (
-                  params.row.id_persona_cargo === userinfo.id_persona ||
-                  userinfo.is_superuser
-                ) {
-                  dispatch(current_organigram(params.row));
-                  set_delegar_organigrama_is_active(true);
-                } else {
-                  control_error(
-                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    `Este organigrama actualmente sólo podrá ser editado por ${params.row.nombre_completo}`
-                  );
-                }
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
+          {params.row.fecha_terminado === null && (
+            <Tooltip title="Delegación">
+              <IconButton
+                onClick={() => {
+                  console.log(params.row);
+                  // Permitir delegar organigrama si es superusuario o si es el usuario delegado para ese organigrama
+                  if (
+                    params.row.id_persona_cargo === userinfo.id_persona ||
+                    userinfo.is_superuser
+                  ) {
+                    dispatch(current_organigram(params.row));
+                    set_delegar_organigrama_is_active(true);
+                  } else {
+                    control_error(
+                      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                      `Este organigrama actualmente sólo podrá ser editado por ${params.row.nombre_completo}`
+                    );
+                  }
                 }}
-                variant="rounded"
               >
-                <ManageAccountsOutlinedIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
-          </Tooltip>
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <ManageAccountsOutlinedIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          )}
         </>
       ),
     },

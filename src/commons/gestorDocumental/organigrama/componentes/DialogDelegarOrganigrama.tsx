@@ -26,14 +26,15 @@ import SaveIcon from '@mui/icons-material/Save';
 import { CustomSelect } from '../../../../components';
 import DialogBusquedaAvanzadaUserOrganigrama from './DialogBusquedaAvanzadaUserOrganigrama';
 import { useAppSelector } from '../../../../hooks';
-import { get_tipo_documento, get_user_by_id } from '../../../../request';
+import { get_tipo_documento } from '../../../../request';
 import { control_error } from '../../../../helpers';
-import { type Users } from '../../../seguridad/interfaces';
 import { type IList } from '../../../../interfaces/globalModels';
 import { type UserDelegacionOrganigrama } from '../interfaces/organigrama';
+
 import {
   delegar_organigrama_persona,
   get_nuevo_user_organigrama,
+  get_organigrams_service,
 } from '../store/thunks/organigramThunks';
 
 interface IProps {
@@ -55,18 +56,14 @@ const DialogDelegarOrganigrama = ({
   set_is_modal_active,
 }: IProps) => {
   const dispatch = useDispatch();
+  const { organigram_current } = useAppSelector((state) => state.organigram);
   const [
     modal_busqueda_avanzada_user_organigram,
     set_modal_busqueda_avanzada_user_organigram,
   ] = useState<boolean>(false);
-  const { userinfo } = useAppSelector((state) => state.auth);
   const [tipo_documento, set_tipo_documento] = useState('');
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
-  const { organigram_current } = useAppSelector((state) => state.organigram);
   const [loading, set_loading] = useState<boolean>(false);
-  const [data_user_actual, set_data_user_actual] = useState<
-    Users | undefined
-  >();
   const [data_user_por_asignar, set_data_user_por_asignar] =
     useState<UserDelegacionOrganigrama>();
   const {
@@ -105,15 +102,19 @@ const DialogDelegarOrganigrama = ({
         )
       );
       handle_close_delegar_organigrama();
+      void dispatch(get_organigrams_service());
+      reset_search_for_delegation();
     } else {
       control_error('Selecciona usuario para delegación de organigrama');
     }
   };
 
   const handle_search_result = (data: UserDelegacionOrganigrama): void => {
+    set_loading(true);
     reset_search_for_delegation();
     set_data_user_por_asignar(data);
     set_tipo_documento(data.tipo_documento);
+    set_loading(false);
   };
 
   // Establece los valores del formulario
@@ -147,9 +148,6 @@ const DialogDelegarOrganigrama = ({
         data: { data: res_tipo_documento },
       } = await get_tipo_documento();
       set_tipo_documento_opt(res_tipo_documento ?? []);
-
-      const { data } = await get_user_by_id(userinfo.id_usuario);
-      set_data_user_actual(data.data);
     } catch (err) {
       control_error(err);
     } finally {
@@ -231,7 +229,7 @@ const DialogDelegarOrganigrama = ({
                     onChange={on_change}
                     label="Tipo de documento *"
                     name="tipo_documento"
-                    value={data_user_actual?.tipo_documento}
+                    value={organigram_current.tipo_documento?.toString() ?? ''}
                     options={tipo_documento_opt}
                     loading={loading}
                     disabled={true}
@@ -248,7 +246,7 @@ const DialogDelegarOrganigrama = ({
                       fullWidth
                       autoFocus
                       label="Número de documento"
-                      value={data_user_actual?.numero_documento}
+                      value={organigram_current.numero_documento}
                       size="small"
                       disabled={true}
                     />
@@ -263,7 +261,7 @@ const DialogDelegarOrganigrama = ({
                       fullWidth
                       label="Nombre de usuario"
                       size="small"
-                      value={data_user_actual?.nombre_de_usuario}
+                      value={organigram_current?.nombre_completo}
                       disabled={true}
                     />
                   )}
