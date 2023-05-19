@@ -26,7 +26,7 @@ import { CustomSelect, Title } from '../../../components';
 import { consultar_datos_persona } from '../../seguridad/request/Request';
 
 interface PropsBuscador {
-    onResult: (data_representante: InfoPersona, data_representante_detalle: DataPersonas) => void;
+    onResult: (data_representante_detalle: DataPersonas) => void;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
@@ -150,7 +150,7 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
     const get_datos_representante_legal = async (data: InfoPersona): Promise<void> => {
         try {
             const response = await consultar_datos_persona(data.id_persona);
-            onResult(data, response);
+            onResult(response);
             handle_close()
         } catch (err) {
             control_error(err);

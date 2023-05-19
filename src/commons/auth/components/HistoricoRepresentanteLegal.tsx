@@ -14,7 +14,6 @@ import {
 import { Title } from '../../../components/Title';
 import type {
     HistoricoRepresentanteLegal,
-    InfoPersona,
 } from '../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../helpers';
@@ -24,7 +23,7 @@ import { consultar_historico_representante } from '../../seguridad/request/Reque
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    historico_representante: InfoPersona;
+    id_persona: number | null;
 }
 
 const columns: GridColDef[] = [
@@ -76,7 +75,7 @@ const columns: GridColDef[] = [
 export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
     is_modal_active,
     set_is_modal_active,
-    historico_representante,
+    id_persona,
 }: IProps) => {
     const [rows, set_rows] = useState<HistoricoRepresentanteLegal[]>([]);
 
@@ -87,7 +86,7 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
     const historico = async (): Promise<void> => {
         try {
             const response = await consultar_historico_representante(
-                historico_representante.id_persona
+                id_persona=0
             );
             const new_historico = response.map(
                 (datos: HistoricoRepresentanteLegal) => ({

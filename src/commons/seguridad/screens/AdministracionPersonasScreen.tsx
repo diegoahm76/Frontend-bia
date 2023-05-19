@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import type { InfoPersona } from '../../../interfaces/globalModels';
-import { Alert, Divider, Grid, LinearProgress, Typography } from '@mui/material';
+import { Divider, Grid, Typography } from '@mui/material';
 import { Title } from '../../../components/Title';
 import 'react-datepicker/dist/react-datepicker.css';
 import { AdministracionPersonasScreenNatural } from '../../auth/components/AdministradorPersonaNatural';
@@ -38,17 +38,6 @@ export const AdministracionPersonasScreen: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    set_is_update(false)
-    if (persona !== undefined) {
-      set_is_update(true)
-    }
-  }, [persona]);
-
-  useEffect(() => {
-    // Este efecto se ejecutará cada vez que se actualice is_update o is_register
-  }, [is_update, is_register]);
-
   return (
     <>
       <Grid
@@ -67,7 +56,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
           <BuscadorPersona onResult={on_result} />
           {is_update && (
             <>
-              {persona?.tipo_persona === 'N' ? (
+              {persona?.tipo_persona === 'N' && (
                 <AdministracionPersonasScreenNatural
                   numero_documento={persona.numero_documento}
                   id_persona={persona.id_persona}
@@ -81,19 +70,22 @@ export const AdministracionPersonasScreen: React.FC = () => {
                   getValues={get_values}
                   watch={watch}
                 />
-              ) : (
-                <Grid item xs={12}>
-                  <Grid container justifyContent="center" textAlign="center">
-                    <Alert icon={false} severity="info">
-                      <LinearProgress />
-                      <Typography>Cargando Información...</Typography>
-                    </Alert>
-                  </Grid>
-                </Grid>
               )}
               {persona?.tipo_persona === 'J' && (
                 <>
-                  <AdministracionPersonasScreenJuridica data_all={persona} />
+                  <AdministracionPersonasScreenJuridica
+                    numero_documento={persona.numero_documento}
+                    id_persona={persona.id_persona}
+                    tipo_persona={persona.tipo_persona}
+                    tipo_documento={persona.tipo_documento}
+                    errors={errors}
+                    handleSubmit={handle_submit}
+                    isValid={is_valid}
+                    register={register}
+                    setValue={set_value}
+                    getValues={get_values}
+                    watch={watch}
+                  />
                 </>
               )}
             </>

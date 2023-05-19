@@ -81,7 +81,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
     const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
     const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
     const [clase_tercero_persona, set_clase_tercero_persona] = useState<ClaseTercero[]>([]);
-    const [is_data, set_is_data] = useState(false);
+    // const [is_data, set_is_data] = useState(false);
     // watchers
     const misma_direccion = watch('misma_direccion') ?? false;
     const acepta_notificacion_email = watch('acepta_notificacion_email') ?? false;
@@ -103,7 +103,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
         set_fecha_nacimiento(value);
     };
     const get_datos_persona = async (): Promise<void> => {
-        set_is_data(false)
+        // set_is_data(false)
         try {
             const response = await consultar_datos_persona(id_persona);
             // datos basicos
@@ -140,7 +140,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
             // autorización de notificaciones
             set_value('acepta_notificacion_sms', response.acepta_notificacion_sms)
             set_value('acepta_notificacion_email', response.acepta_notificacion_email)
-            set_is_data(true)
+            // set_is_data(true)
         } catch (err) {
             control_error(err);
         }
@@ -229,7 +229,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
     ];
     return (
         <>
-            {is_data ? (
+            {datos_persona !== null ? (
                 <>
                     <form
                     // onSubmit={(e) => {
