@@ -1,4 +1,8 @@
-export interface ModalProps{
+export interface ModalProps {
+  data: {
     show: boolean;
-    onClose: any;
+    id: number;
+  };
+  arrayToRender: any[];
+  set_modal: React.Dispatch<React.SetStateAction<any>>;
 }

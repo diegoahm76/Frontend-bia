@@ -50,7 +50,7 @@ export const TablaGeneral = ({
 
   const [modal_data, set_modal] = useState({
     show: false,
-    id: '',
+    id: 0,
   });
 
   const { desktop_open } = useSelector(
@@ -415,7 +415,7 @@ export const TablaGeneral = ({
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
   const ActionTemplate: React.FC<ActionTemplateProps> = ({ rowData }) => {
-    console.log(rowData);
+    /* console.log(rowData); */
     return (
       <div>
         <Button
