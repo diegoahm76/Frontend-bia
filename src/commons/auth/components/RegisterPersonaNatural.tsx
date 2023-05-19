@@ -7,7 +7,6 @@ import {
   FormControlLabel,
   Checkbox,
   FormHelperText,
-  // Alert,
   Typography,
   Button,
   OutlinedInput,
@@ -30,24 +29,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Visibility from '@mui/icons-material/Visibility';
 import type { PropsRegister } from '../../../interfaces/globalModels';
 import { use_register_persona_n } from '../hooks/registerPersonaNaturalHook';
-import type {
-  FieldErrors,
-  FieldValues,
-  UseFormGetValues,
-  UseFormRegister,
-  UseFormSetValue,
-  UseFormWatch,
-} from 'react-hook-form';
-
-interface PropsElement {
-  errors: FieldErrors<FieldValues>;
-  watch: UseFormWatch<FieldValues>;
-  setValue: UseFormSetValue<FieldValues>;
-  getValues: UseFormGetValues<FieldValues>;
-  register: UseFormRegister<FieldValues>;
-  handleBack?: () => void;
-  typeDirection?: (type: string) => void;
-}
+import type { PropsElement } from '../interfaces';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DatosBasicos: (props: PropsElement) => JSX.Element = ({
@@ -58,7 +40,6 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
   register,
 }: PropsElement) => {
   const {
-    is_saving,
     loading,
     paises_options,
     departamentos_opt,
@@ -255,8 +236,6 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
               variant="contained"
               fullWidth
               color="primary"
-              loading={is_saving}
-              disabled={is_saving}
             >
               Continuar
             </LoadingButton>
@@ -278,7 +257,6 @@ const DatosResidencia: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    is_saving,
     loading,
     paises_options,
     dpts_residencia_opt,
@@ -401,8 +379,6 @@ const DatosResidencia: (props: PropsElement) => JSX.Element = ({
               variant="contained"
               fullWidth
               color="primary"
-              loading={is_saving}
-              disabled={is_saving}
             >
               Continuar
             </LoadingButton>
@@ -424,7 +400,6 @@ const DatosNotifiacion: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    is_saving,
     loading,
     paises_options,
     dpto_notifiacion_opt,
@@ -630,8 +605,6 @@ const DatosNotifiacion: (props: PropsElement) => JSX.Element = ({
               variant="contained"
               fullWidth
               color="primary"
-              loading={is_saving}
-              disabled={is_saving}
             >
               Continuar
             </LoadingButton>
@@ -653,7 +626,6 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    is_saving,
     loading,
     paises_options,
     departamento_laboral,
@@ -789,8 +761,6 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
               variant="contained"
               fullWidth
               color="primary"
-              loading={is_saving}
-              disabled={is_saving}
             >
               Continuar
             </LoadingButton>
@@ -805,17 +775,9 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
 const AutorizaNotifiacion: (props: PropsElement) => JSX.Element = ({
   errors,
   watch,
-  setValue: set_value,
-  getValues,
   register,
   handleBack,
 }: PropsElement) => {
-  const { is_saving } = use_register_persona_n({
-    watch,
-    setValue: set_value,
-    getValues,
-  });
-
   // watchers
   const acepta_notificacion_email = watch('acepta_notificacion_email') ?? false;
   const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
@@ -900,8 +862,6 @@ const AutorizaNotifiacion: (props: PropsElement) => JSX.Element = ({
               variant="contained"
               fullWidth
               color="primary"
-              loading={is_saving}
-              disabled={is_saving}
             >
               Continuar
             </LoadingButton>
@@ -920,9 +880,9 @@ const DatosAcceso: (props: PropsElement) => JSX.Element = ({
   getValues,
   register,
   handleBack,
+  isSaving: is_saving,
 }: PropsElement) => {
   const {
-    is_saving,
     show_password,
     error_password,
     message_error_password,
