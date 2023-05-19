@@ -24,7 +24,7 @@ import {
 import { api } from '../../../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+const control_error = (message: ToastContent) =>
   toast.error(message, {
     position: 'bottom-right',
     autoClose: 3000,
@@ -69,7 +69,6 @@ export const get_mold_organigrams_service: any = (id: string | number) => {
 // Obtener Organigrama
 export const get_organigrams_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
-    console.log(api);
     try {
       const { data } = await api.get('transversal/organigrama/get/');
       dispatch(get_organigrams(data.Organigramas));
@@ -232,7 +231,6 @@ export const get_nuevo_user_organigrama: any = (tipo_documento:  string, numero_
       const { data } = await api.get(
         `transversal/organigrama/get-nuevo-user-organigrama/${tipo_documento}/${numero_documento}/`
       );
-      console.log('llego');
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -241,17 +239,31 @@ export const get_nuevo_user_organigrama: any = (tipo_documento:  string, numero_
   };
 };
 
-export const get_busqueda_avanzada_user_organigrama: any = (primer_nombre:  string, primer_apellido: string ) => {
-  return async () => {
+export const get_busqueda_avanzada_user_organigrama:any = (primer_nombre:  string, primer_apellido: string) => { 
+  return async() => {
     try {
       const { data } = await api.get(
-        `transversal/organigrama/get-nuevo-user-organigrama-filters/${primer_nombre}/${primer_apellido}/`
+        `transversal/organigrama/get-nuevo-user-organigrama-filters/?primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}`
       );
-      console.log('llego');
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
+  }
+};
+
+export const delegar_organigrama_persona:any = (id_persona: number, organigrama: string) => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.post(`transversal/organigrama/delegate-organigrama-persona/?id_persona=${id_persona}&id_organigrama=${organigrama}`);          
+          control_success("Delegacion de organigrama exitosa");
+          return data;
+      } catch (error: any) {
+          console.log("delegate_organigram_user");
+          control_error(error.response.data.detail);
+         
+          return error as AxiosError;
+      }
   };
 };

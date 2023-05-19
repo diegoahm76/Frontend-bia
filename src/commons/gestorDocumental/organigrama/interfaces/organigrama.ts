@@ -125,3 +125,11 @@ export interface ISon {
     cod_unidad_org_padre: null | string | number;
     hijos: ISon[];
 }
+
+export interface UserDelegacionOrganigrama{
+    id_persona: number;
+    tipo_documento: string;
+    numero_documento: number;    
+    nombre_completo: string;
+    tiene_usuario: boolean
+}
