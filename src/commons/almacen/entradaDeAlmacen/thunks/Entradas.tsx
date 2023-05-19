@@ -91,6 +91,19 @@ export const obtener_bienes: any = () => {
   };
 };
 
+// Obtiene listado de estados
+export const obtener_estados: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/estados-articulo/get-list/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Anular mantenimiento
 export const anular_entradas: any = (id_entrada: number,form_data: anular_entrada) => {
   return async () => {

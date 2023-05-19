@@ -21,6 +21,7 @@ import { get_tipo_documento } from "../../../../request";
 import { useDropzone } from "react-dropzone";
 import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
 import AnularEntradaComponent from "./AnularEntrada";
+import EntradaArticuloFijoComponent from "./EntradaArticuloFijo";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
@@ -52,6 +53,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [valor_total_entrada, set_valor_total_entrada] = useState<string | number>("");
   const [buscar_articulo_is_active, set_buscar_articulo_is_active] = useState<boolean>(false);
   const [anular_entrada_is_active, set_anular_entrada_is_active] = useState<boolean>(false);
+  const [entrada_af_is_active, set_entrada_af_is_active] = useState<boolean>(false);
   const [file, set_file] = useState<any>(null);
 
   useEffect(() => {
@@ -181,7 +183,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_valor_total_item("");
       set_valor_total_entrada("");
     }
-  },[cantidad,valor_unidad])
+  },[cantidad,valor_unidad]);
+
   return (
     <>
       <h1>Entrada de bienes de Almacen</h1>
@@ -561,10 +564,16 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
             <Button
               color='primary'
               variant='contained'
-              onClick={() => { }}
+              onClick={() => { set_entrada_af_is_active(true); }}
             >
               Agregar
             </Button>
+            {entrada_af_is_active && (
+                  <EntradaArticuloFijoComponent
+                    is_modal_active={entrada_af_is_active}
+                    set_is_modal_active={set_entrada_af_is_active}
+                    articulo_entrada={articulo} />
+                )}
           </Stack>
         </Grid>
       </Grid>
