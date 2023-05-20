@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, Typography } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, Typography, FormHelperText } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { type Dayjs } from "dayjs";
@@ -22,39 +22,52 @@ import { useDropzone } from "react-dropzone";
 import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
 import AnularEntradaComponent from "./AnularEntrada";
 import EntradaArticuloFijoComponent from "./EntradaArticuloFijo";
+import { type IInfoEntrada, type crear_entrada } from "../interfaces/entradas";
+import { BuscadorPersonaDialog } from "../../gestionDeInventario/gestionHojaDeVida/mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoGeneral/BuscadorPersonaDialog";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
+  const [entradas, set_entradas] = useState<crear_entrada>();
   const [user_info, set_user_info] = useState<any>({});
-  const [articulo, set_articulo] = useState<any>({});
+  const [info_entrada, set_info_entrada] = useState<IInfoEntrada>({});
+  const [articulo, set_articulo] = useState<any>({codigo_bien: ""});
+  const [msj_error_articulo, set_msj_error_articulo] = useState<any>(null);
   const [codigo_articulo, set_codigo_articulo] = useState<string | number>("");
-  const [numero_entrada, set_numero_entrada] = useState<string>("");
-  const [fecha_entrada, set_fecha_entrada] = useState<Dayjs | null>(dayjs());
+  const [numero_entrada, set_numero_entrada] = useState<number>(0);
+  const [fecha_entrada, set_fecha_entrada] = useState<Dayjs>(dayjs());
+  const [msj_error_fecha_entrada, set_msj_error_fecha_entrada] = useState<string>("");
   const [tipo_entrada, set_tipo_entrada] = useState<string>("");
+  const [msj_error_tipo, set_msj_error_tipo] = useState<string>("");
   const [tipos_entrada, set_tipos_entrada] = useState<any>([]);
-  const [mensaje_error_tipo, set_mensaje_error_tipo] = useState<string>("");
   const [observaciones, set_observaciones] = useState<string | null>("");
-  const [motivo, set_motivo] = useState<string | null>("");
-  const [tipo_documento, set_tipo_documento] = useState<string>("");
+  const [msj_error_observaciones, set_msj_error_observaciones] = useState<string>("");
+  const [motivo, set_motivo] = useState<string>("");
+  const [msj_error_motivo, set_msj_error_motivo] = useState<string>("");
   const [tipos_documentos, set_tipos_documentos] = useState<any>([]);
+  const [proveedor, set_proveedor] = useState<any>({nombre: ""});
+  const [msj_error_proveedor, set_msj_error_proveedor] = useState<string>("");
+  const [tipo_documento, set_tipo_documento] = useState<string>("");
+  const [msj_error_tdoc, set_msj_error_tdoc] = useState<string>("");
   const [numero_documento, set_numero_documento] = useState<string>("");
-  const [mensaje_error_documento, set_mensaje_error_documento] = useState<string>("");
-  const [nombre_proveedor, set_nombre_proveedor] = useState<string>("");
   const [bodegas, set_bodegas] = useState<any>([]);
   const [bodega_ingreso, set_bodega_ingreso] = useState<string>("22");
-  const [mensaje_error_bodega, set_mensaje_error_bodega] = useState<string>("");
+  const [msj_error_bodega, set_msj_error_bodega] = useState<string>("");
   const [bodega_detalle, set_bodega_detalle] = useState<string>("22");
-  const [mensaje_error_bodega_detalle, set_mensaje_error_bodega_detalle] = useState<string>("");
+  const [msj_error_bd, set_msj_error_bd] = useState<string>("");
   const [cantidad, set_cantidad] = useState<string>("");
+  const [msj_error_cantidad, set_msj_error_cantidad] = useState<string>("");
   const [valor_unidad, set_valor_unidad] = useState<string>("");
+  const [msj_error_vu, set_msj_error_vu] = useState<string>("");
   const [valor_iva, set_valor_iva] = useState<number | string>("");
   const [valor_total_item, set_valor_total_item] = useState<string | number>("");
-  const [valor_total_entrada, set_valor_total_entrada] = useState<string | number>("");
+  const [valor_total_entrada, set_valor_total_entrada] = useState<number>(0);
   const [buscar_articulo_is_active, set_buscar_articulo_is_active] = useState<boolean>(false);
   const [anular_entrada_is_active, set_anular_entrada_is_active] = useState<boolean>(false);
   const [entrada_af_is_active, set_entrada_af_is_active] = useState<boolean>(false);
   const [file, set_file] = useState<any>(null);
+  const [abrir_modal_proveedor, set_abrir_modal_proveedor] = useState<boolean>(false);
+
 
   useEffect(() => {
     void get_list_tipo_doc();
@@ -82,7 +95,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const obtener_consecutivo_fc: () => void = () => {
     dispatch(obtener_consecutivo()).then((response: { success: boolean, numero_entrada: number }) => {
       if (response.success)
-        set_numero_entrada(response.numero_entrada.toString());
+        set_numero_entrada(response.numero_entrada);
     })
   }
 
@@ -115,23 +128,28 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const cambio_tipo_entrada: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_entrada(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
-      set_mensaje_error_tipo("");
+      set_msj_error_tipo("");
   }
 
   const cambio_bodega_ingreso: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_bodega_ingreso(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
-      set_mensaje_error_bodega("");
+      set_msj_error_bodega("");
   }
 
   const cambio_bodega_detalle: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_bodega_detalle(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
-      set_mensaje_error_bodega_detalle("");
+      set_msj_error_bd("");
   }
 
   const cambio_fecha_entrada = (date: Dayjs | null): void => {
-    set_fecha_entrada(date);
+    if(date !== null){
+      set_fecha_entrada(date); 
+      set_msj_error_fecha_entrada("");
+    }else{
+      set_msj_error_fecha_entrada("El campo fecha entrada es obligatorio.");
+    }
   };
 
   const cambio_motivo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,16 +173,26 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     set_observaciones(e.target.value);
   };
   const cambio_cantidad: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_cantidad(e.target.value);
+    if(parseInt(e.target.value) > 0){
+      set_cantidad(e.target.value);
+      set_msj_error_cantidad("");
+    }else{
+      set_msj_error_cantidad("El campo Cantidad no puede ser menor a 1.");
+    }
   };
   const cambio_valor_unidad: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_valor_unidad(e.target.value);
+    if(parseInt(e.target.value) >= 0){
+      set_valor_unidad(e.target.value);
+      set_msj_error_vu("");
+    }else{
+      set_msj_error_vu("El campo Valor unidad no puede ser menor a 0.");
+    }
   };
 
   const cambio_tipo_documento: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_tipo_documento(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
-      set_mensaje_error_documento("");
+      set_msj_error_tdoc("");
   }
 
   const calcular_totales = (): void => {
@@ -175,13 +203,59 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_valor_total_item(total_unidad);
       set_valor_total_entrada(total_entrada);
   }
+
+  const validar_entrada = (): void => {
+    if(validar_formulario()){
+          const formulario: IInfoEntrada = {
+            id_entrada_almacen: numero_entrada,
+            fecha_entrada: fecha_entrada.format("YYYY-MM-DD"), 
+            motivo, 
+            observacion: observaciones, 
+            id_proveedor: proveedor.id_persona, 
+            id_tipo_entrada: parseInt(tipo_entrada),  
+            id_bodega: parseInt(bodega_ingreso), 
+            valor_total_entrada
+          };
+          set_info_entrada(formulario);
+          if(articulo.cod_tipo_bien === "A")
+            set_entrada_af_is_active(true);
+          else{
+            // set_entradas({...entradas, info_entrada: info_entradas});
+          }
+    }
+  }
+  
+  const validar_formulario = (): boolean =>{
+    if(tipo_entrada === "")
+      set_msj_error_tipo("El campo Tipo de entrada es obligaotrio.")
+    if(observaciones === "")
+      set_msj_error_observaciones("El campo Observaciones es obligaotrio.")
+    if(motivo === "")
+      set_msj_error_motivo("El campo Motivo es obligaotrio.")
+    if(tipo_documento === "")
+      set_msj_error_tdoc("El campo Tipo de documento es obligaotrio.");
+    if(bodega_ingreso === "")
+      set_msj_error_bodega("El campo Bodega de ingreso es obligaotrio.")
+    if(proveedor === null || proveedor === undefined)
+      set_msj_error_proveedor("El campo Nombre proveedor es obligaotrio.");
+    if(articulo === null || articulo === undefined)
+      set_msj_error_articulo("El campo Nombre articulo es obligaotrio.");
+    if(cantidad === "")
+      set_msj_error_cantidad("El campo Cantidad es obligatorio.");
+    if(valor_unidad === "")
+      set_msj_error_vu("El campo Cantidad es obligatorio.");
+
+    return (msj_error_fecha_entrada === "" && msj_error_tipo === "" && msj_error_observaciones === "" && msj_error_motivo === "" && msj_error_tdoc === "" && msj_error_bodega === ""
+            && msj_error_proveedor === "" && msj_error_bd === "" && msj_error_cantidad === "" && msj_error_vu === "" && msj_error_articulo === "" && msj_error_proveedor === "");
+  }
+
   useEffect(() => {
     if(cantidad !== "" && valor_unidad !== ""){
       calcular_totales();
     }else{
       set_valor_iva("");
       set_valor_total_item("");
-      set_valor_total_entrada("");
+      set_valor_total_entrada(0);
     }
   },[cantidad,valor_unidad]);
 
@@ -222,7 +296,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     value={tipo_entrada}
                     label="Tipo de entrada"
                     onChange={cambio_tipo_entrada}
-                    error={mensaje_error_tipo !== ""}
+                    error={msj_error_tipo !== ""}
                   >
                     {tipos_entrada.map((te: any) => (
                       <MenuItem key={te.cod_tipo_entrada} value={te.cod_tipo_entrada}>
@@ -235,7 +309,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               <Grid item xs={12} sm={4}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    label="Fecha mantenimiento"
+                    label="Fecha entrada"
                     value={fecha_entrada}
                     onChange={(newValue) => { cambio_fecha_entrada(newValue); }}
                     renderInput={(params) => (
@@ -244,11 +318,13 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                         fullWidth
                         size="small"
                         {...params}
+                        error={msj_error_fecha_entrada !== ""}
                       />
                     )}
                     maxDate={dayjs()}
                   />
                 </LocalizationProvider>
+                {(msj_error_fecha_entrada !== "") && (<FormHelperText error >{msj_error_fecha_entrada}</FormHelperText>)}
               </Grid>
             </Grid>
           </Box>
@@ -303,10 +379,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 <FormControl required size='small' fullWidth>
                   <InputLabel>Tipo de documento</InputLabel>
                   <Select
-                    value={tipo_documento}
+                    value={proveedor.tipo_documento ?? ""}
                     label="Tipo de documento"
                     onChange={cambio_tipo_documento}
-                    error={mensaje_error_documento !== ""}
+                    error={msj_error_tdoc !== ""}
                   >
                     {tipos_documentos.map((tipos: any) => (
                       <MenuItem key={tipos.value} value={tipos.value}>
@@ -322,7 +398,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   type={'text'}
                   size="small"
                   fullWidth
-                  value={numero_documento}
+                  value={proveedor.numero_documento ?? ""}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -331,7 +407,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   type={'text'}
                   size="small"
                   fullWidth
-                  value={nombre_proveedor}
+                  value={proveedor.nombre_completo ?? ""}
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -339,10 +415,17 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   color='primary'
                   variant='contained'
                   startIcon={<SearchIcon />}
-                  onClick={() => { }}
+                  onClick={() => { set_abrir_modal_proveedor(true); }}
                 >
                   Buscar proveedor
                 </Button>
+                {abrir_modal_proveedor && (
+                    <BuscadorPersonaDialog
+                        is_modal_active={abrir_modal_proveedor}
+                        set_is_modal_active={set_abrir_modal_proveedor}
+                        title={"Busqueda de proveedor"}
+                        set_persona={set_proveedor} />
+                )}
               </Grid>
             </Grid>
 
@@ -356,7 +439,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     value={bodega_ingreso}
                     label="Bodega de ingreso"
                     onChange={cambio_bodega_ingreso}
-                    error={mensaje_error_bodega !== ""}
+                    error={msj_error_bodega !== ""}
                   >
                     {bodegas.map((bg: any) => (
                       <MenuItem key={bg.id_bodega} value={bg.id_bodega}>
@@ -531,7 +614,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     value={bodega_detalle}
                     label="Bodega"
                     onChange={cambio_bodega_detalle}
-                    error={mensaje_error_bodega_detalle !== ""}
+                    error={msj_error_bd !== ""}
                   >
                     {bodegas.map((bg: any) => (
                       <MenuItem key={bg.id_bodega} value={bg.id_bodega}>
@@ -564,7 +647,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
             <Button
               color='primary'
               variant='contained'
-              onClick={() => { set_entrada_af_is_active(true); }}
+              onClick={validar_entrada}
             >
               Agregar
             </Button>
@@ -572,7 +655,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   <EntradaArticuloFijoComponent
                     is_modal_active={entrada_af_is_active}
                     set_is_modal_active={set_entrada_af_is_active}
-                    articulo_entrada={articulo} />
+                    articulo_entrada={articulo} 
+                    info_entrada={info_entrada}/>
                 )}
           </Stack>
         </Grid>
@@ -595,7 +679,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               <Grid item xs={12} sm={12}>
                 <div className="card">
                   <DataTable
-                    value={[{ codigo: '10011111', nombre: 'Articulo nivel 5', cantidad: 1, valor_total: 50000 }]}
+                    value={entradas?.info_items_entrada}
                     sortField="nombre"
                     stripedRows
                     paginator
@@ -619,11 +703,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                       field="cantidad"
                       header="Cantidad"
                       style={{ width: '10%' }}
-                    ></Column>
-                    <Column
-                      field="valor_total"
-                      header="Valor total"
-                      style={{ width: '20%' }}
                     ></Column>
                     <Column header="Acciones" align={'center'} body={(rowData) => {
                       return <Button color="error" size="small" variant='contained' onClick={() => { console.log(rowData); }}><DeleteForeverIcon fontSize="small" /></Button>;
@@ -706,7 +785,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           </Stack>
         </Box>
       </Grid>
-
     </>
   );
 }

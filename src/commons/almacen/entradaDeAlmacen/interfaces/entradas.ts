@@ -1,32 +1,32 @@
 export interface crear_entrada {
-  info_entrada: IInfoEntrada;
-  info_items_entrada: IInfoItemEntrada[];
+  info_entrada?: IInfoEntrada;
+  info_items_entrada?: IInfoItemEntrada[];
 }
 
 export interface IInfoEntrada {
-  id_entrada_almacen: number | null;
-  fecha_entrada: string;
-  motivo: string;
-  observacion: string;
-  id_proveedor: number;
-  id_tipo_entrada: number;
-  id_bodega: number;
-  valor_total_entrada: number;
+  id_entrada_almacen?: number | null;
+  fecha_entrada?: string | null;
+  motivo?: string | null;
+  observacion?: string | null;
+  id_proveedor?: number | null;
+  id_tipo_entrada?: number | null;
+  id_bodega?: number | null;
+  valor_total_entrada?: number;
 }
 
 export interface IInfoItemEntrada {
-  id_item_entrada_almacen: number | null;
-  id_entrada_almacen: number | null;
-  id_bien: number | null;
-  cantidad: number;
-  id_bodega: number | null;
-  numero_posicion: number;
-  porcentaje_iva: number;
-  id_bien_padre: number | null;
-  valor_unitario: number;
-  valor_residual: number | null;
-  valor_iva: number;
-  valor_total_item: number;
+  id_item_entrada_almacen?: number | null;
+  id_entrada_almacen?: number | null;
+  id_bien?: number | null;
+  cantidad?: number;
+  id_bodega?: number | null;
+  numero_posicion?: number;
+  porcentaje_iva?: number;
+  id_bien_padre?: number | null;
+  valor_unitario?: number;
+  valor_residual?: number | null;
+  valor_iva?: number;
+  valor_total_item?: number;
 }
 
 export interface anular_entrada { 

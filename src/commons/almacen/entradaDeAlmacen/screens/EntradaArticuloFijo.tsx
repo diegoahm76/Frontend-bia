@@ -14,7 +14,8 @@ import { Column } from "primereact/column";
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
-    articulo_entrada: any
+    articulo_entrada: any,
+    info_entrada: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -38,6 +39,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
 
     useEffect(() => {
         obtener_estados_fc();
+        console.log(props.articulo_entrada);
     }, [])
 
     const obtener_estados_fc: () => void = () => {
@@ -65,11 +67,11 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
         set_valor_residual(e.target.value);
     }
 
-    const guardar_entrada = (): void => {
+    const agregar_entradas = (): void => {
 
     }
 
-    const agregar_entradas = (): void => {
+    const guardar_entrada = (): void => {
         const values: any = {
             estado,
             placa_serial,
