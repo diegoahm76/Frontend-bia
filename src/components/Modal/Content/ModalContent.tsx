@@ -1,50 +1,33 @@
-import { Typography } from "@mui/material";
-import '../Modal.css';
 /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable react/prop-types */
+import { Typography } from '@mui/material';
+import '../Modal.css';
+
+const sx = {
+  fontWeight: 'bold',
+  fontSize: '20px',
+  mb: '10px'
+};
+
 export const ModalContent: React.FC<{ keys: any[]; values: any[] }> = ({
   keys,
-  values,
-}: any) => {
-  return (
-    <section className="grid-modal">
-      <div>
-        {keys.map((key: any, index: number) => {
-          if (key === false ?? undefined) return null;
-          return (
-            <div key={index}>
-              <Typography
-                sx={{
-                  fontWeight: 'bold',
-                  fontSize: '20px',
-                  mb: '10px',
-                  border: '1px solid red',
-                }}
-              >
-                {key}
-              </Typography>
-            </div>
-          );
-        })}
-      </div>
-      <div>
-        {values?.map((value: any, index: number) => {
-          if (value === false ?? undefined) return null;
-          return (
-            <div key={index}>
-              <Typography
-                sx={{
-                  fontWeight: 'normal',
-                  fontSize: '20px',
-                  mb: '10px',
-                  border: '1px solid red',
-                }}
-              >
-                {value}
-              </Typography>
-            </div>
-          );
-        })}
-      </div>
-    </section>
-  );
-};
+  values
+}) => (
+  <section className="grid-modal">
+    <div className="grid-internal">
+      {keys?.map((key: any, index: number) => (
+        <div className="sub-grid-internal" key={index}>
+          <Typography sx={sx}>{key} : &nbsp;</Typography>
+        </div>
+      ))}
+    </div>
+
+    <div className="grid-internal">
+      {values?.map((value: any, index: number) => (
+        <div className="sub-grid-internal" key={index}>
+          <Typography sx={sx}>{value}</Typography>
+        </div>
+      ))}
+    </div>
+  </section>
+);
