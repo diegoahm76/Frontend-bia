@@ -1,4 +1,4 @@
-import { CambiarContrasena } from '../components/CambiarContrasenaForm';
+import { CambiarContrasena } from '../components/CambiarContrasenaForm/CambiarContrasenaForm';
 import { AuthLayout } from '../layouts/AuthLayout';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

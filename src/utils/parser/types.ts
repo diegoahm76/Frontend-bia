@@ -1,1 +1,1 @@
-export type ParsedObject = Record<string, string>;
+export type ParsedObject = Record<string, any>;

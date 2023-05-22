@@ -1,7 +1,7 @@
 import { Box } from "@mui/material"
 import { useEffect, useState } from "react";
 import { type crear_mantenimiento } from "../../interfaces/IProps";
-import { TablaGeneral } from './../../../../../../../components/TablaGeneral'
+import { TablaGeneral } from '../../../../../../../components/TablaGeneral/TablaGeneral'
 
 interface IProps {
     data_grid: crear_mantenimiento[],

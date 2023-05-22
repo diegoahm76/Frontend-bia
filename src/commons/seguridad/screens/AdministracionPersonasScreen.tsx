@@ -4,9 +4,9 @@ import type { InfoPersona } from '../../../interfaces/globalModels';
 import { Grid } from '@mui/material';
 import { Title } from '../../../components/Title';
 import 'react-datepicker/dist/react-datepicker.css';
-import { AdministracionPersonasScreenNatural } from '../../auth/components/AdministradorPersonaNatural';
-import { AdministracionPersonasScreenJuridica } from '../../auth/components/AdministradorPersonaJuridica';
-import { RegisterAdministradorPersona } from '../../auth/components/RegisterAdministradorPersona';
+import { AdministracionPersonasScreenNatural } from '../../auth/components/AdministradorPersonaNatural/AdministradorPersonaNatural';
+import { AdministracionPersonasScreenJuridica } from '../../auth/components/AdministrarPersonaJuridica/AdministradorPersonaJuridica';
+import { RegisterAdministradorPersona } from '../../auth/components/RegisterAdministradorPersona/RegisterAdministradorPersona';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreen: React.FC = () => {
   const [persona, set_persona] = useState<InfoPersona>();
