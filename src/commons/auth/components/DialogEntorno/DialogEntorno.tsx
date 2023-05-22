@@ -10,9 +10,9 @@ import {
   ListItemButton,
   ListItemText
 } from '@mui/material';
+import { DialogRepresentantes } from '../DialogRepresentantes/DialogRepresentantes';
 import { type AuthSlice } from '../../interfaces/authModels';
 import { useDispatch, useSelector } from 'react-redux';
-import { DialogRepresentantes } from '../DialogRepresentantes/DialogRepresentantes';
 import {
   change_entorno,
   close_dialog_entorno,
