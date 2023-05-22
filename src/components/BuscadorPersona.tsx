@@ -233,7 +233,28 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
-      onResult(data);
+      if (data !== undefined) {
+        onResult(data);
+      } else {
+        const new_data = {
+          id: 0,
+          id_persona: 0,
+          tipo_persona: tipo_documento === 'NT' ? 'J' : 'N',
+          tipo_documento,
+          numero_documento,
+          primer_nombre: '',
+          segundo_nombre: '',
+          primer_apellido: '',
+          segundo_apellido: '',
+          nombre_completo: '',
+          razon_social: '',
+          nombre_comercial: '',
+          tiene_usuario: false,
+          digito_verificacion: '',
+          cod_naturaleza_empresa: '',
+        };
+        onResult(new_data);
+      }
     } catch (error) {
       const temp_error = error as AxiosError;
       const resp = temp_error.response?.data as ResponseServer<any>;
@@ -442,7 +463,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
-                    {tipo_documento_av === 'NT' ? (
+                      {tipo_documento_av === 'NT' ? (
                         <>
                           <DataGrid
                             rows={rows}
