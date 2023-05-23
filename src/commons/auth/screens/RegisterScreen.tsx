@@ -1,4 +1,4 @@
-import { RegisterForm } from '../components/RegisterForm';
+import { RegisterForm } from '../components/RegisterForm/RegisterForm';
 import { AuthLayout } from '../layouts/AuthLayout';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -4,13 +4,13 @@ import type { DataPersonas, InfoPersona } from '../../../interfaces/globalModels
 import { Divider, Grid, Typography } from '@mui/material';
 import { Title } from '../../../components/Title';
 import 'react-datepicker/dist/react-datepicker.css';
-import { AdministracionPersonasScreenNatural } from '../../auth/components/AdministradorPersonaNatural';
-import { AdministracionPersonasScreenJuridica } from '../../auth/components/AdministradorPersonaJuridica';
-import { CrearPersonaNatAdmin } from '../../auth/components/CrearPersonaNatAdmin';
-import { CrearPersonaJurAdmin } from '../../auth/components/CrearPersonaJurAdmin';
 import { use_register } from '../../auth/hooks/registerHook';
 import { consultar_datos_persona } from '../request/Request';
 import { control_error } from '../../../helpers';
+import { AdministracionPersonasScreenNatural } from '../../auth/components/AdministradorPersonaNatural/AdministradorPersonaNatural';
+import { AdministracionPersonasScreenJuridica } from '../../auth/components/AdministrarPersonaJuridica/AdministradorPersonaJuridica';
+import { CrearPersonaNatAdmin } from '../../auth/components/CrearPersonaNatAdmin/CrearPersonaNatAdmin';
+import { CrearPersonaJurAdmin } from '../../auth/components/CrearPersonaJurAdmin/CrearPersonaJurAdmin';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreen: React.FC = () => {

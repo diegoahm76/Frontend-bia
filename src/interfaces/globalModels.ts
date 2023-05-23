@@ -160,7 +160,7 @@ export type keys_direccion =
 export interface InfoPersona {
   id: number;
   id_persona: number;
-  tipo_persona: string;
+  tipo_persona?: string;
   tipo_documento: string;
   numero_documento: string;
   primer_nombre: string;

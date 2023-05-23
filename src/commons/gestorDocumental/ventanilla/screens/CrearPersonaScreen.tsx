@@ -1,7 +1,7 @@
 // Components Material UI
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { RegisterForm } from '../../../auth/components/RegisterForm';
+import { RegisterForm } from '../../../auth/components/RegisterForm/RegisterForm';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPersonaScreen: React.FC = () => {
