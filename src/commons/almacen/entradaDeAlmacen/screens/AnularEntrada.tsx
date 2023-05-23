@@ -6,19 +6,20 @@ import { useState, type Dispatch, type SetStateAction } from "react";
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../../../../../../hooks";
-import { override_maintenance } from "./thunks/maintenanceThunks";
-import { control_error } from "../../../../../../../helpers";
+import { useAppDispatch } from "../../../../hooks";
+import { anular_entradas } from "../thunks/Entradas";
+import { control_error } from "../../../../helpers";
+
 interface IProps {
   is_modal_active: boolean,
   set_is_modal_active: Dispatch<SetStateAction<boolean>>,
   title: string,
   user_info: any,
-  id_programado: number
+  id_entrada: number
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const AnularMantenimientoComponent = ({ is_modal_active, set_is_modal_active, title, user_info, id_programado }: IProps) => {
+const AnularEntradaComponent = ({ is_modal_active, set_is_modal_active, title, user_info, id_entrada }: IProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -34,8 +35,7 @@ const AnularMantenimientoComponent = ({ is_modal_active, set_is_modal_active, ti
   };
 
   const guardar_anulacion = (): void => {
-    // const object_formulario = { id_mantenimiento: id_programado, id_funcionario: user_info.id_usuario, fecha_anulacion: fecha, motivo_anulacion: motivo };
-    dispatch(override_maintenance(id_programado, { justificacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
+    dispatch(anular_entradas(id_entrada, { justificacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
       if (response.success) {
         navigate('/home');
         set_is_modal_active(false);
@@ -125,4 +125,4 @@ const AnularMantenimientoComponent = ({ is_modal_active, set_is_modal_active, ti
   )
 }
 // eslint-disable-next-line no-restricted-syntax
-export default AnularMantenimientoComponent;
+export default AnularEntradaComponent;
