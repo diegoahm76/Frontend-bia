@@ -41,7 +41,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
     useEffect(() => {
         obtener_estados_fc();
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        set_tittle('Registro de detalles ' + cant_registros + ' de ' + props.cantidad_entrada);
+        set_tittle('Registro de detalles (' + cant_registros + ' de ' + props.cantidad_entrada +')');
         console.log(props.articulo_entrada);
     }, [])
     
