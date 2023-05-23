@@ -30,7 +30,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [entradas, set_entradas] = useState<crear_entrada>();
   const [user_info, set_user_info] = useState<any>({});
-  const [detalles_entrada, set_detalles_entrada] = useState<any>([]);
+  const [detalles_entrada, set_detalles_entrada] = useState<any[]>([]);
   const [articulo, set_articulo] = useState<any>({codigo_bien: ""});
   const [msj_error_articulo, set_msj_error_articulo] = useState<string>("");
   const [codigo_articulo, set_codigo_articulo] = useState<string | number>("");
@@ -52,7 +52,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [numero_documento, set_numero_documento] = useState<string>("");
   const [bodegas, set_bodegas] = useState<any>([]);
   const [bodega_ingreso, set_bodega_ingreso] = useState<string>("22");
-  const [msj_error_bodega, set_msj_error_bodega] = useState<string>("");
   const [bodega_detalle, set_bodega_detalle] = useState<string>("22");
   const [msj_error_bd, set_msj_error_bd] = useState<string>("");
   const [cantidad, set_cantidad] = useState<string>("");
@@ -133,8 +132,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const cambio_bodega_ingreso: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_bodega_ingreso(e.target.value);
-    if (e.target.value !== null && e.target.value !== "")
-      set_msj_error_bodega("");
   }
 
   const cambio_bodega_detalle: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
@@ -205,8 +202,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   }
 
   const validar_entrada = (): void => {
-    set_entrada_af_is_active(true);
-
     if(validar_formulario()){
       articulo.cod_tipo_bien === "A" ? set_entrada_af_is_active(true) : cargar_entradas();
     }
@@ -228,7 +223,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const carga_info_items = (): IInfoItemEntrada[] => {
     const info_items: IInfoItemEntrada[] = [];
-    if(detalles_entrada.length > 0){
+    if(detalles_entrada !== undefined && detalles_entrada.length > 0){
       detalles_entrada.forEach((info_item: any) => {
         info_items.push({
           id_item_entrada_almacen: null,
@@ -266,25 +261,23 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   
   const validar_formulario = (): boolean =>{
     if(tipo_entrada === "")
-      set_msj_error_tipo("El campo Tipo de entrada es obligaotrio.")
+      set_msj_error_tipo("El campo Tipo de entrada es obligatorio.")
     if(observaciones === "")
-      set_msj_error_observaciones("El campo Observaciones es obligaotrio.")
+      set_msj_error_observaciones("El campo Observaciones es obligatorio.")
     if(motivo === "")
-      set_msj_error_motivo("El campo Motivo es obligaotrio.")
-    if(tipo_documento === "")
-      set_msj_error_tdoc("El campo Tipo de documento es obligaotrio.");
-    if(bodega_ingreso === "")
-      set_msj_error_bodega("El campo Bodega de ingreso es obligaotrio.")
-    if(proveedor === null || proveedor === undefined)
-      set_msj_error_proveedor("El campo Nombre proveedor es obligaotrio.");
-    if(articulo === null || articulo === undefined)
-      set_msj_error_articulo("El campo Nombre articulo es obligaotrio.");
+      set_msj_error_motivo("El campo Motivo es obligatorio.")
+    if(proveedor.tipo_documento === undefined || tipo_documento === undefined || tipo_documento === "")
+      set_msj_error_tdoc("El campo Tipo de documento es obligatorio.");
+    if(proveedor.nombre_completo === undefined || proveedor.nombre_completo === "")
+      set_msj_error_proveedor("El campo Nombre proveedor es obligatorio.");
+    if(articulo.nombre === undefined || articulo.nombre === "")
+      set_msj_error_articulo("El campo Nombre articulo es obligatorio.");
     if(cantidad === "")
       set_msj_error_cantidad("El campo Cantidad es obligatorio.");
     if(valor_unidad === "")
       set_msj_error_vu("El campo Cantidad es obligatorio.");
 
-    return (msj_error_fecha_entrada === "" && msj_error_tipo === "" && msj_error_observaciones === "" && msj_error_motivo === "" && msj_error_tdoc === "" && msj_error_bodega === ""
+    return (msj_error_fecha_entrada === "" && msj_error_tipo === "" && msj_error_observaciones === "" && msj_error_motivo === "" && msj_error_tdoc === ""
             && msj_error_proveedor === "" && msj_error_bd === "" && msj_error_cantidad === "" && msj_error_vu === "" && msj_error_articulo === "" && msj_error_proveedor === "");
   }
 
@@ -303,7 +296,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   },[articulo]);
 
   useEffect(() => {
-    if(detalles_entrada.length > 0){
+    if(detalles_entrada !== undefined){
       cargar_entradas();
     }
   },[detalles_entrada]);
@@ -361,6 +354,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     ))}
                   </Select>
                 </FormControl>
+                {(msj_error_tipo !== "") && (<FormHelperText error >{msj_error_tipo}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={4}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -447,6 +441,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     ))}
                   </Select>
                 </FormControl>
+                {(msj_error_tdoc !== "") && (<FormHelperText error >{msj_error_tdoc}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
@@ -455,7 +450,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   size="small"
                   fullWidth
                   value={proveedor.numero_documento ?? ""}
+                  error={msj_error_proveedor !== ""}
                 />
+                {(msj_error_proveedor !== "") && (<FormHelperText error >El campo Numero documento es obligatorio.</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={4}>
                 <TextField
@@ -464,7 +461,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   size="small"
                   fullWidth
                   value={proveedor.nombre_completo ?? ""}
+                  error={msj_error_proveedor !== ""}
                 />
+                {(msj_error_proveedor !== "") && (<FormHelperText error >{msj_error_proveedor}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={2}>
                 <Button
@@ -495,7 +494,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     value={bodega_ingreso}
                     label="Bodega de ingreso"
                     onChange={cambio_bodega_ingreso}
-                    error={msj_error_bodega !== ""}
                   >
                     {bodegas.map((bg: any) => (
                       <MenuItem key={bg.id_bodega} value={bg.id_bodega}>
@@ -568,7 +566,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   fullWidth
                   value={articulo.codigo_bien ?? ""}
                   onBlur={buscar_x_codigo}
+                  error={msj_error_articulo !== ""}
                 />
+                {(msj_error_articulo !== "") && (<FormHelperText error >El campo Código es obligatorio.</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={5}>
                 <TextField
@@ -577,10 +577,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   size="small"
                   fullWidth
                   value={articulo.nombre ?? ""}
+                  error={msj_error_articulo !== ""}
                   InputProps={{
                     readOnly: true,
                   }}
                 />
+                {(msj_error_articulo !== "") && (<FormHelperText error >{msj_error_articulo}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={2}>
                 <Button
@@ -611,7 +613,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   fullWidth
                   value={cantidad}
                   onChange={cambio_cantidad}
+                  error={msj_error_cantidad !== ""}
                 />
+                {(msj_error_cantidad !== "") && (<FormHelperText error >{msj_error_cantidad}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
@@ -621,7 +625,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   fullWidth
                   value={valor_unidad}
                   onChange={cambio_valor_unidad}
+                  error={msj_error_vu !== ""}
                 />
+                {(msj_error_vu !== "") && (<FormHelperText error >{msj_error_vu}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={1}>
                 <TextField
@@ -679,6 +685,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     ))}
                   </Select>
                 </FormControl>
+                {(msj_error_bd !== "") && (<FormHelperText error >{msj_error_bd}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
