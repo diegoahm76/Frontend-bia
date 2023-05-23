@@ -24,7 +24,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 // import { add_organigrams_service } from '../store/thunks/organigramThunks';
 import { useAppDispatch } from '../../../../hooks';
-import { get_finished_ccd_service } from '../../ccd/store/thunks/ccdThunks';
+import { get_ccds_finished_x_organigrama } from '../../ccd/store/thunks/ccdThunks';
 import { type IList } from '../../../../interfaces/globalModels';
 import { CustomSelect } from '../../../../components';
 import { control_error } from '../../../../helpers';
@@ -36,8 +36,8 @@ import {
   trds_choise_adapter,
   tcas_choise_adapter,
 } from '../adapters/organigrama_adapters';
-import { get_finished_tca_service } from '../../tca/store/thunks/tcaThunks';
-import { get_finished_trd_service } from '../../trd/store/thunks/trdThunks';
+import { get_tcas_finished_x_trd } from '../../tca/store/thunks/tcaThunks';
+import { get_trds_finished_x_ccd } from '../../trd/store/thunks/trdThunks';
 
 interface IProps {
   is_modal_active: boolean;
@@ -113,27 +113,6 @@ const DialogElegirOrganigramaActual = ({
       const res_organigramas_adapter: IList[] =
         await organigramas_choise_adapter(response_orgs);
       set_list_organigrams(res_organigramas_adapter);
-
-      const response_ccds = await dispatch(get_finished_ccd_service());
-      console.log(response_ccds);
-      const res_ccds_adapter: IList[] = await ccds_choise_adapter(
-        response_ccds
-      );
-      set_list_ccds(res_ccds_adapter);
-
-      const response_trds = await dispatch(get_finished_trd_service());
-      console.log(response_trds);
-      const res_trds_adapter: IList[] = await trds_choise_adapter(
-        response_trds.data
-      );
-      set_list_trds(res_trds_adapter);
-
-      const response_tcas = await dispatch(get_finished_tca_service());
-      console.log(response_tcas);
-      const res_tcas_adapter: IList[] = await tcas_choise_adapter(
-        response_tcas.data
-      );
-      set_list_tcas(res_tcas_adapter);
     } catch (err) {
       control_error(err);
     } finally {
@@ -141,9 +120,46 @@ const DialogElegirOrganigramaActual = ({
     }
   };
 
+  const get_list_ccds = async (
+    id_organigram: string | number
+  ): Promise<void> => {
+    const response_ccds = await dispatch(
+      get_ccds_finished_x_organigrama(id_organigram)
+    );
+    console.log(response_ccds);
+    const res_ccds_adapter: IList[] = await ccds_choise_adapter(response_ccds);
+    set_list_ccds(res_ccds_adapter);
+  };
+
+  const get_list_trds = async (id_cdd: string | number): Promise<void> => {
+    const response_trds = await dispatch(get_trds_finished_x_ccd(id_cdd));
+    console.log(response_trds);
+    const res_trds_adapter: IList[] = await trds_choise_adapter(
+      response_trds.data
+    );
+    set_list_trds(res_trds_adapter);
+  };
+
+  const get_list_tcas = async (id_trd: string | number): Promise<void> => {
+    const response_tcas = await dispatch(get_tcas_finished_x_trd(id_trd));
+    console.log(response_tcas);
+    const res_tcas_adapter: IList[] = await tcas_choise_adapter(
+      response_tcas.data
+    );
+    set_list_tcas(res_tcas_adapter);
+  };
+
   useEffect(() => {
-    console.log(list_organigrams);
-  }, [list_organigrams]);
+    void get_list_ccds(organigrams ?? '');
+  }, [organigrams]);
+
+  useEffect(() => {
+    void get_list_trds(ccds ?? '');
+  }, [ccds]);
+
+  useEffect(() => {
+    void get_list_tcas(trds ?? '');
+  }, [trds]);
 
   useEffect(() => {
     void get_data_selects();

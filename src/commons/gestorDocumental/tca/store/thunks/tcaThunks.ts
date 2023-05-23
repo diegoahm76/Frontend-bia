@@ -47,3 +47,18 @@ export const get_finished_tca_service = (): any => {
     }
   };
 };
+
+//  Obtener TCA's terminados por TRD
+export const get_tcas_finished_x_trd: any = (id_trd: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/activar/get-tca-terminados-by-trd/${id_trd}/`
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};

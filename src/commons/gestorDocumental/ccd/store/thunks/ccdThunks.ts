@@ -214,3 +214,18 @@ export const update_ccds_service: any = (ccd: {
     }
   };
 };
+
+//  Obtener CCDS's terminados por Organigrama
+export const get_ccds_finished_x_organigrama: any = (id_organigrama: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/activar/get-ccd-terminados-by-org/${id_organigrama}/`
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};

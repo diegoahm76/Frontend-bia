@@ -47,3 +47,19 @@ export const get_finished_trd_service = (): any => {
     }
   };
 };
+
+//  Obtener TRD's terminados por CCD
+export const get_trds_finished_x_ccd: any = (id_ccd:  number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/activar/get-trd-terminados-by-ccd/${id_ccd}/`
+      );
+      return data;
+    } catch (error: any) {
+      console.log('get_mold_organigrams_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};

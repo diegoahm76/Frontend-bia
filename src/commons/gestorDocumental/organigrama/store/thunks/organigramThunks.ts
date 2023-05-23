@@ -299,3 +299,5 @@ export const delegar_organigrama_persona:any = (id_persona: number, organigrama:
       }
   };
 };
+
+
