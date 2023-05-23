@@ -21,15 +21,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import { edit_bien_service } from '../store/thunks/configuracionThunks';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { type IList, type IObjBien as FormValues } from '../interfaces/configuracion';
+import { type IObjBien as FormValues } from '../interfaces/configuracion';
 import { api } from '../../../../api/axios';
+import type { IList } from '../../../../interfaces/globalModels';
 interface IProps {
-  action: string,
+  action: string;
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
 }
-
-
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const EditarBienDialogForm = ({
@@ -45,17 +44,18 @@ const EditarBienDialogForm = ({
   ];
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [tipo_elemento, set_tipo_elemento] =
-    useState<IList[]>(initial_options);
-  const [tipo_elemento_selected, set_tipo_elemento_selected] = useState<any>("MV");
- 
-  
-  const {current_bien} = useAppSelector((state) => state.configuracion);
+  const [tipo_elemento, set_tipo_elemento] = useState<IList[]>(initial_options);
+  const [tipo_elemento_selected, set_tipo_elemento_selected] =
+    useState<any>('MV');
 
+  const { current_bien } = useAppSelector((state) => state.configuracion);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { control: control_bien, handleSubmit: handle_submit, reset: reset_bien } =
-    useForm<FormValues>();
+  const {
+    control: control_bien,
+    handleSubmit: handle_submit,
+    reset: reset_bien,
+  } = useForm<FormValues>();
 
   const handle_close_add_bien = (): void => {
     set_is_modal_active(false);
@@ -64,10 +64,8 @@ const EditarBienDialogForm = ({
     reset_bien(current_bien);
   }, [current_bien]);
 
-
-
   const on_submit_edit = (data: FormValues): void => {
-    data.cod_tipo_elemento_vivero = tipo_elemento_selected
+    data.cod_tipo_elemento_vivero = tipo_elemento_selected;
     void dispatch(edit_bien_service(data, current_bien.id_bien, navigate));
     handle_close_add_bien();
   };
@@ -79,7 +77,6 @@ const EditarBienDialogForm = ({
     }));
     return data_new_format;
   };
-  
 
   useEffect(() => {
     const get_selects_options: any = async () => {
@@ -97,11 +94,11 @@ const EditarBienDialogForm = ({
     };
     void get_selects_options();
   }, []);
-  const on_change_tipo_elemento: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_tipo_elemento_selected(e.target.value)    
+  const on_change_tipo_elemento: any = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    set_tipo_elemento_selected(e.target.value);
   };
- 
-
 
   return (
     <Dialog
@@ -112,9 +109,15 @@ const EditarBienDialogForm = ({
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit= {handle_submit(on_submit_edit)}
+        onSubmit={handle_submit(on_submit_edit)}
       >
-        <DialogTitle>{action==="create"? "Crear vivero": action==="detail"? "Detalle Vivero": "Editar vivero" }</DialogTitle>
+        <DialogTitle>
+          {action === 'create'
+            ? 'Crear vivero'
+            : action === 'detail'
+            ? 'Detalle Vivero'
+            : 'Editar vivero'}
+        </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
@@ -124,7 +127,7 @@ const EditarBienDialogForm = ({
                 name="nombre_cientifico"
                 control={control_bien}
                 defaultValue=""
-                rules={{ required: tipo_elemento_selected === "MV" }}
+                rules={{ required: tipo_elemento_selected === 'MV' }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -135,7 +138,7 @@ const EditarBienDialogForm = ({
                     size="small"
                     label="Nombre cientifico"
                     variant="outlined"
-                    disabled={action==="detail"}
+                    disabled={action === 'detail'}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -149,33 +152,30 @@ const EditarBienDialogForm = ({
               />
             </Grid>
             <Grid item xs={11} md={5} margin={1}>
-              
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="Tipo de elemento"
-                    variant="outlined"
-                    disabled={action==="detail"}
-                    value={tipo_elemento_selected}
-                    onChange={on_change_tipo_elemento}
-                    
-                  >
-                    {tipo_elemento.map((option: IList) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-               
+              <TextField
+                margin="dense"
+                fullWidth
+                select
+                size="small"
+                label="Tipo de elemento"
+                variant="outlined"
+                disabled={action === 'detail'}
+                value={tipo_elemento_selected}
+                onChange={on_change_tipo_elemento}
+              >
+                {tipo_elemento.map((option: IList) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
             <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="es_semilla_vivero"
                 control={control_bien}
-                defaultValue={tipo_elemento_selected === "MV"}
-                rules={{ required: tipo_elemento_selected === "MV" }}
+                defaultValue={tipo_elemento_selected === 'MV'}
+                rules={{ required: tipo_elemento_selected === 'MV' }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -187,7 +187,9 @@ const EditarBienDialogForm = ({
                     size="small"
                     label="¿Es semilla?"
                     variant="outlined"
-                    disabled = {tipo_elemento_selected !== "MV" || action==="detail"}
+                    disabled={
+                      tipo_elemento_selected !== 'MV' || action === 'detail'
+                    }
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -219,12 +221,15 @@ const EditarBienDialogForm = ({
             >
               CERRAR
             </Button>
-            {action === "edit"?
-            <Button type="submit" variant="contained" startIcon={<EditIcon />}>
-              EDITAR
-            </Button>:
-            null
-            }
+            {action === 'edit' ? (
+              <Button
+                type="submit"
+                variant="contained"
+                startIcon={<EditIcon />}
+              >
+                EDITAR
+              </Button>
+            ) : null}
           </Stack>
         </DialogActions>
       </Box>

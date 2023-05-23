@@ -4,6 +4,7 @@ import { type SetStateAction, type Dispatch } from 'react';
 import type {
   FieldErrors,
   FieldValues,
+  UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormSetValue,
@@ -39,8 +40,8 @@ export interface TipoPersona {
 }
 
 export interface IList {
-  label: string;
-  value: string;
+  label: string | number;
+  value: number | string;
 }
 export interface Departamentos {
   cod_departamento: string;
@@ -77,6 +78,20 @@ export interface PropsRegister {
   errors: FieldErrors<FieldValues>;
   isValid: boolean;
   watch: UseFormWatch<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+}
+export interface PropsUpdate {
+  numero_documento: string;
+  id_persona: number;
+  tipo_documento: string;
+  tipo_persona: string;
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  isValid: boolean;
+  watch: UseFormWatch<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
 }
 
 export interface Direccion {
@@ -134,7 +149,7 @@ export type keys_direccion =
 export interface InfoPersona {
   id: number;
   id_persona: number;
-  tipo_persona: string;
+  tipo_persona?: string;
   tipo_documento: string;
   numero_documento: string;
   primer_nombre: string;
@@ -241,127 +256,127 @@ export interface HistoricoDatosRestringidos {
   id_persona: number;
 }
 export type keys_object =
-| "id_persona"
-| "nombre_unidad_organizacional_actual"
-| "tiene_usuario"
-| "primer_nombre"
-| "segundo_nombre"
-| "primer_apellido"
-| "segundo_apellido"
-| "tipo_persona"
-| "numero_documento"
-| "digito_verificacion"
-| "nombre_comercial"
-| "razon_social"
-| "pais_residencia"
-| "municipio_residencia"
-| "direccion_residencia"
-| "direccion_residencia_ref"
-| "ubicacion_georeferenciada"
-| "direccion_laboral"
-| "direccion_notificaciones"
-| "pais_nacimiento"
-| "fecha_nacimiento"
-| "sexo"
-| "fecha_asignacion_unidad"
-| "es_unidad_organizacional_actual"
-| "email"
-| "email_empresarial"
-| "telefono_fijo_residencial"
-| "telefono_celular"
-| "telefono_empresa"
-| "cod_municipio_laboral_nal"
-| "cod_municipio_notificacion_nal"
-| "telefono_celular_empresa"
-| "telefono_empresa_2"
-| "cod_pais_nacionalidad_empresa"
-| "acepta_notificacion_sms"
-| "acepta_notificacion_email"
-| "acepta_tratamiento_datos"
-| "cod_naturaleza_empresa"
-| "direccion_notificacion_referencia"
-| "fecha_cambio_representante_legal"
-| "fecha_inicio_cargo_rep_legal"
-| "fecha_inicio_cargo_actual"
-| "fecha_a_finalizar_cargo_actual"
-| "observaciones_vinculacion_cargo_actual"
-| "fecha_ultim_actualizacion_autorizaciones"
-| "fecha_creacion"
-| "fecha_ultim_actualiz_diferente_crea"
-| "tipo_documento"
-| "estado_civil"
-| "id_cargo"
-| "id_unidad_organizacional_actual"
-| "representante_legal"
-| "cod_municipio_expedicion_id"
-| "id_persona_crea"
-| "id_persona_ultim_actualiz_diferente_crea"
-| "cod_departamento_expedicion"
-| "cod_departamento_residencia"
-| "cod_departamento_notificacion"
-| "cod_departamento_laboral";
+  | 'id_persona'
+  | 'nombre_unidad_organizacional_actual'
+  | 'tiene_usuario'
+  | 'primer_nombre'
+  | 'segundo_nombre'
+  | 'primer_apellido'
+  | 'segundo_apellido'
+  | 'tipo_persona'
+  | 'numero_documento'
+  | 'digito_verificacion'
+  | 'nombre_comercial'
+  | 'razon_social'
+  | 'pais_residencia'
+  | 'municipio_residencia'
+  | 'direccion_residencia'
+  | 'direccion_residencia_ref'
+  | 'ubicacion_georeferenciada'
+  | 'direccion_laboral'
+  | 'direccion_notificaciones'
+  | 'pais_nacimiento'
+  | 'fecha_nacimiento'
+  | 'sexo'
+  | 'fecha_asignacion_unidad'
+  | 'es_unidad_organizacional_actual'
+  | 'email'
+  | 'email_empresarial'
+  | 'telefono_fijo_residencial'
+  | 'telefono_celular'
+  | 'telefono_empresa'
+  | 'cod_municipio_laboral_nal'
+  | 'cod_municipio_notificacion_nal'
+  | 'telefono_celular_empresa'
+  | 'telefono_empresa_2'
+  | 'cod_pais_nacionalidad_empresa'
+  | 'acepta_notificacion_sms'
+  | 'acepta_notificacion_email'
+  | 'acepta_tratamiento_datos'
+  | 'cod_naturaleza_empresa'
+  | 'direccion_notificacion_referencia'
+  | 'fecha_cambio_representante_legal'
+  | 'fecha_inicio_cargo_rep_legal'
+  | 'fecha_inicio_cargo_actual'
+  | 'fecha_a_finalizar_cargo_actual'
+  | 'observaciones_vinculacion_cargo_actual'
+  | 'fecha_ultim_actualizacion_autorizaciones'
+  | 'fecha_creacion'
+  | 'fecha_ultim_actualiz_diferente_crea'
+  | 'tipo_documento'
+  | 'estado_civil'
+  | 'id_cargo'
+  | 'id_unidad_organizacional_actual'
+  | 'representante_legal'
+  | 'cod_municipio_expedicion_id'
+  | 'id_persona_crea'
+  | 'id_persona_ultim_actualiz_diferente_crea'
+  | 'cod_departamento_expedicion'
+  | 'cod_departamento_residencia'
+  | 'cod_departamento_notificacion'
+  | 'cod_departamento_laboral';
 
 export interface DataPersonas {
-  id_persona:                               number;
-  nombre_unidad_organizacional_actual:      string;
-  tiene_usuario:                            boolean;
-  primer_nombre:                            string;
-  segundo_nombre:                           string;
-  primer_apellido:                          string;
-  segundo_apellido:                         string;
-  tipo_persona:                             string;
-  numero_documento:                         string;
-  digito_verificacion:                      string;
-  nombre_comercial:                         string;
-  razon_social:                             string;
-  pais_residencia:                          string;
-  municipio_residencia:                     string;
-  direccion_residencia:                     string;
-  direccion_residencia_ref:                 string;
-  ubicacion_georeferenciada:                string;
-  direccion_laboral:                        string;
-  direccion_notificaciones:                 string;
-  pais_nacimiento:                          string;
-  fecha_nacimiento:                         string | null | Date;
-  sexo:                                     string;
-  fecha_asignacion_unidad:                  string;
-  es_unidad_organizacional_actual:          string;
-  email:                                    string;
-  email_empresarial:                        string;
-  telefono_fijo_residencial:                string;
-  telefono_celular:                         string;
-  telefono_empresa:                         string;
-  cod_municipio_laboral_nal:                string;
-  cod_municipio_notificacion_nal:           string;
-  telefono_celular_empresa:                 string;
-  telefono_empresa_2:                       string;
-  cod_pais_nacionalidad_empresa:            string;
-  acepta_notificacion_sms:                  boolean;
-  acepta_notificacion_email:                boolean;
-  acepta_tratamiento_datos:                 boolean;
-  cod_naturaleza_empresa:                   string;
-  direccion_notificacion_referencia:        string;
-  fecha_cambio_representante_legal:         string;
-  fecha_inicio_cargo_rep_legal:             string;
-  fecha_inicio_cargo_actual:                string;
-  fecha_a_finalizar_cargo_actual:           string;
-  observaciones_vinculacion_cargo_actual:   string;
+  id_persona: number;
+  nombre_unidad_organizacional_actual: string;
+  tiene_usuario: boolean;
+  primer_nombre: string;
+  segundo_nombre: string;
+  primer_apellido: string;
+  segundo_apellido: string;
+  tipo_persona: string;
+  numero_documento: string;
+  digito_verificacion: string;
+  nombre_comercial: string;
+  razon_social: string;
+  pais_residencia: string;
+  municipio_residencia: string;
+  direccion_residencia: string;
+  direccion_residencia_ref: string;
+  ubicacion_georeferenciada: string;
+  direccion_laboral: string;
+  direccion_notificaciones: string;
+  pais_nacimiento: string;
+  fecha_nacimiento: string | null | Date;
+  sexo: string;
+  fecha_asignacion_unidad: string;
+  es_unidad_organizacional_actual: string;
+  email: string;
+  email_empresarial: string;
+  telefono_fijo_residencial: string;
+  telefono_celular: string;
+  telefono_empresa: string;
+  cod_municipio_laboral_nal: string;
+  cod_municipio_notificacion_nal: string;
+  telefono_celular_empresa: string;
+  telefono_empresa_2: string;
+  cod_pais_nacionalidad_empresa: string;
+  acepta_notificacion_sms: boolean;
+  acepta_notificacion_email: boolean;
+  acepta_tratamiento_datos: boolean;
+  cod_naturaleza_empresa: string;
+  direccion_notificacion_referencia: string;
+  fecha_cambio_representante_legal: string;
+  fecha_inicio_cargo_rep_legal: string;
+  fecha_inicio_cargo_actual: string;
+  fecha_a_finalizar_cargo_actual: string;
+  observaciones_vinculacion_cargo_actual: string;
   fecha_ultim_actualizacion_autorizaciones: string;
-  fecha_creacion:                           string;
-  fecha_ultim_actualiz_diferente_crea:      string;
-  tipo_documento:                           string;
-  estado_civil:                             string;
-  id_cargo:                                 number;
-  id_unidad_organizacional_actual:          number;
-  representante_legal:                      number | null;
-  cod_municipio_expedicion_id:              string;
-  id_persona_crea:                          number;
+  fecha_creacion: string;
+  fecha_ultim_actualiz_diferente_crea: string;
+  tipo_documento: string;
+  estado_civil: string;
+  id_cargo: number;
+  id_unidad_organizacional_actual: number;
+  representante_legal: number | null;
+  cod_municipio_expedicion_id: string;
+  id_persona_crea: number;
   id_persona_ultim_actualiz_diferente_crea: number;
   cod_departamento_expedicion: string;
   cod_departamento_residencia: string;
   cod_departamento_notificacion: string;
   cod_departamento_laboral: string;
-  datos_clasificacion_persona?: number[]
+  datos_clasificacion_persona?: number[];
 }
 export interface ClaseTercero {
   value: number;
@@ -369,7 +384,7 @@ export interface ClaseTercero {
 }
 export interface ClaseTerceroPersona {
   id_clase_tercero: number;
-  nombre:           string;
+  nombre: string;
 }
 export interface UpdateAutorizaNotificacion {
   acepta_autorizacion_email: boolean;
@@ -377,54 +392,54 @@ export interface UpdateAutorizaNotificacion {
 }
 
 export interface DatosVinculacionCormacarena {
-  id_unidad_organizacional_actual:        number;
-  id_cargo:                               number;
-  cargo_actual:                           string;
-  unidad_organizacional_actual:           string;
-  es_unidad_organizacional_actual:        boolean;
-  fecha_inicio_cargo_actual:              string;
-  fecha_asignacion_unidad:                string;
-  fecha_a_finalizar_cargo_actual:         string;
+  id_unidad_organizacional_actual: number;
+  id_cargo: number;
+  cargo_actual: string;
+  unidad_organizacional_actual: string;
+  es_unidad_organizacional_actual: boolean;
+  fecha_inicio_cargo_actual: string;
+  fecha_asignacion_unidad: string;
+  fecha_a_finalizar_cargo_actual: string;
   observaciones_vinculacion_cargo_actual: string;
-  fecha_vencida:                          boolean;
+  fecha_vencida: boolean;
 }
 export interface DataNaturaUpdate {
-  cod_municipio_expedicion_id:       string;
-  nombre_comercial:                  string;
-  fecha_nacimiento:                  string;
-  email:                             string;
-  telefono_celular:                  string;
-  telefono_empresa_2:                string;
-  sexo:                              string;
-  estado_civil:                      string;
-  pais_nacimiento:                   string;
-  email_empresarial:                 string;
-  ubicacion_georeferenciada:         string;
-  telefono_fijo_residencial:         string;
-  pais_residencia:                   string;
-  municipio_residencia:              string;
-  direccion_residencia:              string;
-  direccion_laboral:                 string;
-  direccion_residencia_ref:          string;
-  direccion_notificaciones:          string;
+  cod_municipio_expedicion_id: string;
+  nombre_comercial: string;
+  fecha_nacimiento: string;
+  email: string;
+  telefono_celular: string;
+  telefono_empresa_2: string;
+  sexo: string;
+  estado_civil: string;
+  pais_nacimiento: string;
+  email_empresarial: string;
+  ubicacion_georeferenciada: string;
+  telefono_fijo_residencial: string;
+  pais_residencia: string;
+  municipio_residencia: string;
+  direccion_residencia: string;
+  direccion_laboral: string;
+  direccion_residencia_ref: string;
+  direccion_notificaciones: string;
   direccion_notificacion_referencia: string;
-  cod_municipio_laboral_nal:         string;
-  cod_municipio_notificacion_nal:    string;
-  datos_clasificacion_persona:       number[];
+  cod_municipio_laboral_nal: string;
+  cod_municipio_notificacion_nal: string;
+  datos_clasificacion_persona: number[];
 }
 export interface DataJuridicaUpdate {
-  email:                             string;
-  email_empresarial:                 string;
-  direccion_notificaciones:          string;
+  email: string;
+  email_empresarial: string;
+  direccion_notificaciones: string;
   direccion_notificacion_referencia: string;
-  cod_municipio_notificacion_nal:    string;
-  cod_pais_nacionalidad_empresa:     string;
-  telefono_celular_empresa:          string;
-  telefono_empresa_2:                string;
-  telefono_empresa:                  string;
-  representante_legal:               number;
-  fecha_inicio_cargo_rep_legal:      string;
-  datos_clasificacion_persona:       number[];
+  cod_municipio_notificacion_nal: string;
+  cod_pais_nacionalidad_empresa: string;
+  telefono_celular_empresa: string;
+  telefono_empresa_2: string;
+  telefono_empresa: string;
+  representante_legal: number;
+  fecha_inicio_cargo_rep_legal: string;
+  datos_clasificacion_persona: number[];
 }
 export interface ReisterHookUpdate {
   ciudad_expedicion: string;
@@ -532,7 +547,7 @@ export interface HistoricoDirecciones {
   nombre_completo:             string;
 }
 export interface HistoricoEmail {
-  id_histo_email:     number;
+  id_histo_email: number;
   email_notificacion: string;
   fecha_cambio:       Date;
   id_persona:         number;
@@ -557,4 +572,62 @@ export interface HistoricoAutorizaNotificaciones {
   fecha_inicio:                string;
   fecha_fin:                   string;
   id_persona:                  number;
+}
+export interface CrearPersonNaturalAdmin {
+  tipo_persona:                      string;
+  tipo_documento:                    string;
+  numero_documento:                  string;
+  cod_municipio_expedicion_id:       string;
+  digito_verificacion:               string;
+  nombre_comercial:                  string;
+  primer_nombre:                     string;
+  segundo_nombre:                    string;
+  primer_apellido:                   string;
+  segundo_apellido:                  string;
+  fecha_nacimiento:                  Date | string;
+  email:                             string;
+  telefono_celular:                  string;
+  telefono_empresa_2:                null | string;
+  sexo:                              string;
+  estado_civil:                      string;
+  pais_nacimiento:                   string;
+  email_empresarial:                 string;
+  ubicacion_georeferenciada:         string;
+  telefono_fijo_residencial:         null | string;
+  pais_residencia:                   string;
+  municipio_residencia:              string;
+  direccion_residencia:              string;
+  direccion_laboral:                 string;
+  direccion_residencia_ref:          string;
+  direccion_notificaciones:          string;
+  direccion_notificacion_referencia: string;
+  cod_municipio_laboral_nal:         string;
+  cod_municipio_notificacion_nal:    string;
+  acepta_notificacion_sms:           boolean;
+  acepta_notificacion_email:         boolean;
+  acepta_tratamiento_datos:          boolean;
+  datos_clasificacion_persona:       number[];
+}
+export interface CrearPersonJuridicaAdmin {
+  tipo_persona:                      string;
+  tipo_documento:                    string;
+  numero_documento:                  string;
+  digito_verificacion:               string;
+  cod_naturaleza_empresa:            string;
+  nombre_comercial:                  string;
+  razon_social:                      string;
+  email:                             string;
+  email_empresarial:                 null;
+  direccion_notificaciones:          string;
+  direccion_notificacion_referencia: string;
+  cod_municipio_notificacion_nal:    number;
+  cod_pais_nacionalidad_empresa:     string;
+  telefono_celular_empresa:          string;
+  telefono_empresa_2:                string;
+  telefono_empresa:                  string;
+  acepta_notificacion_sms:           boolean;
+  acepta_notificacion_email:         boolean;
+  representante_legal:               number;
+  fecha_inicio_cargo_rep_legal:      Date;
+  datos_clasificacion_persona:       number[];
 }

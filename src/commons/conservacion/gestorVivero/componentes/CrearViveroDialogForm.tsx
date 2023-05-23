@@ -19,19 +19,21 @@ import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
 
-import { add_nursery_service, edit_nursery_service } from '../store/thunks/gestorViveroThunks';
+import {
+  add_nursery_service,
+  edit_nursery_service,
+} from '../store/thunks/gestorViveroThunks';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { type IList, type IObjNursery as FormValues } from '../interfaces/vivero';
+import { type IObjNursery as FormValues } from '../interfaces/vivero';
 import { api } from '../../../../api/axios';
+import type { IList } from '../../../../interfaces/globalModels';
 
 interface IProps {
-  action: string,
+  action: string;
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
 }
-
-
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const CrearViveroDialogForm = ({
@@ -52,54 +54,66 @@ const CrearViveroDialogForm = ({
   const [nursery_types, set_nursery_types] = useState(initial_options);
   const [source_resources, set_source_resources] = useState(initial_options);
   const [file, set_file] = useState<any>(null);
-  
-  const {current_nursery} = useAppSelector((state) => state.nursery);
 
+  const { current_nursery } = useAppSelector((state) => state.nursery);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { control: control_vivero, handleSubmit: handle_submit, reset: reset_nursery, getValues, formState: { errors } } =
-    useForm<FormValues>();
-    console.log("Errors:", errors);
+  const {
+    control: control_vivero,
+    handleSubmit: handle_submit,
+    reset: reset_nursery,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    getValues,
+    formState: { errors },
+  } = useForm<FormValues>();
+  console.log('Errors:', errors);
 
   const handle_close_add_nursery = (): void => {
     set_is_modal_active(false);
   };
   useEffect(() => {
     reset_nursery(current_nursery);
-    console.log(current_nursery)
+    console.log(current_nursery);
   }, [current_nursery]);
 
-
   const on_submit = (data: FormValues): void => {
-    console.log(file)
-    data.ruta_archivo_creacion = file
-    const form_data:any = new FormData();
+    console.log(file);
+    data.ruta_archivo_creacion = file;
+    const form_data: any = new FormData();
     form_data.append('nombre', data.nombre);
-        form_data.append('cod_municipio', data.cod_municipio);
-        form_data.append('direccion', data.direccion);
-        form_data.append('area_mt2', data.area_mt2);
-        form_data.append('area_propagacion_mt2', data.area_propagacion_mt2);
-        form_data.append('tiene_area_produccion', data.tiene_area_produccion);
-        form_data.append('tiene_areas_pep_sustrato', data.tiene_areas_pep_sustrato);
-        form_data.append('tiene_area_embolsado', data.tiene_area_embolsado);
-        form_data.append('cod_tipo_vivero', data.cod_tipo_vivero);
-        form_data.append('cod_origen_recursos_vivero', data.cod_origen_recursos_vivero);
-        form_data.append('ruta_archivo_creacion', file === null ? '' : file);
+    form_data.append('cod_municipio', data.cod_municipio);
+    form_data.append('direccion', data.direccion);
+    form_data.append('area_mt2', data.area_mt2);
+    form_data.append('area_propagacion_mt2', data.area_propagacion_mt2);
+    form_data.append('tiene_area_produccion', data.tiene_area_produccion);
+    form_data.append('tiene_areas_pep_sustrato', data.tiene_areas_pep_sustrato);
+    form_data.append('tiene_area_embolsado', data.tiene_area_embolsado);
+    form_data.append('cod_tipo_vivero', data.cod_tipo_vivero);
+    form_data.append(
+      'cod_origen_recursos_vivero',
+      data.cod_origen_recursos_vivero
+    );
+    form_data.append('ruta_archivo_creacion', file === null ? '' : file);
     void dispatch(add_nursery_service(form_data, navigate));
     handle_close_add_nursery();
   };
   const on_submit_edit = (data: FormValues): void => {
-    const form_data:any = new FormData();
-    
-        form_data.append('area_mt2', data.area_mt2);
-        form_data.append('area_propagacion_mt2', data.area_propagacion_mt2);
-        form_data.append('tiene_area_produccion', data.tiene_area_produccion);
-        form_data.append('tiene_areas_pep_sustrato', data.tiene_areas_pep_sustrato);
-        form_data.append('tiene_area_embolsado', data.tiene_area_embolsado);
-        form_data.append('cod_tipo_vivero', data.cod_tipo_vivero);
-        form_data.append('cod_origen_recursos_vivero', data.cod_origen_recursos_vivero);
-      
-    void dispatch(edit_nursery_service(form_data, current_nursery.id_vivero, navigate));
+    const form_data: any = new FormData();
+
+    form_data.append('area_mt2', data.area_mt2);
+    form_data.append('area_propagacion_mt2', data.area_propagacion_mt2);
+    form_data.append('tiene_area_produccion', data.tiene_area_produccion);
+    form_data.append('tiene_areas_pep_sustrato', data.tiene_areas_pep_sustrato);
+    form_data.append('tiene_area_embolsado', data.tiene_area_embolsado);
+    form_data.append('cod_tipo_vivero', data.cod_tipo_vivero);
+    form_data.append(
+      'cod_origen_recursos_vivero',
+      data.cod_origen_recursos_vivero
+    );
+
+    void dispatch(
+      edit_nursery_service(form_data, current_nursery.id_vivero, navigate)
+    );
     handle_close_add_nursery();
   };
 
@@ -110,7 +124,6 @@ const CrearViveroDialogForm = ({
     }));
     return data_new_format;
   };
-  
 
   useEffect(() => {
     const get_selects_options: any = async () => {
@@ -152,9 +165,8 @@ const CrearViveroDialogForm = ({
   }, []);
 
   const on_change_file: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_file(e.target.files!=null?e.target.files[0]:"")    
+    set_file(e.target.files != null ? e.target.files[0] : '');
   };
-
 
   return (
     <Dialog
@@ -165,9 +177,19 @@ const CrearViveroDialogForm = ({
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={action==="create"? handle_submit(on_submit):handle_submit(on_submit_edit)}
+        onSubmit={
+          action === 'create'
+            ? handle_submit(on_submit)
+            : handle_submit(on_submit_edit)
+        }
       >
-        <DialogTitle>{action==="create"? "Crear vivero": action==="detail"? "Detalle vivero": "Editar vivero" }</DialogTitle>
+        <DialogTitle>
+          {action === 'create'
+            ? 'Crear vivero'
+            : action === 'detail'
+            ? 'Detalle vivero'
+            : 'Editar vivero'}
+        </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
@@ -188,7 +210,7 @@ const CrearViveroDialogForm = ({
                     size="small"
                     label="Nombre"
                     variant="outlined"
-                    disabled = {action !== "create"}
+                    disabled={action !== 'create'}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -218,7 +240,7 @@ const CrearViveroDialogForm = ({
                     size="small"
                     label="Municipio"
                     variant="outlined"
-                    disabled = {action !== "create"}
+                    disabled={action !== 'create'}
                     defaultValue={value}
                     value={value}
                     onChange={onChange}
@@ -254,12 +276,11 @@ const CrearViveroDialogForm = ({
                     size="small"
                     label="Dirección"
                     variant="outlined"
-                    disabled = {action !== "create"}
+                    disabled={action !== 'create'}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
                     helperText={
-                      
                       error != null
                         ? 'Es obligatorio ingresar una dirección'
                         : 'Ingrese dirección'
@@ -273,10 +294,14 @@ const CrearViveroDialogForm = ({
                 name="area_mt2"
                 control={control_vivero}
                 defaultValue={0}
-                rules={{ required: true, min:0, max: getValues("area_propagacion_mt2")?? '' }}
+                rules={{
+                  required: true,
+                  min: 0,
+                  max: getValues('area_propagacion_mt2') ?? '',
+                }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error }
+                  fieldState: { error },
                 }) => (
                   <TextField
                     margin="dense"
@@ -285,19 +310,21 @@ const CrearViveroDialogForm = ({
                     label="Area m2"
                     variant="outlined"
                     type="number"
-                    disabled = {action === "detail"}
+                    disabled={action === 'detail'}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
-                    helperText= {
+                    helperText={
                       error != null
-                        ? error.type === "required"?'El area es requerida':`El valor del area debe ser menor al area de propagacion (${getValues("area_propagacion_mt2")??""})`
+                        ? error.type === 'required'
+                          ? 'El area es requerida'
+                          : `El valor del area debe ser menor al area de propagacion (${
+                              getValues('area_propagacion_mt2') ?? ''
+                            })`
                         : 'Ingrese area'
                     }
                   />
                 )}
-                
-
               />
             </Grid>
             <Grid item xs={11} md={5} margin={1}>
@@ -317,7 +344,7 @@ const CrearViveroDialogForm = ({
                     size="small"
                     label="Tipo vivero"
                     variant="outlined"
-                    disabled = {action === "detail"}
+                    disabled={action === 'detail'}
                     defaultValue={value}
                     value={value}
                     onChange={onChange}
@@ -343,7 +370,7 @@ const CrearViveroDialogForm = ({
                 name="area_propagacion_mt2"
                 control={control_vivero}
                 defaultValue={0}
-                rules={{ required: true, min: getValues("area_mt2")?? '' }}
+                rules={{ required: true, min: getValues('area_mt2') ?? '' }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -355,14 +382,18 @@ const CrearViveroDialogForm = ({
                     label="Area propagacion m2"
                     variant="outlined"
                     type="number"
-                    disabled = {action === "detail"}
+                    disabled={action === 'detail'}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
                     helperText={
                       error != null
-                      ? error.type === "required"?'El area de propagacion es requerida':`El valor del area debe ser mayor al area (${getValues("area_mt2")??""})`
-                      : 'Ingrese area'
+                        ? error.type === 'required'
+                          ? 'El area de propagacion es requerida'
+                          : `El valor del area debe ser mayor al area (${
+                              getValues('area_mt2') ?? ''
+                            })`
+                        : 'Ingrese area'
                     }
                   />
                 )}
@@ -385,7 +416,7 @@ const CrearViveroDialogForm = ({
                     size="small"
                     label="¿Tiene area de produccion?"
                     variant="outlined"
-                    disabled = {action === "detail"}
+                    disabled={action === 'detail'}
                     defaultValue={value}
                     value={value}
                     onChange={onChange}
@@ -419,7 +450,7 @@ const CrearViveroDialogForm = ({
                     size="small"
                     label="¿Tiene area preparacion de sustrato?"
                     variant="outlined"
-                    disabled = {action === "detail"}
+                    disabled={action === 'detail'}
                     defaultValue={value}
                     value={value}
                     onChange={onChange}
@@ -453,7 +484,7 @@ const CrearViveroDialogForm = ({
                     size="small"
                     label="¿Tiene area de embolsado?"
                     variant="outlined"
-                    disabled = {action === "detail"}
+                    disabled={action === 'detail'}
                     defaultValue={value}
                     value={value}
                     onChange={onChange}
@@ -487,7 +518,7 @@ const CrearViveroDialogForm = ({
                     size="small"
                     label="¿Vivero creado por medio de ?"
                     variant="outlined"
-                    disabled = {action === "detail"}
+                    disabled={action === 'detail'}
                     defaultValue={value}
                     value={value}
                     onChange={onChange}
@@ -507,22 +538,19 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            {action === "create"?
-            <Grid item xs={ 11 } md={ 5 } margin={ 1 }>
-          
-              <TextField
-                margin="dense"
-                fullWidth
-                size="small"
-                label="archivo"
-                variant="outlined"
-                type="file"
-                onChange={ on_change_file }
-              />
-            
-          </Grid>
-          :null
-          }
+            {action === 'create' ? (
+              <Grid item xs={11} md={5} margin={1}>
+                <TextField
+                  margin="dense"
+                  fullWidth
+                  size="small"
+                  label="archivo"
+                  variant="outlined"
+                  type="file"
+                  onChange={on_change_file}
+                />
+              </Grid>
+            ) : null}
           </Grid>
         </DialogContent>
         <Divider />
@@ -539,16 +567,23 @@ const CrearViveroDialogForm = ({
             >
               CERRAR
             </Button>
-            {action === "create"?
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
-              GUARDAR
-            </Button> :
-            action === "edit"?
-            <Button type="submit" variant="contained" startIcon={<EditIcon />}>
-              EDITAR
-            </Button>:
-            null
-            }
+            {action === 'create' ? (
+              <Button
+                type="submit"
+                variant="contained"
+                startIcon={<SaveIcon />}
+              >
+                GUARDAR
+              </Button>
+            ) : action === 'edit' ? (
+              <Button
+                type="submit"
+                variant="contained"
+                startIcon={<EditIcon />}
+              >
+                EDITAR
+              </Button>
+            ) : null}
           </Stack>
         </DialogActions>
       </Box>

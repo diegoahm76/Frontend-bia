@@ -1,7 +1,6 @@
 import { Grid, } from "@mui/material";
 
 import { Title } from '../../../../../../components/Title';
-import SolicitudPorAprobar from "../components/SolicitudesPorAprobar";
 
 
 // import CheckIcon from '@mui/icons-material/Check';
@@ -31,7 +30,7 @@ export function AprobacionSolicitudScreen(): JSX.Element {
                 <Grid item xs={12} marginY={2}>
                     <Title title="Aprobación de soliitudes"></Title>
                 </Grid>
-                < SolicitudPorAprobar />
+
 
 
 
