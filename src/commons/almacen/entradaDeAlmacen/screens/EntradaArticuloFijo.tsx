@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Alert, Typography, ToggleButton } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Alert, Typography, ToggleButton, FormHelperText } from "@mui/material";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import ClearIcon from '@mui/icons-material/Clear';
-import SaveIcon from '@mui/icons-material/Save';
+import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useAppDispatch } from "../../../../hooks";
@@ -15,32 +15,41 @@ interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
     articulo_entrada: any,
-    info_entrada: any
+    cantidad_entrada: any,
+    detalles_entrada: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const EntradaArticuloFijoComponent = (props: IProps) => {
     const dispatch = useAppDispatch();
+    const [tittle, set_tittle] = useState<string>("");
     const [detalle_complementario, set_detalle_complementario] = useState<any[]>([]);
     const [estados, set_estados] = useState<any[]>([]);
     const [estado, set_estado] = useState<string>("O");
-    const [mensaje_error_estado, set_mensaje_error_estado] = useState<string>("");
+    const [cant_registros, set_cant_registros] = useState<number>(0);
     const [placa_serial, set_placa_serial] = useState<string>("");
-    const [mensaje_error_placa_serial, set_mensaje_error_placa_serial] = useState<string>("");
-    const [nro_elemento_bien, set_nro_elemento_bien] = useState<string>("");
-    const [mensaje_error_nro_elemento_bien, set_mensaje_error_nro_elemento_bien] = useState<string>("");
+    const [msj_error_placa_serial, set_msj_error_placa_serial] = useState<string>("");
+    const [nro_elemento_bien, set_nro_elemento_bien] = useState<string>("0");
     const [vida_util, set_vida_util] = useState<string>("");
-    const [mensaje_error_vida_util, set_mensaje_error_vida_util] = useState<string>("");
+    const [msj_error_vida_util, set_msj_error_vida_util] = useState<string>("");
     const [unidad_tiempo, set_unidad_tiempo] = useState<string>("");
-    const [mensaje_error_unidad_tiempo, set_mensaje_error_unidad_tiempo] = useState<string>("");
+    const [msj_error_unidad_tiempo, set_msj_error_unidad_tiempo] = useState<string>("");
     const [valor_residual, set_valor_residual] = useState<string>("");
-    const [mensaje_error_valor_residual, set_mensaje_error_valor_residual] = useState<string>("");
+    const [msj_error_valor_residual, set_msj_error_valor_residual] = useState<string>("");
     const [abrir_hdv, set_abrir_hdv] = useState<boolean>(false);
 
     useEffect(() => {
         obtener_estados_fc();
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        set_tittle('Registro de detalles ' + cant_registros + ' de ' + props.cantidad_entrada);
         console.log(props.articulo_entrada);
     }, [])
+    
+    useEffect(() => {
+        if(props.detalles_entrada !== null){
+            set_detalle_complementario(props.detalles_entrada);
+        }
+    }, [props.detalles_entrada])
 
     const obtener_estados_fc: () => void = () => {
         dispatch(obtener_estados()).then((response: any) => {
@@ -53,35 +62,70 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
     }
     const cambio_placa_serial: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_placa_serial(e.target.value);
-    }
-    const cambio_nro_elemento_bien: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        set_nro_elemento_bien(e.target.value);
+        if (e.target.value !== "")
+            set_msj_error_placa_serial("");
     }
     const cambio_vida_util: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_vida_util(e.target.value);
+        if (e.target.value !== "")
+            set_msj_error_vida_util("");
     }
     const cambio_unidad_tiempo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_unidad_tiempo(e.target.value);
+        if (e.target.value !== "")
+            set_msj_error_unidad_tiempo("");
     }
     const cambio_valor_residual: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_valor_residual(e.target.value);
+        if (e.target.value !== "")
+            set_msj_error_valor_residual("");
+    }
+
+    const valida_detalle_complementario = (): boolean => {
+        let validador = true;
+        if (placa_serial === ""){
+            set_msj_error_placa_serial("El campo Placa/Serial es obligatorio.");
+            validador = false;
+        }
+        if (vida_util === ""){
+            set_msj_error_vida_util("El campo Vida util es obligatorio.");
+            validador = false;
+        }
+        if (unidad_tiempo === ""){
+            set_msj_error_unidad_tiempo("El campo Unidad tiempo es obligatorio.");
+            validador = false;
+        }
+        if (valor_residual === ""){
+            set_msj_error_valor_residual("El campo Valor residual es obligatorio.");
+            validador = false;
+        }
+
+        return validador;
+
     }
 
     const agregar_entradas = (): void => {
-
+        if(detalle_complementario.length === props.cantidad_entrada){
+            props.detalles_entrada(detalle_complementario);
+            props.set_is_modal_active(false);
+        }
     }
 
     const guardar_entrada = (): void => {
-        const values: any = {
-            estado,
-            placa_serial,
-            nro_elemento_bien,
-            vida_util,
-            unidad_tiempo,
-            valor_residual,
-            abrir_hdv
-        };
-        set_detalle_complementario([...detalle_complementario, values]);
+        if (valida_detalle_complementario()) {
+            const values: any = {
+                estado,
+                placa_serial,
+                nro_elemento_bien,
+                vida_util,
+                unidad_tiempo,
+                valor_residual,
+                abrir_hdv
+            };
+            set_cant_registros(cant_registros + 1);
+            if(cant_registros <= props.cantidad_entrada)
+                set_detalle_complementario([...detalle_complementario, values]);
+        }
     }
 
     return (
@@ -123,7 +167,6 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                 value={estado}
                                                 required
                                                 onChange={cambio_estado}
-                                                error={mensaje_error_estado !== ""}
                                             >
                                                 {estados.map((te: any) => (
                                                     <MenuItem key={te.cod_estado} value={te.cod_estado}>
@@ -143,19 +186,20 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                             size="small"
                                             fullWidth
                                             onChange={cambio_placa_serial}
-                                            error={mensaje_error_placa_serial !== ""}
+                                            error={msj_error_placa_serial !== ""}
                                         />
+                                        {(msj_error_placa_serial !== "") && (<FormHelperText error >{msj_error_placa_serial}</FormHelperText>)}
                                     </Grid>
                                     <Grid item xs={12} sm={4}>
                                         <TextField
                                             label="N° elemento"
                                             value={nro_elemento_bien}
-                                            required
                                             type={'text'}
                                             size="small"
                                             fullWidth
-                                            onChange={cambio_nro_elemento_bien}
-                                            error={mensaje_error_nro_elemento_bien !== ""}
+                                            InputProps={{
+                                                readOnly: true
+                                            }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -171,8 +215,9 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                             size="small"
                                             fullWidth
                                             onChange={cambio_vida_util}
-                                            error={mensaje_error_vida_util !== ""}
+                                            error={msj_error_vida_util !== ""}
                                         />
+                                        {(msj_error_vida_util !== "") && (<FormHelperText error >{msj_error_vida_util}</FormHelperText>)}
                                     </Grid>
                                     <Grid item xs={12} sm={2}>
                                         <FormControl required size='small' fullWidth>
@@ -182,7 +227,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                 value={unidad_tiempo}
                                                 required
                                                 onChange={cambio_unidad_tiempo}
-                                                error={mensaje_error_unidad_tiempo !== ""}
+                                                error={msj_error_unidad_tiempo !== ""}
                                             >
                                                 {estados.map((te: any) => (
                                                     <MenuItem key={te.cod_tipo_entrada} value={te.cod_tipo_entrada}>
@@ -191,6 +236,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                 ))}
                                             </Select>
                                         </FormControl>
+                                        {(msj_error_unidad_tiempo !== "") && (<FormHelperText error >{msj_error_unidad_tiempo}</FormHelperText>)}
                                     </Grid>
 
                                     <Grid item xs={12} sm={3}>
@@ -202,8 +248,9 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                             size="small"
                                             fullWidth
                                             onChange={cambio_valor_residual}
-                                            error={mensaje_error_valor_residual !== ""}
+                                            error={msj_error_valor_residual !== ""}
                                         />
+                                        {(msj_error_valor_residual !== "") && (<FormHelperText error >{msj_error_valor_residual}</FormHelperText>)}
                                     </Grid>
                                     <Grid item xs={12} sm={2}>
                                         <ToggleButton
@@ -222,7 +269,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                             color='primary'
                                             variant='contained'
                                             onClick={guardar_entrada}
-                                            startIcon={<SaveIcon />}>Guardar entrada</Button>
+                                            startIcon={<AddIcon />}>Agregar detalle</Button>
                                     </Grid>
                                 </Grid>
                             </Box>
@@ -240,7 +287,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                         }}
                     >
                         <Grid item md={12} xs={12}>
-                            <Title title="Registro de detalles" />
+                            <Title title={tittle}  />
                             <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                                 <Grid item container spacing={2}>
                                     <Grid item xs={12} sm={12}>
@@ -320,8 +367,8 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                 <Button
                     color='primary'
                     variant='contained'
-                    startIcon={<SaveIcon />}
-                    onClick={agregar_entradas}>Agregar</Button>
+                    startIcon={<AddIcon />}
+                    onClick={agregar_entradas}>Agregar entrada</Button>
             </DialogActions>
         </Dialog>
     )

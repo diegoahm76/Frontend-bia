@@ -1,6 +1,6 @@
 export interface crear_entrada {
-  info_entrada?: IInfoEntrada;
-  info_items_entrada?: IInfoItemEntrada[];
+  info_entrada: IInfoEntrada;
+  info_items_entrada: IInfoItemEntrada[];
 }
 
 export interface IInfoEntrada {

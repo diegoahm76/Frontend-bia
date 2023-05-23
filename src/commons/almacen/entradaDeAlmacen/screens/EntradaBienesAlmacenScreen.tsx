@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, Typography, FormHelperText } from "@mui/material";
+import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, FormHelperText } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { type Dayjs } from "dayjs";
@@ -22,7 +22,7 @@ import { useDropzone } from "react-dropzone";
 import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
 import AnularEntradaComponent from "./AnularEntrada";
 import EntradaArticuloFijoComponent from "./EntradaArticuloFijo";
-import { type IInfoEntrada, type crear_entrada } from "../interfaces/entradas";
+import { type IInfoEntrada, type crear_entrada, type IInfoItemEntrada } from "../interfaces/entradas";
 import { BuscadorPersonaDialog } from "../../gestionDeInventario/gestionHojaDeVida/mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoGeneral/BuscadorPersonaDialog";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -30,9 +30,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [entradas, set_entradas] = useState<crear_entrada>();
   const [user_info, set_user_info] = useState<any>({});
-  const [info_entrada, set_info_entrada] = useState<IInfoEntrada>({});
+  const [detalles_entrada, set_detalles_entrada] = useState<any>([]);
   const [articulo, set_articulo] = useState<any>({codigo_bien: ""});
-  const [msj_error_articulo, set_msj_error_articulo] = useState<any>(null);
+  const [msj_error_articulo, set_msj_error_articulo] = useState<string>("");
   const [codigo_articulo, set_codigo_articulo] = useState<string | number>("");
   const [numero_entrada, set_numero_entrada] = useState<number>(0);
   const [fecha_entrada, set_fecha_entrada] = useState<Dayjs>(dayjs());
@@ -59,8 +59,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [msj_error_cantidad, set_msj_error_cantidad] = useState<string>("");
   const [valor_unidad, set_valor_unidad] = useState<string>("");
   const [msj_error_vu, set_msj_error_vu] = useState<string>("");
-  const [valor_iva, set_valor_iva] = useState<number | string>("");
-  const [valor_total_item, set_valor_total_item] = useState<string | number>("");
+  const [valor_iva, set_valor_iva] = useState<string>("");
+  const [valor_total_item, set_valor_total_item] = useState<string>("");
   const [valor_total_entrada, set_valor_total_entrada] = useState<number>(0);
   const [buscar_articulo_is_active, set_buscar_articulo_is_active] = useState<boolean>(false);
   const [anular_entrada_is_active, set_anular_entrada_is_active] = useState<boolean>(false);
@@ -199,30 +199,69 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       const total_iva = ((parseInt(valor_unidad) * (articulo.porcentaje_iva/100)));
       const total_unidad = parseInt(valor_unidad) + total_iva;
       const total_entrada = total_unidad * parseInt(cantidad);
-      set_valor_iva(total_iva);
-      set_valor_total_item(total_unidad);
+      set_valor_iva(total_iva.toString());
+      set_valor_total_item(total_unidad.toString());
       set_valor_total_entrada(total_entrada);
   }
 
   const validar_entrada = (): void => {
+    set_entrada_af_is_active(true);
+
     if(validar_formulario()){
-          const formulario: IInfoEntrada = {
-            id_entrada_almacen: numero_entrada,
-            fecha_entrada: fecha_entrada.format("YYYY-MM-DD"), 
-            motivo, 
-            observacion: observaciones, 
-            id_proveedor: proveedor.id_persona, 
-            id_tipo_entrada: parseInt(tipo_entrada),  
-            id_bodega: parseInt(bodega_ingreso), 
-            valor_total_entrada
-          };
-          set_info_entrada(formulario);
-          if(articulo.cod_tipo_bien === "A")
-            set_entrada_af_is_active(true);
-          else{
-            // set_entradas({...entradas, info_entrada: info_entradas});
-          }
+      articulo.cod_tipo_bien === "A" ? set_entrada_af_is_active(true) : cargar_entradas();
     }
+  }
+
+  const cargar_entradas = (): void => {
+    const encabezado: IInfoEntrada = {
+      id_entrada_almacen: numero_entrada,
+      fecha_entrada: fecha_entrada.format("YYYY-MM-DD"), 
+      motivo, 
+      observacion: observaciones, 
+      id_proveedor: proveedor.id_persona, 
+      id_tipo_entrada: parseInt(tipo_entrada),  
+      id_bodega: parseInt(bodega_ingreso), 
+      valor_total_entrada
+    };
+    set_entradas({...entradas, info_entrada: encabezado,info_items_entrada: carga_info_items()});
+  }
+
+  const carga_info_items = (): IInfoItemEntrada[] => {
+    const info_items: IInfoItemEntrada[] = [];
+    if(detalles_entrada.length > 0){
+      detalles_entrada.forEach((info_item: any) => {
+        info_items.push({
+          id_item_entrada_almacen: null,
+          id_entrada_almacen: numero_entrada,
+          id_bien: articulo.codigo_bien,
+          cantidad: parseInt(cantidad),
+          id_bodega: parseInt(bodega_detalle),
+          numero_posicion: 0,
+          porcentaje_iva: articulo.porcentaje_iva,
+          id_bien_padre: articulo.bien_padre,
+          valor_unitario: parseFloat(valor_unidad),
+          valor_residual: info_item.valor_residual,
+          valor_iva: parseFloat(valor_iva),
+          valor_total_item: parseFloat(valor_total_item)
+        })
+      });
+    }else{
+      info_items.push({
+        id_item_entrada_almacen: null,
+        id_entrada_almacen: numero_entrada,
+        id_bien: articulo.codigo_bien,
+        cantidad: parseInt(cantidad),
+        id_bodega: parseInt(bodega_detalle),
+        numero_posicion: 0,
+        porcentaje_iva: articulo.porcentaje_iva,
+        id_bien_padre: articulo.bien_padre,
+        valor_unitario: parseFloat(valor_unidad),
+        valor_residual: null,
+        valor_iva: parseFloat(valor_iva),
+        valor_total_item: parseFloat(valor_total_item)
+      })
+    }
+    return info_items;
   }
   
   const validar_formulario = (): boolean =>{
@@ -258,6 +297,23 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_valor_total_entrada(0);
     }
   },[cantidad,valor_unidad]);
+
+  useEffect(() => {
+    articulo ?? set_codigo_articulo(articulo.codigo_bien);
+  },[articulo]);
+
+  useEffect(() => {
+    if(detalles_entrada.length > 0){
+      cargar_entradas();
+    }
+  },[detalles_entrada]);
+
+  useEffect(() => {
+    if(proveedor !== null){
+      set_tipo_documento(proveedor.tipo_documento);
+      set_numero_documento(proveedor.numero_documento);
+    }
+  },[proveedor]);
 
   return (
     <>
@@ -653,10 +709,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
             </Button>
             {entrada_af_is_active && (
                   <EntradaArticuloFijoComponent
-                    is_modal_active={entrada_af_is_active}
-                    set_is_modal_active={set_entrada_af_is_active}
-                    articulo_entrada={articulo} 
-                    info_entrada={info_entrada}/>
+                is_modal_active={entrada_af_is_active}
+                set_is_modal_active={set_entrada_af_is_active}
+                articulo_entrada={articulo}
+                cantidad_entrada={parseInt(cantidad)} detalles_entrada={set_detalles_entrada}/>
                 )}
           </Stack>
         </Grid>
