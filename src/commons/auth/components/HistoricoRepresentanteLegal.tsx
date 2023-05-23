@@ -23,7 +23,7 @@ import { consultar_historico_representante } from '../../seguridad/request/Reque
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    id_persona: number | null;
+    id_persona: number | undefined;
 }
 
 const columns: GridColDef[] = [

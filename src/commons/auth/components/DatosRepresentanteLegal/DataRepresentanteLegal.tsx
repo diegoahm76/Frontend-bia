@@ -1,22 +1,36 @@
 import { useEffect, useState } from 'react';
 import type { DataPersonas, } from "../../../../interfaces/globalModels";
 import {
-    Button, Grid, Stack, TextField,
+    Grid, MenuItem, Stack, TextField,
 } from "@mui/material";
-import { Title } from "../../../../components/Title";
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DialogRepresentanteLegal } from "../DialogCambioRepresentanteLegal";
-import { DialogHistoricoRepresentanteLegal } from '../HistoricoRepresentanteLegal';
 import type { PropsDatosRepresentanteLegal } from './types';
-import { get_datos_representante_legal } from '../Services/api.services';
+import { control_error } from '../../../../helpers';
+import { consultar_datos_persona } from '../../../seguridad/request/Request';
+import { CustomSelect } from '../../../../components/CustomSelect';
+import { use_register_persona_j } from '../../hooks/registerPersonaJuridicaHook';
+import { useForm } from 'react-hook-form';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = ({
-    id_persona = 0,
+    id_persona,
 }: PropsDatosRepresentanteLegal) => {
+    const {
+        register,
+        formState: { errors },
+        watch,
+        setValue: set_value,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        getValues
+      } = useForm();
+    const {
+        loading,
+        ciudad_notificacion_opt,
+    } = use_register_persona_j({ watch, setValue: set_value, getValues });
 
-    const [datos_persona, set_datos_persona] = useState<DataPersonas>();
-    const [is_modal_active, set_is_modal_active] = useState(false);
     const [datos_representante, set_datos_representante] = useState<DataPersonas>({
         id_persona: 0,
         nombre_unidad_organizacional_actual: '',
@@ -142,13 +156,50 @@ export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = (
             cod_departamento_laboral: result_representante_datalle.cod_departamento_laboral,
         })
     };
-    const handle_open_historico_representante = (): void => {
-        set_is_modal_active(true);
+    const get_datos_representante_legal = async (): Promise<void> => {
+        try {
+            const response = await consultar_datos_persona(id_persona);
+            set_datos_representante(response)
+            console.log('datos_representante', response)
+        } catch (err) {
+            control_error(err);
+        }
     };
 
     useEffect(() => {
-        void get_datos_representante_legal(id_persona, set_datos_persona)
-    }, [])
+        void get_datos_representante_legal()
+    }, [id_persona !== undefined && id_persona !== 0])
+
+    const tipos_doc = [
+        {
+            value: 'CC',
+            label: 'Cédula de ciudadanía'
+        },
+        {
+            value: 'CE',
+            label: 'Cédula extranjería',
+        },
+        {
+            value: 'TI',
+            label: 'Tarjeta de identidad',
+        },
+        {
+            value: 'RC',
+            label: 'Registro civil',
+        },
+        {
+            value: 'NU',
+            label: 'NUIP'
+        },
+        {
+            value: 'PA',
+            label: 'Pasaporte',
+        },
+        {
+            value: 'PE',
+            label: 'Permiso especial de permanencia',
+        },
+    ];
 
     return (
         <>
@@ -157,9 +208,7 @@ export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = (
                     <Grid container spacing={2}>
                         {/* datos de representante legal */}
                         <>
-                            <Grid item xs={12}>
-                                <Title title="DATOS DEL REPRESENTANTE LEGAL" />
-                            </Grid>
+                            
                             <Grid item xs={12} sm={6}>
                                 <TextField
                                     label="Tipo de Documento"
@@ -173,6 +222,11 @@ export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = (
                                     disabled
                                     defaultValue={datos_representante?.tipo_documento}
                                 >
+                                    {tipos_doc.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
                                 </TextField>
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -197,7 +251,7 @@ export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = (
                                     margin="dense"
                                     required
                                     autoFocus
-                                    value={datos_persona?.primer_nombre}
+                                    value={datos_representante?.primer_nombre}
                                     disabled
                                 />
                             </Grid>
@@ -226,17 +280,16 @@ export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = (
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-                                <TextField
-                                    label="Tipo de Documento"
-                                    id="tipo-doc-representante"
-                                    select
-                                    fullWidth
-                                    size="small"
-                                    margin="dense"
-                                    required
-                                    autoFocus
-                                    disabled
-                                    defaultValue={datos_representante?.cod_municipio_notificacion_nal}
+                                <CustomSelect
+                                    label="Ciudad"
+                                    name="cod_municipio_notificacion_nal"
+                                    value={datos_representante?.cod_municipio_notificacion_nal}
+                                    options={ciudad_notificacion_opt}
+                                    loading={loading}
+                                    disabled={datos_representante?.cod_departamento_notificacion === '' ?? true}
+                                    required={true}
+                                    errors={errors}
+                                    register={register}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -252,19 +305,24 @@ export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = (
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
-
-                                <TextField
-                                    label="Tipo de Documento"
-                                    id="tipo-doc-representante"
-                                    select
-                                    fullWidth
-                                    size="small"
-                                    margin="dense"
-                                    required
-                                    autoFocus
-                                    disabled
-                                    defaultValue={datos_representante?.fecha_inicio_cargo_rep_legal}
-                                />
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        label="Fecha de inicio como representante legal"
+                                        inputFormat="YYYY-MM-DD"
+                                        openTo="day"
+                                        value={datos_representante.fecha_inicio_cargo_rep_legal}
+                                        views={['year', 'month', 'day']}
+                                        renderInput={(params) => (
+                                            <TextField
+                                                required
+                                                fullWidth
+                                                // defaultValue={datos_persona?.fecha_nacimiento}
+                                                size="small"
+                                                {...params} />
+                                        )} onChange={function (value: string | null, keyboardInputValue?: string | undefined): void {
+                                            throw new Error('Function not implemented.');
+                                        } }                                    />
+                                </LocalizationProvider>
                             </Grid>
                             <Grid item xs={12}>
                                 <Stack
@@ -273,16 +331,6 @@ export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = (
                                     direction="row"
                                     spacing={2}
                                 >
-                                    <Button
-                                        variant="outlined"
-                                        startIcon={<RemoveRedEyeIcon />}
-                                        onClick={() => {
-                                            handle_open_historico_representante();
-                                        }}
-                                    >
-                                        Historico Representante Legal
-                                    </Button>
-
                                     <DialogRepresentanteLegal
                                         onResult={result_representante}
                                     />
@@ -292,11 +340,6 @@ export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = (
                     </Grid>
                 </form>
             </Grid>
-            <DialogHistoricoRepresentanteLegal
-                is_modal_active={is_modal_active}
-                set_is_modal_active={set_is_modal_active}
-                id_persona={id_persona}
-            />
         </>
     );
 };
