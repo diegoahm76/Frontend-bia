@@ -45,9 +45,7 @@ export const ModalAtom: React.FC<ModalProps> = ({
           )}
           {values2 !== false && keys2 !== false && (
             <details>
-              <summary>
-                Valores Actualizados
-              </summary>
+              <summary>Valores Actualizados</summary>
               <ModalContent keys={keys2} values={values2} />
             </details>
           )}
