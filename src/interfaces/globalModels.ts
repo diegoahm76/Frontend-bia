@@ -80,6 +80,30 @@ export interface PropsRegister {
   watch: UseFormWatch<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
 }
+export interface PropsUpdateJ {
+  data: DataPersonas | undefined;
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  isValid: boolean;
+  watch: UseFormWatch<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+}
+
+export interface PropsUpdate {
+  numero_documento: string;
+  id_persona: number;
+  tipo_documento: string;
+  tipo_persona: string;
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  isValid: boolean;
+  watch: UseFormWatch<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+}
 
 export interface Direccion {
   via_principal: string;
@@ -136,7 +160,7 @@ export type keys_direccion =
 export interface InfoPersona {
   id: number;
   id_persona: number;
-  tipo_persona: string;
+  tipo_persona?: string;
   tipo_documento: string;
   numero_documento: string;
   primer_nombre: string;

@@ -1,18 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
-import type { InfoPersona } from '../../../interfaces/globalModels';
-import { Alert, Divider, Grid, LinearProgress, Typography } from '@mui/material';
+import type { DataPersonas, InfoPersona } from '../../../interfaces/globalModels';
+import { Divider, Grid, Typography } from '@mui/material';
 import { Title } from '../../../components/Title';
 import 'react-datepicker/dist/react-datepicker.css';
-import { AdministracionPersonasScreenNatural } from '../../auth/components/AdministradorPersonaNatural';
-import { AdministracionPersonasScreenJuridica } from '../../auth/components/AdministradorPersonaJuridica';
-import { CrearPersonaNatAdmin } from '../../auth/components/CrearPersonaNatAdmin';
-import { CrearPersonaJurAdmin } from '../../auth/components/CrearPersonaJurAdmin';
 import { use_register } from '../../auth/hooks/registerHook';
+import { consultar_datos_persona } from '../request/Request';
+import { control_error } from '../../../helpers';
+import { AdministracionPersonasScreenNatural } from '../../auth/components/AdministradorPersonaNatural/AdministradorPersonaNatural';
+import { AdministracionPersonasScreenJuridica } from '../../auth/components/AdministrarPersonaJuridica/AdministradorPersonaJuridica';
+import { CrearPersonaNatAdmin } from '../../auth/components/CrearPersonaNatAdmin/CrearPersonaNatAdmin';
+import { CrearPersonaJurAdmin } from '../../auth/components/CrearPersonaJurAdmin/CrearPersonaJurAdmin';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreen: React.FC = () => {
   const [persona, set_persona] = useState<InfoPersona>();
+  const [datos_persona, set_datos_persona] = useState<DataPersonas>();
   const [is_register, set_is_register] = useState(false);
   const [is_update, set_is_update] = useState(false);
   const {
@@ -25,11 +28,21 @@ export const AdministracionPersonasScreen: React.FC = () => {
     watch,
   } = use_register();
 
+  const get_datos_persona = async (id_persona:number): Promise<void> => {
+    try {
+      const response = await consultar_datos_persona(id_persona);
+        set_datos_persona(response);
+
+    } catch (err) {
+        control_error(err);
+    }
+};
+
   const on_result = (info_persona: InfoPersona): void => {
     set_is_update(false)
     set_is_register(false)
     if (info_persona !== undefined && info_persona.id_persona !== 0) {
-      console.log("info_persona", info_persona)
+      void get_datos_persona(info_persona.id_persona)
       set_is_update(true)
       set_persona(info_persona);
     } else {
@@ -37,17 +50,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
       set_persona(info_persona);
     }
   };
-
-  useEffect(() => {
-    set_is_update(false)
-    if (persona !== undefined) {
-      set_is_update(true)
-    }
-  }, [persona]);
-
-  useEffect(() => {
-    // Este efecto se ejecutará cada vez que se actualice is_update o is_register
-  }, [is_update, is_register]);
+  
 
   return (
     <>
@@ -67,26 +70,38 @@ export const AdministracionPersonasScreen: React.FC = () => {
           <BuscadorPersona onResult={on_result} />
           {is_update && (
             <>
-              {persona?.tipo_persona === 'N' ? (
-                <AdministracionPersonasScreenNatural data_all={persona} />
-                ) : (
-                  <Grid item xs={12}>
-                      <Grid container justifyContent="center" textAlign="center">
-                          <Alert icon={false} severity="info">
-                              <LinearProgress />
-                              <Typography>Cargando Información...</Typography>
-                          </Alert>
-                      </Grid>
-                  </Grid>
+              {persona?.tipo_persona === 'N' && (
+                <AdministracionPersonasScreenNatural
+                  numero_documento={persona.numero_documento}
+                  id_persona={persona.id_persona}
+                  tipo_persona={persona.tipo_persona}
+                  tipo_documento={persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                />
               )}
               {persona?.tipo_persona === 'J' && (
                 <>
-                  <AdministracionPersonasScreenJuridica data_all={persona} />
+                  <AdministracionPersonasScreenJuridica
+                    data={datos_persona}
+                    errors={errors}
+                    handleSubmit={handle_submit}
+                    isValid={is_valid}
+                    register={register}
+                    setValue={set_value}
+                    getValues={get_values}
+                    watch={watch}
+                  />
                 </>
               )}
             </>
-          
-        )}
+
+          )}
           {is_register && (
             <>
               <Grid container spacing={2}>

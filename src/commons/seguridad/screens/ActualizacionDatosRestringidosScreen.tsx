@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import type { InfoPersona } from '../../../interfaces/globalModels';
 import {
@@ -26,24 +26,7 @@ import { DialogHistorialDatosRestringidos } from '../components/DialogHistorialD
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   const [historico, set_historico] = useState<boolean>(false);
-  const [persona, set_persona] = useState<InfoPersona>({
-    id: 0,
-    id_persona: 0,
-    tipo_persona: '',
-    tipo_documento: '',
-    numero_documento: '',
-    primer_nombre: '',
-    segundo_nombre: '',
-    primer_apellido: '',
-    segundo_apellido: '',
-    nombre_completo: '',
-    razon_social: '',
-    nombre_comercial: '',
-    tiene_usuario: false,
-    digito_verificacion: '',
-    cod_naturaleza_empresa: '',
-  });
-  const [new_tipo_persona, set_new_tipo_persona] = useState('');
+  const [persona, set_persona] = useState<InfoPersona>();
   const [loading_natural, set_loading_natural] = useState(false);
   const [loading_juridica, set_loading_juridica] = useState(false);
   const [datos_historico, set_datos_historico] = useState<InfoPersona>({
@@ -94,23 +77,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
     set_persona(info_persona);
   };
   const cancelar = (): void => {
-    set_persona({
-      id: 0,
-      id_persona: 0,
-      tipo_persona: '',
-      tipo_documento: '',
-      numero_documento: '',
-      primer_nombre: '',
-      segundo_nombre: '',
-      primer_apellido: '',
-      segundo_apellido: '',
-      nombre_completo: '',
-      razon_social: '',
-      nombre_comercial: '',
-      tiene_usuario: false,
-      digito_verificacion: '',
-      cod_naturaleza_empresa: '',
-    });
+    set_persona(undefined);
     reset_file_state();
     reset();
   };
@@ -132,7 +99,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
       );
       datos_persona.append('justificacion', data.justificacion);
 
-      const id_persona: number = persona?.id_persona ?? 0;
+      const id_persona: number | undefined = persona?.id_persona;
       await editar_datos_restringidos_persona(id_persona, datos_persona);
       reset_file_state();
       set_loading_natural(false);
@@ -163,7 +130,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
       console.log('file', data.ruta_archivo_soporte[0]);
       datos_persona.append('justificacion', data.justificacion);
 
-      const id_persona: number = persona?.id_persona ?? 0;
+      const id_persona: number | undefined = persona?.id_persona;
       await editar_datos_restringidos_juridica(id_persona, datos_persona);
       reset_file_state();
       set_loading_juridica(false);
@@ -173,13 +140,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
       set_loading_juridica(false);
     }
   };
-  useEffect(() => {
-    if (persona != null) {
-      // Aquí puedes renderizar la información de la persona correctamente
-      // o realizar cualquier otra acción necesaria cuando se detecta información nueva
-      set_new_tipo_persona(persona.tipo_persona);
-    }
-  }, [persona]);
 
   const tipos_doc_comercial = [
     {
@@ -258,9 +218,8 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
         <Grid item xs={12} spacing={2}>
           <Title title="ACTUALIZACIÓN DE DATOS RESTRINGIDOS" />
           <BuscadorPersona onResult={on_result} />
-          {new_tipo_persona === 'N' && (
-            <Box
-              component="form"
+          {persona?.tipo_persona === 'N' && (
+            <Box component="form"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onSubmit={handleSubmit(on_submit_persona)}
             >
@@ -502,9 +461,8 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
               </Grid>
             </Box>
           )}
-          {new_tipo_persona === 'J' && (
-            <Box
-              component="form"
+          {persona?.tipo_persona === 'J' && (
+            <Box component="form"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onSubmit={handleSubmit(on_submit_persona_juridica)}
             >
