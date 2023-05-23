@@ -81,7 +81,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
   const historico = async (): Promise<void> => {
     try {
       const response = await consultar_historico_restringido(
-        datos_historico.id_persona
+        datos_historico?.id_persona ?? 0
       );
       const new_historico = response.map(
         (datos: HistoricoDatosRestringidos) => ({
@@ -93,7 +93,6 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
           fecha_cambio: datos.fecha_cambio,
           justificacion_cambio: datos.justificacion_cambio,
           id_persona: datos.id_persona,
-
         })
       );
 
@@ -155,7 +154,6 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
                 </Grid>
               </Grid>
             )}
-
           </Grid>
           <Grid item xs={12}>
             <Stack
