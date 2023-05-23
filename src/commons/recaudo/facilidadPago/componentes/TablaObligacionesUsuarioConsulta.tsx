@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox, TextField, Stack, Button } from '@mui/material';
+import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
-import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -126,37 +125,6 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
           {params.value}
         </div>
       ),
-    },
-    {
-      field: 'acciones',
-      headerName: 'Acciones',
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <>
-            <Tooltip title="Ver">
-                <IconButton
-                  onClick={() => {}}
-                >
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
-                  >
-                    <ArticleIcon
-                      sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                    />
-
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-            </>
-        )
-      },
     },
   ];
 

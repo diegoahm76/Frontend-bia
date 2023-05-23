@@ -5,6 +5,12 @@ export interface event {
   }
 }
 
+export interface check {
+  target: {
+    checked: boolean;
+  }
+}
+
 export interface Obligacion {
   nombre: string;
   fecha_inicio: string;
@@ -29,6 +35,11 @@ export interface FacilidadPago {
   fecha_generacion: string;
 }
 
+export interface Funcionario {
+  id_persona: number;
+  nombre_funcionario: string;
+}
+
 export interface FacilidadPagoSolicitud {
   id: number;
   fecha_generacion: string;
@@ -38,4 +49,13 @@ export interface FacilidadPagoSolicitud {
   documento_soporte: string;
   observaciones: string;
   notificaciones: boolean;
+}
+
+export interface RespuestaFacilidadPago {
+  id_funcionario: number;
+  id_facilidades_pago : number;
+  estado : string;
+  aprobacion : boolean;
+  observacion : string;
+  consulta_dbme : string;
 }

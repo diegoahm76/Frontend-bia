@@ -1,4 +1,5 @@
 import { api } from '../../../../api/axios';
+import { type RespuestaFacilidadPago } from '../interfaces/interfaces';
 
 // Listar Obligaciones desde Pag. Usuario Externo
 export const get_obligaciones_usuario = async (): Promise<any> => {
@@ -13,7 +14,7 @@ export const get_deudores = async (): Promise<any> => {
 
 // Listar Obligaciones de Usuario Externo desde Pag. Usuario Interno
 export const get_obligaciones_deudores = async (identificacion: string): Promise<any> => {
-  return await api.get(`recaudo/pagos/consulta-deudores-obligaciones/${identificacion}`)
+  return await api.get(`recaudo/pagos/consulta-deudores-obligaciones/${identificacion}/`)
 }
 
 // Listar facilidades de pago ingresadas desde Pag. Usuario Admin
@@ -29,6 +30,24 @@ export const get_fac_pago_asignadas = async (): Promise<any> => {
 
 // Ver la información de la facilidad de pago desde Pag. Usuario Interno
 export const get_fac_pago_solicitud = async (): Promise<any> => {
-  const data = await api.get(`https://backend-bia-beta-production.up.railway.app/api/recaudo/pagos/consulta-facilidades-pagos/1/`)
+  const data = await api.get(`recaudo/pagos/consulta-facilidades-pagos/1/`)
+  return data
+}
+
+// Listar funcionarios desde Pag. Usuario Interno
+export const get_funcionarios = async (): Promise<any> => {
+  const data = await api.get('recaudo/pagos/funcionarios/')
+  return data.data
+}
+
+// Dar respuesta a la facilidad de pago desde Pag. Usuario Interno
+export const put_asignacion_funcionario = async (id: number): Promise<any> => {
+  const data = await api.put(`recaudo/pagos/asignar-facilidad-pago/${id}/`,)
+  return data
+}
+
+// Dar respuesta a la facilidad de pago desde Pag. Usuario Interno
+export const post_respuesta_fac_pago = async (respuesta: RespuestaFacilidadPago): Promise<any> => {
+  const data = await api.post(`recaudo/pagos/respuesta-funcionario/`, respuesta)
   return data
 }

@@ -6,12 +6,18 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { type event, type FacilidadPago } from '../interfaces/interfaces';
+import { type event, type FacilidadPago, type Funcionario } from '../interfaces/interfaces';
 import { useSelector } from 'react-redux';
 
-interface RootState {
+interface RootStateFacilidades {
   facilidades: {
     facilidades: FacilidadPago[];
+  }
+}
+
+interface RootStateFuncionarios {
+  funcionarios: {
+    funcionarios: Funcionario[];
   }
 }
 
@@ -23,7 +29,8 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const [sub_modal, set_sub_modal] = useState(false);
   const [modal_option, set_modal_option] = useState('no');
-  const { facilidades } = useSelector((state: RootState) => state.facilidades);
+  const { facilidades } = useSelector((state: RootStateFacilidades) => state.facilidades);
+  const { funcionarios } = useSelector((state: RootStateFuncionarios) => state.funcionarios);
   const navigate = useNavigate();
 
   const handle_open = () => { set_modal(true) };
@@ -121,10 +128,11 @@ export const TablaObligacionesAdmin: React.FC = () => {
                   handle_open()
                 }}
               >
-                <MenuItem value='Olga'>Olga</MenuItem>
-                <MenuItem value='Diana'>Diana</MenuItem>
-                <MenuItem value='Juan'>Juan</MenuItem>
-                <MenuItem value='Fernando'>Fernando</MenuItem>
+                {
+                  funcionarios.map((funcionario) => (
+                    <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>{funcionario.nombre_funcionario}</MenuItem>
+                  ))
+                }
               </Select>
           </FormControl>
         )
