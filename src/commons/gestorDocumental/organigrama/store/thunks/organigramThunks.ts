@@ -66,7 +66,7 @@ export const get_mold_organigrams_service: any = (id: string | number) => {
   };
 };
 
-// Obtener Organigrama
+// Obtener todos los organigramas
 export const get_organigrams_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -79,6 +79,21 @@ export const get_organigrams_service = (): any => {
     }
   };
 };
+
+// Obtener todos los organigramas terminado
+export const get_finished_organigrams_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('transversal/organigrama/get-terminados/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
 
 // Agregar Organigrama
 export const add_organigrams_service:any = (organigrama: any, set_position_tab_organigrama: Dispatch<SetStateAction<string>>) => {

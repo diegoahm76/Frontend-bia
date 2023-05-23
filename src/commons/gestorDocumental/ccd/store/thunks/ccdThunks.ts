@@ -50,12 +50,10 @@ const control_success = (message: ToastContent) =>
   });
 
 // Obtener los CCDS terminados
-export const get_finished_ccd_service = () => {
-  return async (): Promise<AxiosResponse | AxiosError> => {
+export const get_finished_ccd_service = ():any => {
+  return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('gestor/ccd/get-terminados/');
-      // dispatch(getMoldOrganigrams(data.data));
-      control_success(data.detail);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
