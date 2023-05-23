@@ -46,7 +46,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
     }, [detalle])
 
     const validar_formulario: () => void = () => {
-        if (user_info !== null && programacion !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null) {
+        if (user_info !== null && programacion !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null && accion_guardar) {
             const formulario: ejecutar_mantenimiento = {
                 fecha_registrado: dayjs().format("YYYY-MM-DD"),
                 fecha_ejecutado: fecha_dias.fecha_mantenimiento.format("YYYY-MM-DD"),
