@@ -6,13 +6,13 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DialogRepresentanteLegal } from "../DialogCambioRepresentanteLegal";
 import type { PropsDatosRepresentanteLegal } from './types';
 import { control_error } from '../../../../helpers';
 import { consultar_datos_persona } from '../../../seguridad/request/Request';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { use_register_persona_j } from '../../hooks/registerPersonaJuridicaHook';
 import { useForm } from 'react-hook-form';
+import { DialogRepresentanteLegal } from '../DialogCambioRepresentanteLegal/DialogCambioRepresentanteLegal';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosRepresentanteLegal: React.FC<PropsDatosRepresentanteLegal> = ({

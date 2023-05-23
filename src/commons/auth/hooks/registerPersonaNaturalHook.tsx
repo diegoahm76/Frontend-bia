@@ -232,6 +232,7 @@ export const use_register_persona_n = ({
     try {
       values.redirect_url =
         'https://macareniafrontendevelopv2.netlify.app/#/auth/activacion_cuenta';
+      values.telefono_celular = `57${values.telefono_celular as string}`;
       const { data } = await crear_persona_natural_and_user(
         values as DataRegisterPersonaN
       );

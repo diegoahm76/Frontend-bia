@@ -28,14 +28,12 @@ import { type FieldErrors, useForm } from "react-hook-form";
 import { DialogGeneradorDeDirecciones } from "../../../components/DialogGeneradorDeDirecciones";
 import { consultar_clase_tercero, consultar_clase_tercero_persona, consultar_datos_persona, consultar_datos_persona_basicos, editar_persona_juridica } from "../../seguridad/request/Request";
 import dayjs, { type Dayjs } from 'dayjs';
-import { DialogRepresentanteLegal } from "./DialogCambioRepresentanteLegal";
 import { DialogAutorizaDatos } from '../../../components/DialogAutorizaDatos';
 import { DialogHistorialDatosRestringidos } from '../../seguridad/components/DialogHistorialDatosRestringidos';
-import { DialogHistorialEmail } from './HistoricoEmail';
-import { DialogHistorialDirecciones } from './HistoricoDirecciones';
-import { DialogHistoricoAutorizaNotificaciones } from './HistoricoAutorizaNotificaciones';
-import { DialogHistoricoRepresentanteLegal } from './HistoricoRepresentanteLegal';
 import { update_register } from '../hooks/updateHooks';
+import { DialogHistorialEmail } from './HistoricoEmail/HistoricoEmail';
+import { DialogHistorialDirecciones } from './HistoricoDirecciones/HistoricoDirecciones';
+import { DialogHistoricoAutorizaNotificaciones } from './HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
 
 interface PropsElement {
     errors: FieldErrors<DataPersonas>;
