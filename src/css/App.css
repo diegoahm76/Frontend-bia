@@ -240,9 +240,9 @@ body::-webkit-scrollbar-thumb {
    *  - Componente: Footer
    *  - Version: 4.0.0
    */
+
 [class^='govco-']:before,
 [class*=' govco-']:before {
-  /* font-family: 'govco-fontv2'; */
   font-style: normal;
   font-weight: normal;
 

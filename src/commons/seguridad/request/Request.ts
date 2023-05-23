@@ -2,6 +2,8 @@ import { api } from '../../../api/axios';
 import type {
   ClaseTercero,
   ClaseTerceroPersona,
+  CrearPersonJuridicaAdmin,
+  CrearPersonNaturalAdmin,
   DataJuridicaUpdate,
   DataNaturaUpdate,
   DataPersonas,
@@ -167,6 +169,26 @@ export const editar_autorizacion_notificaciones = async (
 ): Promise<any> => {
   const response = await api.put(
     `gestor/ventanilla/personas/autorizacion-notificaciones/${id_persona ?? 0}/`,
+    datos
+  );
+  return response.data;
+};
+// crear datos persona naturual
+export const crear_persona_natural = async (
+  datos: CrearPersonNaturalAdmin
+): Promise<any> => {
+  const response = await api.post(
+    `personas/register-persona-natural-admin-personas/`,
+    datos
+  );
+  return response.data;
+};
+// crear datos persona naturual
+export const crear_persona_juridica = async (
+  datos: CrearPersonJuridicaAdmin
+): Promise<any> => {
+  const response = await api.post(
+    `personas/register-persona-juridica-admin-personas/`,
     datos
   );
   return response.data;

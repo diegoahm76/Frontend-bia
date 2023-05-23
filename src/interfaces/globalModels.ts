@@ -80,6 +80,30 @@ export interface PropsRegister {
   watch: UseFormWatch<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
 }
+export interface PropsUpdateJ {
+  data: DataPersonas | undefined;
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  isValid: boolean;
+  watch: UseFormWatch<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+}
+
+export interface PropsUpdate {
+  numero_documento: string;
+  id_persona: number;
+  tipo_documento: string;
+  tipo_persona: string;
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  isValid: boolean;
+  watch: UseFormWatch<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+}
 
 export interface Direccion {
   via_principal: string;
@@ -136,7 +160,7 @@ export type keys_direccion =
 export interface InfoPersona {
   id: number;
   id_persona: number;
-  tipo_persona: string;
+  tipo_persona?: string;
   tipo_documento: string;
   numero_documento: string;
   primer_nombre: string;
@@ -559,4 +583,62 @@ export interface HistoricoAutorizaNotificaciones {
   fecha_inicio:                string;
   fecha_fin:                   string;
   id_persona:                  number;
+}
+export interface CrearPersonNaturalAdmin {
+  tipo_persona:                      string;
+  tipo_documento:                    string;
+  numero_documento:                  string;
+  cod_municipio_expedicion_id:       string;
+  digito_verificacion:               string;
+  nombre_comercial:                  string;
+  primer_nombre:                     string;
+  segundo_nombre:                    string;
+  primer_apellido:                   string;
+  segundo_apellido:                  string;
+  fecha_nacimiento:                  Date | string;
+  email:                             string;
+  telefono_celular:                  string;
+  telefono_empresa_2:                null | string;
+  sexo:                              string;
+  estado_civil:                      string;
+  pais_nacimiento:                   string;
+  email_empresarial:                 string;
+  ubicacion_georeferenciada:         string;
+  telefono_fijo_residencial:         null | string;
+  pais_residencia:                   string;
+  municipio_residencia:              string;
+  direccion_residencia:              string;
+  direccion_laboral:                 string;
+  direccion_residencia_ref:          string;
+  direccion_notificaciones:          string;
+  direccion_notificacion_referencia: string;
+  cod_municipio_laboral_nal:         string;
+  cod_municipio_notificacion_nal:    string;
+  acepta_notificacion_sms:           boolean;
+  acepta_notificacion_email:         boolean;
+  acepta_tratamiento_datos:          boolean;
+  datos_clasificacion_persona:       number[];
+}
+export interface CrearPersonJuridicaAdmin {
+  tipo_persona:                      string;
+  tipo_documento:                    string;
+  numero_documento:                  string;
+  digito_verificacion:               string;
+  cod_naturaleza_empresa:            string;
+  nombre_comercial:                  string;
+  razon_social:                      string;
+  email:                             string;
+  email_empresarial:                 null;
+  direccion_notificaciones:          string;
+  direccion_notificacion_referencia: string;
+  cod_municipio_notificacion_nal:    number;
+  cod_pais_nacionalidad_empresa:     string;
+  telefono_celular_empresa:          string;
+  telefono_empresa_2:                string;
+  telefono_empresa:                  string;
+  acepta_notificacion_sms:           boolean;
+  acepta_notificacion_email:         boolean;
+  representante_legal:               number;
+  fecha_inicio_cargo_rep_legal:      Date;
+  datos_clasificacion_persona:       number[];
 }

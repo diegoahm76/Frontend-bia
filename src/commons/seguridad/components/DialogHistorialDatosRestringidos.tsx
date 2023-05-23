@@ -7,6 +7,9 @@ import {
   Divider,
   Grid,
   Stack,
+  Alert,
+  LinearProgress,
+  Typography,
 } from '@mui/material';
 import { Title } from '../../../components/Title';
 import type {
@@ -21,7 +24,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  datos_historico: InfoPersona;
+  datos_historico: InfoPersona ;
 }
 
 const columns: GridColDef[] = [
@@ -78,7 +81,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
   const historico = async (): Promise<void> => {
     try {
       const response = await consultar_historico_restringido(
-        datos_historico.id_persona
+        datos_historico?.id_persona ?? 0
       );
       const new_historico = response.map(
         (datos: HistoricoDatosRestringidos) => ({
@@ -90,7 +93,6 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
           fecha_cambio: datos.fecha_cambio,
           justificacion_cambio: datos.justificacion_cambio,
           id_persona: datos.id_persona,
-
         })
       );
 
@@ -133,14 +135,25 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
           }}
         >
           <Grid item xs={12}>
-            <DataGrid
-              autoHeight
-              rows={rows}
-              columns={columns}
-              getRowId={(row) => row.historico_cambio_id_persona}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-            />
+            {rows.length > 0 ? (
+              <DataGrid
+                autoHeight
+                rows={rows}
+                columns={columns}
+                getRowId={(row) => row.historico_cambio_id_persona}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+              />
+            ) : (
+              <Grid item xs={12}>
+                <Grid container justifyContent="center" textAlign="center">
+                  <Alert icon={false} severity="info">
+                    <LinearProgress />
+                    <Typography>No se encontraron resultados...</Typography>
+                  </Alert>
+                </Grid>
+              </Grid>
+            )}
           </Grid>
           <Grid item xs={12}>
             <Stack

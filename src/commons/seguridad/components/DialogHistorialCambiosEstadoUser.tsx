@@ -77,7 +77,7 @@ export const DialogHistorialCambiosEstadoUser: React.FC<IProps> = ({
   const historico = async (): Promise<void> => {
     try {
       const response = await user_historico_cambios_estado(id_usuario);
-      const new_historico = response.map(
+      const new_historico = response.data?.map(
         (datos: HistoricoCambioEstadosUser) => ({
           id_historico: datos.id_historico,
           nombre_operador: datos.nombre_operador,
@@ -89,7 +89,7 @@ export const DialogHistorialCambiosEstadoUser: React.FC<IProps> = ({
         })
       );
 
-      set_rows(new_historico);
+      set_rows(new_historico ?? []);
     } catch (err) {
       control_error(err);
     }
