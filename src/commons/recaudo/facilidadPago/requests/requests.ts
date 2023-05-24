@@ -1,6 +1,10 @@
 import { api } from '../../../../api/axios';
 import { type RespuestaFacilidadPago } from '../interfaces/interfaces';
 
+interface Funcionario {
+  id_funcionario: number;
+}
+
 // Listar Obligaciones desde Pag. Usuario Externo
 export const get_obligaciones_usuario = async (): Promise<any> => {
   return await api.get('recaudo/pagos/listado-obligaciones/');
@@ -40,9 +44,9 @@ export const get_funcionarios = async (): Promise<any> => {
   return data.data
 }
 
-// Dar respuesta a la facilidad de pago desde Pag. Usuario Interno
-export const put_asignacion_funcionario = async (id: number): Promise<any> => {
-  const data = await api.put(`recaudo/pagos/asignar-facilidad-pago/${id}/`,)
+// Asignar la facilidad de pago a un funcionario desde Pag. Usuario Interno
+export const put_asignacion_funcionario = async (id: number, id_funcionario: Funcionario): Promise<any> => {
+  const data = await api.put(`recaudo/pagos/asignar-facilidad-pago/${id}/`, id_funcionario)
   return data
 }
 

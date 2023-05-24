@@ -29,9 +29,10 @@ export interface ObligacionesUsuario {
 }
 
 export interface FacilidadPago {
+  id_facilidad: number;
   nombre_de_usuario: string;
   identificacion: string;
-  obligacion: string;
+  obligacion: string; // este parametro no esta contemplado en back nro radicación fp
   fecha_generacion: string;
 }
 
@@ -42,11 +43,15 @@ export interface Funcionario {
 
 export interface FacilidadPagoSolicitud {
   id: number;
+  id_funcionario: number;
+  id_deudor_actuacion: number;
   fecha_generacion: string;
   periodicidad: number;
   cuotas: number;
   consignacion_soporte: string;
   documento_soporte: string;
+  documento_no_enajenacion: string;
+  documento_garantia: string;
   observaciones: string;
   notificaciones: boolean;
 }

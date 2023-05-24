@@ -7,7 +7,10 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { type event, type FacilidadPago, type Funcionario } from '../interfaces/interfaces';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { get_facilidad_solicitud } from '../slices/FacilidadesSlice';
+import { put_asignacion_funcionario } from '../requests/requests';
 
 interface RootStateFacilidades {
   facilidades: {
@@ -31,6 +34,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const [modal_option, set_modal_option] = useState('no');
   const { facilidades } = useSelector((state: RootStateFacilidades) => state.facilidades);
   const { funcionarios } = useSelector((state: RootStateFuncionarios) => state.funcionarios);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
   const handle_open = () => { set_modal(true) };
@@ -90,7 +94,8 @@ export const TablaObligacionesAdmin: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    navigate('../solicitud')
+                    void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                    navigate('../solicitud');
                   }}
                 >
                   <Avatar
@@ -124,13 +129,16 @@ export const TablaObligacionesAdmin: React.FC = () => {
               <Select
                 size='small'
                 label="Seleccionar"
-                onChange={()=>{
+                defaultValue={''}
+                onChange={(event: event) => {
+                  const { value } = event.target
+                  void put_asignacion_funcionario(params.row.id_facilidad, {id_funcionario: parseInt(value)});
                   handle_open()
                 }}
               >
                 {
                   funcionarios.map((funcionario) => (
-                    <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>{funcionario.nombre_funcionario}</MenuItem>
+                    <MenuItem key={funcionario.id_persona} value={funcionario.id_persona}>{funcionario.nombre_funcionario}</MenuItem>
                   ))
                 }
               </Select>
@@ -156,6 +164,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
           <InputLabel>Filtrar por: </InputLabel>
             <Select
               label="Filtrar por: "
+              defaultValue={''}
               onChange={(event: event)=>{
                 const { value } = event.target
                 set_filter(value)
@@ -244,7 +253,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.identificacion}
+                    getRowId={(row) => row.id_facilidad}
                   />
                 </Box>
               </Grid>

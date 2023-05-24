@@ -6,7 +6,9 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { type event, type FacilidadPago } from '../interfaces/interfaces';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { get_facilidad_solicitud } from '../slices/FacilidadesSlice';
 
 interface RootState {
   facilidades: {
@@ -20,38 +22,8 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
   const { facilidades } = useSelector((state: RootState) => state.facilidades);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
-
-  /* const fac_pago = [
-    {
-      id: 1,
-      nombre: 'Koch and Sons',
-      identificacion: '10298723',
-      obligacion: 'Concesión Agua Superficial',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 2,
-      nombre: 'Steuber LLC',
-      identificacion: '2346448723',
-      obligacion: 'Permiso Perforación',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 3,
-      nombre: 'Konopelski Group',
-      identificacion: '43214134',
-      obligacion: 'Pago Tasa TUA',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 4,
-      nombre: 'Harber Inc',
-      identificacion: '34545437',
-      obligacion: 'Uso Agua Subterranea',
-      fechaRadicacion: '01/01/2022'
-    },
-  ]; */
 
   const columns: GridColDef[] = [
     {
@@ -104,7 +76,8 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    navigate('../solicitud')
+                    void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                    navigate('../solicitud');
                   }}
                 >
                   <Avatar
@@ -145,6 +118,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           <InputLabel>Filtrar por: </InputLabel>
             <Select
               label="Filtrar por: "
+              defaultValue={''}
               onChange={(event: event)=>{
                 const { value } = event.target
                 set_filter(value)
@@ -233,7 +207,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.identificacion}
+                    getRowId={(row) => row.id_facilidad}
                   />
                 </Box>
               </Grid>

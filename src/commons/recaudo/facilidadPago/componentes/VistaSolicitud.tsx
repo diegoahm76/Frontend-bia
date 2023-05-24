@@ -8,7 +8,7 @@ import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 
 interface RootState {
   facilidades: {
-    facilidades: FacilidadPagoSolicitud[];
+    facilidades: FacilidadPagoSolicitud;
   }
 }
 
@@ -136,7 +136,7 @@ export const VistaSolicitud: React.FC = () => {
             label="Periodicidad y Modalidad"
             size="small"
             fullWidth
-            value={facilidades[0].periodicidad}
+            value={facilidades.periodicidad}
             disabled
           />
         </Grid>
@@ -145,7 +145,7 @@ export const VistaSolicitud: React.FC = () => {
             label="Plazo"
             size="small"
             fullWidth
-            value={facilidades[0].cuotas}
+            value={facilidades.cuotas}
             disabled
           />
         </Grid>
@@ -193,7 +193,7 @@ export const VistaSolicitud: React.FC = () => {
         <TextField
           multiline
           rows={4}
-          value={facilidades[0].observaciones}
+          value={facilidades.observaciones}
           label="Observación Usuario"
           size="small"
           fullWidth
@@ -202,7 +202,7 @@ export const VistaSolicitud: React.FC = () => {
       <FormGroup>
         <FormControlLabel checked disabled control={<Checkbox />} label="Aceptar términos y condiciones" />
         {
-          facilidades[0].notificaciones ? (<FormControlLabel checked control={<Checkbox />} label="Autorizar notificación por correo electrónico" />)  : (<FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />)
+          facilidades.notificaciones ? (<FormControlLabel checked control={<Checkbox />} label="Autorizar notificación por correo electrónico" />)  : (<FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />)
         }
       </FormGroup>
     </>

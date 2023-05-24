@@ -18,8 +18,8 @@ export const get_facilidades_asignadas = createAsyncThunk('facilidades_pago/func
 })
 
 // Ver la información de la facilidad de pago desde Pag. Usuario Interno
-export const get_facilidad_solicitud = createAsyncThunk('facilidades_pago/solicitud', async () => {
-  const { data } = await api.get(`recaudo/pagos/consulta-facilidades-pagos/1/`)
+export const get_facilidad_solicitud = createAsyncThunk('facilidades_pago/solicitud', async (id: number) => {
+  const { data } = await api.get(`recaudo/pagos/consulta-facilidades-pagos/${id}/`)
   return data
 })
 

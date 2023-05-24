@@ -6,14 +6,18 @@ import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, Di
 import { Close } from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
-import { type event, type check } from '../interfaces/interfaces';
-import { get_facilidad_solicitud } from '../slices/FacilidadesSlice';
-import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+import { type event, type check, type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 import { post_respuesta_fac_pago } from '../requests/requests';
+import { useSelector } from 'react-redux';
+
+interface RootState {
+  facilidades: {
+    facilidades: FacilidadPagoSolicitud;
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VisualizarSolicitudAdmin: React.FC = () => {
@@ -23,11 +27,11 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const [modal_anular, set_modal_anular] = useState(false);
   const [modal_option, set_modal_option] = useState('');
+  const [file, set_file] = useState({});
   const [file_name, set_file_name] = useState('');
   const { form_state, on_input_change } = use_form({});
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { facilidades } = useSelector((state: RootState) => state.facilidades);
   const navigate = useNavigate();
-  console.log('form', form_state)
 
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
@@ -38,17 +42,10 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
+      set_file(selected_file);
       set_file_name(selected_file.name);
     }
   };
-
-  useEffect(() => {
-    try {
-      void dispatch(get_facilidad_solicitud());
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  }, [])
 
   return (
     <>
@@ -308,7 +305,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                 startIcon={<SaveIcon />}
                 sx={{ marginTop: '30px' }}
                 onClick={() => {
-                  void post_respuesta_fac_pago(form_state)
+                  void post_respuesta_fac_pago({...form_state, id_facilidades_pago: facilidades.id, id_funcionario: facilidades.id_funcionario, consulta_dbme: file })
                 }}
               >
               Actualizar / Enviar
