@@ -112,7 +112,7 @@ export const EstadosProcesoScreen: React.FC = () => {
   const [id_etapa, set_id_etapa] = useState<number | null>(null);
   const [descripcion_etapa, set_descripcion_etapa] = useState('');
 
-  const columns: GridColDef[] = [
+  const columns_etapas: GridColDef[] = [
     {
       field: 'id',
       headerName: 'ID etapa',
@@ -299,7 +299,7 @@ export const EstadosProcesoScreen: React.FC = () => {
                     density="compact"
                     autoHeight
                     rows={rows_etapas}
-                    columns={columns}
+                    columns={columns_etapas}
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
