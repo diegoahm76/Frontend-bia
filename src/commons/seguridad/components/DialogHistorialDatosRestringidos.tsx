@@ -91,7 +91,6 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
           fecha_cambio: datos.fecha_cambio,
           justificacion_cambio: datos.justificacion_cambio,
           id_persona: datos.id_persona,
-
         })
       );
       set_rows(new_historico);
@@ -151,7 +150,6 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
                 </Grid>
               </Grid>
             )}
-
           </Grid>
           <Grid item xs={12}>
             <Stack
