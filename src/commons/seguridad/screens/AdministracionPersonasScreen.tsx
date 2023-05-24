@@ -28,15 +28,15 @@ export const AdministracionPersonasScreen: React.FC = () => {
     watch,
   } = use_register();
 
-  const get_datos_persona = async (id_persona:number): Promise<void> => {
+  const get_datos_persona = async (id_persona: number): Promise<void> => {
     try {
       const response = await consultar_datos_persona(id_persona);
-        set_datos_persona(response);
+      set_datos_persona(response);
 
     } catch (err) {
-        control_error(err);
+      control_error(err);
     }
-};
+  };
 
   const on_result = (info_persona: InfoPersona): void => {
     set_is_update(false)
@@ -50,7 +50,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
       set_persona(info_persona);
     }
   };
-  
+
 
   return (
     <>
@@ -72,10 +72,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
             <>
               {persona?.tipo_persona === 'N' && (
                 <AdministracionPersonasScreenNatural
-                  numero_documento={persona.numero_documento}
-                  id_persona={persona.id_persona}
-                  tipo_persona={persona.tipo_persona}
-                  tipo_documento={persona.tipo_documento}
+                  data={datos_persona}
                   errors={errors}
                   handleSubmit={handle_submit}
                   isValid={is_valid}

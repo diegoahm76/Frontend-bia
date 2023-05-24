@@ -8,13 +8,11 @@ import {
   Grid,
   Stack,
   Alert,
-  LinearProgress,
   Typography,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import type {
   HistoricoEmail,
-  InfoPersona,
 } from '../../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../../helpers';
@@ -24,7 +22,8 @@ import { consultar_historico_email } from '../../../seguridad/request/Request';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  datos_historico: InfoPersona;
+  id_persona: number;
+  tipo_persona: string;
 }
 
 const columns: GridColDef[] = [
@@ -77,7 +76,8 @@ const columns_juridica: GridColDef[] = [
 export const DialogHistorialEmail: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
-  datos_historico,
+  id_persona,
+  tipo_persona,
 }: IProps) => {
   const [rows, set_rows] = useState<HistoricoEmail[]>([]);
 
@@ -87,9 +87,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
 
   const historico = async (): Promise<void> => {
     try {
-      const response = await consultar_historico_email(
-        datos_historico.id_persona
-      );
+      const response = await consultar_historico_email(id_persona);
       const new_historico = response.map(
         (datos: HistoricoEmail) => ({
           id_histo_email: datos.id_histo_email,
@@ -107,9 +105,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
   };
 
   useEffect(() => {
-    if (is_modal_active) {
-      void historico();
-    }
+    void historico();
   }, [is_modal_active]);
   return (
     <>
@@ -141,7 +137,7 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
           <Grid item xs={12}>
             {rows.length > 0 ? (
               <>
-                {datos_historico.tipo_persona === 'J' && (
+                {tipo_persona === 'J' && (
                   <>
                     <DataGrid
                       autoHeight
@@ -153,13 +149,13 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
                     />
                   </>
                 )}
-                {datos_historico.tipo_persona === 'N' && (
+                {tipo_persona === 'N' && (
                   <>
                     <DataGrid
                       autoHeight
                       rows={rows}
                       columns={columns}
-                      getRowId={(row) => row.id_historico_direccion}
+                      getRowId={(row) => row.id_histo_email}
                       pageSize={5}
                       rowsPerPageOptions={[5]}
                     />
@@ -170,7 +166,6 @@ export const DialogHistorialEmail: React.FC<IProps> = ({
               <Grid item xs={12}>
                 <Grid container justifyContent="center" textAlign="center">
                   <Alert icon={false} severity="info">
-                    <LinearProgress />
                     <Typography>No se encontraron resultados...</Typography>
                   </Alert>
                 </Grid>

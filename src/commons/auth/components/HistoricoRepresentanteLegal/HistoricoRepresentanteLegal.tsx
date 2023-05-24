@@ -8,7 +8,6 @@ import {
     Grid,
     Stack,
     Alert,
-    LinearProgress,
     Typography,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
@@ -83,7 +82,7 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
     const historico = async (): Promise<void> => {
         try {
             const response = await consultar_historico_representante(
-                id_persona=0
+                id_persona as number
             );
             const new_historico = response.map(
                 (datos: HistoricoRepresentanteLegal) => ({
@@ -150,7 +149,6 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
                             <Grid item xs={12}>
                                 <Grid container justifyContent="center" textAlign="center">
                                     <Alert icon={false} severity="info">
-                                        <LinearProgress />
                                         <Typography>No se encontraron resultados...</Typography>
                                     </Alert>
                                 </Grid>
@@ -167,7 +165,6 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
                         >
                             <Button
                                 variant="outlined"
-                                // eslint-disable-next-line react/jsx-no-undef
                                 startIcon={<CancelIcon />}
                                 onClick={() => {
                                     handle_close();

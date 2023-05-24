@@ -135,6 +135,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
     <>
       <form
         onSubmit={(e) => {
+          console.log(e);
           void on_submit_create_natural(e);
         }}
       >

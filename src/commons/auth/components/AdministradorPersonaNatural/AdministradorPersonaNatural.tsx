@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { ClaseTercero, ClaseTerceroPersona, DataPersonas, PropsUpdate} from "../../../../interfaces/globalModels";
+import type { ClaseTercero, ClaseTerceroPersona, PropsUpdateJ, UpdateAutorizaNotificacion } from "../../../../interfaces/globalModels";
 import {
     Button, Divider, Grid, MenuItem, TextField, Typography,
     FormControlLabel,
@@ -7,6 +7,7 @@ import {
     Autocomplete,
     type AutocompleteChangeReason,
     type AutocompleteChangeDetails,
+    Stack,
 } from "@mui/material";
 
 import { Title } from "../../../../components/Title";
@@ -18,20 +19,23 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from "../../../../components/DialogGeneradorDeDirecciones";
-import { consultar_clase_tercero, consultar_clase_tercero_persona, consultar_datos_persona,  } from "../../../seguridad/request/Request";
+import { consultar_clase_tercero, consultar_clase_tercero_persona, } from "../../../seguridad/request/Request";
 import { use_register_persona_n } from '../../hooks/registerPersonaNaturalHook';
 import type { Dayjs } from 'dayjs';
 import { DatosVinculacion } from '../DataVinculación';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { LoadingButton } from '@mui/lab';
+import UpdateIcon from '@mui/icons-material/Update';
 import dayjs from 'dayjs';
-
+import { DialogHistorialDatosRestringidos } from '../../../seguridad/components/DialogHistorialDatosRestringidos';
+import { DialogHistorialEmail } from '../HistoricoEmail/HistoricoEmail';
+import { DialogHistorialDirecciones } from '../HistoricoDirecciones/HistoricoDirecciones';
+import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
+import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
-    numero_documento,
-    id_persona,
-    tipo_documento,
-    tipo_persona,
+export const AdministracionPersonasScreenNatural: React.FC<PropsUpdateJ> = ({
+    data,
     register,
     handleSubmit: handle_submit,
     setValue: set_value,
@@ -39,7 +43,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
     isValid: is_valid,
     watch,
     getValues,
-}: PropsUpdate) => {
+}: PropsUpdateJ) => {
     const {
         is_saving,
         // is_exists,
@@ -53,39 +57,30 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
         ciudades_residencia_opt,
         genero_opt,
         estado_civil_opt,
-        municipio_residencia,
-        pais_nacimiento,
-        genero,
-        estado_civil,
-        departamento_expedicion,
-        ciudad_expedicion,
         pais_residencia,
-        departamento_residencia,
-        dpto_notifiacion,
-        ciudad_notificacion,
-        direccion_notificaciones,
-        departamento_laboral,
-        municipio_laboral,
         dpto_laboral_opt,
         departamento_laboral_opt,
         is_modal_active,
-        direccion,
-        direccion_laboral,
         set_value_direction,
         on_change,
         open_modal,
     } = use_register_persona_n({ watch, setValue: set_value, getValues });
 
-    const [datos_persona, set_datos_persona] = useState<DataPersonas>();
     const [type_direction, set_type_direction] = useState('');
     const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
     const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
     const [clase_tercero_persona, set_clase_tercero_persona] = useState<ClaseTercero[]>([]);
+    const [is_modal_active_historico_direcciones, set_is_modal_active_historico_direcciones] = useState(false);
+    const [is_modal_active_historico_email, set_is_modal_active_historico_email] = useState(false);
+    const [is_modal_historico_autorizacion, set_is_modal_historico_autorizacion] = useState<boolean>(false);
+    const [is_modal_historico_datos_r, set_is_modal_historico_datos_r] = useState<boolean>(false);
+    const [dialog_notificaciones, set_dialog_notificaciones] = useState<boolean>(false);
     // const [is_data, set_is_data] = useState(false);
     // watchers
     const misma_direccion = watch('misma_direccion') ?? false;
-    const acepta_notificacion_email = watch('acepta_notificacion_email') ?? false;
-    const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
+    // watchers
+    const acepta_notificacion_email = watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email;
+    const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms;
 
     const handle_change_autocomplete = (
         event: React.SyntheticEvent<Element, Event>,
@@ -95,55 +90,37 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
     ): void => {
         set_value('datos_clasificacion_persona', value.map(e => e.value));
     };
+    // abre modal historial de autorizacion
+    const handle_open_dialog_autorizacion = (): void => {
+        set_is_modal_historico_autorizacion(true);
+    };
+    // abre modal de historico de direcciones
+    const handle_open_historico_direcciones = (): void => {
+        set_is_modal_active_historico_direcciones(true);
+    };
+    // abre modal de historico de email
+    const handle_open_historico_email = (): void => {
+        set_is_modal_active_historico_email(true);
+    };
+    // abrir modal actualizar Notificaciones
+    const handle_open_dialog_notificaciones = (): void => {
+        set_dialog_notificaciones(true);
+    };
+    // abrir modal datos restringidos
+    const handle_open_historico_datos_r = (): void => {
+        set_is_modal_historico_datos_r(true);
+    };
+
+    const respuesta_autorizacion = (data: UpdateAutorizaNotificacion): void => {
+        set_value('acepta_notificacion_email', data.acepta_autorizacion_email);
+        set_value('acepta_notificacion_sms', data.acepta_autorizacion_sms);
+    }
 
     // establece la fecha de nacimiento
     const on_change_birt_day = (value: Dayjs | null): void => {
         const date = dayjs(value).format('YYYY-MM-DD');
         set_value('fecha_nacimiento', date);
         set_fecha_nacimiento(value);
-    };
-    const get_datos_persona = async (): Promise<void> => {
-        // set_is_data(false)
-        try {
-            const response = await consultar_datos_persona(id_persona);
-            // datos basicos
-            set_datos_persona(response);
-            set_value('primer_nombre', response.primer_nombre)
-            set_value('segundo_nombre', response.segundo_apellido)
-            set_value('primer_apellido', response.primer_apellido)
-            set_value('segundo_apellido', response.segundo_apellido)
-            set_value('fecha_nacimiento', response.fecha_nacimiento)
-            set_value('pais_nacimiento', response.pais_nacimiento)
-            set_value('sexo', response.sexo)
-            set_value('estado_civil', response.estado_civil)
-            set_value('departamento_expedicion', response.cod_departamento_expedicion)
-            set_value('cod_municipio_expedicion_id', response.cod_municipio_expedicion_id)
-            // Datos de residencia
-            set_value('pais_residencia', response.pais_residencia)
-            set_value('departamento_residencia', response.cod_departamento_residencia)
-            set_value('municipio_residencia', response.municipio_residencia)
-            set_value('direccion_residencia', response.direccion_residencia)
-            set_value('direccion_residencia_ref', response.direccion_residencia_ref)
-            // Datos de notificacion
-            set_value('dpto_notifiacion', response.cod_departamento_notificacion)
-            set_value('ciudad_notificacion', response.cod_municipio_notificacion_nal)
-            set_value('direccion_notificaciones', response.direccion_notificaciones)
-            set_value('complemento_direccion', response.direccion_notificacion_referencia)
-            set_value('email', response.email)
-            set_value('telefono_celular', response.telefono_celular)
-            // Datos adicionales 
-            set_value('nombre_comercial', response.nombre_comercial)
-            set_value('telefono_fijo_residencial', response.telefono_fijo_residencial)
-            set_value('departamento_laboral', response.cod_departamento_laboral)
-            set_value('municipio_laboral', response.cod_municipio_laboral_nal)
-            set_value('direccion_laboral', response.direccion_laboral)
-            // autorización de notificaciones
-            set_value('acepta_notificacion_sms', response.acepta_notificacion_sms)
-            set_value('acepta_notificacion_email', response.acepta_notificacion_email)
-            // set_is_data(true)
-        } catch (err) {
-            control_error(err);
-        }
     };
     // trae todas las clase tercero
     const get_datos_clase_tercero = async (): Promise<void> => {
@@ -155,9 +132,9 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
         }
     };
     // trae clase tercero por persona
-    const get_datos_clase_tercero_persona = async (): Promise<void> => {
+    const get_datos_clase_tercero_persona = async (id: number | undefined): Promise<void> => {
         try {
-            const response = await consultar_clase_tercero_persona(id_persona);
+            const response = await consultar_clase_tercero_persona(id);
             const data_persona_clase_tercero = response.map((item: ClaseTerceroPersona) => ({
                 value: item.id_clase_tercero,
                 label: item.nombre
@@ -170,10 +147,11 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
     }
 
     useEffect(() => {
-        void get_datos_persona();
-        void get_datos_clase_tercero();
-        void get_datos_clase_tercero_persona();
-    }, [datos_persona])
+        if (data?.id_persona !== undefined) {
+            void get_datos_clase_tercero();
+            void get_datos_clase_tercero_persona(data?.id_persona);
+        }
+    }, [data?.id_persona !== undefined])
 
     // const on_submit_create_natural = handle_submit(async (data) => {
     //     try {
@@ -229,7 +207,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
     ];
     return (
         <>
-            {datos_persona !== null ? (
+            {data?.id_persona !== undefined ? (
                 <>
                     <form
                     // onSubmit={(e) => {
@@ -251,7 +229,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         margin="dense"
                                         required
                                         autoFocus
-                                        defaultValue={tipo_persona}
+                                        value={data?.tipo_persona}
                                         disabled
                                     >
                                         {tipo_persona_opt.map((option) => (
@@ -271,7 +249,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         margin="dense"
                                         required
                                         autoFocus
-                                        defaultValue={tipo_documento}
+                                        value={data?.tipo_documento}
                                         disabled
                                     >
                                         {tipos_doc.map((option) => (
@@ -290,7 +268,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         size="small"
                                         margin="dense"
                                         required
-                                        defaultValue={numero_documento}
+                                        value={data?.numero_documento}
                                         disabled
                                     />
                                 </Grid>
@@ -307,13 +285,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         fullWidth
                                         size="small"
                                         label="Primer nombre *"
-                                        error={errors.primer_nombre?.type === 'required'}
-                                        helperText={
-                                            errors.primer_nombre?.type === 'required'
-                                                ? 'Este campo es obligatorio'
-                                                : ''
-                                        }
-                                        {...register('primer_nombre', { required: true })}
+                                        value={data?.primer_nombre}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={4}>
@@ -321,7 +293,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         fullWidth
                                         size="small"
                                         label="Segundo nombre"
-                                        {...register('segundo_nombre')}
+                                        value={data?.segundo_nombre}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={4}>
@@ -330,14 +302,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         size="small"
                                         label="Primer apellido *"
                                         error={errors.primer_apellido?.type === 'required'}
-                                        helperText={
-                                            errors.primer_apellido?.type === 'required'
-                                                ? 'Este campo es obligatorio'
-                                                : ''
-                                        }
-                                        {...register('primer_apellido', {
-                                            required: true,
-                                        })}
+                                        value={data?.primer_apellido}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={4}>
@@ -345,7 +310,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         fullWidth
                                         size="small"
                                         label="Segundo apellido"
-                                        {...register('segundo_apellido')}
+                                        value={data?.segundo_apellido}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={4}>
@@ -378,7 +343,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="País de nacimiento *"
                                         name="pais_nacimiento"
-                                        value={pais_nacimiento}
+                                        value={data?.pais_nacimiento}
                                         options={paises_options}
                                         loading={loading}
                                         disabled={false}
@@ -392,7 +357,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="Género *"
                                         name="sexo"
-                                        value={genero}
+                                        value={data?.sexo}
                                         options={genero_opt}
                                         loading={loading}
                                         disabled={false}
@@ -406,7 +371,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="Estado civil *"
                                         name="estado_civil"
-                                        value={estado_civil}
+                                        value={data?.estado_civil}
                                         options={estado_civil_opt}
                                         loading={loading}
                                         disabled={false}
@@ -414,6 +379,27 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         errors={errors}
                                         register={register}
                                     />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Stack
+                                        justifyContent="flex-end"
+                                        sx={{ m: '10px 0 20px 0' }}
+                                        direction="row"
+                                        spacing={2}
+                                    >
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<RemoveRedEyeIcon />}
+                                            onClick={() => {
+                                                handle_open_historico_datos_r();
+                                            }}
+                                        >
+                                            Historico Datos Restringidos
+                                        </Button>
+                                    </Stack>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Divider />
                                 </Grid>
                                 {/* Lugar de expedición del documento */}
                                 <Grid item xs={12}>
@@ -427,7 +413,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="Departamento *"
                                         name="departamento_expedicion"
-                                        value={departamento_expedicion}
+                                        value={data?.cod_departamento_expedicion}
                                         options={departamentos_opt}
                                         loading={loading}
                                         disabled={false}
@@ -441,7 +427,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="Ciudad *"
                                         name="cod_municipio_expedicion_id"
-                                        value={ciudad_expedicion}
+                                        value={data.cod_municipio_expedicion_id}
                                         options={ciudades_opt}
                                         loading={loading}
                                         disabled={false}
@@ -463,7 +449,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="País de residencia *"
                                         name="pais_residencia"
-                                        value={pais_residencia}
+                                        value={data?.pais_residencia}
                                         options={paises_options}
                                         loading={loading}
                                         required={true}
@@ -478,7 +464,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                                 onChange={on_change}
                                                 label="Departamento *"
                                                 name="departamento_residencia"
-                                                value={departamento_residencia}
+                                                value={data?.cod_departamento_residencia}
                                                 options={dpts_residencia_opt}
                                                 loading={loading}
                                                 required={true}
@@ -491,10 +477,10 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                                 onChange={on_change}
                                                 label="Ciudad *"
                                                 name="municipio_residencia"
-                                                value={municipio_residencia}
+                                                value={data?.municipio_residencia}
                                                 options={ciudades_residencia_opt}
                                                 loading={loading}
-                                                disabled={departamento_residencia === '' ?? true}
+                                                disabled={data?.cod_departamento_residencia === '' ?? true}
                                                 required={true}
                                                 errors={errors}
                                                 register={register}
@@ -515,7 +501,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                                 {...register('direccion_residencia', {
                                                     required: true,
                                                 })}
-                                                value={direccion}
+                                                value={data?.direccion_residencia}
                                             />
                                         </Grid>
                                         <Grid item xs={12} sm={6} md={4}>
@@ -536,8 +522,27 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                                 type="textarea"
                                                 rows="3"
                                                 label="Complemento dirección"
+                                                defaultValue={data.direccion_residencia_ref}
                                                 {...register('direccion_residencia_ref')}
                                             />
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <Stack
+                                                justifyContent="flex-end"
+                                                sx={{ m: '10px 0 20px 0' }}
+                                                direction="row"
+                                                spacing={2}
+                                            >
+                                                <Button
+                                                    variant="outlined"
+                                                    startIcon={<RemoveRedEyeIcon />}
+                                                    onClick={() => {
+                                                        handle_open_historico_direcciones();
+                                                    }}
+                                                >
+                                                    Historico Direcciones
+                                                </Button>
+                                            </Stack>
                                         </Grid>
                                     </>
                                 )}
@@ -580,7 +585,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="Departamento *"
                                         name="dpto_notifiacion"
-                                        value={dpto_notifiacion}
+                                        value={data.cod_departamento_notificacion}
                                         options={dpto_notifiacion_opt}
                                         loading={loading}
                                         required={true}
@@ -593,10 +598,10 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="Ciudad *"
                                         name="cod_municipio_notificacion_nal"
-                                        value={ciudad_notificacion}
+                                        value={data.cod_municipio_notificacion_nal}
                                         options={ciudad_notificacion_opt}
                                         loading={loading}
-                                        disabled={dpto_notifiacion === '' ?? true}
+                                        disabled={data.cod_departamento_notificacion === '' ?? true}
                                         required={true}
                                         errors={errors}
                                         register={register}
@@ -608,7 +613,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         label="Direccion *"
                                         disabled
                                         fullWidth
-                                        value={direccion_notificaciones}
+                                        value={data.direccion_notificaciones}
                                         error={errors.direccion_notificaciones?.type === 'required'}
                                         helperText={
                                             errors.direccion_notificaciones?.type === 'required'
@@ -638,6 +643,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         type="textarea"
                                         rows="3"
                                         label="Complemento dirección"
+                                        defaultValue={data.direccion_notificacion_referencia}
                                         {...register('complemento_direccion')}
                                     />
                                 </Grid>
@@ -663,7 +669,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         fullWidth
                                         size="small"
                                         label="Celular"
-                                        onCopy={(e: any) => e.preventDefault()}
+                                        value={data.telefono_celular}
                                         error={errors.telefono_celular?.type === 'required'}
                                         type="text"
                                         helperText={
@@ -673,6 +679,24 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         }
                                         {...register('telefono_celular')}
                                     />
+                                </Grid>
+                                <Grid item xs={12} sm={6} md={4}>
+                                    <Stack
+                                        justifyContent="flex-end"
+                                        sx={{ m: '10px 0 20px 0' }}
+                                        direction="row"
+                                        spacing={2}
+                                    >
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<RemoveRedEyeIcon />}
+                                            onClick={() => {
+                                                handle_open_historico_email();
+                                            }}
+                                        >
+                                            Historico E-mail
+                                        </Button>
+                                    </Stack>
                                 </Grid>
                             </Grid>
                         </>
@@ -687,6 +711,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         fullWidth
                                         size="small"
                                         label="Nombre comercial"
+                                        value={data.nombre_comercial}
                                         {...register('nombre_comercial')}
                                     />
                                 </Grid>
@@ -695,6 +720,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         fullWidth
                                         size="small"
                                         label="Teléfono fijo personal"
+                                        value={data.telefono_fijo_residencial}
                                         {...register('telefono_fijo_residencial')}
                                     />
                                 </Grid>
@@ -724,7 +750,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="Departamento *"
                                         name="departamento_laboral"
-                                        value={departamento_laboral}
+                                        value={data?.cod_departamento_laboral}
                                         options={dpto_laboral_opt}
                                         loading={loading}
                                         required={false}
@@ -737,10 +763,10 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         onChange={on_change}
                                         label="Ciudad *"
                                         name="cod_municipio_laboral_nal"
-                                        value={municipio_laboral}
+                                        value={data?.cod_municipio_laboral_nal}
                                         options={departamento_laboral_opt}
                                         loading={loading}
-                                        disabled={departamento_laboral === '' ?? true}
+                                        disabled={data?.cod_departamento_laboral === '' ?? true}
                                         required={false}
                                         errors={errors}
                                         register={register}
@@ -755,7 +781,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         {...register('direccion_laboral', {
                                             required: true,
                                         })}
-                                        value={direccion_laboral}
+                                        value={data?.direccion_laboral}
                                     />
                                 </Grid>
                                 <Grid item xs={12} sm={6} md={4}>
@@ -776,6 +802,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         type="textarea"
                                         rows="3"
                                         label="Complemento dirección"
+                                        defaultValue={data.direccion_laboral}
                                         {...register('direccion_laboral_ref')}
                                     />
                                 </Grid>
@@ -793,6 +820,7 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         control={
                                             <Checkbox
                                                 size="small"
+                                                disabled={true}
                                                 checked={acepta_notificacion_email}
                                                 {...register('acepta_notificacion_email')}
                                             />
@@ -805,11 +833,39 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                                         control={
                                             <Checkbox
                                                 size="small"
+                                                disabled={true}
                                                 checked={acepta_notificacion_sms}
                                                 {...register('acepta_notificacion_sms')}
                                             />
                                         }
                                     />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Stack
+                                        justifyContent="flex-end"
+                                        sx={{ m: '10px 0 20px 0' }}
+                                        direction="row"
+                                        spacing={2}
+                                    >
+                                        <Button
+                                            variant="outlined"
+                                            startIcon={<RemoveRedEyeIcon />}
+                                            onClick={() => {
+                                                handle_open_dialog_autorizacion();
+                                            }}
+                                        >
+                                            Historico Autorizaciones
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            startIcon={<UpdateIcon />}
+                                            onClick={() => {
+                                                handle_open_dialog_notificaciones();
+                                            }}
+                                        >
+                                            Actualizar Notificaciones
+                                        </Button>
+                                    </Stack>
                                 </Grid>
                             </Grid>
                         </>
@@ -851,9 +907,11 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                         {/* Datos de vinculación */}
                         <>
                             <Grid container spacing={2} mt={0.1}>
-                                <DatosVinculacion
-                                    id_persona={id_persona}
-                                />
+                                {data?.id_persona !== undefined && (
+                                    <DatosVinculacion
+                                        id_persona={data?.id_persona}
+                                    />
+                                )}
                                 {/* BOTONES */}
                                 <Grid item spacing={2} justifyContent="end" container>
                                     <Grid item>
@@ -877,6 +935,37 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdate> = ({
                         openDialog={open_modal}
                         onChange={set_value_direction}
                         type={type_direction}
+                    />
+                    <DialogHistorialDatosRestringidos
+                        is_modal_active={is_modal_historico_datos_r}
+                        set_is_modal_active={set_is_modal_historico_datos_r}
+                        id_persona={data?.id_persona ?? 0}
+                    />
+                    <DialogHistorialEmail
+                        is_modal_active={is_modal_active_historico_email}
+                        set_is_modal_active={set_is_modal_active_historico_email}
+                        id_persona={data?.id_persona ?? 0}
+                        tipo_persona={data?.tipo_persona ?? ''}
+                    />
+
+                    <DialogHistorialDirecciones
+                        is_modal_active={is_modal_active_historico_direcciones}
+                        set_is_modal_active={set_is_modal_active_historico_direcciones}
+                        id_persona={data?.id_persona ?? 0}
+                        tipo_persona={data?.tipo_persona ?? ''}
+                    />
+                    <DialogHistoricoAutorizaNotificaciones
+                        is_modal_active={is_modal_historico_autorizacion}
+                        set_is_modal_active={set_is_modal_historico_autorizacion}
+                        id_persona={data?.id_persona ?? 0}
+                        tipo_persona={data?.tipo_persona ?? ''}
+                    />
+                    <DialogAutorizaDatos
+                        is_modal_active={dialog_notificaciones}
+                        set_is_modal_active={set_dialog_notificaciones}
+                        id_persona={data?.id_persona ?? 0}
+                        data_autorizacion={{ acepta_autorizacion_email: data?.acepta_notificacion_email, acepta_autorizacion_sms: data?.acepta_notificacion_sms }}
+                        on_result={respuesta_autorizacion}
                     />
                 </>
             ) : (
