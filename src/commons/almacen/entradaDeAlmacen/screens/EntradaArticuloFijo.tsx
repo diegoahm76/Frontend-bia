@@ -22,11 +22,10 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const EntradaArticuloFijoComponent = (props: IProps) => {
     const dispatch = useAppDispatch();
-    const [tittle, set_tittle] = useState<string>("");
+    const [tittle, set_title] = useState<string>("");
     const [detalle_complementario, set_detalle_complementario] = useState<any[]>([]);
     const [estados, set_estados] = useState<any[]>([]);
     const [estado, set_estado] = useState<string>("O");
-    const [cant_registros, set_cant_registros] = useState<number>(0);
     const [placa_serial, set_placa_serial] = useState<string>("");
     const [msj_error_placa_serial, set_msj_error_placa_serial] = useState<string>("");
     const [nro_elemento_bien, set_nro_elemento_bien] = useState<string>("0");
@@ -41,16 +40,10 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
     useEffect(() => {
         obtener_estados_fc();
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        set_tittle('Registro de detalles (' + cant_registros + ' de ' + props.cantidad_entrada +')');
+        set_title('Registro de detalles (' + 0 + ' de ' + props.cantidad_entrada +')');
         console.log(props.articulo_entrada);
     }, [])
     
-    useEffect(() => {
-        if(props.detalles_entrada !== null){
-            set_detalle_complementario(props.detalles_entrada);
-        }
-    }, [props.detalles_entrada])
-
     const obtener_estados_fc: () => void = () => {
         dispatch(obtener_estados()).then((response: any) => {
             set_estados(response);
@@ -113,18 +106,22 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
 
     const guardar_entrada = (): void => {
         if (valida_detalle_complementario()) {
-            const values: any = {
-                estado,
-                placa_serial,
-                nro_elemento_bien,
-                vida_util,
-                unidad_tiempo,
-                valor_residual,
-                abrir_hdv
-            };
-            set_cant_registros(cant_registros + 1);
-            if(cant_registros <= props.cantidad_entrada)
-                set_detalle_complementario([...detalle_complementario, values]);
+            if(detalle_complementario.findIndex(dc => dc.placa_serial === placa_serial) === -1){
+                const values: any = {
+                    estado,
+                    placa_serial,
+                    nro_elemento_bien,
+                    vida_util,
+                    unidad_tiempo,
+                    valor_residual,
+                    abrir_hdv
+                };
+                if(detalle_complementario.length < props.cantidad_entrada){
+                    set_detalle_complementario([...detalle_complementario,values]);
+                    // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+                    set_title('Registro de detalles (' + (detalle_complementario.length + 1) + ' de ' + props.cantidad_entrada +')');
+                }
+            }
         }
     }
 
@@ -230,7 +227,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                 error={msj_error_unidad_tiempo !== ""}
                                             >
                                                 {estados.map((te: any) => (
-                                                    <MenuItem key={te.cod_tipo_entrada} value={te.cod_tipo_entrada}>
+                                                    <MenuItem key={te.cod_estado} value={te.cod_estado}>
                                                         {te.nombre}
                                                     </MenuItem>
                                                 ))}
@@ -301,7 +298,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                 scrollable scrollHeight="flex"
                                                 tableStyle={{ minWidth: '60rem' }}
                                                 rowsPerPageOptions={[5, 10, 25, 50]}
-                                                dataKey="id_programacion_mantenimiento"
+                                                dataKey="placa_serial"
                                             >
                                                 <Column
                                                     field="item"
@@ -317,11 +314,6 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                     field="placa_serial"
                                                     header="Placa/Serial"
                                                     style={{ width: '10%' }}
-                                                ></Column>
-                                                <Column
-                                                    field="nro_elemento_bien"
-                                                    header="N° elemento"
-                                                    style={{ width: '15%' }}
                                                 ></Column>
                                                 <Column
                                                     field="vida_util"

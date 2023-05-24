@@ -24,13 +24,15 @@ import AnularEntradaComponent from "./AnularEntrada";
 import EntradaArticuloFijoComponent from "./EntradaArticuloFijo";
 import { type IInfoEntrada, type crear_entrada, type IInfoItemEntrada } from "../interfaces/entradas";
 import { BuscadorPersonaDialog } from "../../gestionDeInventario/gestionHojaDeVida/mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoGeneral/BuscadorPersonaDialog";
-
+import { v4 as uuid } from "uuid";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [entradas, set_entradas] = useState<crear_entrada>();
+  const [info_items, set_info_items] = useState<IInfoItemEntrada[]>([]);
   const [user_info, set_user_info] = useState<any>({});
   const [detalles_entrada, set_detalles_entrada] = useState<any[]>([]);
+  // const [previsualizacion, set_previsualizacion] = useState<any[]>([]);
   const [articulo, set_articulo] = useState<any>({codigo_bien: ""});
   const [msj_error_articulo, set_msj_error_articulo] = useState<string>("");
   const [codigo_articulo, set_codigo_articulo] = useState<string | number>("");
@@ -41,7 +43,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [msj_error_tipo, set_msj_error_tipo] = useState<string>("");
   const [tipos_entrada, set_tipos_entrada] = useState<any>([]);
   const [observaciones, set_observaciones] = useState<string | null>("");
-  const [msj_error_observaciones, set_msj_error_observaciones] = useState<string>("");
   const [motivo, set_motivo] = useState<string>("");
   const [msj_error_motivo, set_msj_error_motivo] = useState<string>("");
   const [tipos_documentos, set_tipos_documentos] = useState<any>([]);
@@ -203,7 +204,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const validar_entrada = (): void => {
     if(validar_formulario()){
-      articulo.cod_tipo_bien === "A" ? set_entrada_af_is_active(true) : cargar_entradas();
+      articulo.cod_tipo_bien === "A" ? set_entrada_af_is_active(true) : carga_info_items();
     }
   }
 
@@ -218,18 +219,20 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       id_bodega: parseInt(bodega_ingreso), 
       valor_total_entrada
     };
-    set_entradas({...entradas, info_entrada: encabezado,info_items_entrada: carga_info_items()});
+    set_entradas({...entradas, info_entrada: encabezado,info_items_entrada: info_items});
+    set_detalles_entrada([]);
   }
 
-  const carga_info_items = (): IInfoItemEntrada[] => {
-    const info_items: IInfoItemEntrada[] = [];
-    if(detalles_entrada !== undefined && detalles_entrada.length > 0){
+  const carga_info_items = (): void => {
+    if(detalles_entrada.length > 0){
       detalles_entrada.forEach((info_item: any) => {
-        info_items.push({
+        set_info_items(prevArray => [...prevArray, {
+          id_entrada_local: String(uuid()),
           id_item_entrada_almacen: null,
           id_entrada_almacen: numero_entrada,
           id_bien: articulo.codigo_bien,
-          cantidad: parseInt(cantidad),
+          nombre: articulo.nombre,
+          cantidad: 1,
           id_bodega: parseInt(bodega_detalle),
           numero_posicion: 0,
           porcentaje_iva: articulo.porcentaje_iva,
@@ -238,13 +241,15 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           valor_residual: info_item.valor_residual,
           valor_iva: parseFloat(valor_iva),
           valor_total_item: parseFloat(valor_total_item)
-        })
+        }])
       });
     }else{
-      info_items.push({
+      set_info_items(prevArray => [...prevArray, {
+        id_entrada_local: String(uuid()),
         id_item_entrada_almacen: null,
         id_entrada_almacen: numero_entrada,
         id_bien: articulo.codigo_bien,
+        nombre: articulo.nombre,
         cantidad: parseInt(cantidad),
         id_bodega: parseInt(bodega_detalle),
         numero_posicion: 0,
@@ -254,16 +259,14 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
         valor_residual: null,
         valor_iva: parseFloat(valor_iva),
         valor_total_item: parseFloat(valor_total_item)
-      })
+      }])
     }
-    return info_items;
+    cargar_entradas();
   }
   
   const validar_formulario = (): boolean =>{
     if(tipo_entrada === "")
       set_msj_error_tipo("El campo Tipo de entrada es obligatorio.")
-    if(observaciones === "")
-      set_msj_error_observaciones("El campo Observaciones es obligatorio.")
     if(motivo === "")
       set_msj_error_motivo("El campo Motivo es obligatorio.")
     if(proveedor.tipo_documento === undefined || tipo_documento === undefined || tipo_documento === "")
@@ -277,7 +280,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     if(valor_unidad === "")
       set_msj_error_vu("El campo Cantidad es obligatorio.");
 
-    return (msj_error_fecha_entrada === "" && msj_error_tipo === "" && msj_error_observaciones === "" && msj_error_motivo === "" && msj_error_tdoc === ""
+    return (msj_error_fecha_entrada === "" && msj_error_tipo === "" && msj_error_motivo === "" && msj_error_tdoc === ""
             && msj_error_proveedor === "" && msj_error_bd === "" && msj_error_cantidad === "" && msj_error_vu === "" && msj_error_articulo === "" && msj_error_proveedor === "");
   }
 
@@ -293,11 +296,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   useEffect(() => {
     articulo ?? set_codigo_articulo(articulo.codigo_bien);
+    set_msj_error_articulo("");
   },[articulo]);
 
   useEffect(() => {
-    if(detalles_entrada !== undefined){
-      cargar_entradas();
+    if(detalles_entrada.length > 0){
+      carga_info_items();
     }
   },[detalles_entrada]);
 
@@ -305,6 +309,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     if(proveedor !== null){
       set_tipo_documento(proveedor.tipo_documento);
       set_numero_documento(proveedor.numero_documento);
+      set_msj_error_proveedor("");
+      set_msj_error_tdoc("");
     }
   },[proveedor]);
 
@@ -386,10 +392,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   rows={2}
                   value={motivo}
                   label="Motivo"
-                  helperText="Ingresar motivo"
                   size="small"
                   fullWidth
-                  onChange={cambio_motivo} />
+                  onChange={cambio_motivo} 
+                  error={msj_error_motivo !== ""}/>
+              {(msj_error_motivo !== "") && (<FormHelperText error >{msj_error_motivo}</FormHelperText>)}
               </Grid>
             </Grid>
           </Box>
@@ -401,7 +408,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   rows={2}
                   value={observaciones}
                   label="Observaciones"
-                  helperText="Ingresar observaciones"
                   size="small"
                   fullWidth
                   onChange={cambio_observacion} />
@@ -742,7 +748,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               <Grid item xs={12} sm={12}>
                 <div className="card">
                   <DataTable
-                    value={entradas?.info_items_entrada}
+                    value={info_items}
                     sortField="nombre"
                     stripedRows
                     paginator
@@ -750,10 +756,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     scrollable scrollHeight="flex"
                     tableStyle={{ minWidth: '85rem' }}
                     rowsPerPageOptions={[5, 10, 25, 50]}
-                    dataKey="id_programacion_mantenimiento"
                   >
                     <Column
-                      field="codigo"
+                      field="id_bien"
                       header="Código"
                       style={{ width: '20%' }}
                     ></Column>
@@ -767,9 +772,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                       header="Cantidad"
                       style={{ width: '10%' }}
                     ></Column>
-                    <Column header="Acciones" align={'center'} body={(rowData) => {
+                    {/* <Column header="Acciones" align={'center'} body={(rowData) => {
                       return <Button color="error" size="small" variant='contained' onClick={() => { console.log(rowData); }}><DeleteForeverIcon fontSize="small" /></Button>;
-                    }}></Column>
+                    }}></Column> */}
                   </DataTable>
                 </div>
               </Grid>

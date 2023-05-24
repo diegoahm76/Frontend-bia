@@ -15,9 +15,11 @@ export interface IInfoEntrada {
 }
 
 export interface IInfoItemEntrada {
+  id_entrada_local: string;
   id_item_entrada_almacen?: number | null;
   id_entrada_almacen?: number | null;
   id_bien?: number | null;
+  nombre: string;
   cantidad?: number;
   id_bodega?: number | null;
   numero_posicion?: number;
