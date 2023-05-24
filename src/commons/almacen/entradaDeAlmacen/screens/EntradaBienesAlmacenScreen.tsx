@@ -15,7 +15,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useAppDispatch } from "../../../../hooks";
-import { obtener_articulo_codigo, obtener_bodegas, obtener_consecutivo, obtener_tipos_entrada } from "../thunks/Entradas";
+import { crear_entrada_bien, obtener_articulo_codigo, obtener_bodegas, obtener_consecutivo, obtener_tipos_entrada } from "../thunks/Entradas";
 import { control_error } from "../../../../helpers";
 import { get_tipo_documento } from "../../../../request";
 import { useDropzone } from "react-dropzone";
@@ -220,7 +220,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       valor_total_entrada
     };
     set_entradas({...entradas, info_entrada: encabezado,info_items_entrada: info_items});
-    set_detalles_entrada([]);
   }
 
   const carga_info_items = (): void => {
@@ -230,13 +229,14 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           id_entrada_local: String(uuid()),
           id_item_entrada_almacen: null,
           id_entrada_almacen: numero_entrada,
-          id_bien: articulo.codigo_bien,
+          id_bien: articulo.id_bien,
+          codigo: articulo.codigo_bien,
           nombre: articulo.nombre,
           cantidad: 1,
           id_bodega: parseInt(bodega_detalle),
           numero_posicion: 0,
           porcentaje_iva: articulo.porcentaje_iva,
-          id_bien_padre: articulo.bien_padre,
+          id_bien_padre: articulo.id_bien_padre,
           valor_unitario: parseFloat(valor_unidad),
           valor_residual: info_item.valor_residual,
           valor_iva: parseFloat(valor_iva),
@@ -248,20 +248,21 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
         id_entrada_local: String(uuid()),
         id_item_entrada_almacen: null,
         id_entrada_almacen: numero_entrada,
-        id_bien: articulo.codigo_bien,
+        id_bien: articulo.id_bien,
+        codigo: articulo.codigo_bien,
         nombre: articulo.nombre,
         cantidad: parseInt(cantidad),
         id_bodega: parseInt(bodega_detalle),
         numero_posicion: 0,
         porcentaje_iva: articulo.porcentaje_iva,
-        id_bien_padre: articulo.bien_padre,
+        id_bien_padre: articulo.id_bien_padre,
         valor_unitario: parseFloat(valor_unidad),
         valor_residual: null,
         valor_iva: parseFloat(valor_iva),
         valor_total_item: parseFloat(valor_total_item)
       }])
     }
-    cargar_entradas();
+    set_detalles_entrada([]);
   }
   
   const validar_formulario = (): boolean =>{
@@ -283,6 +284,17 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     return (msj_error_fecha_entrada === "" && msj_error_tipo === "" && msj_error_motivo === "" && msj_error_tdoc === ""
             && msj_error_proveedor === "" && msj_error_bd === "" && msj_error_cantidad === "" && msj_error_vu === "" && msj_error_articulo === "" && msj_error_proveedor === "");
   }
+
+  const guardar_entrada = (): void => {
+    cargar_entradas();
+  }
+
+  useEffect(() => {
+    if(entradas !== undefined)
+      dispatch(crear_entrada_bien(entradas)).then((response: any) =>{
+        console.log("Se creo una entrada: ",response);
+      });
+  }, [entradas]);
 
   useEffect(() => {
     if(cantidad !== "" && valor_unidad !== ""){
@@ -758,7 +770,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     rowsPerPageOptions={[5, 10, 25, 50]}
                   >
                     <Column
-                      field="id_bien"
+                      field="codigo"
                       header="Código"
                       style={{ width: '20%' }}
                     ></Column>
@@ -802,7 +814,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               color='primary'
               variant='contained'
               startIcon={<SaveIcon />}
-              onClick={() => { }}
+              onClick={guardar_entrada}
             >
               Guardar
             </Button>
