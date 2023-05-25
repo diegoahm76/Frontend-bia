@@ -25,6 +25,7 @@ import EntradaArticuloFijoComponent from "./EntradaArticuloFijo";
 import { type IInfoEntrada, type crear_entrada, type IInfoItemEntrada } from "../interfaces/entradas";
 import { BuscadorPersonaDialog } from "../../gestionDeInventario/gestionHojaDeVida/mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoGeneral/BuscadorPersonaDialog";
 import { v4 as uuid } from "uuid";
+import BuscarEntradasComponent from "./BuscarEntradas";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -34,6 +35,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [detalles_entrada, set_detalles_entrada] = useState<any[]>([]);
   // const [previsualizacion, set_previsualizacion] = useState<any[]>([]);
   const [articulo, set_articulo] = useState<any>({codigo_bien: ""});
+  const [buscar_articulo, set_buscar_articulo] = useState<any>(null);
   const [msj_error_articulo, set_msj_error_articulo] = useState<string>("");
   const [codigo_articulo, set_codigo_articulo] = useState<string | number>("");
   const [numero_entrada, set_numero_entrada] = useState<number>(0);
@@ -67,6 +69,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [entrada_af_is_active, set_entrada_af_is_active] = useState<boolean>(false);
   const [file, set_file] = useState<any>(null);
   const [abrir_modal_proveedor, set_abrir_modal_proveedor] = useState<boolean>(false);
+  const [buscar_entrada_is_active, set_buscar_entrada_is_active] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -325,6 +328,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_msj_error_tdoc("");
     }
   },[proveedor]);
+
+  useEffect(() => {
+    buscar_articulo === null ? set_buscar_articulo(null) : set_buscar_articulo(buscar_articulo);
+  }, [buscar_articulo]);
 
   return (
     <>
@@ -842,10 +849,16 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               color='secondary'
               variant='contained'
               startIcon={<SearchIcon />}
-              onClick={() => { }}
+              onClick={() => { set_buscar_entrada_is_active(true) }}
             >
               Buscar
             </Button>
+            <BuscarEntradasComponent is_modal_active={buscar_entrada_is_active}
+            set_is_modal_active={set_buscar_entrada_is_active}
+            title={"Buscar entrada"} 
+            tipos_entrada={tipos_entrada} 
+            set_articulo={set_buscar_articulo} 
+            set_entrada={set_entradas}></BuscarEntradasComponent>
             <Button
               color='secondary'
               variant='contained'
