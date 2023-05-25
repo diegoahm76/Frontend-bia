@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { EstadosProcesoModal } from "../components/estadosProceso/EstadosProcesoModal";
 import type { AtributoEtapa, EtapaProceso } from "../interfaces/proceso";
 import axios from "axios";
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridToolbar, type GridColDef } from "@mui/x-data-grid";
 import { control_error, control_success } from "../../../helpers";
 // import type { GridRenderCellParams } from "@mui/x-data-grid";
 
@@ -304,6 +304,7 @@ export const EstadosProcesoScreen: React.FC = () => {
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => row.id}
+                    components={{ Toolbar: GridToolbar }}
                   />
                 </Box>
               </TabPanel>
