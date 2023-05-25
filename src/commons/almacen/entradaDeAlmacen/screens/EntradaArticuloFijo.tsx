@@ -7,10 +7,11 @@ import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useAppDispatch } from "../../../../hooks";
-import { obtener_estados } from "../thunks/Entradas";
+import { obtener_estados, obtener_unidades_medida } from "../thunks/Entradas";
 import { Title } from "../../../../components/Title";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { v4 as uuid } from "uuid";
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
@@ -32,6 +33,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
     const [vida_util, set_vida_util] = useState<string>("");
     const [msj_error_vida_util, set_msj_error_vida_util] = useState<string>("");
     const [unidad_tiempo, set_unidad_tiempo] = useState<string>("");
+    const [unidades_medida, set_unidades_medida] = useState<any[]>([]);
     const [msj_error_unidad_tiempo, set_msj_error_unidad_tiempo] = useState<string>("");
     const [valor_residual, set_valor_residual] = useState<string>("");
     const [msj_error_valor_residual, set_msj_error_valor_residual] = useState<string>("");
@@ -39,14 +41,21 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
 
     useEffect(() => {
         obtener_estados_fc();
+        obtener_unidades_medida_fc();
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
         set_title('Registro de detalles (' + 0 + ' de ' + props.cantidad_entrada +')');
-        console.log(props.articulo_entrada);
-    }, [])
+    }, []);
     
     const obtener_estados_fc: () => void = () => {
         dispatch(obtener_estados()).then((response: any) => {
             set_estados(response);
+        })
+    }
+
+    const obtener_unidades_medida_fc: () => void = () => {
+        dispatch(obtener_unidades_medida()).then((response: any) => {
+            const response_filter = response.filter((r: any) => r.activo);
+            set_unidades_medida(response_filter);
         })
     }
 
@@ -108,6 +117,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
         if (valida_detalle_complementario()) {
             if(detalle_complementario.findIndex(dc => dc.placa_serial === placa_serial) === -1){
                 const values: any = {
+                    id: String(uuid()),
                     estado,
                     placa_serial,
                     nro_elemento_bien,
@@ -220,15 +230,15 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                         <FormControl required size='small' fullWidth>
                                             <InputLabel>Unidad tiempo</InputLabel>
                                             <Select
-                                                label="Unidad tiempo"
+                                                label="Unidad medida"
                                                 value={unidad_tiempo}
                                                 required
                                                 onChange={cambio_unidad_tiempo}
                                                 error={msj_error_unidad_tiempo !== ""}
                                             >
-                                                {estados.map((te: any) => (
-                                                    <MenuItem key={te.cod_estado} value={te.cod_estado}>
-                                                        {te.nombre}
+                                                {unidades_medida.map((um: any) => (
+                                                    <MenuItem key={um.id_unidad_medida} value={um.id_unidad_medida}>
+                                                        {um.nombre}
                                                     </MenuItem>
                                                 ))}
                                             </Select>
@@ -336,7 +346,11 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                     style={{ width: '15%' }}
                                                 ></Column>
                                                 <Column header="Acciones" style={{ width: '10%' }} align={'center'} body={(rowData) => {
-                                                    return <Button color="error" size="small" variant='contained' onClick={() => { console.log(rowData); }}><DeleteForeverIcon fontSize="small" /></Button>;
+                                                    return <Button color="error" size="small" variant='contained' onClick={() => { 
+                                                        const index = detalle_complementario.findIndex((d:any) => d.id_entrada_local === rowData.id_entrada_local);
+                                                        detalle_complementario.splice(index,1);
+                                                        set_detalle_complementario([...detalle_complementario]);
+                                                     }}><DeleteForeverIcon fontSize="small" /></Button>;
                                                 }}></Column>
                                             </DataTable>
                                         </div>

@@ -92,6 +92,32 @@ export const obtener_bodegas: any = () => {
   };
 };
 
+// Obtiene listado unidades de medida
+export const obtener_unidades_medida: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/unidades-medida/get-list/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtiene listado unidades de medida
+export const obtener_porcentajes_iva: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/porcentajes/get-list/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtiene todo el listado de bienes
 export const obtener_bienes: any = () => {
   return async () => {
