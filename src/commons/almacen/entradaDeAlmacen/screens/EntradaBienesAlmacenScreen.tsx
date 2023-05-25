@@ -18,12 +18,12 @@ import { useAppDispatch } from "../../../../hooks";
 import { obtener_articulo_codigo, obtener_bodegas, obtener_consecutivo, obtener_tipos_entrada } from "../thunks/Entradas";
 import { control_error } from "../../../../helpers";
 import { get_tipo_documento } from "../../../../request";
-import { useDropzone } from "react-dropzone";
 import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
 import AnularEntradaComponent from "./AnularEntrada";
 import EntradaArticuloFijoComponent from "./EntradaArticuloFijo";
 import { type IInfoEntrada, type crear_entrada, type IInfoItemEntrada } from "../interfaces/entradas";
 import { BuscadorPersonaDialog } from "../../gestionDeInventario/gestionHojaDeVida/mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoGeneral/BuscadorPersonaDialog";
+import { useDropzone } from 'react-dropzone';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
