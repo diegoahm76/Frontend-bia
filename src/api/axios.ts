@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'https://backend-bia-beta-production.up.railway.app/api/'
+  baseURL: 'https://backend-bia-beta.up.railway.app/api/'
 });
 
 api.interceptors.request.use(
@@ -12,7 +12,6 @@ api.interceptors.request.use(
         request.headers.Authorization = `Bearer ${token}`;
       }
     } catch (e) {}
-
     return request;
   },
   async (error) => {

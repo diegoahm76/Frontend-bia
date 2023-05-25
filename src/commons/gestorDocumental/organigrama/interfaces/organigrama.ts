@@ -138,3 +138,9 @@ export interface UserDelegacionOrganigrama{
     nombre_completo: string;
     tiene_usuario: boolean
 }
+
+export interface DataCambioOrganigramaActual{
+    justificacion: string,
+    organigrama: number,
+    id_ccd: number
+}

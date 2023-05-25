@@ -229,3 +229,17 @@ export const get_ccds_finished_x_organigrama: any = (id_organigrama: string | nu
     }
   };
 };
+
+export const get_ccds_posibles: any = (id_organigrama: number) => {
+  return async () => {
+    try{
+      const { data } = await api.get(
+        `gestor/activar/get-ccd-posibles/?id_organigrama=${id_organigrama}`
+      );
+      return data;
+    }catch(error:any){
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  }
+}

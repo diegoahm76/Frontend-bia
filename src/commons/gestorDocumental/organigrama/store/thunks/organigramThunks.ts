@@ -14,12 +14,9 @@ import {
   get_unitys
 } from '../slices/organigramSlice';
 // Interfaces
-import {
-  // type IObjOrganigram,
-  type IObjCreateOrganigram
-  // type FormValuesUnitys,
-  //  type IObjLevels,
-  //  type IObjUnitys
+import type{
+   DataCambioOrganigramaActual,
+   IObjCreateOrganigram
 } from '../../interfaces/organigrama';
 import { api } from '../../../../../api/axios';
 
@@ -300,4 +297,44 @@ export const delegar_organigrama_persona:any = (id_persona: number, organigrama:
   };
 };
 
+export const cambio_organigrama_actual:any = (data_cambio:DataCambioOrganigramaActual) => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.post('transversal/organigrama/change-actual-organigrama/', data_cambio);          
+          control_success("Proceso exitoso");
+          return data;
+      } catch (error: any) {
+          control_error(error.response.data.detail);
+          return error as AxiosError;
+      }
+  };
+};
 
+export const get_organigrama_actual:any = () => { 
+  return async() => {
+    try {
+      const { data } = await api.get(
+        'transversal/organigrama/get-organigrama-actual/'
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  }
+};
+
+
+export const get_organigramas_posibles:any = () => { 
+  return async() => {
+    try {
+      const { data } = await api.get(
+        'transversal/organigrama/get-organigramas-posibles/'
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  }
+};
