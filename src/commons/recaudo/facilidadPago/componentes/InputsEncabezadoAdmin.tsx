@@ -1,10 +1,23 @@
 import { Grid, Box, TextField, Button } from "@mui/material";
 import { useState } from "react";
 import { TablaObligacionesSolicitud } from "./TablaObligacionesSolicitud";
+import { useSelector } from 'react-redux';
+import { type Deudor } from "../interfaces/interfaces";
+
+interface RootState {
+  deudores: {
+    deudores: Deudor;
+  }
+}
+
+interface Fecha {
+  fecha_solicitud: string;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const InputsEncabezadoAdmin: React.FC = () => {
+export const InputsEncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
   const [obligaciones, set_obligaciones] = useState(false);
+  const { deudores } = useSelector((state: RootState) => state.deudores);
 
   return (
     <>
@@ -33,7 +46,7 @@ export const InputsEncabezadoAdmin: React.FC = () => {
                   label="Nombre o Razón Social"
                   size="small"
                   fullWidth
-                  value={"Maria Cardenas"}
+                  value={''.concat(deudores.nombres, ' ', deudores.apellidos)}
                   disabled
                 />
               </Grid>
@@ -42,7 +55,7 @@ export const InputsEncabezadoAdmin: React.FC = () => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={"1140239284"}
+                  value={`${deudores.identificacion}`}
                   disabled
                 />
               </Grid>
@@ -51,7 +64,7 @@ export const InputsEncabezadoAdmin: React.FC = () => {
                   label="Correo Electrónico"
                   size="small"
                   fullWidth
-                  value={"maria@gmail.com"}
+                  value={`${deudores.email}`}
                   disabled
                 />
               </Grid>
@@ -60,7 +73,7 @@ export const InputsEncabezadoAdmin: React.FC = () => {
                   label="Dirección Notificación"
                   size="small"
                   fullWidth
-                  value={"Cra 23 #203-901"}
+                  value={`${deudores.ubicacion}`}
                   disabled
                 />
               </Grid>
@@ -69,7 +82,7 @@ export const InputsEncabezadoAdmin: React.FC = () => {
                   label="Fecha Solicitud"
                   size="small"
                   fullWidth
-                  value={"04/26/2023"}
+                  value={`${props.fecha_solicitud}`}
                   disabled
                 />
               </Grid>

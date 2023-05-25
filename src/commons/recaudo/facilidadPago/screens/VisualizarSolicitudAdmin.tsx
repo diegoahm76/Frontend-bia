@@ -6,16 +6,19 @@ import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, Di
 import { Close } from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { use_form } from '../../../../hooks/useForm';
 import { type event, type check, type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 import { post_respuesta_fac_pago } from '../requests/requests';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { get_datos_deudor } from '../slices/DeudoresSlice';
+import { get_datos_contacto } from '../slices/CalidadPersonasSlice';
 
 interface RootState {
-  facilidades: {
-    facilidades: FacilidadPagoSolicitud;
+  solicitud_facilidad: {
+    solicitud_facilidad: FacilidadPagoSolicitud;
   }
 }
 
@@ -30,7 +33,8 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   const [file, set_file] = useState({});
   const [file_name, set_file_name] = useState('');
   const { form_state, on_input_change } = use_form({});
-  const { facilidades } = useSelector((state: RootState) => state.facilidades);
+  const { solicitud_facilidad } = useSelector((state: RootState) => state.solicitud_facilidad);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
   const handle_open = () => { set_modal(true) };
@@ -47,10 +51,21 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if(solicitud_facilidad.id_deudor_actuacion !== undefined){
+      try {
+        void dispatch(get_datos_deudor(solicitud_facilidad.id_deudor_actuacion));
+        void dispatch(get_datos_contacto(solicitud_facilidad.id_deudor_actuacion));
+      } catch (error: any) {
+        throw new Error(error);
+      }
+    }
+  }, [solicitud_facilidad])
+
   return (
     <>
       <Title title='Visualizar Solicitud Facilidad de Pago - Usuario Cormacarena'/>
-      <InputsEncabezadoAdmin />
+      <InputsEncabezadoAdmin fecha_solicitud={solicitud_facilidad.fecha_generacion} />
       <Grid
         container
         sx={{
@@ -305,7 +320,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                 startIcon={<SaveIcon />}
                 sx={{ marginTop: '30px' }}
                 onClick={() => {
-                  void post_respuesta_fac_pago({...form_state, id_facilidades_pago: facilidades.id, id_funcionario: facilidades.id_funcionario, consulta_dbme: file })
+                  void post_respuesta_fac_pago({...form_state, id_facilidades_pago: solicitud_facilidad.id, id_funcionario: solicitud_facilidad.id_funcionario, consulta_dbme: file })
                 }}
               >
               Actualizar / Enviar

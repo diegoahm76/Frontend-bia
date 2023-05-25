@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { type event, type FacilidadPago, type Funcionario } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { get_facilidad_solicitud } from '../slices/FacilidadesSlice';
+import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
 import { put_asignacion_funcionario } from '../requests/requests';
 
 interface RootStateFacilidades {
@@ -36,6 +36,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const { funcionarios } = useSelector((state: RootStateFuncionarios) => state.funcionarios);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
+  // void get_filtro_fac_pago_ingresadas();
 
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };

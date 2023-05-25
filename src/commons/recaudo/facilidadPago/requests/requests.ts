@@ -16,6 +16,12 @@ export const get_deudores = async (): Promise<any> => {
   return data.data
 }
 
+// Filtrar Deudores desde Pag. Usuario Interno (no esta funcionando parametro nombre_contribuyente)
+export const get_filtro_deudores = async (): Promise<any> => {
+  const data = await api.get(`recaudo/pagos/listado-deudores/?identificacion=541`)
+  return data.data
+}
+
 // Listar Obligaciones de Usuario Externo desde Pag. Usuario Interno
 export const get_obligaciones_deudores = async (identificacion: string): Promise<any> => {
   return await api.get(`recaudo/pagos/consulta-deudores-obligaciones/${identificacion}/`)
@@ -27,14 +33,25 @@ export const get_fac_pago_ingresadas = async (): Promise<any> => {
   return data.data
 }
 
+// Filtrar facilidades de pago ingresadas desde Pag. Usuario Admin
+export const get_filtro_fac_pago_ingresadas = async (): Promise<any> => {
+  const data = await api.get(`recaudo/pagos/listado-facilidades-pagos/?identificacion=112`)
+  return data.data
+}
+
 // Listar facilidades de pago asignadas desde Pag. Usuario Interno
 export const get_fac_pago_asignadas = async (): Promise<any> => {
   return await api.get(`recaudo/pagos/listado-facilidades-funcionarios/`)
 }
 
+// Filtrar facilidades de pago asignadas desde Pag. Usuario Interno (no esta funcionando parametro nombre_usuario)
+export const get_filtro_fac_pago_asignadas = async (): Promise<any> => {
+  return await api.get(`recaudo/pagos/listado-facilidades-funcionarios/?nombre_usuario=oscar`)
+}
+
 // Ver la información de la facilidad de pago desde Pag. Usuario Interno
-export const get_fac_pago_solicitud = async (): Promise<any> => {
-  const data = await api.get(`recaudo/pagos/consulta-facilidades-pagos/1/`)
+export const get_fac_pago_solicitud = async (id: number): Promise<any> => {
+  const data = await api.get(`recaudo/pagos/consulta-facilidades-pagos/${id}/`)
   return data
 }
 
@@ -54,4 +71,14 @@ export const put_asignacion_funcionario = async (id: number, id_funcionario: Fun
 export const post_respuesta_fac_pago = async (respuesta: RespuestaFacilidadPago): Promise<any> => {
   const data = await api.post(`recaudo/pagos/respuesta-funcionario/`, respuesta)
   return data
+}
+
+// Ver la información personal del Deudor desde Pag. Usuario Interno
+export const get_datos_deudor = async (id: number): Promise<any> => {
+  return await api.get(`recaudo/pagos/facilidades-pagos-deudor/${id}/`)
+}
+
+// Ver la información de contacto del Deudor desde Pag. Usuario Interno
+export const get_datos_contacto_solicitud = async (id: number): Promise<any> => {
+  return await api.get(`recaudo/pagos/datos-contacto-deudor/${id}/`)
 }

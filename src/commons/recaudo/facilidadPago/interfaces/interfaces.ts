@@ -46,6 +46,7 @@ export interface FacilidadPagoSolicitud {
   id_funcionario: number;
   id_deudor_actuacion: number;
   fecha_generacion: string;
+  tipo_actuacion: string;
   periodicidad: number;
   cuotas: number;
   consignacion_soporte: string;
@@ -63,4 +64,19 @@ export interface RespuestaFacilidadPago {
   aprobacion : boolean;
   observacion : string;
   consulta_dbme : string;
+}
+
+export interface Deudor {
+  codigo: number;
+  identificacion: string;
+  nombres: string;
+  apellidos: string;
+  email: string;
+  ubicacion: string;
+}
+
+export interface Contacto {
+  direccion_notificaciones: string;
+  ciudad: string;
+  telefono_celular: string;
 }

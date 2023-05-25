@@ -29,6 +29,8 @@ import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/Obli
 import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
 import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
 import { funcionarios_slice } from "../commons/recaudo/facilidadPago/slices/FuncionariosSlice";
+import { calidad_personas_slice } from "../commons/recaudo/facilidadPago/slices/CalidadPersonasSlice";
+import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
 
 const persist_config = {
   key: 'macarenia_app',
@@ -61,7 +63,9 @@ const app_reducers = combineReducers({
   obligaciones: obligaciones_slice.reducer,
   deudores: deudores_slice.reducer,
   facilidades: facilidades_slice.reducer,
-  funcionarios: funcionarios_slice.reducer
+  funcionarios: funcionarios_slice.reducer,
+  calidad_personas: calidad_personas_slice.reducer,
+  solicitud_facilidad: solicitud_facilidad_slice.reducer
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

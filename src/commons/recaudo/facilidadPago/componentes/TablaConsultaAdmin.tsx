@@ -9,6 +9,7 @@ import { type event } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_obligaciones_id } from '../slices/ObligacionesSlice';
+// import { get_filtro_deudores } from '../requests/requests';
 
 interface Contribuyente {
   identificacion: string;
@@ -29,6 +30,10 @@ export const TablaConsultaAdmin: React.FC = () => {
   const [obligaciones_module, set_obligaciones_module] = useState(false);
   const { deudores } = useSelector((state: RootState) => state.deudores);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
+  /* useEffect(() => {
+    void get_filtro_deudores();
+  }, []) */
 
   const columns: GridColDef[] = [
     {
