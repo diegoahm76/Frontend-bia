@@ -113,7 +113,6 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdateJ> = ({
     useState<boolean>(false);
   const [dialog_notificaciones, set_dialog_notificaciones] =
     useState<boolean>(false);
-  const [update_count, set_update_count] = useState(0);
 
 
   const tipo_persona = watch('tipo_persona') ?? '';
@@ -215,42 +214,32 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdateJ> = ({
       void get_datos_clase_tercero_persona(data?.id_persona);
     }
   }, [data]);
-  
+
   useEffect(() => {
     if (departamento_expedicion !== '') {
       console.log('entro aqui', departamento_expedicion);
       console.log('cod_municipio_expedicion_id', data?.cod_municipio_expedicion_id);
       set_value('ciudad_expedicion', data?.cod_municipio_expedicion_id);
-      set_update_count(update_count + 1);
     }
   }, [departamento_expedicion]);
-  
+
   useEffect(() => {
     if (departamento_residencia !== '') {
       set_value('municipio_residencia', data?.municipio_residencia);
-      set_update_count(update_count + 1);
     }
   }, [departamento_residencia]);
-  
+
   useEffect(() => {
     if (departamento_laboral !== '') {
       set_value('municipio_laboral', data?.cod_municipio_laboral_nal);
-      set_update_count(update_count + 1);
     }
   }, [departamento_laboral]);
-  
+
   useEffect(() => {
     if (dpto_notifiacion !== '') {
       set_value('ciudad_notificacion', data?.cod_municipio_notificacion_nal);
-      set_update_count(update_count + 1);
     }
   }, [dpto_notifiacion]);
-  
-  useEffect(() => {
-    console.log('Componente actualizado');
-    console.log('ciudad_expedicion data', data?.cod_municipio_expedicion_id)
-    console.log('ciudad_expedicion', ciudad_expedicion)
-  }, [update_count]);
 
   const on_submit_update_natural = handle_submit(async (datos) => {
     try {
@@ -455,497 +444,485 @@ export const AdministracionPersonasScreenNatural: React.FC<PropsUpdateJ> = ({
               </Grid>
             </Grid>
             {/* Datos de residencia */}
-            <>
-              <Grid container spacing={2} mt={0.1}>
-                <Grid item xs={12}>
-                  <Title title="DATOS DE RESIDENCIA" />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <CustomSelect
-                    onChange={on_change}
-                    label="País de residencia *"
-                    name="pais_residencia"
-                    value={pais_residencia}
-                    options={paises_options}
-                    loading={loading}
-                    required={true}
-                    errors={errors}
-                    register={register}
-                  />
-                </Grid>
-                {pais_residencia === 'CO' && (
-                  <>
-                    <Grid item xs={12} sm={6} md={4}>
-                      <CustomSelect
-                        onChange={on_change}
-                        label="Departamento *"
-                        name="departamento_residencia"
-                        value={departamento_residencia}
-                        options={dpts_residencia_opt}
-                        loading={loading}
-                        required={true}
-                        errors={errors}
-                        register={register}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                      <CustomSelect
-                        onChange={on_change}
-                        label="Ciudad *"
-                        name="municipio_residencia"
-                        value={municipio_residencia}
-                        options={ciudades_residencia_opt}
-                        loading={loading}
-                        disabled={
-                          data?.cod_departamento_residencia === '' ?? true
-                        }
-                        required={true}
-                        errors={errors}
-                        register={register}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
-                      <TextField
-                        size="small"
-                        label="Direccion *"
-                        disabled
-                        fullWidth
-                        error={errors.direccion_residencia?.type === 'required'}
-                        helperText={
-                          errors.direccion_residencia?.type === 'required'
-                            ? 'Este campo es obligatorio'
-                            : ''
-                        }
-                        {...register('direccion_residencia', {
-                          required: true,
-                        })}
-                        value={direccion}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6} md={4}>
+            <Grid container spacing={2} mt={0.1}>
+              <Grid item xs={12}>
+                <Title title="DATOS DE RESIDENCIA" />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CustomSelect
+                  onChange={on_change}
+                  label="País de residencia *"
+                  name="pais_residencia"
+                  value={pais_residencia}
+                  options={paises_options}
+                  loading={loading}
+                  required={true}
+                  errors={errors}
+                  register={register}
+                />
+              </Grid>
+              {pais_residencia === 'CO' && (
+                <>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <CustomSelect
+                      onChange={on_change}
+                      label="Departamento *"
+                      name="departamento_residencia"
+                      value={departamento_residencia}
+                      options={dpts_residencia_opt}
+                      loading={loading}
+                      required={true}
+                      errors={errors}
+                      register={register}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <CustomSelect
+                      onChange={on_change}
+                      label="Ciudad *"
+                      name="municipio_residencia"
+                      value={municipio_residencia}
+                      options={ciudades_residencia_opt}
+                      loading={loading}
+                      disabled={
+                        data?.cod_departamento_residencia === '' ?? true
+                      }
+                      required={true}
+                      errors={errors}
+                      register={register}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <TextField
+                      size="small"
+                      label="Direccion *"
+                      disabled
+                      fullWidth
+                      error={errors.direccion_residencia?.type === 'required'}
+                      helperText={
+                        errors.direccion_residencia?.type === 'required'
+                          ? 'Este campo es obligatorio'
+                          : ''
+                      }
+                      {...register('direccion_residencia', {
+                        required: true,
+                      })}
+                      value={direccion}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={4}>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        open_modal(true);
+                        set_type_direction('residencia');
+                      }}
+                    >
+                      Generar dirección
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      type="textarea"
+                      rows="3"
+                      label="Complemento dirección"
+                      defaultValue={data.direccion_residencia_ref}
+                      {...register('direccion_residencia_ref')}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Stack
+                      justifyContent="flex-end"
+                      sx={{ m: '10px 0 20px 0' }}
+                      direction="row"
+                      spacing={2}
+                    >
                       <Button
-                        variant="contained"
+                        variant="outlined"
+                        startIcon={<RemoveRedEyeIcon />}
                         onClick={() => {
-                          open_modal(true);
-                          set_type_direction('residencia');
+                          handle_open_historico_direcciones();
                         }}
                       >
-                        Generar dirección
+                        Historico Direcciones
                       </Button>
-                    </Grid>
+                    </Stack>
+                  </Grid>
+                </>
+              )}
+            </Grid>
+            {/* Datos de notificación */}
+            <Grid container spacing={2} mt={0.1}>
+              <Grid item xs={12}>
+                <Title title="DATOS DE NOTIFICACIÓN" />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  label="¿Desea usar la dirección de residencia como dirección de notificación?"
+                  control={
+                    <Checkbox
+                      size="small"
+                      checked={misma_direccion}
+                      {...register('misma_direccion')}
+                    />
+                  }
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CustomSelect
+                  onChange={on_change}
+                  label="País de notificación *"
+                  name="pais_notificacion"
+                  value={'CO'}
+                  options={paises_options}
+                  loading={loading}
+                  disabled={true}
+                  required={false}
+                  errors={errors}
+                  register={register}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CustomSelect
+                  onChange={on_change}
+                  label="Departamento *"
+                  name="dpto_notifiacion"
+                  value={dpto_notifiacion}
+                  options={dpto_notifiacion_opt}
+                  loading={loading}
+                  required={true}
+                  errors={errors}
+                  register={register}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CustomSelect
+                  onChange={on_change}
+                  label="Ciudad *"
+                  name="cod_municipio_notificacion_nal"
+                  value={ciudad_notificacion}
+                  options={ciudad_notificacion_opt}
+                  loading={loading}
+                  disabled={dpto_notifiacion === '' ?? true}
+                  required={true}
+                  errors={errors}
+                  register={register}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  size="small"
+                  label="Direccion *"
+                  disabled
+                  fullWidth
+                  value={direccion_notificaciones}
+                  error={errors.direccion_notificaciones?.type === 'required'}
+                  helperText={
+                    errors.direccion_notificaciones?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : ''
+                  }
+                  {...register('direccion_notificaciones', {
+                    required: true,
+                  })}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    open_modal(true);
+                    set_type_direction('notificacion');
+                  }}
+                >
+                  Generar dirección
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="textarea"
+                  rows="3"
+                  label="Complemento dirección"
+                  defaultValue={data.direccion_notificacion_referencia}
+                  {...register('complemento_direccion')}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="E-mail *"
+                  defaultValue={data.email}
+                  error={errors.email?.type === 'required'}
+                  type="email"
+                  helperText={
+                    errors.email?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : ''
+                  }
+                  {...register('email', {
+                    required: true,
+                  })}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Celular"
+                  defaultValue={data.telefono_celular}
+                  error={errors.telefono_celular?.type === 'required'}
+                  type="text"
+                  helperText={
+                    errors.telefono_celular?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : ''
+                  }
+                  {...register('telefono_celular')}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Stack
+                  justifyContent="flex-end"
+                  sx={{ m: '10px 0 20px 0' }}
+                  direction="row"
+                  spacing={2}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<RemoveRedEyeIcon />}
+                    onClick={() => {
+                      handle_open_historico_email();
+                    }}
+                  >
+                    Historico E-mail
+                  </Button>
+                </Stack>
+              </Grid>
+            </Grid>
+            {/* Datos adicionales (opcionales) */}
+            <Grid container spacing={2} mt={0.1}>
+              <Grid item xs={12}>
+                <Title title="DATOS ADICIONALES (opcionales)" />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Nombre comercial"
+                  value={data.nombre_comercial}
+                  {...register('nombre_comercial')}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Teléfono fijo personal"
+                  value={data.telefono_fijo_residencial}
+                  {...register('telefono_fijo_residencial')}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Dirección laboral nacional
+                </Typography>
+                <Divider />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CustomSelect
+                  onChange={on_change}
+                  label="País"
+                  name="pais_laboral"
+                  value={'CO'}
+                  options={paises_options}
+                  loading={loading}
+                  required={false}
+                  disabled={true}
+                  errors={errors}
+                  register={register}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CustomSelect
+                  onChange={on_change}
+                  label="Departamento *"
+                  name="departamento_laboral"
+                  value={departamento_laboral}
+                  options={dpto_laboral_opt}
+                  loading={loading}
+                  required={false}
+                  errors={errors}
+                  register={register}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <CustomSelect
+                  onChange={on_change}
+                  label="Ciudad *"
+                  name="cod_municipio_laboral_nal"
+                  value={municipio_laboral}
+                  options={departamento_laboral_opt}
+                  loading={loading}
+                  disabled={departamento_laboral === '' ?? true}
+                  required={false}
+                  errors={errors}
+                  register={register}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  size="small"
+                  label="Direccion *"
+                  disabled
+                  fullWidth
+                  {...register('direccion_laboral', {
+                    required: true,
+                  })}
+                  value={direccion_laboral}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    open_modal(true);
+                    set_type_direction('laboral');
+                  }}
+                >
+                  Generar dirección
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="textarea"
+                  rows="3"
+                  label="Complemento dirección"
+                  defaultValue={data.direccion_laboral}
+                  {...register('direccion_laboral_ref')}
+                />
+              </Grid>
+            </Grid>
+            {/* Autorización de notificación y tratamiento de datos */}
+            <Grid container spacing={2} mt={0.1}>
+              <Grid item xs={12}>
+                <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  label="¿Autoriza notificaciones judiciales por correo electrónico?"
+                  control={
+                    <Checkbox
+                      size="small"
+                      disabled={true}
+                      checked={acepta_notificacion_email}
+                      {...register('acepta_notificacion_email')}
+                    />
+                  }
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  label="¿Autoriza notificaciones informativas a través de mensajes de texto?"
+                  control={
+                    <Checkbox
+                      size="small"
+                      disabled={true}
+                      checked={acepta_notificacion_sms}
+                      {...register('acepta_notificacion_sms')}
+                    />
+                  }
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Stack
+                  justifyContent="flex-end"
+                  sx={{ m: '10px 0 20px 0' }}
+                  direction="row"
+                  spacing={2}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<RemoveRedEyeIcon />}
+                    onClick={() => {
+                      handle_open_dialog_autorizacion();
+                    }}
+                  >
+                    Historico Autorizaciones
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<UpdateIcon />}
+                    onClick={() => {
+                      handle_open_dialog_notificaciones();
+                    }}
+                  >
+                    Actualizar Notificaciones
+                  </Button>
+                </Stack>
+              </Grid>
+            </Grid>
+            {/* Datos de clasificación Cormacarena */}
+            <Grid container spacing={2} mt={0.1}>
+              <Grid item xs={12}>
+                <Title title="DATOS DE CLASIFICACIÓN" />
+              </Grid>
+              <Grid item xs={12}>
+                {clase_tercero.length > 0 && (
+                  <>
                     <Grid item xs={12}>
-                      <TextField
+                      <Autocomplete
+                        multiple
                         fullWidth
-                        size="small"
-                        type="textarea"
-                        rows="3"
-                        label="Complemento dirección"
-                        defaultValue={data.direccion_residencia_ref}
-                        {...register('direccion_residencia_ref')}
+                        size="medium"
+                        options={clase_tercero}
+                        getOptionLabel={(option) => option.label}
+                        isOptionEqualToValue={(option, value) =>
+                          option.value === value?.value
+                        }
+                        value={clase_tercero_persona}
+                        renderInput={(params) => (
+                          <TextField
+                            key={params.id}
+                            {...params}
+                            label="Datos clasificación Cormacarena"
+                            placeholder="Clasificacion Cormacarena"
+                          />
+                        )}
+                        {...register('datos_clasificacion_persona')}
+                        onChange={handle_change_autocomplete}
                       />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Stack
-                        justifyContent="flex-end"
-                        sx={{ m: '10px 0 20px 0' }}
-                        direction="row"
-                        spacing={2}
-                      >
-                        <Button
-                          variant="outlined"
-                          startIcon={<RemoveRedEyeIcon />}
-                          onClick={() => {
-                            handle_open_historico_direcciones();
-                          }}
-                        >
-                          Historico Direcciones
-                        </Button>
-                      </Stack>
                     </Grid>
                   </>
                 )}
               </Grid>
-            </>
-            {/* Datos de notificación */}
-            <>
-              <Grid container spacing={2} mt={0.1}>
-                <Grid item xs={12}>
-                  <Title title="DATOS DE NOTIFICACIÓN" />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    label="¿Desea usar la dirección de residencia como dirección de notificación?"
-                    control={
-                      <Checkbox
-                        size="small"
-                        checked={misma_direccion}
-                        {...register('misma_direccion')}
-                      />
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <CustomSelect
-                    onChange={on_change}
-                    label="País de notificación *"
-                    name="pais_notificacion"
-                    value={'CO'}
-                    options={paises_options}
-                    loading={loading}
-                    disabled={true}
-                    required={false}
-                    errors={errors}
-                    register={register}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <CustomSelect
-                    onChange={on_change}
-                    label="Departamento *"
-                    name="dpto_notifiacion"
-                    value={dpto_notifiacion}
-                    options={dpto_notifiacion_opt}
-                    loading={loading}
-                    required={true}
-                    errors={errors}
-                    register={register}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <CustomSelect
-                    onChange={on_change}
-                    label="Ciudad *"
-                    name="cod_municipio_notificacion_nal"
-                    value={ciudad_notificacion}
-                    options={ciudad_notificacion_opt}
-                    loading={loading}
-                    disabled={dpto_notifiacion === '' ?? true}
-                    required={true}
-                    errors={errors}
-                    register={register}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    size="small"
-                    label="Direccion *"
-                    disabled
-                    fullWidth
-                    value={direccion_notificaciones}
-                    error={errors.direccion_notificaciones?.type === 'required'}
-                    helperText={
-                      errors.direccion_notificaciones?.type === 'required'
-                        ? 'Este campo es obligatorio'
-                        : ''
-                    }
-                    {...register('direccion_notificaciones', {
-                      required: true,
-                    })}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      open_modal(true);
-                      set_type_direction('notificacion');
-                    }}
-                  >
-                    Generar dirección
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    type="textarea"
-                    rows="3"
-                    label="Complemento dirección"
-                    defaultValue={data.direccion_notificacion_referencia}
-                    {...register('complemento_direccion')}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="E-mail *"
-                    defaultValue={data.email}
-                    error={errors.email?.type === 'required'}
-                    type="email"
-                    helperText={
-                      errors.email?.type === 'required'
-                        ? 'Este campo es obligatorio'
-                        : ''
-                    }
-                    {...register('email', {
-                      required: true,
-                    })}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Celular"
-                    defaultValue={data.telefono_celular}
-                    error={errors.telefono_celular?.type === 'required'}
-                    type="text"
-                    helperText={
-                      errors.telefono_celular?.type === 'required'
-                        ? 'Este campo es obligatorio'
-                        : ''
-                    }
-                    {...register('telefono_celular')}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <Stack
-                    justifyContent="flex-end"
-                    sx={{ m: '10px 0 20px 0' }}
-                    direction="row"
-                    spacing={2}
-                  >
-                    <Button
-                      variant="outlined"
-                      startIcon={<RemoveRedEyeIcon />}
-                      onClick={() => {
-                        handle_open_historico_email();
-                      }}
-                    >
-                      Historico E-mail
-                    </Button>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </>
-            {/* Datos adicionales (opcionales) */}
-            <>
-              <Grid container spacing={2} mt={0.1}>
-                <Grid item xs={12}>
-                  <Title title="DATOS ADICIONALES (opcionales)" />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Nombre comercial"
-                    value={data.nombre_comercial}
-                    {...register('nombre_comercial')}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    label="Teléfono fijo personal"
-                    value={data.telefono_fijo_residencial}
-                    {...register('telefono_fijo_residencial')}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle1" fontWeight="bold">
-                    Dirección laboral nacional
-                  </Typography>
-                  <Divider />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <CustomSelect
-                    onChange={on_change}
-                    label="País"
-                    name="pais_laboral"
-                    value={'CO'}
-                    options={paises_options}
-                    loading={loading}
-                    required={false}
-                    disabled={true}
-                    errors={errors}
-                    register={register}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <CustomSelect
-                    onChange={on_change}
-                    label="Departamento *"
-                    name="departamento_laboral"
-                    value={departamento_laboral}
-                    options={dpto_laboral_opt}
-                    loading={loading}
-                    required={false}
-                    errors={errors}
-                    register={register}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <CustomSelect
-                    onChange={on_change}
-                    label="Ciudad *"
-                    name="cod_municipio_laboral_nal"
-                    value={municipio_laboral}
-                    options={departamento_laboral_opt}
-                    loading={loading}
-                    disabled={departamento_laboral === '' ?? true}
-                    required={false}
-                    errors={errors}
-                    register={register}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    size="small"
-                    label="Direccion *"
-                    disabled
-                    fullWidth
-                    {...register('direccion_laboral', {
-                      required: true,
-                    })}
-                    value={direccion_laboral}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      open_modal(true);
-                      set_type_direction('laboral');
-                    }}
-                  >
-                    Generar dirección
-                  </Button>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    size="small"
-                    type="textarea"
-                    rows="3"
-                    label="Complemento dirección"
-                    defaultValue={data.direccion_laboral}
-                    {...register('direccion_laboral_ref')}
-                  />
-                </Grid>
-              </Grid>
-            </>
-            {/* Autorización de notificación y tratamiento de datos */}
-            <>
-              <Grid container spacing={2} mt={0.1}>
-                <Grid item xs={12}>
-                  <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    label="¿Autoriza notificaciones judiciales por correo electrónico?"
-                    control={
-                      <Checkbox
-                        size="small"
-                        disabled={true}
-                        checked={acepta_notificacion_email}
-                        {...register('acepta_notificacion_email')}
-                      />
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    label="¿Autoriza notificaciones informativas a través de mensajes de texto?"
-                    control={
-                      <Checkbox
-                        size="small"
-                        disabled={true}
-                        checked={acepta_notificacion_sms}
-                        {...register('acepta_notificacion_sms')}
-                      />
-                    }
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Stack
-                    justifyContent="flex-end"
-                    sx={{ m: '10px 0 20px 0' }}
-                    direction="row"
-                    spacing={2}
-                  >
-                    <Button
-                      variant="outlined"
-                      startIcon={<RemoveRedEyeIcon />}
-                      onClick={() => {
-                        handle_open_dialog_autorizacion();
-                      }}
-                    >
-                      Historico Autorizaciones
-                    </Button>
-                    <Button
-                      variant="contained"
-                      startIcon={<UpdateIcon />}
-                      onClick={() => {
-                        handle_open_dialog_notificaciones();
-                      }}
-                    >
-                      Actualizar Notificaciones
-                    </Button>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </>
-            {/* Datos de clasificación Cormacarena */}
-            <>
-              <Grid container spacing={2} mt={0.1}>
-                <Grid item xs={12}>
-                  <Title title="DATOS DE CLASIFICACIÓN" />
-                </Grid>
-                <Grid item xs={12}>
-                  {clase_tercero.length > 0 && (
-                    <>
-                      <Grid item xs={12}>
-                        <Autocomplete
-                          multiple
-                          fullWidth
-                          size="medium"
-                          options={clase_tercero}
-                          getOptionLabel={(option) => option.label}
-                          isOptionEqualToValue={(option, value) =>
-                            option.value === value?.value
-                          }
-                          value={clase_tercero_persona}
-                          renderInput={(params) => (
-                            <TextField
-                              key={params.id}
-                              {...params}
-                              label="Datos clasificación Cormacarena"
-                              placeholder="Clasificacion Cormacarena"
-                            />
-                          )}
-                          {...register('datos_clasificacion_persona')}
-                          onChange={handle_change_autocomplete}
-                        />
-                      </Grid>
-                    </>
-                  )}
-                </Grid>
-              </Grid>
-            </>
+            </Grid>
             {/* Datos de vinculación */}
-            <>
-              <Grid container spacing={2} mt={0.1}>
-                {data?.id_persona !== undefined && (
-                  <DatosVinculacion id_persona={data?.id_persona} />
-                )}
-                <Grid item spacing={2} justifyContent="end" container>
-                  <Grid item>
-                    <LoadingButton
-                      type="submit"
-                      variant="contained"
-                      fullWidth
-                      color="success"
-                      loading={is_saving}
-                      disabled={is_saving}
-                    >
-                      Actualizar
-                    </LoadingButton>
-                  </Grid>
+            <Grid container spacing={2} mt={0.1}>
+              {data?.id_persona !== undefined && (
+                <DatosVinculacion id_persona={data?.id_persona} />
+              )}
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <LoadingButton
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    color="success"
+                    loading={is_saving}
+                    disabled={is_saving}
+                  >
+                    Actualizar
+                  </LoadingButton>
                 </Grid>
               </Grid>
-            </>
+            </Grid>
           </form>
           <DialogGeneradorDeDirecciones
             open={is_modal_active}
