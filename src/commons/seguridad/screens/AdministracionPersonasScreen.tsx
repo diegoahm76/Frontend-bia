@@ -3,6 +3,7 @@ import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import type {
   DataPersonas,
   InfoPersona,
+  key_data_persona,
 } from '../../../interfaces/globalModels';
 import { Divider, Grid } from '@mui/material';
 import { Title } from '../../../components/Title';
@@ -33,9 +34,18 @@ export const AdministracionPersonasScreen: React.FC = () => {
       const {
         data: { data },
       } = await consultar_datos_persona(info_persona.id_persona);
-      console.log(datos_persona);
+
       if (data.id_persona !== 0) {
         set_datos_persona(data);
+        console.log(data);
+        const fields = get_values();
+        for (const key in fields) {
+          const temp = key as key_data_persona;
+          set_value(key, data[temp]);
+        }
+        set_value('departamento_expedicion', data.cod_departamento_expedicion);
+
+        console.log(datos_persona);
       }
     } catch (err) {
       const temp = err as AxiosError;
