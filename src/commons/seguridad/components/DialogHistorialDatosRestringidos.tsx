@@ -8,13 +8,11 @@ import {
   Grid,
   Stack,
   Alert,
-  LinearProgress,
   Typography,
 } from '@mui/material';
 import { Title } from '../../../components/Title';
 import type {
   HistoricoDatosRestringidos,
-  InfoPersona,
 } from '../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../helpers';
@@ -24,7 +22,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  datos_historico: InfoPersona ;
+  id_persona: number | undefined;
 }
 
 const columns: GridColDef[] = [
@@ -70,7 +68,7 @@ const columns: GridColDef[] = [
 export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
-  datos_historico,
+  id_persona,
 }: IProps) => {
   const [rows, set_rows] = useState<HistoricoDatosRestringidos[]>([]);
 
@@ -81,7 +79,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
   const historico = async (): Promise<void> => {
     try {
       const response = await consultar_historico_restringido(
-        datos_historico?.id_persona ?? 0
+        id_persona ?? 0
       );
       const new_historico = response.map(
         (datos: HistoricoDatosRestringidos) => ({
@@ -95,7 +93,6 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
           id_persona: datos.id_persona,
         })
       );
-
       set_rows(new_historico);
     } catch (err) {
       control_error(err);
@@ -148,7 +145,6 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
               <Grid item xs={12}>
                 <Grid container justifyContent="center" textAlign="center">
                   <Alert icon={false} severity="info">
-                    <LinearProgress />
                     <Typography>No se encontraron resultados...</Typography>
                   </Alert>
                 </Grid>

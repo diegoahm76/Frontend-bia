@@ -14,7 +14,6 @@ import {
 import { Title } from '../../../../components/Title';
 import type {
     HistoricoDirecciones,
-    InfoPersona,
 } from '../../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../../helpers';
@@ -24,7 +23,8 @@ import { consultar_historico_direcciones } from '../../../seguridad/request/Requ
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    historico_direcciones: InfoPersona;
+    id_persona: number;
+    tipo_persona: string;
 }
 
 const columns: GridColDef[] = [
@@ -102,7 +102,8 @@ const columns_juridica: GridColDef[] = [
 export const DialogHistorialDirecciones: React.FC<IProps> = ({
     is_modal_active,
     set_is_modal_active,
-    historico_direcciones,
+    id_persona,
+    tipo_persona,
 }: IProps) => {
     const [rows, set_rows] = useState<HistoricoDirecciones[]>([]);
 
@@ -113,7 +114,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
     const historico = async (): Promise<void> => {
         try {
             const response = await consultar_historico_direcciones(
-                historico_direcciones.id_persona
+                id_persona
             );
             const new_historico = response.map(
                 (datos: HistoricoDirecciones) => ({
@@ -135,9 +136,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
     };
 
     useEffect(() => {
-        if (is_modal_active) {
-            void historico();
-        }
+        void historico();
     }, [is_modal_active]);
     return (
         <>
@@ -169,7 +168,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                     <Grid item xs={12}>
                         {rows.length > 0 ? (
                             <>
-                                {historico_direcciones.tipo_persona === 'J' && (
+                                {tipo_persona === 'J' && (
                                     <>
                                         <DataGrid
                                             autoHeight
@@ -181,7 +180,7 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                                         />
                                     </>
                                 )}
-                                {historico_direcciones.tipo_persona === 'N' && (
+                                {tipo_persona === 'N' && (
                                     <>
                                         <DataGrid
                                             autoHeight

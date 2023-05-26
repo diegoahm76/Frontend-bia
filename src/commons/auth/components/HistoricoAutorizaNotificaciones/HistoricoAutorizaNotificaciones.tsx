@@ -15,7 +15,6 @@ import {
 import { Title } from '../../../../components/Title';
 import type {
     HistoricoAutorizaNotificaciones,
-    InfoPersona,
 } from '../../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../../helpers';
@@ -25,14 +24,16 @@ import { consultar_historico_autorizaciones } from '../../../seguridad/request/R
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    historico_autorizaciones: InfoPersona;
+    id_persona: number;
+    tipo_persona: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
 export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
     is_modal_active,
     set_is_modal_active,
-    historico_autorizaciones,
+    id_persona,
+    tipo_persona,
 }: IProps) => {
     const columns: GridColDef[] = [
         {
@@ -141,7 +142,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
     const historico = async (): Promise<void> => {
         try {
             const response = await consultar_historico_autorizaciones(
-                historico_autorizaciones.id_persona
+                id_persona
             );
             const new_historico = response.map(
                 (datos: HistoricoAutorizaNotificaciones) => ({
@@ -167,6 +168,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
     }, [is_modal_active]);
     return (
         <>
+        
             <Dialog
                 open={is_modal_active}
                 onClose={handle_close}
@@ -195,7 +197,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                     <Grid item xs={12}>
                         {rows.length > 0 ? (
                             <>
-                                {historico_autorizaciones.tipo_persona === 'J' && (
+                                {tipo_persona === 'J' && (
                                     <>
                                         <DataGrid
                                             autoHeight
@@ -207,7 +209,7 @@ export const DialogHistoricoAutorizaNotificaciones: React.FC<IProps> = ({
                                         />
                                     </>
                                 )}
-                                {historico_autorizaciones.tipo_persona === 'N' && (
+                                {tipo_persona === 'N' && (
                                     <>
                                         <DataGrid
                                             autoHeight

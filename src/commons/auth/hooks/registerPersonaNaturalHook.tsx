@@ -107,9 +107,6 @@ export const use_register_persona_n = ({
   const [departamento_laboral_opt, set_departamento_laboral_opt] = useState<
     IList[]
   >([]);
-  const [pais_nacimiento, set_pais_nacimiento] = useState('');
-  const [genero, set_genero] = useState('');
-  const [estado_civil, set_estado_civil] = useState('');
   const [departamento_expedicion, set_departamento_expedicion] = useState('');
   const [ciudad_expedicion, set_ciudad_expedicion] = useState('');
   const [pais_residencia, set_pais_residencia] = useState('');
@@ -123,6 +120,9 @@ export const use_register_persona_n = ({
   const [direccion, set_direccion] = useState('');
   const [direccion_laboral, set_direccion_laboral] = useState('');
 
+  const pais_nacimiento = watch('pais_nacimiento') ?? '';
+  const genero = watch('sexo');
+  const estado_civil = watch('estado_civil') ?? '';
   const email = watch('email') ?? '';
   const confirmar_email = watch('confirmar_email') ?? '';
   const telefono_celular = watch('telefono_celular') ?? '';
@@ -289,24 +289,6 @@ export const use_register_persona_n = ({
   useEffect(() => {
     void get_selects_options();
   }, []);
-
-  useEffect(() => {
-    if (watch('pais_nacimiento') !== undefined) {
-      set_pais_nacimiento(watch('pais_nacimiento'));
-    }
-  }, [watch('pais_nacimiento')]);
-
-  useEffect(() => {
-    if (watch('sexo') !== undefined) {
-      set_genero(watch('sexo'));
-    }
-  }, [watch('sexo')]);
-
-  useEffect(() => {
-    if (watch('estado_civil') !== undefined) {
-      set_estado_civil(watch('estado_civil'));
-    }
-  }, [watch('estado_civil')]);
 
   useEffect(() => {
     if (watch('departamento_expedicion') !== undefined) {

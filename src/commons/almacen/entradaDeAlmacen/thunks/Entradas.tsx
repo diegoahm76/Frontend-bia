@@ -47,6 +47,20 @@ export const crear_entrada_bien: any = (form_data: crear_entrada) => {
     }
   };
 };
+
+// Obtiene enrtadas
+export const obtener_entradas: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/bienes/entradas/get-list/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtiene ultimo numero de entrada (Consecutivo)
 export const obtener_consecutivo: any = () => {
   return async () => {
@@ -70,6 +84,32 @@ export const obtener_bodegas: any = () => {
   return async () => {
     try {
       const { data } = await api.get('almacen/bodega/get-list/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtiene listado unidades de medida
+export const obtener_unidades_medida: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/unidades-medida/get-list/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtiene listado unidades de medida
+export const obtener_porcentajes_iva: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/porcentajes/get-list/');
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

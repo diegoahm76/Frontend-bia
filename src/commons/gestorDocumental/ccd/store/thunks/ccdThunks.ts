@@ -50,12 +50,10 @@ const control_success = (message: ToastContent) =>
   });
 
 // Obtener los CCDS terminados
-export const get_finished_ccd_service = () => {
-  return async (): Promise<AxiosResponse | AxiosError> => {
+export const get_finished_ccd_service = ():any => {
+  return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('gestor/ccd/get-terminados/');
-      // dispatch(getMoldOrganigrams(data.data));
-      control_success(data.detail);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -216,3 +214,32 @@ export const update_ccds_service: any = (ccd: {
     }
   };
 };
+
+//  Obtener CCDS's terminados por Organigrama
+export const get_ccds_finished_x_organigrama: any = (id_organigrama: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/activar/get-ccd-terminados-by-org/${id_organigrama}/`
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_ccds_posibles: any = (id_organigrama: number) => {
+  return async () => {
+    try{
+      const { data } = await api.get(
+        `gestor/activar/get-ccd-posibles/?id_organigrama=${id_organigrama}`
+      );
+      return data;
+    }catch(error:any){
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  }
+}
