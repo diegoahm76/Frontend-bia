@@ -140,6 +140,8 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
     <>
       <form
         onSubmit={(e) => {
+          console.log('first');
+          console.log(errors);
           void on_submit_create_natural(e);
         }}
       >
@@ -588,7 +590,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
           <Grid item xs={12} sm={6} md={4}>
             <CustomSelect
               onChange={on_change}
-              label="Departamento *"
+              label="Departamento"
               name="departamento_laboral"
               value={departamento_laboral}
               options={dpto_laboral_opt}
@@ -600,7 +602,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
           <Grid item xs={12} sm={6} md={4}>
             <CustomSelect
               onChange={on_change}
-              label="Ciudad *"
+              label="Ciudad"
               name="cod_municipio_laboral_nal"
               value={municipio_laboral}
               options={departamento_laboral_opt}
@@ -613,7 +615,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
           <Grid item xs={12} sm={6} md={4}>
             <TextField
               size="small"
-              label="Direccion *"
+              label="Direccion"
               disabled
               fullWidth
               {...register('direccion_laboral', {
