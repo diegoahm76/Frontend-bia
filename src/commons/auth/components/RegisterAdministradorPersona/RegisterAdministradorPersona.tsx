@@ -12,8 +12,8 @@ import type { keys_object } from '../../interfaces';
 import { CustomSelect } from '../../../../components';
 import { LoadingButton } from '@mui/lab';
 import { use_register } from '../../hooks/registerHook';
-import { CrearPersonaNatAdmin } from '../CrearPersonaNatAdmin/CrearPersonaNatAdmin';
-import { CrearPersonaJurAdmin } from '../CrearPersonaJurAdmin/CrearPersonaJurAdmin';
+import { CrearPersonaNatAdmin } from '../../../seguridad/components/CrearPersonaNatAdmin/CrearPersonaNatAdmin';
+import { CrearPersonaJurAdmin } from '../../../seguridad/components/CrearPersonaJurAdmin/CrearPersonaJurAdmin';
 
 interface Props {
   uso_interno: boolean;

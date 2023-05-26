@@ -20,7 +20,6 @@ import type {
   PropsUpdateJ,
   UpdateAutorizaNotificacion,
 } from '../../../../interfaces/globalModels';
-import { use_register_persona_j } from '../../hooks/registerPersonaJuridicaHook';
 import {
   consultar_clase_tercero,
   consultar_clase_tercero_persona,
@@ -36,7 +35,8 @@ import { DialogHistorialDirecciones } from '../HistoricoDirecciones/HistoricoDir
 import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
 import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
 import { DialogHistorialDatosRestringidos } from '../../../seguridad/components/DialogHistorialDatosRestringidos';
-import { use_register } from '../../hooks/registerHook';
+import { use_register } from '../../../auth/hooks/registerHook';
+import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
@@ -51,7 +51,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
 }: PropsUpdateJ) => {
   const {
     is_saving,
-    loading,
     paises_options,
     dpto_notifiacion_opt,
     ciudad_notificacion_opt,

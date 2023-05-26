@@ -20,8 +20,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 import dayjs, { type Dayjs } from 'dayjs';
-
-import { use_register_persona_n } from '../../hooks/registerPersonaNaturalHook';
 import type {
   ClaseTercero,
   CrearPersonNaturalAdmin,
@@ -33,6 +31,7 @@ import {
   crear_persona_natural,
 } from '../../../seguridad/request/Request';
 import { Title } from '../../../../components';
+import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
@@ -49,7 +48,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
 }: PropsRegister) => {
   const {
     is_saving,
-    loading,
     paises_options,
     departamentos_opt,
     dpto_notifiacion_opt,

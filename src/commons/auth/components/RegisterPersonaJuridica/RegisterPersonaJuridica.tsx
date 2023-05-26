@@ -41,7 +41,6 @@ const DatosEmpresariales: (props: PropsElement) => JSX.Element = ({
 }: PropsElement) => {
   const {
     is_saving,
-    loading,
     paises_options,
     naturaleza_empresa_opt,
     nacionalidad_empresa,
@@ -166,7 +165,6 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     dpto_notifiacion_opt,
     ciudad_notificacion_opt,
@@ -376,7 +374,6 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
   handleBack,
 }: PropsElement) => {
   const {
-    loading,
     tipo_documento_opt,
     tipo_documento_representante,
     documento_representante,

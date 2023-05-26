@@ -33,9 +33,7 @@ import {
   consultar_clase_tercero_persona,
   editar_persona_natural,
 } from '../../../seguridad/request/Request';
-import { use_register_persona_n } from '../../hooks/registerPersonaNaturalHook';
 import type { Dayjs } from 'dayjs';
-import { DatosVinculacion } from '../DataVinculación';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { LoadingButton } from '@mui/lab';
 import UpdateIcon from '@mui/icons-material/Update';
@@ -45,8 +43,10 @@ import { DialogHistorialEmail } from '../HistoricoEmail/HistoricoEmail';
 import { DialogHistorialDirecciones } from '../HistoricoDirecciones/HistoricoDirecciones';
 import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
 import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
-import { use_register } from '../../hooks/registerHook';
 import { Typography } from '@mui/material';
+import { DatosVinculacion } from '../../../auth/components/DataVinculación';
+import { use_register } from '../../../auth/hooks/registerHook';
+import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreenNatural: React.FC<PropsUpdateJ> = ({

@@ -40,7 +40,6 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
   register,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     departamentos_opt,
     ciudades_opt,
@@ -252,7 +251,6 @@ const DatosResidencia: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     dpts_residencia_opt,
     ciudades_residencia_opt,
@@ -392,7 +390,6 @@ const DatosNotifiacion: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     dpto_notifiacion_opt,
     ciudad_notificacion_opt,
@@ -615,7 +612,6 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     departamento_laboral,
     municipio_laboral,

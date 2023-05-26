@@ -8,11 +8,11 @@ import type { PropsDatosRepresentanteLegal } from './types';
 import { control_error } from '../../../../helpers';
 import { consultar_datos_persona } from '../../../seguridad/request/Request';
 import { CustomSelect } from '../../../../components/CustomSelect';
-import { use_register_persona_j } from '../../hooks/registerPersonaJuridicaHook';
 import { useForm } from 'react-hook-form';
 import { DialogRepresentanteLegal } from '../DialogCambioRepresentanteLegal/DialogCambioRepresentanteLegal';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { DialogHistoricoRepresentanteLegal } from '../HistoricoRepresentanteLegal/HistoricoRepresentanteLegal';
+import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosRepresentanteLegal: React.FC<

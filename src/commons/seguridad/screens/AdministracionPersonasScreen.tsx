@@ -9,9 +9,9 @@ import { Title } from '../../../components/Title';
 import { use_register } from '../../auth/hooks/registerHook';
 import { consultar_datos_persona } from '../request/Request';
 import { control_error } from '../../../helpers';
-import { CrearPersonaNatAdmin } from '../../auth/components/CrearPersonaNatAdmin/CrearPersonaNatAdmin';
-import { CrearPersonaJurAdmin } from '../../auth/components/CrearPersonaJurAdmin/CrearPersonaJurAdmin';
 import type { AxiosError } from 'axios';
+import { CrearPersonaNatAdmin } from '../components/CrearPersonaNatAdmin/CrearPersonaNatAdmin';
+import { CrearPersonaJurAdmin } from '../components/CrearPersonaJurAdmin/CrearPersonaJurAdmin';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreen: React.FC = () => {

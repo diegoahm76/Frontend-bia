@@ -22,13 +22,13 @@ import type {
   CrearPersonJuridicaAdmin,
   PropsRegister,
 } from '../../../../interfaces/globalModels';
-import { use_register_persona_j } from '../../hooks/registerPersonaJuridicaHook';
 import { Title } from '../../../../components/Title';
 import {
   consultar_clase_tercero,
   crear_persona_juridica,
 } from '../../../seguridad/request/Request';
 import { control_error, control_success } from '../../../../helpers';
+import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPersonaJurAdmin: React.FC<PropsRegister> = ({
@@ -45,7 +45,6 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegister> = ({
 }: PropsRegister) => {
   const {
     is_saving,
-    loading,
     paises_options,
     dpto_notifiacion_opt,
     ciudad_notificacion_opt,
