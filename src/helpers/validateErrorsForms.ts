@@ -5,12 +5,11 @@ export const validate_error = async (
   keys_object: string[]
 ): Promise<boolean> => {
   return await new Promise((resolve, reject) => {
-    for (let index = 0; index < keys_object.length; index++) {
-      console.log(keys_object[index]);
-      console.log(errors);
-      const has_key = errors[keys_object[index]] !== undefined;
-      console.log(has_key);
-    }
+    keys_object.forEach((e) => {
+      if(errors[e]?.type === 'required'){
+        reject(new Error(`${e} is required`))
+      }
+    });
     resolve(true);
   });
 };

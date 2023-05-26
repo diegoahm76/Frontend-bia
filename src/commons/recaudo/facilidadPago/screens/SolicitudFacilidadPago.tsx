@@ -47,7 +47,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
     }
   };
 
-
   useEffect(()=>{
     let count:number = 0;
     const arr:number[] = []
@@ -436,8 +435,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           onChange={on_input_change}
                           name='tipoDeudor'
                         >
-                          <MenuItem>Ej 1</MenuItem>
-                          <MenuItem>Ej 2</MenuItem>
+                          <MenuItem value='DeudorNatural'>Persona Natural</MenuItem>
+                          <MenuItem value='DeudorJuridico'>Persona Juridica / Apoderado</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid>

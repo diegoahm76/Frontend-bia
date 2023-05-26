@@ -25,7 +25,7 @@ export const initial_state_current_bien = {
   valor_residual: null,
   stock_minimo: null,
   stock_maximo: null,
-  solicitable_vivero: true,
+  solicitable_vivero: false,
   tiene_hoja_vida: false,
   maneja_hoja_vida: false,
   visible_solicitudes: false,
@@ -35,7 +35,7 @@ export const initial_state_current_bien = {
   id_unidad_medida_vida_util: null,
   id_bien_padre: null,
 };
-const initial_state_data ={
+const initial_state_data = {
   nombre: "",
   codigo: "",
   acciones: "",
@@ -62,7 +62,7 @@ const initial_state: IBien = {
   marca: [],
   unidad_medida: [],
   porcentaje_iva: [],
-  
+
 };
 export const bien_slice = createSlice({
   name: 'bien',
@@ -79,11 +79,11 @@ export const bien_slice = createSlice({
       state: IBien,
       action: PayloadAction<INodo>
     ) => {
-      state.current_nodo= action.payload;
+      state.current_nodo = action.payload;
     },
     get_code_bien: (
       state: IBien,
-      action: PayloadAction<string|null|undefined>
+      action: PayloadAction<string | null | undefined>
     ) => {
       state.code_bien = action.payload;
     },

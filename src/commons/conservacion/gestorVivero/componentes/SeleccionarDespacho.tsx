@@ -124,14 +124,11 @@ const SeleccionarDespacho = ({
       }
     })
 
-  
-
-  
-
   const get_despachos: any = (async () => {
     try {
+      const despacho: string = get_values("numero_despacho_consumo")
       const { data } = await api.get(
-        `conservacion/despachos/get-list/`
+        `conservacion/despachos/get-list/?numero_despacho=${despacho??""}`
       );
       console.log(data)
       if ("data" in data) {

@@ -1,26 +1,28 @@
-import { Box, Button, Grid, Stack, TextField } from "@mui/material";
+import { Box, Button, FormHelperText, Grid, Stack, TextField } from "@mui/material";
 import use_buscar_programacion from "../../mantenimientoGeneral/hooks/useBuscarProgramacion";
 import SearchIcon from '@mui/icons-material/Search';
-import BuscarProrgamacionComponent from "../../mantenimientoGeneral/BuscarProgramacion";
-import { useCallback, useEffect, useState } from "react";
+import BuscarProgramacionComponent from "../../mantenimientoGeneral/BuscarProgramacion";
+import { useEffect, useState } from "react";
 import use_previsualizacion from "../../mantenimientoGeneral/hooks/usePrevisualizacion";
-import { get_cv_vehicle_service } from "../../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks";
-import { get_cv_computer_service } from "../../../../hojaDeVidaComputo/store/thunks/cvComputoThunks";
-import { get_cv_others_service } from "../../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks";
-import { useAppDispatch } from "../../../../../../../../hooks";
+import dayjs, { type Dayjs } from "dayjs";
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers/';
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 interface IProps {
     tipo_articulo: string,
     set_prog_seleccion: any,
-    parent_details: any
+    emit_dias_posibles: any,
+    parent_details: any,
+    limpiar_formulario: boolean,
+    accion_guardar: boolean
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, set_prog_seleccion, parent_details}: IProps) => {
-  const dispatch = useAppDispatch();
-    const [fecha_programada, set_fecha_programada] = useState<string | null>("");
+export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo, set_prog_seleccion, parent_details, limpiar_formulario, emit_dias_posibles, accion_guardar }: IProps) => {
+    const [fecha_registro, set_fecha_registro] = useState<Dayjs | null>(dayjs());
+    const [mensaje_error_fecha, set_mensaje_error_fecha] = useState<string>("");
 
     const {
         programacion,
-        // detalle_seleccionado,
+        detalle_seleccionado,
         set_programacion,
         set_detalle_seleccionado
     } = use_previsualizacion();
@@ -31,42 +33,48 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, 
         set_buscar_programacion_is_active
     } = use_buscar_programacion();
 
-    const set_prog_seleccionada = useCallback((val: any) => {
-        set_programacion(val);
-    }, [set_programacion]);
-
-    const set_details_state = useCallback((val: any) => {
-        set_detalle_seleccionado(val);
-    }, [set_detalle_seleccionado]);
-
     useEffect(() => {
         set_prog_seleccion(programacion);
     }, [set_prog_seleccion, programacion]);
 
     useEffect(() => {
-        if (programacion !== undefined && programacion !== null) {
-            if(tipo_articulo ==='vehículos'){
-                dispatch(get_cv_vehicle_service(programacion.articulo)).then((response: any) => {
-                    parent_details(response.data);
-                })
-            }else if(tipo_articulo ==='computadores'){
-                dispatch(get_cv_computer_service(programacion.articulo)).then((response: any) => {
-                    parent_details(response.data);
-                })
-            }else{
-                dispatch(get_cv_others_service(programacion.articulo)).then((response: any) => {
-                    parent_details(response.data);
-                })
-            }
-        }
-    }, [parent_details,programacion]);
+        set_detalle_seleccionado(detalle_seleccionado);
+    }, [set_detalle_seleccionado, detalle_seleccionado]);
 
     useEffect(() => {
-        if (programacion !== undefined && programacion !== null) {
-            set_fecha_programada(programacion.fecha);
-        }
-    }, [programacion]);
+        parent_details(detalle_seleccionado);
+    }, [parent_details, detalle_seleccionado]);
 
+    useEffect(() => {
+        if (limpiar_formulario) {
+            set_fecha_registro(dayjs());
+        }
+    }, [limpiar_formulario]);
+
+    useEffect(() => {
+        if (accion_guardar) {
+            valida_formulario();
+        }
+    }, [accion_guardar]);
+
+    const valida_formulario: () => void = () => {
+        if(fecha_registro !== null)
+            emit_dias_posibles({dias_posibles:(dayjs().diff(fecha_registro,'days')+1), fecha_mantenimiento: fecha_registro});
+        else
+            set_mensaje_error_fecha("El campo Fecha mantenimiento es obligatorio.");
+    }
+
+    const handle_change_fecha_programada = (date: Dayjs | null): void => {
+        set_fecha_registro(date);
+        if(date !== null)
+            set_mensaje_error_fecha("");
+        else
+            set_mensaje_error_fecha("El campo Fecha mantenimiento es obligatorio.");
+    };
+    
+    useEffect(()=>{
+        valida_formulario();
+    },[fecha_registro])
     return (
         <>
             <Grid container>
@@ -95,12 +103,12 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, 
                                 Buscar programación
                             </Button>
                             {buscar_programacion_is_active && (
-                                <BuscarProrgamacionComponent
+                                <BuscarProgramacionComponent
                                     is_modal_active={buscar_programacion_is_active}
                                     set_is_modal_active={set_buscar_programacion_is_active}
-                                    title={title_programacion} 
-                                    parent_details={set_prog_seleccionada} 
-                                    prog_details={set_details_state} 
+                                    title={title_programacion}
+                                    prog_details={set_programacion}
+                                    parent_details={set_detalle_seleccionado}
                                     tipo_articulo={tipo_articulo} />
                             )}
                         </Stack>
@@ -113,16 +121,25 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({tipo_articulo, 
                         spacing={2}
                         sx={{ mt: '20px' }}
                     >
-                        <TextField
-                            label="Fecha mantenimiento"
-                            size="small"
-                            fullWidth
-                            value={fecha_programada}
-                            InputProps={{
-                                readOnly: true,
-                            }}
-                        />
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Fecha mantenimiento"
+                                value={fecha_registro}
+                                onChange={(newValue) => { handle_change_fecha_programada(newValue); }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        size="small"
+                                        {...params}
+                                        error={mensaje_error_fecha !== ""}
+                                    />
+                                )}
+                                maxDate={dayjs()}
+                            />
+                        </LocalizationProvider>
                     </Stack>
+                    {(mensaje_error_fecha !== "") && (<FormHelperText error id="dias-error">{mensaje_error_fecha}</FormHelperText>)}
                 </Grid>
             </Grid>
         </>

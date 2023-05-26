@@ -8,6 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../../../../../hooks";
 import { override_maintenance } from "./thunks/maintenanceThunks";
+import { control_error } from "../../../../../../../helpers";
 interface IProps {
   is_modal_active: boolean,
   set_is_modal_active: Dispatch<SetStateAction<boolean>>,
@@ -30,7 +31,6 @@ const AnularMantenimientoComponent = ({ is_modal_active, set_is_modal_active, ti
 
   const on_change_motivo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_motivo(e.target.value);
-    console.log(motivo);
   };
 
   const guardar_anulacion = (): void => {
@@ -40,6 +40,8 @@ const AnularMantenimientoComponent = ({ is_modal_active, set_is_modal_active, ti
         navigate('/home');
         set_is_modal_active(false);
       }
+    }).catch((error: any) =>{
+      control_error(error);
     })
   }
 

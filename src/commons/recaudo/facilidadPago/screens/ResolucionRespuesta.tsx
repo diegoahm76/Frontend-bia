@@ -120,7 +120,7 @@ export const ResolucionRespuesta: React.FC = () => {
             </Grid>
             <CKEditor
               editor={ ClassicEditor }
-              data="<p>Puedes empezar a escribir aquí</p>"
+              data="<p></p>"
               onReady={ editor => {
                   console.log( 'Editor is ready to use!', editor );
               } }
@@ -133,6 +133,9 @@ export const ResolucionRespuesta: React.FC = () => {
               } }
               onFocus={ ( event, editor ) => {
                   console.log( 'Focus.', editor );
+              } }
+              config={ {
+                placeholder: 'Puede empezar a escribir aquí',
               } }
             />
             <Stack

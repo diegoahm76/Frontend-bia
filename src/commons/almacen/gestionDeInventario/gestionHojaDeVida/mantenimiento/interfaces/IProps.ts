@@ -37,3 +37,21 @@ export interface crear_mantenimiento {
     id_persona_solicita: number,
     id_persona_anula: number| null
 }
+
+export interface ejecutar_mantenimiento {
+    "fecha_registrado": string | null,
+    "fecha_ejecutado": string,
+    "cod_tipo_mantenimiento": string,
+    "dias_empleados": number,
+    "fecha_estado_anterior": string | null,
+    "id_articulo": number,
+    "cod_estado_final": string,
+    "id_persona_realiza": number,
+    "id_persona_diligencia": number,
+    "cod_estado_anterior": string | null,
+    "acciones_realizadas": string,
+    "observaciones": string | null,
+    "valor_mantenimiento": number | null,
+    "contrato_mantenimiento": string | null,
+    "id_programacion_mtto": number | null
+  }

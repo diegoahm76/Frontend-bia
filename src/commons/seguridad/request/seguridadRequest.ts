@@ -1,7 +1,6 @@
 import { api } from '../../../api/axios';
 import type {
   HistoricoCambioEstadosUser,
-  UserCreate,
   SuperUser,
   Roles,
   Users,
@@ -185,38 +184,43 @@ export const persons_request = async (
   }
 };
 
-// Trae todos los datos de un usuario
-export const user_request = async (
-  id_usuario: number
-): Promise<AxiosResponse<ResponseServer<Users>>> => {
-  return await api.get(`users/get-by-pk/${id_usuario}`);
-};
-
 // Trae historico de cambios de estado para cada usuario
 export const user_historico_cambios_estado = async (
   id_usuario: number
-): Promise<HistoricoCambioEstadosUser[]> => {
+): Promise<ResponseThunks<HistoricoCambioEstadosUser[]>> => {
   console.log(id_usuario);
+  try{
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    const {data: { data }} = await api.get<ResponseServer<HistoricoCambioEstadosUser[]>>(
+      `users/historico-activacion/${id_usuario}/`
+    );
+    return {
+      ok: true,
+      data
+    };
+  }catch(error){
+    const { response } = error as AxiosError<AxiosResponse>;
+    const { data } = response as unknown as ResponseThunks;
+    control_error(data.detail);
+    return {
+      ok: false,
+      error_message: data.detail
+    };
+  }
 
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const { data } = await api.get<ResponseServer<HistoricoCambioEstadosUser[]>>(
-    `users/historico-activacion/${id_usuario}/`
-  );
-  console.log(data);
-  return data.data;
 };
 
 export const crear_user_admin_user = async (
   data: FormData
-): Promise<AxiosResponse<UserCreate>> => {
+): Promise<AxiosResponse<ResponseServer<any>>> => {
   return await api.post('users/register/', data);
 };
 
 export const update_user_admin_user = async (
   id_usuario: number,
   data: FormData
-): Promise<AxiosResponse<UserCreate>> => {
-  return await api.patch(`users/update/${id_usuario}}/`, data);
+): Promise<AxiosResponse<ResponseServer<any>>> => {
+  return await api.patch(`users/update/${id_usuario}/`, data);
 };
 
 // editar datos persona restringida juridica

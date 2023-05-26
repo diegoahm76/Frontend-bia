@@ -191,6 +191,7 @@ const SeleccionarBienDistribuir = () => {
     useEffect(() => {
         const id_despacho = current_despacho.id_despacho_entrante
         if (id_despacho !== null && id_despacho !== undefined) {
+            void dispatch(get_items_despacho_service(id_despacho))
             void dispatch(get_items_distribuidos_service(id_despacho));
         }
         set_action("agregar")
@@ -218,22 +219,14 @@ const SeleccionarBienDistribuir = () => {
         if(current_bien.id_bien !== null){
             if(get_values_bien("codigo_bien") === current_bien.codigo_bien){
                 const bien: IObjDistribucion | undefined = aux_items_distribuidos.find((p) => p.id_bien === current_bien.id_bien && p.id_vivero === data.id_vivero)
-                let asignada = (bien?.cantidad_asignada ?? 0)
+                let asignada = 0
                 aux_items_distribuidos.forEach((option) => {
-                    if (option.id_bien === current_bien.id_bien) {
+                    if (option.id_bien !== bien?.id_bien ) {
                         asignada = asignada + (option.cantidad_asignada ?? 0)
-                        console.log(asignada)
-                    } 
+                    }
                 })
-                if (action === "editar") {
-                    asignada = asignada - ((bien?.cantidad_asignada ?? 0)*2)
-                    console.log(asignada, bien?.cantidad_asignada )
-                } else{
-                    asignada = asignada - (bien?.cantidad_asignada ?? 0)
 
-                }
-
-                if ((data.cantidad_asignada??0) <= Math.abs(((current_bien.cantidad_restante ?? 0) - asignada)))
+                if ((data.cantidad_asignada??0) <= (current_bien.cantidad_restante ?? 0))
                 {   
                     const vivero: IObjNursery | undefined = nurseries.find((p) => p.id_vivero === data.id_vivero);
                     const new_bien: IObjDistribucion = {
@@ -249,8 +242,9 @@ const SeleccionarBienDistribuir = () => {
                         nombre_bien: current_bien.nombre_bien ?? "",
                     }
                     if (bien === undefined) {
-                        
                         set_aux_items_distribuidos([...aux_items_distribuidos, new_bien])
+                        const restante = (current_bien.cantidad_restante ?? 0) - (new_bien.cantidad_asignada ?? 0) 
+                        dispatch(set_current_bien({...current_bien, cantidad_restante: restante}))
                     } else {
                         if (action === "editar") {
                             const aux_items: IObjDistribucion[] = []
@@ -262,13 +256,16 @@ const SeleccionarBienDistribuir = () => {
                                 }
                             })
                             set_aux_items_distribuidos(aux_items)
+                            const restante = (current_bien.cantidad_restante ?? 0) - (new_bien.cantidad_asignada ?? 0) 
+
+                            dispatch(set_current_bien({...current_bien, cantidad_restante: restante}))
                             set_action("agregar")
                         } else {
                             control_error("el bien ya se asigno en el vivero, seleccione la opcion de editar")
                         }
                     }
                 } else{
-                control_error("La cantidad asignada debe ser maximo "+ String(Math.abs(((current_bien.cantidad_restante ?? 0) - asignada))))
+                control_error("La cantidad asignada debe ser maximo "+ String(current_bien.cantidad_restante))
                 }
             } else{
                 control_error("Codigo de bien no coincide con el seleccionado")
@@ -279,13 +276,29 @@ const SeleccionarBienDistribuir = () => {
     };
 
     const edit_bien_distribuido = (item: IObjDistribucion): void => {
-        const bien: IObjItem| undefined = items_despacho.find((p: IObjItem) => p.id_item_despacho_entrante === item.id_item_despacho_entrante)
-        if(bien !== undefined){
-            dispatch(set_current_bien(bien))
-        }
-        reset_distribucion(aux_items_distribuidos.find((p) => p.id_bien === item.id_bien && p.id_vivero === item.id_vivero))
         set_action("editar")
-
+        const bien: IObjItem| undefined = items_despacho.find((p: IObjItem) => p.id_item_despacho_entrante === item.id_item_despacho_entrante)
+        const item_bien = aux_items_distribuidos.find((p) => p.id_bien === item.id_bien && p.id_vivero === item.id_vivero)
+        reset_distribucion(item_bien)
+        const aux_items: IObjDistribucion[] = []
+        let asignada = 0
+        let restante = 0 
+        aux_items_distribuidos.forEach((option) => {
+            if (option.id_bien !== item.id_bien || option.id_vivero !== item.id_vivero) {
+                aux_items.push(option)
+            }
+        })
+        if(bien !== undefined){
+            aux_items.forEach((option) => {
+                if (option.id_bien === bien?.id_bien) {
+                    asignada = asignada + (option.cantidad_asignada ?? 0)
+                } 
+            })
+            restante = (bien.cantidad_entrante ?? 0) - asignada
+            console.log(asignada, restante)
+            dispatch(set_current_bien({...bien, cantidad_restante: restante}))
+        }
+        set_aux_items_distribuidos(aux_items)
     };
 
     const delete_bien_distribuido = (item: IObjDistribucion): void => {
@@ -315,7 +328,7 @@ const SeleccionarBienDistribuir = () => {
                     get_filters_models={get_bienes}
                     set_models={get_items_despacho}
                     reset_values={reset_bien}
-                    button_submit_label='Buscar bien'
+                    button_submit_label='Ver bienes'
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -401,7 +414,7 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_distribucion,
                             control_name: "cantidad_asignada",
                             default_value: "",
-                            rules: {required_rule: { rule: true, message: "Ingrese cantidad" }, min_rule: { rule: 0.01, message: "Cantidad debe ser mayor que 0" } },
+                            rules: {required_rule: { rule: true, message: "Ingrese cantidad" }, min_rule: { rule: 0.01, message: "Cantidad debe ser mayor que 0" }, max_rule: { rule: current_bien.cantidad_restante, message: "La cantidad restante es "+String(current_bien.cantidad_restante) +"" } },
                             label: "Cantidad",
                             type: "number",
                             disabled: false,
@@ -426,38 +439,12 @@ const SeleccionarBienDistribuir = () => {
                     title_list= {(current_despacho.distribucion_confirmada ?? false)?'Bienes distribuidos':'Bienes pre-distribuidos'}
                     list={aux_items_distribuidos}
                     add_item_list={handle_submit_distribucion(on_submit_distribucion)}
-                    add_list_button_label={action}
+                    add_list_button_label={"agregar"}
                     columns_list={columns_bienes_distribuidos}
                     row_list_id={"id_distribucion_item_despacho_entrante"}
-                    modal_select_model_title='Buscar bien'
-                    modal_form_filters={[
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "codigo_bien",
-                            default_value: "",
-                            rules: {},
-                            label: "Codigo bien",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "nombre_bien",
-                            default_value: "",
-                            rules: {},
-                            label: "Nombre",
-                            type: "text",
-                            disabled: false,
-                            helper_text: ""
-                        },
-                    ]}
+                    modal_select_model_title='Seleccionar bien a distribuir'
+                    modal_form_filters={[]}
+                    title_table_modal = "Lista de bienes en despacho"
                 />
                 
             </Grid>

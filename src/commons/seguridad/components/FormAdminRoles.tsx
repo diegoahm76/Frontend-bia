@@ -68,6 +68,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
         data: { data },
       } = await get_permisos_by_modulos();
 
+      // Obtiene permisos asignados al Rol al editar
       if (rol_edit?.id_rol !== 0) {
         await get_permisos_rol(data);
       } else {
@@ -158,13 +159,13 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
       );
       set_permisos_rol([...new_array]);
     }
-    console.log(permisos_rol);
   };
 
-  const render_actions = (actions: Acciones): JSX.Element[] => {
+  const render_actions = (actions: Acciones, modulo: string): JSX.Element[] => {
     const elements: JSX.Element[] = [];
     for (const index in actions) {
       const key = index as key_obj;
+      // Renderiza cuando esta editando
       if (rol_edit?.id_rol !== 0) {
         elements.push(
           <FormControlLabel
@@ -180,6 +181,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
           />
         );
       } else {
+        // Renderiza cuando esta creando
         elements.push(
           <FormControlLabel
             key={key}
@@ -212,13 +214,17 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
         if (temp !== undefined) {
           e.checked = true;
           e.modulos.forEach((m) => {
+            // Buscamos que permisos tiene asignados
             const module = temp.modulos.find(
               (i) => i.id_modulo === m.id_modulo
             );
+            // Si tien algun permiso asignado, asigamos las acciones que tiene
             if (module !== undefined) {
+              console.log(module);
               for (const key in module.permisos) {
                 const k = key as key_obj;
                 const element = module.permisos[k];
+                // enviamos los permisos asignados al array que se envia al server
                 if (element?.id !== undefined) {
                   temp_permisos.push({
                     id_permiso_modulo: element?.id,
@@ -234,6 +240,19 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
                 consultar: module.permisos.consultar,
                 // anular: module.permisos.anular,
                 // ejecutar: module.permisos.ejecutar,
+              };
+            } else {
+              // Si no tien permiso asignado, asignamos por defecto en false
+              m.permisos = {
+                crear: { id: m.permisos.crear?.id ?? 0, value: false },
+                actualizar: {
+                  id: m.permisos.actualizar?.id ?? 0,
+                  value: false,
+                },
+                borrar: { id: m.permisos.borrar?.id ?? 0, value: false },
+                consultar: { id: m.permisos.consultar?.id ?? 0, value: false },
+                // anular: module.permisos.anular,
+                // ejecutar: mo
               };
             }
           });
@@ -305,7 +324,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
               type="submit"
               variant="contained"
               color="primary"
-              disabled={is_saving}
+              disabled={is_saving || permisos_rol.length === 0}
               startIcon={<SaveIcon />}
             >
               GUARDAR
@@ -355,7 +374,12 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
                                           Acciones para el usuario
                                         </Typography>
                                       </div>
-                                      <div>{render_actions(m.permisos)}</div>
+                                      <div>
+                                        {render_actions(
+                                          m.permisos,
+                                          m.nombre_modulo
+                                        )}
+                                      </div>
                                     </AccordionDetails>
                                   </Accordion>
                                 </Grid>

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material"
 import { useEffect, useState } from "react";
 import { type crear_mantenimiento } from "../../interfaces/IProps";
-import { TablaGeneral } from './../../../../../../../components/TablaGeneral'
+import { TablaGeneral } from '../../../../../../../components/TablaGeneral/TablaGeneral'
 
 interface IProps {
     data_grid: crear_mantenimiento[],
@@ -18,7 +18,6 @@ export const PrevisualizacionComponent: React.FC<IProps> = ({ data_grid, limpiar
     }, [data_grid]);
 
     useEffect(() => {
-        console.log('data_previsualizacion: ', data_previsualizacion)
     }, [data_previsualizacion]);
     
 
@@ -33,7 +32,7 @@ export const PrevisualizacionComponent: React.FC<IProps> = ({ data_grid, limpiar
         { field: "serial_placa", header: "Placa", visible: true },
         { field: "kilometraje_programado", header: "Kilometraje", visible: true },
         { field: "fecha_programada", header: "Fecha", visible: true },
-        { field: "cod_tipo_mantenimiento", header: "Tipo de mantenimiento", visible: true }
+        { field: "tipo_programacion", header: "Tipo de mantenimiento", visible: true }
     ];
 
     return (

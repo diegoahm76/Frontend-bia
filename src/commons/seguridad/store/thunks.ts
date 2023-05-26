@@ -1,28 +1,19 @@
 import { type Dispatch } from 'react';
 import {
   persons_request,
-  roles_request,
   superuser_request,
-  user_request,
   users_request,
 } from '../request/seguridadRequest';
 import {
   delegate_superuser_role,
   set_data_legal_person,
   set_persons,
-  set_roles,
   set_user_info,
   set_users,
 } from './seguridadSlice';
 import { control_error, control_success } from '../../../helpers';
 import { consultar_datos_persona } from '../request/Request';
-
-export const get_roles: () => any = () => {
-  return async (dispatch: Dispatch<any>) => {
-    const data = await roles_request();
-    dispatch(set_roles(data.data));
-  };
-};
+import { get_user_by_id } from '../../../request';
 
 export const create_super_user: (
   id_persona: number
@@ -73,7 +64,7 @@ export const get_persons: (
 
 export const get_data_user: (id: number) => any = (id: number) => {
   return async (dispatch: Dispatch<any>) => {
-    const { data } = await user_request(id);
+    const { data } = await get_user_by_id(id);
     dispatch(set_user_info(data.data));
   };
 };

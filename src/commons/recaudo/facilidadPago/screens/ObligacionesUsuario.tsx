@@ -1,45 +1,36 @@
 import { Title } from '../../../../components/Title';
+import { EncabezadoObligacionesUsuario } from '../componentes/EncabezadoObligacionesUsuario';
 import { TablaObligacionesUsuario } from '../componentes/TablaObligacionesUsuario';
-import { Grid, Box, TextField } from "@mui/material";
-import { get_obligaciones_usuario } from '../requests/requests';
+import { Grid, Box } from "@mui/material";
 import { useEffect } from 'react';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
+import { get_obligaciones } from '../slices/ObligacionesSlice';
+import { type ObligacionesUsuario } from '../interfaces/interfaces';
+
+interface RootState {
+  obligaciones: {
+    obligaciones: ObligacionesUsuario[];
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ObligacionesUsuario: React.FC = () => {
-  const obligaciones = [
-    {
-      id: 1,
-      nombreObligacion: 'Permiso 1',
-      fecha_inicio: '01/01/2015',
-      id_expediente: 378765,
-      nroResolucion: '378765-143',
-      monto_inicial: 120000000,
-      carteras: {
-        valor_intereses: 35000000,
-        dias_mora: 390,
-      }
-    },
-    {
-      id: 2,
-      nombreObligacion: 'Concesion Aguas',
-      fecha_inicio: '01/04/2015',
-      id_expediente: 3342765,
-      nroResolucion: '3342765-4546',
-      monto_inicial: 190700000,
-      carteras: {
-        valor_intereses: 45000000,
-        dias_mora: 180,
-      }
-    },
-  ];
+export const ObligacionesUsuarios: React.FC = () => {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
 
   useEffect(() => {
-    void get_obligaciones_usuario()
+    try {
+      void dispatch(get_obligaciones());
+    } catch (error: any) {
+      throw new Error(error);
+    }
   }, [])
 
   return (
     <>
       <Title title='Listado de Obligaciones del Usuario Externo'/>
+      <EncabezadoObligacionesUsuario />
       <Grid
         container
         sx={{
@@ -58,58 +49,14 @@ export const ObligacionesUsuario: React.FC = () => {
             noValidate
             autoComplete="off"
           >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  disabled
-                  label="Nombres"
-                  size="small"
-                  fullWidth
-                  value={"nombre_completo"}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  disabled
-                  label="Identificación"
-                  size="small"
-                  fullWidth
-                  value={"numero_identificacion"}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  disabled
-                  label="Correo Electrónico"
-                  size="small"
-                  fullWidth
-                  value={"email"}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </Grid>
-      </Grid>
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          mb: '20px',
-          mt: '20px',
-          p: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-          >
-              <Title title='Sus obligaciones pendientes por pago son las siguientes:'/>
-              <TablaObligacionesUsuario obligaciones={obligaciones} />
+              {
+                obligaciones.length !== 0 ? (
+                  <>
+                    <p>Sus obligaciones pendientes por pago son las siguientes:</p>
+                    <TablaObligacionesUsuario />
+                  </>
+                ): <p>Usted no tiene obligaciones pendientes por pago.</p>
+              }
           </Box>
         </Grid>
       </Grid>

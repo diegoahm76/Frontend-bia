@@ -5,7 +5,6 @@ import { type AxiosError, } from 'axios';
 import { toast, type ToastContent } from 'react-toastify';
 import { type anular_mantenimiento, type crear_mantenimiento } from '../../../interfaces/IProps';
 
-
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
   toast.error(message, {
@@ -58,15 +57,28 @@ export const override_maintenance: any = (id_programado: number,form_data: anula
     }
   };
 };
-// Consulta mantenimientos programados por fechas
-export const get_programmed_maintenance: any = (fecha_desde: string, fecha_hasta: string) => {
+// Consulta mantenimientos programados por fechas y tipo
+export const get_programmed_maintenance: any = (fecha_desde: string, fecha_hasta: string, tipo: string) => {
   return async () => {
     try {
-      const { data } = await api.get(`almacen/mantenimientos/programados/get-by-fechas/?rango-inicial-fecha=${fecha_desde}&rango-final-fecha=${fecha_hasta}`);
+      const { data } = await api.get(`almacen/mantenimientos/programados/get-by-fechas/?rango-inicial-fecha=${fecha_desde}&rango-final-fecha=${fecha_hasta}&cod_tipo_activo=${tipo}`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
+  };
+};
+
+export const get_article_by_type: any = (tipo: string) => {
+  return async () => {
+      try {
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=${tipo}`);
+          return data;
+      } catch (error: any) {
+          control_error(error.response.data.detail);
+          return error as AxiosError;
+      }
   };
 };

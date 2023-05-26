@@ -243,7 +243,6 @@ body::-webkit-scrollbar-thumb {
 
 [class^='govco-']:before,
 [class*=' govco-']:before {
-  /* font-family: 'govco-fontv2'; */
   font-style: normal;
   font-weight: normal;
 

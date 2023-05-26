@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Grid,
@@ -37,8 +37,6 @@ const dialog_busqueda_avanzada_usuario = ({
 }: IProps): JSX.Element => {
   const dispatch = useDispatch();
   const { users } = useSelector((state: SeguridadSlice) => state.seguridad);
-  const [buscando_users, set_buscando_users] = useState<boolean>(false);
-
   const {
     register: register_search_user,
     handleSubmit: handle_submit_search_user,
@@ -132,7 +130,6 @@ const dialog_busqueda_avanzada_usuario = ({
 
   const on_submit_search_user = (data: FormValuesSearchUser): void => {
     dispatch(get_users(data.nombre_usuario));
-    set_buscando_users(true);
   };
 
   return (
@@ -194,19 +191,17 @@ const dialog_busqueda_avanzada_usuario = ({
           </Grid>
         </Box>
         <Grid item xs={12}>
-          {buscando_users && (
-            <Grid item xs={12}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={users}
-                columns={columns_users}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                getRowId={(row) => row.id_usuario}
-              />
-            </Grid>
-          )}
+          <Grid item xs={12}>
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={users ?? []}
+              columns={columns_users}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              getRowId={(row) => row.id_usuario}
+            />
+          </Grid>
         </Grid>
       </DialogContent>
     </Dialog>

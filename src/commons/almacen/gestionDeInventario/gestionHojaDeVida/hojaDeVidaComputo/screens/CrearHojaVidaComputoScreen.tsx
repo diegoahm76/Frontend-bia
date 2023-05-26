@@ -1,33 +1,23 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 
-// import { useNavigate } from 'react-router-dom';
-// Componentes de Material UI
 import {
   Grid,
   Box,
-
   IconButton,
   Avatar,
   Chip,
+  Stack,
+  Button,
   Tooltip,
-  DialogTitle,
 
 } from '@mui/material';
-// Icons de Material UI
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 
-// import LockIcon from '@mui/icons-material/Lock';
-// import BlockIcon from '@mui/icons-material/Block';
-// import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-// import BusinessIcon from '@mui/icons-material/Business';
-// import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
-// import DeleteIcon from '@mui/icons-material/Delete';
+
 
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 // Componentes personalizados
@@ -35,17 +25,50 @@ import { Title } from '../../../../../../components/Title';
 // // Hooks
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 // Thunks
-import { get_computers_all_service } from '../store/thunks/cvComputoThunks';
+
 import CrearCvComputoForm from '../components/CrearCvComputoForm';
 // // Slices
 import { current_computer } from '../store/slices/indexCvComputo';
-// import { ProgramacionManteniento } from '../../mantenimiento/ProgramacionManteniento';
+// import { get_cv_computer_service, } from '../store/thunks/cvComputoThunks';
 
 
-//  import CrearViveroDialogForm from '../../../../../conservacion/gestorVivero/componentes/CrearViveroDialogForm';
-// import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
-// // // Slices
-// import { current_nursery } from '../store/slice/indexCvComputo';
+
+const initial_state_current_computer = {
+  id_bien: 0,
+  codigo_bien: null,
+  nro_elemento_bien: null,
+  nombre: "",
+  cod_tipo_bien: null,
+  cod_tipo_activo: null,
+  nivel_jerarquico: null,
+  nombre_cientifico: null,
+  descripcion: "",
+  doc_identificador_nro: null,
+  cod_metodo_valoracion: null,
+  cod_tipo_depreciacion: null,
+  cantidad_vida_util: null,
+  valor_residual: null,
+  stock_minimo: null,
+  stock_maximo: null,
+  solicitable_vivero: false,
+  tiene_hoja_vida: false,
+  maneja_hoja_vida: false,
+  visible_solicitudes: false,
+  id_marca: null,
+  id_unidad_medida: null,
+  id_articulo: 0,
+  id_porcentaje_iva: null,
+  id_unidad_medida_vida_util: null,
+  id_bien_padre: null,
+  cod_tipo_elemento_vivero: 0,
+  es_semilla_vivero: false,
+  estado: "",
+  marca: "",
+  nombre_padre: "",
+  porcentaje_iva: 0,
+  unidad_medida: "",
+  unidad_medida_vida_util: "",
+}
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -70,12 +93,12 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
       ),
     },
     {
-      field: 'tiene_hoja_vida',
-      headerName: '¿Hoja de vida?',
+      field: 'maneja_hoja_vida',
+      headerName: '¿maneja Hoja de vida?',
       width: 120,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.tiene_hoja_vida ? (
+        return params.row.maneja_hoja_vida ? (
           <Chip size="small" label="SI" color="success" variant="outlined" />
         ) : (
           <Chip size="small" label="NO" color="error" variant="outlined" />
@@ -150,60 +173,20 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
               </IconButton>
             </Tooltip>
           }
-          <Tooltip title="Programar mantenimiento">
-            <IconButton
-              onClick={() => {
 
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <EngineeringIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
 
-              </Avatar>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Asignaciones">
-            <IconButton
-              onClick={() => {
-
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <AssignmentIndIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-
-              </Avatar>
-            </IconButton>
-          </Tooltip>
         </>
       ),
     },
   ];
 
   useEffect(() => {
-    void dispatch(get_computers_all_service());
+    // void dispatch(get_cv_computer_service())
+
   }, []);
 
   return (
+
     <>
 
       <Grid
@@ -218,9 +201,22 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12}>
-          <DialogTitle>Activos</DialogTitle>
+
 
           <Title title="Computadores"></Title>
+          <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon />}
+              onClick={() => {
+                dispatch(current_computer(initial_state_current_computer));
+                set_action("create")
+                set_add_cv_com_is_active(true);
+              }}
+            >
+              Crear hoja de vida
+            </Button>
+          </Stack>
 
           <Grid item>
             <Box sx={{ width: '100%' }}>
