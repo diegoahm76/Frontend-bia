@@ -18,7 +18,6 @@ import { useAppDispatch } from "../../../../hooks";
 import { crear_entrada_bien, obtener_articulo_codigo, obtener_bodegas, obtener_consecutivo, obtener_porcentajes_iva, obtener_tipos_entrada } from "../thunks/Entradas";
 import { control_error } from "../../../../helpers";
 import { get_tipo_documento } from "../../../../request";
-import { useDropzone } from "react-dropzone";
 import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
 import AnularEntradaComponent from "./AnularEntrada";
 import EntradaArticuloFijoComponent from "./EntradaArticuloFijo";
@@ -27,6 +26,7 @@ import { BuscadorPersonaDialog } from "../../gestionDeInventario/gestionHojaDeVi
 import { v4 as uuid } from "uuid";
 import BuscarEntradasComponent from "./BuscarEntradas";
 import { useNavigate } from "react-router-dom";
+import { useDropzone } from "react-dropzone";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();

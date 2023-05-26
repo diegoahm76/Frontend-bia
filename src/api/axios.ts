@@ -12,7 +12,6 @@ api.interceptors.request.use(
         request.headers.Authorization = `Bearer ${token}`;
       }
     } catch (e) {}
-
     return request;
   },
   async (error) => {

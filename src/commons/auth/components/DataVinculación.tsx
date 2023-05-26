@@ -9,7 +9,7 @@ import { control_error } from "../../../helpers";
 import { consultar_vinculacion_persona } from "../../seguridad/request/Request";
 
 interface Props {
-    id_persona: number;
+    id_persona: number | undefined;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosVinculacion: React.FC<Props> = ({
@@ -20,16 +20,20 @@ export const DatosVinculacion: React.FC<Props> = ({
     const [is_ver_datos_vinculacion, set_is_ver_datos_vinculacion] = useState(false);
 
     useEffect(() => {
-        void get_datos_vinculación()
-    }, [id_persona])
+        if (id_persona !== undefined) {
+            void get_datos_vinculación()
+        }
+    }, [id_persona !== undefined])
 
     // trae los datos de vinculacion de una persona
     const get_datos_vinculación = async (): Promise<void> => {
         set_is_ver_datos_vinculacion(false)
         try {
-            const response = await consultar_vinculacion_persona(id_persona);
-            set_datos_vinculacion(response)
-            set_is_ver_datos_vinculacion(true)
+            if (id_persona !== undefined) {
+                const response = await consultar_vinculacion_persona(id_persona);
+                set_datos_vinculacion(response)
+                set_is_ver_datos_vinculacion(true)
+            }
         } catch (err) {
             control_error(err);
         }

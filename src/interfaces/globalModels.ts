@@ -91,20 +91,6 @@ export interface PropsUpdateJ {
   getValues: UseFormGetValues<FieldValues>;
 }
 
-export interface PropsUpdate {
-  numero_documento: string;
-  id_persona: number;
-  tipo_documento: string;
-  tipo_persona: string;
-  register: UseFormRegister<FieldValues>;
-  handleSubmit: UseFormHandleSubmit<FieldValues>;
-  setValue: UseFormSetValue<FieldValues>;
-  errors: FieldErrors<FieldValues>;
-  isValid: boolean;
-  watch: UseFormWatch<FieldValues>;
-  getValues: UseFormGetValues<FieldValues>;
-}
-
 export interface Direccion {
   via_principal: string;
   numero_o_nombre_via: string;
@@ -398,8 +384,8 @@ export interface ClaseTerceroPersona {
   nombre: string;
 }
 export interface UpdateAutorizaNotificacion {
-  acepta_autorizacion_email: boolean;
-  acepta_autorizacion_sms:   boolean;
+  acepta_autorizacion_email: boolean | undefined;
+  acepta_autorizacion_sms:   boolean | undefined;
 }
 
 export interface DatosVinculacionCormacarena {
