@@ -5,7 +5,7 @@ import { GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiq
 import { Title } from "../../../components"
 import axios from 'axios';
 import type { FormDetalleLiquidacion, FormLiquidacion, Liquidacion, OpcionLiquidacion } from '../interfaces/liquidacion';
-import { TablaGeneral } from '../../../components/TablaGeneral';
+import { TablaGeneral } from '../../../components/TablaGeneral/TablaGeneral';
 
 interface Row {
   id: number;

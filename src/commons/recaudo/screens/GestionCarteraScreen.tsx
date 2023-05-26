@@ -6,7 +6,7 @@ import { EditarCartera } from '../components/GestionCartera/EditarCartera';
 import { CobroCoactivo } from '../components/GestionCartera/CobroCoactivo';
 import type { Liquidacion } from '../interfaces/liquidacion';
 import axios from 'axios';
-import { TablaGeneral } from '../../../components/TablaGeneral';
+import { TablaGeneral } from '../../../components/TablaGeneral/TablaGeneral';
 
 interface Row {
   id: number;
