@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Grid, IconButton, Stack, Tab } from "@mui/material
 import { Title } from '../../../components/Title';
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { useState,  type SyntheticEvent } from 'react';
-import { TablaGeneral } from "../../../components/TablaGeneral";
+import { TablaGeneral } from "../../../components/TablaGeneral/TablaGeneral";
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { EstadosProcesoModal } from "../components/estadosProceso/EstadosProcesoModal";

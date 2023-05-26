@@ -2,10 +2,19 @@
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { PersonaNatural } from './CalidadPersona';
+import { PersonaNatural, PersonaJuridica, DeudorSolidario } from './CalidadPersona';
+import { useSelector } from 'react-redux';
+import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
+
+interface RootState {
+  solicitud_facilidad: {
+    solicitud_facilidad: FacilidadPagoSolicitud;
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const VistaSolicitud: React.FC = () => {
+  const { solicitud_facilidad } = useSelector((state: RootState) => state.solicitud_facilidad);
 
   const rows_bienes = [
     {
@@ -115,19 +124,27 @@ export const VistaSolicitud: React.FC = () => {
             label="Calidad en que actúa la persona"
             size="small"
             fullWidth
-            value={'Persona Natural'}
+            value={solicitud_facilidad.tipo_actuacion === 'tipo 1' ? 'Persona Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 2' ? 'Persona Juridica' : 'Deudor Solidario'}
             disabled
           />
         </Grid>
         <Grid item xs={12} sm={10}>
-          <PersonaNatural />
+          {
+            solicitud_facilidad.tipo_actuacion === 'tipo 1' ? (
+              <PersonaNatural />
+            ) : solicitud_facilidad.tipo_actuacion === 'tipo 2' ? (
+              <PersonaJuridica />
+            ) : (
+              <DeudorSolidario />
+            )
+          }
         </Grid>
         <Grid item xs={12} sm={2.9}>
           <TextField
             label="Periodicidad y Modalidad"
             size="small"
             fullWidth
-            value={'Semestral'}
+            value={`${solicitud_facilidad.periodicidad}`}
             disabled
           />
         </Grid>
@@ -136,7 +153,7 @@ export const VistaSolicitud: React.FC = () => {
             label="Plazo"
             size="small"
             fullWidth
-            value={2}
+            value={`${solicitud_facilidad.cuotas}`}
             disabled
           />
         </Grid>
@@ -184,16 +201,18 @@ export const VistaSolicitud: React.FC = () => {
         <TextField
           multiline
           rows={4}
-          value={'Aquí van todas las observaciones escritas por el usuario externo.'}
+          value={`${solicitud_facilidad.observaciones}`}
           label="Observación Usuario"
           size="small"
-          disabled
           fullWidth
+          disabled
         />
       </Grid>
       <FormGroup>
         <FormControlLabel checked disabled control={<Checkbox />} label="Aceptar términos y condiciones" />
-        <FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
+        {
+          solicitud_facilidad.notificaciones !== undefined ? solicitud_facilidad.notificaciones ?  (<FormControlLabel checked disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />)  : (<FormControlLabel disabled control={<Checkbox />} label="Autorizar notificación por correo electrónico" />) : null
+        }
       </FormGroup>
     </>
   )
