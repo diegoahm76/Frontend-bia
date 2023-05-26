@@ -23,14 +23,10 @@ import AnularEntradaComponent from "./AnularEntrada";
 import EntradaArticuloFijoComponent from "./EntradaArticuloFijo";
 import { type IInfoEntrada, type crear_entrada, type IInfoItemEntrada } from "../interfaces/entradas";
 import { BuscadorPersonaDialog } from "../../gestionDeInventario/gestionHojaDeVida/mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoGeneral/BuscadorPersonaDialog";
-<<<<<<< HEAD
-import { useDropzone } from 'react-dropzone';
-
-=======
 import { v4 as uuid } from "uuid";
 import BuscarEntradasComponent from "./BuscarEntradas";
 import { useNavigate } from "react-router-dom";
->>>>>>> 0bd2cc5da0dd63ee4a77af5a086d7adb62e04668
+import { useDropzone } from "react-dropzone";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
