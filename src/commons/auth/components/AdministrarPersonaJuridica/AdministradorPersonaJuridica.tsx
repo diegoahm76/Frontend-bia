@@ -8,16 +8,15 @@ import {
     Autocomplete,
     type AutocompleteChangeReason,
     type AutocompleteChangeDetails,
-    MenuItem,
     Stack,
 } from '@mui/material';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { LoadingButton } from '@mui/lab';
 import UpdateIcon from '@mui/icons-material/Update';
-import type { ClaseTercero, ClaseTerceroPersona, PropsUpdateJ, UpdateAutorizaNotificacion } from '../../../../interfaces/globalModels';
+import type { ClaseTercero, ClaseTerceroPersona, DataJuridicaUpdate, PropsUpdateJ, UpdateAutorizaNotificacion } from '../../../../interfaces/globalModels';
 import { use_register_persona_j } from '../../hooks/registerPersonaJuridicaHook';
-import { consultar_clase_tercero, consultar_clase_tercero_persona } from '../../../seguridad/request/Request';
-import { control_error } from '../../../../helpers';
+import { consultar_clase_tercero, consultar_clase_tercero_persona, editar_persona_juridica } from '../../../seguridad/request/Request';
+import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { DatosRepresentanteLegal } from '../DatosRepresentanteLegal/DataRepresentanteLegal';
@@ -27,6 +26,7 @@ import { DialogHistorialDirecciones } from '../HistoricoDirecciones/HistoricoDir
 import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
 import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
 import { DialogHistorialDatosRestringidos } from '../../../seguridad/components/DialogHistorialDatosRestringidos';
+import { use_register } from '../../hooks/registerHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
@@ -46,11 +46,16 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
         dpto_notifiacion_opt,
         ciudad_notificacion_opt,
         naturaleza_empresa_opt,
+        nacionalidad_empresa,
+        dpto_notifiacion,
+        ciudad_notificacion,
+        direccion_notificaciones,
         is_modal_active,
         set_value_direction,
         on_change,
         open_modal,
     } = use_register_persona_j({ watch, setValue: set_value, getValues });
+    const { tipo_persona_opt } = use_register();
 
     const [type_direction, set_type_direction] = useState('');
     const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
@@ -63,6 +68,8 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
 
 
     // watchers
+    // const nacionalidad_empresa = watch('nacionalidad_empresa') ?? '';
+    const tipo_persona = watch('tipo_persona') ?? '';
     const acepta_notificacion_email = watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email;
     const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms;
 
@@ -73,6 +80,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
         details?: AutocompleteChangeDetails<ClaseTercero>
     ): void => {
         set_value('datos_clasificacion_persona', value.map(e => e.value));
+        set_clase_tercero_persona(value);
     };
     // abre modal historial de autorizacion
     const handle_open_dialog_autorizacion = (): void => {
@@ -125,107 +133,56 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
 
     useEffect(() => {
         if (data?.id_persona !== undefined) {
+            set_value('tipo_persona', data.tipo_persona);
+            set_value('nacionalidad_empresa', data.cod_pais_nacionalidad_empresa);
+            set_value('dpto_notifiacion', data.cod_departamento_notificacion);
+            set_value('ciudad_notificacion', data.cod_municipio_notificacion_nal);
+            set_value('direccion_notificaciones', data.direccion_notificaciones);
+
             void get_datos_clase_tercero();
             void get_datos_clase_tercero_persona();
         }
     }, [data?.id_persona])
 
-    // const on_submit_create_natural = handle_submit(async (data) => {
-    //     try {
-    //         data.ubicacion_georeferenciada = ''
-    //         data.numero_documento = numero_documento
-    //         data.tipo_documento = tipo_documento
-    //         data.tipo_persona = tipo_persona
-    //         await crear_persona_juridica(data as CrearPersonJuridicaAdmin);
-    //         control_success('la persona se creó correctamente');
-    //     } catch (error) {
-    //         control_error(error);
-    //     }
-    // });
-    const tipo_persona_opc = [
-        {
-            value: 'N',
-            label: 'Natural',
-        },
-        {
-            value: 'J',
-            label: 'Juridica',
-        },
-    ];
-    const tipos_doc_comercial = [
-        {
-            value: 'NT',
-            label: 'NIT',
-        },
-    ];
-    return (
-        <>{data !== undefined ? (
-            <>
-                <form
-                // onSubmit={(e) => {
-                //     void on_submit_create_natural(e)
-                // }}
-                >
+    const on_submit_update_juridical = handle_submit(async (datos) => {
+        try {
+            datos.ubicacion_georeferenciada = ''
+            await editar_persona_juridica(data?.id_persona, datos as DataJuridicaUpdate);
+            control_success('la persona se actualizó correctamente');
+        } catch (error) {
+            control_error('Ha ocurrido un error al actualizar la persona, por favor intente nuevamente');
+        }
+    });
 
-                    {/* datos de identificación */}
-                    <>
+    return (
+        <>
+            {data !== undefined ? (
+                <>
+                    <form
+                        onSubmit={(e) => {
+                            void on_submit_update_juridical(e)
+                        }}
+                    >
+                        {/* Datos empresariales */}
                         <Grid container spacing={2} mt={0.1}>
                             <Grid item xs={12}>
-                                <Title title="DATOS DE IDENTIFICACIÓN" />
+                                <Title title="DATOS EMPRESARIALES" />
                             </Grid>
-                            <Grid item xs={12} sm={3}>
-                                <TextField
-                                    id="tipo_doc_comercial"
-                                    label="Tipo de Persona"
-                                    select
-                                    fullWidth
-                                    size="small"
-                                    margin="dense"
-                                    required
-                                    autoFocus
-                                    defaultValue={data?.tipo_persona}
-                                    disabled
-                                >
-                                    {tipo_persona_opc.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            </Grid>
-                            <Grid item xs={12} sm={3}>
-                                <TextField
-                                    label="Tipo de Documento"
-                                    select
-                                    fullWidth
-                                    size="small"
-                                    margin="dense"
-                                    required
-                                    autoFocus
-                                    disabled
-                                    defaultValue={data?.tipo_documento}
-                                >
-                                    {tipos_doc_comercial.map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
-                                    ))}
-                                </TextField>
-                            </Grid>
-                            <Grid item xs={12} sm={3}>
-                                <TextField
-                                    label="Número Identificación"
-                                    id="documento_juridico"
-                                    type="number"
-                                    fullWidth
-                                    size="small"
-                                    margin="dense"
-                                    required
-                                    defaultValue={data?.numero_documento}
-                                    disabled
+                            <Grid item xs={12} sm={6} md={4}>
+                                <CustomSelect
+                                    onChange={on_change}
+                                    label="Tipo persona"
+                                    name="tipo_persona"
+                                    value={tipo_persona}
+                                    options={tipo_persona_opt}
+                                    loading={loading}
+                                    disabled={true}
+                                    required={false}
+                                    errors={errors}
+                                    register={register}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={3}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <TextField
                                     label="Digito de verificación:"
                                     type="number"
@@ -234,42 +191,6 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                     margin="dense"
                                     required
                                     autoFocus
-                                    defaultValue={data?.digito_verificacion}
-                                    disabled
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Stack
-                                    justifyContent="flex-end"
-                                    sx={{ m: '10px 0 20px 0' }}
-                                    direction="row"
-                                    spacing={2}
-                                >
-                                    <Button
-                                        variant="outlined"
-                                        startIcon={<RemoveRedEyeIcon />}
-                                        onClick={() => {
-                                            handle_open_historico_datos_r();
-                                        }}
-                                    >
-                                        Historico Datos Restringidos
-                                    </Button>
-                                </Stack>
-                            </Grid>
-                        </Grid>
-                    </>
-                    {/* Datos empresariales */}
-                    <>
-                        <Grid container spacing={2} mt={0.1}>
-                            <Grid item xs={12}>
-                                <Title title="DATOS EMPRESARIALES" />
-                            </Grid>
-                            <Grid item xs={12} sm={6} md={4}>
-                                <TextField
-                                    fullWidth
-                                    size="small"
-                                    label="Dígito de verificación *"
-                                    type="number"
                                     defaultValue={data?.digito_verificacion}
                                     disabled
                                 />
@@ -301,7 +222,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                     options={naturaleza_empresa_opt}
                                     loading={loading}
                                     disabled={true}
-                                    required={true}
+                                    required={false}
                                     errors={errors}
                                     register={register}
                                 />
@@ -311,7 +232,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                     onChange={on_change}
                                     label="Nacionalidad empresa *"
                                     name="cod_pais_nacionalidad_empresa"
-                                    value={data?.cod_pais_nacionalidad_empresa}
+                                    value={nacionalidad_empresa}
                                     options={paises_options}
                                     loading={loading}
                                     disabled={false}
@@ -320,10 +241,27 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                     register={register}
                                 />
                             </Grid>
+                            <Grid item xs={12}>
+                                <Stack
+                                    justifyContent="flex-end"
+                                    sx={{ m: '10px 0 20px 0' }}
+                                    direction="row"
+                                    spacing={2}
+                                >
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<RemoveRedEyeIcon />}
+                                        onClick={() => {
+                                            handle_open_historico_datos_r();
+                                        }}
+                                    >
+                                        Historico Datos Restringidos
+                                    </Button>
+                                </Stack>
+                            </Grid>
                         </Grid>
-                    </>
-                    {/* Datos de notificación */}
-                    <>
+                        {/* Datos de notificación */}
+
                         <Grid container spacing={2} mt={0.1}>
                             <Grid item xs={12}>
                                 <Title title="DATOS DE NOTIFICACIÓN NACIONAL" />
@@ -347,7 +285,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                     onChange={on_change}
                                     label="Departamento *"
                                     name="dpto_notifiacion"
-                                    value={data.cod_departamento_notificacion}
+                                    value={dpto_notifiacion}
                                     options={dpto_notifiacion_opt}
                                     loading={loading}
                                     required={true}
@@ -360,10 +298,10 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                     onChange={on_change}
                                     label="Ciudad *"
                                     name="cod_municipio_notificacion_nal"
-                                    value={data.cod_municipio_notificacion_nal}
+                                    value={ciudad_notificacion}
                                     options={ciudad_notificacion_opt}
                                     loading={loading}
-                                    disabled={data.cod_departamento_notificacion === '' ?? true}
+                                    disabled={dpto_notifiacion === '' ?? true}
                                     required={true}
                                     errors={errors}
                                     register={register}
@@ -375,7 +313,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                     label="Direccion *"
                                     disabled
                                     fullWidth
-                                    value={data.direccion_notificaciones}
+                                    value={direccion_notificaciones}
                                     error={errors.direccion_notificaciones?.type === 'required'}
                                     helperText={
                                         errors.direccion_notificaciones?.type === 'required'
@@ -470,9 +408,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                 </Stack>
                             </Grid>
                         </Grid>
-                    </>
-                    {/* Datos del representante legal */}
-                    <>
+                        {/* Datos del representante legal */}
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <Title title="DATOS DEL REPRESENTANTE LEGAL" />
@@ -483,9 +419,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                     id_persona={data?.id_persona} />
                             </Grid>
                         </Grid>
-                    </>
-                    {/* Datos adicionales (opcionales) */}
-                    <>
+                        {/* Datos adicionales (opcionales) */}
                         <Grid container spacing={2} mt={0.1}>
                             <Grid item xs={12}>
                                 <Title title="DATOS ADICIONALES (OPCIONALES)" />
@@ -518,9 +452,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                 />
                             </Grid>
                         </Grid>
-                    </>
-                    {/* Autorización de notificación y tratamiento de datos */}
-                    <>
+                        {/* Autorización de notificación y tratamiento de datos */}
                         <Grid container spacing={2} mt={0.1}>
                             <Grid item xs={12}>
                                 <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
@@ -579,9 +511,7 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                 </Stack>
                             </Grid>
                         </Grid>
-                    </>
-                    {/* Datos de clasificación Cormacarena */}
-                    <>
+                        {/* Datos de clasificación Cormacarena */}
                         <Grid container spacing={2} mt={0.1}>
                             <Grid item xs={12}>
                                 <Title title="DATOS DE CLASIFICACIÓN" />
@@ -630,12 +560,12 @@ export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </>
-                </form>
-            </>
-        ) : (
-            <div>Cragando Resultados....</div>
-        )}
+                    </form>
+                </>
+            ) : (
+                <div>Cragando Resultados....</div>
+            )
+            }
             <DialogGeneradorDeDirecciones
                 open={is_modal_active}
                 openDialog={open_modal}

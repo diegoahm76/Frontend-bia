@@ -49,7 +49,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
 }: PropsRegister) => {
   const {
     is_saving,
-    // is_exists,
     loading,
     paises_options,
     departamentos_opt,
