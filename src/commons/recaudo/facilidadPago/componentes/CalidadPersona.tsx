@@ -1,8 +1,17 @@
 import { Grid, Box, TextField, Button } from "@mui/material";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { type Contacto } from '../interfaces/interfaces';
+import { useSelector } from 'react-redux';
+
+interface RootState {
+  calidad_personas: {
+    calidad_personas: Contacto;
+  }
+}
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const PersonaNatural: React.FC = () => {
+  const { calidad_personas } = useSelector((state: RootState) => state.calidad_personas);
   return (
     <>
       <p><strong>Caso Persona Natural</strong></p>
@@ -28,7 +37,7 @@ export const PersonaNatural: React.FC = () => {
               <TextField
                 disabled
                 label="Dirección Notificación"
-                value={'Cl 45 # 302A-320'}
+                value={`${calidad_personas.direccion_notificaciones}`}
                 size="small"
                 fullWidth
               />
@@ -37,7 +46,7 @@ export const PersonaNatural: React.FC = () => {
               <TextField
                 disabled
                 label="Ciudad"
-                value={'Bogotá'}
+                value={`${calidad_personas.ciudad}`}
                 size="small"
                 fullWidth
               />
@@ -46,7 +55,7 @@ export const PersonaNatural: React.FC = () => {
               <TextField
                 disabled
                 label="Teléfono Contacto"
-                value={'3123457865'}
+                value={`${calidad_personas.telefono_celular}`}
                 size="small"
                 fullWidth
               />
@@ -59,6 +68,7 @@ export const PersonaNatural: React.FC = () => {
 }
 
 export const PersonaJuridica: React.FC = () => {
+  const { calidad_personas } = useSelector((state: RootState) => state.calidad_personas);
   return (
     <>
       <p><strong>Caso Persona Juridica / Apoderado</strong></p>
@@ -106,7 +116,7 @@ export const PersonaJuridica: React.FC = () => {
               <TextField
                 disabled
                 label="Dirección Notificación"
-                value={'Cl 32 #201-305'}
+                value={`${calidad_personas.direccion_notificaciones}`}
                 size="small"
                 fullWidth
               />
@@ -115,7 +125,7 @@ export const PersonaJuridica: React.FC = () => {
               <TextField
                 disabled
                 label="Ciudad"
-                value={'Bogotá'}
+                value={`${calidad_personas.ciudad}`}
                 size="small"
                 fullWidth
               />
@@ -124,7 +134,7 @@ export const PersonaJuridica: React.FC = () => {
               <TextField
                 disabled
                 label="Teléfono Contacto"
-                value={'3214932553'}
+                value={`${calidad_personas.telefono_celular}`}
                 size="small"
                 fullWidth
               />
@@ -137,6 +147,7 @@ export const PersonaJuridica: React.FC = () => {
 }
 
 export const DeudorSolidario: React.FC = () => {
+  const { calidad_personas } = useSelector((state: RootState) => state.calidad_personas);
   return (
     <>
       <p><strong>Caso Deudor Solidario</strong></p>
@@ -151,7 +162,7 @@ export const DeudorSolidario: React.FC = () => {
               <TextField
                 disabled
                 label="Tipo Deudor Solidario"
-                value={'Ej 1'}
+                value={'Deudor Solidario Natural'}
                 size="small"
                 fullWidth
               />
@@ -193,7 +204,7 @@ export const DeudorSolidario: React.FC = () => {
               <TextField
                 disabled
                 label="Dirección Notificación"
-                value={'Cra 34 #213-201'}
+                value={`${calidad_personas.direccion_notificaciones}`}
                 size="small"
                 fullWidth
               />
@@ -202,7 +213,7 @@ export const DeudorSolidario: React.FC = () => {
               <TextField
                 disabled
                 label="Ciudad"
-                value={'Medellín'}
+                value={`${calidad_personas.ciudad}`}
                 size="small"
                 fullWidth
               />
@@ -211,7 +222,7 @@ export const DeudorSolidario: React.FC = () => {
               <TextField
                 disabled
                 label="Teléfono Contacto"
-                value={'3214923232'}
+                value={`${calidad_personas.telefono_celular}`}
                 size="small"
                 fullWidth
               />
