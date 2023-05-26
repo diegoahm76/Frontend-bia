@@ -6,8 +6,6 @@ import type { DatosVinculacionCormacarena } from "../../../interfaces/globalMode
 import { Divider, Grid, TextField } from "@mui/material";
 import { Title } from "../../../components/Title";
 import { control_error } from "../../../helpers";
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import esLocale from 'dayjs/locale/es';
 import { consultar_vinculacion_persona } from "../../seguridad/request/Request";
 
 interface Props {

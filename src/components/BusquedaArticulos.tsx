@@ -1,34 +1,25 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, TextField } from "@mui/material"
-import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, Stack, TextField } from '@mui/material';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import { obtener_bienes } from '../commons/almacen/entradaDeAlmacen/thunks/Entradas';
+import { useAppDispatch } from '../hooks';
+import { Title } from './Title';
 import SearchIcon from '@mui/icons-material/Search';
-import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
-import { Title } from '../../../../../../../components';
-import { useAppDispatch } from "../../../../../../../hooks";
-import { get_article_by_type } from "./thunks/maintenanceThunks";
-
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  title: string;
-  parent_details: any;
+  articulo: any
 }
-const tipos_articulos = [{ value: "Veh", tipo: "vehículos" }, { value: "Com", tipo: "computadores" }, { value: "OAc", tipo: "otros activos" }];
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const BuscarArticuloComponent = ({
-  is_modal_active,
-  set_is_modal_active,
-  title,
-  parent_details
-}: IProps) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
   const dispatch = useAppDispatch();
   const [codigo, set_codigo] = useState<string>("");
   const [nombre, set_nombre] = useState<string>("");
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
-  const [selected_product, set_selected_product] = useState(null);
-  const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
+  const [seleccion_articulo, set_seleccion_articulo] = useState(null);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo(e.target.value);
@@ -39,7 +30,7 @@ const BuscarArticuloComponent = ({
   }
 
   const accionar_busqueda: any = () => {
-    if (nombre === '' && codigo === '') {
+    if(nombre === '' && codigo === ''){
       set_grid_busqueda(grid_busqueda_before);
       return
     }
@@ -48,28 +39,29 @@ const BuscarArticuloComponent = ({
   }
 
   const selected_product_grid: any = () => {
-    parent_details(selected_product);
-    set_is_modal_active(false);
+    props.articulo(seleccion_articulo);
+    props.set_is_modal_active(false);
   }
 
   useEffect(() => {
-    const tipo = tipos_articulos.find(ta => ta.tipo === title);
-    set_columna_hidden(false);
-    dispatch(get_article_by_type(tipo?.value)).then((response: any) => {
-      const articulos = response.Elementos.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
-      set_grid_busqueda(articulos);
-      set_grid_busqueda_before([...articulos]);
-    })
-  }, [title])
+    dispatch(obtener_bienes()).then((response: {success: boolean,detail: string, data: any[]}) => {
+      if(response.success){
+        const articulos = response.data.filter((e: { nivel_jerarquico: number; }) => e.nivel_jerarquico === 5);
+        set_grid_busqueda(articulos);
+        set_grid_busqueda_before([...articulos]);
+      }
+    });
+  }, []);
+
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <Dialog
       fullWidth
       maxWidth="md"
-      open={is_modal_active}
-      onClose={() => { set_is_modal_active(false); }}
+      open={props.is_modal_active}
+      onClose={() => { props.set_is_modal_active(false); }}
     >
-      <DialogTitle>Buscar {title}</DialogTitle>
+      <DialogTitle>Selección de articulos</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
           <Box
@@ -130,14 +122,13 @@ const BuscarArticuloComponent = ({
                 <Title title='Resultados' />
                 <Box sx={{ width: '100%', mt: '20px' }}>
                   <div className="card">
-                    <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
-                      selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value); }} dataKey="id_bien"
+                    <DataTable value={grid_busqueda} sortField="nombre" stripedRows  paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+                    selectionMode="single" selection={seleccion_articulo} onSelectionChange={(e) => { set_seleccion_articulo(e.value); }} dataKey="id_bien"
                     >
                       <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
                       <Column field="codigo_bien" header="Código" style={{ width: '25%' }}></Column>
                       <Column field="nombre" header="Nombre" style={{ width: '25%' }}></Column>
-                      <Column field="doc_identificador_nro" header="Placa" style={{ width: '25%' }} hidden={columna_hidden}></Column>
-                      <Column field="doc_identificador_nro" header="Serial" style={{ width: '25%' }} hidden={!columna_hidden}></Column>
+                      <Column field="cod_tipo_bien" header="Tipo bien" style={{ width: '25%' }}></Column>
                     </DataTable>
                   </div>
                 </Box>
@@ -150,7 +141,7 @@ const BuscarArticuloComponent = ({
         <Button
           color='inherit'
           variant='contained'
-          onClick={() => { set_is_modal_active(false); }}>Cerrar</Button>
+          onClick={() => { props.set_is_modal_active(false); }}>Cerrar</Button>
         <Button
           color='primary'
           variant='contained'
@@ -159,5 +150,7 @@ const BuscarArticuloComponent = ({
     </Dialog>
   )
 }
-// eslint-disable-next-line no-restricted-syntax
-export default BuscarArticuloComponent;
+
+
+
+

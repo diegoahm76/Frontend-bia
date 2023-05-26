@@ -1,4 +1,4 @@
-import { useEffect, type Dispatch, type SetStateAction } from 'react';
+import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import {
     Button,
@@ -12,19 +12,15 @@ import {
     Typography,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import type {
-    HistoricoRepresentanteLegal,
-    InfoPersona,
-} from '../../../../interfaces/globalModels';
-import { useState } from 'react';
 import { control_error } from '../../../../helpers';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { consultar_historico_representante } from '../../../seguridad/request/Request';
+import type{ HistoricoRepresentanteLegal } from '../../../../interfaces/globalModels';
 
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    historico_representante: InfoPersona;
+    id_persona: number | undefined;
 }
 
 const columns: GridColDef[] = [
@@ -76,7 +72,7 @@ const columns: GridColDef[] = [
 export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
     is_modal_active,
     set_is_modal_active,
-    historico_representante,
+    id_persona,
 }: IProps) => {
     const [rows, set_rows] = useState<HistoricoRepresentanteLegal[]>([]);
 
@@ -87,7 +83,7 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
     const historico = async (): Promise<void> => {
         try {
             const response = await consultar_historico_representante(
-                historico_representante.id_persona
+                id_persona=0
             );
             const new_historico = response.map(
                 (datos: HistoricoRepresentanteLegal) => ({
