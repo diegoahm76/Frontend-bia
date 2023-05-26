@@ -7,7 +7,7 @@ import {
     TextField
 } from "@mui/material"
 import SearchIcon from '@mui/icons-material/Search';
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import use_buscar_articulo from "../../mantenimientoGeneral/hooks/useBuscarArticulo";
 import use_previsualizacion from "../../mantenimientoGeneral/hooks/usePrevisualizacion";
 import BuscarArticuloComponent from "../../mantenimientoGeneral/BuscarArticulo";
@@ -38,14 +38,6 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
     const [nombre, set_nombre] = useState<string | null>("");
     // Errors
     const [mensaje_error_codigo, set_mensaje_error_codigo] = useState<string>("");
-
-    const set_details_state = useCallback((val: any) => {
-        set_detalle_seleccionado(val);
-    }, [set_detalle_seleccionado]);
-
-    // useEffect(() => {
-    //     set_detalle_seleccionado(detalle_seleccionado);
-    // }, [set_detalle_seleccionado]);
 
     useEffect(() => {
         parent_details(detalle_seleccionado);
@@ -123,7 +115,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                                 startIcon={<SearchIcon />}
                                 onClick={() => {
                                     set_buscar_articulo_is_active(true);
-                                    set_title('Buscar ' + tipo_articulo);
+                                    set_title(tipo_articulo);
                                 }}
                             >
                                 Buscar {tipo_articulo}
@@ -132,7 +124,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                                 <BuscarArticuloComponent
                                     is_modal_active={consulta_buscar_articulo_is_active}
                                     set_is_modal_active={set_buscar_articulo_is_active}
-                                    title={title} parent_details={set_details_state} />
+                                    title={title} parent_details={set_detalle_seleccionado} />
                             )}
                         </Stack>
                     </Grid>
