@@ -32,6 +32,7 @@ import {
   organigramas_choise_adapter,
   ccds_choise_adapter,
 } from '../adapters/organigrama_adapters';
+import dayjs from 'dayjs';
 
 interface OrgActual {
   actual: boolean;
@@ -44,6 +45,20 @@ interface OrgActual {
   justificacion_nueva_version: string | null;
   nombre: string;
   ruta_resolucion: string | null;
+  version: string;
+}
+
+interface CCD {
+  id_ccd: number;
+  nombre: string;
+  tca: {
+    nombre: string;
+    version: string;
+  };
+  trd: {
+    nombre: string;
+    version: string;
+  };
   version: string;
 }
 
@@ -60,7 +75,9 @@ interface FormValues {
   justificación: string;
 }
 
-type keys_object = 'organigrama' | 'ccd' | 'trd' | 'tca' | 'justificación';
+const fecha_actual = dayjs().format('YYYY-MM-DD');
+
+type keys_object = 'organigrama' | 'ccd' | 'justificación';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogElegirOrganigramaActual = ({
@@ -77,7 +94,7 @@ const DialogElegirOrganigramaActual = ({
       value: 0,
     },
   ]);
-  const [data_ccds_posibles, set_data_ccds_posibles] = useState();
+  const [data_ccds_posibles, set_data_ccds_posibles] = useState<CCD[]>();
   const [ccd_selected, set_ccd_selected] = useState<string>();
   const [list_ccds, set_list_ccds] = useState<IList[]>([
     {
@@ -85,7 +102,7 @@ const DialogElegirOrganigramaActual = ({
       value: 0,
     },
   ]);
-  const [data_asociada_ccd, set_data_asociada_ccd] = useState();
+  const [data_asociada_ccd, set_data_asociada_ccd] = useState<CCD[]>();
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const {
@@ -93,6 +110,7 @@ const DialogElegirOrganigramaActual = ({
     register: register_elegir_organigrama_actual,
     getValues: get_values_elegir_organigrama_actual,
     setValue: set_value_elegir_organigrama_actual,
+    watch: watch_elegir_organigrama_actual,
     formState: { errors: errors_elegir_organigrama_actual },
   } = useForm<FormValues>();
 
@@ -134,44 +152,38 @@ const DialogElegirOrganigramaActual = ({
     id_organigram: string | number
   ): Promise<void> => {
     const response_ccds = await dispatch(get_ccds_posibles(id_organigram));
-    console.log(response_ccds);
-    set_data_ccds_posibles(response_ccds);
-    const res_ccds_adapter: IList[] = await ccds_choise_adapter(response_ccds);
+    console.log(response_ccds.data);
+    set_data_ccds_posibles(response_ccds.data);
+    const res_ccds_adapter: IList[] = await ccds_choise_adapter(
+      response_ccds.data
+    );
     set_list_ccds(res_ccds_adapter);
   };
 
-  // const get_list_trds = async (id_cdd: string | number): Promise<void> => {
-  //   const response_trds = await dispatch(get_trds_finished_x_ccd(id_cdd));
-  //   console.log(response_trds);
-  //   const res_trds_adapter: IList[] = await trds_choise_adapter(
-  //     response_trds.data
-  //   );
-  //   set_list_trds(res_trds_adapter);
-  // };
-
-  // const get_list_tcas = async (id_trd: string | number): Promise<void> => {
-  //   const response_tcas = await dispatch(get_tcas_finished_x_trd(id_trd));
-  //   console.log(response_tcas);
-  //   const res_tcas_adapter: IList[] = await tcas_choise_adapter(
-  //     response_tcas.data
-  //   );
-  //   set_list_tcas(res_tcas_adapter);
-  // };
+  useEffect(() => {
+    if (watch_elegir_organigrama_actual('organigrama') !== undefined) {
+      console.log(
+        'watch_elegir_organigrama_actual',
+        get_values_elegir_organigrama_actual('organigrama')
+      );
+      void get_list_ccds(
+        get_values_elegir_organigrama_actual('organigrama') ?? ''
+      );
+    }
+  }, [watch_elegir_organigrama_actual('organigrama')]);
 
   useEffect(() => {
-    void get_list_ccds(organigram_selected ?? '');
-  }, [organigram_selected]);
-
-  useEffect(() => {
-    const result_filter = data_ccds_posibles?.filter(
-      (ccds: any) => ccds.id_ccd !== ccd_selected
-    );
-    set_data_asociada_ccd(result_filter);
-  }, [ccd_selected]);
-
-  // useEffect(() => {
-  //   void get_list_tcas(trds ?? '');
-  // }, [trds]);
+    if (watch_elegir_organigrama_actual('ccd') !== undefined) {
+      console.log(
+        'watch_elegir_organigrama_actual',
+        watch_elegir_organigrama_actual('ccd')
+      );
+      const result_filter = data_ccds_posibles?.filter(
+        (ccds: any) => ccds.id_ccd !== watch_elegir_organigrama_actual('ccd')
+      );
+      set_data_asociada_ccd(result_filter ?? []);
+    }
+  }, [watch_elegir_organigrama_actual('ccd')]);
 
   useEffect(() => {
     void get_data_selects();
@@ -190,12 +202,6 @@ const DialogElegirOrganigramaActual = ({
       case 'ccd':
         set_ccd_selected(value);
         break;
-      // case 'trd':
-      //   set_trds(value);
-      //   break;
-      // case 'tca':
-      //   set_tcas(value);
-      //   break;
     }
     set_value_elegir_organigrama_actual(name as keys_object, value);
   };
@@ -266,7 +272,7 @@ const DialogElegirOrganigramaActual = ({
               <CustomSelect
                 onChange={on_change}
                 label="Organigramas*"
-                name="organigramas"
+                name="organigrama"
                 value={organigram_selected?.toString()}
                 options={list_organigrams}
                 loading={loading}
@@ -277,7 +283,7 @@ const DialogElegirOrganigramaActual = ({
               />
             </Grid>
           </Grid>
-          {organigram_selected !== null && list_ccds.length > 0 && (
+          {list_ccds !== undefined && (
             <>
               <Title title="Cuadros de clasificación documental asociado" />
               <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
@@ -296,7 +302,7 @@ const DialogElegirOrganigramaActual = ({
                   />
                 </Grid>
               </Grid>
-              {ccd_selected !== null && data_asociada_ccd !== null && (
+              {data_asociada_ccd !== undefined && (
                 <>
                   <Title title="Tabla de retención asociada" />
                   <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
@@ -309,8 +315,9 @@ const DialogElegirOrganigramaActual = ({
                         />
                       ) : (
                         <TextField
+                          disabled
                           fullWidth
-                          value={data_asociada_ccd}
+                          value={data_asociada_ccd[0].trd.nombre ?? ''}
                           type="textarea"
                           rows="3"
                           label="Nombre"
@@ -327,9 +334,10 @@ const DialogElegirOrganigramaActual = ({
                         />
                       ) : (
                         <TextField
+                          disabled
                           fullWidth
                           type="textarea"
-                          value={data_asociada_ccd}
+                          value={data_asociada_ccd[0].trd.version ?? ''}
                           rows="3"
                           label="Versión"
                           size="small"
@@ -348,8 +356,9 @@ const DialogElegirOrganigramaActual = ({
                         />
                       ) : (
                         <TextField
+                          disabled
                           fullWidth
-                          value={data_asociada_ccd}
+                          value={data_asociada_ccd[0].tca.nombre ?? ''}
                           type="textarea"
                           rows="3"
                           label="Nombre"
@@ -366,8 +375,9 @@ const DialogElegirOrganigramaActual = ({
                         />
                       ) : (
                         <TextField
+                          disabled
                           fullWidth
-                          value={data_asociada_ccd}
+                          value={data_asociada_ccd[0].tca.version ?? ''}
                           type="textarea"
                           rows="3"
                           label="Versión"
@@ -389,6 +399,7 @@ const DialogElegirOrganigramaActual = ({
                 <TextField
                   disabled
                   fullWidth
+                  value={fecha_actual}
                   label="Fecha de activación"
                   size="small"
                 />
