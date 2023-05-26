@@ -103,7 +103,6 @@ const DatosEmpresariales: (props: PropsElement) => JSX.Element = ({
             name="cod_naturaleza_empresa"
             value={naturaleza_empresa}
             options={naturaleza_empresa_opt}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -117,7 +116,6 @@ const DatosEmpresariales: (props: PropsElement) => JSX.Element = ({
             name="cod_pais_nacionalidad_empresa"
             value={nacionalidad_empresa}
             options={paises_options}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -197,7 +195,6 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
             name="pais_notificacion"
             value={'CO'}
             options={paises_options}
-            loading={loading}
             disabled={true}
             required={false}
             errors={errors}
@@ -211,7 +208,6 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
             name="dpto_notifiacion"
             value={dpto_notifiacion}
             options={dpto_notifiacion_opt}
-            loading={loading}
             required={true}
             errors={errors}
             register={register}
@@ -224,7 +220,6 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
             name="cod_municipio_notificacion_nal"
             value={ciudad_notificacion}
             options={ciudad_notificacion_opt}
-            loading={loading}
             disabled={dpto_notifiacion === '' ?? true}
             required={true}
             errors={errors}
@@ -415,7 +410,6 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
             name="tipo_documento_representante"
             value={tipo_documento_representante}
             options={tipo_documento_opt}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}

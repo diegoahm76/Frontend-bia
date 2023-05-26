@@ -20,7 +20,9 @@ interface Props {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterAdministradorPersona: React.FC<Props> = ({ uso_interno }: Props) => {
+export const RegisterAdministradorPersona: React.FC<Props> = ({
+  uso_interno,
+}: Props) => {
   const {
     errors,
     message_error,
@@ -86,7 +88,6 @@ export const RegisterAdministradorPersona: React.FC<Props> = ({ uso_interno }: P
               name="tipo_persona"
               value={tipo_persona}
               options={tipo_persona_opt}
-              loading={loading}
               disabled={false}
               required={true}
               errors={errors}
@@ -100,7 +101,6 @@ export const RegisterAdministradorPersona: React.FC<Props> = ({ uso_interno }: P
               name="tipo_documento"
               value={tipo_documento}
               options={tipo_documento_opt}
-              loading={loading}
               disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
               required={true}
               errors={errors}

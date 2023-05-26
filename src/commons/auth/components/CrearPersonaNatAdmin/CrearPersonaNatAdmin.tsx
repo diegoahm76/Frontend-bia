@@ -137,11 +137,11 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
       control_error(error);
     }
   });
+
   return (
     <>
       <form
         onSubmit={(e) => {
-          console.log(e);
           void on_submit_create_natural(e);
         }}
       >
@@ -228,7 +228,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="pais_nacimiento"
               value={pais_nacimiento}
               options={paises_options}
-              loading={loading}
               disabled={false}
               required={true}
               errors={errors}
@@ -242,7 +241,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="sexo"
               value={genero}
               options={genero_opt}
-              loading={loading}
               disabled={false}
               required={true}
               errors={errors}
@@ -256,7 +254,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="estado_civil"
               value={estado_civil}
               options={estado_civil_opt}
-              loading={loading}
               disabled={false}
               required={true}
               errors={errors}
@@ -277,7 +274,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="departamento_expedicion"
               value={departamento_expedicion}
               options={departamentos_opt}
-              loading={loading}
               disabled={false}
               required={true}
               errors={errors}
@@ -291,7 +287,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="cod_municipio_expedicion_id"
               value={ciudad_expedicion}
               options={ciudades_opt}
-              loading={loading}
               disabled={false}
               required={true}
               errors={errors}
@@ -311,7 +306,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="pais_residencia"
               value={pais_residencia}
               options={paises_options}
-              loading={loading}
               required={true}
               errors={errors}
               register={register}
@@ -326,7 +320,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
                   name="departamento_residencia"
                   value={departamento_residencia}
                   options={dpts_residencia_opt}
-                  loading={loading}
                   required={true}
                   errors={errors}
                   register={register}
@@ -339,7 +332,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
                   name="municipio_residencia"
                   value={municipio_residencia}
                   options={ciudades_residencia_opt}
-                  loading={loading}
                   disabled={departamento_residencia === '' ?? true}
                   required={true}
                   errors={errors}
@@ -412,7 +404,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="pais_notificacion"
               value={'CO'}
               options={paises_options}
-              loading={loading}
               disabled={true}
               required={false}
               errors={errors}
@@ -426,7 +417,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="dpto_notifiacion"
               value={dpto_notifiacion}
               options={dpto_notifiacion_opt}
-              loading={loading}
               required={true}
               errors={errors}
               register={register}
@@ -439,7 +429,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="cod_municipio_notificacion_nal"
               value={ciudad_notificacion}
               options={ciudad_notificacion_opt}
-              loading={loading}
               disabled={dpto_notifiacion === '' ?? true}
               required={true}
               errors={errors}
@@ -592,7 +581,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="pais_laboral"
               value={'CO'}
               options={paises_options}
-              loading={loading}
               required={false}
               disabled={true}
               errors={errors}
@@ -606,7 +594,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="departamento_laboral"
               value={departamento_laboral}
               options={dpto_laboral_opt}
-              loading={loading}
               required={false}
               errors={errors}
               register={register}
@@ -619,7 +606,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               name="cod_municipio_laboral_nal"
               value={municipio_laboral}
               options={departamento_laboral_opt}
-              loading={loading}
               disabled={departamento_laboral === '' ?? true}
               required={false}
               errors={errors}

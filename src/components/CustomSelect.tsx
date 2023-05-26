@@ -14,7 +14,6 @@ export const CustomSelect = ({
   label,
   name,
   value,
-  loading,
   disabled = false,
   required = false,
   onChange,
@@ -28,7 +27,7 @@ export const CustomSelect = ({
       error={errors[name]?.type === 'required'}
       disabled={disabled}
     >
-      {loading ? (
+      {options.length === 0 ? (
         <Skeleton variant="rectangular" width="100%" height={42} />
       ) : (
         <>

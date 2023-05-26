@@ -283,7 +283,6 @@ const DialogBusquedaAvanzada = ({
                 name="tipo_persona"
                 value={tipo_persona}
                 options={tipo_persona_opt}
-                loading={loading}
                 disabled={false}
                 required={true}
                 errors={errors_search_person}
@@ -298,7 +297,6 @@ const DialogBusquedaAvanzada = ({
                 name="tipo_documento"
                 value={tipo_documento}
                 options={tipo_documento_opt}
-                loading={loading}
                 disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
                 required={true}
                 errors={errors_search_person}
