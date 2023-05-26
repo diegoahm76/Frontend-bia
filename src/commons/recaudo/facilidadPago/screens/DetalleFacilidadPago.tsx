@@ -1,9 +1,14 @@
-import { Box, Button, Grid, TextField } from '@mui/material';
+import { Box, Button, Grid, Stack, TextField } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import { Add } from '@mui/icons-material';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DetalleFacilidadPago: React.FC = () => {
+  const [ estado ] = useState('Cancelada/Anulada');
+  const navigate = useNavigate();
 
   return (
     <>
@@ -131,63 +136,125 @@ export const DetalleFacilidadPago: React.FC = () => {
                   label="Estado"
                   size="small"
                   fullWidth
-                  value={"Aprobado"}
+                  value={"Cancelada/Anulada"}
                   disabled
                 />
               </Grid>
             </Grid>
           </Box>
         </Grid>
-        <Grid item xs={12} mt='20px'>
-          <Box
-            component="form"
-            noValidate
-            autoComplete="off"
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={2}>
-                <TextField
-                  label="Plan de Pagos"
-                  size="small"
-                  fullWidth
-                  value={"Si"}
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={2}>
-                <Button
-                  color='primary'
-                  variant='outlined'
-                  size='medium'
-                  startIcon={<CloudDownloadIcon />}
-                  onClick={() => {}}
-                >
-                  Ver
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={2}>
-                <TextField
-                  label="Resolución"
-                  size="small"
-                  fullWidth
-                  value={"Si"}
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={2}>
-                <Button
-                  color='primary'
-                  variant='outlined'
-                  size='medium'
-                  startIcon={<CloudDownloadIcon />}
-                  onClick={() => {}}
-                >
-                  Ver
-                </Button>
-              </Grid>
+        {
+          estado !== "Cancelada/Anulada" ? (
+            <Grid item xs={12} mt='20px'>
+              <Box
+                component="form"
+                noValidate
+                autoComplete="off"
+              >
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={2}>
+                    <TextField
+                      label="Plan de Pagos"
+                      size="small"
+                      fullWidth
+                      value={"Si"}
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <Button
+                      color='primary'
+                      variant='outlined'
+                      size='medium'
+                      startIcon={<CloudDownloadIcon />}
+                      onClick={() => {}}
+                    >
+                      Ver
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <TextField
+                      label="Resolución"
+                      size="small"
+                      fullWidth
+                      value={"Si"}
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <Button
+                      color='primary'
+                      variant='outlined'
+                      size='medium'
+                      startIcon={<CloudDownloadIcon />}
+                      onClick={() => {}}
+                    >
+                      Ver
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
             </Grid>
-          </Box>
-        </Grid>
+          ) : (
+            <Grid item xs={12} mt='20px'>
+              <Box
+                component="form"
+                noValidate
+                autoComplete="off"
+              >
+                <Grid container spacing={2}>
+                <Grid item xs={12} sm={2}>
+                    <TextField
+                      label="Plan de Pagos"
+                      size="small"
+                      fullWidth
+                      value={"No"}
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <TextField
+                      label="Resolución"
+                      size="small"
+                      fullWidth
+                      value={"Si"}
+                      disabled
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <Button
+                      color='primary'
+                      variant='outlined'
+                      size='medium'
+                      startIcon={<CloudDownloadIcon />}
+                      onClick={() => {}}
+                    >
+                      Ver
+                    </Button>
+                  </Grid>
+                </Grid>
+                <Stack
+                  direction="row"
+                  justifyContent="right"
+                  spacing={2}
+                  sx={{ mb: '20px' }}
+                >
+                  <Button
+                    color='primary'
+                    variant='contained'
+                    startIcon={<Add />}
+                    sx={{ marginTop: '30px' }}
+                    onClick={() => {
+                      navigate('/') // aún no se ha construido esta pantalla
+                    }}
+                  >
+                    Crear recurso de reposición
+                  </Button>
+                </Stack>
+              </Box>
+            </Grid>
+          )
+        }
       </Grid>
     </>
   )

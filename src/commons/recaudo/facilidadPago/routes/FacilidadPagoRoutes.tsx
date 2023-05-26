@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import { ObligacionesUsuario } from '../screens/ObligacionesUsuario';
+import { ObligacionesUsuarios } from '../screens/ObligacionesUsuario';
 import { ConsultaAdminObligaciones } from '../screens/ConsultaAdminObligaciones';
 import { SolicitudFacilidadPago } from '../screens/SolicitudFacilidadPago';
 import { ObligacionesAdmin } from '../screens/ObligacionesAdmin';
@@ -14,7 +14,7 @@ import { DetalleFacilidadPago } from '../screens/DetalleFacilidadPago';
 export const FacilidadPagoRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path='/*' element={<ObligacionesUsuario />} />
+      <Route path='/*' element={<ObligacionesUsuarios />} />
       <Route path='consulta' element={<ConsultaAdminObligaciones />} />
       <Route path='registro' element={<SolicitudFacilidadPago />} />
       <Route path='admin' element={<ObligacionesAdmin />} />

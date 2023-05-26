@@ -5,56 +5,34 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { type event } from '../interfaces/interfaces';
+import { type event, type FacilidadPago } from '../interfaces/interfaces';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
+// import { get_filtro_fac_pago_asignadas } from '../requests/requests';
 
-interface Data {
-  nombre: string;
-  identificacion: string;
-  obligacion: string;
-  fechaRadicacion: string;
+interface RootState {
+  facilidades: {
+    facilidades: FacilidadPago[];
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaObligacionesAdminAsignadas: React.FC = () => {
-  const [visible_rows, set_visible_rows] = useState(Array<Data>);
+  const [visible_rows, set_visible_rows] = useState(Array<FacilidadPago>);
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
+  const { facilidades } = useSelector((state: RootState) => state.facilidades);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const fac_pago = [
-    {
-      id: 1,
-      nombre: 'Koch and Sons',
-      identificacion: '10298723',
-      obligacion: 'Concesión Agua Superficial',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 2,
-      nombre: 'Steuber LLC',
-      identificacion: '2346448723',
-      obligacion: 'Permiso Perforación',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 3,
-      nombre: 'Konopelski Group',
-      identificacion: '43214134',
-      obligacion: 'Pago Tasa TUA',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 4,
-      nombre: 'Harber Inc',
-      identificacion: '34545437',
-      obligacion: 'Uso Agua Subterranea',
-      fechaRadicacion: '01/01/2022'
-    },
-  ];
+  /* useEffect(() => {
+    void get_filtro_fac_pago_asignadas();
+  }, []) */
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre',
+      field: 'nombre_de_usuario',
       headerName: 'Nombre Usuario',
       width: 200,
       renderCell: (params) => (
@@ -84,7 +62,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
       ),
     },
     {
-      field: 'fechaRadicacion',
+      field: 'fecha_generacion',
       headerName: 'Fecha Radicación',
       width: 150,
       renderCell: (params) => (
@@ -103,7 +81,8 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    navigate('../solicitud')
+                    void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                    navigate('../solicitud');
                   }}
                 >
                   <Avatar
@@ -129,8 +108,8 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
   ];
 
   useEffect(()=>{
-    set_visible_rows(fac_pago)
-  }, [])
+    set_visible_rows(facilidades)
+  }, [facilidades])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -144,6 +123,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           <InputLabel>Filtrar por: </InputLabel>
             <Select
               label="Filtrar por: "
+              defaultValue={''}
               onChange={(event: event)=>{
                 const { value } = event.target
                 set_filter(value)
@@ -170,25 +150,25 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           onClick={() => {
             const new_rows = [];
             if(filter === 'nombre'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].nombre.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
+              for(let i=0; i < facilidades.length; i++){
+                if(facilidades[i].nombre_de_usuario.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(facilidades[i])
                 }
               }
               set_visible_rows(new_rows)
             }
             if(filter === 'identificacion'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].identificacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
+              for(let i=0; i < facilidades.length; i++){
+                if(facilidades[i].identificacion.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(facilidades[i])
                 }
               }
               set_visible_rows(new_rows)
             }
             if(filter === 'obligacion'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].obligacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
+              for(let i=0; i < facilidades.length; i++){
+                if(facilidades[i].obligacion.toLowerCase().includes(search.toLowerCase())){
+                  new_rows.push(facilidades[i])
                 }
               }
               set_visible_rows(new_rows)
@@ -202,7 +182,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           variant='outlined'
           startIcon={<FilterAltOffOutlined />}
           onClick={() => {
-            set_visible_rows(fac_pago)
+            set_visible_rows(facilidades)
           }}
         >
         Mostrar Todo
@@ -232,7 +212,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id}
+                    getRowId={(row) => row.id_facilidad}
                   />
                 </Box>
               </Grid>
