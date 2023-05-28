@@ -66,7 +66,7 @@ export const AdminUsers: React.FC = () => {
               <>
                 <Grid container spacing={2} sx={{ mt: '5px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
-                    <Title title={`Datos personales persona ${tipo_persona}`} />
+                    <Title title={`Datos personales`} />
                   </Box>
                   {tipo_persona === 'N' ? (
                     <>
@@ -369,7 +369,18 @@ export const AdminUsers: React.FC = () => {
                       label="Justificación del cambio"
                       multiline
                       value={data_register.activo_justificacion_cambio}
-                      {...register_admin_user('activo_justificacion_cambio')}
+                      required={!check_user_is_active}
+                      error={
+                        !check_user_is_active &&
+                        Boolean(errors_admin_users.activo_justificacion_cambio)
+                      }
+                      helperText={
+                        !check_user_is_active &&
+                        errors_admin_users.activo_justificacion_cambio?.message
+                      }
+                      {...register_admin_user('activo_justificacion_cambio', {
+                        required: 'Este campo es obligatorio',
+                      })}
                       onChange={handle_change}
                     />
                   </Grid>
@@ -391,6 +402,7 @@ export const AdminUsers: React.FC = () => {
                       disabled
                       fullWidth
                       size="small"
+                      required={check_user_is_blocked}
                       label="Fecha ultimo cambio"
                       value={data_register.bloqueado_fecha_ultimo_cambio}
                       {...register_admin_user('bloqueado_fecha_ultimo_cambio')}
@@ -405,7 +417,22 @@ export const AdminUsers: React.FC = () => {
                       label="Justificación del cambio"
                       multiline
                       value={data_register.bloqueado_justificacion_cambio}
-                      {...register_admin_user('bloqueado_justificacion_cambio')}
+                      required={!check_user_is_blocked}
+                      error={
+                        !check_user_is_blocked &&
+                        Boolean(
+                          errors_admin_users.bloqueado_justificacion_cambio
+                        )
+                      }
+                      helperText={
+                        !check_user_is_blocked &&
+                        errors_admin_users.bloqueado_justificacion_cambio
+                          ?.message
+                      }
+                      {...register_admin_user(
+                        'bloqueado_justificacion_cambio',
+                        { required: 'Este campo es obligatorio' }
+                      )}
                       onChange={handle_change}
                     />
                   </Grid>

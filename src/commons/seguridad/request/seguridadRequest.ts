@@ -184,13 +184,6 @@ export const persons_request = async (
   }
 };
 
-// Trae todos los datos de un usuario
-export const user_request = async (
-  id_usuario: number
-): Promise<AxiosResponse<ResponseServer<Users>>> => {
-  return await api.get(`users/get-by-pk/${id_usuario}`);
-};
-
 // Trae historico de cambios de estado para cada usuario
 export const user_historico_cambios_estado = async (
   id_usuario: number

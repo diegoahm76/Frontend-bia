@@ -8,6 +8,7 @@ import { toast, type ToastContent } from 'react-toastify';
 import { get_ccd_current, get_ccds } from '../slices/ccdSlice';
 import { get_series_service } from './seriesThunks';
 import { get_subseries_service } from './subseriesThunks';
+import { type DataCambioCCDActual } from '../../interfaces/ccd';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const notification_error = async (
@@ -24,7 +25,7 @@ const notification_error = async (
   }).fire();
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+const control_error = (message: ToastContent) =>
   toast.error(message, {
     position: 'bottom-right',
     autoClose: 3000,
@@ -50,12 +51,10 @@ const control_success = (message: ToastContent) =>
   });
 
 // Obtener los CCDS terminados
-export const get_finished_ccd_service = () => {
-  return async (): Promise<AxiosResponse | AxiosError> => {
+export const get_finished_ccd_service = ():any => {
+  return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('gestor/ccd/get-terminados/');
-      // dispatch(getMoldOrganigrams(data.data));
-      control_success(data.detail);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -214,5 +213,48 @@ export const update_ccds_service: any = (ccd: {
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
+  };
+};
+
+//  Obtener CCDS's terminados por Organigrama
+export const get_ccds_finished_x_organigrama: any = (id_organigrama: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/activar/get-ccd-terminados-by-org/${id_organigrama}/`
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_ccds_posibles: any = (id_organigrama?: number) => {
+  return async () => {
+    try{
+      const { data } = await api.get(
+        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        `gestor/activar/get-ccd-posibles/?id_organigrama=${id_organigrama}`
+      );
+      return data;
+    }catch(error:any){
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  }
+}
+
+export const cambio_ccd_actual:any = (data_cambio:DataCambioCCDActual) => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.put('gestor/activar/instrumentos-archivisticos/', data_cambio);          
+          control_success("Proceso exitoso");
+          return data;
+      } catch (error: any) {
+          control_error(error.response.data.detail);
+          return error as AxiosError;
+      }
   };
 };
