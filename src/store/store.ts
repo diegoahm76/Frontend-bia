@@ -20,22 +20,27 @@ import { assignments_slice } from "../commons/gestorDocumental/ccd/store/slices/
 import {
   marcas_slice,
   porcentajes_slice,
-  medida_slice,
-} from "../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice";
-import { bodegas_slice } from "../commons/almacen/configuracion/store/slice/BodegaSlice";
-import { cv_others_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos";
-import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
-import { solicitud_consumo_slice } from "../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo";
+  medida_slice
+} from '../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice';
+import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/BodegaSlice';
+import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
+import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
+import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
+import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/ObligacionesSlice';
+import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
+import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
+import { funcionarios_slice } from "../commons/recaudo/facilidadPago/slices/FuncionariosSlice";
+import { calidad_personas_slice } from "../commons/recaudo/facilidadPago/slices/CalidadPersonasSlice";
+import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
 
 const persist_config = {
-  key: "macarenia_app",
+  key: 'macarenia_app',
   storage,
-  whitelist: ["auth", "layout"],
+  whitelist: ['auth', 'layout']
 };
 
 const app_reducers = combineReducers({
   auth: auth_slice.reducer,
-  seguridad: seguridad_slice.reducer,
   layout: layout_slice.reducer,
   organigram: organigrama_slice.reducer,
   ccd: ccd_slice.reducer,
@@ -43,6 +48,7 @@ const app_reducers = combineReducers({
   subseries: subseries_slice.reducer,
   assignments: assignments_slice.reducer,
   nursery: nursery_slice.reducer,
+  seguridad: seguridad_slice.reducer,
   marca: marcas_slice.reducer,
   porcentaje: porcentajes_slice.reducer,
   medida: medida_slice.reducer,
@@ -56,13 +62,19 @@ const app_reducers = combineReducers({
   cvo: cv_others_slice.reducer,
   cve: cve_vehicle_slice.reducer,
   solic_consumo: solicitud_consumo_slice.reducer,
+  obligaciones: obligaciones_slice.reducer,
+  deudores: deudores_slice.reducer,
+  facilidades: facilidades_slice.reducer,
+  funcionarios: funcionarios_slice.reducer,
+  calidad_personas: calidad_personas_slice.reducer,
+  solicitud_facilidad: solicitud_facilidad_slice.reducer
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
 
 export const store = configureStore({
   middleware: [thunk],
-  reducer: persist_reducer,
+  reducer: persist_reducer
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

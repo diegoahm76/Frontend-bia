@@ -1,295 +1,401 @@
-import React, { useEffect, useState } from 'react';
-import { type Dispatch, type SetStateAction } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Box,
   Grid,
-  Stack,
   Button,
   TextField,
+  CircularProgress,
+  FormGroup,
   FormControlLabel,
   Checkbox,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Typography,
-  Card,
-  Alert,
-  AlertTitle,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useForm } from 'react-hook-form';
+import {
+  create_permiso_rol,
+  create_rol,
+  get_permisos_by_modulos,
+  get_rol_by_id,
+  update_permiso_rol,
+  update_rol,
+} from '../request/seguridadRequest';
+import { control_error, control_success } from '../../../helpers';
+import type {
+  Acciones,
+  Modulo,
+  PermisosRol,
+  PermisosRolEdit,
+  Rol,
+  Roles,
+} from '../interfaces';
 import SaveIcon from '@mui/icons-material/Save';
-import { Title } from '../../../components/Title';
-import { api } from '../../../api/axios';
-import { useForm, Controller } from 'react-hook-form';
-import { get_permisos_rol_post } from '../../auth/adapters/roles.adapters';
-import { toast, type ToastContent } from 'react-toastify';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import type { AxiosError } from 'axios';
+import type { ResponseServer } from '../../../interfaces/globalModels';
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light',
-  });
-
-const dataone: React.SetStateAction<Array<{ id: number }> | undefined> = [];
-
-interface IProps {
-  set_position_tab_admin_roles: Dispatch<SetStateAction<string>>;
+interface Props {
+  on_create: () => void;
+  rol_edit?: Rol;
 }
 
+type key_obj =
+  | 'crear'
+  | 'actualizar'
+  | 'consultar'
+  | 'borrar'
+  | 'anular'
+  | 'ejecutar';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FormAdminRoles = ({
-  set_position_tab_admin_roles,
-}: IProps): JSX.Element => {
-  const [expanded, set_expanded] = React.useState<string | false>(false);
-
-  const [is_create, set_is_create] = useState('');
-  const [rol_permisos, set_rol_permisos] = useState<Array<{ id: number }>>();
-
-  const [permisos, set_permisos] = React.useState([]);
-
+export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
   const {
-    register: register_rol_permiso,
-    control,
-    handleSubmit: handle_submit_rol_permiso,
+    register,
+    handleSubmit: handle_submit,
+    formState: { errors },
+    setValue: set_value,
   } = useForm();
+  const [is_loading, set_is_loading] = useState(false);
+  const [is_saving, set_is_saving] = useState(false);
+  const [permisos, set_permisos] = useState<Roles[]>([]);
+  const [permisos_rol, set_permisos_rol] = useState<PermisosRol[]>([]);
 
-  const handle_change =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      set_expanded(isExpanded ? panel : false);
-    };
+  const get_roles_permisos = async (): Promise<void> => {
+    set_is_loading(true);
+    try {
+      const {
+        data: { data },
+      } = await get_permisos_by_modulos();
 
-  const handle_change_1 = (
+      // Obtiene permisos asignados al Rol al editar
+      if (rol_edit?.id_rol !== 0) {
+        await get_permisos_rol(data);
+      } else {
+        data.map((e) => {
+          e.checked = false;
+          e.modulos.map((i) => {
+            i.checked = false;
+            return i;
+          });
+          return e;
+        });
+        set_permisos(data);
+      }
+    } catch (error) {
+      control_error(error);
+    } finally {
+      set_is_loading(false);
+    }
+  };
+
+  const on_submit = handle_submit(async (data_form) => {
+    set_is_saving(true);
+    try {
+      if (rol_edit?.id_rol === 0) {
+        const { data } = await create_rol(data_form as Rol);
+        permisos_rol.forEach((e) => {
+          e.id_rol = data.id_rol;
+        });
+
+        await create_permiso_rol(permisos_rol);
+
+        control_success('Rol creado');
+      } else {
+        const { data: res_rol } = await update_rol(
+          data_form as Rol,
+          rol_edit?.id_rol ?? 0
+        );
+
+        const temp_permisos: PermisosRolEdit[] = permisos_rol.map((e) => {
+          return { id_permisos_modulo: e.id_permiso_modulo };
+        });
+        const { data } = await update_permiso_rol(
+          temp_permisos,
+          rol_edit?.id_rol ?? 0
+        );
+
+        control_success(res_rol.detail);
+        control_success(data.detail);
+      }
+
+      on_create();
+    } catch (error) {
+      const { response } = error as AxiosError<ResponseServer<any>>;
+      control_error(response?.data.detail);
+    } finally {
+      set_is_saving(false);
+    }
+  });
+
+  const checked_modulo = (rol: Roles, index: number): void => {
+    const temp_permisos = [...permisos];
+    temp_permisos[index] = { ...rol, checked: !rol.checked };
+    set_permisos(temp_permisos);
+  };
+
+  const checked_item = (obj: Modulo, key: number, key_modulo: number): void => {
+    const temp_permisos = [...permisos];
+    const modulos = [...temp_permisos[key_modulo].modulos];
+    modulos[key] = { ...obj, checked: !obj.checked };
+    temp_permisos[key_modulo].modulos = [...modulos];
+    set_permisos(temp_permisos);
+  };
+
+  const select_permisos = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
-    // set_checked([event.target.checked, event.target.checked]);
-  };
-
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const get_roles_permisos = async () => {
-    try {
-      const { data: data_permisos } = await api.get(
-        'permisos/permisos-modulos/get-list/'
+    if (event.target.checked) {
+      set_permisos_rol([
+        ...permisos_rol,
+        {
+          id_permiso_modulo: +event.target.value,
+          id_rol: 0,
+        },
+      ]);
+    } else {
+      const new_array = permisos_rol.filter(
+        (e) => e.id_permiso_modulo !== +event.target.value
       );
-      console.log(data_permisos.data);
-      set_permisos(data_permisos.data);
-    } catch (error) {
-      console.log(error);
+      set_permisos_rol([...new_array]);
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const on_submit_rol_permiso = async (data: any) => {
-    // eslint-disable-next-line array-callback-return
-    data.permisos.map((item: any, index: any) => {
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (item.true) {
-        dataone.push({
-          id: index,
-        });
-        set_rol_permisos(dataone);
+  const render_actions = (actions: Acciones, modulo: string): JSX.Element[] => {
+    const elements: JSX.Element[] = [];
+    for (const index in actions) {
+      const key = index as key_obj;
+      // Renderiza cuando esta editando
+      if (rol_edit?.id_rol !== 0) {
+        elements.push(
+          <FormControlLabel
+            key={key}
+            control={
+              <Checkbox
+                defaultChecked={actions[key]?.value}
+                onChange={select_permisos}
+              />
+            }
+            label={key}
+            value={actions[key]?.id}
+          />
+        );
+      } else {
+        // Renderiza cuando esta creando
+        elements.push(
+          <FormControlLabel
+            key={key}
+            control={<Checkbox onChange={select_permisos} />}
+            label={key}
+            value={actions[key]?.id}
+          />
+        );
       }
-    });
-
-    if (is_create === 'crear') {
-      const rol_create = {
-        nombre_rol: data.nombre_rol,
-        descripcion_rol: data.descripcion_rol,
-        Rol_sistema: false,
-      };
-      const { data: data_rol } = await api.post('roles/create/', rol_create);
-      control_success('Rol creado');
-      set_position_tab_admin_roles('1');
-      const permisos_rol = get_permisos_rol_post(data_rol.id_rol, rol_permisos);
-      await api
-        .post('permisos/permisos-modulos-rol/create/', permisos_rol)
-        .then(() => {
-          control_success('Rol creado');
-        });
     }
-    // else {
-    //   const datos_edit_rol = {
-    //     nombre_rol: data.nombre_rol,
-    //     descripcion_rol: data.descripcion_rol,
-    //   };
+    return elements;
+  };
 
-    //   const { data: response_edit_rol } = await api.put(
-    //     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    //     `/roles/update/${data.idRol}/`,
-    //     datos_edit_rol
-    //   );
-    //   console.log(response_edit_rol);
+  const get_permisos_rol = async (permisos: Roles[]): Promise<void> => {
+    set_is_loading(true);
+    try {
+      const temp_permisos: PermisosRol[] = [];
+      set_permisos_rol([]);
+      const {
+        data: { data },
+      } = await get_rol_by_id(rol_edit?.id_rol ?? 0);
 
-    //   const datos_edit_permisos_rol = get_permisos_rol_post(
-    //     data.idRol,
-    //     form_values.permisosRol
-    //   );
-    //   const data_format_request_rol = datos_edit_permisos_rol.map(
-    //     (permiso: { id_permiso_modulo: number }) => ({
-    //       id_permisos_modulo: permiso.id_permiso_modulo,
-    //     })
-    //   );
-    //   await api
-    //     .put(
-    //       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    //       `permisos/permisos-modulos-rol/update/${data.idRol}/`,
-    //       data_format_request_rol
-    //     )
-    //     .then(() => {
-    //       control_success('Datos del rol actualizados correctamente');
-    //     })
-    //     .catch(() => {
-    //       control_error('Algo pasó consulta con tu developer de confianza');
-    //     });
-    // }
+      permisos.forEach((e) => {
+        e.checked = false;
+        e.modulos.map((i) => {
+          i.checked = false;
+          return i;
+        });
+        const temp = data.find((i) => i.subsistema === e.subsistema);
+        if (temp !== undefined) {
+          e.checked = true;
+          e.modulos.forEach((m) => {
+            // Buscamos que permisos tiene asignados
+            const module = temp.modulos.find(
+              (i) => i.id_modulo === m.id_modulo
+            );
+            // Si tien algun permiso asignado, asigamos las acciones que tiene
+            if (module !== undefined) {
+              console.log(module);
+              for (const key in module.permisos) {
+                const k = key as key_obj;
+                const element = module.permisos[k];
+                // enviamos los permisos asignados al array que se envia al server
+                if (element?.id !== undefined) {
+                  temp_permisos.push({
+                    id_permiso_modulo: element?.id,
+                    id_rol: 0,
+                  });
+                }
+              }
+              m.checked = true;
+              m.permisos = {
+                crear: module.permisos.crear,
+                actualizar: module.permisos.actualizar,
+                borrar: module.permisos.borrar,
+                consultar: module.permisos.consultar,
+                // anular: module.permisos.anular,
+                // ejecutar: module.permisos.ejecutar,
+              };
+            } else {
+              // Si no tien permiso asignado, asignamos por defecto en false
+              m.permisos = {
+                crear: { id: m.permisos.crear?.id ?? 0, value: false },
+                actualizar: {
+                  id: m.permisos.actualizar?.id ?? 0,
+                  value: false,
+                },
+                borrar: { id: m.permisos.borrar?.id ?? 0, value: false },
+                consultar: { id: m.permisos.consultar?.id ?? 0, value: false },
+                // anular: module.permisos.anular,
+                // ejecutar: mo
+              };
+            }
+          });
+        }
+      });
+      set_permisos_rol(temp_permisos);
+      set_permisos(permisos);
+    } catch (error) {
+      control_error(error);
+    } finally {
+      set_is_loading(false);
+    }
   };
 
   useEffect(() => {
     void get_roles_permisos();
-    set_is_create('crear');
   }, []);
+
+  useEffect(() => {
+    set_value('nombre_rol', rol_edit?.nombre_rol);
+    set_value('descripcion_rol', rol_edit?.descripcion_rol);
+  }, [rol_edit]);
 
   return (
     <>
-      <Grid item xs={12}>
-        <Title title="LUGAR DE RESIDENCIA" />
-        <Box sx={{ mt: '20px' }}>
-          <Box
-            component="form"
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onSubmit={handle_submit_rol_permiso(on_submit_rol_permiso)}
+      <form
+        onSubmit={(e) => {
+          void on_submit(e);
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={3}>
+            <TextField
+              label="Nombre del rol"
+              size="small"
+              fullWidth
+              {...register('nombre_rol', { required: true })}
+              error={errors.nombre_rol?.type === 'required'}
+              helperText={
+                errors.nombre_rol?.type === 'required' ? 'Campo requerido' : ''
+              }
+            />
+          </Grid>
+          <Grid item xs={12} sm={7}>
+            <TextField
+              label="Descripción"
+              size="small"
+              fullWidth
+              {...register('descripcion_rol', {
+                required: true,
+              })}
+              error={errors.descripcion_rol?.type === 'required'}
+              helperText={
+                errors.descripcion_rol?.type === 'required'
+                  ? 'Campo requerido'
+                  : ''
+              }
+            />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={2}
+            container
+            direction="column"
+            justifyContent="center"
           >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Nombre del rol"
-                  size="small"
-                  fullWidth
-                  {...register_rol_permiso('nombre_rol', { required: true })}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Descripción"
-                  size="small"
-                  fullWidth
-                  {...register_rol_permiso('descripcion_rol', {
-                    required: true,
-                  })}
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}></Grid>
-              <Grid item xs={12} sm={3}></Grid>
-            </Grid>
-            <Box sx={{ mt: '20px' }}>
-              {permisos.map((subsistema: any, index) => (
-                <>
-                  <Accordion
-                    key={subsistema.subsistema}
-                    elevation={5}
-                    expanded={expanded === `panel${index + 1}`}
-                    onChange={handle_change(`panel${index + 1}`)}
-                  >
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      aria-controls="panel1bh-content"
-                      id="panel1bh-header"
-                    >
-                      <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                        {subsistema.desc_subsistema}
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Grid container direction="row" spacing={3}>
-                        {subsistema.modulos.map((modulo: any): any => (
-                          <>
-                            <Grid item xs={12} sm={6}>
-                              <Card sx={{ p: '10px' }}>
-                                <Box sx={{ flexDirection: 'column' }}>
-                                  {Object.keys(modulo.permisos).length > 0 ? (
-                                    <Typography>
-                                      <FormControlLabel
-                                        label={modulo.nombre_modulo}
-                                        control={
-                                          <Checkbox
-                                            key={modulo.id_modulo}
-                                            checked={false}
-                                            indeterminate={false}
-                                            onChange={handle_change_1}
-                                          />
-                                        }
-                                      />
-                                    </Typography>
-                                  ) : (
-                                    <Typography sx={{ p: '0 0 10px 10px' }}>
-                                      {modulo.nombre_modulo}
-                                    </Typography>
-                                  )}
-
-                                  {Object.keys(modulo.permisos).length > 0 ? (
-                                    Object.keys(modulo.permisos).map(
-                                      (permiso, index) => (
-                                        <Controller
-                                          key={modulo.permisos[permiso].id}
-                                          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                                          name={`permisos[${modulo.permisos[permiso].id}][${modulo.permisos[permiso].value}]`}
-                                          control={control}
-                                          render={({ field }) => (
-                                            <FormControlLabel
-                                              {...field}
-                                              labelPlacement="top"
-                                              label={permiso}
-                                              control={
-                                                <Checkbox color="primary" />
-                                              }
-                                            />
-                                          )}
-                                        ></Controller>
-                                      )
-                                    )
-                                  ) : (
-                                    <Box>
-                                      <Alert severity="info">
-                                        <AlertTitle>Info</AlertTitle>
-                                        Sin acciones disponibles
-                                      </Alert>
-                                    </Box>
-                                  )}
-                                </Box>
-                              </Card>
-                            </Grid>
-                          </>
-                        ))}
-                      </Grid>
-                    </AccordionDetails>
-                  </Accordion>
-                </>
-              ))}
-            </Box>
-            <Stack
-              direction="row"
-              justifyContent="flex-end"
-              spacing={2}
-              sx={{ mt: '20px' }}
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={is_saving || permisos_rol.length === 0}
+              startIcon={<SaveIcon />}
             >
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                startIcon={<SaveIcon />}
-              >
-                CREAR
-              </Button>
-            </Stack>
-          </Box>
-        </Box>
-      </Grid>
+              GUARDAR
+            </Button>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            container={is_loading}
+            justifyContent={is_loading ? 'center' : 'start'}
+          >
+            {is_loading ? (
+              <CircularProgress />
+            ) : (
+              <>
+                <Typography variant="h5">lista de permisos</Typography>
+                <FormGroup>
+                  {permisos.map((e, k) => {
+                    return (
+                      <div key={k}>
+                        <FormControlLabel
+                          control={<Checkbox checked={e.checked} />}
+                          label={e.desc_subsistema}
+                          onChange={() => {
+                            checked_modulo(e, k);
+                          }}
+                        />
+                        {e.checked && (
+                          <Grid container px={3} spacing={2}>
+                            {e.modulos.map((m, i) => {
+                              return (
+                                <Grid item xs={12} sm={6} key={i}>
+                                  <Accordion expanded={m.checked}>
+                                    <AccordionSummary
+                                      expandIcon={<ExpandMoreIcon />}
+                                      aria-controls="panel1a-content"
+                                      id={m.nombre_modulo}
+                                      onClick={() => {
+                                        checked_item(m, i, k);
+                                      }}
+                                    >
+                                      <Typography>{m.nombre_modulo}</Typography>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                      <div>
+                                        <Typography variant="caption">
+                                          Acciones para el usuario
+                                        </Typography>
+                                      </div>
+                                      <div>
+                                        {render_actions(
+                                          m.permisos,
+                                          m.nombre_modulo
+                                        )}
+                                      </div>
+                                    </AccordionDetails>
+                                  </Accordion>
+                                </Grid>
+                              );
+                            })}
+                          </Grid>
+                        )}
+                      </div>
+                    );
+                  })}
+                </FormGroup>
+              </>
+            )}
+          </Grid>
+        </Grid>
+      </form>
     </>
   );
 };

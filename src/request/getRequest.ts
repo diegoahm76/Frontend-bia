@@ -8,6 +8,7 @@ import type {
   InfoPersona,
   CompleteInfoPersona
 } from '../interfaces/globalModels';
+import { type Users } from '../commons/seguridad/interfaces';
 
 export const get_direcciones = async (): Promise<any> => {
   return await api.get('choices/direcciones/');
@@ -17,6 +18,12 @@ export const get_tipo_persona = async (): Promise<
   AxiosResponse<ResponseServer<IList[]>>
 > => {
   return await api.get<ResponseServer<IList[]>>('listas/tipo-persona/');
+};
+
+export const get_tipo_usuario = async (): Promise<
+  AxiosResponse<ResponseServer<IList[]>>
+> => {
+  return await api.get<ResponseServer<IList[]>>('listas/tipo-usuario/');
 };
 
 export const get_tipo_documento = async (): Promise<
@@ -82,6 +89,14 @@ export const get_person_by_id = async (
     `personas/get-by-id/${id_persona}/`
   );
 };
+
+// Trae todos los datos de un usuario
+export const get_user_by_id = async (
+  id_usuario: number
+): Promise<AxiosResponse<ResponseServer<Users>>> => {
+  return await api.get(`users/get-by-pk/${id_usuario}`);
+};
+
 
 export const search_avanzada = async ({
   tipo_documento,

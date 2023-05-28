@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@blockly/field-date": "^6.0.12",
+    "@ckeditor/ckeditor5-build-classic": "^37.1.0",
+    "@ckeditor/ckeditor5-react": "^6.0.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@fontsource/roboto": "^4.5.8",
@@ -46,6 +48,7 @@
     "react-cosmos": "^5.7.2",
     "react-datepicker": "^4.10.0",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-google-recaptcha": "^2.1.0",
     "react-hook-form": "^7.43.3",
     "react-leaflet": "^4.2.1",

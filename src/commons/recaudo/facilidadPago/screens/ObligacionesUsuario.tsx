@@ -1,0 +1,65 @@
+import { Title } from '../../../../components/Title';
+import { EncabezadoObligacionesUsuario } from '../componentes/EncabezadoObligacionesUsuario';
+import { TablaObligacionesUsuario } from '../componentes/TablaObligacionesUsuario';
+import { Grid, Box } from "@mui/material";
+import { useEffect } from 'react';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
+import { get_obligaciones } from '../slices/ObligacionesSlice';
+import { type ObligacionesUsuario } from '../interfaces/interfaces';
+
+interface RootState {
+  obligaciones: {
+    obligaciones: ObligacionesUsuario[];
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const ObligacionesUsuarios: React.FC = () => {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
+
+  useEffect(() => {
+    try {
+      void dispatch(get_obligaciones());
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }, [])
+
+  return (
+    <>
+      <Title title='Listado de Obligaciones del Usuario Externo'/>
+      <EncabezadoObligacionesUsuario />
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          mb: '20px',
+          mt: '20px',
+          p: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+          <Box
+            component="form"
+            noValidate
+            autoComplete="off"
+          >
+              {
+                obligaciones.length !== 0 ? (
+                  <>
+                    <p>Sus obligaciones pendientes por pago son las siguientes:</p>
+                    <TablaObligacionesUsuario />
+                  </>
+                ): <p>Usted no tiene obligaciones pendientes por pago.</p>
+              }
+          </Box>
+        </Grid>
+      </Grid>
+    </>
+  )
+}

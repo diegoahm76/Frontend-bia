@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Chip, Grid} from "@mui/material";
 import SeleccionarDespacho from "../componentes/SeleccionarDespacho";
 import SeleccionarBienDistribuir from "../componentes/SeleccionarBienDistribuir";

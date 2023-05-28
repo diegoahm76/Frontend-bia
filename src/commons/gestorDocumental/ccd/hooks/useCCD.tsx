@@ -9,7 +9,6 @@ import {
   // type IAssignmentsObject,
   type ICCDAsingForm,
   type ICCDForm,
-  type IListOrganigrama,
 } from '../interfaces/ccd';
 import { get_ccd_current } from '../store/slices/ccdSlice';
 import { get_assignments_ccd_current } from '../store/slices/assignmentsSlice';
@@ -28,6 +27,7 @@ import {
   get_assignments_service,
 } from '../store/thunks/assignmentsThunks';
 import type { GridColDef } from '@mui/x-data-grid';
+import type { IList } from '../../../../interfaces/globalModels';
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
   const dispatch = useAppDispatch();
@@ -49,21 +49,19 @@ const use_ccd = () => {
   const [consulta_ccd_is_active, set_consulta_ccd_is_active] =
     useState<boolean>(false);
   const [save_ccd, set_save_ccd] = useState<boolean>(false);
-  const [list_unitys, set_list_unitys] = useState<IListOrganigrama[]>([
+  const [list_unitys, set_list_unitys] = useState<IList[]>([
     {
       label: '',
       value: 0,
     },
   ]);
-  const [list_organigrams, set_list_organigrams] = useState<IListOrganigrama[]>(
-    [
-      {
-        label: '',
-        value: 0,
-      },
-    ]
-  );
-  const [list_sries, set_list_sries] = useState<IListOrganigrama[]>([
+  const [list_organigrams, set_list_organigrams] = useState<IList[]>([
+    {
+      label: '',
+      value: 0,
+    },
+  ]);
+  const [list_sries, set_list_sries] = useState<IList[]>([
     {
       label: '',
       value: 0,

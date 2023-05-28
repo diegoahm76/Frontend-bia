@@ -1,51 +1,52 @@
 
-import {api} from '../../../../../../../api/axios';
+import { api } from '../../../../../../../api/axios';
 // Types
 import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 // Interfaces
-import {   get_computers, get_cv_computer, get_marks  } from '../../store/slices/indexCvComputo';
+import { get_computers, get_cv_computer, get_marks, } from '../../store/slices/indexCvComputo';
 import { type Dispatch } from 'react';
+import { type NavigateFunction } from 'react-router-dom';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light'
-  });
+    toast.error(message, {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+    });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light'
-  });
+    toast.success(message, {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+    });
 
-  export const get_marca_service = (): any => {
+export const get_marca_service = (): any => {
     return async (dispatch: Dispatch<any>) => {
-      try {
-        const { data } = await api.get('almacen/marcas/get-list');
-        dispatch(get_marks(data));
-        return data;
-      } catch (error: any) {
-        return error as AxiosError;
-      }
+        try {
+            const { data } = await api.get('almacen/marcas/get-list');
+            dispatch(get_marks(data));
+            return data;
+        } catch (error: any) {
+            return error as AxiosError;
+        }
     };
-  };
+};
 
 // Obtener Mantenimientos
 // export const get_cv_maintenance_service = (id_articulo: number) => {
@@ -65,7 +66,7 @@ const control_success = (message: ToastContent) =>
 // // // Obtener Artculo por nombre o codigo
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const get_computers_all_service: any = () =>{
+export const get_computers_all_service: any = () => {
     return async (dispatch: Dispatch<any>) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -81,30 +82,43 @@ export const get_computers_all_service: any = () =>{
 };
 
 // Obtener Hoja de Vida PC
-export const get_cv_computer_service = (id: any) => {
+
+
+export const get_cv_computer_service: (id: any) => any = (id: any) => {
+
     return async (dispatch: Dispatch<any>) => {
         try {
+
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            const { data } = await api.get(`almacen/hoja-de-vida/computadores/get-by-id-bien/${id}/`);
-            dispatch(get_cv_computer(data.Elementos));
+            const { data } = await api.get(`almacen/hoja-de-vida/computadores/get-by-id-bien/${264}/`);
+            console.log(data)
+            dispatch(get_cv_computer(data));
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
+
             return error as AxiosError;
         }
     };
 };
 
-// Crear Hoja de Vida PC
-export const create_cv_computers_service: any = (form_data: any) => {
+// CREAR HOJA DE VIDA
+export const create_cv_computers_service: any = (
+    cv: any,
+    navigate: NavigateFunction
+
+) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.post('almacen/hoja-de-vida/computadores/create/', form_data);
+            const { data } = await api.post(
+                'almacen/hoja-de-vida/computadores/create/', cv
+            );
+            //   dispatch(get_cv_computer_service());
             control_success('La hoja de vida se creo correctamente');
-            dispatch(get_computers_all_service());
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
+            console.log(error.response.data);
             return error as AxiosError;
         }
     };
@@ -139,7 +153,7 @@ export const update_cv_computers_service = (id: string, file: any) => {
 };
 // Eliminar Hoja de Vida PC
 export const delete_cv_computers_service = (id: string) => {
-    return async (dispatch: Dispatch<any>) =>{
+    return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.delete(`almacen/hoja-de-vida/computadores/delete/${id}/`);
             dispatch(get_cv_computer_service(id));

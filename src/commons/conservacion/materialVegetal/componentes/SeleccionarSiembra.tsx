@@ -1,10 +1,11 @@
+/* eslint-disable object-shorthand */
 import { useEffect, useState } from 'react';
 import { Chip, Grid } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
-import { set_current_planting,  set_plantings } from '../store/slice/materialvegetalSlice';
-import { get_nurseries_service, get_plantings_service,  get_vegetal_materials_service } from '../store/thunks/materialvegetalThunks';
+import { set_current_planting, set_plantings } from '../store/slice/materialvegetalSlice';
+import { get_nurseries_service, get_plantings_service, get_vegetal_materials_service } from '../store/thunks/materialvegetalThunks';
 
 
 interface IProps {
@@ -17,8 +18,8 @@ const SeleccionarSiembra = ({
   get_values
 }: IProps) => {
 
-  const dispatch= useAppDispatch()
-  const {  current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery} = useAppSelector((state) => state.material_vegetal);
+  const dispatch = useAppDispatch()
+  const { current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery } = useAppSelector((state) => state.material_vegetal);
   const [file, set_file] = useState<any>(null);
   const [file_name, set_file_name] = useState<any>("");
 
@@ -41,7 +42,7 @@ const SeleccionarSiembra = ({
       width: 350,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {(nurseries.find((p) => p.id_vivero === params.value ))?.nombre??""}
+          {(nurseries.find((p) => p.id_vivero === params.value))?.nombre ?? ""}
         </div>
       ),
     },
@@ -88,7 +89,8 @@ const SeleccionarSiembra = ({
     void dispatch(get_plantings_service());
   }, []);
 
-  useEffect(() => {console.log(file)
+  useEffect(() => {
+    console.log(file)
   }, [file]);
 
   useEffect(() => {
@@ -101,14 +103,15 @@ const SeleccionarSiembra = ({
   }, [file]);
 
   useEffect(() => {
-    if(current_planting.ruta_archivo_soporte !== null){  
+    if (current_planting.ruta_archivo_soporte !== null) {
       set_file_name(current_planting.ruta_archivo_soporte)
-    
+
     }
   }, [current_planting]);
 
   const get_siembras: any = (async () => {
     void dispatch(get_plantings_service());
+    console.log(get_siembras)
   })
 
   return (
@@ -181,7 +184,7 @@ const SeleccionarSiembra = ({
               control_form: control_siembra,
               control_name: "distancia_entre_semillas",
               default_value: "",
-              rules: { required_rule: { rule: true, message: "Distancia requerida" }  },
+              rules: { required_rule: { rule: true, message: "Distancia requerida" } },
               label: "Distancia entre semillas (cms)",
               type: "number",
               disabled: false,
