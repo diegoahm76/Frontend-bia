@@ -10,7 +10,7 @@ import { Button } from 'primereact/button';
 export const ModalAtom: React.FC<ModalProps> = ({
   data: { show, id },
   arrayToRender,
-  set_modal,
+  set_modal
 }: ModalProps) => {
   if (!show) {
     return null;
@@ -40,10 +40,12 @@ export const ModalAtom: React.FC<ModalProps> = ({
     <div className={`modal ${selectedModal != null ? 'show' : ''}`}>
       {selectedModal != null && (
         <div className="modal-content">
-          <ModalContent keys={keys} values={values} />
+          {values !== false && keys !== false && (
+            <ModalContent keys={keys} values={values} />
+          )}
           {values2 !== false && keys2 !== false && (
             <details>
-              <summary>Título del acordeón</summary>
+              <summary>Valores Actualizados</summary>
               <ModalContent keys={keys2} values={values2} />
             </details>
           )}
