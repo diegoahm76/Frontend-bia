@@ -144,27 +144,31 @@ const DialogElegirOrganigramaActual = ({
       organigrama: get_values_elegir_organigrama_actual('organigrama'),
       id_ccd: get_values_elegir_organigrama_actual('ccd'),
     };
-    console.log(data_cambio);
     await dispatch(cambio_organigrama_actual(data_cambio));
     handle_close_crear_organigrama();
   };
 
   // 1.0 Ejecutar funcion para traer data organigramas posibles y organigrama actual
   useEffect(() => {
-    void get_data_selects();
-  }, []);
+    if (is_modal_active) {
+      void get_data_selects();
+    }
+  }, [is_modal_active]);
 
   // 1.1 Traer data
   const get_data_selects = async (): Promise<void> => {
     set_loading(true);
     try {
       const response_org_actual = await dispatch(get_organigrama_actual());
-      set_organigrama_actual(response_org_actual.data);
-      const response_orgs = await dispatch(get_organigramas_posibles());
-      console.log('organigramas posibles', response_orgs.data);
-      const res_organigramas_adapter: IList[] =
-        await organigramas_choise_adapter(response_orgs.data);
-      set_list_organigrams(res_organigramas_adapter);
+      if (response_org_actual.data.length > 0) {
+        set_organigrama_actual(response_org_actual.data);
+        const response_orgs = await dispatch(get_organigramas_posibles());
+        const res_organigramas_adapter: IList[] =
+          await organigramas_choise_adapter(response_orgs.data);
+        set_list_organigrams(res_organigramas_adapter);
+      } else {
+        control_error('Sin organigramas disponibles para activación');
+      }
     } catch (err) {
       control_error(err);
     } finally {
@@ -175,7 +179,6 @@ const DialogElegirOrganigramaActual = ({
   // 2. Seleccionar organigrama
   useEffect(() => {
     if (organigram_selected !== undefined && organigram_selected !== '') {
-      console.log('Id de organigrama seleccionado', organigram_selected);
       // Traer listado de ccds segun organigrama seleccionado
       void get_list_ccds(organigram_selected);
     }
@@ -186,7 +189,6 @@ const DialogElegirOrganigramaActual = ({
     id_organigram: string | number
   ): Promise<void> => {
     const response_ccds = await dispatch(get_ccds_posibles(id_organigram));
-    console.log('Lista de ccds posibles', response_ccds.data);
     set_data_ccds_posibles(response_ccds.data);
     const res_ccds_adapter: IList[] = await ccds_choise_adapter(
       response_ccds.data
@@ -197,8 +199,6 @@ const DialogElegirOrganigramaActual = ({
   // 4. Filtrar ccd seleccionado para mostrar datos de trd y tca
   useEffect(() => {
     if (ccd_selected !== undefined && ccd_selected !== '') {
-      console.log('Id de ccd seleccionado', ccd_selected);
-      console.log('data ccd posbile antes de filter', data_ccds_posibles);
       const result_filter = data_ccds_posibles.find(
         (ccds: CCD) => ccds.id_ccd === ccd_selected
       );

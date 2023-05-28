@@ -287,7 +287,7 @@ export function ListOrganigramas({
           variant="outlined"
           startIcon={<AssignmentTurnedInIcon />}
           onClick={() => {
-            set_elegir_organigrama_actual_is_active(true);
+            set_elegir_ccd_actual_is_active(true);
           }}
         >
           ELEGIR CCD ACTUAL

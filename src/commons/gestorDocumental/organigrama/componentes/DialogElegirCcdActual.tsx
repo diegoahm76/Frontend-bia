@@ -109,27 +109,31 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
       justificacion: get_values_elegir_organigrama_actual('justificacion'),
       id_ccd: get_values_elegir_organigrama_actual('ccd'),
     };
-    console.log(data_cambio);
     await dispatch(cambio_ccd_actual(data_cambio));
     handle_close_dialog();
   };
 
   // 1.0 Ejecutar funcion para traer data organigramas posibles y organigrama actual
   useEffect(() => {
-    void get_list_ccds();
-  }, []);
+    if (is_modal_active) {
+      void get_list_ccds();
+    }
+  }, [is_modal_active]);
 
   // 1.1 Traer data
   const get_list_ccds = async (): Promise<void> => {
     set_loading(true);
     try {
       const response_ccds = await dispatch(get_ccds_posibles());
-      console.log('Lista de ccds posibles', response_ccds.data);
-      set_data_ccds_posibles(response_ccds.data);
-      const res_ccds_adapter: IList[] = await ccds_choise_adapter(
-        response_ccds.data
-      );
-      set_list_ccds(res_ccds_adapter);
+      if ('data' in response_ccds) {
+        set_data_ccds_posibles(response_ccds.data);
+        const res_ccds_adapter: IList[] = await ccds_choise_adapter(
+          response_ccds.data
+        );
+        set_list_ccds(res_ccds_adapter);
+      } else {
+        control_error("Sin CCD's disponibles para activación");
+      }
     } catch (err) {
       control_error(err);
     } finally {
@@ -140,8 +144,6 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
   // 4. Filtrar ccd seleccionado para mostrar datos de trd y tca
   useEffect(() => {
     if (ccd_selected !== undefined && ccd_selected !== '') {
-      console.log('Id de ccd seleccionado', ccd_selected);
-      console.log('data ccd posbile antes de filter', data_ccds_posibles);
       const result_filter = data_ccds_posibles.find(
         (ccds: CCD) => ccds.id_ccd === ccd_selected
       );
@@ -174,7 +176,7 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
         onSubmit={handle_submit(on_submit)}
       >
         <DialogTitle>
-          Activación de ccd e instrumentos archivisticos
+          Activación de CCD e instrumentos archivisticos
           <IconButton
             aria-label="close"
             onClick={() => {
