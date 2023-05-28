@@ -28,6 +28,7 @@ import DialogDelegarOrganigrama from './DialogDelegarOrganigrama';
 // Slices
 import { current_organigram } from '../store/slices/organigramSlice';
 import { toast, type ToastContent } from 'react-toastify';
+import { type IObjOrganigram } from '../interfaces/organigrama';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -86,12 +87,11 @@ export function ListOrganigramas({
       width: 100,
     },
     {
-      field: 'actual',
-      headerName: 'Actual',
+      field: 'usado',
+      headerName: 'En uso',
       width: 100,
-      renderCell: (params) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.actual ? (
+      renderCell: (params: { row: IObjOrganigram }) => {
+        return params.row.usado ? (
           <Chip size="small" label="Sí" color="success" variant="outlined" />
         ) : (
           <Chip size="small" label="No" color="error" variant="outlined" />

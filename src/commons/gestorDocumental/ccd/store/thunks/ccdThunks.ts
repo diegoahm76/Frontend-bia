@@ -24,7 +24,7 @@ const notification_error = async (
   }).fire();
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+const control_error = (message: ToastContent) =>
   toast.error(message, {
     position: 'bottom-right',
     autoClose: 3000,
