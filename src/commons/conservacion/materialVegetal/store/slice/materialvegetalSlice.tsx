@@ -1,12 +1,15 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import {
+  type IObjSeedLot,
+  type IObjQuarantine,
+  type IObjLifting,
   type IObjNursery,
   type IObjVegetalMaterial,
   type IObjGerminationBed,
   type IObjPlantingGoods,
   type IObjGoods,
   type IObjPlanting,
-  type IMaterialVegetal
+  type IMaterialVegetal,
 } from '../../interfaces/materialvegetal';
 import { type Persona } from "../../../../../interfaces/globalModels";
 
@@ -83,6 +86,60 @@ const initial_state_current_good: IObjGoods = {
   unidad_disponible: null,
 }
 
+const initial_satate_current_plant_seed_lot: IObjSeedLot = {
+  id_inventario_vivero: null,
+  id_vivero: null,
+  id_bien: null,
+  agno_lote: null,
+  nro_lote: null,
+  cod_etapa_lote: null,
+  id_siembra_lote_germinacion: null,
+  id_mezcla: null,
+  saldo_disponible: null,
+  codigo_bien: "",
+  nombre_bien: ""
+}
+
+const initial_satate_current_plant_quarantine: IObjQuarantine = {
+  id_cuarentena_mat_vegetal: null,
+  agno_lote: null,
+  nro_lote: null,
+  cod_etapa_lote: null,
+  consec_cueren_por_lote_etapa: null,
+  fecha_cuarentena: (new Date().toString()),
+  fecha_registro: null,
+  cantidad_cuarentena: null,
+  descrip_corta_diferenciable: "",
+  motivo: "",
+  cantidad_levantada: null,
+  cantidad_bajas: null,
+  cuarentena_abierta: true,
+  cuarentena_anulada: false,
+  justificacion_anulacion: "",
+  fecha_anulacion: null,
+  ruta_archivo_soporte: "",
+  id_vivero: null,
+  id_bien: null,
+  id_persona_cuarentena: null,
+  id_persona_anula: null,
+}
+
+const initial_satate_current_lifting: IObjLifting = {
+  id_item_levanta_cuarentena: null,
+  realizado_por: "",
+  consec_levan_por_cuaren: null,
+  fecha_levantamiento: (new Date().toString()),
+  fecha_registro: null,
+  cantidad_a_levantar:null,
+  observaciones: "",
+  levantamiento_anulado: false,
+  justificacion_anulacion: null,
+  fecha_anulacion: null,
+  id_cuarentena_mat_vegetal: null,
+  id_persona_levanta: null,
+  id_persona_anula: null,
+}
+
 const initial_state: IMaterialVegetal = {
   nurseries: [],
   current_nursery: initial_state_current_nursery,
@@ -95,7 +152,15 @@ const initial_state: IMaterialVegetal = {
   plantings: [],
   current_planting: initial_state_planting,
   persons: [],
-  planting_person: initial_state_person
+  planting_person: initial_state_person,
+  plant_seed_lots: [],
+  current_plant_seed_lot: initial_satate_current_plant_seed_lot,
+  plant_quarantines: [],
+  current_plant_quarantine: initial_satate_current_plant_quarantine,
+  plant_quarantine_lifting: [],
+  current_lifting: initial_satate_current_lifting,
+
+
 }
 
 
@@ -147,6 +212,49 @@ export const material_vegetal_slice = createSlice({
     set_planting_person: (state: IMaterialVegetal, action: PayloadAction<Persona>) => {
       state.planting_person = action.payload;
     },
+
+    set_plant_seed_lots: (state: IMaterialVegetal, action: PayloadAction<IObjSeedLot[]>) => {
+      state.plant_seed_lots = action.payload;
+    },
+
+    set_current_plant_seed_lot: (state: IMaterialVegetal, action: PayloadAction<IObjSeedLot>) => {
+      state.current_plant_seed_lot = action.payload;
+    },
+
+    set_plant_quarantines: (state: IMaterialVegetal, action: PayloadAction<IObjQuarantine[]>) => {
+      state.plant_quarantines = action.payload;
+    },
+
+    set_current_plant_quarantine: (state: IMaterialVegetal, action: PayloadAction<IObjQuarantine>) => {
+      state.current_plant_quarantine = action.payload;
+    },
+    
+    set_plant_quarantine_lifting: (state: IMaterialVegetal, action: PayloadAction<IObjLifting[]>) => {
+      state.plant_quarantine_lifting = action.payload;
+    },
+
+    set_current_lifting: (state: IMaterialVegetal, action: PayloadAction<IObjLifting>) => {
+      state.current_lifting = action.payload;
+    },
   },
 });
-export const { set_persons, set_current_good, set_goods, set_planting_person, set_current_nursery, set_nurseries, set_vegetal_materials, set_germination_beds, set_current_germination_beds, set_planting_goods, set_plantings, set_current_planting } = material_vegetal_slice.actions;
+export const { 
+  set_persons,
+  set_current_good,
+  set_goods, 
+  set_planting_person, 
+  set_current_nursery, 
+  set_nurseries, 
+  set_vegetal_materials, 
+  set_germination_beds, 
+  set_current_germination_beds, 
+  set_planting_goods, 
+  set_plantings, 
+  set_current_planting,
+  set_plant_seed_lots,
+  set_current_plant_seed_lot,
+  set_plant_quarantines,
+  set_current_plant_quarantine,
+  set_plant_quarantine_lifting,
+  set_current_lifting
+   } = material_vegetal_slice.actions;

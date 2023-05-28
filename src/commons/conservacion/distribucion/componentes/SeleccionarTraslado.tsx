@@ -17,7 +17,7 @@ interface IProps {
   destination_nursery_list: IObjNursery[],
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarSiembra = ({
+const SeleccionarTraslado = ({
   control_traslado,
   get_values,
   origin_nursery_list,
@@ -31,8 +31,7 @@ const SeleccionarSiembra = ({
   const [file, set_file] = useState<any>(null);
   const [file_name, set_file_name] = useState<any>("");
 
-
-  const columns_siembras: GridColDef[] = [
+  const columns_traslado: GridColDef[] = [
     { field: 'id_traslado', headerName: 'ID', width: 20 },
     {
       field: 'nro_traslado',
@@ -74,6 +73,7 @@ const SeleccionarSiembra = ({
         </div>
       ),
     },
+
     {
       field: 'traslado_anulado',
       headerName: 'Estado de traslado',
@@ -149,7 +149,7 @@ const SeleccionarSiembra = ({
         <BuscarModelo
           set_current_model={set_current_transfer}
           row_id={"id_traslado"}
-          columns_model={columns_siembras}
+          columns_model={columns_traslado}
           models={transfers_nurseries}
           get_filters_models={get_traslados}
           set_models={set_transfers_nurseries}
@@ -255,7 +255,7 @@ const SeleccionarSiembra = ({
               helper_text: ""
             }
           ]}
-          modal_select_model_title='Seleccionar siembra'
+          modal_select_model_title='Seleccionar traslado'
           modal_form_filters={[
             {
               datum_type: "select_controller",
@@ -296,4 +296,5 @@ const SeleccionarSiembra = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarSiembra;
+export default SeleccionarTraslado;
+

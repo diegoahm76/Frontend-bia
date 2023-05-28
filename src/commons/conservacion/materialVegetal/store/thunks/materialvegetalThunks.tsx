@@ -319,3 +319,41 @@ export const delete_siembra_service = (
     }
   };
 };
+
+// obtener viveros cuarentena
+export const get_nurseries_quarantine_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('conservacion/ingreso-cuarentena/get-viveros/');
+      dispatch(set_nurseries(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_nurseries_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener lotes
+export const get_lots_service = (
+  id_vivero: string,
+  code: string
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/ingreso-cuarentena/get-lotes-etapa/${id_vivero}/${code}/`);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_siembra_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
