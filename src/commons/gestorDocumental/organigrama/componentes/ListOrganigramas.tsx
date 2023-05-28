@@ -29,6 +29,7 @@ import DialogDelegarOrganigrama from './DialogDelegarOrganigrama';
 import { current_organigram } from '../store/slices/organigramSlice';
 import { toast, type ToastContent } from 'react-toastify';
 import { type IObjOrganigram } from '../interfaces/organigrama';
+import DialogElegirCcdActual from './DialogElegirCcdActual';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -60,6 +61,8 @@ export function ListOrganigramas({
     elegir_organigrama_actual_is_active,
     set_elegir_organigrama_actual_is_active,
   ] = useState<boolean>(false);
+  const [elegir_ccd_actual_is_active, set_elegir_ccd_actual_is_active] =
+    useState<boolean>(false);
   const [delegar_organigrama_is_active, set_delegar_organigrama_is_active] =
     useState<boolean>(false);
 
@@ -280,6 +283,15 @@ export function ListOrganigramas({
         >
           ELEGIR ACTUAL
         </Button>
+        <Button
+          variant="outlined"
+          startIcon={<AssignmentTurnedInIcon />}
+          onClick={() => {
+            set_elegir_organigrama_actual_is_active(true);
+          }}
+        >
+          ELEGIR CCD ACTUAL
+        </Button>
       </Stack>
       <Grid item>
         <Box sx={{ width: '100%' }}>
@@ -306,6 +318,10 @@ export function ListOrganigramas({
       <DialogDelegarOrganigrama
         is_modal_active={delegar_organigrama_is_active}
         set_is_modal_active={set_delegar_organigrama_is_active}
+      />
+      <DialogElegirCcdActual
+        is_modal_active={elegir_ccd_actual_is_active}
+        set_is_modal_active={set_elegir_ccd_actual_is_active}
       />
     </>
   );
