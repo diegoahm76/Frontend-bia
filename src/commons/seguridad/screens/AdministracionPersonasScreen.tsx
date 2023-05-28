@@ -37,13 +37,16 @@ export const AdministracionPersonasScreen: React.FC = () => {
 
       if (data.id_persona !== 0) {
         set_datos_persona(data);
-        console.log(data);
         const fields = get_values();
+        console.log(fields, 'fields')
         for (const key in fields) {
           const temp = key as key_data_persona;
           set_value(key, data[temp]);
         }
+        set_value('fecha_nacimiento', data.fecha_nacimiento);
         set_value('departamento_expedicion', data.cod_departamento_expedicion);
+        set_value('ciudad_expedicion', data.cod_departamento_expedicion);
+        set_value('departamento_residencia', data.cod_departamento_residencia);
 
         console.log(datos_persona);
       }
@@ -74,6 +77,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
         {persona?.tipo_persona === 'N' && (
           <>
             <CrearPersonaNatAdmin
+              id_persona={persona.id_persona}
               numero_documento={persona.numero_documento}
               tipo_persona={persona.tipo_persona}
               tipo_documento={persona.tipo_documento}

@@ -33,7 +33,6 @@ export const AdminUsers: React.FC = () => {
     data_disponible,
     historial_cambios_estado_is_active,
     data_register,
-    loading,
     tipo_persona,
     tipo_usuario_opt,
     tipo_usuario,

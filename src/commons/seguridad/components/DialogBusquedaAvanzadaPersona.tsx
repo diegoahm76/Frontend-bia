@@ -49,7 +49,6 @@ const DialogBusquedaAvanzada = ({
   const { persons } = useSelector((state: SeguridadSlice) => state.seguridad);
   const {
     data_search_person,
-    loading,
     tipo_documento_opt,
     tipo_documento,
     tipo_persona_opt,
