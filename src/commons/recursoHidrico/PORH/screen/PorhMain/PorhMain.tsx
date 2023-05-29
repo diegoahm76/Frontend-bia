@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { ReactElement } from 'react';
@@ -5,28 +7,33 @@ import { TableAdaptable } from '../../components/Table/TableAdaptable';
 
 // ? TODO
 //! FIX THE ERRORS THAT ESLINT SHOWS
-
 // actions components
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { get_adapter_axios } from '../../../../../utils/AxiosAdapter/AxiosAdapter';
+import { useEffect } from 'react';
+import { COLUMNS, DATA } from './dataSimulation/data';
+import { BuscadorAtomPORH } from '../../components/Buscador/Buscador';
+
+export const ACTIONSTABLE = [
+  {
+    iconEdit: <EditIcon />,
+    iconDelete: <DeleteIcon />
+  }
+];
 export const PorhMain = (): ReactElement => {
-  const DATA = [
-    { id: 1, name: 'John', age: 25 },
-    { id: 2, name: 'Jane', age: 30 },
-    { id: 3, name: 'Bob', age: 35 }
-  ];
+  /*  const fetchData = async () => {
+    const hola = await get_adapter_axios('estaciones/parametros/consultar-parametro')
+    console.log(hola)
+  }
 
-  const COLUMNS = ['ID', 'Name', 'Age', 'Actions'];
-
-  const ACTIONSTABLE = [
-    {
-      iconEdit: <EditIcon />,
-      iconDelete: <DeleteIcon />
-    }
-  ];
+  useEffect(() => {
+    fetchData()
+  },[]); */
 
   return (
     <div>
+      <BuscadorAtomPORH/>
       <TableAdaptable
         data={DATA}
         columns={COLUMNS}
