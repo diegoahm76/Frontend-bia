@@ -9,6 +9,7 @@ import { ReportesIndicadoresAnaliticaRoutes } from "../reportesIndicadoresAnalit
 import { GestionInventarioRoutes } from "../gestionDeInventario/gestionHojaDeVida/routes/GestionInventarioRoutes";
 import { SolicitudDespachoScreen } from "../registroSolicitudesAlmacen/despacho/screens/SolicitudDespachoScreen";
 import SolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudBienConsumoScreen";
+import { AdministracionVehiculosRoutes } from "../administracionDeVehiculos/routes/EntradaAlmacenRoutes";
 
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
@@ -25,6 +26,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="entrada_almacen/*"
         element={<EntradaBienesAlmacenRoutes />}
+      />
+      <Route
+        path="administracion_vehiculo/*"
+        element={<AdministracionVehiculosRoutes />}
       />
 
       <Route
