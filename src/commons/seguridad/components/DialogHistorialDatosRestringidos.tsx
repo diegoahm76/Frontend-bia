@@ -7,11 +7,12 @@ import {
   Divider,
   Grid,
   Stack,
+  Alert,
+  Typography,
 } from '@mui/material';
 import { Title } from '../../../components/Title';
 import type {
   HistoricoDatosRestringidos,
-  InfoPersona,
 } from '../../../interfaces/globalModels';
 import { useState } from 'react';
 import { control_error } from '../../../helpers';
@@ -21,7 +22,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  datos_historico: InfoPersona;
+  id_persona: number | undefined;
 }
 
 const columns: GridColDef[] = [
@@ -67,7 +68,7 @@ const columns: GridColDef[] = [
 export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
   is_modal_active,
   set_is_modal_active,
-  datos_historico,
+  id_persona,
 }: IProps) => {
   const [rows, set_rows] = useState<HistoricoDatosRestringidos[]>([]);
 
@@ -78,7 +79,7 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
   const historico = async (): Promise<void> => {
     try {
       const response = await consultar_historico_restringido(
-        datos_historico.id_persona
+        id_persona ?? 0
       );
       const new_historico = response.map(
         (datos: HistoricoDatosRestringidos) => ({
@@ -90,10 +91,8 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
           fecha_cambio: datos.fecha_cambio,
           justificacion_cambio: datos.justificacion_cambio,
           id_persona: datos.id_persona,
-
         })
       );
-
       set_rows(new_historico);
     } catch (err) {
       control_error(err);
@@ -133,14 +132,24 @@ export const DialogHistorialDatosRestringidos: React.FC<IProps> = ({
           }}
         >
           <Grid item xs={12}>
-            <DataGrid
-              autoHeight
-              rows={rows}
-              columns={columns}
-              getRowId={(row) => row.historico_cambio_id_persona}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-            />
+            {rows.length > 0 ? (
+              <DataGrid
+                autoHeight
+                rows={rows}
+                columns={columns}
+                getRowId={(row) => row.historico_cambio_id_persona}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+              />
+            ) : (
+              <Grid item xs={12}>
+                <Grid container justifyContent="center" textAlign="center">
+                  <Alert icon={false} severity="info">
+                    <Typography>No se encontraron resultados...</Typography>
+                  </Alert>
+                </Grid>
+              </Grid>
+            )}
           </Grid>
           <Grid item xs={12}>
             <Stack

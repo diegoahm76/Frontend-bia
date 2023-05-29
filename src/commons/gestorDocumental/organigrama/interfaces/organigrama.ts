@@ -17,6 +17,11 @@ export interface IObjOrganigram {
     version: string;
     actual: boolean;
     ruta_resolucion: string | null;
+    id_persona_cargo: number | null;
+    tipo_documento: number | null;
+    numero_documento: number | null;
+    nombre_completo: string | null;
+    usado: boolean
 }
 
 export interface IObjCreateOrganigram {
@@ -124,4 +129,18 @@ export interface ISon {
     id_unidad_org_padre?: null | number | string;
     cod_unidad_org_padre: null | string | number;
     hijos: ISon[];
+}
+
+export interface UserDelegacionOrganigrama{
+    id_persona: number;
+    tipo_documento: string;
+    numero_documento: number;    
+    nombre_completo: string;
+    tiene_usuario: boolean
+}
+
+export interface DataCambioOrganigramaActual{
+    justificacion: string,
+    organigrama: number,
+    id_ccd: number
 }

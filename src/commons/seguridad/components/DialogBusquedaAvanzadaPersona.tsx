@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, type Dispatch, type SetStateAction, useEffect } from 'react';
+import { type Dispatch, type SetStateAction, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Grid,
@@ -28,29 +28,27 @@ import type {
   keys_object_search_person,
 } from '../interfaces';
 import { get_persons } from '../store/thunks';
-import {
-  set_action_admin_users,
-  set_data_person_search,
-} from '../store/seguridadSlice';
+import { set_data_person_search } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
-
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  user_person_create_active: () => void;
+  user_edit_active: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogBusquedaAvanzada = ({
   is_modal_active,
   set_is_modal_active,
+  user_person_create_active,
+  user_edit_active,
 }: IProps) => {
   const dispatch = useDispatch();
   const { persons } = useSelector((state: SeguridadSlice) => state.seguridad);
-  const [buscando_persons, set_buscando_persons] = useState<boolean>(false);
   const {
     data_search_person,
-    loading,
     tipo_documento_opt,
     tipo_documento,
     tipo_persona_opt,
@@ -68,34 +66,6 @@ const DialogBusquedaAvanzada = ({
     watch: watch_search_person,
   } = useForm<FormValuesSearchPerson>();
   const numero_documento = watch_search_person('numero_documento');
-
-  // Consultamos si el usuario existe
-  useEffect(() => {
-    if (numero_documento !== undefined && numero_documento !== '') {
-      set_numero_documento(numero_documento);
-    }
-  }, [numero_documento]);
-
-  useEffect(() => {
-    if (watch_search_person('tipo_persona') !== undefined) {
-      set_tipo_persona(watch_search_person('tipo_persona'));
-    }
-  }, [watch_search_person('tipo_persona')]);
-
-  useEffect(() => {
-    if (watch_search_person('tipo_documento') !== undefined) {
-      set_tipo_documento(watch_search_person('tipo_documento'));
-    }
-  }, [watch_search_person('tipo_documento')]);
-
-  useEffect(() => {
-    if (tipo_persona === 'J') {
-      set_value_search_person('tipo_documento', 'NT');
-      set_tipo_documento('NT');
-    } else {
-      set_tipo_documento('');
-    }
-  }, [tipo_persona]);
 
   const columns_persons: GridColDef[] = [
     {
@@ -132,7 +102,6 @@ const DialogBusquedaAvanzada = ({
         );
       },
     },
-
     {
       headerName: 'Tipo documento',
       field: 'tipo_documento',
@@ -204,15 +173,43 @@ const DialogBusquedaAvanzada = ({
     },
   ];
 
+  // Consultamos si el usuario existe
+  useEffect(() => {
+    if (numero_documento !== undefined && numero_documento !== '') {
+      set_numero_documento(numero_documento);
+    }
+  }, [numero_documento]);
+
+  useEffect(() => {
+    if (watch_search_person('tipo_persona') !== undefined) {
+      set_tipo_persona(watch_search_person('tipo_persona'));
+    }
+  }, [watch_search_person('tipo_persona')]);
+
+  useEffect(() => {
+    if (watch_search_person('tipo_documento') !== undefined) {
+      set_tipo_documento(watch_search_person('tipo_documento'));
+    }
+  }, [watch_search_person('tipo_documento')]);
+
+  useEffect(() => {
+    if (tipo_persona === 'J') {
+      set_value_search_person('tipo_documento', 'NT');
+      set_tipo_documento('NT');
+    } else {
+      set_tipo_documento('');
+    }
+  }, [tipo_persona]);
+
   const trigger_user_person_create_active = (data: any): void => {
+    user_person_create_active();
     set_is_modal_active(false);
-    dispatch(set_action_admin_users('CREATE'));
     dispatch(set_data_person_search(data));
   };
 
   const trigger_user_edit_active = (data: any): void => {
+    user_edit_active();
     set_is_modal_active(false);
-    dispatch(set_action_admin_users('EDIT'));
     dispatch(set_data_person_search(data));
   };
 
@@ -229,7 +226,6 @@ const DialogBusquedaAvanzada = ({
         data.primer_apellido
       )
     );
-    set_buscando_persons(true);
   };
 
   // Establece los valores del formulario
@@ -243,7 +239,6 @@ const DialogBusquedaAvanzada = ({
 
   // Se usa para escuchar los cambios de valor del componente CustomSelect
   const on_change = (e: SelectChangeEvent<string>): void => {
-    // console.log(e);
     set_value_form_search_person(e.target.name, e.target.value);
   };
 
@@ -287,7 +282,6 @@ const DialogBusquedaAvanzada = ({
                 name="tipo_persona"
                 value={tipo_persona}
                 options={tipo_persona_opt}
-                loading={loading}
                 disabled={false}
                 required={true}
                 errors={errors_search_person}
@@ -302,7 +296,6 @@ const DialogBusquedaAvanzada = ({
                 name="tipo_documento"
                 value={tipo_documento}
                 options={tipo_documento_opt}
-                loading={loading}
                 disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
                 required={true}
                 errors={errors_search_person}
@@ -351,19 +344,17 @@ const DialogBusquedaAvanzada = ({
             </Grid>
           </Grid>
         </Box>
-        {buscando_persons && (
-          <Grid item xs={12} sx={{ mt: '15px' }}>
-            <DataGrid
-              density="compact"
-              autoHeight
-              rows={persons}
-              columns={columns_persons}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
-              getRowId={(row) => row.id_persona}
-            />
-          </Grid>
-        )}
+        <Grid item xs={12} sx={{ mt: '15px' }}>
+          <DataGrid
+            density="compact"
+            autoHeight
+            rows={persons ?? []}
+            columns={columns_persons}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            getRowId={(row) => row.id_persona}
+          />
+        </Grid>
       </DialogContent>
     </Dialog>
   );

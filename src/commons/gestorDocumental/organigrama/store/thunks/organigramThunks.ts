@@ -14,17 +14,14 @@ import {
   get_unitys
 } from '../slices/organigramSlice';
 // Interfaces
-import {
-  // type IObjOrganigram,
-  type IObjCreateOrganigram
-  // type FormValuesUnitys,
-  //  type IObjLevels,
-  //  type IObjUnitys
+import type{
+   DataCambioOrganigramaActual,
+   IObjCreateOrganigram
 } from '../../interfaces/organigrama';
 import { api } from '../../../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+const control_error = (message: ToastContent) =>
   toast.error(message, {
     position: 'bottom-right',
     autoClose: 3000,
@@ -54,7 +51,7 @@ export const get_mold_organigrams_service: any = (id: string | number) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `almacen/organigrama/unidades/get-jerarquia/${id}/`
+        `transversal/organigrama/unidades/get-jerarquia/${id}/`
       );
       dispatch(get_mold_organigrams(data.data));
       return data;
@@ -66,12 +63,11 @@ export const get_mold_organigrams_service: any = (id: string | number) => {
   };
 };
 
-// Obtener Organigrama
+// Obtener todos los organigramas
 export const get_organigrams_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
-    console.log(api);
     try {
-      const { data } = await api.get('almacen/organigrama/get/');
+      const { data } = await api.get('transversal/organigrama/get/');
       dispatch(get_organigrams(data.Organigramas));
       return data;
     } catch (error: any) {
@@ -81,12 +77,27 @@ export const get_organigrams_service = (): any => {
   };
 };
 
+// Obtener todos los organigramas terminado
+export const get_finished_organigrams_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('transversal/organigrama/get-terminados/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
 // Agregar Organigrama
 export const add_organigrams_service:any = (organigrama: any, set_position_tab_organigrama: Dispatch<SetStateAction<string>>) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             console.log(organigrama);   
-            const { data } = await api.post("almacen/organigrama/create/", organigrama);
+            const { data } = await api.post("transversal/organigrama/create/", organigrama);
             
             dispatch(get_organigrams_service());
             dispatch(current_organigram(data.detail));
@@ -112,7 +123,7 @@ export const edit_organigrams_service: any = (
     try {
       console.log(api.defaults)
       const { data } = await api.patch(
-        `almacen/organigrama/update/${id}/`,
+        `transversal/organigrama/update/${id}/`,
         organigrama
       );
       dispatch(get_organigrams_service());
@@ -130,7 +141,7 @@ export const edit_organigrams_service: any = (
 export const to_finalize_organigram_service:any = (id: string, set_position_tab_organigrama:  Dispatch<SetStateAction<string>>) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.put(`almacen/organigrama/finalizar/${id}/`);
+            const { data } = await api.put(`transversal/organigrama/finalizar/${id}/`);
             dispatch(get_organigrams_service());
             void Swal.fire({
                 position: "center", icon: "info", title: "Atención", text: data.detail,
@@ -145,13 +156,30 @@ export const to_finalize_organigram_service:any = (id: string, set_position_tab_
     };
 };
 
+// Reanudar organigrama
+export const to_resume_organigram_service:any = (id: string) => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.put(`transversal/organigrama/reanudar-organigrama/${id}/`);
+          dispatch(get_organigrams_service());
+          void Swal.fire({
+              position: "center", icon: "info", title: "Atención", text: data.detail,
+          });
+          return data;
+      } catch (error: any) {
+          control_error(error.response.data.detail);
+          return error as AxiosError;
+      }
+  };
+};
+
 // Niveles
 // Obtener Niveles
 export const get_levels_service: any = (id: string | number) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `almacen/organigrama/niveles/get-by-organigrama/${id}/`
+        `transversal/organigrama/niveles/get-by-organigrama/${id}/`
       );
       dispatch(get_levels(data.data));
       return data;
@@ -171,7 +199,7 @@ export const update_levels_service: any = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(
-        `almacen/organigrama/niveles/update/${id}/`,
+        `transversal/organigrama/niveles/update/${id}/`,
         newLevels
       );
       dispatch(get_levels_service(id));
@@ -191,7 +219,7 @@ export const get_unitys_service: any = (id: string | number) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `almacen/organigrama/unidades/get-by-organigrama/${id}/`
+        `transversal/organigrama/unidades/get-by-organigrama/${id}/`
       );
       dispatch(get_unitys(data.data));
       return data;
@@ -211,7 +239,7 @@ export const update_unitys_service: any = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(
-        `almacen/organigrama/unidades/update/${id}/`,
+        `transversal/organigrama/unidades/update/${id}/`,
         new_unitys
       );
       dispatch(get_unitys_service(id));
@@ -223,4 +251,90 @@ export const update_unitys_service: any = (
       return error as AxiosError;
     }
   };
+};
+
+// Trae info de usuario para delegarle un organigrama posteriormente
+export const get_nuevo_user_organigrama: any = (tipo_documento:  string, numero_documento: number ) => {
+  return async () => {
+    try {
+      const { data } = await api.get(
+        `transversal/organigrama/get-nuevo-user-organigrama/${tipo_documento}/${numero_documento}/`
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_busqueda_avanzada_user_organigrama:any = (primer_nombre:  string, primer_apellido: string) => { 
+  return async() => {
+    try {
+      const { data } = await api.get(
+        `transversal/organigrama/get-nuevo-user-organigrama-filters/?primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}`
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  }
+};
+
+export const delegar_organigrama_persona:any = (id_persona: number, organigrama: string) => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.post(`transversal/organigrama/delegate-organigrama-persona/?id_persona=${id_persona}&id_organigrama=${organigrama}`);          
+          control_success("Delegacion de organigrama exitosa");
+          return data;
+      } catch (error: any) {
+          console.log("delegate_organigram_user");
+          control_error(error.response.data.detail);
+         
+          return error as AxiosError;
+      }
+  };
+};
+
+export const cambio_organigrama_actual:any = (data_cambio:DataCambioOrganigramaActual) => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.put('transversal/organigrama/change-actual-organigrama/', data_cambio);          
+          control_success("Proceso exitoso");
+          return data;
+      } catch (error: any) {
+          control_error(error.response.data.detail);
+          return error as AxiosError;
+      }
+  };
+};
+
+export const get_organigrama_actual:any = () => { 
+  return async() => {
+    try {
+      const { data } = await api.get(
+        'transversal/organigrama/get-organigrama-actual/'
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  }
+};
+
+
+export const get_organigramas_posibles:any = () => { 
+  return async() => {
+    try {
+      const { data } = await api.get(
+        'transversal/organigrama/get-organigramas-posibles/'
+      );
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  }
 };

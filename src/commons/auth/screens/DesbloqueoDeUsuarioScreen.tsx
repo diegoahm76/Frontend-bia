@@ -1,4 +1,4 @@
-import { DesbloqueodeUsuario } from '../components/DesbloqueoDeUsuarioForm';
+import { DesbloqueodeUsuario } from '../components/DesbloqueoDeUsuarioForm/DesbloqueoDeUsuarioForm';
 import { AuthLayout } from '../layouts/AuthLayout';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

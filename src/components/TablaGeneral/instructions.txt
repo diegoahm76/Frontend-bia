@@ -1,0 +1,87 @@
+/** 
+ 
+ ** en la pantalla donde llame le componente debe llamarlo con los siguientes parametros
+*! importa el modulo
+ * @param: const columns = [
+  {field: 'nombre', header: 'nombre',visible: true},
+  agrega cuntos registros necesite mostrar
+];
+
+* @param: const rows = [
+{
+  id: '1001',
+  code: 'sdfsdf',
+  name: 'Bamboo ssss',
+  description: 'Product Descasdasdription',
+  image: 'bamboo-watch.jpg',
+  price: 65,
+  category: 'Accessories',
+  quantity: 25,
+  inventoryStatus: 'INSTOCK',
+  rating: 5,
+  status:'unqualified'
+}
+];
+
+*! adiciona donde quierausar el componente bajo adicionando estas propiedades
+<div className="App">
+      <TableGeneral 
+      show_button_export
+      tittle={'Productos'} // titulo que dese mostrar al momento de bajar a excel no aplica para el csv
+      columns={columns} //parametros de columnas antes declarados
+      rowsData={rows} //rows antes declarados pusheados de la api
+      staticscroll={true} //lo puede activar o no para dejar statica el header y hacer scroll
+      stylescroll={"780px"} // va de la mano con el anterior para ajsutar ala pantalla procurar que no pase del tamapo de pantalla
+       />
+    </div>
+
+* TODO: un breve ejemplo
+import TableGeneral from './components/TableGeneral';
+import { row } from './../commons/almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
+import { type } from './../../utils/parser/types';
+
+const columns = [
+  {field: 'code', header: 'Code',visible: true},
+  {field: 'name', header: 'Name',visible: false},
+  {field: 'category', header: 'Category',visible: true},
+  {field: 'quantity', header: 'Quantity',visible: true},
+  {field: 'description', header: 'description',visible: true},
+  {field: 'price', header: 'price',visible: true},
+  {field: 'status', header: 'statuss',visible: true}
+];
+
+const rows = [
+{
+  id: '1001',
+  code: 'sdfsdf',
+  name: 'Bamboo ssss',
+  description: 'Product Descasdasdription',
+  image: 'bamboo-watch.jpg',
+  price: 65,
+  category: 'Accessories',
+  quantity: 25,
+  inventoryStatus: 'INSTOCK',
+  rating: 5,
+  status:'unqualified'
+}
+];
+
+function App() {
+  return (
+    <div className="App">
+      <TableGeneral 
+      show_button_export
+      tittle={'Productos'} 
+      columns={columns} 
+      rowsData={rows}
+      staticscroll={true}
+      stylescroll={"780px"}
+       />
+    </div>
+  );
+}
+
+export default App;
+
+
+**/

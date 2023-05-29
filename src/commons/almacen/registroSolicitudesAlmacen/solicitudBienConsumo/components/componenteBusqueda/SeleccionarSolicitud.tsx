@@ -225,4 +225,3 @@ const SeleccionarSolicitud = ({
 
 // eslint-disable-next-line no-restricted-syntax
 export default SeleccionarSolicitud;
-

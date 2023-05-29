@@ -1,34 +1,41 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, IconButton, Avatar, Tooltip, Checkbox, TextField, Stack, Button } from '@mui/material';
+import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
 import { Add } from '@mui/icons-material';
-import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { obligaciones_seleccionadas } from '../store/slices/FacilidadPagoSlices';
-import { useDispatch } from 'react-redux';
+import { obligaciones_seleccionadas } from '../slices/ObligacionesSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { type ObligacionesState } from '../interfaces/interfaces';
+import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
 
-interface Obligaciones {
-  obligaciones: ObligacionesState[];
+interface RootState {
+  obligaciones: {
+    obligaciones: ObligacionesUsuario;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuario: React.FC<Obligaciones> = (props: Obligaciones) => {
+export const TablaObligacionesUsuario: React.FC = () => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
-  const navigate = useNavigate();
+  const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
+  const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    set_lista_obligaciones(obligaciones.obligaciones)
+  }, [obligaciones.obligaciones])
 
   const handle_submit = async () => {
     const arr_registro = []
-    for(let i=0; i<props.obligaciones.length; i++){
+    for(let i=0; i<lista_obligaciones.length; i++){
       for(let j=0; j<selected.length; j++){
-        if(props.obligaciones[i].nombreObligacion === selected[j]){
-          arr_registro.push(props.obligaciones[i])
+        if(lista_obligaciones[i].nombre === selected[j]){
+          arr_registro.push(lista_obligaciones[i])
         }
       }
     }
@@ -48,14 +55,14 @@ export const TablaObligacionesUsuario: React.FC<Obligaciones> = (props: Obligaci
         return (
           <Checkbox
             onClick={(event) => {
-              handle_click(event, params.row.nombreObligacion)
+              handle_click(event, params.row.nombre)
             }}
           />
         )
       },
     },
     {
-      field: 'nombreObligacion',
+      field: 'nombre',
       headerName: 'Nombre Obligación',
       width: 150,
       renderCell: (params) => (
@@ -105,45 +112,24 @@ export const TablaObligacionesUsuario: React.FC<Obligaciones> = (props: Obligaci
       ),
     },
     {
-      field: 'carteras',
-      headerName: 'Valor Intereses - Días Mora',
-      width: 200,
-      valueGetter: (params) => {
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        return `${params.value.valor_intereses} - ${params.value.dias_mora}`
-
-      },
+      field: 'valor_intereses',
+      headerName: 'Valor Intereses',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
     },
     {
-      field: 'acciones',
-      headerName: 'Acciones',
+      field: 'dias_mora',
+      headerName: 'Días Mora',
       width: 150,
-      renderCell: (params) => {
-        return (
-          <>
-            <Tooltip title="Ver">
-                <IconButton
-                  onClick={() => {}}
-                >
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
-                  >
-                    <ArticleIcon
-                      sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                    />
-
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-            </>
-        )
-      },
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
     },
   ];
 
@@ -170,11 +156,11 @@ export const TablaObligacionesUsuario: React.FC<Obligaciones> = (props: Obligaci
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    for(let i=0; i < props.obligaciones.length; i++){
-      for(let j=0; j < selected.length; j++){
-        if(props.obligaciones[i].nombreObligacion === selected[j]){
-          sub_capital = sub_capital + props.obligaciones[i].monto_inicial
-          sub_intereses = sub_intereses + props.obligaciones[i].carteras.valor_intereses
+    for(let i=0; i< lista_obligaciones.length; i++){
+      for(let j=0; j< selected.length; j++){
+        if(lista_obligaciones[i].nombre === selected[j]){
+          sub_capital = sub_capital + parseFloat(lista_obligaciones[i].monto_inicial)
+          sub_intereses = sub_intereses + parseFloat(lista_obligaciones[i].valor_intereses)
           set_capital(sub_capital)
           set_intereses(sub_intereses)
         }
@@ -206,12 +192,12 @@ export const TablaObligacionesUsuario: React.FC<Obligaciones> = (props: Obligaci
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={props.obligaciones}
+                rows={lista_obligaciones}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id}
+                getRowId={(row) => row.id_expediente}
               />
             </Box>
           </Grid>

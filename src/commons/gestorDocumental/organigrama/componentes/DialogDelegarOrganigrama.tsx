@@ -1,29 +1,41 @@
-import React from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import {
+  Box,
   TextField,
   Dialog,
-  DialogContent,
   DialogTitle,
+  DialogContent,
+  DialogActions,
+  Stack,
   IconButton,
   Grid,
-  Box,
   Divider,
-  Chip,
-  Typography,
-  Stepper,
-  Step,
-  StepButton,
+  Alert,
   Button,
-  // Alert,
+  Skeleton,
+  type SelectChangeEvent,
+  Typography,
 } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-import type { GridColDef } from '@mui/x-data-grid';
+import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
-// import { add_organigrams_service } from '../store/thunks/organigramThunks';
-// import { useAppDispatch } from '../../../../hooks';
+import SearchIcon from '@mui/icons-material/Search';
+import SaveIcon from '@mui/icons-material/Save';
+import { CustomSelect } from '../../../../components';
+import DialogBusquedaAvanzadaUserOrganigrama from './DialogBusquedaAvanzadaUserOrganigrama';
 import { useAppSelector } from '../../../../hooks';
+import { get_tipo_documento } from '../../../../request';
+import { control_error } from '../../../../helpers';
+import { type IList } from '../../../../interfaces/globalModels';
+import { type UserDelegacionOrganigrama } from '../interfaces/organigrama';
+
+import {
+  delegar_organigrama_persona,
+  get_nuevo_user_organigrama,
+  get_organigrams_service,
+} from '../store/thunks/organigramThunks';
 
 interface IProps {
   is_modal_active: boolean;
@@ -31,347 +43,355 @@ interface IProps {
 }
 
 interface FormValues {
+  tipo_documento: string;
+  numero_documento: string;
   nombre: string;
-  version: string;
-  descripcion: string;
 }
 
-const columns: GridColDef[] = [
-  {
-    field: 'tipo_documento',
-    headerName: 'Tipo de documento',
-    width: 50,
-    editable: true,
-  },
-  { field: 'id', headerName: 'Cedula', width: 90 },
-  {
-    field: 'nombre',
-    headerName: 'Nombre',
-    width: 150,
-    editable: true,
-  },
-  {
-    field: 'acciones',
-    headerName: 'Seleccionar',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 100,
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.tipo_documento || ''} ${params.row.nombre || ''}`,
-  },
-];
-
-const rows = [{ id: 1033752674, nombre: 'Snow', tipo_documento: 'CC' }];
-
-const steps = ['Seleccionar nuevo encargado', 'Verificación de delegación'];
+type keys_object = 'tipo_documento' | 'numero_documento' | 'nombre';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogDelegarOrganigrama = ({
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
-  // const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const { organigram_current } = useAppSelector((state) => state.organigram);
-  const [active_step, set_active_step] = React.useState(0);
-  const [completed, set_completed] = React.useState<Record<number, boolean>>(
-    {}
-  );
-  const { control: control_organigrama, handleSubmit: handle_submit } =
-    useForm<FormValues>();
+  const [
+    modal_busqueda_avanzada_user_organigram,
+    set_modal_busqueda_avanzada_user_organigram,
+  ] = useState<boolean>(false);
+  const [tipo_documento, set_tipo_documento] = useState('');
+  const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
+  const [loading, set_loading] = useState<boolean>(false);
+  const [data_user_por_asignar, set_data_user_por_asignar] =
+    useState<UserDelegacionOrganigrama>();
+  const {
+    handleSubmit: handle_submit_search_for_delegation,
+    watch: watch_search_for_delegation,
+    setValue: set_value_search_for_delegation,
+    register: register_search_for_delegation,
+    formState: { errors: errors_search_for_delegation },
+    reset: reset_search_for_delegation,
+  } = useForm<FormValues>();
 
-  const handle_close_crear_organigrama = (): void => {
+  const handle_close_delegar_organigrama = (): void => {
     set_is_modal_active(false);
   };
 
-  const on_submit = (data: FormValues): void => {
-    // void dispatch(add_organigrams_service(data, set_position_tab_organigrama));
-    handle_close_crear_organigrama();
+  const on_submit = async (data: FormValues): Promise<void> => {
+    set_loading(true);
+    try {
+      const response = await dispatch(
+        get_nuevo_user_organigrama(data.tipo_documento, data.numero_documento)
+      );
+      set_data_user_por_asignar(response.data);
+    } catch (err) {
+      control_error(err);
+    } finally {
+      set_loading(false);
+    }
   };
 
-  const total_steps = (): number => {
-    return steps.length;
+  const handle_submit_delegacion_organigrama = async (): Promise<void> => {
+    if (data_user_por_asignar?.id_persona !== null) {
+      await dispatch(
+        delegar_organigrama_persona(
+          data_user_por_asignar?.id_persona,
+          organigram_current.id_organigrama
+        )
+      );
+      handle_close_delegar_organigrama();
+      void dispatch(get_organigrams_service());
+      reset_search_for_delegation();
+    } else {
+      control_error('Selecciona usuario para delegación de organigrama');
+    }
   };
 
-  const completed_steps = (): number => {
-    return Object.keys(completed).length;
+  const handle_search_result = (data: UserDelegacionOrganigrama): void => {
+    set_loading(true);
+    reset_search_for_delegation();
+    set_data_user_por_asignar(data);
+    set_tipo_documento(data.tipo_documento);
+    set_loading(false);
   };
 
-  const is_last_step = (): boolean => {
-    return active_step === total_steps() - 1;
+  // Establece los valores del formulario
+  const set_value_form = (name: string, value: string): void => {
+    set_value_search_for_delegation(name as keys_object, value);
   };
 
-  const all_steps_completed = (): boolean => {
-    return completed_steps() === total_steps();
+  // Cambio inputs
+  const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_value_form(e.target.name, e.target.value);
   };
 
-  const handle_next = (): void => {
-    const new_active_step =
-      is_last_step() && !all_steps_completed()
-        ? // It's the last step, but not all steps have been completed,
-          // find the first step that has been completed
-          steps.findIndex((step, i) => !(i in completed))
-        : active_step + 1;
-    set_active_step(new_active_step);
+  const on_change = (e: SelectChangeEvent<string>): void => {
+    set_value_form(e.target.name, e.target.value);
   };
 
-  const handle_back = (): void => {
-    set_active_step((prev_active_step) => prev_active_step - 1);
+  useEffect(() => {
+    set_value_form('tipo_documento', tipo_documento);
+  }, [tipo_documento]);
+
+  useEffect(() => {
+    if (watch_search_for_delegation('tipo_documento') !== undefined) {
+      set_tipo_documento(watch_search_for_delegation('tipo_documento'));
+    }
+  }, [watch_search_for_delegation('tipo_documento')]);
+
+  const get_selects_options = async (): Promise<void> => {
+    set_loading(true);
+    try {
+      const {
+        data: { data: res_tipo_documento },
+      } = await get_tipo_documento();
+      set_tipo_documento_opt(res_tipo_documento ?? []);
+    } catch (err) {
+      control_error(err);
+    } finally {
+      set_loading(false);
+    }
   };
 
-  const handle_step = (step: number) => () => {
-    set_active_step(step);
-  };
-
-  const handle_complete = (): void => {
-    const new_completed = completed;
-    new_completed[active_step] = true;
-    set_completed(new_completed);
-    handle_next();
-  };
-
-  const handle_reset = (): void => {
-    set_active_step(0);
-    set_completed({});
-  };
+  useEffect(() => {
+    void get_selects_options();
+  }, []);
 
   return (
-    <Dialog
-      maxWidth="sm"
-      open={is_modal_active}
-      onClose={handle_close_crear_organigrama}
-    >
-      <DialogTitle>
-        Delegacion de organigrama
-        <IconButton
-          aria-label="close"
-          onClick={() => {
-            set_is_modal_active(false);
-          }}
-          sx={{
-            position: 'absolute',
-            right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500],
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <Divider />
-      <DialogContent sx={{ mb: '0px' }}>
-        <Typography sx={{ textAlign: 'center' }}>
-          Organigrama: {organigram_current.nombre}
-        </Typography>
-        <Typography sx={{ textAlign: 'center', mb: '20px' }}>
-          Versión:{' '}
-          <Chip
-            size="small"
-            label={organigram_current.version}
-            color="success"
-            variant="outlined"
-          />
-        </Typography>
-        {/* <Alert severity="info" sx={{ m: '10px 0' }}>
-          Al seleccionar un nuevo encargado para este organigrama
-          automaticamente ya no tendrás acceso a los permisos para modificar el
-          mismo
-        </Alert> */}
-        <Box>
-          <Stepper
-            alternativeLabel
-            activeStep={active_step}
-            sx={{ mb: '20px' }}
+    <>
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        open={is_modal_active}
+        onClose={handle_close_delegar_organigrama}
+      >
+        <DialogTitle>
+          Delegación de organigrama
+          <IconButton
+            aria-label="close"
+            onClick={() => {
+              set_is_modal_active(false);
+            }}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
           >
-            {steps.map((label, index) => (
-              <Step key={label} completed={completed[index]}>
-                <StepButton color="inherit" onClick={handle_step(index)}>
-                  {label}
-                </StepButton>
-              </Step>
-            ))}
-          </Stepper>
-          <div>
-            {all_steps_completed() ? (
-              <React.Fragment>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                  All steps completed - you&apos;re finished
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                  <Box sx={{ flex: '1 1 auto' }} />
-                  <Button onClick={handle_reset}>Reset</Button>
-                </Box>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                {active_step === 0 ? (
-                  <>
-                    <Box
-                      component="form"
-                      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                      onSubmit={handle_submit(on_submit)}
-                    >
-                      <Controller
-                        name="nombre"
-                        control={control_organigrama}
-                        defaultValue=""
-                        rules={{ required: true }}
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
-                          <TextField
-                            margin="dense"
-                            fullWidth
-                            size="small"
-                            label="Buscar"
-                            variant="outlined"
-                            value={value}
-                            onChange={onChange}
-                          />
-                        )}
-                      />
-                    </Box>
-                    <DataGrid
-                      density="compact"
-                      autoHeight
-                      rows={rows}
-                      columns={columns}
-                      pageSize={3}
-                      rowsPerPageOptions={[3]}
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <Divider />
+        <DialogContent sx={{ mb: '0px' }}>
+          <Box>
+            <Box>
+              <Typography sx={{ mb: '10px' }}>
+                Información de organigrama
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6} md={3}>
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <TextField
+                      fullWidth
+                      label="Organigrama"
+                      size="small"
+                      value={organigram_current.nombre}
+                      disabled={true}
                     />
-                  </>
-                ) : (
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sm={4}>
-                      <Controller
-                        name="nombre"
-                        control={control_organigrama}
-                        defaultValue=""
-                        rules={{ required: true }}
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
-                          <TextField
-                            margin="dense"
-                            fullWidth
-                            size="small"
-                            label="Nombre"
-                            variant="outlined"
-                            disabled={
-                              organigram_current.fecha_terminado !== null
-                            }
-                            value={value}
-                            onChange={onChange}
-                            error={!(error == null)}
-                            helperText={
-                              error != null
-                                ? 'Es obligatorio ingresar un nombre'
-                                : 'Ingrese nombre'
-                            }
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Controller
-                        name="version"
-                        control={control_organigrama}
-                        defaultValue=""
-                        rules={{ required: true }}
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
-                          <TextField
-                            margin="dense"
-                            fullWidth
-                            size="small"
-                            label="Versión"
-                            variant="outlined"
-                            disabled={
-                              organigram_current.fecha_terminado !== null
-                            }
-                            value={value}
-                            onChange={onChange}
-                            error={!(error == null)}
-                            helperText={
-                              error != null
-                                ? 'Es obligatorio ingresar una versión'
-                                : 'Ingrese versión'
-                            }
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={4}>
-                      <Controller
-                        name="descripcion"
-                        control={control_organigrama}
-                        defaultValue=""
-                        rules={{ required: true }}
-                        render={({
-                          field: { onChange, value },
-                          fieldState: { error },
-                        }) => (
-                          <TextField
-                            margin="dense"
-                            fullWidth
-                            size="small"
-                            label="Descripcion"
-                            variant="outlined"
-                            value={value}
-                            disabled={
-                              organigram_current.fecha_terminado !== null
-                            }
-                            onChange={onChange}
-                            error={!(error == null)}
-                            helperText={
-                              error != null
-                                ? 'Es obligatorio ingresar una descripción'
-                                : 'Ingrese descripción'
-                            }
-                          />
-                        )}
-                      />
-                    </Grid>
-                  </Grid>
-                )}
-                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                  <Button
-                    color="inherit"
-                    disabled={active_step === 0}
-                    onClick={handle_back}
-                    sx={{ mr: 1 }}
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <TextField
+                    fullWidth
+                    label="Versión"
+                    size="small"
+                    value={organigram_current.version}
+                    disabled={true}
+                  />
+                </Grid>
+                <Alert severity="info" sx={{ ml: '15px', mt: '20px' }}>
+                  Al seleccionar un nuevo encargado para este organigrama
+                  automaticamente ya no tendrá acceso a los permisos para
+                  modificar el mismo
+                </Alert>
+              </Grid>
+            </Box>
+            <Box sx={{ p: 2, border: '1px dashed grey', mt: '20px' }}>
+              <Typography sx={{ mb: '10px' }}>Encargado actual</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6} md={3}>
+                  <CustomSelect
+                    onChange={on_change}
+                    label="Tipo de documento *"
+                    name="tipo_documento"
+                    value={organigram_current.tipo_documento?.toString() ?? ''}
+                    options={tipo_documento_opt}
+                    disabled={true}
+                    required={false}
+                    errors={errors_search_for_delegation}
+                    register={register_search_for_delegation}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <TextField
+                      fullWidth
+                      autoFocus
+                      label="Número de documento"
+                      value={organigram_current.numero_documento}
+                      size="small"
+                      disabled={true}
+                    />
+                  )}
+                </Grid>
+
+                <Grid item xs={12} sm={6} md={3}>
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <TextField
+                      fullWidth
+                      label="Nombre de usuario"
+                      size="small"
+                      value={organigram_current?.nombre_completo}
+                      disabled={true}
+                    />
+                  )}
+                </Grid>
+              </Grid>
+            </Box>
+            <Box
+              component="form"
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+              onSubmit={handle_submit_search_for_delegation(on_submit)}
+              sx={{ p: 2, border: '1px dashed grey', mt: '20px' }}
+              autoComplete="off"
+            >
+              <Typography sx={{ mb: '10px' }}>Nuevo encargado</Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6} md={3}>
+                  <CustomSelect
+                    onChange={on_change}
+                    label="Tipo de documento *"
+                    name="tipo_documento"
+                    value={tipo_documento}
+                    options={tipo_documento_opt}
+                    disabled={false}
+                    required={false}
+                    errors={errors_search_for_delegation}
+                    register={register_search_for_delegation}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <TextField
+                      fullWidth
+                      label="Número de documento *"
+                      type="number"
+                      size="small"
+                      value={data_user_por_asignar?.numero_documento}
+                      disabled={false}
+                      inputProps={{
+                        inputMode: 'numeric',
+                        pattern: '[0-9]*',
+                      }}
+                      error={
+                        errors_search_for_delegation.numero_documento?.type ===
+                        'required'
+                      }
+                      helperText={
+                        errors_search_for_delegation.numero_documento?.type ===
+                        'required'
+                          ? 'Este campo es obligatorio'
+                          : ''
+                      }
+                      {...register_search_for_delegation('numero_documento', {
+                        required: true,
+                      })}
+                      onChange={handle_change}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} sm={6} md={2}>
+                  <LoadingButton
+                    type="submit"
+                    fullWidth
+                    loading={false}
+                    color="primary"
+                    variant="contained"
+                    startIcon={<SearchIcon />}
                   >
-                    Volver
-                  </Button>
-                  <Box sx={{ flex: '1 1 auto' }} />
-                  <Button onClick={handle_next} sx={{ mr: 1 }}>
-                    Siguiente
-                  </Button>
-                  {active_step !== steps.length &&
-                    (completed[active_step] ? (
-                      <Typography
-                        variant="caption"
-                        sx={{ display: 'inline-block', textAlign: 'center' }}
-                      >
-                        Step {active_step + 1} already completed
-                      </Typography>
-                    ) : (
-                      <Button onClick={handle_complete}>
-                        {completed_steps() === total_steps() - 1
-                          ? 'Finish'
-                          : 'Complete Step'}
-                      </Button>
-                    ))}
-                </Box>
-              </React.Fragment>
-            )}
-          </div>
-        </Box>
-      </DialogContent>
-    </Dialog>
+                    {'BUSCAR'}
+                  </LoadingButton>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                  {loading ? (
+                    <Skeleton variant="rectangular" width="100%" height={45} />
+                  ) : (
+                    <TextField
+                      fullWidth
+                      value={data_user_por_asignar?.nombre_completo}
+                      label="Nombre de usuario"
+                      size="small"
+                      disabled={true}
+                    />
+                  )}
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+          >
+            <Button
+              variant="outlined"
+              onClick={handle_close_delegar_organigrama}
+              startIcon={<CloseIcon />}
+            >
+              CERRAR
+            </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={() => {
+                set_modal_busqueda_avanzada_user_organigram(true);
+              }}
+              startIcon={<SearchIcon />}
+            >
+              BUSQUEDA AVANZADA DE USUARIO
+            </Button>
+            <Button
+              type="button"
+              variant="contained"
+              onClick={() => {
+                void handle_submit_delegacion_organigrama();
+              }}
+              startIcon={<SaveIcon />}
+            >
+              GUARDAR
+            </Button>
+          </Stack>
+        </DialogActions>
+      </Dialog>
+      <DialogBusquedaAvanzadaUserOrganigrama
+        is_modal_active={modal_busqueda_avanzada_user_organigram}
+        set_is_modal_active={set_modal_busqueda_avanzada_user_organigram}
+        search_result={handle_search_result}
+      />
+    </>
   );
 };
 

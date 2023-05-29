@@ -2,11 +2,11 @@
 import { Grid, Box } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { type ObligacionesState } from '../interfaces/interfaces';
+import { type Obligacion } from '../interfaces/interfaces';
 
 interface RootState {
   obligaciones: {
-    obligaciones: ObligacionesState[];
+    obligaciones: Obligacion[];
   }
 }
 
@@ -16,7 +16,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'nombreObligacion',
+      field: 'nombre',
       headerName: 'Nombre Obligación',
       width: 150,
       renderCell: (params) => (
@@ -111,7 +111,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id}
+                getRowId={(row) => row.id_expediente}
               />
             </Box>
           </Grid>

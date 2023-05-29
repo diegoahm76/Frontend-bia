@@ -11,8 +11,9 @@ api.interceptors.request.use(
       if (token !== null) {
         request.headers.Authorization = `Bearer ${token}`;
       }
-    } catch (e) {}
-
+    } catch (e) {
+      console.log(e);
+    }
     return request;
   },
   async (error) => {

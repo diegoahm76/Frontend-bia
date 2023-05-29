@@ -44,7 +44,6 @@ interface PropsBuscador {
 export const BuscadorPersona: React.FC<PropsBuscador> = ({
   onResult,
 }: PropsBuscador) => {
-
   const columns: GridColDef[] = [
     { field: 'id_persona', headerName: 'ID', sortable: true, width: 70 },
     {
@@ -233,8 +232,27 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
       const {
         data: { data },
       } = await get_person_by_document(tipo_documento, numero_documento);
-      if (data?.id_persona !== undefined) {
+      if (data !== undefined) {
         onResult(data);
+      } else {
+        const new_data = {
+          id: 0,
+          id_persona: 0,
+          tipo_persona: tipo_documento === 'NT' ? 'J' : 'N',
+          tipo_documento,
+          numero_documento,
+          primer_nombre: '',
+          segundo_nombre: '',
+          primer_apellido: '',
+          segundo_apellido: '',
+          nombre_completo: '',
+          razon_social: '',
+          nombre_comercial: '',
+          tiene_usuario: false,
+          digito_verificacion: '',
+          cod_naturaleza_empresa: '',
+        };
+        onResult(new_data);
       }
     } catch (error) {
       const temp_error = error as AxiosError;
@@ -300,7 +318,6 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
               name="tipo_documento"
               value={tipo_documento}
               options={tipo_documento_opt}
-              loading={is_loading}
               disabled={is_loading}
               required={true}
               errors={errors}
@@ -312,12 +329,18 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
             {is_loading ? (
               <Skeleton variant="rectangular" width="100%" height={45} />
             ) : (
-              <FormControl size="small" variant="outlined" fullWidth error={errors.numero_documento?.type === 'required'}>
-                <InputLabel htmlFor="documento">Número de documento *</InputLabel>
+              <FormControl
+                size="small"
+                variant="outlined"
+                fullWidth
+                error={errors.numero_documento?.type === 'required'}
+              >
+                <InputLabel htmlFor="documento">
+                  Número de documento *
+                </InputLabel>
                 <OutlinedInput
                   id="documento"
-                  {...register('numero_documento', {
-                  })}
+                  {...register('numero_documento', {})}
                   label="Número de documento *"
                 />
               </FormControl>
@@ -327,7 +350,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
             <LoadingButton
               aria-label="toggle password visibility"
               variant="contained"
-              type='submit'
+              type="submit"
               style={{ marginRight: '10px' }}
               loading={is_search}
               disabled={is_search}
@@ -361,7 +384,6 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   name="tipo_documento"
                   value={tipo_documento_av}
                   options={tipo_documento_opt}
-                  loading={is_loading}
                   disabled={is_loading}
                   required={true}
                   errors={errors}
@@ -444,7 +466,7 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
-                    {tipo_documento_av === 'NT' ? (
+                      {tipo_documento_av === 'NT' ? (
                         <>
                           <DataGrid
                             rows={rows}
@@ -465,7 +487,6 @@ export const BuscadorPersona: React.FC<PropsBuscador> = ({
                           />
                         </>
                       )}
-
                     </Box>
                   </Grid>
                 </>
