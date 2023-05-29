@@ -565,14 +565,10 @@ const AutorizaNotificacion: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Volver</Typography>
             </Button>
           </Grid>
-          <Grid item>
-            <Button variant="outlined" color="error" onClick={handleBack}>
-              Volver
-            </Button>
-          </Grid>
+          
           <Grid item>
             <LoadingButton
               type="submit"
@@ -634,7 +630,7 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -800,7 +796,7 @@ const DatosAcceso: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
