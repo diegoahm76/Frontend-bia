@@ -36,7 +36,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
-      console.log(selected_file.name);
       set_file_name(selected_file.name);
     }
   };

@@ -16,7 +16,8 @@ import type {
   HistoricoRepresentanteLegal,
   InfoPersona,
   ResponseServer,
-  UpdateAutorizaNotificacion
+  UpdateAutorizaNotificacion,
+  UpdateAutorizaNotificacionPropia
 } from '../../../interfaces/globalModels';
 
 // editar datos persona restringida naturual
@@ -136,9 +137,17 @@ export const consultar_historico_email = async (
 };
 // consulta autorizacion notificaciones
 export const consultar_notificaciones = async (
-  id: number | undefined | null
+  id: number
 ): Promise<UpdateAutorizaNotificacion> => {
   const { data } = await api.get<ResponseServer<UpdateAutorizaNotificacion>>(
+    `personas/get-by-id/${id ?? 0}/`
+  );
+  return data.data;
+};
+export const consultar_notificaciones_cuenta_propia = async (
+  id: number
+): Promise<UpdateAutorizaNotificacionPropia> => {
+  const { data } = await api.get<ResponseServer<UpdateAutorizaNotificacionPropia>>(
     `personas/get-by-id/${id ?? 0}/`
   );
   return data.data;

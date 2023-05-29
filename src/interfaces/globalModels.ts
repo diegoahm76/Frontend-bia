@@ -461,6 +461,10 @@ export interface UpdateAutorizaNotificacion {
   acepta_autorizacion_email: boolean | undefined;
   acepta_autorizacion_sms: boolean | undefined;
 }
+export interface UpdateAutorizaNotificacionPropia {
+  acepta_notificacion_email: boolean | undefined;
+  acepta_notificacion_sms: boolean | undefined;
+}
 
 export interface DatosVinculacionCormacarena {
   id_unidad_organizacional_actual: number;
