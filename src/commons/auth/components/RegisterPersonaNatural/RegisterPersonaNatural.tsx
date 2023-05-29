@@ -40,7 +40,6 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
   register,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     departamentos_opt,
     ciudades_opt,
@@ -145,7 +144,6 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
             name="pais_nacimiento"
             value={pais_nacimiento}
             options={paises_options}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -159,7 +157,6 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
             name="sexo"
             value={genero}
             options={genero_opt}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -173,7 +170,6 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
             name="estado_civil"
             value={estado_civil}
             options={estado_civil_opt}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -194,7 +190,6 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
             name="departamento_expedicion"
             value={departamento_expedicion}
             options={departamentos_opt}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -208,7 +203,6 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
             name="cod_municipio_expedicion_id"
             value={ciudad_expedicion}
             options={ciudades_opt}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -257,7 +251,6 @@ const DatosResidencia: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     dpts_residencia_opt,
     ciudades_residencia_opt,
@@ -282,7 +275,6 @@ const DatosResidencia: (props: PropsElement) => JSX.Element = ({
             name="pais_residencia"
             value={pais_residencia}
             options={paises_options}
-            loading={loading}
             required={true}
             errors={errors}
             register={register}
@@ -297,7 +289,6 @@ const DatosResidencia: (props: PropsElement) => JSX.Element = ({
                 name="departamento_residencia"
                 value={departamento_residencia}
                 options={dpts_residencia_opt}
-                loading={loading}
                 required={true}
                 errors={errors}
                 register={register}
@@ -310,7 +301,6 @@ const DatosResidencia: (props: PropsElement) => JSX.Element = ({
                 name="municipio_residencia"
                 value={municipio_residencia}
                 options={ciudades_residencia_opt}
-                loading={loading}
                 disabled={departamento_residencia === '' ?? true}
                 required={true}
                 errors={errors}
@@ -400,7 +390,6 @@ const DatosNotifiacion: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     dpto_notifiacion_opt,
     ciudad_notificacion_opt,
@@ -441,7 +430,6 @@ const DatosNotifiacion: (props: PropsElement) => JSX.Element = ({
             name="pais_notificacion"
             value={'CO'}
             options={paises_options}
-            loading={loading}
             disabled={true}
             required={false}
             errors={errors}
@@ -455,7 +443,6 @@ const DatosNotifiacion: (props: PropsElement) => JSX.Element = ({
             name="dpto_notifiacion"
             value={dpto_notifiacion}
             options={dpto_notifiacion_opt}
-            loading={loading}
             required={true}
             errors={errors}
             register={register}
@@ -468,7 +455,6 @@ const DatosNotifiacion: (props: PropsElement) => JSX.Element = ({
             name="cod_municipio_notificacion_nal"
             value={ciudad_notificacion}
             options={ciudad_notificacion_opt}
-            loading={loading}
             disabled={dpto_notifiacion === '' ?? true}
             required={true}
             errors={errors}
@@ -626,7 +612,6 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     departamento_laboral,
     municipio_laboral,
@@ -675,7 +660,6 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
             name="pais_laboral"
             value={'CO'}
             options={paises_options}
-            loading={loading}
             required={false}
             disabled={true}
             errors={errors}
@@ -689,7 +673,6 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
             name="departamento_laboral"
             value={departamento_laboral}
             options={dpto_laboral_opt}
-            loading={loading}
             required={false}
             errors={errors}
             register={register}
@@ -702,7 +685,6 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
             name="cod_municipio_laboral_nal"
             value={municipio_laboral}
             options={departamento_laboral_opt}
-            loading={loading}
             disabled={departamento_laboral === '' ?? true}
             required={false}
             errors={errors}
