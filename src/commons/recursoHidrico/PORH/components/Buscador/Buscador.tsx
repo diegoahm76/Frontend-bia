@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useContext } from 'react';
-import { TextField, InputLabel } from '@mui/material';
+import { TextField, InputLabel, Button } from '@mui/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { DataContext } from '../../context/contextData';
 
@@ -35,6 +35,9 @@ export const BuscadorAtomPORH = (props: any): JSX.Element => {
         <TextField
         name = {label}
          id="outlined-basic" label="Outlined" variant="outlined" />
+         <Button variant="contained">
+          
+         </Button>
       </form>
     </div>
   );
