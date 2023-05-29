@@ -203,7 +203,6 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
                 name="ccd"
                 value={ccd_selected}
                 options={list_ccds}
-                loading={loading}
                 disabled={false}
                 required={true}
                 errors={errors_elegir_organigrama_actual}
