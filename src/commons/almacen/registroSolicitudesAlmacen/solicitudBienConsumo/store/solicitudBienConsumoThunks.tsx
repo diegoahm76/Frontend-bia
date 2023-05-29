@@ -8,7 +8,7 @@ import { api } from '../../../../../api/axios';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
 // import { log } from 'console';
-import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero, } from './slices/indexSolicitudBienesConsumo';
+import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero } from './slices/indexSolicitudBienesConsumo';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -44,6 +44,7 @@ export const get_num_solicitud = (): any => {
         try {
             const { data } = await api.get('almacen/solicitudes/get-nro-documento-solicitudes-bienes-consumo/');
 
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 dispatch(set_numero_solicitud(data["Número de solicitud"]))
             }
@@ -61,6 +62,7 @@ export const get_num_solicitud_vivero = (): any => {
         try {
             const { data } = await api.get('almacen/solicitudes-vivero/get-nro-documento-solicitudes-bienes-consumo-vivero/true/');
 
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 dispatch(set_numero_solicitud_vivero(data["Número de solicitud"]))
             }
@@ -83,6 +85,7 @@ export const crear_solicitud_bien_consumo: any = (
             const { data } = await api.put('almacen/solicitudes/crear-solicitud-bienes-de-consumo/', solicitud);
             //  dispatch(get_solicitud_consumo_id());
             console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
             } else {
@@ -111,6 +114,7 @@ export const crear_solicitud_bien_consumo_vivero: any = (
             const { data } = await api.put('almacen/solicitudes-vivero/crear-solicitud/', solicitud_vivero);
             //  dispatch(get_solicitud_consumo_id());
             console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (data.success) {
                 control_success(data.detail)
             } else {
@@ -226,7 +230,7 @@ export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
 
 
 
-
+// OBTENER SOLICITUD POR ID de solicitud por id 
 export const get_solicitud_service = (id: number | string): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
@@ -234,6 +238,7 @@ export const get_solicitud_service = (id: number | string): any => {
             console.log('Solicitudes recuperadas:', data);
             dispatch(set_current_solicitud(data.detail.info_solicitud));
             dispatch(set_bienes_solicitud(data.detail.info_items));
+            // dispatch(setID(Number(id)))
             return data;
         } catch (error: any) {
             console.log('get_solicitud_service');
@@ -242,6 +247,28 @@ export const get_solicitud_service = (id: number | string): any => {
         }
     };
 };
+
+// OBTENER SOLICITUD POR TIPO Y DOCUMENTO 
+export const get_solicitud_documento_service = (
+    type: string,
+    document: number | "",
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/solicitudes/get-solicitudes-pendientes-por-aprobar/${type ?? ""}/${document ?? ""}/`);
+            console.log('Solicitudes recuperadas:', data);
+            dispatch(set_solicitudes(data.data));
+
+            return data;
+        } catch (error: any) {
+            console.log('get_solicitud_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// obtener solicitudes que no han sido aprobadas id persona para aprobacion 
 
 export const get_solicitudes_id_persona_service = (id: number | string): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -267,6 +294,7 @@ export const get_solicitudes_id_persona_service = (id: number | string): any => 
     };
 };
 
+
 // obtener persona por iddocumento
 export const get_person_id_service = (id: number,): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -275,6 +303,28 @@ export const get_person_id_service = (id: number,): any => {
             console.log(data)
             if ("data" in data) {
                 dispatch(set_persona_solicita({ id_persona: data.data.id_persona, unidad_organizacional: data.data.nombre_unidad_organizacional_actual, nombre: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
+
+            } else {
+                control_error(data.detail)
+            }
+            return data;
+        } catch (error: any) {
+            console.log('get_person_document_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// obtener persona por iddocumento
+export const get_funcionario_id_service = (id: number | null,): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`personas/get-by-id/${id ?? ""}/`);
+            if ("data" in data) {
+                // console.log(data)
+
+                dispatch(set_current_funcionario({ id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, nombre_unidad_organizacional_actual: data.data.nombre_unidad_organizacional_actual, nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
 
             } else {
                 control_error(data.detail)
@@ -358,23 +408,80 @@ export const get_funcionario_service = (
 
 
 
-// anular solicitud 
+// aprobarr solicitud 
 
 
-export const anular_solicitud: any = (id: string | number) => {
+export const aprobacion_solicitud_pendiente: any = (
+    form_data: any,
+    id: string | number
+) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.delete(
-                `almacen/solicitudes/anular-solicitudes-bienes/${id}/`
+            const { data } = await api.put(
+                `almacen/solicitudes/aprobacion-solicitudes-pendientes/${id}/`, form_data
             );
+            console.log(data)
             dispatch(get_solicitud_service(id));
-            control_success('Se anulo la solicitud');
+            control_success('Se aprobo la solicitud');
 
             return data;
         } catch (error: any) {
-            console.log('anular solicitud');
+            console.log('aprobar solicitud');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }
     };
 };
+// ANULAR SOLICITUD
+
+export const anular_solicitud_service: any = (
+    form_data: any,
+    id: string | number) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+
+            console.log(form_data)
+            const { data } = await api.put(
+                `almacen/solicitudes/anular-solicitudes-bienes/${id}/`, form_data
+
+            );
+            console.log(data)
+            dispatch(get_solicitud_service(id));
+            control_success('Se anulo la solicitud');
+
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
+            console.log(error);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
+// buscar solicitudes a despachar 
+
+export const get_solicitudes_pendientes_despacho = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('almacen/solicitudes/solicitudes-pendientes-por-despachar/');
+            dispatch(set_solicitudes(data['Solicitudes pendientes por despahcar']))
+            console.log(data);
+            console.log(data, "data")
+            if ('data' in data) {
+                if (data.length > 0) {
+                    control_success("Se encontrarón solicitudes")
+                } else {
+                    control_error("No se encontrarón solicitudes")
+                }
+            }
+            return data;
+        } catch (error: any) {
+            return error as AxiosError;
+        }
+    };
+};
+
+

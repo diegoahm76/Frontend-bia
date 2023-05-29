@@ -69,25 +69,6 @@ const CrearBienDialogForm = ({
     set_is_modal_active(false);
   };
 
-  //   const [nursery_types, set_nursery_types] = useState(initial_options);
-  //   const [source_resources, set_source_resources] = useState(initial_options);
-  //   const [file, set_file] = useState<any>("");
-
-  //   // eslint-disable-next-line @typescript-eslint/naming-convention
-  //   const { control: control_vivero, handleSubmit: handle_submit } =
-  //     useForm<FormValues>();
-
-  //   const handle_close_add_nursery = (): void => {
-  //     set_is_modal_active(false);
-  //   };
-
-  //   const on_submit = (data: FormValues): void => {
-  //     data.ruta_archivo_creacion = file
-  //     console.log(data)
-  //     void dispatch(add_nursery_service(data, navigate));
-  //     handle_close_add_nursery();
-  //   };
-
   const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
       label: dataOld[1],
@@ -666,6 +647,7 @@ const CrearBienDialogForm = ({
                 </Grid>
               </>
             )}
+
 
 
             <FormSelectController
