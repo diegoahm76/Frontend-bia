@@ -9,7 +9,7 @@ import { type event } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_obligaciones_id } from '../slices/ObligacionesSlice';
-// import { get_filtro_deudores } from '../requests/requests';
+import { get_filtro_deudores, get_deudores } from '../slices/DeudoresSlice';
 
 interface Contribuyente {
   identificacion: string;
@@ -30,10 +30,6 @@ export const TablaConsultaAdmin: React.FC = () => {
   const [obligaciones_module, set_obligaciones_module] = useState(false);
   const { deudores } = useSelector((state: RootState) => state.deudores);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-
-  /* useEffect(() => {
-    void get_filtro_deudores();
-  }, []) */
 
   const columns: GridColDef[] = [
     {
@@ -130,6 +126,7 @@ export const TablaConsultaAdmin: React.FC = () => {
                       const { value } = event.target
                       set_filter(value)
                     }}
+                    defaultValue={''}
                   >
                     <MenuItem value='identificacion'>Número Identificación</MenuItem>
                     <MenuItem value='nombre_contribuyente'>Nombre Contribuyente</MenuItem>
@@ -149,22 +146,10 @@ export const TablaConsultaAdmin: React.FC = () => {
                 variant='contained'
                 startIcon={<SearchOutlined />}
                 onClick={() => {
-                  const new_rows = [];
-                  if(filter === 'identificacion'){
-                    for(let i=0; i < deudores.length; i++){
-                      if(deudores[i].identificacion.toLowerCase().includes(search.toLowerCase())){
-                        new_rows.push(deudores[i])
-                      }
-                    }
-                    set_visible_rows(new_rows)
-                  }
-                  if(filter === 'nombre_contribuyente'){
-                    for(let i=0; i < deudores.length; i++){
-                      if(deudores[i].nombre_contribuyente.toLowerCase().includes(search.toLowerCase())){
-                        new_rows.push(deudores[i])
-                      }
-                    }
-                    set_visible_rows(new_rows)
+                  try {
+                    void dispatch(get_filtro_deudores({parametro: filter, valor: search}));
+                  } catch (error: any) {
+                    throw new Error(error);
                   }
                 }}
               >
@@ -175,7 +160,11 @@ export const TablaConsultaAdmin: React.FC = () => {
                 variant='outlined'
                 startIcon={<FilterAltOffOutlined />}
                 onClick={() => {
-                  set_visible_rows(deudores)
+                  try {
+                    void dispatch(get_deudores());
+                  } catch (error: any) {
+                    throw new Error(error);
+                  }
                 }}
               >
               Mostrar Todo
