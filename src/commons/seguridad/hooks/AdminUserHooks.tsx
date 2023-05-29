@@ -126,6 +126,10 @@ export const use_admin_users = (): AdminUserHook => {
     useState<boolean>(true);
   const [check_user_is_blocked, set_check_user_is_blocked] =
     useState<boolean>(true);
+  const [valor_actual_user_is_blocked, set_valor_actual_user_is_blocked] =
+    useState<boolean>();
+  const [valor_actual_user_is_active, set_valor_actual_user_is_active] =
+    useState<boolean>();
   // Mostrar modal usuarios por persona
   const [users_x_person_is_active, set_users_x_person_is_active] =
     useState<boolean>(false);
@@ -256,19 +260,35 @@ export const use_admin_users = (): AdminUserHook => {
   };
 
   const on_change = (e: SelectChangeEvent<string>): void => {
-    console.log(e.target.name, e.target.value);
     switch (e.target.name) {
       case 'tipo_usuario':
         console.log(e.target.value);
         set_tipo_usuario(e.target.value);
         break;
       case 'activo':
+        console.log('valor actual', valor_actual_user_is_active);
+        console.log('selected actual', e.target.value);
         set_activo(e.target.value);
-        set_check_user_is_active(false);
+        if (
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          `${valor_actual_user_is_active}` !== e.target.value
+        ) {
+          set_check_user_is_active(false);
+        } else {
+          set_check_user_is_active(true);
+        }
+        // set_valor_actual_user_is_active(e.target.value !== 'false');
         break;
       case 'bloqueado':
         set_bloqueado(e.target.value);
-        set_check_user_is_blocked(false);
+        if (
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          `${valor_actual_user_is_blocked}` !== e.target.value
+        ) {
+          set_check_user_is_blocked(false);
+        } else {
+          set_check_user_is_blocked(true);
+        }
         break;
     }
     set_value_form(e.target.name, e.target.value);
@@ -328,8 +348,10 @@ export const use_admin_users = (): AdminUserHook => {
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       set_activo(`${data_register.activo}`);
+      set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       set_bloqueado(`${data_register.bloqueado}`);
+      set_valor_actual_user_is_blocked(data_register.bloqueado);
 
       if (data_person_search.tipo_persona === 'N') {
         // set_tipo_usuario('');
@@ -404,8 +426,10 @@ export const use_admin_users = (): AdminUserHook => {
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       set_activo(`${data_register.activo}`);
+      set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       set_bloqueado(`${data_register.bloqueado}`);
+      set_valor_actual_user_is_blocked(data_register.bloqueado);
       set_data_register({
         ...data_register,
         razon_social: user_info.razon_social,

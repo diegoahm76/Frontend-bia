@@ -15,7 +15,10 @@ import { get_tipo_documento } from '../../../../request/getRequest';
 import ReCaptcha from 'react-google-recaptcha';
 import { desbloquer_usuario } from '../../request/authRequest';
 import type { Dayjs } from 'dayjs';
-import type { IList, ResponseServer } from '../../../../interfaces/globalModels';
+import type {
+  IList,
+  ResponseServer,
+} from '../../../../interfaces/globalModels';
 import type { AxiosError } from 'axios';
 import { control_success } from '../../../recursoHidrico/requets/Request';
 import { CustomSelect } from '../../../../components';
@@ -132,7 +135,6 @@ export const DesbloqueodeUsuario: React.FC = () => {
               name="tipo_documento"
               value={tipo_documento}
               options={tipo_documento_opt}
-              loading={is_loading}
               required={true}
               errors={errors}
               register={register}
@@ -267,7 +269,6 @@ export const DesbloqueodeUsuario: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 color="warning"
-                loading={is_loading}
                 disabled={is_loading}
                 onClick={() => {
                   window.location.href = '#/auth/login';

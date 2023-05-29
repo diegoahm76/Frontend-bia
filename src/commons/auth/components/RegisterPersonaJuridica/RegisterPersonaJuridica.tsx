@@ -41,7 +41,6 @@ const DatosEmpresariales: (props: PropsElement) => JSX.Element = ({
 }: PropsElement) => {
   const {
     is_saving,
-    loading,
     paises_options,
     naturaleza_empresa_opt,
     nacionalidad_empresa,
@@ -103,7 +102,6 @@ const DatosEmpresariales: (props: PropsElement) => JSX.Element = ({
             name="cod_naturaleza_empresa"
             value={naturaleza_empresa}
             options={naturaleza_empresa_opt}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -117,7 +115,6 @@ const DatosEmpresariales: (props: PropsElement) => JSX.Element = ({
             name="cod_pais_nacionalidad_empresa"
             value={nacionalidad_empresa}
             options={paises_options}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -129,14 +126,14 @@ const DatosEmpresariales: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'black' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -168,7 +165,6 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
   typeDirection,
 }: PropsElement) => {
   const {
-    loading,
     paises_options,
     dpto_notifiacion_opt,
     ciudad_notificacion_opt,
@@ -197,7 +193,6 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
             name="pais_notificacion"
             value={'CO'}
             options={paises_options}
-            loading={loading}
             disabled={true}
             required={false}
             errors={errors}
@@ -211,7 +206,6 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
             name="dpto_notifiacion"
             value={dpto_notifiacion}
             options={dpto_notifiacion_opt}
-            loading={loading}
             required={true}
             errors={errors}
             register={register}
@@ -224,7 +218,6 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
             name="cod_municipio_notificacion_nal"
             value={ciudad_notificacion}
             options={ciudad_notificacion_opt}
-            loading={loading}
             disabled={dpto_notifiacion === '' ?? true}
             required={true}
             errors={errors}
@@ -340,14 +333,14 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'black' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -381,7 +374,6 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
   handleBack,
 }: PropsElement) => {
   const {
-    loading,
     tipo_documento_opt,
     tipo_documento_representante,
     documento_representante,
@@ -415,7 +407,6 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
             name="tipo_documento_representante"
             value={tipo_documento_representante}
             options={tipo_documento_opt}
-            loading={loading}
             disabled={false}
             required={true}
             errors={errors}
@@ -494,14 +485,14 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'black' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -567,21 +558,17 @@ const AutorizaNotificacion: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'white' }}>Volver</Typography>
             </Button>
           </Grid>
-          <Grid item>
-            <Button variant="outlined" color="error" onClick={handleBack}>
-              Volver
-            </Button>
-          </Grid>
+          
           <Grid item>
             <LoadingButton
               type="submit"
@@ -636,14 +623,14 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'white' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -802,14 +789,14 @@ const DatosAcceso: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'white' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>

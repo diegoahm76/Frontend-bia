@@ -15,9 +15,8 @@ import {
 
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import EditIcon from '@mui/icons-material/Edit';
-import { add_marca_service, edit_marca_service} from '../../store/thunks/MarcaMedidaPorcentajeThunks';
- import { useNavigate } from 'react-router-dom';
+import { add_marca_service, edit_marca_service } from '../../store/thunks/MarcaMedidaPorcentajeThunks';
+import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/';
 
 
@@ -29,11 +28,12 @@ interface IProps {
 }
 
 interface FormValues {
-    id_marca: number | null,
-    nombre: string,
-    activo: boolean,
-    item_ya_usado: boolean,
+  id_marca: number | null,
+  nombre: string,
+  activo: boolean,
+  item_ya_usado: boolean,
 }
+
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -42,14 +42,14 @@ const CrearMarcaModal = ({
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
- 
-  
+
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
- // eslint-disable-next-line @typescript-eslint/naming-convention
- const {marca_seleccionada} = useAppSelector((state) => state.marca);
-  const { control: control_marca, handleSubmit: handle_submit, reset: reset_marca } =  useForm<FormValues>();
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { marca_seleccionada } = useAppSelector((state) => state.marca);
+  const { control: control_marca, handleSubmit: handle_submit, reset: reset_marca } = useForm<FormValues>();
 
   const handle_close_add_marca = (): void => {
     set_is_modal_active(false);
@@ -57,7 +57,7 @@ const CrearMarcaModal = ({
   useEffect(() => {
     reset_marca(marca_seleccionada);
     console.log(marca_seleccionada);
-  }, [marca_seleccionada] );
+  }, [marca_seleccionada]);
 
   const on_submit = (data: FormValues): void => {
     const form_data: any = new FormData();
@@ -65,21 +65,21 @@ const CrearMarcaModal = ({
     form_data.append('nombre', data.nombre);
     form_data.append('activo', data.activo);
     form_data.append('item_ya_usado', data.item_ya_usado);
-      
-   void dispatch(add_marca_service(form_data, navigate));
-   handle_close_add_marca();
+
+    void dispatch(add_marca_service(form_data, navigate));
+    handle_close_add_marca();
   };
 
   const on_submit_edit = (data: FormValues): void => {
-    const form_data:any = new FormData();
+    const form_data: any = new FormData();
 
     form_data.append('nombre', data.nombre);
-  
+
     void dispatch(edit_marca_service(form_data, marca_seleccionada.id_marca, navigate));
     handle_close_add_marca();
 
   }
- 
+
   return (
     <Dialog
       maxWidth="xl"
@@ -89,38 +89,38 @@ const CrearMarcaModal = ({
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-       onSubmit={action=== "create"? handle_submit(on_submit):handle_submit(on_submit_edit)}
+        onSubmit={action === "create" ? handle_submit(on_submit) : handle_submit(on_submit_edit)}
       >
-         <DialogTitle>{action==="create"? "Crear marca": action==="detail"? "Detalle Marca": "Editar Marca" }</DialogTitle>
+        <DialogTitle>{action === "create" ? "Crear marca" : action === "detail" ? "Detalle Marca" : "Editar Marca"}</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-         <Grid container >
-         <Grid xs={ 11 } md={ 11 } margin={ 1 }>
-          <Controller
-            name="nombre"
-            control={control_marca}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <TextField
-                margin="dense"
-                fullWidth
-                size="small"
-                label="Marca"
-                variant="outlined"
-                value={value}
-                onChange={onChange}
-                error={!(error == null)}
-                helperText={
-                  error != null
-                    ? 'Es obligatorio ingresar una marca'
-                    : 'Ingrese marca'
-                }
+          <Grid container >
+            <Grid xs={11} md={11} margin={1}>
+              <Controller
+                name="nombre"
+                control={control_marca}
+                defaultValue=""
+                rules={{ required: true }}
+                render={({ field: { onChange, value }, fieldState: { error } }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    size="small"
+                    label="Marca"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio ingresar una marca'
+                        : 'Ingrese marca'
+                    }
+                  />
+                )}
               />
-            )}
-          />
-          </Grid>
-         
+            </Grid>
+
           </Grid>
         </DialogContent>
         <Divider />
@@ -137,17 +137,12 @@ const CrearMarcaModal = ({
             >
               CERRAR
             </Button>
-            {action === "create"?
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
-              GUARDAR
-            </Button>:
-            action === "edit"?
-            <Button type="submit" variant="contained" startIcon={<EditIcon />}>
-              EDITAR
-            </Button>:
-            null
+            {action === "create" &&
+              <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+                GUARDAR
+              </Button>
             }
-           </Stack>
+          </Stack>
         </DialogActions>
       </Box>
     </Dialog>
