@@ -524,10 +524,16 @@ export interface ChangePassword {
   uidb64: string | null;
 }
 
-export interface DataUserRecover {
+export interface RecoverPassword {
   nombre_de_usuario: string;
   tipo_envio: string;
   redirect_url: string;
+}
+
+export interface RecoverUser {
+  tipo_documento: string;
+  numero_documento: string;
+  email: string;
 }
 
 export interface ResponseRecover {
