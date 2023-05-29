@@ -86,7 +86,7 @@ const initial_state_current_good: IObjGoods = {
   unidad_disponible: null,
 }
 
-const initial_satate_current_plant_seed_lot: IObjSeedLot = {
+export const initial_satate_current_plant_seed_lot: IObjSeedLot = {
   id_inventario_vivero: null,
   id_vivero: null,
   id_bien: null,
@@ -124,7 +124,7 @@ const initial_satate_current_plant_quarantine: IObjQuarantine = {
   id_persona_anula: null,
 }
 
-const initial_satate_current_lifting: IObjLifting = {
+export const initial_satate_current_lifting: IObjLifting = {
   id_item_levanta_cuarentena: null,
   realizado_por: "",
   consec_levan_por_cuaren: null,

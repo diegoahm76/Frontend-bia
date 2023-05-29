@@ -40,27 +40,31 @@ export interface IObjSeedLot {
 }
 
 export interface IObjQuarantine {
-  id_cuarentena_mat_vegetal: number | null;
-  agno_lote: number | null;
-  nro_lote: number | null;
-  cod_etapa_lote: string | null;
-  consec_cueren_por_lote_etapa: number | null;
-  fecha_cuarentena: string | null;
-  fecha_registro: string | null;
-  cantidad_cuarentena: number | null;
-  descrip_corta_diferenciable: string | null;
-  motivo: string | null;
-  cantidad_levantada: number | null;
-  cantidad_bajas: number | null;
-  cuarentena_abierta: boolean | null;
-  cuarentena_anulada: boolean | null;
-  justificacion_anulacion: string | null;
-  fecha_anulacion: string | null;
-  ruta_archivo_soporte: string | null;
-  id_vivero: number | null;
-  id_bien: number | null;
-  id_persona_cuarentena: number | null;
-  id_persona_anula: number | null;
+  id_cuarentena_mat_vegetal?: number | null;
+  agno_lote?: number | null;
+  nro_lote?: number | null;
+  cod_etapa_lote?: string | null;
+  consec_cueren_por_lote_etapa?: number | null;
+  fecha_cuarentena?: string | null;
+  fecha_registro?: string | null;
+  cantidad_cuarentena?: number | null;
+  descrip_corta_diferenciable?: string | null;
+  motivo?: string | null;
+  cantidad_levantada?: number | null;
+  cantidad_bajas?: number | null;
+  cuarentena_abierta?: boolean | null;
+  cuarentena_anulada?: boolean | null;
+  justificacion_anulacion?: string | null;
+  fecha_anulacion?: string | null;
+  ruta_archivo_soporte?: string | null;
+  id_vivero?: number | null;
+  id_bien?: number | null;
+  id_persona_cuarentena?: number | null;
+  persona_cuarentena?: string | null;
+  id_persona_anula?: number | null;
+  codigo_bien?: string | null;
+  nombre_bien?: string | null;
+  cantidad_disponible?: number | null;
 }
 
 export interface IObjLifting {
@@ -76,7 +80,13 @@ export interface IObjLifting {
   fecha_anulacion: string | null;
   id_cuarentena_mat_vegetal: number | null;
   id_persona_levanta: number | null;
+  persona_levanta?: string | null,
   id_persona_anula: number | null;
+  persona_anula?: string | null,
+  cantidad_cuarentena?: number | null,
+  cantidad_levantada?: number | null,
+  cantidad_mortalidad?: number | null,
+  cantidad_disponible?: number | null,
 }
 
 export interface IObjPlantingGoods {

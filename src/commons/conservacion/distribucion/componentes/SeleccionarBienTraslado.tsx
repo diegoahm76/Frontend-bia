@@ -284,7 +284,7 @@ const SeleccionarBienSiembra = () => {
         if('success' in bienes){
             if(bienes.success === true){
                 if('modal' in bienes){
-                    if(bienes.modal){
+                    if(bienes.modal === true){
                         set_select_model_is_active(true);
                     }
                 }

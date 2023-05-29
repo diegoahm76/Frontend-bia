@@ -8,7 +8,7 @@ import {
 // Slices
 import {
   initial_state_planting,
-  set_goods, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting, set_planting_person, set_persons, set_current_germination_beds
+  set_goods, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting, set_planting_person, set_persons, set_current_germination_beds, set_current_plant_quarantine, set_current_plant_seed_lot, set_plant_seed_lots, set_plant_quarantines
 } from '../slice/materialvegetalSlice';
 import { api } from '../../../../../api/axios';
 
@@ -335,14 +335,95 @@ export const get_nurseries_quarantine_service = (): any => {
   };
 };
 
-// obtener lotes
-export const get_lots_service = (
-  id_vivero: string,
+// obtener lotes pór codigo de material vegetal
+export const get_lots_code_service = (
+  id_vivero: number | string,
   code: string
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`conservacion/ingreso-cuarentena/get-lotes-etapa/${id_vivero}/${code}/`);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        dispatch(set_current_plant_seed_lot(data.data))
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_siembra_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener lotes filtro
+export const get_lots_service = (
+  id_vivero: string | number,
+  code: string | null,
+  name:string | null,
+  agno_lote: number | null,
+  cod_etapa: string | null,
+
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/ingreso-cuarentena/get-lotes-etapa/${id_vivero}/?codigo_bien=${code??""}&nombre=${name ?? ""}&agno_lote=${agno_lote ?? ""}&cod_etapa_lote=${cod_etapa ?? ""}`);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      console.log(data)
+      if (data.success) {
+        dispatch(set_plant_seed_lots(data.data))
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_MV_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener cuarentenas filtro
+export const get_plant_quarantines_service = (
+  code: string | null,
+  name:string | null,
+  agno_lote: number | null,
+  cod_etapa: string | null,
+
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/ingreso-cuarentena/get-ingreso-cuarentena/?codigo_bien=${code??""}&nombre=${name ?? ""}&agno_lote=${agno_lote ?? ""}&cod_etapa_lote=${cod_etapa ?? ""}`);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      console.log(data)
+      if (data.success) {
+        dispatch(set_plant_quarantines(data.data))
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_siembra_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// crear ingreso a cuarentena
+export const add_plant_quarantine_service = (
+  quarantine: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post('conservacion/ingreso-cuarentena/create/', quarantine);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail)      
@@ -351,7 +432,160 @@ export const get_lots_service = (
       }
       return data;
     } catch (error: any) {
+      console.log('add_quarantine_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// editar ingreso a cuarentena
+export const edit_plant_quarantine_service = (
+  quarantine: any,
+  id: number
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/ingreso-cuarentena/update/${id}/`, quarantine);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('edit_quarantine_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// borrar siembra
+export const annul_plant_quarantine_service = (
+  id: number,
+  quarantine: any
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(`conservacion/ingreso-cuarentena/anular/${id}/`, quarantine);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)   
+         
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('anular_quarantine_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener cuarentenas levantamiento filtro
+export const get_lifting_quarantines_service = (
+  id_vivero: number | null,
+  code: string | null,
+  name:string | null,
+  agno_lote: number | null,
+  cod_etapa: string | null,
+
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/levantamiento-cuarentena/get-registro-cuarentena-by-lupa/${id_vivero ?? ""}/?codigo_bien=${code??""}&nombre=${name ?? ""}&agno_lote=${agno_lote ?? ""}&cod_etapa_lote=${cod_etapa ?? ""}`);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      console.log(data)
+      if (data.success) {
+        dispatch(set_plant_quarantines(data.data))
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
       console.log('add_siembra_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+
+
+
+// crear ingreso a cuarentena
+export const add_lifting_quarantine_service = (
+  quarantine: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post('conservacion/ingreso-cuarentena/create/', quarantine);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_quarantine_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// editar ingreso a cuarentena
+export const edit_lifting_quarantine_service = (
+  quarantine: any,
+  id: number
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/ingreso-cuarentena/update/${id}/`, quarantine);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('edit_quarantine_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// borrar siembra
+export const annul_lifting_quarantine_service = (
+  id: number,
+  quarantine: any
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.delete(`conservacion/ingreso-cuarentena/anular/${id}/`, quarantine);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)   
+         
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('anular_quarantine_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
