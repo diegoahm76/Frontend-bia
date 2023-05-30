@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Grid, Input, Stack, TextField } from '@mui/material';
+import { Box, Button, CircularProgress, Grid, Input, Stack, TextField } from '@mui/material';
 import { Title } from '../../../components';
 import { control_error, control_success, validate_password } from '../../../helpers';
 import type { AxiosError } from 'axios';
@@ -26,6 +26,7 @@ export const DatosAccesoScreen: React.FC = () => {
   const [message_error, set_message_error_password] = useState('');
   const [is_error_password, set_error_password] = useState(false);
   const [is_cambio_password, set_is_cambio_password] = useState(false);
+  const [loading_natural, set_loading_natural] = useState(false);
   const [file_name, set_file_name] = useState('');
   const [image_url, set_image_url] = useState<string | null>(null);
 
@@ -45,7 +46,9 @@ export const DatosAccesoScreen: React.FC = () => {
       reader.readAsDataURL(selected_file);
     }
   };
-
+  const reset_file_state = (): void => {
+    set_file_name('');
+  };
 
   useEffect(() => {
     if (password !== password2) {
@@ -86,26 +89,24 @@ export const DatosAccesoScreen: React.FC = () => {
 
   const on_submit_persona: SubmitHandler<FieldValues> = async (data) => {
     try {
-      //  set_loading_natural(true);
+      set_loading_natural(true);
       const datos_persona = new FormData();
       if (data !== undefined) {
         datos_persona.append('password', data.password);
-        console.log('first_name')
       }
-      if (data.profile_img !== undefined) {
+      if (data.profile_img !== undefined && data.profile_img !== '' && data.profile_img !== null && data.profilr_img > 0) {
         datos_persona.append(
           'profile_img',
           data.profile_img[0]
         );
       }
-      console.log(datos_persona , 'datos_persona')
       await editar_datos_acceso(datos_persona);
-      // reset_file_state();
-      // set_loading_natural(false);
+      reset_file_state();
+      set_loading_natural(false);
       control_success('Se actualizaron los datos correctamente');
     } catch (error) {
-      // set_loading_natural(false);
-      control_error(error);
+      set_loading_natural(false);
+      control_error('hubo un error al actualizar los datos, intente nuevamente');
     }
   };
 
@@ -267,8 +268,23 @@ export const DatosAccesoScreen: React.FC = () => {
                   >
                     Cambiar contraseña
                   </Button>
-                  <Button color="success" variant="contained" type='submit'>
-                    Guardar
+                  <Button color="success"
+                    variant="contained"
+                    type='submit'
+                    startIcon={
+                      loading_natural ? (
+                        <CircularProgress
+                          size={20}
+                          key={1}
+                          className="align-middle ml-1"
+                        />
+                      ) : (
+                        ''
+                      )
+                    }
+                    aria-label="Actualizar"
+                    disabled={loading_natural}>
+                    Actualizar
                   </Button>
                 </Stack>
               </Grid>
