@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import {
   Box,
   Divider,
@@ -19,7 +19,10 @@ import {
 } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import CircleIcon from '@mui/icons-material/Circle';
+import PersonIcon from '@mui/icons-material/Person';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import { open_drawer_desktop, open_drawer_mobile } from '../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
 import type { AuthSlice, Menu, MenuElement } from '../commons/auth/interfaces';
@@ -36,6 +39,7 @@ interface Props {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [open, set_open] = useState(false);
   const [dialog_open, set_dialog_open] = useState(false);
   const [is_loading, set_is_loading] = useState(true);
@@ -66,10 +70,22 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
     set_open(!open);
   };
   const handle_click_delegar_super = (): void => {
-    set_dialog_open(true);
+    navigate('/app/seguridad/delegacion_superusuario');
   };
   const handle_close_dialog_user = (): void => {
     set_dialog_open(false);
+  };
+
+  const handle_datos_acceso = (): void => {
+    navigate('/app/usuario/datos_acceso');
+  };
+
+  const handle_datos_personales = (): void => {
+    navigate('/app/usuario/datos_personales');
+  };
+
+  const handle_autorizacion_notificacion = (): void => {
+    navigate('/app/usuario/autorizacion_notificacion');
   };
 
   const open_collapse = (obj: Menu, key: number): void => {
@@ -130,7 +146,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
       <List sx={{ margin: '0 20px', color: mod_dark ? '#fafafa' : '#141415' }}>
         <ListItemButton onClick={handle_click} sx={{ borderRadius: '10px' }}>
           <ListItemIcon>
-            <Avatar alt="Cristian Mendoza" src="/static/images/avatar/1.jpg" />
+            <Avatar alt="Usuario" src="/static/images/avatar/1.jpg" />
           </ListItemIcon>
           <ListItemText primary={userinfo.nombre_de_usuario} />
           {open ? <ExpandLess /> : <ExpandMore />}
@@ -146,16 +162,43 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           }}
         >
           <List component="div" disablePadding>
-            <ListItemButton sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <CircleIcon
+            {/* Datos de acceso del usuario */}
+            <ListItemButton sx={{ pl: 4 }} >
+              <ListItemIcon >
+                <PersonIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
-                    height: '10px',
+                    height: '30px'
                   }}
-                />
+                />                
               </ListItemIcon>
-              <ListItemText primary="Starred" />
+              <ListItemText primary="Datos Acceso" onClick={handle_datos_acceso}/>
+            </ListItemButton>
+
+            {/* Datos de Personales del usuario */}
+            <ListItemButton sx={{ pl: 4 }} >
+              <ListItemIcon >
+                <ContactEmergencyIcon
+                  sx={{
+                    color: mod_dark ? '#fafafa' : '#141415',
+                    height: '30px'
+                  }}
+                />                
+              </ListItemIcon>
+              <ListItemText primary="Datos Personales" onClick={handle_datos_personales}/>
+            </ListItemButton>
+
+            {/* Autorización de Notificacion  */}
+            <ListItemButton sx={{ pl: 4 }} >
+              <ListItemIcon >
+                <CircleNotificationsIcon
+                  sx={{
+                    color: mod_dark ? '#fafafa' : '#141415',
+                    height: '30px'
+                  }}
+                />                
+              </ListItemIcon>
+              <ListItemText primary="Autoriza Notificaciones" onClick={handle_autorizacion_notificacion}/>
             </ListItemButton>
 
             {/* Validamos si es superusuario */}
@@ -165,10 +208,10 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 onClick={handle_click_delegar_super}
               >
                 <ListItemIcon>
-                  <CircleIcon
+                  <SupervisedUserCircleIcon
                     sx={{
                       color: mod_dark ? '#fafafa' : '#141415',
-                      height: '10px',
+                      height: '30px',
                     }}
                   />
                 </ListItemIcon>
