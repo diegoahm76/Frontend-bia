@@ -28,17 +28,17 @@ export const AdministracionPersonasScreen: React.FC = () => {
     watch,
   } = use_register();
 
+
   const on_result = async (info_persona: InfoPersona): Promise<void> => {
     try {
       set_persona(info_persona);
       const {
         data: { data },
       } = await consultar_datos_persona(info_persona.id_persona);
-
       if (data.id_persona !== 0) {
+        console.log(data)
         set_datos_persona(data);
         const fields = get_values();
-        console.log(fields, 'fields')
         for (const key in fields) {
           const temp = key as key_data_persona;
           set_value(key, data[temp]);
@@ -47,8 +47,6 @@ export const AdministracionPersonasScreen: React.FC = () => {
         set_value('departamento_expedicion', data.cod_departamento_expedicion);
         set_value('ciudad_expedicion', data.cod_departamento_expedicion);
         set_value('departamento_residencia', data.cod_departamento_residencia);
-
-        console.log(datos_persona);
       }
     } catch (err) {
       const temp = err as AxiosError;
@@ -94,7 +92,9 @@ export const AdministracionPersonasScreen: React.FC = () => {
         {persona?.tipo_persona === 'J' && (
           <>
             <CrearPersonaJurAdmin
-              numero_documento={persona.numero_documento}
+              id_persona={persona.id_persona}
+              representante_legal={datos_persona?.representante_legal}
+              numero_documento={persona?.numero_documento}
               tipo_persona={persona.tipo_persona}
               tipo_documento={persona.tipo_documento}
               errors={errors}
