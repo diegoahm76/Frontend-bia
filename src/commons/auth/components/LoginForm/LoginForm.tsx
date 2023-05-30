@@ -176,7 +176,7 @@ export const LoginForm: React.FC = () => {
               type="submit"
               variant="contained"
               fullWidth
-              color={theme.palette.mode === 'light' ? 'success' : 'inherit'} 
+              color={theme.palette.mode === 'light' ? 'success' : 'inherit'}
               loading={is_authenticating}
               disabled={disable}
               style={{ fontSize: '.9rem' }}
@@ -209,9 +209,12 @@ export const LoginForm: React.FC = () => {
           </Grid>
           <Grid item xs={12}>
             <Link className="no-decoration" to="/auth/recuperar_contrasena">
-              <Typography sx={{ textAlign: 'center', mb: '20px' }}>
-                ¿Olvidó su contraseña?
-              </Typography>
+              <Typography textAlign="center">¿Olvidó su contraseña?</Typography>
+            </Link>
+          </Grid>
+          <Grid item xs={12}>
+            <Link className="no-decoration" to="/auth/recuperar_usuario">
+              <Typography textAlign="center">¿Olvidó su usuario?</Typography>
             </Link>
           </Grid>
         </Grid>
@@ -244,17 +247,17 @@ export const LoginForm: React.FC = () => {
             </Typography>
           </Grid>
           <Grid item justifyContent="center">
-            <Button
-              type="button"
-              variant="outlined"
-              fullWidth
-              color="primary"
-              style={{ fontSize: '.9rem' }}
-            >
-              <Link className="no-decoration" to="/auth/register">
+            <Link className="no-decoration" to="/auth/register">
+              <Button
+                type="button"
+                variant="outlined"
+                fullWidth
+                color="primary"
+                style={{ fontSize: '.9rem' }}
+              >
                 Regístrese
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </Grid>
           <Grid item sx={{ p: '10px 0' }}>
             <Typography
@@ -266,8 +269,7 @@ export const LoginForm: React.FC = () => {
               <i>
                 Si tiene algún reclamo o solicitud, ingrese a{' '}
                 <a href="#">PQR en linéa</a> Número de atención: Linea nacional
-                01-8000-51847095 Email:{' '}
-                <a href="#">pqrds@cormacarena.gov.co</a>
+                01-8000-51847095 Email: <a href="#">pqrds@cormacarena.gov.co</a>
               </i>
             </Typography>
           </Grid>

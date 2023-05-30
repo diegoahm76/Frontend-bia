@@ -465,10 +465,10 @@ const use_editar_organigrama = () => {
     const get_selects_options = async () => {
       try {
         const { data: agrupacion_documental_no_format } = await api.get(
-          'almacen/choices/agrupacion-documental/'
+          'transversal/choices/agrupacion-documental/'
         );
         const { data: tipo_unidad_no_format } = await api.get(
-          'almacen/choices/tipo-unidad/'
+          'transversal/choices/tipo-unidad/'
         );
 
         const agrupacion_documental_format = textChoiseAdapter(

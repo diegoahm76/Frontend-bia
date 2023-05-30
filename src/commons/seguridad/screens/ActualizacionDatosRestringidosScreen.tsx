@@ -29,23 +29,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
   const [persona, set_persona] = useState<InfoPersona>();
   const [loading_natural, set_loading_natural] = useState(false);
   const [loading_juridica, set_loading_juridica] = useState(false);
-  const [datos_historico, set_datos_historico] = useState<InfoPersona>({
-    id: 0,
-    id_persona: 0,
-    tipo_persona: '',
-    tipo_documento: '',
-    numero_documento: '',
-    primer_nombre: '',
-    segundo_nombre: '',
-    primer_apellido: '',
-    segundo_apellido: '',
-    nombre_completo: '',
-    razon_social: '',
-    nombre_comercial: '',
-    tiene_usuario: false,
-    digito_verificacion: '',
-    cod_naturaleza_empresa: '',
-  });
   const [file_name, set_file_name] = useState('');
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -53,7 +36,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
     const selected_file =
       event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
-      console.log(selected_file.name);
       set_file_name(selected_file.name);
     }
   };
@@ -450,7 +432,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                       variant="outlined"
                       startIcon={<RemoveRedEyeIcon />}
                       onClick={() => {
-                        set_datos_historico(persona);
                         handle_open_historico();
                       }}
                     >
@@ -711,7 +692,6 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                       variant="outlined"
                       startIcon={<RemoveRedEyeIcon />}
                       onClick={() => {
-                        set_datos_historico(persona);
                         handle_open_historico();
                       }}
                     >
@@ -726,7 +706,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
         <DialogHistorialDatosRestringidos
           is_modal_active={historico}
           set_is_modal_active={set_historico}
-          datos_historico={datos_historico}
+          id_persona={persona?.id_persona}
         />
       </Grid>
     </>

@@ -15,10 +15,14 @@ import { get_tipo_documento } from '../../../../request/getRequest';
 import ReCaptcha from 'react-google-recaptcha';
 import { desbloquer_usuario } from '../../request/authRequest';
 import type { Dayjs } from 'dayjs';
-import type { IList, ResponseServer } from '../../../../interfaces/globalModels';
+import type {
+  IList,
+  ResponseServer,
+} from '../../../../interfaces/globalModels';
 import type { AxiosError } from 'axios';
 import { control_success } from '../../../recursoHidrico/requets/Request';
 import { CustomSelect } from '../../../../components';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DesbloqueodeUsuario: React.FC = () => {
@@ -45,21 +49,11 @@ export const DesbloqueodeUsuario: React.FC = () => {
   const [is_valida_captcha, set_is_valida_captcha] = useState(false);
   // establece la fecha de nacimiento
   const on_change_birt_day = (value: Dayjs | null): void => {
+    const date = dayjs(value).format('YYYY-MM-DD');
+    set_value('fecha_nacimiento', date);
+    set_value_form('fecha_nacimiento', date);
     set_fecha_nacimiento(value);
   };
-
-  useEffect(() => {
-    if (fecha_nacimiento?.month() !== undefined) {
-      const month = fecha_nacimiento.month() + 1;
-      const day = fecha_nacimiento.get('D').toString();
-      const year = fecha_nacimiento.get('y').toString();
-      const month_f = month < 10 ? `0${month}` : month;
-      const day_f = day.length === 1 ? `0${day}` : day;
-      const date = `${year}-${month_f}-${day_f}`;
-      set_value('fecha_nacimiento', date);
-      set_value_form('fecha_nacimiento', date);
-    }
-  }, [fecha_nacimiento]);
 
   const get_selects_options = async (): Promise<void> => {
     set_is_loading(true);
@@ -141,7 +135,6 @@ export const DesbloqueodeUsuario: React.FC = () => {
               name="tipo_documento"
               value={tipo_documento}
               options={tipo_documento_opt}
-              loading={is_loading}
               required={true}
               errors={errors}
               register={register}
@@ -276,7 +269,6 @@ export const DesbloqueodeUsuario: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 color="warning"
-                loading={is_loading}
                 disabled={is_loading}
                 onClick={() => {
                   window.location.href = '#/auth/login';

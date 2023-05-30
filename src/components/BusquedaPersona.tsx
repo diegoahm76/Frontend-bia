@@ -7,13 +7,17 @@ import type * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { control_error } from '../helpers';
-import { type IList, type InfoPersona, type ResponseServer } from '../interfaces/globalModels';
+import {
+  type IList,
+  type InfoPersona,
+  type ResponseServer,
+} from '../interfaces/globalModels';
 import { get_tipo_documento, search_avanzada } from '../request';
 import { CustomSelect } from './CustomSelect';
 import { Title } from './Title';
 
 interface IProps {
-  set_persona: any
+  set_persona: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
@@ -68,7 +72,7 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
           primer_apellido,
           razon_social,
           nombre_comercial,
-        })
+        });
 
         if (data?.length > 0) {
           set_rows(data);
@@ -94,7 +98,9 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
           void on_submit_advance(e);
         }}
       >
-        <Grid container spacing={2}
+        <Grid
+          container
+          spacing={2}
           sx={{
             position: 'relative',
             background: '#FFFFFF',
@@ -103,7 +109,8 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
             mb: '20px',
             mt: '5px',
             boxShadow: '0px 3px 6px #042F4A26',
-          }}>
+          }}
+        >
           <Grid item xs={12} sm={6} md={3}>
             <CustomSelect
               onChange={handle_change_select}
@@ -111,7 +118,6 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
               name="tipo_documento"
               value={tipo_documento_av}
               options={tipo_documento_opt}
-              loading={is_loading}
               disabled={is_loading}
               required={true}
               errors={errors}
@@ -188,13 +194,17 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
             </LoadingButton>
           </Grid>
         </Grid>
-        <Grid container spacing={2}  sx={{
+        <Grid
+          container
+          spacing={2}
+          sx={{
             position: 'relative',
             background: '#FFFFFF',
             borderRadius: '15px',
             p: '5px',
             boxShadow: '0px 3px 6px #042F4A26',
-          }}>
+          }}
+        >
           <Grid item xs={12} sm={12}>
             <Title title="Resultados" />
             <Box sx={{ width: '100%', mt: '20px' }}>
@@ -202,10 +212,11 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
                 <DataTable
                   value={rows}
                   sortField="numero_documento"
-                  size={"small"}
+                  size={'small'}
                   paginator
                   rows={5}
-                  scrollable scrollHeight="flex"
+                  scrollable
+                  scrollHeight="flex"
                   rowsPerPageOptions={[5, 10, 25, 50]}
                   tableStyle={{ minWidth: '40rem' }}
                   selectionMode="single"
@@ -267,9 +278,5 @@ export const BusquedaPersona: React.FC<IProps> = (props: IProps) => {
         </Grid>
       </form>
     </>
-  )
-}
-
-
-
-
+  );
+};
