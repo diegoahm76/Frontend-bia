@@ -1,4 +1,4 @@
-import { Grid, TextField, Box, Button, Stack, FormHelperText, ToggleButton } from "@mui/material";
+import { Grid, TextField, Box, Button, Stack, FormHelperText, ToggleButton, FormLabel, InputLabel, FormControl, Select, MenuItem, type SelectChangeEvent } from "@mui/material";
 import CheckIcon from '@mui/icons-material/Check';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -6,20 +6,29 @@ import dayjs, { type Dayjs } from "dayjs";
 import { useEffect, useState } from "react";
 import { Title } from "../../../../components";
 import SearchIcon from '@mui/icons-material/Search';
-import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import ClearIcon from '@mui/icons-material/Clear';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-// import { useAppDispatch } from "../../../../hooks";
+import { useAppDispatch } from "../../../../hooks";
 import { useNavigate } from "react-router-dom";
+import { crear_arriendo_veh, obtener_marcas } from "../thunks/Arriendo";
+import { type crear_arriendo } from "./../interfaces/ArriendoVehiculo"
+import BuscarArriendoComponent from "./BuscarArriendo";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ArriendoVehiculosScreen: React.FC = () => {
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [user_info, set_user_info] = useState<any>({});
+  const [arriendo, set_arriendo] = useState<any | null>(null);
+  const [lista_marcas, set_lista_marcas] = useState<any[]>([]);
   const [nombre_vehiculo, set_nombre_vehiculo] = useState<string>("");
+  const [msj_error_nom_veh, set_msj_error_nom_veh] = useState<string>("");
+  const [empresa_proveedora, set_empresa_proveedora] = useState<string>("");
+  const [msj_error_emp_prov, set_msj_error_emp_prov] = useState<string>("");
   const [placa, set_placa] = useState<string>("");
+  const [msj_error_placa, set_msj_error_placa] = useState<string>("");
+  const [marca, set_marca] = useState<string>("");
+  const [msj_error_marca, set_msj_error_marca] = useState<string>("");
   const [descripcion, set_descripcion] = useState<string>("");
   const [msj_error_descripcion, set_msj_error_descripcion] = useState<string>("");
   const [fecha_inicio, set_fecha_inicio] = useState<Dayjs>(dayjs());
@@ -27,26 +36,31 @@ export const ArriendoVehiculosScreen: React.FC = () => {
   const [fecha_fin, set_fecha_fin] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_fin, set_msj_error_fecha_fin] = useState<string>("");
   const [abrir_hdv, set_abrir_hdv] = useState<boolean>(false);
-
+  const [es_agendable, set_es_agendable] = useState<boolean>(false);
+  const [buscar_arriendo, set_buscar_arriendo] = useState<boolean>(false);
+  const [actualiza, set_actualiza] = useState<boolean>(false);
 
   useEffect(() => {
-    // obtener_bodegas_fc();
-    obtener_usuario();
+    obtener_marcas_fc();
   }, []);
 
-  // const obtener_bodegas_fc: () => void = () => {
-  //   dispatch(obtener_bodegas()).then((response: any) => {
-  //     set_bodegas(response);
-  //   })
-  // }
-
-  const obtener_usuario: () => void = () => {
-    const data = localStorage.getItem('persist:macarenia_app');
-    if (data !== null) {
-      const data_json = JSON.parse(data);
-      const data_auth = JSON.parse(data_json.auth);
-      set_user_info(data_auth.userinfo);
+  useEffect(() => {
+    if(arriendo !== null){
+      set_nombre_vehiculo(arriendo.nombre);
+      set_placa(arriendo.placa);
+      set_marca(arriendo.id_marca);
+      set_empresa_proveedora(arriendo.empresa_contratista);
+      set_descripcion(arriendo.descripcion);
+      set_abrir_hdv(arriendo.tiene_hoja_de_vida);
+      set_actualiza(true);
     }
+  }, [arriendo]);
+
+  const obtener_marcas_fc: () => void = () => {
+    dispatch(obtener_marcas()).then((response: any) => {
+      const filter_marcas = response.filter((r: any) => r.activo);
+      set_lista_marcas(filter_marcas);
+    })
   }
 
   const cambio_fecha_inicio = (date: Dayjs | null): void => {
@@ -70,14 +84,26 @@ export const ArriendoVehiculosScreen: React.FC = () => {
   const cambio_nombre_vh: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_nombre_vehiculo(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
-      set_msj_error_descripcion("");
+      set_msj_error_nom_veh("");
+  };
+
+  const cambio_empresa_proveedora: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_empresa_proveedora(e.target.value);
+    if (e.target.value !== null && e.target.value !== "")
+      set_msj_error_emp_prov("");
   };
 
   const cambio_placa: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_placa(e.target.value);
     if (e.target.value !== null && e.target.value !== "")
-      set_msj_error_descripcion("");
+      set_msj_error_placa("");
   };
+
+  const cambio_marca: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+    set_marca(e.target.value);
+    if (e.target.value !== null && e.target.value !== "")
+      set_msj_error_marca("");
+  }
 
   const cambio_descripcion: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_descripcion(e.target.value);
@@ -87,8 +113,32 @@ export const ArriendoVehiculosScreen: React.FC = () => {
 
   const validar_formulario = (): boolean => {
     let validar = true;
-    if (msj_error_descripcion === "") {
+    if (nombre_vehiculo === "") {
+      set_msj_error_nom_veh("El campo Nombre es obligatorio.");
+      validar = false;
+    }
+    if (placa === "") {
+      set_msj_error_placa("El campo Placa es obligatorio.");
+      validar = false;
+    }
+    if (marca === "") {
+      set_msj_error_marca("El campo Marca es obligatorio.");
+      validar = false;
+    }
+    if (empresa_proveedora === "") {
+      set_msj_error_emp_prov("El campo Empresa proveedora es obligatorio.");
+      validar = false;
+    }
+    if (descripcion === "") {
       set_msj_error_descripcion("El campo Descripción es obligatorio.");
+      validar = false;
+    }
+    if (fecha_inicio === null || fecha_inicio === undefined) {
+      set_msj_error_fecha_inicio("El campo Fecha inicio es obligatorio.");
+      validar = false;
+    }
+    if (fecha_fin === null || fecha_fin === undefined) {
+      set_msj_error_fecha_fin("El campo Fecha fin es obligatorio.");
       validar = false;
     }
     return validar;
@@ -96,12 +146,57 @@ export const ArriendoVehiculosScreen: React.FC = () => {
 
   const guardar_formulario = (): void => {
     if (validar_formulario()) {
-      console.log('ok', user_info);
+      const formulario: crear_arriendo = {
+        nombre: nombre_vehiculo,
+        placa,
+        id_marca: parseInt(marca),
+        empresa_contratista: empresa_proveedora,
+        descripcion,
+        asignar_hoja_de_vida: abrir_hdv,
+        es_agendable,
+        fecha_inicio: fecha_inicio.format("YYYY-MM-DD"),
+        fecha_fin: fecha_fin.format("YYYY-MM-DD")
+      };
+      actualiza ? actualiza_arriendo(formulario) : crear_arriendo(formulario);
     }
   }
 
-  const limpiar_formulario = (): void => {
+  const crear_arriendo = (formulario: crear_arriendo): void => {
+    dispatch(crear_arriendo_veh(formulario)).then((response: {success:boolean ,detail:string, data: any}) => {
+      if(response.success){
+        limpiar_formulario();
+        if(formulario.asignar_hoja_de_vida){
+          console.log('Redirecciona a hoja de vida');
+        }
+      }
+    })
+  }
 
+  const actualiza_arriendo = (formulario: crear_arriendo): void => {
+    dispatch(crear_arriendo_veh(formulario)).then((response: {success:boolean ,detail:string, data: any}) => {
+      if(response.success){
+        limpiar_formulario();
+      }
+    })
+  }
+
+  const limpiar_formulario = (): void => {
+    set_nombre_vehiculo("");
+    set_placa("");
+    set_marca("");
+    set_empresa_proveedora("");
+    set_descripcion("");
+    set_fecha_inicio(dayjs());
+    set_fecha_fin(dayjs());
+    set_abrir_hdv(false);
+    set_es_agendable(false);
+    set_msj_error_nom_veh("");
+    set_msj_error_placa("");
+    set_msj_error_marca("");
+    set_msj_error_emp_prov("");
+    set_msj_error_descripcion("");
+    set_msj_error_fecha_inicio("");
+    set_msj_error_fecha_fin("");
   }
 
   const salir_entrada: () => void = () => {
@@ -131,52 +226,60 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                   label="Nombre"
                   type={'text'}
                   size="small"
+                  required
                   fullWidth
                   value={nombre_vehiculo}
-                  InputProps={{
-                    readOnly: true,
-                  }}
                   onChange={cambio_nombre_vh}
+                  error={msj_error_nom_veh !== ""}
+                  disabled={actualiza}
                 />
+                {(msj_error_nom_veh !== "") && (<FormHelperText error >{msj_error_nom_veh}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
                   label="Placa"
                   type={'text'}
                   size="small"
+                  required
                   fullWidth
                   value={placa}
-                  InputProps={{
-                    readOnly: true,
-                  }}
                   onChange={cambio_placa}
+                  error={msj_error_placa !== ""}
+                  disabled={actualiza}
                 />
+                {(msj_error_placa !== "") && (<FormHelperText error >{msj_error_placa}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={3}>
-                <TextField
-                  label="Marca"
-                  type={'text'}
-                  size="small"
-                  fullWidth
-                  value={placa}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  onChange={cambio_placa}
-                />
+                <FormControl required size='small' fullWidth>
+                  <InputLabel>Marca</InputLabel>
+                  <Select
+                    label="Marca"
+                    value={marca}
+                    required
+                    onChange={cambio_marca}
+                    error={msj_error_marca !== ""}
+                  >
+                    {lista_marcas.map((m: any) => (
+                      <MenuItem key={m.id_marca} value={m.id_marca}>
+                        {m.nombre}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {(msj_error_marca !== "") && (<FormHelperText error >{msj_error_marca}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
                   label="Empresa proveedora"
                   type={'text'}
                   size="small"
+                  required
                   fullWidth
-                  value={placa}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  onChange={cambio_placa}
+                  value={empresa_proveedora}
+                  onChange={cambio_empresa_proveedora}
+                  error={msj_error_emp_prov !== ""}
                 />
+                {(msj_error_emp_prov !== "") && (<FormHelperText error >{msj_error_emp_prov}</FormHelperText>)}
               </Grid>
             </Grid>
           </Box>
@@ -187,8 +290,9 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                   multiline
                   rows={2}
                   value={descripcion}
-                  label="Motivo"
+                  label="Descripción"
                   size="small"
+                  required
                   fullWidth
                   onChange={cambio_descripcion}
                   error={msj_error_descripcion !== ""} />
@@ -201,7 +305,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
               <Grid item xs={12} sm={3}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    label="Fecha entrada"
+                    label="Fecha inicio"
                     value={fecha_inicio}
                     onChange={(newValue) => { cambio_fecha_inicio(newValue); }}
                     renderInput={(params) => (
@@ -213,14 +317,16 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                         error={msj_error_fecha_inicio !== ""}
                       />
                     )}
-                    maxDate={dayjs()}
+                    minDate={dayjs()}
+                    maxDate={fecha_fin}
                   />
                 </LocalizationProvider>
+                {(msj_error_fecha_inicio !== "") && (<FormHelperText error >{msj_error_fecha_inicio}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    label="Fecha entrada"
+                    label="Fecha fin"
                     value={fecha_fin}
                     onChange={(newValue) => { cambio_fecha_fin(newValue); }}
                     renderInput={(params) => (
@@ -232,16 +338,17 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                         error={msj_error_fecha_fin !== ""}
                       />
                     )}
-                    maxDate={dayjs()}
+                    minDate={fecha_inicio}
                   />
                 </LocalizationProvider>
+                {(msj_error_fecha_fin !== "") && (<FormHelperText error >{msj_error_fecha_fin}</FormHelperText>)}
               </Grid>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={3}>
                 <Stack
                   direction="row"
                   justifyContent="center"
-                  spacing={2}
                 >
+                  <FormLabel sx={{ mt: '9px' }}>Desea asignarle hoja de vida: </FormLabel>
                   <ToggleButton
                     value="check"
                     selected={abrir_hdv}
@@ -250,17 +357,28 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                     }}
                     size='small'
                   >
-                    <CheckIcon />Desea asignarle hoja de vida
+                    <CheckIcon /> {abrir_hdv ? "Si" : "No"}
                   </ToggleButton>
                 </Stack>
 
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <FormLabel sx={{ mt: '9px' }}>Es agendable: </FormLabel>
+                <ToggleButton
+                  value="check"
+                  selected={es_agendable}
+                  onChange={() => {
+                    set_es_agendable(!es_agendable);
+                  }}
+                  size='small'
+                >
+                  <CheckIcon /> {es_agendable ? "Si" : "No"}
+                </ToggleButton>
               </Grid>
             </Grid>
           </Box>
         </Grid>
       </Grid>
-
-
       <Grid item xs={6}>
         <Box
           component="form"
@@ -275,45 +393,39 @@ export const ArriendoVehiculosScreen: React.FC = () => {
             sx={{ mt: '20px' }}
           >
             <Button
-              color='error'
-              variant='contained'
-              startIcon={<DeleteForeverIcon />}
-              onClick={() => { }}
-              disabled={false}
-            >
-              Anular
-            </Button>
-            <Button
-              color='inherit'
-              variant="contained"
-              startIcon={<CleanIcon />}
-              onClick={limpiar_formulario}
-            >
-              Limpiar
-            </Button>
-            <Button
               color='secondary'
               variant='contained'
               startIcon={<SearchIcon />}
-              onClick={() => { }}
+              onClick={() => { set_buscar_arriendo(true) }}
             >
               Buscar
             </Button>
+            <BuscarArriendoComponent is_modal_active={buscar_arriendo} set_is_modal_active={set_buscar_arriendo}
+             title={"Buscar arriendo"} lista_marcas={lista_marcas} arriendo_veh={set_arriendo}></BuscarArriendoComponent>
             <Button
               color='primary'
               variant='contained'
               startIcon={<SaveIcon />}
               onClick={guardar_formulario}
             >
-              Guardar
+              {actualiza ? 'Actualizar' : 'Guardar'}
             </Button>
             <Button
-              color='error'
+              color='secondary'
               variant='contained'
               startIcon={<ClearIcon />}
               onClick={salir_entrada}
             >
               Salir
+            </Button>
+            <Button
+              color='error'
+              variant='contained'
+              startIcon={<DeleteForeverIcon />}
+              onClick={() => { }}
+              disabled={!actualiza}
+            >
+              Borrar
             </Button>
           </Stack>
         </Box>
