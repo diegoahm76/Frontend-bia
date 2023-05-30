@@ -24,7 +24,7 @@ import {
   consultar_clase_tercero,
   consultar_clase_tercero_persona,
   editar_persona_juridica,
-} from '../../../seguridad/request/Request';
+} from '../../request/Request'
 import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { CustomSelect } from '../../../../components/CustomSelect';
@@ -34,12 +34,12 @@ import { DialogHistorialEmail } from '../HistoricoEmail/HistoricoEmail';
 import { DialogHistorialDirecciones } from '../HistoricoDirecciones/HistoricoDirecciones';
 import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
 import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
-import { DialogHistorialDatosRestringidos } from '../../../seguridad/components/DialogHistorialDatosRestringidos';
+import { DialogHistorialDatosRestringidos } from '../DialogHistorialDatosRestringidos'
 import { use_register } from '../../../auth/hooks/registerHook';
 import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AdministracionPersonasScreenJuridica: React.FC<PropsUpdateJ> = ({
+export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
   data,
   register,
   handleSubmit: handle_submit,

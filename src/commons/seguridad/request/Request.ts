@@ -203,3 +203,14 @@ export const crear_persona_juridica = async (
   );
   return response.data;
 };
+
+// editar datos persona naturual
+export const editar_persona_natural_cuenta_propia = async (
+  datos: DataNaturaUpdate
+): Promise<any> => {
+  const response = await api.patch(
+    `personas/persona-natural/self/update/`,
+    datos
+  );
+  return response.data;
+};
