@@ -168,7 +168,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 <PersonIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
-                    height: '30px'
+                    height: '20px'
                   }}
                 />                
               </ListItemIcon>
@@ -181,7 +181,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 <ContactEmergencyIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
-                    height: '30px'
+                    height: '20px'
                   }}
                 />                
               </ListItemIcon>
@@ -194,7 +194,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 <CircleNotificationsIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
-                    height: '30px'
+                    height: '20px'
                   }}
                 />                
               </ListItemIcon>
@@ -211,7 +211,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                   <SupervisedUserCircleIcon
                     sx={{
                       color: mod_dark ? '#fafafa' : '#141415',
-                      height: '30px',
+                      height: '20px',
                     }}
                   />
                 </ListItemIcon>
