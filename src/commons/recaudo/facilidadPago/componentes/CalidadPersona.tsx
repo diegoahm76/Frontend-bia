@@ -146,7 +146,84 @@ export const PersonaJuridica: React.FC = () => {
   )
 }
 
-export const DeudorSolidario: React.FC = () => {
+export const DeudorSolidarioNatural: React.FC = () => {
+  const { calidad_personas } = useSelector((state: RootState) => state.calidad_personas);
+  return (
+    <>
+      <p><strong>Caso Deudor Solidario</strong></p>
+      <Grid item xs={12}>
+        <Box
+          component="form"
+          noValidate
+          autoComplete="off"
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                disabled
+                label="Tipo Deudor Solidario"
+                value={'Deudor Solidario Natural'}
+                size="small"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Button
+                color='primary'
+                variant='outlined'
+                size='medium'
+                startIcon={<CloudDownloadIcon />}
+                onClick={() => {}}
+              >
+                Ver Documento Deudor Solidario
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={3.7}>
+              <Button
+                color='primary'
+                variant='outlined'
+                size='medium'
+                startIcon={<CloudDownloadIcon />}
+                onClick={() => {}}
+              >
+                Ver Oficio Respaldando Deuda
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                disabled
+                label="Dirección Notificación"
+                value={`${calidad_personas.direccion_notificaciones}`}
+                size="small"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                disabled
+                label="Ciudad"
+                value={`${calidad_personas.ciudad}`}
+                size="small"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+              <TextField
+                disabled
+                label="Teléfono Contacto"
+                value={`${calidad_personas.telefono_celular}`}
+                size="small"
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      </Grid>
+    </>
+  )
+}
+
+export const DeudorSolidarioJuridico: React.FC = () => {
   const { calidad_personas } = useSelector((state: RootState) => state.calidad_personas);
   return (
     <>

@@ -196,7 +196,8 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     >
                       <MenuItem value='1'>Persona Natural</MenuItem>
                       <MenuItem value='2'>Persona Juridica / Apoderado</MenuItem>
-                      <MenuItem value='3'>Deudor Solidario</MenuItem>
+                      <MenuItem value='3'>Deudor Solidario Natural</MenuItem>
+                      <MenuItem value='4'>Deudor Solidario Juridico</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -415,7 +416,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
-              <h3>Caso Deudor Solidario</h3>
+              <h3>Caso Deudor Solidario Natural</h3>
               <Grid item xs={12}>
                 <Box
                   component="form"
@@ -423,19 +424,104 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={3}>
-                      <FormControl size="small" fullWidth>
-                        <InputLabel>Tipo Deudor Solidario</InputLabel>
-                        <Select
-                          label="Tipo Deudor Solidario"
-                          onChange={on_input_change}
-                          name='tipoDeudor'
-                        >
-                          <MenuItem value='DeudorNatural'>Persona Natural</MenuItem>
-                          <MenuItem value='DeudorJuridico'>Persona Juridica / Apoderado</MenuItem>
-                        </Select>
-                      </FormControl>
+                    <Grid item xs={11} sm={3.5}>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Documento Deudor Solidario'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
+                    <Grid item xs={11} sm={3.3}>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Oficio Respaldando Deuda'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        label="Dirección Notificación"
+                        helperText='Escribe la Dirección de Notificación'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='direccion'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        label="Ciudad"
+                        helperText='Escribe la Ciudad'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='ciudad'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        label="Teléfono Contacto"
+                        helperText='Escribe el Teléfono de Contacto'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='telefono'
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </>
+        ) : persona === 4 ? (
+          <>
+            <Grid
+              container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                mb: '20px',
+                mt: '20px',
+                p: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+              }}
+            >
+              <h3>Caso Deudor Solidario Juridico</h3>
+              <Grid item xs={12}>
+                <Box
+                  component="form"
+                  noValidate
+                  autoComplete="off"
+                >
+                  <Grid container spacing={2}>
                     <Grid item xs={11} sm={3.5}>
                       <Button
                         variant="outlined"

@@ -2,7 +2,7 @@
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, TextField, Checkbox, FormGroup, FormControlLabel, Button } from "@mui/material";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
-import { PersonaNatural, PersonaJuridica, DeudorSolidario } from './CalidadPersona';
+import { PersonaNatural, PersonaJuridica, DeudorSolidarioNatural, DeudorSolidarioJuridico } from './CalidadPersona';
 import { useSelector } from 'react-redux';
 import { type FacilidadPagoSolicitud } from '../interfaces/interfaces';
 
@@ -134,9 +134,11 @@ export const VistaSolicitud: React.FC = () => {
               <PersonaNatural />
             ) : solicitud_facilidad.tipo_actuacion === 'tipo 2' ? (
               <PersonaJuridica />
-            ) : (
-              <DeudorSolidario />
-            )
+            ) : solicitud_facilidad.tipo_actuacion === 'tipo 3' ? (
+              <DeudorSolidarioNatural />
+            ) : solicitud_facilidad.tipo_actuacion === 'tipo 4' ?  (
+              <DeudorSolidarioJuridico />
+            ) : null
           }
         </Grid>
         <Grid item xs={12} sm={2.9}>
