@@ -91,7 +91,6 @@ export const TablaFacilidadesAutorizadas: React.FC = () => {
                     <ArticleIcon
                       sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                     />
-
                   </Avatar>
                 </IconButton>
               </Tooltip>
