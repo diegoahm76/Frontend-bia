@@ -46,6 +46,19 @@ export const crear_arriendo_veh: any = (form_data: crear_arriendo) => {
     }
   };
 };
+// Eliminar arriendo por id
+export const eliminar_arriendo_veh: any = (id_vehiculo_arrendado: number) => {
+  return async () => {
+    try {
+      const { data } = await api.delete(`almacen/vehiculos/registro/vehiculo/arrendado/delete/${id_vehiculo_arrendado}/`);
+      control_success('El arriendo de vehículo se creo correctamente');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // Obtiene listado de marcas
 export const obtener_marcas: any = () => {
@@ -65,7 +78,7 @@ export const obtener_marcas: any = () => {
 export const obtener_arriendos: any = () => {
   return async () => {
     try {
-      const { data } = await api.get('almacen/vehiculos/busqueda/vehiculo/arrendado/?nombre=&placa=');
+      const { data } = await api.get('almacen/vehiculos/busqueda/vehiculo/arrendado/');
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

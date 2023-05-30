@@ -11,7 +11,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useAppDispatch } from "../../../../hooks";
 import { useNavigate } from "react-router-dom";
-import { crear_arriendo_veh, obtener_marcas } from "../thunks/Arriendo";
+import { crear_arriendo_veh, eliminar_arriendo_veh, obtener_marcas } from "../thunks/Arriendo";
 import { type crear_arriendo } from "./../interfaces/ArriendoVehiculo"
 import BuscarArriendoComponent from "./BuscarArriendo";
 
@@ -43,6 +43,11 @@ export const ArriendoVehiculosScreen: React.FC = () => {
   useEffect(() => {
     obtener_marcas_fc();
   }, []);
+
+  useEffect(() => {
+    if(!abrir_hdv)
+      set_es_agendable(false);
+  }, [abrir_hdv]);
 
   useEffect(() => {
     if(arriendo !== null){
@@ -180,6 +185,14 @@ export const ArriendoVehiculosScreen: React.FC = () => {
     })
   }
 
+  const elimina_arriendo = (): void => {
+    dispatch(eliminar_arriendo_veh(arriendo.id_vehiculo_arrendado)).then((response: {success:boolean ,detail:string, data: any}) => {
+      if(response.success){
+        limpiar_formulario();
+      }
+    })
+  }
+
   const limpiar_formulario = (): void => {
     set_nombre_vehiculo("");
     set_placa("");
@@ -231,7 +244,9 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                   value={nombre_vehiculo}
                   onChange={cambio_nombre_vh}
                   error={msj_error_nom_veh !== ""}
-                  disabled={actualiza}
+                  InputProps={{
+                    readOnly: actualiza,
+                  }}
                 />
                 {(msj_error_nom_veh !== "") && (<FormHelperText error >{msj_error_nom_veh}</FormHelperText>)}
               </Grid>
@@ -245,7 +260,9 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                   value={placa}
                   onChange={cambio_placa}
                   error={msj_error_placa !== ""}
-                  disabled={actualiza}
+                  InputProps={{
+                    readOnly: actualiza,
+                  }}
                 />
                 {(msj_error_placa !== "") && (<FormHelperText error >{msj_error_placa}</FormHelperText>)}
               </Grid>
@@ -352,9 +369,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                   <ToggleButton
                     value="check"
                     selected={abrir_hdv}
-                    onChange={() => {
-                      set_abrir_hdv(!abrir_hdv);
-                    }}
+                    onChange={() => { set_abrir_hdv(!abrir_hdv); }}
                     size='small'
                   >
                     <CheckIcon /> {abrir_hdv ? "Si" : "No"}
@@ -371,6 +386,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                     set_es_agendable(!es_agendable);
                   }}
                   size='small'
+                  disabled={!abrir_hdv}
                 >
                   <CheckIcon /> {es_agendable ? "Si" : "No"}
                 </ToggleButton>
@@ -400,8 +416,8 @@ export const ArriendoVehiculosScreen: React.FC = () => {
             >
               Buscar
             </Button>
-            <BuscarArriendoComponent is_modal_active={buscar_arriendo} set_is_modal_active={set_buscar_arriendo}
-             title={"Buscar arriendo"} lista_marcas={lista_marcas} arriendo_veh={set_arriendo}></BuscarArriendoComponent>
+            {buscar_arriendo && (<BuscarArriendoComponent is_modal_active={buscar_arriendo} set_is_modal_active={set_buscar_arriendo}
+             title={"Buscar arriendo"} lista_marcas={lista_marcas} arriendo_veh={set_arriendo}></BuscarArriendoComponent>)}
             <Button
               color='primary'
               variant='contained'
@@ -422,7 +438,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
               color='error'
               variant='contained'
               startIcon={<DeleteForeverIcon />}
-              onClick={() => { }}
+              onClick={elimina_arriendo}
               disabled={!actualiza}
             >
               Borrar

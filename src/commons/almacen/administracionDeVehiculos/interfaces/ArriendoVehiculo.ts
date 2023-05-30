@@ -19,3 +19,8 @@ export interface obtener_arriendo {
   tiene_hoja_de_vida: boolean,
   id_marca: number
 }
+
+export interface eliminar_arriendo {
+  id_vehiculo_arrendado:number,
+  fecha_fin:string
+}
