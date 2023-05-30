@@ -6,12 +6,13 @@ import type {
   DataUnlockUser,
   InfoPersonaComplete,
   ChangePassword,
-  DataUserRecover,
+  RecoverPassword,
   ResponseRecover,
   DataRegisterPersonaN,
   Menu,
   User,
-  DataRegisterPersonaJ
+  DataRegisterPersonaJ,
+  RecoverUser
 } from '../interfaces/authModels';
 import type {
   ResponseServer,
@@ -119,9 +120,15 @@ export const password_unblock_complete = async (
 };
 
 export const recover_password = async (
-  data: DataUserRecover
+  data: RecoverPassword
 ): Promise<AxiosResponse<ResponseServer<ResponseRecover>>> => {
   return await api.post('users/request-reset-email/', data);
+};
+
+export const recover_user = async (
+  data: RecoverUser
+): Promise<AxiosResponse<ResponseServer<ResponseRecover>>> => {
+  return await api.put('users/recuperar-nombre-usuario/', data);
 };
 
 export const create_user = async (

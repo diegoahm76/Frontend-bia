@@ -51,6 +51,10 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
     }
   };
 
+  /* useEffect(()=>{
+    void get_bienes_deudor(1)
+  },[]) */
+
   useEffect(() => {
     if(solicitud_facilidad.id_deudor_actuacion !== undefined){
       try {
@@ -165,7 +169,8 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     onChange={(event: check) => {
                       const { checked } = event.target
                       console.log('Reportado en BDME', checked)
-                    }} />}
+                    }}
+                  />}
                   label="Usuario reportado en BDME"
                 />
               </Grid>
@@ -260,7 +265,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                           }
                         }}
                       >
-                      Crear Resolución
+                        Crear Resolución
                       </Button>
                     </Grid>
                     <Grid item sm={5}>
@@ -269,7 +274,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                         variant='contained'
                         onClick={() => {}}
                       >
-                      Ver Resolución
+                        Ver Resolución
                       </Button>
                     </Grid>
                   </>

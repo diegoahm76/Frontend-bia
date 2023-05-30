@@ -209,9 +209,12 @@ export const LoginForm: React.FC = () => {
           </Grid>
           <Grid item xs={12}>
             <Link className="no-decoration" to="/auth/recuperar_contrasena">
-              <Typography sx={{ textAlign: 'center', mb: '20px' }}>
-                ¿Olvidó su contraseña?
-              </Typography>
+              <Typography textAlign="center">¿Olvidó su contraseña?</Typography>
+            </Link>
+          </Grid>
+          <Grid item xs={12}>
+            <Link className="no-decoration" to="/auth/recuperar_usuario">
+              <Typography textAlign="center">¿Olvidó su usuario?</Typography>
             </Link>
           </Grid>
         </Grid>

@@ -300,7 +300,7 @@ export const delegar_organigrama_persona:any = (id_persona: number, organigrama:
 export const cambio_organigrama_actual:any = (data_cambio:DataCambioOrganigramaActual) => {
   return async (dispatch: Dispatch<any>) => {
       try {
-          const { data } = await api.post('transversal/organigrama/change-actual-organigrama/', data_cambio);          
+          const { data } = await api.put('transversal/organigrama/change-actual-organigrama/', data_cambio);          
           control_success("Proceso exitoso");
           return data;
       } catch (error: any) {

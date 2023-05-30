@@ -4,6 +4,7 @@ import { RecuperarContrasenaScreen } from '../screens/RecuperarContrasenaScreen'
 import { DesbloqueoDeUsuarioScreen } from '../screens/DesbloqueoDeUsuarioScreen';
 import { ConfirmarCuentaScreen } from '../screens/ConfirmarCuentaScreen';
 import { CambiarContrasenaScreen } from '../screens/CambiarContrasenaScreen';
+import { RecuperarUsuario } from '../screens/RecuperarUsuarioScreen';
 
 import { Page404 } from '../../../screens/404';
 
@@ -18,6 +19,7 @@ export const AuthRoutes: React.FC = () => {
         path="/recuperar_contrasena"
         element={<RecuperarContrasenaScreen />}
       />
+      <Route path="/recuperar_usuario" element={<RecuperarUsuario />} />
       <Route path="/cambiar_contrasena" element={<CambiarContrasenaScreen />} />
       <Route
         path="/desbloqueo_usuario"

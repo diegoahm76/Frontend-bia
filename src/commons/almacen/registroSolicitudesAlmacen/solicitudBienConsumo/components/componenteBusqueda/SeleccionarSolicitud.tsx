@@ -34,7 +34,7 @@ const SeleccionarSolicitud = ({
         {
             field: 'fecha_solicitud',
             headerName: 'Fecha de solicitud',
-            width: 100,
+            width: 400,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -43,7 +43,7 @@ const SeleccionarSolicitud = ({
 
         },
         {
-            field: 'observacion',
+            field: 'persona_solicita',
             headerName: 'Observación',
             width: 350,
             renderCell: (params) => (
@@ -117,7 +117,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 5,
+                            md: 8,
                             control_form: control_solicitud,
                             control_name: "fecha_solicitud",
                             default_value: "",
@@ -134,7 +134,7 @@ const SeleccionarSolicitud = ({
                             control_form: control_solicitud,
                             control_name: "observacion",
                             default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "requerido" } },
                             label: "Observacion de solicitud",
                             type: "text",
                             multiline_text: true,
@@ -194,7 +194,7 @@ const SeleccionarSolicitud = ({
                             control_form: control_solicitud,
                             control_name: "nombre_unidad_organizacional",
                             default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "requerido" } },
                             label: "Unidad a la que pertenece:",
                             type: "text",
                             disabled: true,
