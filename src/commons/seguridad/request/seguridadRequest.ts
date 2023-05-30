@@ -253,3 +253,14 @@ export const get_person_user_or_users_by_document = async (
     `personas/get-personas-by-document-admin-user/${tipo_documento}/${numero_documento}`
   );
 };
+
+// editar datos de acceso 
+export const editar_datos_acceso = async (
+  datos: FormData
+): Promise<any> => {
+  const response = await api.put(
+    `users/profile/update/`,
+    datos
+  );
+  return response.data;
+};

@@ -825,6 +825,32 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
               </Grid>
             </>
           )}
+          <Grid item xs={12}>
+            <FormControlLabel
+              label="¿Autoriza notificaciones judiciales por correo electrónico?"
+              control={
+                <Checkbox
+                  size="small"
+                  disabled={id_persona > 0}
+                  checked={acepta_notificacion_email}
+                  {...register('acepta_notificacion_email')}
+                />
+              }
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <FormControlLabel
+              label="¿Autoriza notificaciones informativas a través de mensajes de texto?"
+              control={
+                <Checkbox
+                  size="small"
+                  disabled={id_persona > 0}
+                  checked={acepta_notificacion_sms}
+                  {...register('acepta_notificacion_sms')}
+                />
+              }
+            />
+          </Grid>
           {id_persona === 0 && (
             <>
               <Grid item xs={12}>
@@ -854,32 +880,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
               </Grid>
             </>
           )}
-          <Grid item xs={12}>
-            <FormControlLabel
-              label="¿Autoriza notificaciones judiciales por correo electrónico?"
-              control={
-                <Checkbox
-                  size="small"
-                  disabled={id_persona > 0}
-                  checked={acepta_notificacion_email}
-                  {...register('acepta_notificacion_email')}
-                />
-              }
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControlLabel
-              label="¿Autoriza notificaciones informativas a través de mensajes de texto?"
-              control={
-                <Checkbox
-                  size="small"
-                  disabled={id_persona > 0}
-                  checked={acepta_notificacion_sms}
-                  {...register('acepta_notificacion_sms')}
-                />
-              }
-            />
-          </Grid>
           {id_persona > 0 && (
             <>
               <Grid item xs={12}>
