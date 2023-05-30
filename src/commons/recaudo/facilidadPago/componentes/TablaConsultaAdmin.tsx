@@ -153,7 +153,7 @@ export const TablaConsultaAdmin: React.FC = () => {
                   }
                 }}
               >
-              Buscar
+                Buscar
               </Button>
               <Button
                 color='primary'
@@ -167,7 +167,7 @@ export const TablaConsultaAdmin: React.FC = () => {
                   }
                 }}
               >
-              Mostrar Todo
+                Mostrar Todo
               </Button>
             </Stack>
           </Box>

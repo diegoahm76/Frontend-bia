@@ -1,6 +1,7 @@
 import { Grid, Box, TextField } from "@mui/material";
 import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InputsEncabezado: React.FC = () => {
   return (

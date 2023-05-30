@@ -265,7 +265,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                           }
                         }}
                       >
-                      Crear Resolución
+                        Crear Resolución
                       </Button>
                     </Grid>
                     <Grid item sm={5}>
@@ -274,7 +274,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                         variant='contained'
                         onClick={() => {}}
                       >
-                      Ver Resolución
+                        Ver Resolución
                       </Button>
                     </Grid>
                   </>

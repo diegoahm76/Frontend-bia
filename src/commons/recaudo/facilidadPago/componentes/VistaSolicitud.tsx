@@ -124,7 +124,7 @@ export const VistaSolicitud: React.FC = () => {
             label="Calidad en que actúa la persona"
             size="small"
             fullWidth
-            value={solicitud_facilidad.tipo_actuacion === 'tipo 1' ? 'Persona Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 2' ? 'Persona Juridica' : 'Deudor Solidario'}
+            value={solicitud_facilidad.tipo_actuacion === 'tipo 1' ? 'Persona Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 2' ? 'Persona Juridica' : solicitud_facilidad.tipo_actuacion === 'tipo 3' ? 'Deudor Solidario Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 4' ? 'Deudor Solidario Juridico' : null }
             disabled
           />
         </Grid>
