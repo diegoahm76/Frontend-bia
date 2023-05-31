@@ -9,9 +9,9 @@ import { NotificacionPage } from '../screens/NotificacionPage';
 
 
 const routes = [
-  { path: '/personas/datos_personales_modificacion_restringida', element: <ActualizacionDatosRestringidosScreen /> },
-  { path: '/personas/administracion_personas', element: <AdminUsuariosScreen /> },
-  { path: '/personas/autorizacion_notificaciones_cuentas', element: <NotificacionPage /> },
+  { path: '/datos_restringidos', element: <ActualizacionDatosRestringidosScreen /> },
+  { path: '/administracion_personas', element: <AdminUsuariosScreen /> },
+  { path: '/autorizacion_notificacion', element: <NotificacionPage /> },
 ];
 export const TransversalRoutes: React.FC = () => {
   return (
