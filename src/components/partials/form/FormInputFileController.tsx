@@ -67,7 +67,7 @@ const FormInputFileController = ({
                             variant="outlined" 
                             startIcon={<CloudUploadIcon />}
                             >
-                                {file_name!==""?file_name:label}
+                                {file_name !== "" ? file_name : label}
                             <Input
                                 type="file"
                                 disabled={disabled}
