@@ -10,7 +10,7 @@ import { NotificacionPage } from '../screens/NotificacionPage';
 
 const routes = [
   { path: '/datos_restringidos', element: <ActualizacionDatosRestringidosScreen /> },
-  { path: '/administracion_usuarios', element: <AdminUsuariosScreen /> },
+  { path: '/administracion_personas', element: <AdminUsuariosScreen /> },
   { path: '/autorizacion_notificacion', element: <NotificacionPage /> },
 ];
 export const TransversalRoutes: React.FC = () => {
