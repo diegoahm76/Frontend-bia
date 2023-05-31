@@ -46,6 +46,8 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
     dpto_notifiacion,
     direccion_notificaciones,
     is_modal_active,
+    nacionalidad_empresa,
+    ciudad_notificacion,
     set_value_direction,
     on_change,
     open_modal,
@@ -57,10 +59,7 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
     useState<boolean>(false);
 
   // watchers
-  // const nacionalidad_empresa = watch('nacionalidad_empresa') ?? '';
   const tipo_persona = watch('tipo_persona') ?? '';
-  const ciudad_notificacion = watch('ciudad_notificacion') ?? data.cod_municipio_notificacion_nal ?? '';
-  const nacionalidad_empresa = watch('nacionalidad_empresa') ?? data.cod_pais_nacionalidad_empresa ?? '';
   const acepta_notificacion_email =
     watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email ?? false;
   const acepta_notificacion_sms =
@@ -77,6 +76,7 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
   };
   useEffect(() => {
     if (data !== undefined) {
+      console.log(data);
       set_value('tipo_persona', data.tipo_persona);
       set_value('nacionalidad_empresa', data.cod_pais_nacionalidad_empresa);
       set_value('dpto_notifiacion', data.cod_departamento_notificacion);
@@ -304,7 +304,7 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
             </Grid>
           </Grid>
           {/* Datos del representante legal */}
-          <Grid container spacing={2}>
+          <Grid container spacing={2} mt={0.1}>
             <Grid item xs={12}>
               <Title title="DATOS DEL REPRESENTANTE LEGAL" />
             </Grid>
@@ -312,6 +312,7 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
               <DatosRepresentanteLegal
                 id_representante_legal={data?.representante_legal ?? 0}
                 id_persona={data?.id_persona}
+                fecha_inicio={data.fecha_inicio_cargo_rep_legal}
               />
             </Grid>
           </Grid>

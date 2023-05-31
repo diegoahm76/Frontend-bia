@@ -625,6 +625,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
                 <DatosRepresentanteLegal
                   id_representante_legal={representante_legal ?? 0}
                   id_persona={id_persona}
+                  fecha_inicio={'2023-05-15'}
                 />
               </Grid>
             </>

@@ -13,11 +13,12 @@ import { DialogRepresentanteLegal } from '../DialogCambioRepresentanteLegal/Dial
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { DialogHistoricoRepresentanteLegal } from '../HistoricoRepresentanteLegal/HistoricoRepresentanteLegal';
 import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosRepresentanteLegal: React.FC<
   PropsDatosRepresentanteLegal
-> = ({ id_representante_legal, id_persona }: PropsDatosRepresentanteLegal) => {
+> = ({ id_representante_legal, id_persona, fecha_inicio}: PropsDatosRepresentanteLegal) => {
   const {
     register,
     formState: { errors },
@@ -332,10 +333,7 @@ export const DatosRepresentanteLegal: React.FC<
                     datos_representante?.cod_municipio_notificacion_nal
                   }
                   options={ciudad_notificacion_opt}
-                  disabled={
-                    datos_representante?.cod_departamento_notificacion ===
-                    '' ?? true
-                  }
+                  disabled={true}
                   required={true}
                   errors={errors}
                   register={register}
@@ -359,7 +357,7 @@ export const DatosRepresentanteLegal: React.FC<
                     label="Fecha de inicio como representante legal"
                     inputFormat="YYYY-MM-DD"
                     openTo="day"
-                    value={datos_representante.fecha_inicio_cargo_rep_legal}
+                    value={dayjs(fecha_inicio)}
                     views={['year', 'month', 'day']}
                     renderInput={(params) => (
                       <TextField

@@ -22,7 +22,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
-import { editar_persona_natural_cuenta_propia,
+import {
+  editar_persona_natural_cuenta_propia,
 } from '../../request/Request';
 import type { Dayjs } from 'dayjs';
 import { LoadingButton } from '@mui/lab';
@@ -63,27 +64,29 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
     departamento_laboral,
     dpto_laboral_opt,
     departamento_laboral_opt,
+    genero,
+    ciudad_expedicion,
+    direccion,
+    dpto_notifiacion,
+    ciudad_notificacion,
+    municipio_laboral,
+    direccion_laboral,
+    direccion_notificaciones,
     is_modal_active,
     set_value_direction,
     on_change,
     open_modal,
   } = use_register_persona_n({ watch, setValue: set_value, getValues });
+
   const { tipo_persona_opt } = use_register();
+  
   const [type_direction, set_type_direction] = useState('');
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
 
   const [dialog_notificaciones, set_dialog_notificaciones] =
     useState<boolean>(false);
 
-  const direccion_laboral = watch('direccion_laboral') ?? '';
-  const municipio_laboral = watch('municipio_laboral') ?? '';
-  const ciudad_notificacion = watch('ciudad_notificacion') ?? '';  
-  const direccion = watch('direccion') ?? data.direccion_residencia ?? '';
-  const ciudad_expedicion = watch('ciudad_expedicion') ?? '';
-  const genero = watch('genero') ?? '';
   const tipo_persona = watch('tipo_persona') ?? '';
-  const direccion_notificaciones = watch('direccion_notificaciones') ?? data.direccion_notificaciones ?? '';
-  const dpto_notifiacion = watch('dpto_notifiacion') ?? data.cod_departamento_notificacion ?? '';
   // watchers
   const misma_direccion = watch('misma_direccion') ?? false;
   const acepta_notificacion_email =
@@ -107,6 +110,8 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   };
 
   useEffect(() => {
+    console.log('getValues', getValues());
+    console.log('data', data);
     if (data !== null) {
       set_value('tipo_persona', data.tipo_persona);
       set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
@@ -212,6 +217,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha de nacimiento *"
+                inputFormat="YYYY-MM-DD"
                 value={fecha_nacimiento}
                 onChange={on_change_birt_day}
                 renderInput={(params) => (
@@ -679,6 +685,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               </Button>
             </Stack>
           </Grid>
+          <Divider></Divider>
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <LoadingButton
