@@ -43,10 +43,37 @@ export const AdministracionPersonasScreen: React.FC = () => {
           const temp = key as key_data_persona;
           set_value(key, data[temp]);
         }
+        set_value('tipo_persona', data.tipo_persona);
         set_value('fecha_nacimiento', data.fecha_nacimiento);
+        set_value('pais_nacimiento', data.pais_nacimiento);
+        set_value('genero', data.sexo);
+        set_value('estado_civil', data.estado_civil);
         set_value('departamento_expedicion', data.cod_departamento_expedicion);
-        set_value('ciudad_expedicion', data.cod_departamento_expedicion);
+        set_value('ciudad_expedicion', data.cod_municipio_expedicion_id);
+        // residencia
+        set_value('pais_residencia', data.pais_residencia);
         set_value('departamento_residencia', data.cod_departamento_residencia);
+        set_value('municipio_residencia', data.municipio_residencia);
+        set_value('direccion', data.direccion_residencia);
+        set_value('direccion_residencia_ref', data.direccion_residencia_ref);
+        // notificaciones
+        set_value('dpto_notifiacion', data.cod_departamento_notificacion);
+        set_value('ciudad_notificacion', data.cod_municipio_notificacion_nal);
+        set_value('direccion_notificaciones', data.direccion_notificaciones);
+        set_value('complemento_direccion', data.direccion_notificacion_referencia);
+        // laboral
+        set_value('departamento_laboral', data.cod_departamento_laboral);
+        set_value('municipio_laboral', data.cod_municipio_laboral_nal);
+        set_value('direccion_laboral', data.direccion_laboral);
+
+        // juridica
+        set_value('naturaleza_empresa', data.cod_naturaleza_empresa);
+        set_value('nacionalidad_empresa', data.cod_pais_nacionalidad_empresa);
+        set_value('dpto_notifiacion', data.cod_departamento_notificacion);
+        set_value('ciudad_notificacion', data.cod_municipio_notificacion_nal);
+        set_value('direccion_notificaciones', data.direccion_notificaciones);
+        set_value('complemento_direccion', data.direccion_notificacion_referencia)
+
       }
     } catch (err) {
       const temp = err as AxiosError;
