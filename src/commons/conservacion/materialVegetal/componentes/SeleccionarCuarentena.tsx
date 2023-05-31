@@ -5,9 +5,11 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
 import { set_current_lifting, set_current_nursery, set_current_plant_quarantine, set_plant_quarantines } from '../store/slice/materialvegetalSlice';
-import { get_nurseries_quarantine_service, get_lifting_quarantines_service } from '../store/thunks/materialvegetalThunks';
-import { IObjNursery, IObjQuarantine } from '../interfaces/materialvegetal';
+import { get_nurseries_quarantine_service, get_lifting_quarantines_service, get_plant_quarantines_service, get_liftings_service, get_quareantines_code_service, get_mortalities_service } from '../store/thunks/materialvegetalThunks';
+import { type IObjNursery, type IObjQuarantine } from '../interfaces/materialvegetal';
 import { useForm } from 'react-hook-form';
+import SeleccionarModeloDialogForm from "../../../../components/partials/getModels/SeleccionarModeloDialogForm";
+
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -15,7 +17,9 @@ const SeleccionarCuarentena = () => {
   const { control: control_cuarentena, handleSubmit: handle_submit, reset: reset_cuarentena, getValues: get_values, watch } = useForm<IObjQuarantine>();
 
   const dispatch = useAppDispatch()
-  const { nurseries, current_plant_quarantine, plant_quarantines, current_lifting, current_nursery } = useAppSelector((state) => state.material_vegetal);
+  const { nurseries, current_plant_quarantine, plant_quarantines, current_lifting, current_nursery, planting_person } = useAppSelector((state) => state.material_vegetal);
+  const [bienes, set_bienes] = useState<any>([]);
+  const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
 
 
 
@@ -138,15 +142,20 @@ const SeleccionarCuarentena = () => {
 
   useEffect(() => {
     if (current_plant_quarantine.id_cuarentena_mat_vegetal !== null) {
+      void dispatch(get_liftings_service(current_plant_quarantine.id_cuarentena_mat_vegetal??0))
+        void dispatch(get_mortalities_service(current_plant_quarantine.id_cuarentena_mat_vegetal??0))
       dispatch(set_current_lifting({
         ...current_lifting,
         id_cuarentena_mat_vegetal: current_plant_quarantine.id_cuarentena_mat_vegetal ?? null,
         cantidad_cuarentena: current_plant_quarantine.cantidad_cuarentena,
         cantidad_levantada: current_plant_quarantine.cantidad_levantada,
         cantidad_mortalidad: current_plant_quarantine.cantidad_bajas,
-        cantidad_disponible: current_plant_quarantine.cantidad_disponible,
+        cantidad_disponible: (current_plant_quarantine.cantidad_cuarentena??0) - (current_plant_quarantine.cantidad_levantada??0) - (current_plant_quarantine.cantidad_bajas??0),
+        id_persona_levanta: planting_person.id_persona,
+        realizado_por: planting_person.nombre_completo
       }))
     }
+    reset_cuarentena(current_plant_quarantine);
   }, [current_plant_quarantine]);
 
   const get_ingresos_cuarentena: any = (async () => {
@@ -154,7 +163,7 @@ const SeleccionarCuarentena = () => {
     const name= get_values("nombre_bien") ?? ""
     const agno_lote= get_values("agno_lote") ?? null
     const cod_etapa= get_values("cod_etapa_lote") ?? ""
-    void dispatch(get_lifting_quarantines_service(current_nursery.id_vivero ,code, name, agno_lote, cod_etapa));
+    void dispatch(get_lifting_quarantines_service(current_nursery.id_vivero, code, name, agno_lote, cod_etapa));
   })
 
   useEffect(() => {
@@ -166,6 +175,32 @@ const SeleccionarCuarentena = () => {
     }
   }, [watch("id_vivero")]);
 
+  const search_bien: any = (async () => {
+    try {
+        const id_vivero = current_nursery.id_vivero
+        if (id_vivero !== null && id_vivero !== undefined) {
+            const codigo = get_values("codigo_bien") ?? ""
+            const data = await dispatch(get_quareantines_code_service(id_vivero, codigo));
+            set_bienes(data)
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    
+  })
+
+useEffect(() => {
+    if('success' in bienes){
+        if(bienes.success === true){
+            if('data' in bienes){
+                if(bienes.data.length > 1){
+                    set_select_model_is_active(true);
+                }
+            }
+        }
+    }
+}, [bienes]);
+
   return (
     <>
       <Grid
@@ -175,7 +210,7 @@ const SeleccionarCuarentena = () => {
         borderRadius={2}
       >
         <BuscarModelo
-          set_current_model={current_plant_quarantine}
+          set_current_model={set_current_plant_quarantine}
           row_id={"id_cuarentena_mat_vegetal"}
           columns_model={columns_cuarentena}
           models={plant_quarantines}
@@ -209,8 +244,9 @@ const SeleccionarCuarentena = () => {
               rules: {required_rule: { rule: true, message: "Bien requerido" }},
               label: "Codigo bien",
               type: "text",
-              disabled: false,
-              helper_text: ""
+              disabled: current_nursery.id_vivero === null,
+              helper_text: "",
+              on_blur_function: search_bien,
             },
             {
               datum_type: "input_controller",
@@ -354,7 +390,19 @@ const SeleccionarCuarentena = () => {
            
           ]}
         />
-
+        <SeleccionarModeloDialogForm
+          set_current_model={set_current_plant_quarantine}
+          is_modal_active={select_model_is_active}
+          set_is_modal_active={set_select_model_is_active}
+          modal_title={"Seleccionar ingreso a cuarentena"}
+          form_filters={[]}
+          set_models={set_plant_quarantines}
+          get_filters_models={null}
+          models={plant_quarantines}
+          columns_model={columns_cuarentena}
+          row_id={"id_cuarentena_mat_vegetal"}
+          title_table_modal={"Resultados de la busqueda"}
+      />
       </Grid>
     </>
   );

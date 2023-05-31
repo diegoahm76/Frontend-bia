@@ -2,6 +2,7 @@ import Grid from '@mui/material/Grid';
 import { Controller } from 'react-hook-form';
 import { Button, FormControl, FormHelperText, Input } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useEffect } from 'react';
 
 interface IRuleMessage {
     rule: any;
@@ -67,7 +68,7 @@ const FormInputFileController = ({
                             variant="outlined" 
                             startIcon={<CloudUploadIcon />}
                             >
-                                {file_name!==""?file_name:label}
+                                {file_name !== "" ? file_name : label}
                             <Input
                                 type="file"
                                 disabled={disabled}

@@ -5,7 +5,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import SeleccionarModeloDialogForm from "../../../../components/partials/getModels/SeleccionarModeloDialogForm";
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IObjSeedLot } from "../interfaces/materialvegetal";
-import { set_current_plant_seed_lot, set_plant_seed_lots } from '../store/slice/materialvegetalSlice';
+import { set_current_plant_quarantine, set_current_plant_seed_lot, set_plant_seed_lots } from '../store/slice/materialvegetalSlice';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import { get_lots_code_service, get_lots_service } from '../store/thunks/materialvegetalThunks';
@@ -17,11 +17,11 @@ const SeleccionarLoteSiembra = () => {
 
     const { control: control_bien, reset: reset_bien, getValues: get_values_bien} = useForm<IObjSeedLot>();
   
-    const [bienes, set_bienes] = useState<any[]>([]);
+    const [bienes, set_bienes] = useState<any>([]);
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
 
 
-    const { current_nursery, current_plant_seed_lot, plant_seed_lots } = useAppSelector((state) => state.material_vegetal);
+    const { current_nursery, current_plant_seed_lot, plant_seed_lots, current_plant_quarantine } = useAppSelector((state) => state.material_vegetal);
     const dispatch = useAppDispatch();
 
     const columns_bienes: GridColDef[] = [
@@ -120,8 +120,8 @@ const SeleccionarLoteSiembra = () => {
     useEffect(() => {
         if('success' in bienes){
             if(bienes.success === true){
-                if('modal' in bienes){
-                    if(bienes.modal === true){
+                if('data' in bienes){
+                    if(bienes.data.length > 1){
                         set_select_model_is_active(true);
                     }
                 }
@@ -133,6 +133,20 @@ const SeleccionarLoteSiembra = () => {
     useEffect(() => {
         reset_bien(current_plant_seed_lot)
     }, [current_plant_seed_lot]);
+
+    useEffect(() => {
+        if(current_plant_seed_lot.id_inventario_vivero === null)
+            {reset_bien({ 
+                ...current_plant_seed_lot, 
+                codigo_bien: current_plant_quarantine.codigo_bien, 
+                nombre_bien: current_plant_quarantine.nombre_bien,
+                nro_lote: current_plant_quarantine.nro_lote,
+                agno_lote: current_plant_quarantine.agno_lote,
+                cod_etapa_lote: current_plant_quarantine.cod_etapa_lote
+            
+            })
+        }
+    }, [current_plant_quarantine]);
     
 
     return (
@@ -151,7 +165,7 @@ const SeleccionarLoteSiembra = () => {
                     get_filters_models={get_bienes}
                     set_models={set_plant_seed_lots}
                     button_submit_label='Buscar bien'
-                    button_submit_disabled= {current_nursery.id_vivero === null}
+                    button_submit_disabled= {current_plant_quarantine.id_cuarentena_mat_vegetal !== null}
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -167,7 +181,7 @@ const SeleccionarLoteSiembra = () => {
                             rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
                             label: "Codigo bien",
                             type: "number",
-                            disabled: false,
+                            disabled: current_plant_quarantine.id_cuarentena_mat_vegetal !== null,
                             helper_text: "",
                             on_blur_function: search_bien,
                         },

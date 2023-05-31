@@ -22,7 +22,7 @@ export interface IMaterialVegetal {
   current_plant_quarantine: IObjQuarantine;
   plant_quarantine_lifting: IObjLifting[];
   current_lifting: IObjLifting;
-  // plant_quarantine_mortalities: IObjMortality[];
+  plant_quarantine_mortalities: IObjMortality[];
 }
 
 export interface IObjSeedLot {
@@ -64,29 +64,37 @@ export interface IObjQuarantine {
   id_persona_anula?: number | null;
   codigo_bien?: string | null;
   nombre_bien?: string | null;
-  cantidad_disponible?: number | null;
+  saldo_disponible?: number | null;
 }
 
 export interface IObjLifting {
   id_item_levanta_cuarentena: number | null;
-  realizado_por: string | null;
+  realizado_por?: string | null;
   consec_levan_por_cuaren: string | null;
   fecha_levantamiento: string | null;
   fecha_registro: string | null;
-  cantidad_a_levantar:string | null;
+  cantidad_a_levantar: string | null;
   observaciones: string | null;
   levantamiento_anulado: boolean | null;
   justificacion_anulacion: string | null;
   fecha_anulacion: string | null;
   id_cuarentena_mat_vegetal: number | null;
   id_persona_levanta: number | null;
-  persona_levanta?: string | null,
   id_persona_anula: number | null;
-  persona_anula?: string | null,
-  cantidad_cuarentena?: number | null,
-  cantidad_levantada?: number | null,
-  cantidad_mortalidad?: number | null,
-  cantidad_disponible?: number | null,
+  persona_anula?: string | null;
+  cantidad_cuarentena?: number | null;
+  cantidad_levantada?: number | null;
+  cantidad_mortalidad?: number | null;
+  cantidad_disponible?: number | null;
+}
+
+export interface IObjMortality {
+  id_item_baja_viveros: number | null;
+  consecutivo_mortalidad: number | null;
+  fecha_mortalidad: string | null;
+  cantidad_mortalidad: number | null;
+  observaciones: string | null;
+  realizado_por: string | null;
 }
 
 export interface IObjPlantingGoods {

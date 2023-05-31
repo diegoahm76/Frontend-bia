@@ -19,7 +19,7 @@ const SeleccionarIngresoCuarentena = ({
 }: IProps) => {
 
   const dispatch = useAppDispatch()
-  const { nurseries, current_plant_quarantine, plant_quarantines } = useAppSelector((state) => state.material_vegetal);
+  const { planting_person, nurseries, current_plant_quarantine, plant_quarantines } = useAppSelector((state) => state.material_vegetal);
   const [file, set_file] = useState<any>(null);
   const [file_name, set_file_name] = useState<any>("");
 
@@ -142,24 +142,31 @@ const SeleccionarIngresoCuarentena = ({
   }, []);
 
   useEffect(() => {
+    console.log(file)
     if (file !== null) {
       if ('name' in file) {
         set_file_name(file.name)
+        console.log(file.name)
         dispatch(set_current_plant_quarantine({
-          ...set_current_plant_quarantine, 
+          ...current_plant_quarantine, 
           id_vivero: get_values("id_vivero"), 
           id_bien: get_values("id_bien"), 
           cantidad_cuarentena: get_values("cantidad_cuarentena"), 
           descrip_corta_diferenciable: get_values("descrip_corta_diferenciable"), 
-          motivo: get_values("motivo")
+          motivo: get_values("motivo"),
+          id_persona_cuarentena: planting_person.id_persona,
+          persona_cuarentena: planting_person.nombre_completo,
+          ruta_archivo_soporte: file
         }))
       }
     }
   }, [file]);
 
   useEffect(() => {
-    if (current_plant_quarantine.ruta_archivo_soporte !== null) {
-      set_file_name(current_plant_quarantine.ruta_archivo_soporte)
+    if(current_plant_quarantine.id_cuarentena_mat_vegetal !== null){
+      if (current_plant_quarantine.ruta_archivo_soporte !== null) {
+        set_file_name(current_plant_quarantine.ruta_archivo_soporte)
+      }
     }
   }, [current_plant_quarantine]);
 
@@ -180,7 +187,7 @@ const SeleccionarIngresoCuarentena = ({
         borderRadius={2}
       >
         <BuscarModelo
-          set_current_model={current_plant_quarantine}
+          set_current_model={set_current_plant_quarantine}
           row_id={"id_cuarentena_mat_vegetal"}
           columns_model={columns_cuarentena}
           models={plant_quarantines}
@@ -242,16 +249,16 @@ const SeleccionarIngresoCuarentena = ({
               disabled: false,
               helper_text: "",
               set_value: set_file,
-              file_name,
+              file_name: file_name,
             },
             {
               datum_type: "input_controller",
               xs: 12,
-              md: current_plant_quarantine.id_cuarentena_mat_vegetal === null ? 3:6,
+              md: current_plant_quarantine.id_cuarentena_mat_vegetal !== null ? 3:6,
               control_form: control_cuarentena,
               control_name: "cantidad_cuarentena",
               default_value: "",
-              rules: { required_rule: { rule: false, message: "Cantidad requerido" }, min_rule: {rule: 0.01, message: "La cantidad debe ser mayor a 0"}, max_rule: {rule: current_plant_quarantine.cantidad_disponible, message: "La cantidad debe ser maximo "+String(current_plant_quarantine.cantidad_disponible) }  },
+              rules: { required_rule: { rule: true, message: "Cantidad requerido" }, min_rule: {rule: 0.01, message: "La cantidad debe ser mayor a 0"}, max_rule: {rule: current_plant_quarantine.saldo_disponible, message: "La cantidad debe ser maximo "+String(current_plant_quarantine.saldo_disponible) }  },
               label: "Cantidad a cuarentena",
               type: "number",
               disabled: false,
@@ -260,9 +267,9 @@ const SeleccionarIngresoCuarentena = ({
             {
               datum_type: "input_controller",
               xs: 12,
-              md: current_plant_quarantine.id_cuarentena_mat_vegetal === null ? 3:6,
+              md: current_plant_quarantine.id_cuarentena_mat_vegetal !== null ? 3:6,
               control_form: control_cuarentena,
-              control_name: "cantidad_disponible",
+              control_name: "saldo_disponible",
               default_value: "",
               rules: { required_rule: { rule: false, message: "Cantidad requerido" } },
               label: "Cantidad disponible",
@@ -282,7 +289,7 @@ const SeleccionarIngresoCuarentena = ({
               type: "number",
               disabled: true,
               helper_text: "",
-              hidden_text: current_plant_quarantine.id_cuarentena_mat_vegetal !== null
+              hidden_text: current_plant_quarantine.id_cuarentena_mat_vegetal === null
             },
             {
               datum_type: "input_controller",
@@ -296,7 +303,7 @@ const SeleccionarIngresoCuarentena = ({
               type: "number",
               disabled: true,
               helper_text: "",
-              hidden_text: current_plant_quarantine.id_cuarentena_mat_vegetal !== null
+              hidden_text: current_plant_quarantine.id_cuarentena_mat_vegetal === null
             },
             {
               datum_type: "input_controller",
@@ -331,7 +338,7 @@ const SeleccionarIngresoCuarentena = ({
             {
               datum_type: "input_controller",
               xs: 12,
-              md: 12,
+              md: 9,
               control_form: control_cuarentena,
               control_name: "persona_cuarentena",
               default_value: "",

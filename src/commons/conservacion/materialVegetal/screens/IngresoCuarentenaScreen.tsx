@@ -5,7 +5,7 @@ import SeleccionarLoteSiembra from "../componentes/SeleccionarLoteSiembra";
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { set_current_plant_quarantine, set_current_nursery, set_current_plant_seed_lot, initial_satate_current_plant_seed_lot } from '../store/slice/materialvegetalSlice';
 import { useEffect, useState } from "react";
-import { add_plant_quarantine_service, annul_plant_quarantine_service, edit_plant_quarantine_service, get_person_id_service } from "../store/thunks/materialvegetalThunks";
+import { add_plant_quarantine_service, annul_plant_quarantine_service, edit_plant_quarantine_service, get_liftings_service, get_mortalities_service, get_person_id_service } from "../store/thunks/materialvegetalThunks";
 import { type IObjNursery, type IObjQuarantine } from "../interfaces/materialvegetal";
 import { useForm } from "react-hook-form";
 import FormButton from "../../../../components/partials/form/FormButton";
@@ -15,6 +15,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
 
 
@@ -22,7 +23,7 @@ import { type AuthSlice } from '../../../auth/interfaces';
 export function IngresoCuarentenaScreen(): JSX.Element {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
-  const { plant_quarantine_lifting, planting_person, current_plant_seed_lot, nurseries, current_nursery, current_plant_quarantine } = useAppSelector((state) => state.material_vegetal);
+  const { plant_quarantine_mortalities, plant_quarantine_lifting, planting_person, current_plant_seed_lot, nurseries, current_nursery, current_plant_quarantine } = useAppSelector((state) => state.material_vegetal);
 
   const { control: control_cuarentena, handleSubmit: handle_submit, reset: reset_cuarentena, getValues: get_values, watch } = useForm<IObjQuarantine>();
 
@@ -73,7 +74,53 @@ export function IngresoCuarentenaScreen(): JSX.Element {
     },
     
 
-];
+  ];
+
+  const columns_mortalidad: GridColDef[] = [
+    {
+        field: 'consecutivo_mortalidad',
+        headerName: 'Consecutivo mortalidad',
+        width: 200,
+        renderCell: (params) => (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {params.value}
+            </div>
+        ),
+    },
+    {
+      field: 'fecha_mortalidad',
+      headerName: 'Fecha de mortalidad',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {new Date(params.value).toDateString()}
+        </div>
+      ),
+    },
+    {
+        field: 'cantidad_mortalidad',
+        headerName: 'Cantidad',
+        width: 200,
+        renderCell: (params) => (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {params.value}
+            </div>
+        ),
+    },
+    {
+        field: 'observaciones',
+        headerName: 'Observación',
+        width: 150,
+        renderCell: (params) => (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {params.value}
+            </div>
+        ),
+    },
+    
+
+  ];
+
 useEffect(() => {
   void dispatch(get_person_id_service(userinfo.id_persona))
 }, []);
@@ -89,8 +136,10 @@ useEffect(() => {
   useEffect(() => {
     if (current_plant_quarantine.id_cuarentena_mat_vegetal !== null) {
       set_action("editar")
-      if(current_plant_quarantine.id_persona_anula !== null ){
+      if(current_plant_quarantine.id_persona_cuarentena !== null ){
         void dispatch(get_person_id_service(current_plant_quarantine.id_persona_cuarentena?? 0))
+        void dispatch(get_liftings_service(current_plant_quarantine.id_cuarentena_mat_vegetal??0))
+        void dispatch(get_mortalities_service(current_plant_quarantine.id_cuarentena_mat_vegetal??0))
       }
     }
     reset_cuarentena(current_plant_quarantine)
@@ -108,9 +157,11 @@ useEffect(() => {
       agno_lote: current_plant_seed_lot.agno_lote,
       nro_lote: current_plant_seed_lot.nro_lote,
       cod_etapa_lote: current_plant_seed_lot.cod_etapa_lote,
-      cantidad_disponible: current_plant_seed_lot.saldo_disponible,
+      saldo_disponible: current_plant_seed_lot.saldo_disponible,
       cantidad_cuarentena: get_values("cantidad_cuarentena"),
       descrip_corta_diferenciable: get_values("descrip_corta_diferenciable"),
+      id_persona_cuarentena: planting_person.id_persona,
+      persona_cuarentena: planting_person.nombre_completo,
       motivo: get_values("motivo")
     }))
 }, [current_plant_seed_lot]);
@@ -119,14 +170,6 @@ useEffect(() => {
     if (watch("id_vivero") !== null) {
       const vivero: IObjNursery | undefined = nurseries.find((p: IObjNursery) => p.id_vivero === watch("id_vivero"))
       if (vivero !== undefined) {
-        dispatch(set_current_plant_quarantine({
-          ...current_plant_quarantine,
-          id_vivero: vivero.id_vivero,
-          id_bien: null,
-          cantidad_cuarentena: get_values("cantidad_cuarentena"),
-          descrip_corta_diferenciable: get_values("descrip_corta_diferenciable"),
-          motivo: get_values("motivo")
-        }))
         dispatch(set_current_nursery(vivero))
       }
     }
@@ -193,19 +236,53 @@ useEffect(() => {
         {current_nursery.id_vivero !== null &&
           <SeleccionarLoteSiembra />
         }
-        <BuscarModelo
-          set_current_model={null}
-          row_id={"id_item_levanta_cuarentena"}
-          columns_model={columns_levantamiento}
-          models={plant_quarantine_lifting}
-          get_filters_models={null}
-          set_models={null}
-          button_submit_label='Historial levantamientos'
-          form_inputs= {[]}
-          modal_select_model_title='Historial levantamientos'
-          modal_form_filters={[]}
-          button_add_selection_hidden= {true}
-        />
+        {current_plant_quarantine.id_cuarentena_mat_vegetal !== null && 
+          <Grid
+            container
+            direction="row"
+            padding={2}
+            spacing={2}
+          >
+            {plant_quarantine_lifting.length > 0 && 
+              <Grid item xs={12} md={3}>
+                <BuscarModelo
+                  set_current_model={null}
+                  row_id={"id_item_levanta_cuarentena"}
+                  columns_model={columns_levantamiento}
+                  models={plant_quarantine_lifting}
+                  get_filters_models={null}
+                  set_models={null}
+                  button_submit_label='Historial levantamientos'
+                  form_inputs= {[]}
+                  modal_select_model_title='Historial levantamientos'
+                  modal_form_filters={[]}
+                  button_add_selection_hidden= {true}
+                  md_button={12}
+                  button_icon_class={<PlaylistAddCheckIcon/>}
+                />
+              </Grid>
+            }
+            {plant_quarantine_mortalities.length > 0 && 
+              <Grid item xs={12} md={3}>
+                <BuscarModelo
+                  set_current_model={null}
+                  row_id={"id_item_baja_viveros"}
+                  columns_model={columns_mortalidad}
+                  models={plant_quarantine_mortalities}
+                  get_filters_models={null}
+                  set_models={null}
+                  button_submit_label='Historial mortalidades'
+                  form_inputs= {[]}
+                  modal_select_model_title='Historial mortalidades'
+                  modal_form_filters={[]}
+                  button_add_selection_hidden= {true}
+                  md_button={12}
+                  button_icon_class={<PlaylistAddCheckIcon/>}
+                />
+              </Grid>
+            }
+          </Grid>
+        }
         <Grid
           container
           direction="row"

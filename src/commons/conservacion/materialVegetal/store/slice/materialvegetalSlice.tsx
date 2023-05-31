@@ -10,6 +10,7 @@ import {
   type IObjGoods,
   type IObjPlanting,
   type IMaterialVegetal,
+  IObjMortality,
 } from '../../interfaces/materialvegetal';
 import { type Persona } from "../../../../../interfaces/globalModels";
 
@@ -159,10 +160,8 @@ const initial_state: IMaterialVegetal = {
   current_plant_quarantine: initial_satate_current_plant_quarantine,
   plant_quarantine_lifting: [],
   current_lifting: initial_satate_current_lifting,
-
-
+  plant_quarantine_mortalities: [],
 }
-
 
 export const material_vegetal_slice = createSlice({
   name: 'material_vegetal',
@@ -236,6 +235,11 @@ export const material_vegetal_slice = createSlice({
     set_current_lifting: (state: IMaterialVegetal, action: PayloadAction<IObjLifting>) => {
       state.current_lifting = action.payload;
     },
+
+    set_plant_quarantine_mortalities: (state: IMaterialVegetal, action: PayloadAction<IObjMortality[]>) => {
+      state.plant_quarantine_mortalities = action.payload;
+    },
+
   },
 });
 export const { 
@@ -256,5 +260,6 @@ export const {
   set_plant_quarantines,
   set_current_plant_quarantine,
   set_plant_quarantine_lifting,
-  set_current_lifting
+  set_current_lifting,
+  set_plant_quarantine_mortalities
    } = material_vegetal_slice.actions;
