@@ -5,7 +5,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import SeleccionarModeloDialogForm from "../../../../components/partials/getModels/SeleccionarModeloDialogForm";
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IObjSeedLot } from "../interfaces/materialvegetal";
-import { set_current_plant_quarantine, set_current_plant_seed_lot, set_plant_seed_lots } from '../store/slice/materialvegetalSlice';
+import { set_current_plant_seed_lot, set_plant_seed_lots } from '../store/slice/materialvegetalSlice';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import { get_lots_code_service, get_lots_service } from '../store/thunks/materialvegetalThunks';

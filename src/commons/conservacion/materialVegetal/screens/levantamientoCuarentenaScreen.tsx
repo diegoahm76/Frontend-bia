@@ -24,7 +24,7 @@ export function LevantamientoCuarentenaScreen(): JSX.Element {
 
   const { current_lifting, plant_quarantine_lifting, planting_person, current_nursery, current_plant_quarantine, plant_quarantine_mortalities } = useAppSelector((state) => state.material_vegetal);
 
-  const { control: control_levantamiento, handleSubmit: handle_submit, reset: reset_levantamiento, getValues: get_values, watch } = useForm<IObjLifting>();
+  const { control: control_levantamiento, handleSubmit: handle_submit, reset: reset_levantamiento, getValues: get_values } = useForm<IObjLifting>();
 
 
   const [action, set_action] = useState<string>("Crear")

@@ -379,7 +379,7 @@ export const get_lots_service = (
       const { data } = await api.get(`conservacion/ingreso-cuarentena/get-lotes-etapa/${id_vivero}/?codigo_bien=${code??""}&nombre=${name ?? ""}&agno_lote=${agno_lote ?? ""}&cod_etapa_lote=${cod_etapa ?? ""}`);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data)
-      if (data.success) {
+      if (data.success === true) {
         dispatch(set_plant_seed_lots(data.data))
         control_success(data.detail)      
       } else {
@@ -408,7 +408,7 @@ export const get_plant_quarantines_service = (
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data)
-      if (data.success) {
+      if (data.success === true) {
         dispatch(set_plant_quarantines(data.data))
         control_success(data.detail)      
       } else {
@@ -433,7 +433,7 @@ export const get_mortalities_service = (
       const { data } = await api.get(`conservacion/mortalidad/get-historial-mortalidad/${id_cuarentena ?? ""}/`);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data)
-      if (data.success) {
+      if (data.success === true) {
         dispatch(set_plant_quarantine_mortalities(data.data))
         // control_success(data.detail)      
       } else {
@@ -564,7 +564,7 @@ export const get_lifting_quarantines_service = (
       const { data } = await api.get(`conservacion/levantamiento-cuarentena/get-registro-cuarentena-by-lupa/${id_vivero ?? ""}/?codigo_bien=${code??""}&nombre=${name ?? ""}&agno_lote=${agno_lote ?? ""}&cod_etapa_lote=${cod_etapa ?? ""}`);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data)
-      if (data.success) {
+      if (data.success === true) {
         dispatch(set_plant_quarantines(data.data))
         control_success(data.detail)      
       } else {
@@ -589,7 +589,7 @@ export const get_liftings_service = (
       const { data } = await api.get(`conservacion/levantamiento-cuarentena/historial-levantamiento-cuarentena/${id_cuarentena ?? ""}/`);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data)
-      if (data.success) {
+      if (data.success === true) {
         if('data' in data){
           dispatch(set_plant_quarantine_lifting(data.data))
         }else{

@@ -2,7 +2,6 @@ import Grid from '@mui/material/Grid';
 import { Controller } from 'react-hook-form';
 import { Button, FormControl, FormHelperText, Input } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useEffect } from 'react';
 
 interface IRuleMessage {
     rule: any;

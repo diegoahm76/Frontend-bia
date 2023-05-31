@@ -10,7 +10,7 @@ import {
   type IObjGoods,
   type IObjPlanting,
   type IMaterialVegetal,
-  IObjMortality,
+  type IObjMortality,
 } from '../../interfaces/materialvegetal';
 import { type Persona } from "../../../../../interfaces/globalModels";
 

@@ -5,7 +5,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppSelector, useAppDispatch } from '../../../../hooks';
 import { set_current_lifting, set_current_nursery, set_current_plant_quarantine, set_plant_quarantines } from '../store/slice/materialvegetalSlice';
-import { get_nurseries_quarantine_service, get_lifting_quarantines_service, get_plant_quarantines_service, get_liftings_service, get_quareantines_code_service, get_mortalities_service } from '../store/thunks/materialvegetalThunks';
+import { get_nurseries_quarantine_service, get_lifting_quarantines_service, get_liftings_service, get_quareantines_code_service, get_mortalities_service } from '../store/thunks/materialvegetalThunks';
 import { type IObjNursery, type IObjQuarantine } from '../interfaces/materialvegetal';
 import { useForm } from 'react-hook-form';
 import SeleccionarModeloDialogForm from "../../../../components/partials/getModels/SeleccionarModeloDialogForm";
@@ -14,7 +14,7 @@ import SeleccionarModeloDialogForm from "../../../../components/partials/getMode
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarCuarentena = () => {
-  const { control: control_cuarentena, handleSubmit: handle_submit, reset: reset_cuarentena, getValues: get_values, watch } = useForm<IObjQuarantine>();
+  const { control: control_cuarentena, reset: reset_cuarentena, getValues: get_values, watch } = useForm<IObjQuarantine>();
 
   const dispatch = useAppDispatch()
   const { nurseries, current_plant_quarantine, plant_quarantines, current_lifting, current_nursery, planting_person } = useAppSelector((state) => state.material_vegetal);
