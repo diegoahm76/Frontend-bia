@@ -89,12 +89,13 @@ export const DatosAccesoScreen: React.FC = () => {
 
   const on_submit_persona: SubmitHandler<FieldValues> = async (data) => {
     try {
+      console.log(data)
       set_loading_natural(true);
       const datos_persona = new FormData();
-      if (data !== undefined) {
+      if (data.password !== undefined) {
         datos_persona.append('password', data.password);
       }
-      if (data.profile_img !== undefined && data.profile_img !== '' && data.profile_img !== null && data.profilr_img > 0) {
+      if (data.profile_img !== 0) {
         datos_persona.append(
           'profile_img',
           data.profile_img[0]

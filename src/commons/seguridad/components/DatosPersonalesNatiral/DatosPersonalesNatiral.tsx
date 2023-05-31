@@ -13,6 +13,7 @@ import {
   Checkbox,
   Typography,
   Stack,
+  type SelectChangeEvent,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { control_error, control_success } from '../../../../helpers';
@@ -32,6 +33,7 @@ import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos'
 
 import { use_register } from '../../../auth/hooks/registerHook';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
+import { type keys_object } from '../../../auth/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
@@ -56,7 +58,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
     estado_civil_opt,
     municipio_residencia,
     pais_nacimiento,
-    genero,
+    // genero,
     estado_civil,
     departamento_expedicion,
     ciudad_expedicion,
@@ -73,7 +75,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
     direccion,
     direccion_laboral,
     set_value_direction,
-    on_change,
+    // on_change,
     open_modal,
   } = use_register_persona_n({ watch, setValue: set_value, getValues });
   const { tipo_persona_opt } = use_register();
@@ -105,6 +107,15 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   // abrir modal actualizar Notificaciones
   const handle_open_dialog_notificaciones = (): void => {
     set_dialog_notificaciones(true);
+  };
+   // Establece los valores del formulario
+   const set_value_form = (name: string, value: string): void => {
+    set_value(name as keys_object, value);
+  };
+
+  // Se usa para escuchar los cambios de valor del componente CustomSelect
+  const on_change = (e: SelectChangeEvent<string>): void => {
+    set_value_form(e.target.name, e.target.value);
   };
 
   useEffect(() => {
@@ -252,7 +263,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               onChange={on_change}
               label="Género *"
               name="sexo"
-              value={genero}
+              value={data.sexo}
               options={genero_opt}
               disabled={false}
               required={true}
