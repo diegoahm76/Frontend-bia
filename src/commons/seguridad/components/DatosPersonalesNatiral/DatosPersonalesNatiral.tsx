@@ -13,7 +13,6 @@ import {
   Checkbox,
   Typography,
   Stack,
-  type SelectChangeEvent,
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { control_error, control_success } from '../../../../helpers';
@@ -33,7 +32,6 @@ import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos'
 
 import { use_register } from '../../../auth/hooks/registerHook';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
-import { type keys_object } from '../../../auth/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
@@ -58,41 +56,40 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
     estado_civil_opt,
     municipio_residencia,
     pais_nacimiento,
-    // genero,
     estado_civil,
     departamento_expedicion,
-    ciudad_expedicion,
     pais_residencia,
     departamento_residencia,
-    dpto_notifiacion,
-    ciudad_notificacion,
-    direccion_notificaciones,
     departamento_laboral,
-    municipio_laboral,
     dpto_laboral_opt,
     departamento_laboral_opt,
     is_modal_active,
-    direccion,
-    direccion_laboral,
     set_value_direction,
-    // on_change,
+    on_change,
     open_modal,
   } = use_register_persona_n({ watch, setValue: set_value, getValues });
   const { tipo_persona_opt } = use_register();
-
   const [type_direction, set_type_direction] = useState('');
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
 
   const [dialog_notificaciones, set_dialog_notificaciones] =
     useState<boolean>(false);
 
+  const direccion_laboral = watch('direccion_laboral') ?? '';
+  const municipio_laboral = watch('municipio_laboral') ?? '';
+  const ciudad_notificacion = watch('ciudad_notificacion') ?? '';  
+  const direccion = watch('direccion') ?? data.direccion_residencia ?? '';
+  const ciudad_expedicion = watch('ciudad_expedicion') ?? '';
+  const genero = watch('genero') ?? '';
   const tipo_persona = watch('tipo_persona') ?? '';
+  const direccion_notificaciones = watch('direccion_notificaciones') ?? data.direccion_notificaciones ?? '';
+  const dpto_notifiacion = watch('dpto_notifiacion') ?? data.cod_departamento_notificacion ?? '';
   // watchers
   const misma_direccion = watch('misma_direccion') ?? false;
   const acepta_notificacion_email =
-    watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email;
+    watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email ?? false;
   const acepta_notificacion_sms =
-    watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms;
+    watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms ?? false;
 
   const respuesta_autorizacion = (data: UpdateAutorizaNotificacion): void => {
     set_value('acepta_notificacion_email', data.acepta_autorizacion_email);
@@ -108,20 +105,11 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   const handle_open_dialog_notificaciones = (): void => {
     set_dialog_notificaciones(true);
   };
-   // Establece los valores del formulario
-   const set_value_form = (name: string, value: string): void => {
-    set_value(name as keys_object, value);
-  };
-
-  // Se usa para escuchar los cambios de valor del componente CustomSelect
-  const on_change = (e: SelectChangeEvent<string>): void => {
-    set_value_form(e.target.name, e.target.value);
-  };
 
   useEffect(() => {
     if (data !== null) {
       set_value('tipo_persona', data.tipo_persona);
-      set_value('fecha_nacimiento', data.fecha_nacimiento);
+      set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
       set_value('pais_nacimiento', data.pais_nacimiento);
       set_value('genero', data.sexo);
       set_value('estado_civil', data.estado_civil);
@@ -144,7 +132,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
       set_value('direccion_laboral', data.direccion_laboral);
 
     }
-  }, []);
+  }, [data]);
 
   const on_submit_update_natural = handle_submit(async (datos) => {
     try {
@@ -263,7 +251,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               onChange={on_change}
               label="Género *"
               name="sexo"
-              value={data.sexo}
+              value={genero}
               options={genero_opt}
               disabled={false}
               required={true}
@@ -587,7 +575,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
           <Grid item xs={12} sm={6} md={4}>
             <CustomSelect
               onChange={on_change}
-              label="Departamento *"
+              label="Departamento "
               name="departamento_laboral"
               value={departamento_laboral}
               options={dpto_laboral_opt}
@@ -615,9 +603,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               label="Direccion *"
               disabled
               fullWidth
-              {...register('direccion_laboral', {
-                required: true,
-              })}
+              {...register('direccion_laboral',)}
               value={direccion_laboral}
             />
           </Grid>
