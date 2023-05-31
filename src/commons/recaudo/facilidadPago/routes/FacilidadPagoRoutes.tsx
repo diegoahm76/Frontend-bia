@@ -9,6 +9,7 @@ import { Amortizacion } from '../screens/Amortizacion';
 import { ResolucionRespuesta } from '../screens/ResolucionRespuesta';
 import { FacilidadPagoAutorizadas } from '../screens/FacilidadPagoAutorizadas';
 import { DetalleFacilidadPago } from '../screens/DetalleFacilidadPago';
+import { ReportesRoutes } from '../reportes/routes/ReportesRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FacilidadPagoRoutes: React.FC = () => {
@@ -24,6 +25,7 @@ export const FacilidadPagoRoutes: React.FC = () => {
       <Route path='resolucion' element={<ResolucionRespuesta />} />
       <Route path='autorizadas' element={<FacilidadPagoAutorizadas />} />
       <Route path='seguimiento' element={<DetalleFacilidadPago />} />
+      <Route path='reporte/*' element={<ReportesRoutes />} />
     </Routes>
   )
 }
