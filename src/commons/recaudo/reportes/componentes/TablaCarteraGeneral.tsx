@@ -4,7 +4,6 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaCarteraGeneral: React.FC = () => {
   const [total, set_total] = useState(0);

@@ -1,13 +1,22 @@
-import { Title } from '../../../../../components/Title';
-import { Box, Button, Grid, Stack, TextField } from '@mui/material';
+import { Title } from '../../../../components/Title';
+import { Box, Button, FormControl, Grid, Stack, TextField } from '@mui/material';
 import { TablaCarteraGeneral } from '../componentes/TablaCarteraGeneral';
 import { GraficaCarteraGeneral } from '../componentes/GraficaCarteraGeneral';
 import { FileDownloadOutlined, SearchOutlined } from '@mui/icons-material';
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import esLocale from 'dayjs/locale/es';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useState } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CarteraGeneral: React.FC = () => {
+  const [date, set_date] = useState<Date | null>(new Date());
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handle_date_change = (date: Date | null) => {
+    set_date(date);
+  };
 
   return (
     <>
@@ -40,14 +49,24 @@ export const CarteraGeneral: React.FC = () => {
                 justifyContent="left"
                 spacing={2}
               >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Fecha Corte"
-                    value={new Date()}
-                    renderInput={(props) => <TextField {...props} />}
-                    onChange={()=>{}}
-                  />
-                </LocalizationProvider>
+                <FormControl>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                    <DatePicker
+                      label="Fecha Corte"
+                      inputFormat="DD/MM/YYYY"
+                      openTo="day"
+                      views={[ 'day', 'month', 'year' ]}
+                      value={date}
+                      onChange={handle_date_change}
+                      renderInput={(params) => (
+                        <TextField
+                          required
+                          {...params}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </FormControl>
                 <Button
                   color='primary'
                   variant='contained'

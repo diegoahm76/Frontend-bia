@@ -3,7 +3,7 @@ import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, Te
 import { SearchOutlined, FilterAltOffOutlined, FileDownloadOutlined } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { type event } from '../../interfaces/interfaces';
+import { type event } from '../../facilidadPago/interfaces/interfaces';
 import { type CarteraDetallada } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
@@ -11,8 +11,8 @@ import { get_filtro_cartera_detallada, get_cartera_detallada } from '../slices/R
 import { faker } from '@faker-js/faker';
 
 interface RootState {
-  reportes_facilidades: {
-    reportes_facilidades: CarteraDetallada[];
+  reportes_recaudo: {
+    reportes_recaudo: CarteraDetallada[];
   }
 }
 
@@ -22,7 +22,7 @@ export const TablaCarteraDetallada: React.FC = () => {
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
   const [total, set_total] = useState(0);
-  const { reportes_facilidades } = useSelector((state: RootState) => state.reportes_facilidades);
+  const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   useEffect(() => {
@@ -119,8 +119,8 @@ export const TablaCarteraDetallada: React.FC = () => {
   ];
 
   useEffect(() => {
-    set_visible_rows(reportes_facilidades)
-  }, [reportes_facilidades])
+    set_visible_rows(reportes_recaudo)
+  }, [reportes_recaudo])
 
   return (
     <Box sx={{ width: '100%' }}>

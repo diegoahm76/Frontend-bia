@@ -1,4 +1,4 @@
-import { Title } from '../../../../../components/Title';
+import { Title } from '../../../../components/Title';
 import { TablaCarteraDetallada } from '../componentes/TablaCarteraDetallada';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
