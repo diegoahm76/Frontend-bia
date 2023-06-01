@@ -30,8 +30,6 @@ interface IProps {
   }
 }
 
-// const tipo_liquidacion = [{ value: 'cobro_coactivo', label: 'Cobro Coactivo' }, { value: 'mandamiento_pago', label: 'Mandamiento de Pago' }];
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarCartera: React.FC<IProps> = ({
   etapas_destino,
@@ -59,6 +57,11 @@ export const EditarCartera: React.FC<IProps> = ({
                   value={selected_proceso.fecha_facturacion}
                   size="small"
                   fullWidth
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#494949",
+                    }
+                  }}
                   disabled
                 />
               </Grid>
@@ -79,6 +82,11 @@ export const EditarCartera: React.FC<IProps> = ({
                   value={selected_proceso.numero_factura}
                   size="small"
                   fullWidth
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#494949",
+                    }
+                  }}
                   disabled
                 />
               </Grid>
@@ -99,6 +107,11 @@ export const EditarCartera: React.FC<IProps> = ({
                   value={selected_proceso.codigo_contable}
                   size="small"
                   fullWidth
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#494949",
+                    }
+                  }}
                   disabled
                 />
               </Grid>
@@ -119,6 +132,11 @@ export const EditarCartera: React.FC<IProps> = ({
                   value={selected_proceso.etapa}
                   size="small"
                   fullWidth
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#494949",
+                    }
+                  }}
                   disabled
                 />
               </Grid>
@@ -141,6 +159,11 @@ export const EditarCartera: React.FC<IProps> = ({
                   value={selected_proceso.monto_inicial}
                   size="small"
                   fullWidth
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#494949",
+                    }
+                  }}
                   disabled
                 />
               </Grid>
@@ -161,6 +184,11 @@ export const EditarCartera: React.FC<IProps> = ({
                   value={selected_proceso.dias_mora}
                   size="small"
                   fullWidth
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#494949",
+                    }
+                  }}
                   disabled
                 />
               </Grid>
@@ -181,6 +209,11 @@ export const EditarCartera: React.FC<IProps> = ({
                   value={selected_proceso.valor_intereses}
                   size="small"
                   fullWidth
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#494949",
+                    }
+                  }}
                   disabled
                 />
               </Grid>
@@ -201,6 +234,11 @@ export const EditarCartera: React.FC<IProps> = ({
                   value={selected_proceso.valor_sancion}
                   size="small"
                   fullWidth
+                  sx={{
+                    "& .MuiInputBase-input.Mui-disabled": {
+                      WebkitTextFillColor: "#494949",
+                    }
+                  }}
                   disabled
                 />
               </Grid>
