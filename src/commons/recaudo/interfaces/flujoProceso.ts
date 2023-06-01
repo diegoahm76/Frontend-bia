@@ -1,3 +1,5 @@
+import { EtapaProceso } from "./proceso";
+
 export interface Nodes {
   id: number;
   data: {
@@ -25,6 +27,15 @@ export interface Dataflow {
 export interface FormDataFlujo {
   id_etapa_origen: string;
   id_etapa_destino: string;
+  fecha_flujo: string;
+  descripcion: string;
+  requisitos: string;
+}
+
+export interface FlujoProceso {
+  id: number;
+  id_etapa_origen: EtapaProceso;
+  id_etapa_destino: EtapaProceso;
   fecha_flujo: string;
   descripcion: string;
   requisitos: string;
