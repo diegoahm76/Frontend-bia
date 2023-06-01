@@ -45,7 +45,6 @@ export const GestionCarteraScreen: React.FC = () => {
   const [etapas_destino, set_etapas_destino] = useState<EtapaProceso[]>([]);
   const [etapa_destino, set_etapa_destino] = useState('');
   const [atributos_etapa, set_atributos_etapa] = useState<AtributoEtapa[]>([]);
-  // const [file_selected, set_file_selected] = useState<File>();
   const [input_values, set_input_values] = useState<Record<string, string>>({});
   const [input_files, set_input_files] = useState<Record<string, File>>({});
 
@@ -201,11 +200,6 @@ export const GestionCarteraScreen: React.FC = () => {
     set_etapas_destino(new_etapas_destino);
   }, [id_etapa]);
 
-  useEffect(() => {
-    console.log(input_values);
-    console.log(input_files);
-  }, [input_values, input_files]);
-
   const handle_tablist_change = (event: SyntheticEvent, newValue: string): void => {
     set_position_tab_organigrama(newValue)
   };
@@ -289,10 +283,6 @@ export const GestionCarteraScreen: React.FC = () => {
       }));
     }
   };
-
-  // const handle_upload_click = (): void => {
-  //   console.log(file_selected);
-  // };
 
   return (
     <>
