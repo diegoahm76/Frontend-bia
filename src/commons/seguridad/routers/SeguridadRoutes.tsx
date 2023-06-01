@@ -11,7 +11,7 @@ import { DelegacionSuperuserScreen } from '../screens/DelegacionSuperuserScreen'
 const routes = [
   { path: '/auditoria', element: <AuditoriaScreen /> },
   { path: '/roles', element: <RolesScreen /> },
-  { path: '/administracion_personas', element: <AdministracionPersonasScreen /> },
+  { path: '/administracion_usuarios', element: <AdministracionPersonasScreen /> },
   { path: '/delegacion_superusuario', element: <DelegacionSuperuserScreen /> }
 
 ];
