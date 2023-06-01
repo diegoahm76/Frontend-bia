@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -160,7 +161,9 @@ const DialogElegirOrganigramaActual = ({
     set_loading(true);
     try {
       const response_org_actual = await dispatch(get_organigrama_actual());
-      if (response_org_actual.data.length > 0) {
+      console.log(response_org_actual.data)
+      if (response_org_actual.data) {
+        console.log(response_org_actual.data)
         set_organigrama_actual(response_org_actual.data);
         const response_orgs = await dispatch(get_organigramas_posibles());
         const res_organigramas_adapter: IList[] =
@@ -180,6 +183,7 @@ const DialogElegirOrganigramaActual = ({
   useEffect(() => {
     if (organigram_selected !== undefined && organigram_selected !== '') {
       // Traer listado de ccds segun organigrama seleccionado
+      void get_data_selects();
       void get_list_ccds(organigram_selected);
     }
   }, [organigram_selected]);

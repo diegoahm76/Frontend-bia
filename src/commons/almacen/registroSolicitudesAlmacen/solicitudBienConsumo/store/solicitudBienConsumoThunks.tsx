@@ -104,6 +104,35 @@ export const crear_solicitud_bien_consumo: any = (
     }
 }
 
+// crear SOLICITUD PARA VIVERO
+export const crear_solicitud_bien_consumo_viero: any = (
+    solicitud: any,
+
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(solicitud)
+            const { data } = await api.put('almacen/solicitudes-vivero/crear-solicitud/', solicitud);
+            //  dispatch(get_solicitud_consumo_id());
+            console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+
+        };
+    }
+}
+
 // crear consumo VIVERO
 export const crear_solicitud_bien_consumo_vivero: any = (
     solicitud_vivero: any,
@@ -486,3 +515,29 @@ export const get_solicitudes_pendientes_despacho = (): any => {
 };
 
 
+// rechazar SOLICITUD por parte de almacen
+
+export const rechazar_solicitud_service: any = (
+    form_data: any,
+    id: string | number) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+
+            console.log(form_data)
+            const { data } = await api.put(
+                `almacen/solicitudes/rechazo-solicitudes-bienes-desde-almacen/${id}/`, form_data
+
+            );
+            console.log(data)
+            dispatch(get_solicitud_service(id));
+            control_success('Se rechazó la solicitud');
+
+            return data;
+        } catch (error: any) {
+
+            control_error(error.response.data.detail);
+            console.log(error);
+            return error as AxiosError;
+        }
+    };
+};

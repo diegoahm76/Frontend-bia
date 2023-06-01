@@ -91,15 +91,20 @@ export function ListOrganigramas({
     },
     {
       field: 'usado',
-      headerName: 'En uso',
+      headerName: 'Usado',
       width: 100,
       renderCell: (params: { row: IObjOrganigram }) => {
+
+        if(params.row.actual){
+          return <Chip size="small" label="Actual" color="primary" variant="filled" />
+        }else if(!params.row.actual){
         return params.row.usado ? (
           <Chip size="small" label="Sí" color="success" variant="outlined" />
         ) : (
           <Chip size="small" label="No" color="error" variant="outlined" />
         );
-      },
+      }
+    },
     },
     {
       field: 'fecha_terminado',

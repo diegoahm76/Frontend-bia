@@ -1,3 +1,4 @@
+/* eslint-disable no-unneeded-ternary */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
@@ -61,12 +62,23 @@ export const get_bienes_service = (): any => {
 export const add_bien_service: any = (bien: any) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(bien);
+
+      // const hv = bien.maneja_hoja_vida === "true" ? true : false
+      const hv = Boolean(bien.maneja_hoja_vida)
+      const visible_solicitudes_const = Boolean(bien.visible_solicitudes)
+      const new_obj = {
+        ...bien,
+        maneja_hoja_vida: hv,
+        visible_solicitudes: visible_solicitudes_const,
+      };
+      console.log(new_obj)
       const { data } = await api.put(
         'almacen/bienes/catalogo-bienes/create/',
-        bien
+        new_obj,
       );
       dispatch(get_bienes_service());
+      // console.log(bien)
+      // console.log(data)
       control_success('El bien se agrego correctamente');
       return data;
     } catch (error: any) {
@@ -169,7 +181,7 @@ export const get_code_bien_service: any = (code: string | null) => {
     }
     for (let index = codigo; index <= limit; index++) {
       try {
-        const { data } = await api.get(`almacen/bienes/catalogo-bienes/validar-codigo/${nivel}/${index}/`);
+        const { data } = await api.get(`almacen/bienes/catalogo-bienes/validar-codigo/${nivel}/${index.toString()}/`);
         if (data.success) {
           dispatch(get_code_bien(index.toString()))
           return data;
