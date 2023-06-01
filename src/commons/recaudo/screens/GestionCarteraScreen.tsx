@@ -256,7 +256,7 @@ export const GestionCarteraScreen: React.FC = () => {
         control_success(response.statusText);
       })
       .catch((error) => {
-        console.log(error.response.data);
+        console.log(error);
         control_error(error);
       });
   };
