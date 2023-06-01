@@ -4,7 +4,7 @@ import FormInputController from "../form/FormInputController";
 import FormInputNoController from "../form/FormInputNoController";
 import FormSelectController from "../form/FormSelectController";
 import FormButton from "../form/FormButton";
-import { Title} from '../../Title';
+import { Title } from '../../Title';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState } from 'react';
 import SeleccionarModeloDialogForm from "./SeleccionarModeloDialogForm";
@@ -33,11 +33,15 @@ interface IProps {
     title_list?: string;
     list?: any[];
     columns_list?: GridColDef[];
-    row_list_id?: string |number;
-    add_list_button_label?:string|null;
+    row_list_id?: string | number;
+    add_list_button_label?: string | null;
     show_inputs?: boolean;
     title_table_modal?: string | null;
     button_submit_disabled?: boolean | null;
+    button_add_selection_hidden?: boolean | null;
+    md_button?: number | null;
+    button_icon_class?: any
+
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -62,7 +66,10 @@ const BuscarModelo = ({
     add_list_button_label,
     show_inputs,
     title_table_modal,
-    button_submit_disabled
+    button_submit_disabled,
+    button_add_selection_hidden,
+    md_button,
+    button_icon_class
 }: IProps) => {
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -119,37 +126,37 @@ const BuscarModelo = ({
             />
         } else if (form_input.datum_type === "title") {
             return <Title title={form_input.title_label}></Title>
-        } else if (form_input.datum_type === "input_file_controller"){
+        } else if (form_input.datum_type === "input_file_controller") {
             return <FormInputFileController
-            xs={form_input.xs}
-            md={form_input.md}
-            control_form={form_input.control_form}
-            control_name={form_input.control_name}
-            default_value={form_input.default_value}
-            rules={form_input.rules}
-            label={form_input.label}
-            disabled={form_input.disabled}
-            helper_text={form_input.helper_text}
-            set_value={form_input.set_value ?? null}
-            hidden_text={form_input.hidden_text ?? null}
-            file_name={form_input.file_name ?? null}
-        />; 
-        } else if (form_input.datum_type === "date_picker_controller"){
+                xs={form_input.xs}
+                md={form_input.md}
+                control_form={form_input.control_form}
+                control_name={form_input.control_name}
+                default_value={form_input.default_value}
+                rules={form_input.rules}
+                label={form_input.label}
+                disabled={form_input.disabled}
+                helper_text={form_input.helper_text}
+                set_value={form_input.set_value ?? null}
+                hidden_text={form_input.hidden_text ?? null}
+                file_name={form_input.file_name ?? null}
+            />;
+        } else if (form_input.datum_type === "date_picker_controller") {
             return <FormDatePickerController
-            xs={form_input.xs}
-            md={form_input.md}
-            control_form={form_input.control_form}
-            control_name={form_input.control_name}
-            default_value={form_input.default_value}
-            rules={form_input.rules}
-            label={form_input.label}
-            disabled={form_input.disabled}
-            helper_text={form_input.helper_text}
-            hidden_text={form_input.hidden_text ?? null}
-            min_date={form_input.min_date ?? ""}
-            max_date={form_input.max_date ?? ""}
-            format={form_input.max_date ?? null}
-        />; 
+                xs={form_input.xs}
+                md={form_input.md}
+                control_form={form_input.control_form}
+                control_name={form_input.control_name}
+                default_value={form_input.default_value}
+                rules={form_input.rules}
+                label={form_input.label}
+                disabled={form_input.disabled}
+                helper_text={form_input.helper_text}
+                hidden_text={form_input.hidden_text ?? null}
+                min_date={form_input.min_date ?? ""}
+                max_date={form_input.max_date ?? ""}
+                format={form_input.max_date ?? null}
+            />;
         }
     }
 
@@ -168,44 +175,11 @@ const BuscarModelo = ({
             borderRadius={2}
         >
             {(show_inputs ?? true) &&
-            <>
-                {form_inputs.map((option, index) => (
-                    <TypeDatum key={index} form_input={option} />
-                ))}
-
-                <Grid
-                    item
-                    xs={12}
-                    md={3}
-                >
-                    <FormButton
-                        variant_button="contained"
-                        on_click_function={handle_open_select_model}
-                        icon_class={<SearchIcon />}
-                        label={button_submit_label ?? "BUSCAR"}
-                        type_button="button"
-                        disabled = {button_submit_disabled ?? false}
-                    />
-                </Grid>
-            </>
-            }
-            <Divider />
-            {form_inputs_list !== undefined && 
-                <Grid
-                container
-                direction="row"
-                padding={2}
-                spacing={2}
-                marginTop={2}
-                borderTop={1}
-                borderColor="lightgray"
-                >
-                    {(show_inputs ?? true) &&
-                    <>
-                    {form_inputs_list?.map((option, index) => (
-
+                <>
+                    {form_inputs.map((option, index) => (
                         <TypeDatum key={index} form_input={option} />
                     ))}
+
                     <Grid
                         item
                         xs={12}
@@ -213,27 +187,60 @@ const BuscarModelo = ({
                     >
                         <FormButton
                             variant_button="contained"
-                            on_click_function={add_item_list}
-                            icon_class={<PlaylistAddCheckIcon />}
-                            label={add_list_button_label??"AGREGAR"}
+                            on_click_function={handle_open_select_model}
+                            icon_class={<SearchIcon />}
+                            label={button_submit_label ?? "BUSCAR"}
                             type_button="button"
+                            disabled={button_submit_disabled ?? false}
                         />
                     </Grid>
-                    </>
+                </>
+            }
+            <Divider />
+            {form_inputs_list !== undefined &&
+                <Grid
+                    container
+                    direction="row"
+                    padding={2}
+                    spacing={2}
+                    marginTop={2}
+                    borderTop={1}
+                    borderColor="lightgray"
+                >
+                    {(show_inputs ?? true) &&
+                        <>
+                            {form_inputs_list?.map((option, index) => (
+
+                                <TypeDatum key={index} form_input={option} />
+                            ))}
+                            <Grid
+                                item
+                                xs={12}
+                                md={3}
+                            >
+                                <FormButton
+                                    variant_button="contained"
+                                    on_click_function={add_item_list}
+                                    icon_class={<PlaylistAddCheckIcon />}
+                                    label={add_list_button_label ?? "AGREGAR"}
+                                    type_button="button"
+                                />
+                            </Grid>
+                        </>
                     }
 
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '80%' }}>
-                            <Title title={title_list??""}></Title>
+                            <Title title={title_list ?? ""}></Title>
                             <DataGrid
                                 density="compact"
                                 autoHeight
-                                rows={list??[]}
-                                columns={columns_list??[]}
+                                rows={list ?? []}
+                                columns={columns_list ?? []}
                                 pageSize={10}
                                 rowsPerPageOptions={[10]}
                                 experimentalFeatures={{ newEditingApi: true }}
-                                getRowId={(row) => row[row_list_id??""] === null?uuid():row[row_list_id??""]}
+                                getRowId={(row) => row[row_list_id ?? ""] === null ? uuid() : row[row_list_id ?? ""]}
                             />
                         </Box>
                     </Grid>
@@ -251,6 +258,7 @@ const BuscarModelo = ({
                 columns_model={columns_model}
                 row_id={row_id}
                 title_table_modal={title_table_modal ?? "Resultados de la busqueda"}
+                button_add_selection_hidden={button_add_selection_hidden ?? false}
             />
         </Grid>
     );

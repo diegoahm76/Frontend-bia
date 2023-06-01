@@ -3,6 +3,7 @@ import {
     Box,
     Button,
     Checkbox,
+    CircularProgress,
     Dialog,
     DialogTitle,
     Divider,
@@ -24,7 +25,7 @@ interface IProps {
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
     id_persona: number | undefined;
     data_autorizacion: UpdateAutorizaNotificacion
-    on_result:(data: UpdateAutorizaNotificacion) => void
+    on_result: (data: UpdateAutorizaNotificacion) => void
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
@@ -47,38 +48,45 @@ export const DialogAutorizaDatos: React.FC<IProps> = ({
         acepta_autorizacion_email: false,
         acepta_autorizacion_sms: false,
     });
+    const [is_loading, set_is_loading] = useState<boolean>(false);
 
     const handle_close = (): void => {
         set_is_modal_active(false);
     };
     const handle_change_checkbox = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        const { name, checked } = event.target;
+        const { id, checked } = event.target;
         set_notificaciones({
             ...notificaciones,
-            [name]: !!checked,
+            [id]: checked,
         });
     };
 
     const on_submit_autorizacion = async (data: UpdateAutorizaNotificacion): Promise<any> => {
         try {
+            set_is_loading(true);
             const data_autorizacion = {
                 acepta_autorizacion_email: data.acepta_autorizacion_email,
                 acepta_autorizacion_sms: data.acepta_autorizacion_sms,
             };
             await editar_autorizacion_notificaciones(id_persona, data_autorizacion);
-            control_success('la persona se actualizó correctamente');
+            control_success('Se actualizó la autorización de notificaciones correctamente');
+            set_is_loading(false);
             on_result(data_autorizacion)
             handle_close();
         } catch (error) {
-            control_error(error);
+            set_is_loading(false);
+            control_error('lo sentimos, ocurrió un error al actualizar la autorización de notificaciones, por favor intenta nuevamente');
         }
     };
 
     useEffect(() => {
-        if (is_modal_active) {
-            set_notificaciones(data_autorizacion)
-        }
-    }, [is_modal_active]);
+        set_notificaciones({
+            ...notificaciones,
+            acepta_autorizacion_email: data_autorizacion.acepta_autorizacion_email,
+            acepta_autorizacion_sms: data_autorizacion.acepta_autorizacion_sms,
+        });
+    }, [data_autorizacion]);
+
     return (
         <>
             <Dialog
@@ -121,6 +129,7 @@ export const DialogAutorizaDatos: React.FC<IProps> = ({
                                     control={
                                         <Checkbox
                                             size="small"
+                                            id='acepta_autorizacion_email'
                                             checked={notificaciones?.acepta_autorizacion_email}
                                             {...register('acepta_autorizacion_email')}
                                             onChange={handle_change_checkbox}
@@ -139,6 +148,7 @@ export const DialogAutorizaDatos: React.FC<IProps> = ({
                                     control={
                                         <Checkbox
                                             size="small"
+                                            id='acepta_autorizacion_sms'
                                             checked={notificaciones?.acepta_autorizacion_sms}
                                             {...register('acepta_autorizacion_sms')}
                                             onChange={handle_change_checkbox}
@@ -157,7 +167,6 @@ export const DialogAutorizaDatos: React.FC<IProps> = ({
                                 <Button
                                     variant="outlined"
                                     size="medium"
-                                    // eslint-disable-next-line react/jsx-no-undef
                                     startIcon={<CancelIcon />}
                                     onClick={() => {
                                         handle_close();
@@ -170,13 +179,13 @@ export const DialogAutorizaDatos: React.FC<IProps> = ({
                                     variant="contained"
                                     color="primary"
                                     type="submit"
-                                    // startIcon={
-                                    //     loading_natural
-                                    //         ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
-                                    //         : ""
-                                    // }
+                                    startIcon={
+                                        is_loading
+                                            ? <CircularProgress size={20} key={1} className="align-middle ml-1" />
+                                            : ""
+                                    }
                                     aria-label="Actualizar"
-                                    // disabled={loading_natural}
+                                    disabled={is_loading}
                                     size="medium"
                                 >
                                     Actualizar

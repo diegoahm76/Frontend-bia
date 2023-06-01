@@ -7,6 +7,8 @@ import { AlmacenRoutes } from '../commons/almacen/routes/AlmacenRoutes';
 import { ConservacionRoutes } from '../commons/conservacion/routes/ConservacionRoutes';
 import { RecaudoRoutes } from '../commons/recaudo/routes/RecaudoRoutes';
 import { RecursoHidricoRoutes } from '../commons/recursoHidrico/routers/RecursoHidricoRoutes';
+import { TransversalRoutes } from '../commons/seguridad/routers/TransversalRoutes';
+import { UserRoutes } from '../commons/seguridad/routers/UserRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProtectedRoutes: React.FC = () => {
@@ -32,6 +34,10 @@ export const ProtectedRoutes: React.FC = () => {
         <Route path="almacen/*" element={<AlmacenRoutes />} />
         {/* Recaudo */}
         <Route path="recaudo/*" element={<RecaudoRoutes />} />
+        {/* Transversal */}
+        <Route path="transversal/*" element={<TransversalRoutes />} />
+        {/* Usuarios */}
+        <Route path="usuario/*" element={<UserRoutes />} />
       </Route>
     </Routes>
   );

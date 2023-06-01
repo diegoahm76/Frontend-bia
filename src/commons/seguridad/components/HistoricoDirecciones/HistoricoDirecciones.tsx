@@ -128,7 +128,6 @@ export const DialogHistorialDirecciones: React.FC<IProps> = ({
                     nombre_completo: datos.nombre_completo,
                 })
             );
-            console.log("Data Historial", new_historico)
             set_rows(new_historico);
         } catch (err) {
             control_error(err);

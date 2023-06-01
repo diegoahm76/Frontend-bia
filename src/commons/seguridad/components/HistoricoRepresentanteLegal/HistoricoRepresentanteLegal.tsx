@@ -14,7 +14,7 @@ import { Title } from '../../../../components/Title';
 import { control_error } from '../../../../helpers';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { consultar_historico_representante } from '../../../seguridad/request/Request';
-import type{ HistoricoRepresentanteLegal } from '../../../../interfaces/globalModels';
+import type { HistoricoRepresentanteLegal } from '../../../../interfaces/globalModels';
 
 interface IProps {
     is_modal_active: boolean;
@@ -104,7 +104,7 @@ export const DialogHistoricoRepresentanteLegal: React.FC<IProps> = ({
     };
 
     useEffect(() => {
-        if (is_modal_active) {
+        if (is_modal_active && id_persona !== undefined && id_persona !== null && id_persona !== 0) {
             void historico();
         }
     }, [is_modal_active]);
