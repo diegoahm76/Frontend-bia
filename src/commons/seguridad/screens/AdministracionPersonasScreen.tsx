@@ -65,7 +65,6 @@ export const AdministracionPersonasScreen: React.FC = () => {
         set_value('departamento_laboral', data.cod_departamento_laboral);
         set_value('municipio_laboral', data.cod_municipio_laboral_nal);
         set_value('direccion_laboral', data.direccion_laboral);
-
         // juridica
         set_value('naturaleza_empresa', data.cod_naturaleza_empresa);
         set_value('nacionalidad_empresa', data.cod_pais_nacionalidad_empresa);
@@ -73,7 +72,6 @@ export const AdministracionPersonasScreen: React.FC = () => {
         set_value('ciudad_notificacion', data.cod_municipio_notificacion_nal);
         set_value('direccion_notificaciones', data.direccion_notificaciones);
         set_value('complemento_direccion', data.direccion_notificacion_referencia)
-
       }
     } catch (err) {
       const temp = err as AxiosError;

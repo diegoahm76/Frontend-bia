@@ -16,7 +16,6 @@ import { editar_datos_acceso } from '../request/seguridadRequest';
 export const DatosAccesoScreen: React.FC = () => {
   const {
     register,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     handleSubmit: handle_submit,
     formState: { errors },
     watch
@@ -89,18 +88,18 @@ export const DatosAccesoScreen: React.FC = () => {
 
   const on_submit_persona: SubmitHandler<FieldValues> = async (data) => {
     try {
-      console.log(data)
       set_loading_natural(true);
       const datos_persona = new FormData();
-      if (data.password !== undefined) {
+      if (data.password !== undefined && data.password !== '' && data.password.length > 0) {
         datos_persona.append('password', data.password);
       }
-      if (data.profile_img !== 0) {
+      if (data.profile_img.length > 0) {
         datos_persona.append(
           'profile_img',
           data.profile_img[0]
         );
       }
+      console.log(datos_persona)
       await editar_datos_acceso(datos_persona);
       reset_file_state();
       set_loading_natural(false);
