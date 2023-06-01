@@ -17,12 +17,8 @@ import { LoadingButton } from '@mui/lab';
 import { CreateUser } from '../CreateUser/CreateUser';
 import { use_register } from '../../hooks/registerHook';
 
-interface Props {
-  uso_interno: boolean;
-}
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
+export const RegisterForm: React.FC = () => {
   const {
     errors,
     message_error,
@@ -70,11 +66,9 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
 
   return (
     <>
-      {!uso_interno && (
-        <Typography variant="h6" textAlign="center" pb={2}>
-          Formulario registro
-        </Typography>
-      )}
+      <Typography variant="h6" textAlign="center" pb={2}>
+        Formulario registro
+      </Typography>
       <form
         onSubmit={(e) => {
           void on_submit(e);

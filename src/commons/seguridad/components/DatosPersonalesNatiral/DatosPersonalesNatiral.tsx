@@ -22,7 +22,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
-import { editar_persona_natural_cuenta_propia,
+import {
+  editar_persona_natural_cuenta_propia,
 } from '../../request/Request';
 import type { Dayjs } from 'dayjs';
 import { LoadingButton } from '@mui/lab';
@@ -56,28 +57,29 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
     estado_civil_opt,
     municipio_residencia,
     pais_nacimiento,
-    genero,
     estado_civil,
     departamento_expedicion,
-    ciudad_expedicion,
     pais_residencia,
     departamento_residencia,
-    dpto_notifiacion,
-    ciudad_notificacion,
-    direccion_notificaciones,
     departamento_laboral,
-    municipio_laboral,
     dpto_laboral_opt,
     departamento_laboral_opt,
-    is_modal_active,
+    genero,
+    ciudad_expedicion,
     direccion,
+    dpto_notifiacion,
+    ciudad_notificacion,
+    municipio_laboral,
     direccion_laboral,
+    direccion_notificaciones,
+    is_modal_active,
     set_value_direction,
     on_change,
     open_modal,
   } = use_register_persona_n({ watch, setValue: set_value, getValues });
-  const { tipo_persona_opt } = use_register();
 
+  const { tipo_persona_opt } = use_register();
+  
   const [type_direction, set_type_direction] = useState('');
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
 
@@ -88,9 +90,9 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   // watchers
   const misma_direccion = watch('misma_direccion') ?? false;
   const acepta_notificacion_email =
-    watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email;
+    watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email ?? false;
   const acepta_notificacion_sms =
-    watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms;
+    watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms ?? false;
 
   const respuesta_autorizacion = (data: UpdateAutorizaNotificacion): void => {
     set_value('acepta_notificacion_email', data.acepta_autorizacion_email);
@@ -108,9 +110,11 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   };
 
   useEffect(() => {
+    console.log('getValues', getValues());
+    console.log('data', data);
     if (data !== null) {
       set_value('tipo_persona', data.tipo_persona);
-      set_value('fecha_nacimiento', data.fecha_nacimiento);
+      set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
       set_value('pais_nacimiento', data.pais_nacimiento);
       set_value('genero', data.sexo);
       set_value('estado_civil', data.estado_civil);
@@ -133,7 +137,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
       set_value('direccion_laboral', data.direccion_laboral);
 
     }
-  }, []);
+  }, [data]);
 
   const on_submit_update_natural = handle_submit(async (datos) => {
     try {
@@ -213,6 +217,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
                 label="Fecha de nacimiento *"
+                inputFormat="YYYY-MM-DD"
                 value={fecha_nacimiento}
                 onChange={on_change_birt_day}
                 renderInput={(params) => (
@@ -576,7 +581,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
           <Grid item xs={12} sm={6} md={4}>
             <CustomSelect
               onChange={on_change}
-              label="Departamento *"
+              label="Departamento "
               name="departamento_laboral"
               value={departamento_laboral}
               options={dpto_laboral_opt}
@@ -604,9 +609,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               label="Direccion *"
               disabled
               fullWidth
-              {...register('direccion_laboral', {
-                required: true,
-              })}
+              {...register('direccion_laboral',)}
               value={direccion_laboral}
             />
           </Grid>
@@ -682,6 +685,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               </Button>
             </Stack>
           </Grid>
+          <Divider></Divider>
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <LoadingButton

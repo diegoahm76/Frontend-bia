@@ -23,7 +23,8 @@ import { control_error } from '../../../helpers/controlError';
 import type {
   DelegarSuper,
   InfoPersonal,
-  PermisosRolEdit
+  PermisosRolEdit,
+  UsersRol
 } from '../interfaces/seguridadModels';
 
 export const change_super_user = (): DelegarSuper => {
@@ -189,16 +190,18 @@ export const user_historico_cambios_estado = async (
   id_usuario: number
 ): Promise<ResponseThunks<HistoricoCambioEstadosUser[]>> => {
   console.log(id_usuario);
-  try{
+  try {
     // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-    const {data: { data }} = await api.get<ResponseServer<HistoricoCambioEstadosUser[]>>(
+    const {
+      data: { data }
+    } = await api.get<ResponseServer<HistoricoCambioEstadosUser[]>>(
       `users/historico-activacion/${id_usuario}/`
     );
     return {
       ok: true,
       data
     };
-  }catch(error){
+  } catch (error) {
     const { response } = error as AxiosError<AxiosResponse>;
     const { data } = response as unknown as ResponseThunks;
     control_error(data.detail);
@@ -207,7 +210,6 @@ export const user_historico_cambios_estado = async (
       error_message: data.detail
     };
   }
-
 };
 
 export const crear_user_admin_user = async (
@@ -258,9 +260,14 @@ export const get_person_user_or_users_by_document = async (
 export const editar_datos_acceso = async (
   datos: FormData
 ): Promise<any> => {
-  const response = await api.put(
+  const response = await api.patch(
     `users/profile/update/`,
     datos
   );
   return response.data;
+};
+export const get_users_rol = async (
+  id_rol: number
+): Promise<AxiosResponse<ResponseServer<UsersRol[]>>> => {
+  return await api.get(`roles/detail_usuarios_rol/${id_rol}/`);
 };

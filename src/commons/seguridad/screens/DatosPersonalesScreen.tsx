@@ -29,7 +29,6 @@ export const DatosPersonalesScreen: React.FC = () => {
       const {
         data: { data },
       } = await consultar_datos_persona(id_persona);
-      console.log(data)
       set_datos(data)
     } catch (err) {
       const temp = err as AxiosError;
@@ -41,7 +40,6 @@ export const DatosPersonalesScreen: React.FC = () => {
 
   useEffect(() => {
     void datos_usuario(userinfo.id_persona);
-    console.log(datos)
   }, []);
 
 

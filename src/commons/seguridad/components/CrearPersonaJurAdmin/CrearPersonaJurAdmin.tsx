@@ -24,6 +24,7 @@ import type {
   ClaseTercero,
   ClaseTerceroPersona,
   CrearPersonJuridicaAdmin,
+  DataJuridicaUpdate,
   PropsRegisterAdmin,
   UpdateAutorizaNotificacion,
 } from '../../../../interfaces/globalModels';
@@ -32,6 +33,7 @@ import {
   consultar_clase_tercero,
   consultar_clase_tercero_persona,
   crear_persona_juridica,
+  editar_persona_juridica,
 } from '../../../seguridad/request/Request';
 import { control_error, control_success } from '../../../../helpers';
 import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
@@ -41,6 +43,7 @@ import { DialogHistorialDirecciones } from '../HistoricoDirecciones/HistoricoDir
 import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
 import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
 import { DatosRepresentanteLegal } from '../DatosRepresentanteLegal/DataRepresentanteLegal';
+import { type AxiosError } from 'axios';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
@@ -150,7 +153,10 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
       const response = await consultar_clase_tercero();
       set_clase_tercero(response);
     } catch (err) {
-      control_error(err);
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404) {
+        control_error(err);
+      }
     }
   };
   // trae clase tercero por persona
@@ -169,7 +175,10 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
       );
       set_clase_tercero_persona(data_persona_clase_tercero);
     } catch (err) {
-      control_error(err);
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404) {
+        control_error(err);
+      }
     }
   };
 
@@ -192,7 +201,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
     }
   }, []);
 
-  const on_submit_create_natural = handle_submit(async (data) => {
+  const on_submit_create_juridica = handle_submit(async (data) => {
     try {
       data.ubicacion_georeferenciada = '';
       data.numero_documento = numero_documento;
@@ -201,6 +210,15 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
       await crear_persona_juridica(data as CrearPersonJuridicaAdmin);
       control_success('la persona se creó correctamente');
     } catch (error) {
+      control_error('hubo un error al crear, intentelo de nuevo');
+    }
+  });
+  const on_submit_update_juridica = handle_submit(async (data) => {
+    try {
+      data.ubicacion_georeferenciada = '';
+      await editar_persona_juridica(id_persona, data as DataJuridicaUpdate);
+      control_error('hubo un error al actualizar los datos, intentelo de nuevo');
+    } catch (error) {
       control_error(error);
     }
   });
@@ -208,7 +226,12 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
     <>
       <form
         onSubmit={(e) => {
-          void on_submit_create_natural(e);
+          if (id_persona > 0) {
+            void on_submit_update_juridica(e);
+          }
+          if (id_persona === 0) {
+            void on_submit_create_juridica(e);
+          }
         }}
       >
         {/* Datos empresariales */}
@@ -625,6 +648,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
                 <DatosRepresentanteLegal
                   id_representante_legal={representante_legal ?? 0}
                   id_persona={id_persona}
+                  fecha_inicio={'2023-05-15'}
                 />
               </Grid>
             </>
@@ -770,20 +794,42 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
           </Grid>
 
           {/* BOTONES */}
-          <Grid item spacing={2} justifyContent="end" container>
-            <Grid item>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                fullWidth
-                color="success"
-                loading={is_saving}
-                disabled={is_saving}
-              >
-                Guardar
-              </LoadingButton>
-            </Grid>
-          </Grid>
+          {id_persona === 0 && (
+            <>
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <LoadingButton
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    color="success"
+                    loading={is_saving}
+                    disabled={is_saving}
+                  >
+                    Guardar
+                  </LoadingButton>
+                </Grid>
+              </Grid>
+            </>
+          )}
+          {id_persona > 0 && (
+            <>
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <LoadingButton
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    color="success"
+                    loading={is_saving}
+                    disabled={is_saving}
+                  >
+                    Actualizar
+                  </LoadingButton>
+                </Grid>
+              </Grid>
+            </>
+          )}
         </Grid>
       </form>
       <DialogGeneradorDeDirecciones
