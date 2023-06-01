@@ -21,3 +21,27 @@ export interface ValoresProceso {
   id_atributo: AtributoEtapa;
   valor: string;
 }
+
+export interface Cartera {
+  id: number;
+  dias_mora: number;
+  valor_intereses: string;
+  valor_sancion: string;
+  inicio: string;
+  fin: string;
+  codigo_contable: string;
+  fecha_facturacion: string;
+  numero_factura: string;
+  monto_inicial: string;
+  id_obligacion: number;
+  id_rango: number;
+}
+
+export interface Proceso {
+  id: number;
+  id_cartera: Cartera;
+  id_etapa: EtapaProceso;
+  id_funcionario: number;
+  inicio: string;
+  fin: string | null;
+}
