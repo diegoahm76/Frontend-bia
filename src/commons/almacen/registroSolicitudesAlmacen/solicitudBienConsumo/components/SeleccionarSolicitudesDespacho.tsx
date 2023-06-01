@@ -20,7 +20,7 @@ const SeleccionarSolicitudDespacho = ({
 
     // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
-    const { unidad_organizacional, solicitudes } = useAppSelector((state) => state.solic_consumo);
+    const { solicitudes } = useAppSelector((state) => state.solic_consumo);
 
 
 
@@ -102,6 +102,7 @@ const SeleccionarSolicitudDespacho = ({
                     set_models={set_solicitudes}
                     button_submit_label='Buscar solicitud'
                     form_inputs={[
+
                         {
                             datum_type: "input_controller",
                             xs: 5,
@@ -116,24 +117,11 @@ const SeleccionarSolicitudDespacho = ({
                             helper_text: "",
                             on_blur_function: search_solicitud
                         },
+
                         {
                             datum_type: "input_controller",
                             xs: 5,
-                            md: 2,
-                            control_form: control_solicitud_despacho,
-                            control_name: "nro_solicitud_por_tipo",
-                            default_value: "",
-                            rules: {},
-                            label: "Numero solicitud",
-                            type: "number",
-                            disabled: true,
-                            helper_text: "",
-                            on_blur_function: search_solicitud
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 8,
+                            md: 3,
                             control_form: control_solicitud_despacho,
                             control_name: "fecha_solicitud",
                             default_value: "",
@@ -145,8 +133,8 @@ const SeleccionarSolicitudDespacho = ({
                         },
                         {
                             datum_type: "input_controller",
-                            xs: 12,
-                            md: 2,
+                            xs: 5,
+                            md: 3,
                             control_form: control_solicitud_despacho,
                             control_name: "persona_solicita",
                             default_value: "",
@@ -156,20 +144,19 @@ const SeleccionarSolicitudDespacho = ({
                             disabled: true,
                             helper_text: ""
                         },
+
                         {
-                            datum_type: "select_controller",
-                            xs: 12,
+                            datum_type: "input_controller",
+                            xs: 5,
                             md: 3,
                             control_form: control_solicitud_despacho,
-                            control_name: "id_unidad_para_la_que_solicita",
+                            control_name: "nombre_unidad_organizacional",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Unidad para la cual se realiza la solicitud",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Unidad a la que pertenece:",
+                            type: "text",
                             disabled: true,
-                            helper_text: "",
-                            select_options: unidad_organizacional,
-                            option_label: "nombre",
-                            option_key: "id_unidad_organizacional"
+                            helper_text: ""
                         },
                         {
                             datum_type: "input_controller",
@@ -214,19 +201,7 @@ const SeleccionarSolicitudDespacho = ({
                             helper_text: ""
                         },
 
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_solicitud_despacho,
-                            control_name: "nombre_unidad_organizacional",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Unidad a la que pertenece:",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
+
 
 
 
@@ -249,7 +224,10 @@ const SeleccionarSolicitudDespacho = ({
                         }
                     ]}
                 />
+
+
             </Grid>
+
         </>
     );
 }

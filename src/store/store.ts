@@ -8,6 +8,7 @@ import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
 import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
 import { material_vegetal_slice } from "../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice";
 import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
+import { distribucion_slice } from "../commons/conservacion/distribucion/store/slice/distribucionSlice";
 import { produccion_slice } from "../commons/conservacion/produccion/store/slice/produccionSlice";
 import { bien_slice } from "../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes";
 import { cv_computo_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo";
@@ -57,6 +58,7 @@ const app_reducers = combineReducers({
   produccion: produccion_slice.reducer,
   cv: cv_computo_slice.reducer,
   material_vegetal: material_vegetal_slice.reducer,
+  distribucion: distribucion_slice.reducer,
   bodegas: bodegas_slice.reducer,
   cvo: cv_others_slice.reducer,
   cve: cve_vehicle_slice.reducer,

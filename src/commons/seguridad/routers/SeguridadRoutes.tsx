@@ -13,6 +13,7 @@ const routes = [
   { path: '/roles', element: <RolesScreen /> },
   { path: '/administracion_personas', element: <AdministracionPersonasScreen /> },
   { path: '/delegacion_superusuario', element: <DelegacionSuperuserScreen /> }
+
 ];
 export const SeguridadRoutes: React.FC = () => {
   return (
