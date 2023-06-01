@@ -38,6 +38,10 @@ interface IProps {
     show_inputs?: boolean;
     title_table_modal?: string | null;
     button_submit_disabled?: boolean | null;
+    button_add_selection_hidden?: boolean | null;
+    md_button?: number | null;
+    button_icon_class?: any
+
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -62,7 +66,10 @@ const BuscarModelo = ({
     add_list_button_label,
     show_inputs,
     title_table_modal,
-    button_submit_disabled
+    button_submit_disabled,
+    button_add_selection_hidden,
+    md_button,
+    button_icon_class
 }: IProps) => {
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -251,6 +258,7 @@ const BuscarModelo = ({
                 columns_model={columns_model}
                 row_id={row_id}
                 title_table_modal={title_table_modal ?? "Resultados de la busqueda"}
+                button_add_selection_hidden={button_add_selection_hidden ?? false}
             />
         </Grid>
     );

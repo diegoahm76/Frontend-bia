@@ -20,7 +20,7 @@ export const CrearPersonaScreen: React.FC = () => {
       >
         <Grid item xs={12}>
           <Title title="Crear Personas" />
-          <RegisterForm uso_interno={true} />
+          <RegisterForm />
         </Grid>
       </Grid>
     </>

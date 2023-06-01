@@ -16,7 +16,8 @@ import type {
   HistoricoRepresentanteLegal,
   InfoPersona,
   ResponseServer,
-  UpdateAutorizaNotificacion
+  UpdateAutorizaNotificacion,
+  UpdateAutorizaNotificacionPropia
 } from '../../../interfaces/globalModels';
 
 // editar datos persona restringida naturual
@@ -136,9 +137,17 @@ export const consultar_historico_email = async (
 };
 // consulta autorizacion notificaciones
 export const consultar_notificaciones = async (
-  id: number | undefined | null
+  id: number
 ): Promise<UpdateAutorizaNotificacion> => {
   const { data } = await api.get<ResponseServer<UpdateAutorizaNotificacion>>(
+    `personas/get-by-id/${id ?? 0}/`
+  );
+  return data.data;
+};
+export const consultar_notificaciones_cuenta_propia = async (
+  id: number
+): Promise<UpdateAutorizaNotificacionPropia> => {
+  const { data } = await api.get<ResponseServer<UpdateAutorizaNotificacionPropia>>(
     `personas/get-by-id/${id ?? 0}/`
   );
   return data.data;
@@ -190,6 +199,27 @@ export const crear_persona_juridica = async (
 ): Promise<any> => {
   const response = await api.post(
     `personas/register-persona-juridica-admin-personas/`,
+    datos
+  );
+  return response.data;
+};
+
+// editar datos persona naturual
+export const editar_persona_natural_cuenta_propia = async (
+  datos: DataNaturaUpdate
+): Promise<any> => {
+  const response = await api.patch(
+    `personas/persona-natural/self/update/`,
+    datos
+  );
+  return response.data;
+};
+// editar datos persona naturual
+export const editar_persona_juridica_cuenta_propia = async (
+  datos: DataJuridicaUpdate
+): Promise<any> => {
+  const response = await api.patch(
+    `personas/persona-juridica/self/update/`,
     datos
   );
   return response.data;

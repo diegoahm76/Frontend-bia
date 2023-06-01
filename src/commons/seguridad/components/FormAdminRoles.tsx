@@ -4,13 +4,13 @@ import {
   Button,
   TextField,
   CircularProgress,
-  FormGroup,
   FormControlLabel,
   Checkbox,
   Typography,
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Divider,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import {
@@ -70,6 +70,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
 
       // Obtiene permisos asignados al Rol al editar
       if (rol_edit?.id_rol !== 0) {
+        console.log('first');
         await get_permisos_rol(data);
       } else {
         data.map((e) => {
@@ -146,6 +147,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     if (event.target.checked) {
+      console.log(event.target.value);
       set_permisos_rol([
         ...permisos_rol,
         {
@@ -176,7 +178,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
                 onChange={select_permisos}
               />
             }
-            label={key}
+            label={`${key} ${actions[key]?.id ?? 0}`}
             value={actions[key]?.id}
           />
         );
@@ -204,6 +206,14 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
         data: { data },
       } = await get_rol_by_id(rol_edit?.id_rol ?? 0);
 
+      type keys =
+        | 'crear'
+        | 'actualizar'
+        | 'borrar'
+        | 'consultar'
+        | 'anular'
+        | 'ejecutar';
+
       permisos.forEach((e) => {
         e.checked = false;
         e.modulos.map((i) => {
@@ -220,7 +230,6 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
             );
             // Si tien algun permiso asignado, asigamos las acciones que tiene
             if (module !== undefined) {
-              console.log(module);
               for (const key in module.permisos) {
                 const k = key as key_obj;
                 const element = module.permisos[k];
@@ -233,27 +242,53 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
                 }
               }
               m.checked = true;
-              m.permisos = {
-                crear: module.permisos.crear,
-                actualizar: module.permisos.actualizar,
-                borrar: module.permisos.borrar,
-                consultar: module.permisos.consultar,
-                // anular: module.permisos.anular,
-                // ejecutar: module.permisos.ejecutar,
-              };
+
+              // Variable que almacena temporalmente las acciones, de cada accion con su propiedad value en false
+              const permisos = {};
+
+              // Recorremos los permisos
+              for (const key in m.permisos) {
+                const element = m.permisos[key as keys];
+                const has_key = module.permisos[key as keys] !== undefined;
+                const properties = {
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                  value: has_key
+                    ? module.permisos[key as keys]
+                    : {
+                        ...element,
+                        value: false,
+                      },
+                };
+                // Enviamos a la variable permisos, los nuevos valores
+                Object.defineProperty(permisos, key, properties);
+              }
+              m.permisos = permisos;
             } else {
               // Si no tien permiso asignado, asignamos por defecto en false
-              m.permisos = {
-                crear: { id: m.permisos.crear?.id ?? 0, value: false },
-                actualizar: {
-                  id: m.permisos.actualizar?.id ?? 0,
-                  value: false,
-                },
-                borrar: { id: m.permisos.borrar?.id ?? 0, value: false },
-                consultar: { id: m.permisos.consultar?.id ?? 0, value: false },
-                // anular: module.permisos.anular,
-                // ejecutar: mo
-              };
+
+              // Variable que almacena temporalmente las acciones, de cada accion con su propiedad value en false
+              const permisos = {};
+
+              // Recorremos los permisos
+              for (const key in m.permisos) {
+                const element = m.permisos[key as keys];
+
+                // Enviamos a la variable permisos, los nuevos valores
+                Object.defineProperty(permisos, key, {
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
+                  value: {
+                    ...element,
+                    value: false,
+                  },
+                });
+              }
+
+              // Reescribimos los permisos, con los nuevos valores
+              m.permisos = permisos;
             }
           });
         }
@@ -333,26 +368,33 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
           <Grid
             item
             xs={12}
-            container={is_loading}
+            container
             justifyContent={is_loading ? 'center' : 'start'}
+            spacing={2}
           >
             {is_loading ? (
               <CircularProgress />
             ) : (
               <>
-                <Typography variant="h5">lista de permisos</Typography>
-                <FormGroup>
-                  {permisos.map((e, k) => {
-                    return (
-                      <div key={k}>
-                        <FormControlLabel
-                          control={<Checkbox checked={e.checked} />}
-                          label={e.desc_subsistema}
-                          onChange={() => {
+                <Grid item xs={12}>
+                  <Typography variant="h5">lista de permisos</Typography>
+                </Grid>
+                {permisos.map((e, k) => {
+                  return (
+                    <Grid item xs={12} key={k}>
+                      <Accordion expanded={e.checked}>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id={e.desc_subsistema}
+                          onClick={() => {
                             checked_modulo(e, k);
                           }}
-                        />
-                        {e.checked && (
+                        >
+                          <Typography>{e.desc_subsistema}</Typography>
+                        </AccordionSummary>
+                        <Divider />
+                        <AccordionDetails>
                           <Grid container px={3} spacing={2}>
                             {e.modulos.map((m, i) => {
                               return (
@@ -386,11 +428,11 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
                               );
                             })}
                           </Grid>
-                        )}
-                      </div>
-                    );
-                  })}
-                </FormGroup>
+                        </AccordionDetails>
+                      </Accordion>
+                    </Grid>
+                  );
+                })}
               </>
             )}
           </Grid>

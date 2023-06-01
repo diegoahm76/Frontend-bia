@@ -11,6 +11,11 @@ export interface check {
   }
 }
 
+export interface Filtro {
+  parametro: string;
+  valor: string;
+}
+
 export interface Obligacion {
   nombre: string;
   fecha_inicio: string;
@@ -79,4 +84,20 @@ export interface Contacto {
   direccion_notificaciones: string;
   ciudad: string;
   telefono_celular: string;
+}
+
+export interface RegistroFacilidadPago {
+  id_deudor_actuacion: number; // de dónde lo saco
+  id_tipo_actuacion: number;
+  id_funcionario: number; // no tiene sentido
+  fecha_generacion: string;
+  observaciones: string;
+  periodicidad: number;
+  cuotas: number;
+  id_tasas_interes: number; // para que es y de dónde lo saco
+  documento_soporte: string;
+  consignacion_soporte: string;
+  documento_garantia: string;
+  documento_no_enajenacion: string;
+  notificaciones: boolean;
 }

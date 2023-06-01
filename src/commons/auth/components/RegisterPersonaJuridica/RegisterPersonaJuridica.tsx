@@ -126,14 +126,14 @@ const DatosEmpresariales: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'black' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -333,14 +333,14 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'black' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -485,14 +485,14 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'black' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -558,21 +558,17 @@ const AutorizaNotificacion: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'white' }}>Volver</Typography>
             </Button>
           </Grid>
-          <Grid item>
-            <Button variant="outlined" color="error" onClick={handleBack}>
-              Volver
-            </Button>
-          </Grid>
+          
           <Grid item>
             <LoadingButton
               type="submit"
@@ -627,14 +623,14 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'white' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -793,14 +789,14 @@ const DatosAcceso: (props: PropsElement) => JSX.Element = ({
           <Grid item>
             <Button
               variant="contained"
-              color="warning"
+              color="primary"
               sx={{
                 textAlign: 'center',
                 color: '#ffff',
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Salir</Typography>
+              <Typography sx={{ color: 'white' }}>Volver</Typography>
             </Button>
           </Grid>
           <Grid item>
