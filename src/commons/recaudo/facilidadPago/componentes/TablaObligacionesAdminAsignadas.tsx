@@ -9,7 +9,7 @@ import { type event, type FacilidadPago } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
-// import { get_filtro_fac_pago_asignadas } from '../requests/requests';
+import { get_filtro_fac_pago_asignadas, get_facilidades_asignadas } from '../slices/FacilidadesSlice';
 
 interface RootState {
   facilidades: {
@@ -25,10 +25,6 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
   const { facilidades } = useSelector((state: RootState) => state.facilidades);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
-
-  /* useEffect(() => {
-    void get_filtro_fac_pago_asignadas();
-  }, []) */
 
   const columns: GridColDef[] = [
     {
@@ -129,9 +125,8 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
                 set_filter(value)
               }}
             >
-              <MenuItem value='nombre'>Nombre Usuario</MenuItem>
+              <MenuItem value='nombre_de_usuario'>Nombre Usuario</MenuItem>
               <MenuItem value='identificacion'>Identificación</MenuItem>
-              <MenuItem value='obligacion'>Número Radicación F.P.</MenuItem>
             </Select>
         </FormControl>
         <TextField
@@ -148,44 +143,28 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
           variant='contained'
           startIcon={<SearchOutlined />}
           onClick={() => {
-            const new_rows = [];
-            if(filter === 'nombre'){
-              for(let i=0; i < facilidades.length; i++){
-                if(facilidades[i].nombre_de_usuario.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(facilidades[i])
-                }
-              }
-              set_visible_rows(new_rows)
-            }
-            if(filter === 'identificacion'){
-              for(let i=0; i < facilidades.length; i++){
-                if(facilidades[i].identificacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(facilidades[i])
-                }
-              }
-              set_visible_rows(new_rows)
-            }
-            if(filter === 'obligacion'){
-              for(let i=0; i < facilidades.length; i++){
-                if(facilidades[i].obligacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(facilidades[i])
-                }
-              }
-              set_visible_rows(new_rows)
+            try {
+              void dispatch(get_filtro_fac_pago_asignadas({parametro: filter, valor: search}));
+            } catch (error: any) {
+              throw new Error(error);
             }
           }}
         >
-        Buscar
+          Buscar
         </Button>
         <Button
           color='primary'
           variant='outlined'
           startIcon={<FilterAltOffOutlined />}
           onClick={() => {
-            set_visible_rows(facilidades)
+            try {
+              void dispatch(get_facilidades_asignadas());
+            } catch (error: any) {
+              throw new Error(error);
+            }
           }}
         >
-        Mostrar Todo
+          Mostrar Todo
         </Button>
       </Stack>
       {

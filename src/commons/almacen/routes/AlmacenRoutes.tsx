@@ -8,6 +8,7 @@ import { EntradaBienesAlmacenRoutes } from "../entradaDeAlmacen/routes/EntradaAl
 import { ReportesIndicadoresAnaliticaRoutes } from "../reportesIndicadoresAnalitca/routes/ReportesIndicadoresAnaliticaRoutes";
 import { GestionInventarioRoutes } from "../gestionDeInventario/gestionHojaDeVida/routes/GestionInventarioRoutes";
 import SolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudBienConsumoScreen";
+import { AdministracionVehiculosRoutes } from "../administracionDeVehiculos/routes/AdministracionVehiculosRoutes";
 import AprobacionSolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudConsumoScreen";
 import DespachoBienesConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/despachoSolicitudScreen";
 
@@ -26,6 +27,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="entrada_almacen/*"
         element={<EntradaBienesAlmacenRoutes />}
+      />
+      <Route
+        path="administracion_vehiculo/*"
+        element={<AdministracionVehiculosRoutes />}
       />
 
       <Route

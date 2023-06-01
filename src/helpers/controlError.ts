@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+
 export const control_error = (error: any | unknown): void => {
   let message = '';
   let auto_close: number | boolean = 5000;
@@ -10,9 +11,11 @@ export const control_error = (error: any | unknown): void => {
   } else if (error.response !== undefined && error.response.status === 401) {
     message = 'Su sesión ha vencido, por favor inicie sesión nuevamente';
     type = 'info';
-    auto_close = false;
-    localStorage.clear();
-    location.reload();
+    auto_close = 4000;
+    setTimeout(() => {
+      localStorage.clear();
+      location.reload();
+    }, 5000);
   } else {
     message = error.toString();
   }
