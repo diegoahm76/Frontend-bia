@@ -3,6 +3,7 @@ import { DataGrid, type GridValueFormatterParams, type GridColDef } from "@mui/x
 import { Title } from "../../../../components"
 import type { AtributoEtapa } from "../../interfaces/proceso";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import SaveIcon from '@mui/icons-material/Save';
 
 interface IProps {
   rows_atributos: AtributoEtapa[];
@@ -49,29 +50,6 @@ export const CobroCoactivo: React.FC<IProps> = ({
   handle_file_change,
   handle_post_valores_proceso 
 }: IProps) => {
-  // const [input_values, set_input_values] = useState<Record<string, string | File | null | number>>({});
-
-  // const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>, name: string): void => {
-  //   const { value } = event.target;
-  //   set_input_values((prevInputValues) => ({
-  //     ...prevInputValues,
-  //     [name]: value,
-  //   }));
-  // };
-
-  // const handle_files_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
-  //   if (event.target.files) {
-  //     set_input_values((prevState) => ({
-  //       ...prevState,
-  //       [event.target.name]: event.target.files[0],
-  //     }));
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   console.log(input_values);
-  // }, [input_values]);
-
   const column_detalle: GridColDef[] = [
     {
       field: 'id',
@@ -213,11 +191,12 @@ export const CobroCoactivo: React.FC<IProps> = ({
               }}
             >
               <Button
-                color="info"
+                color="primary"
                 variant="contained"
                 onClick={handle_post_valores_proceso}
+                startIcon={<SaveIcon />}
               >
-                Guardar
+                Guardar valores del proceso
               </Button>
             </Stack>
           </Box>
