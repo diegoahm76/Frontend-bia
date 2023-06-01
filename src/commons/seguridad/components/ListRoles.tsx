@@ -290,7 +290,7 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
               maxWidth={'md'}
             >
               <DialogTitle id="alert-dialog-title" textAlign="center">
-                Usuarios del rol
+                {rol.nombre_rol}
               </DialogTitle>
               <DialogContent>
                 {is_loading_detail ? (
@@ -305,8 +305,8 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
                 ) : (
                   <>
                     <DialogContentText>
-                      <Typography variant="body1" textAlign="center">
-                        <b>Nombre rol:</b> {rol.nombre_rol}
+                      <Typography variant="body1" mb={2}>
+                        <b>Usuarios asignados al rol</b>
                       </Typography>
                     </DialogContentText>
                     <TableContainer component={Paper}>
