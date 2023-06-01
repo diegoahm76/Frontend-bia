@@ -178,7 +178,7 @@ export const FormAdminRoles = ({ on_create, rol_edit }: Props): JSX.Element => {
                 onChange={select_permisos}
               />
             }
-            label={`${key} ${actions[key]?.id ?? 0}`}
+            label={key}
             value={actions[key]?.id}
           />
         );
