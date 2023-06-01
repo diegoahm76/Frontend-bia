@@ -188,6 +188,7 @@ export function ListOrganigramas({
               <IconButton
                 disabled={params.row.id_persona_cargo !== userinfo.id_persona}
                 onClick={() => {
+                  console.log('hi')
                   dispatch(current_organigram(params.row));
                   set_position_tab_organigrama('2');
                 }}
