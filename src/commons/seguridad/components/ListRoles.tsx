@@ -37,6 +37,7 @@ import {
   get_users_rol,
   roles_request,
 } from '../request/seguridadRequest';
+import { Title } from '../../../components/Title';
 interface IProps {
   on_edit: (tab: string, rol: Rol) => void;
 }
@@ -306,7 +307,7 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
                   <>
                     <DialogContentText>
                       <Typography variant="body1" mb={2}>
-                        <b>Usuarios asignados al rol</b>
+                        <Title title= "Usuarios asignados al rol"></Title>
                       </Typography>
                     </DialogContentText>
                     <TableContainer component={Paper}>
