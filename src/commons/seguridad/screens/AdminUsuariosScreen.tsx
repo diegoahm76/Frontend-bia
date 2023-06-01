@@ -61,7 +61,7 @@ const initial_state_data_register: DataAadminUser = {
   fecha_creacion: '',
   fecha_activación_inicial: '',
   creado_desde_portal: false,
-  persona_que_creo: 0,
+  persona_que_creo: '',
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -262,7 +262,6 @@ export const AdminUsuariosScreen: React.FC = () => {
                   name="tipo_persona"
                   value={tipo_persona}
                   options={tipo_persona_opt}
-                  loading={loading}
                   disabled={false}
                   required={true}
                   errors={errors}
@@ -276,7 +275,6 @@ export const AdminUsuariosScreen: React.FC = () => {
                   name="tipo_documento"
                   value={tipo_documento}
                   options={tipo_documento_opt}
-                  loading={loading}
                   disabled={
                     (tipo_persona === '' || tipo_persona === 'J') ?? true
                   }

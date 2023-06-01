@@ -18,6 +18,11 @@ const initial_state_organigram_current = {
   version: '',
   actual: false,
   ruta_resolucion: null,
+  id_persona_cargo: null,
+  tipo_documento: null,
+  numero_documento: null,
+  nombre_completo: null,
+  usado: false,
 };
 
 const initial_state: IOrganigram = {

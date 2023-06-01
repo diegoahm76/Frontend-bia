@@ -1,3 +1,4 @@
+import type { AxiosResponse } from 'axios';
 import { api } from '../../../api/axios';
 import type {
   ClaseTercero,
@@ -15,7 +16,8 @@ import type {
   HistoricoRepresentanteLegal,
   InfoPersona,
   ResponseServer,
-  UpdateAutorizaNotificacion
+  UpdateAutorizaNotificacion,
+  UpdateAutorizaNotificacionPropia
 } from '../../../interfaces/globalModels';
 
 // editar datos persona restringida naturual
@@ -52,12 +54,11 @@ export const consultar_historico_restringido = async (
 };
 // consultar datos de una persona por id
 export const consultar_datos_persona = async (
-  id: number | undefined | null
-): Promise<DataPersonas> => {
-  const { data } = await api.get<ResponseServer<DataPersonas>>(
-    `personas/get-by-id/${id ?? 0}/`
+  id: number
+): Promise<AxiosResponse<ResponseServer<DataPersonas>>> => {
+  return await api.get<ResponseServer<DataPersonas>>(
+    `personas/get-by-id/${id}/`
   );
-  return data.data;
 };
 // consultar datos de una persona por id
 export const consultar_datos_persona_basicos = async (
@@ -69,9 +70,8 @@ export const consultar_datos_persona_basicos = async (
   );
   return data.data;
 };
-// datos de clasificación cormacarena 
-export const consultar_clase_tercero = async (
-): Promise<ClaseTercero[]> => {
+// datos de clasificación cormacarena
+export const consultar_clase_tercero = async (): Promise<ClaseTercero[]> => {
   const { data } = await api.get<ResponseServer<ClaseTercero[]>>(
     `listas/clase-tercero/`
   );
@@ -84,7 +84,7 @@ export const consultar_clase_tercero_persona = async (
   const { data } = await api.get<ResponseServer<ClaseTerceroPersona[]>>(
     `personas/get-clases-tercero-persona/${id ?? 0}/`
   );
-  return data.data
+  return data.data;
 };
 // datos de vnculación cormacarena por persona
 export const consultar_vinculacion_persona = async (
@@ -137,9 +137,17 @@ export const consultar_historico_email = async (
 };
 // consulta autorizacion notificaciones
 export const consultar_notificaciones = async (
-  id: number | undefined | null
+  id: number
 ): Promise<UpdateAutorizaNotificacion> => {
   const { data } = await api.get<ResponseServer<UpdateAutorizaNotificacion>>(
+    `personas/get-by-id/${id ?? 0}/`
+  );
+  return data.data;
+};
+export const consultar_notificaciones_cuenta_propia = async (
+  id: number
+): Promise<UpdateAutorizaNotificacionPropia> => {
+  const { data } = await api.get<ResponseServer<UpdateAutorizaNotificacionPropia>>(
     `personas/get-by-id/${id ?? 0}/`
   );
   return data.data;
@@ -168,7 +176,9 @@ export const editar_autorizacion_notificaciones = async (
   datos: UpdateAutorizaNotificacion
 ): Promise<any> => {
   const response = await api.put(
-    `gestor/ventanilla/personas/autorizacion-notificaciones/${id_persona ?? 0}/`,
+    `gestor/ventanilla/personas/autorizacion-notificaciones/${
+      id_persona ?? 0
+    }/`,
     datos
   );
   return response.data;
@@ -189,6 +199,27 @@ export const crear_persona_juridica = async (
 ): Promise<any> => {
   const response = await api.post(
     `personas/register-persona-juridica-admin-personas/`,
+    datos
+  );
+  return response.data;
+};
+
+// editar datos persona naturual
+export const editar_persona_natural_cuenta_propia = async (
+  datos: DataNaturaUpdate
+): Promise<any> => {
+  const response = await api.patch(
+    `personas/persona-natural/self/update/`,
+    datos
+  );
+  return response.data;
+};
+// editar datos persona naturual
+export const editar_persona_juridica_cuenta_propia = async (
+  datos: DataJuridicaUpdate
+): Promise<any> => {
+  const response = await api.patch(
+    `personas/persona-juridica/self/update/`,
     datos
   );
   return response.data;

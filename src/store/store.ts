@@ -8,6 +8,7 @@ import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
 import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
 import { material_vegetal_slice } from "../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice";
 import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
+import { distribucion_slice } from "../commons/conservacion/distribucion/store/slice/distribucionSlice";
 import { produccion_slice } from "../commons/conservacion/produccion/store/slice/produccionSlice";
 import { bien_slice } from "../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes";
 import { cv_computo_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo";
@@ -25,7 +26,12 @@ import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/Bode
 import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
 import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
 import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
-import { obligaciones_slice } from '../commons/recaudo/facilidadPago/store/slices/FacilidadPagoSlices';
+import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/ObligacionesSlice';
+import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
+import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
+import { funcionarios_slice } from "../commons/recaudo/facilidadPago/slices/FuncionariosSlice";
+import { calidad_personas_slice } from "../commons/recaudo/facilidadPago/slices/CalidadPersonasSlice";
+import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
 
 const persist_config = {
   key: 'macarenia_app',
@@ -51,11 +57,17 @@ const app_reducers = combineReducers({
   produccion: produccion_slice.reducer,
   cv: cv_computo_slice.reducer,
   material_vegetal: material_vegetal_slice.reducer,
+  distribucion: distribucion_slice.reducer,
   bodegas: bodegas_slice.reducer,
   cvo: cv_others_slice.reducer,
   cve: cve_vehicle_slice.reducer,
   solic_consumo: solicitud_consumo_slice.reducer,
-  obligaciones: obligaciones_slice.reducer
+  obligaciones: obligaciones_slice.reducer,
+  deudores: deudores_slice.reducer,
+  facilidades: facilidades_slice.reducer,
+  funcionarios: funcionarios_slice.reducer,
+  calidad_personas: calidad_personas_slice.reducer,
+  solicitud_facilidad: solicitud_facilidad_slice.reducer
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

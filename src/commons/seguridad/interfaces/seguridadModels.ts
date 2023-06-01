@@ -73,7 +73,7 @@ export interface DataAadminUser {
   fecha_creacion: string;
   fecha_activación_inicial: string | null;
   creado_desde_portal: boolean;
-  persona_que_creo: number | null;
+  persona_que_creo: string | null;
 }
 
 export interface DataCreateUser {

@@ -8,6 +8,7 @@ import {
   IconButton,
   Avatar,
   Chip,
+  Tooltip,
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/AddBoxOutlined';
@@ -26,6 +27,22 @@ import DialogElegirOrganigramaActual from './DialogElegirOrganigramaActual';
 import DialogDelegarOrganigrama from './DialogDelegarOrganigrama';
 // Slices
 import { current_organigram } from '../store/slices/organigramSlice';
+import { toast, type ToastContent } from 'react-toastify';
+import { type IObjOrganigram } from '../interfaces/organigrama';
+import DialogElegirCcdActual from './DialogElegirCcdActual';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const control_error = (message: ToastContent) =>
+  toast.error(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light',
+  });
 
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
@@ -37,12 +54,15 @@ export function ListOrganigramas({
 }: IProps): JSX.Element {
   const dispatch = useAppDispatch();
   const { organigram } = useAppSelector((state) => state.organigram);
+  const { userinfo } = useAppSelector((state) => state.auth);
   const [crear_organigrama_is_active, set_crear_organigrama_is_active] =
     useState<boolean>(false);
   const [
     elegir_organigrama_actual_is_active,
     set_elegir_organigrama_actual_is_active,
   ] = useState<boolean>(false);
+  const [elegir_ccd_actual_is_active, set_elegir_ccd_actual_is_active] =
+    useState<boolean>(false);
   const [delegar_organigrama_is_active, set_delegar_organigrama_is_active] =
     useState<boolean>(false);
 
@@ -70,12 +90,11 @@ export function ListOrganigramas({
       width: 100,
     },
     {
-      field: 'actual',
-      headerName: 'Actual',
+      field: 'usado',
+      headerName: 'En uso',
       width: 100,
-      renderCell: (params) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.actual ? (
+      renderCell: (params: { row: IObjOrganigram }) => {
+        return params.row.usado ? (
           <Chip size="small" label="Sí" color="success" variant="outlined" />
         ) : (
           <Chip size="small" label="No" color="error" variant="outlined" />
@@ -132,52 +151,108 @@ export function ListOrganigramas({
       width: 100,
       renderCell: (params) => (
         <>
-          <IconButton
-            onClick={() => {
-              dispatch(current_organigram(params.row));
-              set_position_tab_organigrama('2');
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              {params.row.fecha_terminado !== null ? (
-                <VisibilityIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              ) : (
-                <EditIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              )}
-            </Avatar>
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              dispatch(current_organigram(params.row));
-              set_delegar_organigrama_is_active(true);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <ManageAccountsOutlinedIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
+          {params.row.fecha_terminado !== null ? (
+            <Tooltip title="Ver">
+              <IconButton
+                onClick={() => {
+                  dispatch(current_organigram(params.row));
+                  set_position_tab_organigrama('2');
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <VisibilityIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Editar">
+              <IconButton
+                disabled={params.row.id_persona_cargo !== userinfo.id_persona}
+                onClick={() => {
+                  dispatch(current_organigram(params.row));
+                  set_position_tab_organigrama('2');
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background:
+                      params.row.id_persona_cargo !== userinfo.id_persona
+                        ? ''
+                        : '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <EditIcon
+                    sx={{
+                      color:
+                        params.row.id_persona_cargo !== userinfo.id_persona
+                          ? ''
+                          : 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          )}
+          {params.row.fecha_terminado === null && (
+            <Tooltip title="Delegación">
+              <IconButton
+                onClick={() => {
+                  console.log(params.row);
+                  // Permitir delegar organigrama si es superusuario o si es el usuario delegado para ese organigrama
+                  if (
+                    params.row.id_persona_cargo === userinfo.id_persona ||
+                    userinfo.is_superuser
+                  ) {
+                    dispatch(current_organigram(params.row));
+                    set_delegar_organigrama_is_active(true);
+                  } else {
+                    control_error(
+                      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                      `Este organigrama actualmente sólo podrá ser editado por ${params.row.nombre_completo}`
+                    );
+                  }
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <ManageAccountsOutlinedIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          )}
         </>
       ),
     },
@@ -208,6 +283,15 @@ export function ListOrganigramas({
         >
           ELEGIR ACTUAL
         </Button>
+        <Button
+          variant="outlined"
+          startIcon={<AssignmentTurnedInIcon />}
+          onClick={() => {
+            set_elegir_ccd_actual_is_active(true);
+          }}
+        >
+          ELEGIR CCD ACTUAL
+        </Button>
       </Stack>
       <Grid item>
         <Box sx={{ width: '100%' }}>
@@ -234,6 +318,10 @@ export function ListOrganigramas({
       <DialogDelegarOrganigrama
         is_modal_active={delegar_organigrama_is_active}
         set_is_modal_active={set_delegar_organigrama_is_active}
+      />
+      <DialogElegirCcdActual
+        is_modal_active={elegir_ccd_actual_is_active}
+        set_is_modal_active={set_elegir_ccd_actual_is_active}
       />
     </>
   );
