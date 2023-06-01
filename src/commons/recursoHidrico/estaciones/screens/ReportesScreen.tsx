@@ -163,7 +163,7 @@ export const ReportesScreen: React.FC = () => {
       return
     }
     try {
-      const response = await api.get(`https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`);
+      const response = await api.get(`estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`);
       set_loading(false);
       return response.data;
     } catch (err: unknown) {
@@ -225,7 +225,7 @@ export const ReportesScreen: React.FC = () => {
         return { data: null, unique_days: {} };
       }
       const response = await api.get(
-        `https://backend-bia-beta-production.up.railway.app/api/estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`
+        `estaciones/datos/consultar-datos-reporte/${selectdashboards.opc_dashboards}/${fecha}/`
       );
 
       // Dias unicos del mes

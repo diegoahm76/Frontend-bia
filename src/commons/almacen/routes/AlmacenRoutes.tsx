@@ -7,8 +7,10 @@ import { EntradaBienesAlmacenRoutes } from "../entradaDeAlmacen/routes/EntradaAl
 
 import { ReportesIndicadoresAnaliticaRoutes } from "../reportesIndicadoresAnalitca/routes/ReportesIndicadoresAnaliticaRoutes";
 import { GestionInventarioRoutes } from "../gestionDeInventario/gestionHojaDeVida/routes/GestionInventarioRoutes";
-import { SolicitudDespachoScreen } from "../registroSolicitudesAlmacen/despacho/screens/SolicitudDespachoScreen";
 import SolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudBienConsumoScreen";
+import { AdministracionVehiculosRoutes } from "../administracionDeVehiculos/routes/AdministracionVehiculosRoutes";
+import AprobacionSolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudConsumoScreen";
+import DespachoBienesConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/despachoSolicitudScreen";
 
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
@@ -25,6 +27,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="entrada_almacen/*"
         element={<EntradaBienesAlmacenRoutes />}
+      />
+      <Route
+        path="administracion_vehiculo/*"
+        element={<AdministracionVehiculosRoutes />}
       />
 
       <Route
@@ -45,9 +51,14 @@ export const AlmacenRoutes: React.FC = () => {
         element={<SolicitudConsumoScreen />}
       />
       <Route
-        path="solicitud_despacho/*"
-        element={<SolicitudDespachoScreen />}
+        path="aprobacion_solicitud_consumo/*"
+        element={<AprobacionSolicitudConsumoScreen />}
       />
+      <Route
+        path="despacho_solicitud_aprobada/*"
+        element={<DespachoBienesConsumoScreen />}
+      />
+
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );

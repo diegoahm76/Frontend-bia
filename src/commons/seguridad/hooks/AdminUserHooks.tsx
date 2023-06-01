@@ -7,7 +7,6 @@ import type {
   DataAadminUser,
   AdminUserHook,
   SeguridadSlice,
-  // Users,
   UserCreate,
   keys_object,
 } from '../interfaces';
@@ -16,15 +15,12 @@ import {
   get_tipo_persona,
   get_tipo_usuario,
 } from '../../../request';
-// import { get_roles } from '../store/thunks';
-// import { roles_request } from '../request/seguridadRequest';
 import { roles_choise_adapter } from '../adapters/roles_adapters';
 import {
   crear_user_admin_user,
   roles_request,
   update_user_admin_user,
 } from '../request/seguridadRequest';
-// import { set_user_info } from '../store/seguridadSlice';
 import { get_data_user } from '../store/thunks';
 import dayjs from 'dayjs';
 import { control_success, control_error } from '../../../helpers';
@@ -90,7 +86,7 @@ export const initial_state_data_register: DataAadminUser = {
   fecha_creacion: '',
   fecha_activación_inicial: '',
   creado_desde_portal: false,
-  persona_que_creo: 0,
+  persona_que_creo: '',
 };
 
 export const use_admin_users = (): AdminUserHook => {
@@ -130,6 +126,10 @@ export const use_admin_users = (): AdminUserHook => {
     useState<boolean>(true);
   const [check_user_is_blocked, set_check_user_is_blocked] =
     useState<boolean>(true);
+  const [valor_actual_user_is_blocked, set_valor_actual_user_is_blocked] =
+    useState<boolean>();
+  const [valor_actual_user_is_active, set_valor_actual_user_is_active] =
+    useState<boolean>();
   // Mostrar modal usuarios por persona
   const [users_x_person_is_active, set_users_x_person_is_active] =
     useState<boolean>(false);
@@ -260,19 +260,35 @@ export const use_admin_users = (): AdminUserHook => {
   };
 
   const on_change = (e: SelectChangeEvent<string>): void => {
-    console.log(e.target.name, e.target.value);
     switch (e.target.name) {
       case 'tipo_usuario':
         console.log(e.target.value);
         set_tipo_usuario(e.target.value);
         break;
       case 'activo':
+        console.log('valor actual', valor_actual_user_is_active);
+        console.log('selected actual', e.target.value);
         set_activo(e.target.value);
-        set_check_user_is_active(false);
+        if (
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          `${valor_actual_user_is_active}` !== e.target.value
+        ) {
+          set_check_user_is_active(false);
+        } else {
+          set_check_user_is_active(true);
+        }
+        // set_valor_actual_user_is_active(e.target.value !== 'false');
         break;
       case 'bloqueado':
         set_bloqueado(e.target.value);
-        set_check_user_is_blocked(false);
+        if (
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+          `${valor_actual_user_is_blocked}` !== e.target.value
+        ) {
+          set_check_user_is_blocked(false);
+        } else {
+          set_check_user_is_blocked(true);
+        }
         break;
     }
     set_value_form(e.target.name, e.target.value);
@@ -332,8 +348,10 @@ export const use_admin_users = (): AdminUserHook => {
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       set_activo(`${data_register.activo}`);
+      set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       set_bloqueado(`${data_register.bloqueado}`);
+      set_valor_actual_user_is_blocked(data_register.bloqueado);
 
       if (data_person_search.tipo_persona === 'N') {
         // set_tipo_usuario('');
@@ -408,8 +426,10 @@ export const use_admin_users = (): AdminUserHook => {
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       set_activo(`${data_register.activo}`);
+      set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       set_bloqueado(`${data_register.bloqueado}`);
+      set_valor_actual_user_is_blocked(data_register.bloqueado);
       set_data_register({
         ...data_register,
         razon_social: user_info.razon_social,
@@ -446,7 +466,9 @@ export const use_admin_users = (): AdminUserHook => {
             ? dayjs(user_info.activated_at).format('DD-MM-YYYY')
             : 'No disponible',
         creado_desde_portal: user_info.creado_por_portal,
-        persona_que_creo: user_info.id_usuario_creador,
+        persona_que_creo: `${user_info.primer_nombre_usuario_creador ?? ''} ${
+          user_info.primer_apellido_usuario_creador ?? ''
+        }`,
       });
       set_value_admin_user('razon_social', user_info.razon_social);
       set_value_admin_user('nombre_comercial', user_info.nombre_comercial);
@@ -492,7 +514,12 @@ export const use_admin_users = (): AdminUserHook => {
           : 'No disponible'
       );
       set_value_admin_user('creado_desde_portal', user_info.creado_por_portal);
-      set_value_admin_user('persona_que_creo', user_info.id_usuario_creador);
+      set_value_admin_user(
+        'persona_que_creo',
+        `${user_info.primer_nombre_usuario_creador ?? ''} ${
+          user_info.primer_apellido_usuario_creador ?? ''
+        }`
+      );
 
       console.log('Si hay data user');
       set_data_disponible(true);

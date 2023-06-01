@@ -15,25 +15,32 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useAppDispatch } from "../../../../hooks";
-import { obtener_articulo_codigo, obtener_bodegas, obtener_consecutivo, obtener_tipos_entrada } from "../thunks/Entradas";
+import { crear_entrada_bien, obtener_articulo_codigo, obtener_bodegas, obtener_consecutivo, obtener_porcentajes_iva, obtener_tipos_entrada } from "../thunks/Entradas";
 import { control_error } from "../../../../helpers";
 import { get_tipo_documento } from "../../../../request";
-import { useDropzone } from "react-dropzone";
 import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
 import AnularEntradaComponent from "./AnularEntrada";
 import EntradaArticuloFijoComponent from "./EntradaArticuloFijo";
 import { type IInfoEntrada, type crear_entrada, type IInfoItemEntrada } from "../interfaces/entradas";
 import { BuscadorPersonaDialog } from "../../gestionDeInventario/gestionHojaDeVida/mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoGeneral/BuscadorPersonaDialog";
-
+import { v4 as uuid } from "uuid";
+import BuscarEntradasComponent from "./BuscarEntradas";
+import { useNavigate } from "react-router-dom";
+import { useDropzone } from "react-dropzone";
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntradaBienesAlmacenScreen: React.FC = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [entradas, set_entradas] = useState<crear_entrada>();
+  const [info_items, set_info_items] = useState<IInfoItemEntrada[]>([]);
   const [user_info, set_user_info] = useState<any>({});
   const [detalles_entrada, set_detalles_entrada] = useState<any[]>([]);
-  const [articulo, set_articulo] = useState<any>({codigo_bien: ""});
+  // const [previsualizacion, set_previsualizacion] = useState<any[]>([]);
+  const [articulo, set_articulo] = useState<any>({});
+  const [buscar_articulo, set_buscar_articulo] = useState<any>(null);
   const [msj_error_articulo, set_msj_error_articulo] = useState<string>("");
   const [codigo_articulo, set_codigo_articulo] = useState<string | number>("");
+  const [nombre_articulo, set_nombre_articulo] = useState<string | number>("");
   const [numero_entrada, set_numero_entrada] = useState<number>(0);
   const [fecha_entrada, set_fecha_entrada] = useState<Dayjs>(dayjs());
   const [msj_error_fecha_entrada, set_msj_error_fecha_entrada] = useState<string>("");
@@ -41,11 +48,13 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [msj_error_tipo, set_msj_error_tipo] = useState<string>("");
   const [tipos_entrada, set_tipos_entrada] = useState<any>([]);
   const [observaciones, set_observaciones] = useState<string | null>("");
-  const [msj_error_observaciones, set_msj_error_observaciones] = useState<string>("");
   const [motivo, set_motivo] = useState<string>("");
   const [msj_error_motivo, set_msj_error_motivo] = useState<string>("");
   const [tipos_documentos, set_tipos_documentos] = useState<any>([]);
+  const [iva, set_iva] = useState<string>("");
+  const [porcentaje_iva, set_porcentaje_iva] = useState<any>([]);
   const [proveedor, set_proveedor] = useState<any>({nombre: ""});
+  const [msj_error_iva, set_msj_error_iva] = useState<string>("");
   const [msj_error_proveedor, set_msj_error_proveedor] = useState<string>("");
   const [tipo_documento, set_tipo_documento] = useState<string>("");
   const [msj_error_tdoc, set_msj_error_tdoc] = useState<string>("");
@@ -66,6 +75,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [entrada_af_is_active, set_entrada_af_is_active] = useState<boolean>(false);
   const [file, set_file] = useState<any>(null);
   const [abrir_modal_proveedor, set_abrir_modal_proveedor] = useState<boolean>(false);
+  const [buscar_entrada_is_active, set_buscar_entrada_is_active] = useState<boolean>(false);
 
 
   useEffect(() => {
@@ -74,6 +84,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     obtener_bodegas_fc();
     obtener_usuario();
     obtener_consecutivo_fc();
+    obtener_porcentajes_iva_fc();
   }, []);
 
   const obtener_tipos_entrada_fc = async (): Promise<void> => {
@@ -88,6 +99,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const obtener_bodegas_fc: () => void = () => {
     dispatch(obtener_bodegas()).then((response: any) => {
       set_bodegas(response);
+    })
+  }
+
+  const obtener_porcentajes_iva_fc: () => void = () => {
+    dispatch(obtener_porcentajes_iva()).then((response: any) => {
+      set_porcentaje_iva(response);
     })
   }
 
@@ -142,7 +159,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const cambio_fecha_entrada = (date: Dayjs | null): void => {
     if(date !== null){
-      set_fecha_entrada(date); 
+      set_fecha_entrada(date);
       set_msj_error_fecha_entrada("");
     }else{
       set_msj_error_fecha_entrada("El campo fecha entrada es obligatorio.");
@@ -151,10 +168,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const cambio_motivo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_motivo(e.target.value);
+    if (e.target.value !== null && e.target.value !== "")
+      set_msj_error_motivo("");
   };
 
   const buscar_x_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value !== null && e.target.value !== undefined) {
+    if (e.target.value !== null && e.target.value !== undefined && e.target.value !== "") {
       set_codigo_articulo(parseInt(e.target.value));
       dispatch(obtener_articulo_codigo(e.target.value)).then((response: {success: boolean,detail: string, data: any}) => {
         if(response.success){
@@ -192,8 +211,15 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_msj_error_tdoc("");
   }
 
+  const cambio_iva: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
+    set_iva(e.target.value);
+    if (e.target.value !== null && e.target.value !== "")
+      set_msj_error_iva("");
+  }
+
   const calcular_totales = (): void => {
-      const total_iva = ((parseInt(valor_unidad) * (articulo.porcentaje_iva/100)));
+      const iva_porcentaje = porcentaje_iva.find((pi: any) => pi.id_porcentaje_iva === iva);
+      const total_iva = ((parseInt(valor_unidad) * (iva_porcentaje.porcentaje/100)));
       const total_unidad = parseInt(valor_unidad) + total_iva;
       const total_entrada = total_unidad * parseInt(cantidad);
       set_valor_iva(total_iva.toString());
@@ -203,14 +229,14 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const validar_entrada = (): void => {
     if(validar_formulario()){
-      articulo.cod_tipo_bien === "A" ? set_entrada_af_is_active(true) : cargar_entradas();
+      articulo.cod_tipo_bien === "A" ? set_entrada_af_is_active(true) : carga_info_items();
     }
   }
 
   const cargar_entradas = (): void => {
     const encabezado: IInfoEntrada = {
       id_entrada_almacen: numero_entrada,
-      fecha_entrada: fecha_entrada.format("YYYY-MM-DD"), 
+      fecha_entrada: fecha_entrada.format("YYYY-MM-DD HH:mm:ss"), 
       motivo, 
       observacion: observaciones, 
       id_proveedor: proveedor.id_persona, 
@@ -218,86 +244,169 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       id_bodega: parseInt(bodega_ingreso), 
       valor_total_entrada
     };
-    set_entradas({...entradas, info_entrada: encabezado,info_items_entrada: carga_info_items()});
+    set_entradas({...entradas, info_entrada: encabezado,info_items_entrada: info_items});
   }
 
-  const carga_info_items = (): IInfoItemEntrada[] => {
-    const info_items: IInfoItemEntrada[] = [];
-    if(detalles_entrada !== undefined && detalles_entrada.length > 0){
+  const carga_info_items = (): void => {
+    if(detalles_entrada.length > 0){
       detalles_entrada.forEach((info_item: any) => {
-        info_items.push({
+        set_info_items(prevArray => [...prevArray, {
+          id_entrada_local: String(uuid()),
           id_item_entrada_almacen: null,
           id_entrada_almacen: numero_entrada,
-          id_bien: articulo.codigo_bien,
-          cantidad: parseInt(cantidad),
+          id_bien: articulo.id_bien,
+          codigo: articulo.codigo_bien,
+          nombre: articulo.nombre,
+          cantidad: 1,
           id_bodega: parseInt(bodega_detalle),
-          numero_posicion: 0,
-          porcentaje_iva: articulo.porcentaje_iva,
-          id_bien_padre: articulo.bien_padre,
+          numero_posicion: (prevArray.length + 1),
+          porcentaje_iva: parseInt(iva),
+          id_bien_padre: articulo.id_bien,
           valor_unitario: parseFloat(valor_unidad),
-          valor_residual: info_item.valor_residual,
           valor_iva: parseFloat(valor_iva),
-          valor_total_item: parseFloat(valor_total_item)
-        })
+          valor_total_item: parseFloat(valor_total_item),
+          id_unidad_medida_vida_util: info_item.unidad_tiempo,
+          valor_residual: info_item.valor_residual,
+          tiene_hoja_vida: info_item.abrir_hdv,
+        }])
       });
     }else{
-      info_items.push({
+      set_info_items(prevArray => [...prevArray, {
+        id_entrada_local: String(uuid()),
         id_item_entrada_almacen: null,
         id_entrada_almacen: numero_entrada,
-        id_bien: articulo.codigo_bien,
+        id_bien: articulo.id_bien,
+        id_unidad_medida_vida_util: null,
+        codigo: articulo.codigo_bien,
+        nombre: articulo.nombre,
         cantidad: parseInt(cantidad),
         id_bodega: parseInt(bodega_detalle),
-        numero_posicion: 0,
-        porcentaje_iva: articulo.porcentaje_iva,
-        id_bien_padre: articulo.bien_padre,
+        numero_posicion: (info_items.length + 1),
+        porcentaje_iva: parseInt(iva),
+        id_bien_padre: null,
         valor_unitario: parseFloat(valor_unidad),
         valor_residual: null,
         valor_iva: parseFloat(valor_iva),
         valor_total_item: parseFloat(valor_total_item)
-      })
+      }])
     }
-    return info_items;
+    set_detalles_entrada([]);
   }
   
   const validar_formulario = (): boolean =>{
-    if(tipo_entrada === "")
-      set_msj_error_tipo("El campo Tipo de entrada es obligatorio.")
-    if(observaciones === "")
-      set_msj_error_observaciones("El campo Observaciones es obligatorio.")
-    if(motivo === "")
-      set_msj_error_motivo("El campo Motivo es obligatorio.")
-    if(proveedor.tipo_documento === undefined || tipo_documento === undefined || tipo_documento === "")
+  let validar = true;
+    if(tipo_entrada === ""){
+      set_msj_error_tipo("El campo Tipo de entrada es obligatorio.");
+      validar = false;
+    }
+    if(motivo === ""){
+      set_msj_error_motivo("El campo Motivo es obligatorio.");
+      validar = false;
+    }
+    if(proveedor.tipo_documento === undefined || tipo_documento === undefined || tipo_documento === ""){
       set_msj_error_tdoc("El campo Tipo de documento es obligatorio.");
-    if(proveedor.nombre_completo === undefined || proveedor.nombre_completo === "")
+      validar = false;
+    }
+    if(proveedor.nombre_completo === undefined || proveedor.nombre_completo === ""){
       set_msj_error_proveedor("El campo Nombre proveedor es obligatorio.");
-    if(articulo.nombre === undefined || articulo.nombre === "")
+      validar = false;
+    }
+    if(articulo.nombre === undefined || articulo.nombre === ""){
       set_msj_error_articulo("El campo Nombre articulo es obligatorio.");
-    if(cantidad === "")
+      validar = false;
+    }
+    if(cantidad === ""){
       set_msj_error_cantidad("El campo Cantidad es obligatorio.");
-    if(valor_unidad === "")
+      validar = false;
+    }
+    if(iva === "" || iva === undefined){
+      set_msj_error_iva("El campo % Iva es obligatorio.");
+      validar = false;
+    }
+    if(valor_unidad === ""){
       set_msj_error_vu("El campo Cantidad es obligatorio.");
+      validar = false;
+    }
+    return validar;
+  }
 
-    return (msj_error_fecha_entrada === "" && msj_error_tipo === "" && msj_error_observaciones === "" && msj_error_motivo === "" && msj_error_tdoc === ""
-            && msj_error_proveedor === "" && msj_error_bd === "" && msj_error_cantidad === "" && msj_error_vu === "" && msj_error_articulo === "" && msj_error_proveedor === "");
+  const guardar_entrada = (): void => {
+    cargar_entradas();
+  }
+
+  const limpiar_formulario = (): void => {
+    set_entradas(undefined);
+    set_info_items([]);
+    set_detalles_entrada([]);
+    set_articulo("");
+    set_buscar_articulo("");
+    set_msj_error_articulo("");
+    set_codigo_articulo("");
+    set_nombre_articulo("");
+    set_fecha_entrada(dayjs());
+    set_msj_error_fecha_entrada("");
+    set_tipo_entrada("");
+    set_msj_error_tipo("");
+    set_observaciones("");
+    set_motivo("");
+    set_msj_error_motivo("");
+    set_proveedor({nombre: ""});
+    set_msj_error_proveedor("");
+    set_tipo_documento("");
+    set_msj_error_tdoc("");
+    set_file(null);
+    set_numero_documento("");
+    set_bodega_ingreso("22");
+    set_iva("");
+    limpiar_detalle();
+  }
+  const limpiar_detalle = (): void => {
+    set_bodega_detalle("22");
+    set_msj_error_bd("");
+    set_cantidad("");
+    set_msj_error_cantidad("");
+    set_valor_unidad("");
+    set_msj_error_vu("");
+    set_valor_iva("");
+    set_msj_error_iva("");
+    set_valor_total_item("");
+    set_valor_total_entrada(0);
+  }
+
+  const salir_entrada: () => void = () => {
+    navigate('/home');
   }
 
   useEffect(() => {
-    if(cantidad !== "" && valor_unidad !== ""){
+    if(entradas !== undefined)
+      dispatch(crear_entrada_bien(entradas)).then((response: any) =>{
+        console.log("Se creo una entrada: ",response);
+      });
+  }, [entradas]);
+
+  useEffect(() => {
+    if(cantidad !== "" && valor_unidad !== "" && (iva !== "" && iva !== undefined)){
       calcular_totales();
     }else{
       set_valor_iva("");
       set_valor_total_item("");
       set_valor_total_entrada(0);
     }
-  },[cantidad,valor_unidad]);
+  },[cantidad, valor_unidad, iva]);
 
   useEffect(() => {
-    articulo ?? set_codigo_articulo(articulo.codigo_bien);
+    if(articulo !== null && articulo !== undefined){
+      set_codigo_articulo(articulo.codigo_bien);
+      set_nombre_articulo(articulo.nombre);
+      set_iva(articulo.id_porcentaje_iva);
+      set_msj_error_articulo("");
+      limpiar_detalle();
+    } 
   },[articulo]);
 
   useEffect(() => {
-    if(detalles_entrada !== undefined){
-      cargar_entradas();
+    if(detalles_entrada.length > 0){
+      carga_info_items();
     }
   },[detalles_entrada]);
 
@@ -305,8 +414,14 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     if(proveedor !== null){
       set_tipo_documento(proveedor.tipo_documento);
       set_numero_documento(proveedor.numero_documento);
+      set_msj_error_proveedor("");
+      set_msj_error_tdoc("");
     }
   },[proveedor]);
+
+  useEffect(() => {
+    buscar_articulo === null ? set_buscar_articulo(null) : set_buscar_articulo(buscar_articulo);
+  }, [buscar_articulo]);
 
   return (
     <>
@@ -386,10 +501,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   rows={2}
                   value={motivo}
                   label="Motivo"
-                  helperText="Ingresar motivo"
                   size="small"
                   fullWidth
-                  onChange={cambio_motivo} />
+                  onChange={cambio_motivo} 
+                  error={msj_error_motivo !== ""}/>
+              {(msj_error_motivo !== "") && (<FormHelperText error >{msj_error_motivo}</FormHelperText>)}
               </Grid>
             </Grid>
           </Box>
@@ -401,7 +517,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   rows={2}
                   value={observaciones}
                   label="Observaciones"
-                  helperText="Ingresar observaciones"
                   size="small"
                   fullWidth
                   onChange={cambio_observacion} />
@@ -564,7 +679,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   type={'number'}
                   size="small"
                   fullWidth
-                  value={articulo.codigo_bien ?? ""}
+                  value={codigo_articulo}
                   onBlur={buscar_x_codigo}
                   error={msj_error_articulo !== ""}
                 />
@@ -576,7 +691,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   type={'text'}
                   size="small"
                   fullWidth
-                  value={articulo.nombre ?? ""}
+                  value={nombre_articulo}
                   error={msj_error_articulo !== ""}
                   InputProps={{
                     readOnly: true,
@@ -630,16 +745,22 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 {(msj_error_vu !== "") && (<FormHelperText error >{msj_error_vu}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={1}>
-                <TextField
-                  label="% Iva"
-                  type={'number'}
-                  size="small"
-                  fullWidth
-                  value={articulo.porcentaje_iva ?? ""}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
+              <FormControl required size='small' fullWidth>
+                  <InputLabel>% Iva</InputLabel>
+                  <Select
+                    value={iva}
+                    label="% Iva"
+                    onChange={cambio_iva}
+                    error={msj_error_iva !== ""}
+                  >
+                    {porcentaje_iva.map((bg: any) => (
+                      <MenuItem key={bg.id_porcentaje_iva} value={bg.id_porcentaje_iva}>
+                        {bg.porcentaje}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                {(msj_error_iva !== "") && (<FormHelperText error >{msj_error_iva}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
@@ -742,7 +863,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               <Grid item xs={12} sm={12}>
                 <div className="card">
                   <DataTable
-                    value={entradas?.info_items_entrada}
+                    value={info_items}
                     sortField="nombre"
                     stripedRows
                     paginator
@@ -750,7 +871,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     scrollable scrollHeight="flex"
                     tableStyle={{ minWidth: '85rem' }}
                     rowsPerPageOptions={[5, 10, 25, 50]}
-                    dataKey="id_programacion_mantenimiento"
                   >
                     <Column
                       field="codigo"
@@ -768,7 +888,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                       style={{ width: '10%' }}
                     ></Column>
                     <Column header="Acciones" align={'center'} body={(rowData) => {
-                      return <Button color="error" size="small" variant='contained' onClick={() => { console.log(rowData); }}><DeleteForeverIcon fontSize="small" /></Button>;
+                      return <Button color="error" size="small" variant='contained' onClick={() => { 
+                        const index = info_items.findIndex((i:any) => i.id_entrada_local === rowData.id_entrada_local);
+                        info_items.splice(index,1);
+                        set_info_items([...info_items]);
+                      }}><DeleteForeverIcon fontSize="small" /></Button>;
                     }}></Column>
                   </DataTable>
                 </div>
@@ -797,7 +921,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               color='primary'
               variant='contained'
               startIcon={<SaveIcon />}
-              onClick={() => { }}
+              onClick={guardar_entrada}
             >
               Guardar
             </Button>
@@ -817,7 +941,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               color='inherit'
               variant="contained"
               startIcon={<CleanIcon />}
-              onClick={() => { }}
+              onClick={limpiar_formulario}
             >
               Limpiar
             </Button>
@@ -825,10 +949,16 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               color='secondary'
               variant='contained'
               startIcon={<SearchIcon />}
-              onClick={() => { }}
+              onClick={() => { set_buscar_entrada_is_active(true) }}
             >
               Buscar
             </Button>
+            <BuscarEntradasComponent is_modal_active={buscar_entrada_is_active}
+            set_is_modal_active={set_buscar_entrada_is_active}
+            title={"Buscar entrada"} 
+            tipos_entrada={tipos_entrada} 
+            set_articulo={set_buscar_articulo} 
+            set_entrada={set_entradas}></BuscarEntradasComponent>
             <Button
               color='secondary'
               variant='contained'
@@ -841,7 +971,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               color='error'
               variant='contained'
               startIcon={<ClearIcon />}
-              onClick={() => { }}
+              onClick={salir_entrada}
             >
               Salir
             </Button>

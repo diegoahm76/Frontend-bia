@@ -21,7 +21,7 @@ const SeleccionarSiembra = ({
   const dispatch = useAppDispatch()
   const { current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery } = useAppSelector((state) => state.material_vegetal);
   const [file, set_file] = useState<any>(null);
-  const [file_name, set_file_name] = useState<any>("");
+  const [file_name, set_file_name] = useState<string>("");
 
 
   const columns_siembras: GridColDef[] = [
@@ -90,22 +90,28 @@ const SeleccionarSiembra = ({
   }, []);
 
   useEffect(() => {
-    console.log(file)
-  }, [file]);
-
-  useEffect(() => {
     if (file !== null) {
       if ('name' in file) {
+        console.log(file.name)
         set_file_name(file.name)
-        dispatch(set_current_planting({ ...current_planting, id_vivero: get_values("id_vivero"), id_bien_sembrado: get_values("id_bien_sembrado"), cama_germinacion: get_values("cama_germinacion"), distancia_entre_semillas: get_values("distancia_entre_semillas"), observaciones: get_values("observaciones"), ruta_archivo_soporte: file }))
+        dispatch(set_current_planting({ 
+          ...current_planting, 
+          id_vivero: get_values("id_vivero"), 
+          id_bien_sembrado: get_values("id_bien_sembrado"), 
+          cama_germinacion: get_values("cama_germinacion"), 
+          distancia_entre_semillas: get_values("distancia_entre_semillas"), 
+          observaciones: get_values("observaciones") ,
+          ruta_archivo_soporte: file
+        }))
       }
     }
   }, [file]);
 
   useEffect(() => {
-    if (current_planting.ruta_archivo_soporte !== null) {
-      set_file_name(current_planting.ruta_archivo_soporte)
-
+    if (current_planting.id_siembra !== null) {
+      if (current_planting.ruta_archivo_soporte !== null) {
+        set_file_name(String(current_planting.ruta_archivo_soporte))
+      }
     }
   }, [current_planting]);
 
@@ -197,7 +203,7 @@ const SeleccionarSiembra = ({
               control_form: control_siembra,
               control_name: "ruta_archivo_soporte",
               default_value: "",
-              rules: { required_rule: { rule: true, message: "Archivo requerido" } },
+              rules: { required_rule: { rule: false, message: "Archivo requerido" } },
               label: "Archivo soporte",
               disabled: current_planting.id_siembra !== null,
               helper_text: "",

@@ -1,18 +1,19 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const api = axios.create({
-  baseURL: 'https://back-end-bia-beta.up.railway.app/api/'
+  baseURL: "https://back-end-bia-beta.up.railway.app/api/",
 });
 
 api.interceptors.request.use(
   async (request) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (token !== null) {
         request.headers.Authorization = `Bearer ${token}`;
       }
-    } catch (e) {}
-
+    } catch (e) {
+      console.log(e);
+    }
     return request;
   },
   async (error) => {

@@ -6,23 +6,36 @@ import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { type event } from '../interfaces/interfaces';
+import { type event, type FacilidadPago, type Funcionario } from '../interfaces/interfaces';
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { get_facilidad_solicitud } from '../slices/SolicitudSlice';
+import { get_filtro_fac_pago_ingresadas, get_facilidades_ingresadas } from '../slices/FacilidadesSlice';
+import { put_asignacion_funcionario } from '../requests/requests';
 
-interface Data {
-  nombre: string;
-  identificacion: string;
-  obligacion: string;
-  fechaRadicacion: string;
+interface RootStateFacilidades {
+  facilidades: {
+    facilidades: FacilidadPago[];
+  }
+}
+
+interface RootStateFuncionarios {
+  funcionarios: {
+    funcionarios: Funcionario[];
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaObligacionesAdmin: React.FC = () => {
-  const [visible_rows, set_visible_rows] = useState(Array<Data>);
+  const [visible_rows, set_visible_rows] = useState(Array<FacilidadPago>);
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
   const [modal, set_modal] = useState(false);
   const [sub_modal, set_sub_modal] = useState(false);
   const [modal_option, set_modal_option] = useState('no');
+  const { facilidades } = useSelector((state: RootStateFacilidades) => state.facilidades);
+  const { funcionarios } = useSelector((state: RootStateFuncionarios) => state.funcionarios);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
   const handle_open = () => { set_modal(true) };
@@ -31,40 +44,9 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const handle_open_sub = () => { set_sub_modal(true) };
   const handle_close_sub = () => { set_sub_modal(false) };
 
-  const fac_pago = [
-    {
-      id: 1,
-      nombre: 'Koch and Sons',
-      identificacion: '10298723',
-      obligacion: 'Concesión Agua Superficial',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 2,
-      nombre: 'Steuber LLC',
-      identificacion: '2346448723',
-      obligacion: 'Permiso Perforación',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 3,
-      nombre: 'Konopelski Group',
-      identificacion: '43214134',
-      obligacion: 'Pago Tasa TUA',
-      fechaRadicacion: '01/01/2022'
-    },
-    {
-      id: 4,
-      nombre: 'Harber Inc',
-      identificacion: '34545437',
-      obligacion: 'Uso Agua Subterranea',
-      fechaRadicacion: '01/01/2022'
-    },
-  ];
-
   const columns: GridColDef[] = [
     {
-      field: 'nombre',
+      field: 'nombre_de_usuario',
       headerName: 'Nombre Usuario',
       width: 200,
       renderCell: (params) => (
@@ -94,7 +76,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
       ),
     },
     {
-      field: 'fechaRadicacion',
+      field: 'fecha_generacion',
       headerName: 'Fecha Radicación',
       width: 150,
       renderCell: (params) => (
@@ -113,7 +95,8 @@ export const TablaObligacionesAdmin: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    navigate('../solicitud')
+                    void dispatch(get_facilidad_solicitud(params.row.id_facilidad));
+                    navigate('../solicitud');
                   }}
                 >
                   <Avatar
@@ -147,14 +130,18 @@ export const TablaObligacionesAdmin: React.FC = () => {
               <Select
                 size='small'
                 label="Seleccionar"
-                onChange={()=>{
+                defaultValue={''}
+                onChange={(event: event) => {
+                  const { value } = event.target
+                  void put_asignacion_funcionario(params.row.id_facilidad, {id_funcionario: parseInt(value)});
                   handle_open()
                 }}
               >
-                <MenuItem value='Olga'>Olga</MenuItem>
-                <MenuItem value='Diana'>Diana</MenuItem>
-                <MenuItem value='Juan'>Juan</MenuItem>
-                <MenuItem value='Fernando'>Fernando</MenuItem>
+                {
+                  funcionarios.map((funcionario) => (
+                    <MenuItem key={funcionario.id_persona} value={funcionario.id_persona}>{funcionario.nombre_funcionario}</MenuItem>
+                  ))
+                }
               </Select>
           </FormControl>
         )
@@ -163,8 +150,8 @@ export const TablaObligacionesAdmin: React.FC = () => {
   ];
 
   useEffect(()=>{
-    set_visible_rows(fac_pago)
-  }, [])
+    set_visible_rows(facilidades)
+  }, [facilidades])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -178,14 +165,14 @@ export const TablaObligacionesAdmin: React.FC = () => {
           <InputLabel>Filtrar por: </InputLabel>
             <Select
               label="Filtrar por: "
+              defaultValue={''}
               onChange={(event: event)=>{
                 const { value } = event.target
                 set_filter(value)
               }}
             >
-              <MenuItem value='nombre'>Nombre Usuario</MenuItem>
+              <MenuItem value='nombre_de_usuario'>Nombre Usuario</MenuItem>
               <MenuItem value='identificacion'>Identificación</MenuItem>
-              <MenuItem value='obligacion'>Número Radicación F.P.</MenuItem>
             </Select>
         </FormControl>
         <TextField
@@ -202,44 +189,28 @@ export const TablaObligacionesAdmin: React.FC = () => {
           variant='contained'
           startIcon={<SearchOutlined />}
           onClick={() => {
-            const new_rows = [];
-            if(filter === 'nombre'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].nombre.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
-                }
-              }
-              set_visible_rows(new_rows)
-            }
-            if(filter === 'identificacion'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].identificacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
-                }
-              }
-              set_visible_rows(new_rows)
-            }
-            if(filter === 'obligacion'){
-              for(let i=0; i < fac_pago.length; i++){
-                if(fac_pago[i].obligacion.toLowerCase().includes(search.toLowerCase())){
-                  new_rows.push(fac_pago[i])
-                }
-              }
-              set_visible_rows(new_rows)
+            try {
+              void dispatch(get_filtro_fac_pago_ingresadas({parametro: filter, valor: search}));
+            } catch (error: any) {
+              throw new Error(error);
             }
           }}
         >
-        Buscar
+          Buscar
         </Button>
         <Button
           color='primary'
           variant='outlined'
           startIcon={<FilterAltOffOutlined />}
           onClick={() => {
-            set_visible_rows(fac_pago)
+            try {
+              void dispatch(get_facilidades_ingresadas());
+            } catch (error: any) {
+              throw new Error(error);
+            }
           }}
         >
-        Mostrar Todo
+          Mostrar Todo
         </Button>
       </Stack>
       {
@@ -266,7 +237,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
                     pageSize={10}
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
-                    getRowId={(row) => row.id}
+                    getRowId={(row) => row.id_facilidad}
                   />
                 </Box>
               </Grid>

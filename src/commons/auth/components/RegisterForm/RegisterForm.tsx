@@ -7,6 +7,7 @@ import {
   Alert,
   LinearProgress,
   type SelectChangeEvent,
+  Button,
 } from '@mui/material';
 import type { keys_object } from '../../interfaces';
 import { RegisterPersonaNatural } from '../RegisterPersonaNatural/RegisterPersonaNatural';
@@ -81,7 +82,6 @@ export const RegisterForm: React.FC = () => {
               name="tipo_persona"
               value={tipo_persona}
               options={tipo_persona_opt}
-              loading={loading}
               disabled={false}
               required={true}
               errors={errors}
@@ -95,7 +95,6 @@ export const RegisterForm: React.FC = () => {
               name="tipo_documento"
               value={tipo_documento}
               options={tipo_documento_opt}
-              loading={loading}
               disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
               required={true}
               errors={errors}
@@ -125,17 +124,38 @@ export const RegisterForm: React.FC = () => {
               />
             )}
           </Grid>
-          <Grid item xs={12} container justifyContent="end">
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              loading={is_search}
-              disabled={is_search}
-            >
-              Buscar
-            </LoadingButton>
+
+          <Grid item spacing={2} justifyContent="end" container>
+
+            <Grid item xs={6} container justifyContent="end">
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                loading={is_search}
+                disabled={is_search}
+              >
+                Buscar
+              </LoadingButton>
+            </Grid>
+
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  textAlign: 'center',
+                  color: '#ffff',
+                }}
+                href="#/auth/login"
+              >
+                <Typography sx={{ color: 'white' }}>Volver</Typography>
+              </Button>
+            </Grid>
+
           </Grid>
+
+          
           {/* Muestra loading cuando esta buscando datos de la persona */}
           {is_search && (
             <Grid item xs={12}>

@@ -2,7 +2,6 @@ import { type Dispatch } from 'react';
 import {
   persons_request,
   superuser_request,
-  user_request,
   users_request,
 } from '../request/seguridadRequest';
 import {
@@ -14,6 +13,7 @@ import {
 } from './seguridadSlice';
 import { control_error, control_success } from '../../../helpers';
 import { consultar_datos_persona } from '../request/Request';
+import { get_user_by_id } from '../../../request';
 
 export const create_super_user: (
   id_persona: number
@@ -64,7 +64,7 @@ export const get_persons: (
 
 export const get_data_user: (id: number) => any = (id: number) => {
   return async (dispatch: Dispatch<any>) => {
-    const { data } = await user_request(id);
+    const { data } = await get_user_by_id(id);
     dispatch(set_user_info(data.data));
   };
 };
