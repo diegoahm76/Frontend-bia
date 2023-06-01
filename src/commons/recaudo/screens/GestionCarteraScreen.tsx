@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SyntheticEvent, useState, useEffect } from 'react';
 import { Avatar, Box, Grid, IconButton, type SelectChangeEvent, Tab, Tooltip } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";

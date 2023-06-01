@@ -8,7 +8,6 @@ import {
   LinearProgress,
   Button,
   type SelectChangeEvent,
-  Button,
 } from '@mui/material';
 import type { keys_object } from '../../interfaces';
 import { RegisterPersonaNatural } from '../RegisterPersonaNatural/RegisterPersonaNatural';

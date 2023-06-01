@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Box, Button, Grid, Stack, TextField } from "@mui/material"
 import { DataGrid, type GridValueFormatterParams, type GridColDef } from "@mui/x-data-grid"
 import { Title } from "../../../../components"
