@@ -6,6 +6,7 @@ import {
   Skeleton,
   Alert,
   LinearProgress,
+  Button,
   type SelectChangeEvent,
   Button,
 } from '@mui/material';
@@ -130,38 +131,32 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
               />
             )}
           </Grid>
-
-          <Grid item spacing={2} justifyContent="end" container>
-
-            <Grid item xs={6} container justifyContent="end">
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                color="primary"
-                loading={is_search}
-                disabled={is_search}
-              >
-                Buscar
-              </LoadingButton>
-            </Grid>
-
-            <Grid item xs={6}>
-              <Button
-                variant="contained"
-                color="primary"
-                sx={{
-                  textAlign: 'center',
-                  color: '#ffff',
-                }}
-                href="#/auth/login"
-              >
-                <Typography sx={{ color: 'white' }}>Volver</Typography>
-              </Button>
-            </Grid>
-
+          <Grid item xs={6} container justifyContent="end">
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              color="primary"
+              loading={is_search}
+              disabled={is_search}
+            >
+              Buscar
+            </LoadingButton>
+          </Grid>    
+          
+          <Grid item xs={6} justifyContent="end">
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                textAlign: 'center',
+                color: '#ffff',
+              }}
+              href="#/auth/login"
+            >
+              <Typography sx={{ color: 'white' }}>Salir</Typography>
+            </Button>
           </Grid>
 
-          
           {/* Muestra loading cuando esta buscando datos de la persona */}
           {is_search && (
             <Grid item xs={12}>
