@@ -162,6 +162,7 @@ const DialogElegirOrganigramaActual = ({
       const response_org_actual = await dispatch(get_organigrama_actual());
       console.log(response_org_actual.data)
       if (response_org_actual.data) {
+        console.log(response_org_actual.data)
         set_organigrama_actual(response_org_actual.data);
         const response_orgs = await dispatch(get_organigramas_posibles());
         const res_organigramas_adapter: IList[] =
