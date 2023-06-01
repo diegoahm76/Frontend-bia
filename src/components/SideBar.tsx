@@ -169,6 +169,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
                     height: '20px'
+
                   }}
                 />                
               </ListItemIcon>
@@ -182,6 +183,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
                     height: '20px'
+
                   }}
                 />                
               </ListItemIcon>
@@ -195,6 +197,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
                     height: '20px'
+
                   }}
                 />                
               </ListItemIcon>
@@ -212,6 +215,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                     sx={{
                       color: mod_dark ? '#fafafa' : '#141415',
                       height: '20px',
+
                     }}
                   />
                 </ListItemIcon>

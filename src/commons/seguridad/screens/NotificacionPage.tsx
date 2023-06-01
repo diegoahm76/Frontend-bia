@@ -45,8 +45,6 @@ export const NotificacionPage: React.FC = () => {
   const datos_usuario = async (id_persona: number): Promise<void> => {
     try {
       const data = await consultar_notificaciones_cuenta_propia(id_persona);
-      console.log(data)
-      console.log(data.acepta_notificacion_email)
       set_value('acepta_notificacion_email', data.acepta_notificacion_email)
       set_value('acepta_notificacion_sms', data.acepta_notificacion_sms)
     } catch (err) {

@@ -45,6 +45,7 @@ export function SiembraSemillasScreen(): JSX.Element {
       }
   }
   }, [current_nursery]);
+  
   useEffect(() => {
     dispatch(set_germination_beds(germination_beds.concat(current_germination_beds)))
   

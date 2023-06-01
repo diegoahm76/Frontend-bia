@@ -27,6 +27,7 @@ import type {
   ClaseTercero,
   ClaseTerceroPersona,
   CrearPersonNaturalAdmin,
+  DataNaturaUpdate,
   PropsRegisterAdmin,
   UpdateAutorizaNotificacion,
 } from '../../../../interfaces/globalModels';
@@ -35,6 +36,7 @@ import {
   consultar_clase_tercero,
   consultar_clase_tercero_persona,
   crear_persona_natural,
+  editar_persona_natural,
 } from '../../../seguridad/request/Request';
 import { Title } from '../../../../components';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
@@ -214,7 +216,19 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
       await crear_persona_natural(data as CrearPersonNaturalAdmin);
       control_success('la persona se creó correctamente');
     } catch (error) {
-      control_error(error);
+      control_error('hubo un error al crear, intentelo de nuevo');
+
+    }
+  });
+  const on_submit_update_natural = handle_submit(async (data: any) => {
+    try {
+      console.log(data, 'data');
+      delete data.dpto_notifiacion;
+      data.ubicacion_georeferenciada = '';
+      await editar_persona_natural(id_persona, data as DataNaturaUpdate);
+      control_success('Los datos se actualizaron correctamente');
+    } catch (error) {
+      control_error('hubo un error al actualizar los datos, intentelo de nuevo');
     }
   });
 
@@ -223,7 +237,13 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
       <form
         onSubmit={(e) => {
           console.log(errors, 'errors');
-          void on_submit_create_natural(e);
+
+          if (id_persona > 0) {
+            void on_submit_update_natural(e);
+          }
+          if (id_persona === 0) {
+            void on_submit_create_natural(e);
+          }
         }}
       >
         {/* Datos personales */}

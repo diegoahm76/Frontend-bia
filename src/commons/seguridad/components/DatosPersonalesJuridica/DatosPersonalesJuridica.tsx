@@ -15,7 +15,7 @@ import type {
   UpdateAutorizaNotificacion,
 } from '../../../../interfaces/globalModels';
 import {
-  editar_persona_juridica,
+  editar_persona_juridica_cuenta_propia,
 } from '../../request/Request'
 import { control_error, control_success } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
@@ -43,11 +43,11 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
     dpto_notifiacion_opt,
     ciudad_notificacion_opt,
     naturaleza_empresa_opt,
-    nacionalidad_empresa,
     dpto_notifiacion,
-    ciudad_notificacion,
     direccion_notificaciones,
     is_modal_active,
+    nacionalidad_empresa,
+    ciudad_notificacion,
     set_value_direction,
     on_change,
     open_modal,
@@ -59,12 +59,11 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
     useState<boolean>(false);
 
   // watchers
-  // const nacionalidad_empresa = watch('nacionalidad_empresa') ?? '';
   const tipo_persona = watch('tipo_persona') ?? '';
   const acepta_notificacion_email =
-    watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email;
+    watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email ?? false;
   const acepta_notificacion_sms =
-    watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms;
+    watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms ?? false;
 
   // abrir modal actualizar Notificaciones
   const handle_open_dialog_notificaciones = (): void => {
@@ -76,20 +75,23 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
     set_value('acepta_notificacion_sms', data.acepta_autorizacion_sms);
   };
   useEffect(() => {
-    if (data?.id_persona !== undefined) {
+    if (data !== undefined) {
+      console.log(data);
       set_value('tipo_persona', data.tipo_persona);
       set_value('nacionalidad_empresa', data.cod_pais_nacionalidad_empresa);
       set_value('dpto_notifiacion', data.cod_departamento_notificacion);
       set_value('ciudad_notificacion', data.cod_municipio_notificacion_nal);
       set_value('direccion_notificaciones', data.direccion_notificaciones);
+      set_value('complemento_direccion', data.direccion_notificacion_referencia)
     }
-  }, [data?.id_persona]);
+  }, [data]);
 
   const on_submit_update_juridical = handle_submit(async (datos) => {
     try {
       datos.ubicacion_georeferenciada = '';
-      await editar_persona_juridica(
-        data?.id_persona,
+      datos.representante_legal = data?.representante_legal;
+      datos.fecha_inicio_cargo_rep_legal = '2023-05-31'
+      await editar_persona_juridica_cuenta_propia(
         datos as DataJuridicaUpdate
       );
       control_success('la persona se actualizó correctamente');
@@ -302,7 +304,7 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
             </Grid>
           </Grid>
           {/* Datos del representante legal */}
-          <Grid container spacing={2}>
+          <Grid container spacing={2} mt={0.1}>
             <Grid item xs={12}>
               <Title title="DATOS DEL REPRESENTANTE LEGAL" />
             </Grid>
@@ -310,6 +312,7 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
               <DatosRepresentanteLegal
                 id_representante_legal={data?.representante_legal ?? 0}
                 id_persona={data?.id_persona}
+                fecha_inicio={data.fecha_inicio_cargo_rep_legal}
               />
             </Grid>
           </Grid>
