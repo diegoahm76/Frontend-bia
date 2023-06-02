@@ -221,7 +221,7 @@ const DatosBasicos: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'white' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -355,7 +355,7 @@ const DatosResidencia: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -577,7 +577,7 @@ const DatosNotifiacion: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -729,7 +729,7 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -830,7 +830,7 @@ const AutorizaNotifiacion: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -994,7 +994,7 @@ const DatosAcceso: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>

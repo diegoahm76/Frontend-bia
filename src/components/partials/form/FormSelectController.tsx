@@ -26,7 +26,7 @@ interface IProps {
     select_options: any;
     option_key: string | number;
     option_label: string | number;
-    multiple?: boolean|null;
+    multiple?: boolean | null;
     hidden_text?: boolean | null;
 }
 
@@ -50,57 +50,57 @@ const FormSelectController = ({
     const id_select = String(uuid())
 
     return (
-        
+
         <>
-        {(!(hidden_text ?? false)) &&
-            
-        <Grid item xs={xs} md={md}>
-            <Controller
-                name={control_name}
-                control={control_form}
-                defaultValue={default_value}
-                rules={{ required: rules.required_rule?.rule }}
-                render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                }) => (
-                    <FormControl fullWidth>
-                        <InputLabel id={id_select}>{label ?? ""}</InputLabel>
-                        <Select
-                            labelId={id_select}
-                            multiple={multiple ?? false}
-                            margin="dense"
-                            fullWidth
-                            size="small"
-                            label={label ?? ""}
-                            variant="outlined"
-                            disabled={disabled}
-                            value={value}
-                            onChange={onChange}
-                            error={!(error == null)}
+            {(!(hidden_text ?? false)) &&
+
+                <Grid item xs={xs} md={md}>
+                    <Controller
+                        name={control_name}
+                        control={control_form}
+                        defaultValue={default_value}
+                        rules={{ required: rules.required_rule?.rule }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                        }) => (
+                            <FormControl fullWidth>
+                                <InputLabel id={id_select}>{label ?? ""}</InputLabel>
+                                <Select
+                                    labelId={id_select}
+                                    multiple={multiple ?? false}
+                                    margin="dense"
+                                    fullWidth
+                                    size="small"
+                                    label={label ?? ""}
+                                    variant="outlined"
+                                    disabled={disabled}
+                                    value={value}
+                                    onChange={onChange}
+                                    error={!(error == null)}
 
 
-                        >
-                            {/* <MenuItem value="">
+                                >
+                                    {/* <MenuItem value="">
                                 <em>None</em>
                             </MenuItem> */}
-                            {select_options.map((option: any) => (
-                                <MenuItem key={option[option_key]} value={option[option_key]}>
-                                    {option[option_label]}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <FormHelperText
-                         error= {!(error == null)}>
-                            {(error != null)
-                                ? rules.required_rule?.message
-                                : helper_text}
-                        </FormHelperText>
-                    </FormControl>
-                )}
-            />
-        </Grid>
-        }
+                                    {select_options.map((option: any) => (
+                                        <MenuItem key={option[option_key]} value={option[option_key]}>
+                                            {option[option_label]}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                <FormHelperText
+                                    error={!(error == null)}>
+                                    {(error != null)
+                                        ? rules.required_rule?.message
+                                        : helper_text}
+                                </FormHelperText>
+                            </FormControl>
+                        )}
+                    />
+                </Grid>
+            }
         </>
     );
 }
