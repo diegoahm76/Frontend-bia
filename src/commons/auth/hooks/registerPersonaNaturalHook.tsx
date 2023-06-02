@@ -107,8 +107,8 @@ export const use_register_persona_n = ({
   const [departamento_laboral_opt, set_departamento_laboral_opt] = useState<
     IList[]
   >([]);
-  const [direccion, set_direccion] = useState('');
-  const [direccion_laboral, set_direccion_laboral] = useState('');
+  // const [direccion, set_direccion] = useState('');
+  // const [direccion_laboral, set_direccion_laboral] = useState('');
 
   const departamento_expedicion = watch('departamento_expedicion') ?? '';
   const ciudad_expedicion = watch('cod_municipio_expedicion_id') ?? '';
@@ -130,6 +130,8 @@ export const use_register_persona_n = ({
   const password = watch('password') ?? '';
   const confirmar_password = watch('confirmar_password') ?? '';
   const direccion_notificaciones = watch('direccion_notificaciones') ?? '';
+  const direccion_laboral = watch('direccion_laboral') ?? '';
+  const direccion = watch('direccion_residencia') ?? '';
 
   const get_selects_options = async (): Promise<void> => {
     set_loading(true);
@@ -260,7 +262,7 @@ export const use_register_persona_n = ({
     // direccion_residencia
     switch (type) {
       case 'residencia':
-        set_direccion(value);
+        // set_direccion(value);
         set_value_form('direccion_residencia', value);
 
         break;
@@ -269,7 +271,7 @@ export const use_register_persona_n = ({
         break;
       case 'laboral':
         set_value_form('direccion_laboral', value);
-        set_direccion_laboral(value);
+        // set_direccion_laboral(value);
         break;
     }
     open_modal(false);
