@@ -23,7 +23,7 @@ export const Page404: React.FC = () => {
               Parece que estás perdido!!
             </Typography>
             <Typography textAlign="center" variant="h6" className="font-arvo">
-              La página que buscas no esta disponible!!!
+              La página que buscas no esta disponible!
             </Typography>
           </Box>
         </Grid>
