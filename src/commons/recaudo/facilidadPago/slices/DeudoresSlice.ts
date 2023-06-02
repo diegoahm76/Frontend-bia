@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk  } from '@reduxjs/toolkit';
 import { api } from '../../../../api/axios';
+import { type Filtro } from '../interfaces/interfaces';
 
 const initial_state = {
   deudores: []
@@ -8,6 +9,12 @@ const initial_state = {
 // Listar Deudores desde Pag. Usuario Interno
 export const get_deudores = createAsyncThunk('facilidades_pago/get_deudores', async () => {
   const { data } = await api.get(`recaudo/pagos/listado-deudores/`)
+  return data.data
+})
+
+// Filtrar Deudores desde Pag. Usuario Interno
+export const get_filtro_deudores = createAsyncThunk('facilidades_pago/get_filtro_deudores', async (filtro: Filtro) => {
+  const { data } = await api.get(`recaudo/pagos/listado-deudores/?${filtro.parametro}=${filtro.valor}`)
   return data.data
 })
 
@@ -27,6 +34,9 @@ export const deudores_slice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(get_deudores.fulfilled, (state, action) => {
+      state.deudores = action.payload;
+    });
+    builder.addCase(get_filtro_deudores.fulfilled, (state, action) => {
       state.deudores = action.payload;
     });
     builder.addCase(get_datos_deudor.fulfilled, (state, action) => {

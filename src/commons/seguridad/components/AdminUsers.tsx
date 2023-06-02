@@ -33,7 +33,6 @@ export const AdminUsers: React.FC = () => {
     data_disponible,
     historial_cambios_estado_is_active,
     data_register,
-    loading,
     tipo_persona,
     tipo_usuario_opt,
     tipo_usuario,
@@ -268,7 +267,6 @@ export const AdminUsers: React.FC = () => {
                       name="tipo_usuario"
                       value={tipo_usuario}
                       options={tipo_usuario_opt}
-                      loading={loading}
                       disabled={tipo_persona === 'J' && true}
                       errors={errors_admin_users}
                       register={register_admin_user}
@@ -346,9 +344,8 @@ export const AdminUsers: React.FC = () => {
                       name="activo"
                       value={activo}
                       options={activo_opt}
-                      loading={loading}
-                      disabled={tipo_usuario === 'E'}
-                      required={tipo_usuario !== 'E'}
+                      disabled={tipo_usuario === 'E' && true}
+                      required={true}
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />
@@ -394,7 +391,6 @@ export const AdminUsers: React.FC = () => {
                       name="bloqueado"
                       value={bloqueado}
                       options={bloqueado_opt}
-                      loading={loading}
                       disabled={false}
                       required={true}
                       errors={errors_admin_users}

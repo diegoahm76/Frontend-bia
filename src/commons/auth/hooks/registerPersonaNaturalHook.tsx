@@ -107,21 +107,21 @@ export const use_register_persona_n = ({
   const [departamento_laboral_opt, set_departamento_laboral_opt] = useState<
     IList[]
   >([]);
-  const [departamento_expedicion, set_departamento_expedicion] = useState('');
-  const [ciudad_expedicion, set_ciudad_expedicion] = useState('');
-  const [pais_residencia, set_pais_residencia] = useState('');
-  const [departamento_residencia, set_departamento_residencia] = useState('');
-  const [municipio_residencia, set_municipio_residencia] = useState('');
-  const [dpto_notifiacion, set_dpto_notifiacion] = useState('');
-  const [ciudad_notificacion, set_ciudad_notificacion] = useState('');
-  const [pais_laboral, set_pais_laboral] = useState('');
-  const [departamento_laboral, set_departamento_laboral] = useState('');
-  const [municipio_laboral, set_municipio_laboral] = useState('');
-  const [direccion, set_direccion] = useState('');
-  const [direccion_laboral, set_direccion_laboral] = useState('');
+  // const [direccion, set_direccion] = useState('');
+  // const [direccion_laboral, set_direccion_laboral] = useState('');
 
+  const departamento_expedicion = watch('departamento_expedicion') ?? '';
+  const ciudad_expedicion = watch('cod_municipio_expedicion_id') ?? '';
+  const pais_residencia = watch('pais_residencia') ?? '';
+  const departamento_residencia = watch('departamento_residencia') ?? '';
+  const municipio_residencia = watch('municipio_residencia') ?? '';
+  const dpto_notifiacion = watch('dpto_notifiacion') ?? '';
+  const ciudad_notificacion = watch('cod_municipio_notificacion_nal') ?? '';
+  const pais_laboral = watch('pais_laboral') ?? '';
+  const departamento_laboral = watch('departamento_laboral') ?? '';
+  const municipio_laboral = watch('cod_municipio_laboral_nal') ?? '';
   const pais_nacimiento = watch('pais_nacimiento') ?? '';
-  const genero = watch('sexo');
+  const genero = watch('sexo') ?? '';
   const estado_civil = watch('estado_civil') ?? '';
   const email = watch('email') ?? '';
   const confirmar_email = watch('confirmar_email') ?? '';
@@ -130,6 +130,8 @@ export const use_register_persona_n = ({
   const password = watch('password') ?? '';
   const confirmar_password = watch('confirmar_password') ?? '';
   const direccion_notificaciones = watch('direccion_notificaciones') ?? '';
+  const direccion_laboral = watch('direccion_laboral') ?? '';
+  const direccion = watch('direccion_residencia') ?? '';
 
   const get_selects_options = async (): Promise<void> => {
     set_loading(true);
@@ -260,7 +262,7 @@ export const use_register_persona_n = ({
     // direccion_residencia
     switch (type) {
       case 'residencia':
-        set_direccion(value);
+        // set_direccion(value);
         set_value_form('direccion_residencia', value);
 
         break;
@@ -269,7 +271,7 @@ export const use_register_persona_n = ({
         break;
       case 'laboral':
         set_value_form('direccion_laboral', value);
-        set_direccion_laboral(value);
+        // set_direccion_laboral(value);
         break;
     }
     open_modal(false);
@@ -289,72 +291,6 @@ export const use_register_persona_n = ({
   useEffect(() => {
     void get_selects_options();
   }, []);
-
-  useEffect(() => {
-    if (watch('departamento_expedicion') !== undefined) {
-      set_departamento_expedicion(watch('departamento_expedicion'));
-    }
-  }, [watch('departamento_expedicion')]);
-
-  useEffect(() => {
-    if (watch('cod_municipio_expedicion_id') !== undefined) {
-      set_ciudad_expedicion(watch('cod_municipio_expedicion_id'));
-    }
-  }, [watch('cod_municipio_expedicion_id')]);
-
-  useEffect(() => {
-    if (watch('pais_residencia') !== undefined) {
-      set_pais_residencia(watch('pais_residencia'));
-    }
-  }, [watch('pais_residencia')]);
-
-  useEffect(() => {
-    if (watch('departamento_residencia') !== undefined) {
-      set_departamento_residencia(watch('departamento_residencia'));
-    }
-  }, [watch('departamento_residencia')]);
-
-  useEffect(() => {
-    if (watch('municipio_residencia') !== undefined) {
-      set_municipio_residencia(watch('municipio_residencia'));
-    }
-  }, [watch('municipio_residencia')]);
-
-  useEffect(() => {
-    if (watch('dpto_notifiacion') !== undefined) {
-      set_dpto_notifiacion(watch('dpto_notifiacion'));
-    }
-  }, [watch('dpto_notifiacion')]);
-
-  useEffect(() => {
-    if (watch('cod_municipio_notificacion_nal') !== undefined) {
-      set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
-    }
-  }, [watch('cod_municipio_notificacion_nal')]);
-
-  useEffect(() => {
-    if (watch('cod_municipio_notificacion_nal') !== undefined) {
-      set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
-    }
-  }, [watch('cod_municipio_notificacion_nal')]);
-
-  useEffect(() => {
-    if (watch('pais_laboral') !== undefined) {
-      set_pais_laboral(watch('pais_laboral'));
-    }
-  }, [watch('pais_laboral')]);
-
-  useEffect(() => {
-    if (watch('departamento_laboral') !== undefined) {
-      set_departamento_laboral(watch('departamento_laboral'));
-    }
-  }, [watch('departamento_laboral')]);
-
-  useEffect(() => {
-    if (watch('cod_municipio_laboral_nal') !== undefined) {
-      set_municipio_laboral(watch('cod_municipio_laboral_nal'));
-    }
-  }, [watch('cod_municipio_laboral_nal')]);
 
   useEffect(() => {
     if (email !== confirmar_email) {

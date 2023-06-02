@@ -7,6 +7,7 @@ import {
   Alert,
   LinearProgress,
   type SelectChangeEvent,
+  Button,
 } from '@mui/material';
 import type { keys_object } from '../../interfaces';
 import { RegisterPersonaNatural } from '../RegisterPersonaNatural/RegisterPersonaNatural';
@@ -16,12 +17,8 @@ import { LoadingButton } from '@mui/lab';
 import { CreateUser } from '../CreateUser/CreateUser';
 import { use_register } from '../../hooks/registerHook';
 
-interface Props {
-  uso_interno: boolean;
-}
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
+export const RegisterForm: React.FC = () => {
   const {
     errors,
     message_error,
@@ -69,11 +66,9 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
 
   return (
     <>
-      {!uso_interno && (
-        <Typography variant="h6" textAlign="center" pb={2}>
-          Formulario registro
-        </Typography>
-      )}
+      <Typography variant="h6" textAlign="center" pb={2}>
+        Formulario registro
+      </Typography>
       <form
         onSubmit={(e) => {
           void on_submit(e);
@@ -87,7 +82,6 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
               name="tipo_persona"
               value={tipo_persona}
               options={tipo_persona_opt}
-              loading={loading}
               disabled={false}
               required={true}
               errors={errors}
@@ -101,7 +95,6 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
               name="tipo_documento"
               value={tipo_documento}
               options={tipo_documento_opt}
-              loading={loading}
               disabled={(tipo_persona === '' || tipo_persona === 'J') ?? true}
               required={true}
               errors={errors}
@@ -131,17 +124,38 @@ export const RegisterForm: React.FC<Props> = ({ uso_interno }: Props) => {
               />
             )}
           </Grid>
-          <Grid item xs={12} container justifyContent="end">
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              color="primary"
-              loading={is_search}
-              disabled={is_search}
-            >
-              Buscar
-            </LoadingButton>
+
+          <Grid item spacing={2} justifyContent="end" container>
+
+            <Grid item xs={6} container justifyContent="end">
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                color="primary"
+                loading={is_search}
+                disabled={is_search}
+              >
+                Buscar
+              </LoadingButton>
+            </Grid>
+
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                sx={{
+                  textAlign: 'center',
+                  color: '#ffff',
+                }}
+                href="#/auth/login"
+              >
+                <Typography sx={{ color: 'white' }}>Inicio</Typography>
+              </Button>
+            </Grid>
+
           </Grid>
+
+          
           {/* Muestra loading cuando esta buscando datos de la persona */}
           {is_search && (
             <Grid item xs={12}>

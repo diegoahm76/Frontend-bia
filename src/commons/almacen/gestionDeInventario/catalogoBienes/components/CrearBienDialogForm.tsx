@@ -27,7 +27,6 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import { type IList, type IObjBien as FormValues } from "../interfaces/catalogodebienes";
 import { api } from "../../../../../api/axios";
-import FormSelectController from "../../../../../components/partials/form/FormSelectController";
 interface IProps {
   action: string;
   is_modal_active: boolean;
@@ -68,25 +67,6 @@ const CrearBienDialogForm = ({
   const handle_close_add_bien = (): void => {
     set_is_modal_active(false);
   };
-
-  //   const [nursery_types, set_nursery_types] = useState(initial_options);
-  //   const [source_resources, set_source_resources] = useState(initial_options);
-  //   const [file, set_file] = useState<any>("");
-
-  //   // eslint-disable-next-line @typescript-eslint/naming-convention
-  //   const { control: control_vivero, handleSubmit: handle_submit } =
-  //     useForm<FormValues>();
-
-  //   const handle_close_add_nursery = (): void => {
-  //     set_is_modal_active(false);
-  //   };
-
-  //   const on_submit = (data: FormValues): void => {
-  //     data.ruta_archivo_creacion = file
-  //     console.log(data)
-  //     void dispatch(add_nursery_service(data, navigate));
-  //     handle_close_add_nursery();
-  //   };
 
   const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -154,6 +134,7 @@ const CrearBienDialogForm = ({
           depreciacion_types_no_format
         );
         set_depreciacion_types(depreciacion_types_format);
+        console.log('jhdjsajkdhakj')
       } catch (err) {
         console.log(err);
       }
@@ -179,6 +160,7 @@ const CrearBienDialogForm = ({
   }, [current_nodo]);
 
   useEffect(() => {
+
     reset_bien({ ...current_nodo.data.bien, codigo_bien: code_bien });
   }, [code_bien]);
 
@@ -218,7 +200,7 @@ const CrearBienDialogForm = ({
             </Grid>
             <Title title="INFORMACION DEL BIEN"></Title>
 
-            <Grid item xs={11} md={2} margin={1}>
+            <Grid item xs={12} md={2} margin={1}>
               <Controller
                 name="codigo_bien"
                 control={control_bien}
@@ -246,7 +228,7 @@ const CrearBienDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={3} margin={1}>
+            <Grid item xs={12} md={2} margin={1}>
               <Controller
                 name="nombre"
                 control={control_bien}
@@ -274,7 +256,7 @@ const CrearBienDialogForm = ({
               />
             </Grid>
             {tipo_bien_selected === 'A' ? (
-              <Grid item xs={11} md={3} margin={1}>
+              <Grid item xs={11} md={2} margin={1}>
                 <Controller
                   name="cod_tipo_activo"
                   control={control_bien}
@@ -296,7 +278,7 @@ const CrearBienDialogForm = ({
                       helperText={
                         error != null
                           ? 'Es obligatorio seleccionar tipo de activo'
-                          : 'seleccione tipo activo'
+                          : 'Seleccione tipo activo'
                       }
                     >
                       {activo_types.map((option: IList) => (
@@ -309,7 +291,7 @@ const CrearBienDialogForm = ({
                 />
               </Grid>
             ) : (
-              <Grid item xs={11} md={3} margin={1}>
+              <Grid item xs={11} md={2} margin={1}>
                 <Controller
                   name="cod_metodo_valoracion"
                   control={control_bien}
@@ -331,7 +313,7 @@ const CrearBienDialogForm = ({
                       helperText={
                         error != null
                           ? 'Es obligatorio seleccionar metodo valoración'
-                          : 'seleccione metodo valoración'
+                          : 'Seleccione metodo valoración'
                       }
                     >
                       {metodo_valoracion.map((option: IList) => (
@@ -458,7 +440,7 @@ const CrearBienDialogForm = ({
                         helperText={
                           error != null
                             ? 'Es obligatorio seleccionar tipo de depreciación'
-                            : 'seleccione tipo depreciación'
+                            : 'Seleccione tipo depreciación'
                         }
                       >
                         {depreciacion_types.map((option: IList) => (
@@ -664,38 +646,106 @@ const CrearBienDialogForm = ({
                     )}
                   />
                 </Grid>
+                <Grid item xs={11} md={2} margin={1}>
+                  <Controller
+                    name="solicitable_vivero"
+                    control={control_bien}
+                    rules={{ required: true }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        select
+                        size="small"
+                        label="¿Solicitable por vivero?"
+                        variant="outlined"
+                        value={value}
+                        onChange={onChange}
+                        error={!(error == null)}
+                        helperText={
+                          error != null
+                            ? 'Es obligatorio seleccionar una opción'
+                            : 'Seleccionar opción'
+                        }
+                      >
+                        <MenuItem value="true">SI</MenuItem>
+                        <MenuItem value="false">NO</MenuItem>
+                      </TextField>
+                    )}
+                  />
+                </Grid>
               </>
+
             )}
 
 
-            <FormSelectController
-              xs={12}
-              md={2}
-              control_form={control_bien}
-              control_name="visible_solicitudes"
-              default_value=""
-              rules={{ required_rule: { rule: true, message: "Es obligatorio seleccionar una opción" } }}
-              label="¿Visible en solicitudes?"
-              disabled={false}
-              helper_text="Seleccionar opción"
-              select_options={[{ label: "SI", value: true }, { label: "NO", value: false }]}
-              option_label="label"
-              option_key="value"
-            />
-            <FormSelectController
-              xs={12}
-              md={2}
-              control_form={control_bien}
-              control_name="maneja_hoja_vida"
-              default_value=""
-              rules={{ required_rule: { rule: true, message: "Es obligatorio seleccionar una opción" } }}
-              label="¿Maneja hoja de vida?"
-              disabled={false}
-              helper_text="Seleccionar opción"
-              select_options={[{ label: "SI", value: true }, { label: "NO", value: false }]}
-              option_label="label"
-              option_key="value"
-            />
+
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="visible_solicitudes"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="¿Visible a solicitudes?"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar una opción'
+                        : 'Seleccionar opción'
+                    }
+                  >
+                    <MenuItem value="true">SI</MenuItem>
+                    <MenuItem value="false">NO</MenuItem>
+                  </TextField>
+                )}
+              />
+            </Grid>
+
+            <Grid item xs={11} md={2} margin={1}>
+              <Controller
+                name="maneja_hoja_vida"
+                control={control_bien}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    select
+                    size="small"
+                    label="¿Maneja hoja de vida?"
+                    variant="outlined"
+                    value={value}
+                    onChange={onChange}
+                    error={!(error == null)}
+                    helperText={
+                      error != null
+                        ? 'Es obligatorio seleccionar una opción'
+                        : 'Seleccionar opción'
+                    }
+                  >
+                    <MenuItem value="true">SI</MenuItem>
+                    <MenuItem value="false">NO</MenuItem>
+                  </TextField>
+                )}
+              />
+            </Grid>
 
             <Grid item xs={11} md={12} margin={1}>
               <Controller

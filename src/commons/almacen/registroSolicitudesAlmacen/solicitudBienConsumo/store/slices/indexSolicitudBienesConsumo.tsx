@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type UnidadOrganizacional, type ISolicitudConsumo, type AprobacionRechazo, type UnidadesMedida, type IObjSolicitud, type IObjBienConsumo, type IObjFuncionario, type IObjBienesSolicitud, type IObjPersonaSolicita } from "../../interfaces/solicitudBienConsumo"
+import { type UnidadOrganizacional, type ISolicitudConsumo, type UnidadesMedida, type IObjSolicitud, type IObjBienConsumo, type IObjFuncionario, type IObjBienesSolicitud, type IObjPersonaSolicita, type IObjSolicitudVivero, } from "../../interfaces/solicitudBienConsumo"
 
 
 const initial_state_current_solicitud: IObjSolicitud = {
@@ -11,7 +12,40 @@ const initial_state_current_solicitud: IObjSolicitud = {
     motivo: "",
     observacion: "",
     fecha_solicitud: (new Date().toString()),
+    fecha_anulacion_solicitante: (new Date().toString()),
+    solicitud_anulada_solicitante: false,
+    justificacion_anulacion_solicitante: "",
+    estado_aprobacion_responsable: "",
+    fecha_aprobacion_responsable: (new Date().toString()),
+    justificacion_rechazo_responsable: "",
+    fecha_rechazo_almacen: (new Date().toString()),
+    justificacion_rechazo_almacen: "",
+    rechazada_almacen: false,
+
 }
+const initial_state_current_solicitud_vivero: IObjSolicitudVivero = {
+    id_solicitud_consumibles: null,
+    es_solicitud_de_conservacion: true,
+    id_unidad_para_la_que_solicita: null,
+    id_funcionario_responsable_unidad: null,
+    motivo: "",
+    observacion: "",
+    fecha_solicitud: (new Date().toString()),
+    fecha_anulacion_solicitante: (new Date().toString()),
+    solicitud_anulada_solicitante: false,
+    justificacion_anulacion_solicitante: "",
+    estado_aprobacion_responsable: "",
+    fecha_aprobacion_responsable: (new Date().toString()),
+    justificacion_rechazo_responsable: "",
+    fecha_rechazo_almacen: (new Date().toString()),
+    justificacion_rechazo_almacen: "",
+    rechazada_almacen: false,
+
+}
+
+
+
+
 const initial_state_current_bien: IObjBienConsumo = {
     id_bien: null,
     nombre: "",
@@ -20,7 +54,7 @@ const initial_state_current_bien: IObjBienConsumo = {
 
 const initial_state_current_funcionario: IObjFuncionario = {
     id_persona: null,
-    tipo_documento: "string | null",
+    tipo_documento: "",
     numero_documento: null,
     primer_nombre: "",
     segundo_nombre: "",
@@ -34,17 +68,26 @@ const initial_state_current_funcionario: IObjFuncionario = {
 const initial_state_aprobacion_solicitud = {
     estado_aprobacion_responsable: "",
     justificacion_rechazo_responsable: "",
+    fecha_aprobacion: (new Date().toString()),
+
 }
 
+const initial_state_anulacion_solicitud = {
+    solicitud_anulada_solicitante: false,
+    justificacion_anulacion_solicitante: "",
+    fecha_anulacion: (new Date().toString()),
+}
 const initial_state_persona_solicita = {
     id_persona: null,
     nombre: "",
     unidad_organizacional: "",
 }
 
-const initial_state: ISolicitudConsumo = {
+const initial_state: ISolicitudConsumo | any = {
     current_solicitud: initial_state_current_solicitud,
     solicitudes: [],
+    current_solicitud_vivero: initial_state_current_solicitud_vivero,
+    solicitudes_vivero: [],
     bienes_solicitud: [],
     bienes: [],
     current_bien: initial_state_current_bien,
@@ -53,9 +96,15 @@ const initial_state: ISolicitudConsumo = {
     persona_solicita: initial_state_persona_solicita,
     unidad_organizacional: [],
     aprobacion_solicitud: initial_state_aprobacion_solicitud,
+    anulacion_solicitud: initial_state_anulacion_solicitud,
     nro_solicitud: null,
+    nro_solicitud_vivero: null,
     unidades_medida: [],
+
+
 }
+
+
 
 export const solicitud_consumo_slice = createSlice({
     name: "solic_consumo",
@@ -67,10 +116,24 @@ export const solicitud_consumo_slice = createSlice({
         ) => {
             state.solicitudes = action.payload;
         },
+        set_solicitudes_vivero: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjSolicitudVivero[]>
+        ) => {
+            state.solicitudes_vivero = action.payload;
+        },
+
 
         set_current_solicitud: (
             state: ISolicitudConsumo,
             action: PayloadAction<IObjSolicitud>
+        ) => {
+            state.current_solicitud = action.payload;
+        },
+
+        set_current_solicitud_vivero: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjSolicitudVivero>
         ) => {
             state.current_solicitud = action.payload;
         },
@@ -117,12 +180,7 @@ export const solicitud_consumo_slice = createSlice({
             state.current_funcionario = action.payload;
         },
 
-        get_aprobacion_solicitud: (
-            state: ISolicitudConsumo,
-            action: PayloadAction<AprobacionRechazo>
-        ) => {
-            state.aprobacion_solicitud = action.payload;
-        },
+
 
         set_numero_solicitud: (
             state: ISolicitudConsumo,
@@ -135,7 +193,7 @@ export const solicitud_consumo_slice = createSlice({
             state: ISolicitudConsumo,
             action: PayloadAction<number>
         ) => {
-            state.nro_solicitud = action.payload;
+            state.nro_solicitud_vivero = action.payload;
         },
 
         set_unidades_medida: (
@@ -152,7 +210,8 @@ export const solicitud_consumo_slice = createSlice({
             state.persona_solicita = action.payload;
         },
 
+
     }
 })
 
-export const { set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, get_aprobacion_solicitud, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero } = solicitud_consumo_slice.actions;
+export const { set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero, set_solicitudes_vivero, set_current_solicitud_vivero } = solicitud_consumo_slice.actions;

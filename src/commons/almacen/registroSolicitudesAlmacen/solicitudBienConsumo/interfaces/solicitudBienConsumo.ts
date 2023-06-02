@@ -1,16 +1,18 @@
 export interface ISolicitudConsumo {
   current_solicitud: IObjSolicitud; // solicitud para crear
   solicitudes: IObjSolicitud[]; // solicitudes
-  bienes_solicitud: IObjBienesSolicitud[]; // solicitud bienes por crear
+  curren_solicitud_vivero: IObjSolicitudVivero;
+  solicitudes_vivero: IObjSolicitudVivero[];
+  bienes_solicitud: IObjBienesSolicitud[]; // solicit;ud bienes por crear
   bienes: IObjBienConsumo[];
   current_bien: IObjBienConsumo;
   persona_solicita: IObjPersonaSolicita;
   funcionarios: IObjFuncionario[];
   current_funcionario: IObjFuncionario;
   nro_solicitud: number | null; //
+  nro_solicitud_vivero: number | null;
   unidades_medida: UnidadesMedida[];
   unidad_organizacional: UnidadOrganizacional[];
-  aprobacion_solicitud: AprobacionRechazo; // para despachounidad_organizacional
 }
 
 export interface IObjPersonaSolicita {
@@ -108,12 +110,6 @@ export interface IObjFuncionario {
   cod_naturaleza_empresa?: string | null;
 }
 
-// interfaz para aprobacion de bienes
-export interface AprobacionRechazo {
-  estado_aprobacion_responsable: string;
-  justificacion_rechazo_responsable: string;
-}
-
 export interface IObjSolicitud {
   id_solicitud_consumibles?: number | null;
   es_solicitud_de_conservacion?: boolean;
@@ -137,13 +133,50 @@ export interface IObjSolicitud {
   solicitud_anulada_solicitante?: boolean | null;
   justificacion_anulacion_solicitante?: string | null;
   fecha_anulacion_solicitante?: string | null;
-  id_persona_solicita?: number | null;
-  id_unidad_org_del_solicitante?: number | null;
+  id_persona_solicita?: number | null; // creador de la solicitud
+  id_unidad_org_del_solicitante?: number | null; // unidad del que solicita
   id_unidad_para_la_que_solicita?: number | null;
-  id_funcionario_responsable_unidad?: number | null;
-  id_unidad_org_del_responsable?: number | null;
+  id_funcionario_responsable_unidad?: number | null; // id del responsable de la unidad de solicitud
+  id_unidad_org_del_responsable?: number | null; // responsable de solcitud
   id_persona_cierre_no_dispo_alm?: number | null;
   id_persona_almacen_rechaza?: number | null;
   persona_solicita?: string | null;
   nombre_unidad_organizacional?: string | null;
+}
+export interface IObjSolicitudVivero {
+  id_solicitud_consumibles?: number | null;
+  es_solicitud_de_conservacion?: boolean;
+  nro_solicitud_por_tipo?: number | null;
+  fecha_solicitud?: string | null;
+  motivo?: string;
+  observacion?: string;
+  solicitud_abierta?: boolean;
+  fecha_cierre_solicitud?: string | null;
+  revisada_responsable?: boolean;
+  estado_aprobacion_responsable?: string | null;
+  justificacion_rechazo_responsable?: string | null;
+  fecha_aprobacion_responsable?: string | null;
+  gestionada_almacen?: boolean;
+  id_despacho_consumo?: number | null;
+  observacion_cierre_no_dispo_alm?: string | null;
+  fecha_cierre_no_dispo_alm?: string | null;
+  rechazada_almacen?: boolean | null;
+  fecha_rechazo_almacen?: string | null;
+  justificacion_rechazo_almacen?: string | null;
+  solicitud_anulada_solicitante?: boolean | null;
+  justificacion_anulacion_solicitante?: string | null;
+  fecha_anulacion_solicitante?: string | null;
+  id_persona_solicita?: number | null; // creador de la solicitud
+  id_unidad_org_del_solicitante?: number | null; // unidad del que solicita
+  id_unidad_para_la_que_solicita?: number | null;
+  id_funcionario_responsable_unidad?: number | null; // id del responsable de la unidad de solicitud
+  id_unidad_org_del_responsable?: number | null; // responsable de solcitud
+  id_persona_cierre_no_dispo_alm?: number | null;
+  id_persona_almacen_rechaza?: number | null;
+  persona_solicita?: string | null;
+  nombre_unidad_organizacional?: string | null;
+}
+
+export interface IObjDespacho {
+  fecha_despacho: string;
 }
