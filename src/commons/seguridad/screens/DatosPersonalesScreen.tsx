@@ -1,132 +1,77 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Button, Grid, Stack } from '@mui/material';
-import { type AuthSlice } from '../../auth/interfaces';
-import { type SeguridadSlice } from '../interfaces';
-import {
-  DatosIdentificacionComponent,
-  DatosEmpresarialesComponent,
-  DatosNotificacionNacional,
-  DatosRepresentanteLegalComponent,
-  DatosAdicionales,
-} from '../components/datosPersonales';
-import { Title } from '../../../components';
-import { get_data_legal_person } from '../store';
+import type { AxiosError } from "axios";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import type { DataPersonas } from "../../../interfaces/globalModels";
+import type { AuthSlice } from "../../auth/interfaces";
+import { control_error } from "../../../helpers";
+import { consultar_datos_persona } from "../request/Request";
+import { DatosPersonalesNatural } from "../components/DatosPersonalesNatiral/DatosPersonalesNatiral";
+import { DatosPersonalesJuridica } from "../components/DatosPersonalesJuridica/DatosPersonalesJuridica";
+import { use_register } from "../../auth/hooks/registerHook";
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosPersonalesScreen: React.FC = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { legal_person } = useSelector(
-    (state: SeguridadSlice) => state.seguridad
-  );
-  const dispatch = useDispatch();
+  const [datos, set_datos] = useState<DataPersonas>();
+  const {
+    errors,
+    is_valid,
+    get_values,
+    handle_submit,
+    register,
+    set_value,
+    watch,
+  } = use_register();
+
+  const datos_usuario = async (id_persona: number): Promise<void> => {
+    try {
+      const {
+        data: { data },
+      } = await consultar_datos_persona(id_persona);
+      set_datos(data)
+    } catch (err) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404) {
+        control_error(err);
+      }
+    }
+  };
 
   useEffect(() => {
-    dispatch(get_data_legal_person(userinfo.id_usuario) as any);
-  }, [userinfo]);
+    void datos_usuario(userinfo.id_persona);
+  }, []);
 
-  console.log(legal_person);
 
   return (
     <>
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Title title="Datos de identificacion"></Title>
-          <DatosIdentificacionComponent legal_person={legal_person} />
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Title title="Datos empresariales"></Title>
-          <DatosEmpresarialesComponent />
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Title title="Datos de notificacion nacional"></Title>
-          <DatosNotificacionNacional />
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Title title="Datos de notificacion nacional"></Title>
-          <DatosRepresentanteLegalComponent />
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12}>
-          <Title title="Datos adicionales"></Title>
-          <DatosAdicionales />
-        </Grid>
-      </Grid>
-
-      <Stack
-        direction="row"
-        justifyContent="center"
-        spacing={2}
-        sx={{ p: '40px' }}
-      >
-        <Button color="success" variant="contained">
-          Actualizar
-        </Button>
-        <Button color="error" variant="contained">
-          Cancelar
-        </Button>
-      </Stack>
+      {datos?.tipo_persona === 'N' && (
+        <>
+          <DatosPersonalesNatural
+          data={datos}
+          errors={errors}
+          handleSubmit={handle_submit}
+          isValid={is_valid}
+          register={register}
+          setValue={set_value}
+          getValues={get_values}
+          watch={watch}
+          />
+        </>
+      )}
+      {datos?.tipo_persona === 'J' && (
+        <>
+          <DatosPersonalesJuridica
+          data={datos}
+          errors={errors}
+          handleSubmit={handle_submit}
+          isValid={is_valid}
+          register={register}
+          setValue={set_value}
+          getValues={get_values}
+          watch={watch}/>
+        </>
+      )}
     </>
   );
 };

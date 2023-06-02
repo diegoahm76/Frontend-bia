@@ -159,7 +159,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const cambio_fecha_entrada = (date: Dayjs | null): void => {
     if(date !== null){
-      set_fecha_entrada(date); 
+      set_fecha_entrada(date);
       set_msj_error_fecha_entrada("");
     }else{
       set_msj_error_fecha_entrada("El campo fecha entrada es obligatorio.");

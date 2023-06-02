@@ -49,7 +49,7 @@ interface OrgActual {
 }
 
 interface CCD {
-  id_ccd: number;
+  id_ccd: string;
   nombre: string;
   tca: {
     nombre: string;
@@ -62,6 +62,20 @@ interface CCD {
   version: string;
 }
 
+const initial_state = {
+  id_ccd: '',
+  nombre: '',
+  tca: {
+    nombre: '',
+    version: '',
+  },
+  trd: {
+    nombre: '',
+    version: '',
+  },
+  version: '',
+};
+
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -72,12 +86,12 @@ interface FormValues {
   ccd: number;
   trd: number;
   tca: number;
-  justificación: string;
+  justificacion: string;
 }
 
 const fecha_actual = dayjs().format('YYYY-MM-DD');
 
-type keys_object = 'organigrama' | 'ccd' | 'justificación';
+type keys_object = 'organigrama' | 'ccd' | 'justificacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogElegirOrganigramaActual = ({
@@ -87,22 +101,24 @@ const DialogElegirOrganigramaActual = ({
   const dispatch = useAppDispatch();
   const [loading, set_loading] = useState<boolean>(false);
   const [organigrama_actual, set_organigrama_actual] = useState<OrgActual>();
-  const [organigram_selected, set_organigram_selected] = useState<string>();
+  const [organigram_selected, set_organigram_selected] = useState<string>('');
   const [list_organigrams, set_list_organigrams] = useState<IList[]>([
     {
       label: '',
       value: 0,
     },
   ]);
-  const [data_ccds_posibles, set_data_ccds_posibles] = useState<CCD[]>();
-  const [ccd_selected, set_ccd_selected] = useState<string>();
+  const [data_ccds_posibles, set_data_ccds_posibles] = useState<CCD[]>([]);
+  const [ccd_selected, set_ccd_selected] = useState<string>('');
   const [list_ccds, set_list_ccds] = useState<IList[]>([
     {
       label: '',
       value: 0,
     },
   ]);
-  const [data_asociada_ccd, set_data_asociada_ccd] = useState<CCD[]>();
+  const [data_asociada_ccd, set_data_asociada_ccd] = useState<CCD | undefined>(
+    initial_state
+  );
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const {
@@ -110,37 +126,49 @@ const DialogElegirOrganigramaActual = ({
     register: register_elegir_organigrama_actual,
     getValues: get_values_elegir_organigrama_actual,
     setValue: set_value_elegir_organigrama_actual,
-    watch: watch_elegir_organigrama_actual,
+    reset: reset_elegir_organigrama_actual,
     formState: { errors: errors_elegir_organigrama_actual },
   } = useForm<FormValues>();
 
   const handle_close_crear_organigrama = (): void => {
+    reset_elegir_organigrama_actual();
+    set_organigram_selected('');
+    set_ccd_selected('');
+    set_data_asociada_ccd(initial_state);
     set_is_modal_active(false);
   };
 
   const on_submit = async (data: FormValues): Promise<void> => {
     const data_cambio = {
-      justificacion: get_values_elegir_organigrama_actual('justificación'),
+      justificacion: get_values_elegir_organigrama_actual('justificacion'),
       organigrama: get_values_elegir_organigrama_actual('organigrama'),
       id_ccd: get_values_elegir_organigrama_actual('ccd'),
     };
-    console.log(data_cambio);
     await dispatch(cambio_organigrama_actual(data_cambio));
     handle_close_crear_organigrama();
   };
 
+  // 1.0 Ejecutar funcion para traer data organigramas posibles y organigrama actual
+  useEffect(() => {
+    if (is_modal_active) {
+      void get_data_selects();
+    }
+  }, [is_modal_active]);
+
+  // 1.1 Traer data
   const get_data_selects = async (): Promise<void> => {
     set_loading(true);
     try {
       const response_org_actual = await dispatch(get_organigrama_actual());
-      console.log(response_org_actual.data);
-      set_organigrama_actual(response_org_actual.data);
-
-      const response_orgs = await dispatch(get_organigramas_posibles());
-      console.log('organigramas posibles', response_orgs);
-      const res_organigramas_adapter: IList[] =
-        await organigramas_choise_adapter(response_orgs.data);
-      set_list_organigrams(res_organigramas_adapter);
+      if (response_org_actual.data.length > 0) {
+        set_organigrama_actual(response_org_actual.data);
+        const response_orgs = await dispatch(get_organigramas_posibles());
+        const res_organigramas_adapter: IList[] =
+          await organigramas_choise_adapter(response_orgs.data);
+        set_list_organigrams(res_organigramas_adapter);
+      } else {
+        control_error('Sin organigramas disponibles para activación');
+      }
     } catch (err) {
       control_error(err);
     } finally {
@@ -148,11 +176,19 @@ const DialogElegirOrganigramaActual = ({
     }
   };
 
+  // 2. Seleccionar organigrama
+  useEffect(() => {
+    if (organigram_selected !== undefined && organigram_selected !== '') {
+      // Traer listado de ccds segun organigrama seleccionado
+      void get_list_ccds(organigram_selected);
+    }
+  }, [organigram_selected]);
+
+  // 3. Traer ccds segun organigrama seleccionado
   const get_list_ccds = async (
     id_organigram: string | number
   ): Promise<void> => {
     const response_ccds = await dispatch(get_ccds_posibles(id_organigram));
-    console.log(response_ccds.data);
     set_data_ccds_posibles(response_ccds.data);
     const res_ccds_adapter: IList[] = await ccds_choise_adapter(
       response_ccds.data
@@ -160,34 +196,15 @@ const DialogElegirOrganigramaActual = ({
     set_list_ccds(res_ccds_adapter);
   };
 
+  // 4. Filtrar ccd seleccionado para mostrar datos de trd y tca
   useEffect(() => {
-    if (watch_elegir_organigrama_actual('organigrama') !== undefined) {
-      console.log(
-        'watch_elegir_organigrama_actual',
-        get_values_elegir_organigrama_actual('organigrama')
+    if (ccd_selected !== undefined && ccd_selected !== '') {
+      const result_filter = data_ccds_posibles.find(
+        (ccds: CCD) => ccds.id_ccd === ccd_selected
       );
-      void get_list_ccds(
-        get_values_elegir_organigrama_actual('organigrama') ?? ''
-      );
+      set_data_asociada_ccd(result_filter);
     }
-  }, [watch_elegir_organigrama_actual('organigrama')]);
-
-  useEffect(() => {
-    if (watch_elegir_organigrama_actual('ccd') !== undefined) {
-      console.log(
-        'watch_elegir_organigrama_actual',
-        watch_elegir_organigrama_actual('ccd')
-      );
-      const result_filter = data_ccds_posibles?.filter(
-        (ccds: any) => ccds.id_ccd !== watch_elegir_organigrama_actual('ccd')
-      );
-      set_data_asociada_ccd(result_filter ?? []);
-    }
-  }, [watch_elegir_organigrama_actual('ccd')]);
-
-  useEffect(() => {
-    void get_data_selects();
-  }, []);
+  }, [ccd_selected]);
 
   const on_change = (e: SelectChangeEvent<string>): void => {
     set_value_form(e.target.name, e.target.value);
@@ -273,17 +290,16 @@ const DialogElegirOrganigramaActual = ({
                 onChange={on_change}
                 label="Organigramas*"
                 name="organigrama"
-                value={organigram_selected?.toString()}
+                value={organigram_selected}
                 options={list_organigrams}
-                loading={loading}
                 disabled={false}
-                required={false}
+                required={true}
                 errors={errors_elegir_organigrama_actual}
                 register={register_elegir_organigrama_actual}
               />
             </Grid>
           </Grid>
-          {list_ccds !== undefined && (
+          {data_ccds_posibles?.length > 0 && (
             <>
               <Title title="Cuadros de clasificación documental asociado" />
               <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
@@ -292,17 +308,16 @@ const DialogElegirOrganigramaActual = ({
                     onChange={on_change}
                     label="Cuadros de clasificación documental*"
                     name="ccd"
-                    value={ccd_selected?.toString()}
+                    value={ccd_selected}
                     options={list_ccds}
-                    loading={loading}
                     disabled={false}
-                    required={false}
+                    required={true}
                     errors={errors_elegir_organigrama_actual}
                     register={register_elegir_organigrama_actual}
                   />
                 </Grid>
               </Grid>
-              {data_asociada_ccd !== undefined && (
+              {ccd_selected !== undefined && ccd_selected !== '' && (
                 <>
                   <Title title="Tabla de retención asociada" />
                   <Grid container spacing={2} sx={{ mt: '5px', mb: '20px' }}>
@@ -314,15 +329,17 @@ const DialogElegirOrganigramaActual = ({
                           height={45}
                         />
                       ) : (
-                        <TextField
-                          disabled
-                          fullWidth
-                          value={data_asociada_ccd[0].trd.nombre ?? ''}
-                          type="textarea"
-                          rows="3"
-                          label="Nombre"
-                          size="small"
-                        />
+                        data_asociada_ccd !== undefined && (
+                          <TextField
+                            disabled
+                            fullWidth
+                            value={data_asociada_ccd.trd.nombre}
+                            type="textarea"
+                            rows="3"
+                            label="Nombre"
+                            size="small"
+                          />
+                        )
                       )}
                     </Grid>
                     <Grid item xs={12} md={4}>
@@ -333,15 +350,17 @@ const DialogElegirOrganigramaActual = ({
                           height={45}
                         />
                       ) : (
-                        <TextField
-                          disabled
-                          fullWidth
-                          type="textarea"
-                          value={data_asociada_ccd[0].trd.version ?? ''}
-                          rows="3"
-                          label="Versión"
-                          size="small"
-                        />
+                        data_asociada_ccd !== undefined && (
+                          <TextField
+                            disabled
+                            fullWidth
+                            type="textarea"
+                            value={data_asociada_ccd.trd.version}
+                            rows="3"
+                            label="Versión"
+                            size="small"
+                          />
+                        )
                       )}
                     </Grid>
                   </Grid>
@@ -355,15 +374,17 @@ const DialogElegirOrganigramaActual = ({
                           height={45}
                         />
                       ) : (
-                        <TextField
-                          disabled
-                          fullWidth
-                          value={data_asociada_ccd[0].tca.nombre ?? ''}
-                          type="textarea"
-                          rows="3"
-                          label="Nombre"
-                          size="small"
-                        />
+                        data_asociada_ccd !== undefined && (
+                          <TextField
+                            disabled
+                            fullWidth
+                            value={data_asociada_ccd.tca.nombre}
+                            type="textarea"
+                            rows="3"
+                            label="Nombre"
+                            size="small"
+                          />
+                        )
                       )}
                     </Grid>
                     <Grid item xs={12} md={4}>
@@ -374,15 +395,17 @@ const DialogElegirOrganigramaActual = ({
                           height={45}
                         />
                       ) : (
-                        <TextField
-                          disabled
-                          fullWidth
-                          value={data_asociada_ccd[0].tca.version ?? ''}
-                          type="textarea"
-                          rows="3"
-                          label="Versión"
-                          size="small"
-                        />
+                        data_asociada_ccd !== undefined && (
+                          <TextField
+                            disabled
+                            fullWidth
+                            value={data_asociada_ccd.tca.version}
+                            type="textarea"
+                            rows="3"
+                            label="Versión"
+                            size="small"
+                          />
+                        )
                       )}
                     </Grid>
                   </Grid>
@@ -411,21 +434,20 @@ const DialogElegirOrganigramaActual = ({
               ) : (
                 <TextField
                   fullWidth
+                  required
                   type="textarea"
                   rows="3"
-                  label="Justicación*"
+                  label="Justicación"
                   size="small"
-                  {...register_elegir_organigrama_actual('justificación')}
-                  error={
-                    errors_elegir_organigrama_actual.justificación?.type ===
-                    'required'
-                  }
+                  error={Boolean(
+                    errors_elegir_organigrama_actual.justificacion
+                  )}
                   helperText={
-                    errors_elegir_organigrama_actual.justificación?.type ===
-                    'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
+                    errors_elegir_organigrama_actual.justificacion?.message
                   }
+                  {...register_elegir_organigrama_actual('justificacion', {
+                    required: 'Este campo es obligatorio',
+                  })}
                 />
               )}
             </Grid>

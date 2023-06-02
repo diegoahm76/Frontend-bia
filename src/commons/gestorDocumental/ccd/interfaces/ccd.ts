@@ -70,3 +70,8 @@ export interface IAssignmentsObject {
   nombre_serie?: string;
   id?: number;
 }
+
+export interface DataCambioCCDActual {
+  id_ccd: number;
+  justificacion: string;
+}

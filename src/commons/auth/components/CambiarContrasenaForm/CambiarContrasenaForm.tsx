@@ -114,7 +114,7 @@ export const CambiarContrasena: React.FC = () => {
               La contraseña debe cumplir con el siguiente formato:
             </p>
             <ul className="formatoPassowrd">
-              <li>Debe contener mínimo 6 caracteres</li>
+              <li>Debe contener mínimo 8 caracteres</li>
               <li>Debe contener 1 Caracter en Mayúscula</li>
               <li>Debe contener 1 Caracter numérico</li>
               <li>Debe contener 1 Caracter simbólico (*,-,_,%...)</li>

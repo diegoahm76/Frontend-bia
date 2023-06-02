@@ -16,35 +16,22 @@ export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
   });
 
   useEffect(() => {
-    switch (pathname) {
-      case '/auth/register':
-        set_extend({
-          sm: 10,
-          md: 10,
-          lg: 8,
-        });
-        break;
-      case '/auth/login':
-        set_extend({
-          sm: 6,
-          md: 6,
-          lg: 6,
-        });
-        break;
-      case '/auth/cambiar_contrasena':
-        set_extend({
-          sm: 5,
-          md: 5,
-          lg: 3,
-        });
-        break;
-      case '/auth/recuperar_contrasena':
-        set_extend({
-          sm: 5,
-          md: 4,
-          lg: 3,
-        });
-        break;
+    if (pathname === '/auth/register') {
+      set_extend({
+        sm: 10,
+        md: 10,
+        lg: 8,
+      });
+    } else if (
+      pathname === '/auth/cambiar_contrasena' ||
+      pathname === '/auth/recuperar_contrasena' ||
+      pathname === '/auth/recuperar_usuario'
+    ) {
+      set_extend({
+        sm: 5,
+        md: 4,
+        lg: 3,
+      });
     }
   }, []);
 
