@@ -17,7 +17,8 @@ import {
   TextField,
   FormGroup,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  FormHelperText
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
@@ -99,24 +100,12 @@ export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container direction='column'>
             <Grid item xs={11} md={5} margin={1}>
-              <TextField
-                name="descripcion"
-                value={form_data.descripcion}
-                helperText="Ingrese la descripción del atributo"
-                margin="dense"
-                fullWidth
-                size="small"
-                required
-                onChange={handle_input_change}
-              />
-            </Grid>
-            <Grid item xs={11} md={5} margin={1}>
-              <FormControl size='small' fullWidth>
+              <FormControl size='small' fullWidth required>
                 <InputLabel>Tipo de atributo</InputLabel>
                 <Select
                   name="id_tipo"
+                  label='Tipo de atributo *'
                   value={form_data.id_tipo}
-                  label='Tipo de atributo'
                   onChange={handle_select_change}
                 >
                   {tipos_atributos.map(({ id, tipo }) => (
@@ -125,7 +114,21 @@ export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_
                     </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText>Ingrese el tipo de atributo</FormHelperText>
               </FormControl>
+            </Grid>
+            <Grid item xs={11} md={5} margin={1}>
+              <TextField
+                name="descripcion"
+                label='Descipción'
+                value={form_data.descripcion}
+                helperText="Ingrese la descripción del atributo"
+                margin="dense"
+                fullWidth
+                size="small"
+                required
+                onChange={handle_input_change}
+              />
             </Grid>
             <Grid item xs={11} md={5} margin={1}>
               <FormGroup>
