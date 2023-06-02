@@ -207,9 +207,8 @@ export const DatosRepresentanteLegal: React.FC<
         data: { data: response },
       } = await consultar_datos_persona(id_representante_legal);
       set_datos_representante(response);
-      console.log(response)
     } catch (err) {
-      control_error(err);
+      control_error('Ocurrio un error con los datos del representante legal');
     }
   };
 

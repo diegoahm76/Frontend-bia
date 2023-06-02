@@ -12,8 +12,11 @@ import {
   Autocomplete,
   type AutocompleteChangeReason,
   type AutocompleteChangeDetails,
+  Stack,
 } from '@mui/material';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { LoadingButton } from '@mui/lab';
+import UpdateIcon from '@mui/icons-material/Update';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -22,19 +25,31 @@ import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGener
 import dayjs, { type Dayjs } from 'dayjs';
 import type {
   ClaseTercero,
+  ClaseTerceroPersona,
   CrearPersonNaturalAdmin,
-  PropsRegister,
+  DataNaturaUpdate,
+  PropsRegisterAdmin,
+  UpdateAutorizaNotificacion,
 } from '../../../../interfaces/globalModels';
 import { control_error, control_success } from '../../../../helpers';
 import {
   consultar_clase_tercero,
+  consultar_clase_tercero_persona,
   crear_persona_natural,
-} from '../../../seguridad/request/Request';
+  editar_persona_natural,
+} from '../../request/Request'
 import { Title } from '../../../../components';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
+import { DatosVinculacion } from '../../../auth/components/DataVinculación';
+import { DialogHistorialDatosRestringidos } from '../DialogHistorialDatosRestringidos';
+import { DialogHistorialEmail } from '../HistoricoEmail/HistoricoEmail';
+import { DialogHistorialDirecciones } from '../HistoricoDirecciones/HistoricoDirecciones';
+import { DialogHistoricoAutorizaNotificaciones } from '../HistoricoAutorizaNotificaciones/HistoricoAutorizaNotificaciones';
+import { DialogAutorizaDatos } from '../../../../components/DialogAutorizaDatos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
+export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
+  id_persona,
   numero_documento,
   tipo_documento,
   tipo_persona,
@@ -44,7 +59,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
   errors,
   watch,
   getValues,
-}: PropsRegister) => {
+}: PropsRegisterAdmin) => {
   const {
     is_saving,
     paises_options,
@@ -84,6 +99,23 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
   const [type_direction, set_type_direction] = useState('');
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
   const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
+  const [clase_tercero_persona, set_clase_tercero_persona] = useState<
+    ClaseTercero[]
+  >([]);
+
+  // modales
+  const [
+    is_modal_active_historico_direcciones,
+    set_is_modal_active_historico_direcciones,
+  ] = useState(false);
+  const [is_modal_active_historico_email, set_is_modal_active_historico_email] =
+    useState(false);
+  const [is_modal_historico_autorizacion, set_is_modal_historico_autorizacion] =
+    useState<boolean>(false);
+  const [is_modal_historico_datos_r, set_is_modal_historico_datos_r] =
+    useState<boolean>(false);
+  const [dialog_notificaciones, set_dialog_notificaciones] =
+    useState<boolean>(false);
 
   // watchers
   const misma_direccion = watch('misma_direccion') ?? false;
@@ -105,6 +137,31 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
       'datos_clasificacion_persona',
       value.map((e) => e.value)
     );
+    set_clase_tercero_persona(value);
+  };
+  // abre modal historial de autorizacion
+  const handle_open_dialog_autorizacion = (): void => {
+    set_is_modal_historico_autorizacion(true);
+  };
+  // abre modal de historico de direcciones
+  const handle_open_historico_direcciones = (): void => {
+    set_is_modal_active_historico_direcciones(true);
+  };
+  // abre modal de historico de email
+  const handle_open_historico_email = (): void => {
+    set_is_modal_active_historico_email(true);
+  };
+  // abrir modal actualizar Notificaciones
+  const handle_open_dialog_notificaciones = (): void => {
+    set_dialog_notificaciones(true);
+  };
+  // abrir modal datos restringidos
+  const handle_open_historico_datos_r = (): void => {
+    set_is_modal_historico_datos_r(true);
+  };
+  const respuesta_autorizacion = (data: UpdateAutorizaNotificacion): void => {
+    set_value('acepta_notificacion_email', data.acepta_autorizacion_email);
+    set_value('acepta_notificacion_sms', data.acepta_autorizacion_sms);
   };
 
   // establece la fecha de nacimiento
@@ -122,9 +179,32 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
       control_error(err);
     }
   };
+  const get_datos_clase_tercero_persona = async (
+    id: number | undefined
+  ): Promise<void> => {
+    try {
+      const response = await consultar_clase_tercero_persona(id);
+      const data_persona_clase_tercero = response.map(
+        (item: ClaseTerceroPersona) => ({
+          value: item.id_clase_tercero,
+          label: item.nombre,
+        })
+      );
+      set_value(
+        'datos_clasificacion_persona',
+        data_persona_clase_tercero.map((e) => e.value)
+      );
+      set_clase_tercero_persona(data_persona_clase_tercero);
+    } catch (err) {
+      control_error(err);
+    }
+  };
 
   useEffect(() => {
     void get_datos_clase_tercero();
+    if (id_persona > 0) {
+      void get_datos_clase_tercero_persona(id_persona);
+    }
   }, []);
 
   const on_submit_create_natural = handle_submit(async (data: any) => {
@@ -140,13 +220,30 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
 
     }
   });
+  const on_submit_update_natural = handle_submit(async (data: any) => {
+    try {
+      console.log(data, 'data');
+      delete data.dpto_notifiacion;
+      data.ubicacion_georeferenciada = '';
+      await editar_persona_natural(id_persona, data as DataNaturaUpdate);
+      control_success('Los datos se actualizaron correctamente');
+    } catch (error) {
+      control_error('hubo un error al actualizar los datos, intentelo de nuevo');
+    }
+  });
 
   return (
     <>
       <form
         onSubmit={(e) => {
           console.log(errors, 'errors');
-          void on_submit_create_natural(e);
+
+          if (id_persona > 0) {
+            void on_submit_update_natural(e);
+          }
+          if (id_persona === 0) {
+            void on_submit_create_natural(e);
+          }
         }}
       >
         {/* Datos personales */}
@@ -159,6 +256,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               fullWidth
               size="small"
               label="Primer nombre *"
+              disabled={id_persona > 0}
               error={errors.primer_nombre?.type === 'required'}
               helperText={
                 errors.primer_nombre?.type === 'required'
@@ -173,6 +271,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               fullWidth
               size="small"
               label="Segundo nombre"
+              disabled={id_persona > 0}
               {...register('segundo_nombre')}
             />
           </Grid>
@@ -181,6 +280,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               fullWidth
               size="small"
               label="Primer apellido *"
+              disabled={id_persona > 0}
               error={errors.primer_apellido?.type === 'required'}
               helperText={
                 errors.primer_apellido?.type === 'required'
@@ -197,6 +297,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               fullWidth
               size="small"
               label="Segundo apellido"
+              disabled={id_persona > 0}
               {...register('segundo_apellido')}
             />
           </Grid>
@@ -264,6 +365,28 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               register={register}
             />
           </Grid>
+          {id_persona > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Stack
+                  justifyContent="flex-end"
+                  sx={{ m: '10px 0 20px 0' }}
+                  direction="row"
+                  spacing={2}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<RemoveRedEyeIcon />}
+                    onClick={() => {
+                      handle_open_historico_datos_r();
+                    }}
+                  >
+                    Historico Datos Restringidos
+                  </Button>
+                </Stack>
+              </Grid>
+            </>
+          )}
           {/* Lugar de expedición del documento */}
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -383,6 +506,28 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               </Grid>
             </>
           )}
+          {id_persona > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Stack
+                  justifyContent="flex-end"
+                  sx={{ m: '10px 0 20px 0' }}
+                  direction="row"
+                  spacing={2}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<RemoveRedEyeIcon />}
+                    onClick={() => {
+                      handle_open_historico_direcciones();
+                    }}
+                  >
+                    Historico Direcciones
+                  </Button>
+                </Stack>
+              </Grid>
+            </>
+          )}
         </Grid>
         {/* Datos de notificación */}
         <Grid container spacing={2} mt={0.1}>
@@ -483,12 +628,12 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               fullWidth
               size="small"
               label="E-mail *"
-              error={errors.email?.type === 'required' || error_email}
+              error={errors.email?.type === 'required' || error_email && id_persona === 0}
               type="email"
               helperText={
                 errors.email?.type === 'required'
                   ? 'Este campo es obligatorio'
-                  : error_email
+                  : error_email && id_persona === 0
                     ? 'Los emails no coinciden'
                     : ''
               }
@@ -497,63 +642,92 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               })}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Confirme su e-mail *"
-              error={errors.confirmar_email?.type === 'required' || error_email}
-              type="email"
-              helperText={
-                errors.confirmar_email?.type === 'required'
-                  ? 'Este campo es obligatorio'
-                  : error_email
-                    ? 'Los emails no coinciden'
-                    : ''
-              }
-              {...register('confirmar_email', {
-                required: true,
-              })}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="caption" fontWeight="bold">
-              NOTA: Se recomienda el registro de un número celular, este se
-              usará como medio de recuperación de la cuenta, en caso de que
-              olvide sus datos de acceso.
-            </Typography>
-          </Grid>
-
+          {id_persona === 0 && (
+            <>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Confirme su e-mail *"
+                  error={errors.confirmar_email?.type === 'required' || error_email}
+                  type="email"
+                  helperText={
+                    errors.confirmar_email?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : error_email
+                        ? 'Los emails no coinciden'
+                        : ''
+                  }
+                  {...register('confirmar_email', {
+                    required: true,
+                  })}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="caption" fontWeight="bold">
+                  NOTA: Se recomienda el registro de un número celular, este se
+                  usará como medio de recuperación de la cuenta, en caso de que
+                  olvide sus datos de acceso.
+                </Typography>
+              </Grid>
+            </>
+          )}
           <Grid item xs={12} sm={6} md={4}>
             <TextField
               fullWidth
               size="small"
               label="Celular"
               onCopy={(e: any) => e.preventDefault()}
-              error={errors.telefono_celular?.type === 'required' || error_phone}
+              error={errors.telefono_celular?.type === 'required' || error_phone && id_persona === 0}
               helperText={
                 errors.telefono_celular?.type === 'required'
                   ? 'Este campo es obligatorio'
-                  : error_phone
+                  : error_phone && id_persona === 0
                     ? 'Los número de celular no son iguales'
                     : ''
               }
               {...register('telefono_celular')}
             />
           </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              fullWidth
-              size="small"
-              label="Confirme su celular"
-              onCopy={(e: any) => e.preventDefault()}
-              error={error_phone}
-              helperText={
-                error_email ? 'Los número de celular no son iguales' : ''
-              }
-              {...register('confirmar_celular')}
-            />
-          </Grid>
+          {id_persona === 0 && (
+            <>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Confirme su celular"
+                  onCopy={(e: any) => e.preventDefault()}
+                  error={error_phone}
+                  helperText={
+                    error_email ? 'Los número de celular no son iguales' : ''
+                  }
+                  {...register('confirmar_celular')}
+                />
+              </Grid>
+            </>
+          )}
+          {id_persona > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Stack
+                  justifyContent="flex-end"
+                  sx={{ m: '10px 0 20px 0' }}
+                  direction="row"
+                  spacing={2}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<RemoveRedEyeIcon />}
+                    onClick={() => {
+                      handle_open_historico_email();
+                    }}
+                  >
+                    Historico E-mail
+                  </Button>
+                </Stack>
+              </Grid>
+            </>
+          )}
         </Grid>
         {/* Datos adicionales (opcionales) */}
         <Grid container spacing={2} mt={0.1}>
@@ -644,28 +818,44 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               Generar dirección
             </Button>
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              size="small"
-              type="textarea"
-              rows="3"
-              label="Complemento dirección"
-              {...register('direccion_laboral_ref')}
-            />
-          </Grid>
+          {id_persona === 0 && (
+            <>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="textarea"
+                  rows="3"
+                  label="Complemento dirección"
+                  {...register('direccion_laboral_ref')}
+                />
+              </Grid>
+            </>
+          )}
         </Grid>
         {/* Autorización de notificación y tratamiento de datos */}
         <Grid container spacing={2} mt={0.1}>
-          <Grid item xs={12}>
-            <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
-          </Grid>
+          {id_persona === 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
+              </Grid>
+            </>
+          )}
+          {id_persona > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Title title="AUTORIZACIÓN DE NOTIFICACIONES" />
+              </Grid>
+            </>
+          )}
           <Grid item xs={12}>
             <FormControlLabel
               label="¿Autoriza notificaciones judiciales por correo electrónico?"
               control={
                 <Checkbox
                   size="small"
+                  disabled={id_persona > 0}
                   checked={acepta_notificacion_email}
                   {...register('acepta_notificacion_email')}
                 />
@@ -678,37 +868,73 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
               control={
                 <Checkbox
                   size="small"
+                  disabled={id_persona > 0}
                   checked={acepta_notificacion_sms}
                   {...register('acepta_notificacion_sms')}
                 />
               }
             />
           </Grid>
-          <Grid item xs={12}>
-            <FormControl
-              required
-              error={errors.acepta_tratamiento_datos?.type === 'required'}
-              component="fieldset"
-              variant="standard"
-            >
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    {...register('acepta_tratamiento_datos', {
-                      required: true,
-                    })}
-                    checked={acepta_tratamiento_datos}
+          {id_persona === 0 && (
+            <>
+              <Grid item xs={12}>
+                <FormControl
+                  required
+                  error={errors.acepta_tratamiento_datos?.type === 'required'}
+                  component="fieldset"
+                  variant="standard"
+                >
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        {...register('acepta_tratamiento_datos', {
+                          required: true,
+                        })}
+                        checked={acepta_tratamiento_datos}
+                      />
+                    }
+                    label="¿Autoriza tratamiento de datos? *"
                   />
-                }
-                label="¿Autoriza tratamiento de datos? *"
-              />
-              {errors.acepta_tratamiento_datos?.type === 'required' && (
-                <FormHelperText>
-                  Debe autorizar el tratamiento de datos
-                </FormHelperText>
-              )}
-            </FormControl>
-          </Grid>
+                  {errors.acepta_tratamiento_datos?.type === 'required' && (
+                    <FormHelperText>
+                      Debe autorizar el tratamiento de datos
+                    </FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+            </>
+          )}
+          {id_persona > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Stack
+                  justifyContent="flex-end"
+                  sx={{ m: '10px 0 20px 0' }}
+                  direction="row"
+                  spacing={2}
+                >
+                  <Button
+                    variant="outlined"
+                    startIcon={<RemoveRedEyeIcon />}
+                    onClick={() => {
+                      handle_open_dialog_autorizacion();
+                    }}
+                  >
+                    Historico Autorizaciones
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<UpdateIcon />}
+                    onClick={() => {
+                      handle_open_dialog_notificaciones();
+                    }}
+                  >
+                    Actualizar Notificaciones
+                  </Button>
+                </Stack>
+              </Grid>
+            </>
+          )}
         </Grid>
         {/* Datos de clasificación Cormacarena */}
         <Grid container spacing={2} mt={0.1}>
@@ -728,6 +954,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
                     isOptionEqualToValue={(option: any, value) =>
                       option?.value === value?.value
                     }
+                    value={clase_tercero_persona}
                     renderInput={(params) => (
                       <TextField
                         key={params.id}
@@ -744,28 +971,85 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
             )}
           </Grid>
           {/* BOTONES */}
-          <Grid item spacing={2} justifyContent="end" container>
-            <Grid item>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                fullWidth
-                color="success"
-                loading={is_saving}
-                disabled={is_saving}
-              >
-                Guardar
-              </LoadingButton>
-            </Grid>
-          </Grid>
+          {id_persona === 0 && (
+            <>
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <LoadingButton
+                    type="submit"
+                    variant="contained"
+                    fullWidth
+                    color="success"
+                    loading={is_saving}
+                    disabled={is_saving}
+                  >
+                    Guardar
+                  </LoadingButton>
+                </Grid>
+              </Grid>
+            </>
+          )}
         </Grid>
         {/* Datos de vinculación */}
+        {id_persona > 0 && (
+          <Grid container spacing={2} mt={0.1}>
+            <DatosVinculacion id_persona={id_persona} />
+            <Grid item spacing={2} justifyContent="end" container>
+              <Grid item>
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  color="success"
+                  loading={is_saving}
+                  disabled={is_saving}
+                >
+                  Actualizar
+                </LoadingButton>
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
       </form>
       <DialogGeneradorDeDirecciones
         open={is_modal_active}
         openDialog={open_modal}
         onChange={set_value_direction}
         type={type_direction}
+      />
+      <DialogHistorialDatosRestringidos
+        is_modal_active={is_modal_historico_datos_r}
+        set_is_modal_active={set_is_modal_historico_datos_r}
+        id_persona={id_persona ?? 0}
+      />
+      <DialogHistorialEmail
+        is_modal_active={is_modal_active_historico_email}
+        set_is_modal_active={set_is_modal_active_historico_email}
+        id_persona={id_persona ?? 0}
+        tipo_persona={tipo_persona ?? ''}
+      />
+
+      <DialogHistorialDirecciones
+        is_modal_active={is_modal_active_historico_direcciones}
+        set_is_modal_active={set_is_modal_active_historico_direcciones}
+        id_persona={id_persona ?? 0}
+        tipo_persona={tipo_persona ?? ''}
+      />
+      <DialogHistoricoAutorizaNotificaciones
+        is_modal_active={is_modal_historico_autorizacion}
+        set_is_modal_active={set_is_modal_historico_autorizacion}
+        id_persona={id_persona ?? 0}
+        tipo_persona={tipo_persona ?? ''}
+      />
+      <DialogAutorizaDatos
+        is_modal_active={dialog_notificaciones}
+        set_is_modal_active={set_dialog_notificaciones}
+        id_persona={id_persona ?? 0}
+        data_autorizacion={{
+          acepta_autorizacion_email: acepta_notificacion_email,
+          acepta_autorizacion_sms: acepta_notificacion_sms,
+        }}
+        on_result={respuesta_autorizacion}
       />
     </>
   );

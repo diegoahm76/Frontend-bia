@@ -80,6 +80,7 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
   };
   useEffect(() => {
     if (data !== undefined) {
+      console.log(data);
       set_value('tipo_persona', data.tipo_persona);
       set_nacionalidad_empresa(data.cod_pais_nacionalidad_empresa);
       // set_dpto_notifiacion(data.cod_departamento_notificacion);
