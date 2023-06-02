@@ -51,6 +51,9 @@ interface RegisterPersonHook {
   documento_representante: string;
   message_no_person: string;
   nombre_presentante: string;
+  set_nacionalidad_empresa: Dispatch<SetStateAction<string>>;
+  set_dpto_notifiacion: Dispatch<SetStateAction<string>>;
+  set_ciudad_notificacion: Dispatch<SetStateAction<string>>;
   handle_click_show_password: () => void;
   on_change: (e: SelectChangeEvent<string>) => void;
   set_value_direction: (value: string, type: string) => void;
@@ -299,10 +302,10 @@ export const use_register_persona_j = ({
   }, [watch('dpto_notifiacion')]);
 
   useEffect(() => {
-    if (watch('cod_municipio_notificacion_nal') !== undefined) {
-      set_ciudad_notificacion(watch('cod_municipio_notificacion_nal'));
+    if (watch('cod_departamento_notificacion') !== undefined) {
+      set_dpto_notifiacion(watch('cod_departamento_notificacion'));
     }
-  }, [watch('cod_municipio_notificacion_nal')]);
+  }, [watch('cod_departamento_notificacion')]);
 
   useEffect(() => {
     if (watch('cod_municipio_notificacion_nal') !== undefined) {
@@ -381,6 +384,9 @@ export const use_register_persona_j = ({
     message_no_person,
     is_search,
     nombre_presentante,
+    set_nacionalidad_empresa,
+    set_dpto_notifiacion,
+    set_ciudad_notificacion,
     validate_exits_representante,
     handle_click_show_password,
     set_value_direction,

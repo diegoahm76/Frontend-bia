@@ -38,7 +38,6 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
   getValues,
 }: PropsUpdateJ) => {
   const {
-    is_saving,
     paises_options,
     dpto_notifiacion_opt,
     ciudad_notificacion_opt,
@@ -48,6 +47,8 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
     is_modal_active,
     nacionalidad_empresa,
     ciudad_notificacion,
+    set_nacionalidad_empresa,
+    // set_dpto_notifiacion,
     set_value_direction,
     on_change,
     open_modal,
@@ -60,10 +61,13 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
 
   // watchers
   const tipo_persona = watch('tipo_persona') ?? '';
+  const direccion_notificacion_referencia = watch('direccion_notificacion_referencia') ?? '';
   const acepta_notificacion_email =
     watch('acepta_notificacion_email') ?? data?.acepta_notificacion_email ?? false;
   const acepta_notificacion_sms =
     watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms ?? false;
+
+  const [is_saving, set_is_saving] = useState<boolean>(false);
 
   // abrir modal actualizar Notificaciones
   const handle_open_dialog_notificaciones = (): void => {
@@ -76,18 +80,19 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
   };
   useEffect(() => {
     if (data !== undefined) {
-      console.log(data);
       set_value('tipo_persona', data.tipo_persona);
-      set_value('nacionalidad_empresa', data.cod_pais_nacionalidad_empresa);
-      set_value('dpto_notifiacion', data.cod_departamento_notificacion);
-      set_value('ciudad_notificacion', data.cod_municipio_notificacion_nal);
+      set_nacionalidad_empresa(data.cod_pais_nacionalidad_empresa);
+      // set_dpto_notifiacion(data.cod_departamento_notificacion);
+      set_value('cod_departamento_notificacion', data.cod_departamento_notificacion);
+      set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
       set_value('direccion_notificaciones', data.direccion_notificaciones);
-      set_value('complemento_direccion', data.direccion_notificacion_referencia)
+      set_value('direccion_notificacion_referencia', data.direccion_notificacion_referencia)
     }
   }, [data]);
 
   const on_submit_update_juridical = handle_submit(async (datos) => {
     try {
+      set_is_saving(true);
       datos.ubicacion_georeferenciada = '';
       datos.representante_legal = data?.representante_legal;
       datos.fecha_inicio_cargo_rep_legal = '2023-05-31'
@@ -95,10 +100,12 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
         datos as DataJuridicaUpdate
       );
       control_success('la persona se actualizó correctamente');
+      set_is_saving(false);
     } catch (error) {
       control_error(
         'Ha ocurrido un error al actualizar la persona, por favor intente nuevamente'
       );
+      set_is_saving(false);
     }
   });
 
@@ -205,10 +212,11 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
+
               <CustomSelect
                 onChange={on_change}
                 label="Departamento *"
-                name="dpto_notifiacion"
+                name="cod_departamento_notificacion"
                 value={dpto_notifiacion}
                 options={dpto_notifiacion_opt}
                 required={true}
@@ -217,17 +225,17 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-              <CustomSelect
-                onChange={on_change}
-                label="Ciudad *"
-                name="cod_municipio_notificacion_nal"
-                value={ciudad_notificacion}
-                options={ciudad_notificacion_opt}
-                disabled={dpto_notifiacion === '' ?? true}
-                required={true}
-                errors={errors}
-                register={register}
-              />
+                  <CustomSelect
+                    onChange={on_change}
+                    label="Ciudad *"
+                    name="cod_municipio_notificacion_nal"
+                    value={ciudad_notificacion}
+                    options={ciudad_notificacion_opt}
+                    disabled={dpto_notifiacion === '' ?? true}
+                    required={true}
+                    errors={errors}
+                    register={register}
+                  />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
@@ -265,8 +273,8 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
                 type="textarea"
                 rows="3"
                 label="Complemento dirección"
-                defaultValue={data.direccion_notificacion_referencia}
-                {...register('complemento_direccion')}
+                defaultValue={direccion_notificacion_referencia}
+                {...register('direccion_notificacion_referencia')}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -410,7 +418,7 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
                   loading={is_saving}
                   disabled={is_saving}
                 >
-                  Guardar
+                  Actualizar
                 </LoadingButton>
               </Grid>
             </Grid>
