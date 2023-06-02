@@ -21,7 +21,13 @@ export const get_filtro_cartera_detallada = async (filtro: Filtro): Promise<any>
 
 // Ver Reporte General por Edades
 export const get_cartera_edades = async (): Promise<any> => {
-  const data = await api.get(`recaudo/reportes/reporte-cartera-edades/?rango_edad=mayor a 361 días`)
+  const data = await api.get(`recaudo/reportes/reporte-cartera-edades/`)
+  return data.data
+}
+
+// Filtrar Reporte General por Edades
+export const get_filtro_cartera_edades = async (filtro: Filtro): Promise<any> => {
+  const data = await api.get(`recaudo/reportes/reporte-cartera-edades/?${filtro.parametro}=${filtro.valor}`)
   return data.data
 }
 

@@ -8,6 +8,10 @@ interface FiltroFacilidad {
   tipo: string;
 }
 
+interface FiltroEdad {
+  valor: string;
+}
+
 const initial_state = {
   reportes_recaudo: [],
 };
@@ -42,6 +46,18 @@ export const get_filtro_facilidad_detallada = createAsyncThunk('reportes_recaudo
   return data.data
 })
 
+// Ver Reporte General por Edades
+export const get_cartera_edades = createAsyncThunk('reportes_recaudo/cartera_edades', async () => {
+  const { data } = await api.get('recaudo/reportes/reporte-cartera-edades/')
+  return data.data
+})
+
+// Filtrar Reporte General por Edades
+export const get_filtro_cartera_edades = createAsyncThunk('reportes_recaudo/filtro_cartera_edades', async (filtro: FiltroEdad) => {
+  const { data } = await api.get(`recaudo/reportes/reporte-cartera-edades/?rango_edad=${filtro.valor}`)
+  return data.data
+})
+
 export const reportes_recaudo_slice = createSlice({
   name: 'reportes_recaudo',
   initialState: initial_state,
@@ -64,6 +80,12 @@ export const reportes_recaudo_slice = createSlice({
       state.reportes_recaudo = action.payload;
     });
     builder.addCase(get_filtro_facilidad_detallada.fulfilled, (state, action) => {
+      state.reportes_recaudo = action.payload;
+    });
+    builder.addCase(get_cartera_edades.fulfilled, (state, action) => {
+      state.reportes_recaudo = action.payload;
+    });
+    builder.addCase(get_filtro_cartera_edades.fulfilled, (state, action) => {
       state.reportes_recaudo = action.payload;
     });
   },
