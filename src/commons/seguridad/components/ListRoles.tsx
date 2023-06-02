@@ -15,16 +15,29 @@ import {
   Button,
   Typography,
   Alert,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  Paper,
+  TableBody,
 } from '@mui/material';
 // Icons de Material UI
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutline';
+import DetailIcon from '@mui/icons-material/Visibility';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { control_error, control_success } from '../../../helpers';
 import type { AxiosError } from 'axios';
 import type { ResponseServer } from '../../../interfaces/globalModels';
-import type { Rol } from '../interfaces';
-import { delete_request, roles_request } from '../request/seguridadRequest';
+import type { Rol, UsersRol } from '../interfaces';
+import {
+  delete_request,
+  get_users_rol,
+  roles_request,
+} from '../request/seguridadRequest';
+import { Title } from '../../../components/Title';
 interface IProps {
   on_edit: (tab: string, rol: Rol) => void;
 }
@@ -33,14 +46,17 @@ interface IProps {
 export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
   const [roles, set_roles] = useState<Rol[]>([]);
   const [is_loading, set_is_loading] = useState(false);
+  const [is_loading_detail, set_is_loading_detail] = useState(false);
   const [message_error, set_message_error] = useState('');
   const [open, set_open] = useState(false);
+  const [open_detail, set_open_detail] = useState(false);
   const [rol, set_rol] = useState<Rol>({
     id_rol: 0,
     nombre_rol: '',
     descripcion_rol: '',
     Rol_sistema: false,
   });
+  const [rows, set_rows] = useState<UsersRol[]>([]);
 
   const columns: GridColDef[] = [
     {
@@ -73,6 +89,7 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
     {
       headerName: 'Acciones',
       field: 'accion',
+      minWidth: 150,
       renderCell: (params: any) => (
         <>
           <IconButton
@@ -113,6 +130,25 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
               />
             </Avatar>
           </IconButton>
+          <IconButton
+            onClick={() => {
+              void view_detail(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <DetailIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
         </>
       ),
     },
@@ -126,6 +162,7 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
       Rol_sistema: false,
     });
     set_open(false);
+    set_open_detail(false);
   };
 
   const get_data = async (): Promise<void> => {
@@ -143,6 +180,22 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
   const confirm_delete_rol = async (rol: Rol): Promise<void> => {
     set_rol(rol);
     set_open(true);
+  };
+
+  const view_detail = async (rol: Rol): Promise<void> => {
+    set_is_loading_detail(true);
+    set_open_detail(true);
+    try {
+      set_rol(rol);
+      const {
+        data: { data },
+      } = await get_users_rol(rol.id_rol);
+      set_rows(data);
+    } catch (error) {
+      control_error(error);
+    } finally {
+      set_is_loading_detail(false);
+    }
   };
 
   const delete_rol = async (): Promise<void> => {
@@ -226,6 +279,82 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
                   disabled={message_error !== ''}
                 >
                   Eliminar
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <Dialog
+              open={open_detail}
+              onClose={handle_close}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              fullWidth
+              maxWidth={'md'}
+            >
+              <DialogTitle id="alert-dialog-title" textAlign="center">
+                {rol.nombre_rol}
+              </DialogTitle>
+              <DialogContent>
+                {is_loading_detail ? (
+                  <>
+                    <Grid container justifyContent="center">
+                      <CircularProgress />
+                    </Grid>
+                    <Typography textAlign="center">
+                      Cargando, por favor espere...
+                    </Typography>
+                  </>
+                ) : (
+                  <>
+                    <DialogContentText>
+                      <Typography variant="body1" mb={2}>
+                        <Title title= "Usuarios asignados al rol"></Title>
+                      </Typography>
+                    </DialogContentText>
+                    <TableContainer component={Paper}>
+                      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell align="center">Usuario</TableCell>
+                            <TableCell align="center">
+                              Nombres y apellidos
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {rows.map((row) => (
+                            <TableRow
+                              key={row.id_persona}
+                              sx={{
+                                '&:last-child td, &:last-child th': {
+                                  border: 0,
+                                },
+                              }}
+                            >
+                              <TableCell
+                                align="center"
+                                component="th"
+                                scope="row"
+                              >
+                                {row.nombre_usuario}
+                              </TableCell>
+                              <TableCell align="center">
+                                {row.nombre_persona}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </>
+                )}
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handle_close}
+                  variant="outlined"
+                  color="success"
+                >
+                  Cerrar
                 </Button>
               </DialogActions>
             </Dialog>

@@ -10,6 +10,7 @@ import { GestionCarteraScreen } from '../screens/GestionCarteraScreen';
 import { LiquidacionScreen } from '../screens/LiquidacionScreen';
 // import { LiquidacionScreen } from '../screens/LiquidacionScreen';
 import { FacilidadPagoRoutes } from '../facilidadPago/routes/FacilidadPagoRoutes';
+import { ReportesRoutes } from '../reportes/routes/ReportesRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecaudoRoutes: React.FC = () => {
@@ -25,6 +26,7 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="liquidacion/*" element={<LiquidacionScreen />} />
       <Route path="/*" element={<Page404 />} />
       <Route path="facilidades_pago/*" element={<FacilidadPagoRoutes />} />
+      <Route path="reportes/*" element={<ReportesRoutes />} />
     </Routes>
   );
 };
