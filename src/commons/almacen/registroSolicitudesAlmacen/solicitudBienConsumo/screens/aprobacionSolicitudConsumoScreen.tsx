@@ -55,13 +55,13 @@ const AprobacionSolicitudConsumoScreen = () => {
         dispatch(set_current_solicitud({ ...current_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional }))
     }, [persona_solicita]);
 
-    const on_submit = (data: IObjSolicitud): void => {
+    const on_submit_aprobacion = (data: IObjSolicitud): void => {
 
         const form_data = {
 
             estado_aprobacion_responsable: data.estado_aprobacion_responsable,
             justificacion_rechazo_responsable: data.justificacion_rechazo_responsable,
-            fecha_aprobacion_responsable: data.fecha_aprobacion_responsable
+            fecha_aprobacion_responsable: new Date().toString(),
         }
 
         void dispatch(aprobacion_solicitud_pendiente(form_data, data.id_solicitud_consumibles))
@@ -105,7 +105,7 @@ const AprobacionSolicitudConsumoScreen = () => {
 
                     <FormButton
                         variant_button="outlined"
-                        on_click_function={handle_submit(on_submit)}
+                        on_click_function={handle_submit(on_submit_aprobacion)}
                         icon_class={<SaveIcon />}
                         label={action}
                         type_button="button"

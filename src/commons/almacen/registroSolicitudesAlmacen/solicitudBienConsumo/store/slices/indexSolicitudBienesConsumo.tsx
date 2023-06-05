@@ -16,9 +16,9 @@ const initial_state_current_solicitud: IObjSolicitud = {
     solicitud_anulada_solicitante: false,
     justificacion_anulacion_solicitante: "",
     estado_aprobacion_responsable: "",
-    fecha_aprobacion_responsable: (new Date().toString()),
+    fecha_aprobacion_responsable: null,
     justificacion_rechazo_responsable: "",
-    fecha_rechazo_almacen: (new Date().toString()),
+    fecha_rechazo_almacen: null,
     justificacion_rechazo_almacen: "",
     rechazada_almacen: false,
 
@@ -35,9 +35,9 @@ const initial_state_current_solicitud_vivero: IObjSolicitudVivero = {
     solicitud_anulada_solicitante: false,
     justificacion_anulacion_solicitante: "",
     estado_aprobacion_responsable: "",
-    fecha_aprobacion_responsable: (new Date().toString()),
+    fecha_aprobacion_responsable: null,
     justificacion_rechazo_responsable: "",
-    fecha_rechazo_almacen: (new Date().toString()),
+    fecha_rechazo_almacen: null,
     justificacion_rechazo_almacen: "",
     rechazada_almacen: false,
 
@@ -65,18 +65,9 @@ const initial_state_current_funcionario: IObjFuncionario = {
     nombre_unidad_organizacional_actual: "",
     id_unidad_para_la_que_solicita: null
 }
-const initial_state_aprobacion_solicitud = {
-    estado_aprobacion_responsable: "",
-    justificacion_rechazo_responsable: "",
-    fecha_aprobacion: (new Date().toString()),
 
-}
 
-const initial_state_anulacion_solicitud = {
-    solicitud_anulada_solicitante: false,
-    justificacion_anulacion_solicitante: "",
-    fecha_anulacion: (new Date().toString()),
-}
+
 const initial_state_persona_solicita = {
     id_persona: null,
     nombre: "",
@@ -95,8 +86,6 @@ const initial_state: ISolicitudConsumo | any = {
     current_funcionario: initial_state_current_funcionario,
     persona_solicita: initial_state_persona_solicita,
     unidad_organizacional: [],
-    aprobacion_solicitud: initial_state_aprobacion_solicitud,
-    anulacion_solicitud: initial_state_anulacion_solicitud,
     nro_solicitud: null,
     nro_solicitud_vivero: null,
     unidades_medida: [],
@@ -135,7 +124,7 @@ export const solicitud_consumo_slice = createSlice({
             state: ISolicitudConsumo,
             action: PayloadAction<IObjSolicitudVivero>
         ) => {
-            state.current_solicitud = action.payload;
+            state.current_solicitud_vivero = action.payload;
         },
 
         set_bienes_solicitud: (
