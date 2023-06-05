@@ -55,7 +55,10 @@ const SearchCcdModal = ({
 
   // useEffect para cargar los datos de la tabla
   useEffect(() => {
-    void dispatch(get_classification_ccds_service());
+    void dispatch(get_classification_ccds_service(
+      '5f9c7a3a-5b0a-4b0a-8b0a-5f9c7a3a5b0a',
+      '5f9c7a3a-5b0a-4b0a-8b0a-5f9c7a3a5b0a',
+    ));
   }, []);
 
   const columns_ccds: GridColDef[] = [

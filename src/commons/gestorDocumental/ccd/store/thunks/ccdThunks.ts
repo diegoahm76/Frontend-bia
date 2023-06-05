@@ -63,13 +63,16 @@ export const get_finished_ccd_service = ():any => {
   };
 };
 // Obtener Cuadro de Clasificación Documental
-export const get_classification_ccds_service: any = () => {
+export const get_classification_ccds_service: any = (name: string, version: string) => {
+  //! se debe
   console.log('get_classification_ccds_service');
   return async (
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
-      const { data } = await api.get('gestor/ccd/get-list');
+      const { data } = await api.get(
+        `gestor/ccd/get-ccd/?nombre=${name}&version=${version}`
+      );
       console.log(data.data);
       dispatch(get_ccds(data.data));
       return data;

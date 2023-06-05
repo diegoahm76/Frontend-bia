@@ -12,9 +12,9 @@ import {
 } from '@mui/material';
 import { type TransitionProps } from '@mui/material/transitions';
 import CloseIcon from '@mui/icons-material/Close';
-import { useAppSelector } from '../../../../hooks';
-import { Subtitle } from '../../../../components/Subtitle';
-import OrganigramVisual from './OrganigramVisual';
+import { useAppSelector } from '../../../../../hooks';
+import { Subtitle } from '../../../../../components/Subtitle';
+import OrganigramVisual from '../OrganigramaVisual/OrganigramVisual';
 
 interface IProps {
   is_modal_active: boolean;

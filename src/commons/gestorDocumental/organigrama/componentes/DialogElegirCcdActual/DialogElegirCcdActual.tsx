@@ -17,16 +17,16 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import { Title } from '../../../../components/Title';
-import { useAppDispatch } from '../../../../hooks';
+import { Title } from '../../../../../components/Title';
+import { useAppDispatch } from '../../../../../hooks';
 import {
   cambio_ccd_actual,
   get_ccds_posibles,
-} from '../../ccd/store/thunks/ccdThunks';
-import { type IList } from '../../../../interfaces/globalModels';
-import { CustomSelect } from '../../../../components';
-import { control_error } from '../../../../helpers';
-import { ccds_choise_adapter } from '../adapters/organigrama_adapters';
+} from '../../../ccd/store/thunks/ccdThunks';
+import { type IList } from '../../../../../interfaces/globalModels';
+import { CustomSelect } from '../../../../../components';
+import { control_error } from '../../../../../helpers';
+import { ccds_choise_adapter } from '../../adapters/organigrama_adapters';
 import dayjs from 'dayjs';
 
 interface CCD {

@@ -277,8 +277,8 @@ export const CcdScreen: React.FC = () => {
                     >
                       CREAR
                     </Button>
-                    <Button disabled>CLONAR</Button>
-                    <Button disabled>PREVISUALIZAR</Button>
+{/*                    <Button disabled>CLONAR</Button>
+                    <Button disabled>PREVISUALIZAR</Button> */}
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} sm={2}>
@@ -313,8 +313,8 @@ export const CcdScreen: React.FC = () => {
                     >
                       CREAR
                     </Button>
-                    <Button disabled>CLONAR</Button>
-                    <Button disabled>PREVISUALIZAR</Button>
+                    {/* <Button disabled>CLONAR</Button>
+                    <Button disabled>PREVISUALIZAR</Button> */}
                   </ButtonGroup>
                 </Grid>
               </Grid>
