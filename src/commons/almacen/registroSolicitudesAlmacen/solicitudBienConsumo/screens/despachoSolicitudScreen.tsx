@@ -73,7 +73,7 @@ const DespachoBienesConsumoScreen = () => {
 
             rechazada_almacen: true,
             justificacion_rechazo_almacen: data.justificacion_rechazo_almacen,
-            fecha_rechazo_almacen: data.fecha_rechazo_almacen
+            fecha_rechazo_almacen: new Date().toString(),
         }
 
         // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
