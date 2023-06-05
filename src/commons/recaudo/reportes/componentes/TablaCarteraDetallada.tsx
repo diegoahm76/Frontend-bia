@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, FileDownloadOutlined } from '@mui/icons-material';
@@ -9,6 +10,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_filtro_cartera_detallada, get_cartera_detallada } from '../slices/ReportesSlice';
 import { faker } from '@faker-js/faker';
+import JsPDF from 'jspdf';
 
 interface RootState {
   reportes_recaudo: {
@@ -34,6 +36,49 @@ export const TablaCarteraDetallada: React.FC = () => {
       }
     }
   }, [visible_rows])
+
+  const handle_export_excel = async (): Promise<void> => {
+    try {
+      const xlsx = await import('xlsx');
+      const worksheet = xlsx.utils.json_to_sheet(visible_rows);
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excel_buffer = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array'
+      });
+      save_as_excel_file(excel_buffer, 'Reporte General de Cartera con Detalle');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const save_as_excel_file = (buffer: Buffer, fileName: string): void => {
+    import('file-saver')
+      .then((module) => {
+        const save_as_fn = module.default.saveAs;
+        const excel_type =
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const excel_extension = '.xlsx';
+        const data = new Blob([buffer], {
+          type: excel_type
+        });
+        save_as_fn(data, fileName + excel_extension);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const handle_export_pdf = () => {
+    const report = new JsPDF('portrait','pt','a4');
+    report.html(document.querySelector('#report') as HTMLElement)
+      .then(() => {
+        report.save('Reporte General de Cartera con Detalle.pdf');
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   const columns: GridColDef[] = [
     {
@@ -195,8 +240,7 @@ export const TablaCarteraDetallada: React.FC = () => {
             color='primary'
             variant='outlined'
             startIcon={<FileDownloadOutlined />}
-            onClick={() => {
-            }}
+            onClick={handle_export_excel}
           >
             Exportar Excel
           </Button>
@@ -204,13 +248,13 @@ export const TablaCarteraDetallada: React.FC = () => {
             color='primary'
             variant='outlined'
             startIcon={<FileDownloadOutlined />}
-            onClick={() => {
-            }}
+            onClick={handle_export_pdf}
           >
             Exportar PDF
           </Button>
         </Stack>
       </Stack>
+      <div id='report'>
       {
         visible_rows.length !== 0 ? (
           <Grid
@@ -257,6 +301,7 @@ export const TablaCarteraDetallada: React.FC = () => {
           </Grid>
         ) : null
       }
+      </div>
     </Box>
   );
 }

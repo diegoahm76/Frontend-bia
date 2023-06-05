@@ -5,7 +5,7 @@ import ReactApexChart from 'react-apexcharts';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GraficaCarteraGeneral: React.FC = () => {
   const [arr_label, set_arr_label] = useState(Array<string>);
-  const [arr_data, set_arr_data] = useState(Array<number>)
+  const [arr_data, set_arr_data] = useState(Array<number>);
 
   const visible_rows = [
     {
