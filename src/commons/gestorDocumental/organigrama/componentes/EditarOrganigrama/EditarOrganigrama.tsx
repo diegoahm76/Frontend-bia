@@ -39,8 +39,6 @@ export const EditarOrganigrama = ({
   set_position_tab_organigrama,
 }: IProps): JSX.Element => {
   const dispatch = useAppDispatch();
-
-  // Estado global
   const [view_organigram, set_view_organigram] = useState(false);
   const {
     organigram_current,
@@ -49,20 +47,16 @@ export const EditarOrganigrama = ({
     mold_organigram,
   } = useAppSelector((state) => state.organigram);
 
-  // Hooks
   const {
     control_organigrama,
     handle_submit_organigrama,
     onsubmit_edit_organigrama,
-    // default_col_def_organigrama,
-    // errors_organigrama,
     columns_nivel,
     orden_nivel,
     title_nivel,
     control_nivel,
     handle_submit_nivel,
     submit_nivel,
-    // errors_nivel,
     title_unidades,
     columns_unidades,
     option_nivel,
@@ -74,8 +68,6 @@ export const EditarOrganigrama = ({
     submit_unidades,
     handle_submit_unidades,
     set_value_unidades,
-    // errors_unidades,
-    // onGridReady,
   } = useEditarOrganigrama();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
