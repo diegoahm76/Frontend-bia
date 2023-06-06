@@ -3,6 +3,10 @@ export const HeaderGov = (): JSX.Element => {
   return (
     <>
       <nav
+
+        style={{
+          zIndex: 1000,
+        }}
         className="navbar navbar-expand-lg barra-superior-govco"
         aria-label="Barra superior"
       >

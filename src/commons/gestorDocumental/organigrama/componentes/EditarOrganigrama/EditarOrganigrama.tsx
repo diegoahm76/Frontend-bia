@@ -20,15 +20,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Title } from '../../../../components';
-import { OrganigramVisualizerDialog } from './OrganigramVisualizerDialog';
-import { type ILevelUnity } from '../interfaces/organigrama';
-import useEditarOrganigrama from '../hooks/useEditarOrganigrama';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { Title } from '../../../../../components';
+import { OrganigramVisualizerDialog } from '../OrganigramVisualizerDialog/OrganigramVisualizerDialog';
+import { type ILevelUnity } from '../../interfaces/organigrama';
+import useEditarOrganigrama from '../../hooks/useEditarOrganigrama';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import {
   to_finalize_organigram_service,
   to_resume_organigram_service,
-} from '../store/thunks/organigramThunks';
+} from '../../store/thunks/organigramThunks';
 
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;

@@ -23,19 +23,19 @@ import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
-import { CustomSelect } from '../../../../components';
-import DialogBusquedaAvanzadaUserOrganigrama from './DialogBusquedaAvanzadaUserOrganigrama';
-import { useAppSelector } from '../../../../hooks';
-import { get_tipo_documento } from '../../../../request';
-import { control_error } from '../../../../helpers';
-import { type IList } from '../../../../interfaces/globalModels';
-import { type UserDelegacionOrganigrama } from '../interfaces/organigrama';
+import { CustomSelect } from '../../../../../components';
+import DialogBusquedaAvanzadaUserOrganigrama from '../DialogBusquedaAvanzadaUserOrganigrama/DialogBusquedaAvanzadaUserOrganigrama';
+import { useAppSelector } from '../../../../../hooks';
+import { get_tipo_documento } from '../../../../../request';
+import { control_error } from '../../../../../helpers';
+import { type IList } from '../../../../../interfaces/globalModels';
+import { type UserDelegacionOrganigrama } from '../../interfaces/organigrama';
 
 import {
   delegar_organigrama_persona,
   get_nuevo_user_organigrama,
   get_organigrams_service,
-} from '../store/thunks/organigramThunks';
+} from '../../store/thunks/organigramThunks';
 
 interface IProps {
   is_modal_active: boolean;

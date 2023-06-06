@@ -18,21 +18,21 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import { Title } from '../../../../components/Title';
-import { useAppDispatch } from '../../../../hooks';
-import { get_ccds_posibles } from '../../ccd/store/thunks/ccdThunks';
-import { type IList } from '../../../../interfaces/globalModels';
-import { CustomSelect } from '../../../../components';
-import { control_error } from '../../../../helpers';
+import { Title } from '../../../../../components/Title';
+import { useAppDispatch } from '../../../../../hooks';
+import { get_ccds_posibles } from '../../../ccd/store/thunks/ccdThunks';
+import { type IList } from '../../../../../interfaces/globalModels';
+import { CustomSelect } from '../../../../../components';
+import { control_error } from '../../../../../helpers';
 import {
   cambio_organigrama_actual,
   get_organigramas_posibles,
   get_organigrama_actual,
-} from '../store/thunks/organigramThunks';
+} from '../../store/thunks/organigramThunks';
 import {
   organigramas_choise_adapter,
   ccds_choise_adapter,
-} from '../adapters/organigrama_adapters';
+} from '../../adapters/organigrama_adapters';
 import dayjs from 'dayjs';
 
 interface OrgActual {
