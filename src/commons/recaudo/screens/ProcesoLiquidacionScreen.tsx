@@ -5,7 +5,7 @@ import { GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiq
 import { Title } from "../../../components"
 import axios from 'axios';
 import type { FormDetalleLiquidacion, FormLiquidacion, Liquidacion, OpcionLiquidacion } from '../interfaces/liquidacion';
-import { TablaGeneral } from '../../../components/TablaGeneral/TablaGeneral';
+import { DataGrid, type GridColDef, GridToolbar } from '@mui/x-data-grid';
 
 interface Row {
   id: number;
@@ -16,36 +16,42 @@ interface Row {
   periodo: string;
 }
 
-const columns = [
+const columns: GridColDef[] = [
   {
     field: 'id',
-    header: 'ID Liquidación',
-    visible: true,
+    headerName: 'ID Liquidación',
+    minWidth: 110,
+    flex: 1,
   },
   {
     field: 'deudor',
-    header: 'Deudor',
-    visible: true,
+    headerName: 'Deudor',
+    minWidth: 150,
+    flex: 1,
   },
   {
     field: 'identificacion',
-    header: 'Identificación',
-    visible: true,
+    headerName: 'Identificación',
+    minWidth: 110,
+    flex: 1,
   },
   {
     field: 'monto_inicial',
-    header: 'Monto Inicial',
-    visible: true,
+    headerName: 'Monto Inicial',
+    minWidth: 110,
+    flex: 1,
   },
   {
     field: 'fecha_liquidacion',
-    header: 'Fecha Liquidación',
-    visible: true,
+    headerName: 'Fecha Liquidación',
+    minWidth: 160,
+    flex: 1,
   },
   {
     field: 'periodo',
-    header: 'Periodo',
-    visible: true,
+    headerName: 'Periodo',
+    minWidth: 100,
+    flex: 1,
   }
 ];
 
@@ -177,13 +183,16 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
               <TabPanel value="1" sx={{ p: '20px 0' }}>
                 {/* DATAGRID LIQUIDACION */}
-                <TablaGeneral
-                  showButtonExport
+                <DataGrid
+                  density='compact'
+                  autoHeight
+                  rows={rows}
                   columns={columns}
-                  rowsData={rows}
-                  tittle='Liquidaciones'
-                  staticscroll
-                  stylescroll='780px'
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) => row.id}
+                  components={{ Toolbar: GridToolbar }}
                 />
               </TabPanel>
 
