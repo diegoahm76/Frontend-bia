@@ -116,7 +116,7 @@ export const crear_confi_alerta = async (configuracion: CrearAlerta): Promise<an
     });
 };
 
-// eliminar persona
+// eliminar estacion
 export const eliminar_estacion = async (idEstacion: number): Promise<any> => {
   return await api.delete(`estaciones/eliminar-estaciones/${idEstacion}`);
 };
