@@ -54,19 +54,20 @@ export const get_num_solicitud = (): any => {
             return error as AxiosError;
         }
     };
-};
+}
 
 
 // obtener numero de solicitud PARA  VIVERO
 export const get_num_solicitud_vivero = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get('almacen/solicitudes-vivero/get-nro-documento-solicitudes-bienes-consumo-vivero/true/');
+            const { data } = await api.get('almacen/solicitudes-vivero/get-nro-documento-solicitudes-bienes-consumo-vivero');
 
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            if (data.success) {
-                dispatch(set_numero_solicitud_vivero(data["Número de solicitud"]))
+            if (data) {
+                dispatch(set_numero_solicitud_vivero(data.detail))
             }
+            console.log(data)
             return data;
         } catch (error: any) {
             return error as AxiosError;
@@ -105,7 +106,7 @@ export const crear_solicitud_bien_consumo: any = (
 }
 
 // crear SOLICITUD PARA VIVERO
-export const crear_solicitud_bien_consumo_viero: any = (
+export const crear_solicitud_bien_consumo_vivero: any = (
     solicitud: any,
 
 ) => {
@@ -132,39 +133,6 @@ export const crear_solicitud_bien_consumo_viero: any = (
         };
     }
 }
-
-// crear consumo VIVERO
-export const crear_solicitud_bien_consumo_vivero: any = (
-    solicitud_vivero: any,
-
-) => {
-    return async (dispatch: Dispatch<any>) => {
-        try {
-            console.log(solicitud_vivero)
-            const { data } = await api.put('almacen/solicitudes-vivero/crear-solicitud/', solicitud_vivero);
-            //  dispatch(get_solicitud_consumo_id());
-            console.log(data)
-            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-            if (data.success) {
-                control_success(data.detail)
-            } else {
-                control_error(data.detail)
-            }
-            // control_success(' se agrego correctamente');
-            return data;
-        } catch (error: any) {
-            console.log(error);
-            control_error(error.response.data.detail);
-
-            return error as AxiosError;
-
-        };
-    }
-}
-
-
-
-
 
 
 // obtener niveles organizacioneles
@@ -229,6 +197,34 @@ export const get_bienes_consumo = (id: string | null, nombre: string | null): an
     };
 };
 
+// BUSCAR BIENES DE CONSUMO VIVERO
+
+export const get_bienes_vivero_consumo = (id: string | null, nombre: string | null, nombre_cientifico: string | null, cod_tipo_elemento_vivero: string | null): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+
+            const { data } = await api.get(`almacen/solicitudes/filtro-bienes-solicitable-vivero/?codigo_bien=${id ?? ""}&nombre_cientifico=${nombre_cientifico ?? ""}&nombre=${nombre ?? ""}&cod_tipo_elemento_vivero=${cod_tipo_elemento_vivero ?? ""}`);
+            console.log(data)
+            if ('detail' in data) {
+                dispatch(set_bienes(data.detail));
+
+                if (data.detail.length > 0) {
+                    control_success("Se encontrarón bienes")
+                } else {
+                    control_error("No se encontrarón bienes")
+                }
+            } else {
+                control_error("No se encontrarón bienes")
+            }
+            return data;
+        } catch (error: any) {
+            console.log('data');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
 // obtener bienes de consumo 
 
 export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
@@ -257,6 +253,36 @@ export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
         }
     };
 };
+
+// OBTENER BIENES PARA VIVERO 
+
+export const get_bienes_consumo_vivero_codigo_bien = (codigo: string | null): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+
+            const { data } = await api.get(`almacen/solicitudes/get-bien-solicitable-vivero/?codigo_bien=${codigo ?? ""}`);
+            console.log(data)
+            if ('detail' in data) {
+                dispatch(set_current_bien(data.detail[0]))
+                if (data.detail.length > 0) {
+                    control_success("Se encontró bien")
+                } else {
+                    control_error("No se encontrón bien")
+                }
+            } else {
+                control_error("No se encontrón bien")
+
+            }
+
+            return data;
+        } catch (error: any) {
+            console.log('data');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
 
 
 
