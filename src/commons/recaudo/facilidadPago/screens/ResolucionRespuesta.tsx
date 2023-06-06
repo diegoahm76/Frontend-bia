@@ -7,6 +7,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useState } from 'react';
+// import { Placeholder } from '../componentes/EditorTexto/placeholder/placeholder';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResolucionRespuesta: React.FC = () => {

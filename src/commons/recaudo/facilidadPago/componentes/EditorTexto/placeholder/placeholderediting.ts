@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* import { Plugin } from '@ckeditor/ckeditor5-core';
+import { Plugin } from '@ckeditor/ckeditor5-core';
 import {
     Widget,
     toWidget,
@@ -55,7 +55,7 @@ export class PlaceholderEditing extends Plugin {
             },
             model: ( viewElement, { writer: modelWriter } ) => {
                 // Extract the "name" from "{name}".
-                const name = viewElement.getChild( 0 ).data.slice( 1, -1 ); // ERROR EN VIEWELEMENT
+                const name = (viewElement.getChild( 0 ) as any)?.data.slice( 1, -1 ); // ERROR EN VIEWELEMENT
 
                 return modelWriter.createElement( 'placeholder', { name } );
             }
@@ -93,4 +93,3 @@ export class PlaceholderEditing extends Plugin {
         }
     }
 }
-*/

@@ -11,6 +11,7 @@ import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_filtro_cartera_detallada, get_cartera_detallada } from '../slices/ReportesSlice';
 import { faker } from '@faker-js/faker';
 import JsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface RootState {
   reportes_recaudo: {
@@ -70,6 +71,22 @@ export const TablaCarteraDetallada: React.FC = () => {
   };
 
   const handle_export_pdf = () => {
+    const report = new JsPDF('l','pt','letter');
+    report.text("Reporte General de Cartera con Detalle", 40, 30);
+    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
+    autoTable(report, {
+      theme: 'grid',
+      head: [['Código Contable', 'Concepto Deuda', 'Nombre Deudor', 'NIT', 'Expediente', 'Resolución', '#Factura', 'Total']],
+      body: [
+        ['25', 'Con ejemplo', 'Diana Quinche', '919832301', '183492', 'RES_PEND', 'FACT_PEND', '3990232.00'],
+        ['2', 'Con ejemplo 2', 'Yeison Piñeros', '129230e23', '3.11.248', 'RES_PEND', 'FACT_PEND', '70854423.05'],
+      ],
+      foot:[['Total General', '', '', '', '', '', '', `${total}`]],
+    })
+    report.save('Reporte General de Cartera con Detalle.pdf');
+  }
+
+  /* const handle_export_pdf = () => {
     const report = new JsPDF('portrait','pt','a4');
     report.html(document.querySelector('#report') as HTMLElement)
       .then(() => {
@@ -78,7 +95,7 @@ export const TablaCarteraDetallada: React.FC = () => {
       .catch((error) => {
         console.error(error);
       });
-  }
+  } */
 
   const columns: GridColDef[] = [
     {

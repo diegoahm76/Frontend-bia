@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/* import { Command } from '@ckeditor/ckeditor5-core';
+import { Command } from '@ckeditor/ckeditor5-core';
 
 export class PlaceholderCommand extends Command {
-    execute( { value } ) {  // ERROR EN VALUE
+    execute( { value } : { value: string } ) {  // ERROR EN VALUE
         const editor = this.editor;
         const selection = editor.model.document.selection;
 
@@ -21,10 +21,11 @@ export class PlaceholderCommand extends Command {
     refresh() {
         const model = this.editor.model;
         const selection = model.document.selection;
-
-        const is_allowed = model.schema.checkChild( selection.focus.parent, 'placeholder' ); // ERROR EN SELECTION
+        let is_allowed = false
+        if(selection.focus !== null) {
+            is_allowed = model.schema.checkChild( (selection.focus as any).parent, 'placeholder' ); // ERROR EN SELECTION
+        }
 
         this.isEnabled = is_allowed;
     }
 }
-*/

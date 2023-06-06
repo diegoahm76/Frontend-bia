@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-/*
 import { Plugin } from '@ckeditor/ckeditor5-core';
 import { Model, addListToDropdown, createDropdown } from '@ckeditor/ckeditor5-ui';
 import { Collection } from '@ckeditor/ckeditor5-utils';
@@ -16,7 +15,7 @@ export class PlaceholderUI extends Plugin {
             const dropdown_view = createDropdown( locale );
 
             // Populate the list in the dropdown with items.
-            addListToDropdown( dropdown_view, getDropdownItemsDefinitions( placeholder_names ) ); // ERROR EN GETDROPDOWN
+            addListToDropdown( dropdown_view, getDropdownItemsDefinitions( placeholder_names as string[] ) as any ); // ERROR EN GETDROPDOWN
 
             dropdown_view.buttonView.set( {
                 // The t() function helps localize the editor. All strings enclosed in t() can be
@@ -28,11 +27,11 @@ export class PlaceholderUI extends Plugin {
 
             // Disable the placeholder button when the command is disabled.
             const command = editor.commands.get( 'placeholder' );
-            dropdown_view.bind( 'isEnabled' ).to( command ); // ERROR COMMAND
+            dropdown_view.bind( 'isEnabled' ).to( command as any ); // ERROR COMMAND
 
             // Execute the command when the dropdown item is clicked (executed).
             this.listenTo( dropdown_view, 'execute', evt => {
-                editor.execute( 'placeholder', { value: evt.source.commandParam } ); // ERROR EN VALUE
+                editor.execute( 'placeholder', { value: (evt.source as any).commandParam } ); // ERROR EN VALUE
                 editor.editing.view.focus();
             } );
 
@@ -60,4 +59,3 @@ function getDropdownItemsDefinitions( placeholder_names: string[] ) {
 
     return item_definitions;
 }
-*/

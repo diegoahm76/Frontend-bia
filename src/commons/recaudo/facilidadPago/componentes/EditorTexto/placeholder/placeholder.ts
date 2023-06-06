@@ -1,4 +1,4 @@
-/* import { Plugin } from '@ckeditor/ckeditor5-core';
+import { Plugin } from '@ckeditor/ckeditor5-core';
 import { PlaceholderEditing } from './placeholderediting';
 import { PlaceholderUI } from './placeholderui';
 
@@ -8,4 +8,3 @@ export class Placeholder extends Plugin {
         return [ PlaceholderEditing, PlaceholderUI ];
     }
 }
-*/

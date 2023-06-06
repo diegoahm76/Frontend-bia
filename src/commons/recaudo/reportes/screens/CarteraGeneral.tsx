@@ -7,7 +7,9 @@ import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
 import { useState } from 'react';
+import { get_cartera_general } from '../requests/requests';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CarteraGeneral: React.FC = () => {
@@ -53,7 +55,7 @@ export const CarteraGeneral: React.FC = () => {
                   <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
                     <DatePicker
                       label="Fecha Corte"
-                      inputFormat="DD/MM/YYYY"
+                      inputFormat="YYYY/MM/DD"
                       openTo="day"
                       views={[ 'day', 'month', 'year' ]}
                       value={date}
@@ -72,6 +74,8 @@ export const CarteraGeneral: React.FC = () => {
                   variant='contained'
                   startIcon={<SearchOutlined />}
                   onClick={() => {
+                    const fecha_seleccionada =  dayjs(date).format('YYYY-MM-DD')
+                    void get_cartera_general(fecha_seleccionada)
                   }}
                 >
                   Consultar
