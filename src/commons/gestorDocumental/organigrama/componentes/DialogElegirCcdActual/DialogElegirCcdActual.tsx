@@ -1,79 +1,27 @@
-import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
+/* eslint-disable @typescript-eslint/no-misused-promises */
+
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import {
-  Grid,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  IconButton,
-  Stack,
-  Button,
-  Box,
-  Divider,
-  Skeleton,
-  type SelectChangeEvent,
-  TextField,
-} from '@mui/material';
+import dayjs from 'dayjs';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, type SelectChangeEvent, Skeleton, Stack, TextField } from '@mui/material';
 import { Title } from '../../../../../components/Title';
-import { useAppDispatch } from '../../../../../hooks';
-import {
-  cambio_ccd_actual,
-  get_ccds_posibles,
-} from '../../../ccd/store/thunks/ccdThunks';
-import { type IList } from '../../../../../interfaces/globalModels';
 import { CustomSelect } from '../../../../../components';
-import { control_error } from '../../../../../helpers';
+import { useAppDispatch } from '../../../../../hooks';
+import { cambio_ccd_actual, get_ccds_posibles } from '../../../ccd/store/thunks/ccdThunks';
+import { type IList } from '../../../../../interfaces/globalModels';
 import { ccds_choise_adapter } from '../../adapters/organigrama_adapters';
-import dayjs from 'dayjs';
-
-interface CCD {
-  id_ccd: string;
-  nombre: string;
-  tca: {
-    nombre: string;
-    version: string;
-  };
-  trd: {
-    nombre: string;
-    version: string;
-  };
-  version: string;
-}
-
-const initial_state = {
-  id_ccd: '',
-  nombre: '',
-  tca: {
-    nombre: '',
-    version: '',
-  },
-  trd: {
-    nombre: '',
-    version: '',
-  },
-  version: '',
-};
-
-interface IProps {
-  is_modal_active: boolean;
-  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-}
-
-interface FormValues {
-  ccd: number;
-  justificacion: string;
-}
-
-const fecha_actual = dayjs().format('YYYY-MM-DD');
-
-type keys_object = 'ccd' | 'justificacion';
+import { initial_state } from './utils/constants';
+import type { CCD, FormValues, IProps, keys_object } from './types/types';
+import { control_error } from '../../../../../helpers';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
+  const fecha_actual = dayjs().format('YYYY-MM-DD');
+
   const dispatch = useAppDispatch();
+
   const [loading, set_loading] = useState<boolean>(false);
   const [data_ccds_posibles, set_data_ccds_posibles] = useState<CCD[]>([]);
   const [ccd_selected, set_ccd_selected] = useState<string>('');
@@ -172,11 +120,10 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
     >
       <Box
         component="form"
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
         <DialogTitle>
-          Activación de CCD e instrumentos archivisticos
+          Activación de Cuadro clasificación documental e instrumentos archivisticos
           <IconButton
             aria-label="close"
             onClick={() => {

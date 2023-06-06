@@ -278,7 +278,7 @@ export function ListOrganigramas({
             set_crear_organigrama_is_active(true);
           }}
         >
-          CREAR
+          CREAR ORGANIGRAMA
         </Button>
         <Button
           variant="outlined"
@@ -287,7 +287,7 @@ export function ListOrganigramas({
             set_elegir_organigrama_actual_is_active(true);
           }}
         >
-          ELEGIR ACTUAL
+          ELEGIR ORGANIGRAMA ACTUAL
         </Button>
         <Button
           variant="outlined"
