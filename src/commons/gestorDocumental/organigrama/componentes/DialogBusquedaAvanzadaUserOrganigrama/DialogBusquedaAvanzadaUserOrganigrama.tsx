@@ -21,8 +21,8 @@ import type { GridColDef } from '@mui/x-data-grid';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { get_busqueda_avanzada_user_organigrama } from '../store/thunks/organigramThunks';
-import { type UserDelegacionOrganigrama } from '../interfaces/organigrama';
+import { get_busqueda_avanzada_user_organigrama } from '../../store/thunks/organigramThunks';
+import { type UserDelegacionOrganigrama } from '../../interfaces/organigrama';
 
 interface IProps {
   is_modal_active: boolean;
