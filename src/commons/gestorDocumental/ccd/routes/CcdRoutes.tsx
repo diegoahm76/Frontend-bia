@@ -5,7 +5,7 @@ import { CcdScreen } from '../screens/CcdScreen';
 export const CcdRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="ccd" element={<CcdScreen />} />
+      <Route path="" element={<CcdScreen />} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );

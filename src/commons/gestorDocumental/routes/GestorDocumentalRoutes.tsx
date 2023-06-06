@@ -6,6 +6,7 @@ import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
 
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
