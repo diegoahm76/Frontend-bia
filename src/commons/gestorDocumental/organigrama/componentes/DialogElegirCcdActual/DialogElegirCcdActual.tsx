@@ -60,7 +60,7 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
     await dispatch(cambio_ccd_actual(data_cambio));
     handle_close_dialog();
   };
-
+  console.log('jshdjshd')
   // 1.0 Ejecutar funcion para traer data organigramas posibles y organigrama actual
   useEffect(() => {
     if (is_modal_active) {
@@ -72,6 +72,7 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
   const get_list_ccds = async (): Promise<void> => {
     set_loading(true);
     try {
+      //!
       const response_ccds = await dispatch(get_ccds_posibles('58'));
       console.log('response_ccds', response_ccds);
       if ('data' in response_ccds) {
