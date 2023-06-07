@@ -1,5 +1,4 @@
 import React from 'react';
-import { type Dispatch, type SetStateAction } from 'react';
 import {
   Dialog,
   AppBar,
@@ -15,11 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useAppSelector } from '../../../../../hooks';
 import { Subtitle } from '../../../../../components/Subtitle';
 import OrganigramVisual from '../OrganigramaVisual/OrganigramVisual';
-
-interface IProps {
-  is_modal_active: boolean;
-  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-}
+import type { IProps } from './types/types';
 
 const transition = React.forwardRef(function Transition(
   props: TransitionProps & {

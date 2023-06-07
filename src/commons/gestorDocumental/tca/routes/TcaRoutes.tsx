@@ -5,7 +5,7 @@ import { TcaScreen } from '../screens/TcaScreen';
 export const TcaRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="/tca" element={<TcaScreen />} />
+      <Route path="" element={<TcaScreen />} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );
