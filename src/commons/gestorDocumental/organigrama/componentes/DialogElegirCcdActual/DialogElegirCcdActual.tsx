@@ -5,16 +5,34 @@ import { useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, IconButton, type SelectChangeEvent, Skeleton, Stack, TextField } from '@mui/material';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Grid,
+  IconButton,
+  type SelectChangeEvent,
+  Skeleton,
+  Stack,
+  TextField,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { CustomSelect } from '../../../../../components';
 import { useAppDispatch } from '../../../../../hooks';
-import { cambio_ccd_actual, get_ccds_posibles } from '../../../ccd/store/thunks/ccdThunks';
+import {
+  cambio_ccd_actual,
+  get_ccds_posibles,
+} from '../../../ccd/store/thunks/ccdThunks';
 import { type IList } from '../../../../../interfaces/globalModels';
 import { ccds_choise_adapter } from '../../adapters/organigrama_adapters';
 import { initial_state } from './utils/constants';
 import type { CCD, FormValues, IProps, keys_object } from './types/types';
 import { control_error } from '../../../../../helpers';
+import { get_organigrama_actual } from '../../store/thunks/organigramThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
@@ -60,7 +78,7 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
     await dispatch(cambio_ccd_actual(data_cambio));
     handle_close_dialog();
   };
-  console.log('jshdjshd')
+
   // 1.0 Ejecutar funcion para traer data organigramas posibles y organigrama actual
   useEffect(() => {
     if (is_modal_active) {
@@ -69,11 +87,13 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
   }, [is_modal_active]);
 
   // 1.1 Traer data
-  const get_list_ccds = async (): Promise<void> => {
+ /* const get_list_ccds = async (): Promise<void> => {
     set_loading(true);
     try {
-      //!
-      const response_ccds = await dispatch(get_ccds_posibles('58'));
+      const {data} = await dispatch(get_organigrama_actual());
+      console.log(typeof(data.id_organigrama), 'organigramaActualData');
+
+      const response_ccds = await dispatch(get_ccds_posibles(String(data.id_organigrama)));
       console.log('response_ccds', response_ccds);
       if ('data' in response_ccds) {
         set_data_ccds_posibles(response_ccds.data);
@@ -89,7 +109,31 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
     } finally {
       set_loading(false);
     }
+  }; */
+
+  const get_list_ccds = async (): Promise<void> => {
+    set_loading(true);
+    try {
+      const { data } = await dispatch(get_organigrama_actual());
+      console.log(typeof data.id_organigrama, 'organigramaActualData');
+  
+      const response_ccds = await dispatch(get_ccds_posibles(String(data.id_organigrama)));
+      console.log('response_ccds', response_ccds);
+  
+      if (Array.isArray(response_ccds.data) && response_ccds.data.length > 0) {
+        set_data_ccds_posibles(response_ccds.data);
+        const res_ccds_adapter: IList[] = await ccds_choise_adapter(response_ccds.data);
+        set_list_ccds(res_ccds_adapter);
+      } else {
+        control_error("Sin CCD's disponibles para activación");
+      }
+    } catch (err) {
+      control_error(err);
+    } finally {
+      set_loading(false);
+    }
   };
+  
 
   // 4. Filtrar ccd seleccionado para mostrar datos de trd y tca
   useEffect(() => {
@@ -120,12 +164,10 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
       open={is_modal_active}
       onClose={handle_close_dialog}
     >
-      <Box
-        component="form"
-        onSubmit={handle_submit(on_submit)}
-      >
+      <Box component="form" onSubmit={handle_submit(on_submit)}>
         <DialogTitle>
-          Activación de Cuadro clasificación documental e instrumentos archivisticos
+          Activación de Cuadro clasificación documental e instrumentos
+          archivisticos
           <IconButton
             aria-label="close"
             onClick={() => {
