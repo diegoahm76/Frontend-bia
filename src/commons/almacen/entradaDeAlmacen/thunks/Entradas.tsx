@@ -48,11 +48,38 @@ export const crear_entrada_bien: any = (form_data: crear_entrada) => {
   };
 };
 
+// Actualizar entrada
+export const actualizar_entrada_bien: any = (id_entrada_almacen:number,form_data: crear_entrada) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`almacen/bienes/entradas/update/${id_entrada_almacen}/`, form_data);
+      control_success('La entrada se actualizó correctamente');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtiene enrtadas
 export const obtener_entradas: any = () => {
   return async () => {
     try {
       const { data } = await api.get('almacen/bienes/entradas/get-list/');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtiene datos de persona por id
+export const obtener_persona: any = (id_persona: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`personas/get-by-id/${id_persona}/`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
