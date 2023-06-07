@@ -1,8 +1,8 @@
-import { Avatar, Box, Button, Grid, IconButton, Stack, Tab, Tooltip } from "@mui/material"
+import { Avatar, Box, Button, Grid, IconButton, Stack, Tab, Tooltip, Typography } from "@mui/material"
 import { Title } from '../../../components/Title';
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { useState,  type SyntheticEvent, useEffect } from 'react';
-import { TablaGeneral } from "../../../components/TablaGeneral/TablaGeneral";
+import { useState, type SyntheticEvent, useEffect } from 'react';
+// import { TablaGeneral } from "../../../components/TablaGeneral/TablaGeneral";
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { EstadosProcesoModal } from "../components/estadosProceso/EstadosProcesoModal";
@@ -20,91 +20,8 @@ interface RowAtributosEtapa {
   opciones: string;
 }
 
-// const rows = [
-//   {
-//     id: 2211,
-//     etapa_proceso: 'Mandamiento de Pago',
-//     descripcion: 'En proceso de pago normal',
-//   },
-//   {
-//     id: 2311,
-//     etapa_proceso: 'Cobro persuasivo',
-//     descripcion: 'Se invita a suscribir mandamiento de pago',
-//   },
-//   {
-//     id: 2318,
-//     etapa_proceso: 'Cobro coactivo',
-//     descripcion: 'Cobro efectivo de recaudo',
-//   },
-//   {
-//     id: 2344,
-//     etapa_proceso: 'Embargo',
-//     descripcion: 'Embargo de bienes dentro del marco de cobro',
-//   },
-//   {
-//     id: 2764,
-//     etapa_proceso: 'Extinción de Deuda',
-//     descripcion: 'Ante inefectividad en el cobro',
-//   },
-//   {
-//     id: 2801,
-//     etapa_proceso: 'Finalización de deuda',
-//     descripcion: 'El deudor ha cumplido sus obligaciones',
-//   },
-// ]
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstadosProcesoScreen: React.FC = () => {
-  // const columns = [
-  //   {
-  //     field: 'id',
-  //     header: 'id etapa',
-  //     visible: true,
-  //   },
-  //   {
-  //     field: 'etapa',
-  //     header: 'Etapa de Proceso',
-  //     visible: true,
-  //   },
-  //   {
-  //     field: 'descripcion',
-  //     header: 'Descripcion',
-  //     visible: true,
-  //   },
-  //   {
-  //     field: 'opciones',
-  //     header: 'Opciones',
-  //     visible: true,
-  //     // renderCell: (params: any) => (
-  //     //   <IconButton
-  //     //     onClick={() => {
-  //     //       set_position_tab_organigrama('2')
-  //     //     }}
-  //     //   >
-  //     //     <Avatar
-  //     //       sx={{
-  //     //         width: 24,
-  //     //         height: 24,
-  //     //         background: '#fff',
-  //     //         border: '2px solid'
-  //     //       }}
-  //     //       variant="rounded"
-  //     //     >
-  //     //       <EditIcon
-  //     //         sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-  //     //       />
-  //     //     </Avatar>
-  //     //   </IconButton>
-  //     // )
-  //     renderCell: () => {
-  //       return (
-  //         <IconButton color="primary" aria-label="Editar etapa proceso">
-  //           <EditIcon />
-  //         </IconButton>
-  //       );
-  //     }
-  //   },
-  // ]
   const [modal_detalle, set_modal_detalle] = useState<boolean>(false);
   const [position_tab, set_position_tab_organigrama] = useState('1');
   const [rows_etapas, set_rows_etapas] = useState<EtapaProceso[]>([]);
@@ -173,31 +90,36 @@ export const EstadosProcesoScreen: React.FC = () => {
     }
   ];
 
-  const columns_atributos_etapa = [
+  const columns_atributos_etapa: GridColDef[] = [
     {
       field: 'id',
-      header: 'ID atributo',
-      visible: true,
+      headerName: 'ID atributo',
+      minWidth: 90,
+      flex: 1,
     },
     {
       field: 'descripcion',
-      header: 'Descripción',
-      visible: true,
+      headerName: 'Descripción',
+      minWidth: 200,
+      flex: 1,
     },
     {
       field: 'tipo_atributo',
-      header: 'Tipo de Atributo',
-      visible: true,
+      headerName: 'Tipo de Atributo',
+      minWidth: 110,
+      flex: 1,
     },
     {
       field: 'obligatorio',
-      header: 'Obligatorio',
-      visible: true,
+      headerName: 'Obligatorio',
+      minWidth: 100,
+      flex: 1,
     },
     {
       field: 'opciones',
-      header: 'Opciones',
-      visible: true,
+      headerName: 'Opciones',
+      minWidth: 100,
+      flex: 1,
     },
   ];
 
@@ -281,7 +203,7 @@ export const EstadosProcesoScreen: React.FC = () => {
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handle_change}>
                   <Tab label="Etapas de Proceso" value="1" />
-                  <Tab label={`Atributos de Etapa: ${descripcion_etapa}`} value="2" />
+                  <Tab label="Atributos de Etapa" value="2" />
                 </TabList>
               </Box>
 
@@ -308,14 +230,17 @@ export const EstadosProcesoScreen: React.FC = () => {
                   />
                 </Box>
               </TabPanel>
-
+              
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <Stack
                   direction="row"
-                  justifyContent="flex-end"
+                  justifyContent="space-between"
                   spacing={2}
                   sx={{ mb: '20px' }}
                 >
+                  <Grid item xs={12} sm={3}>
+                    <Typography variant="h5">{descripcion_etapa}</Typography>
+                  </Grid>
                   <Grid item xs={12} sm={3}>
                     <Button
                       color="primary"
@@ -331,17 +256,27 @@ export const EstadosProcesoScreen: React.FC = () => {
                     </Button>
                   </Grid>
                 </Stack>
-                <TablaGeneral
+                {/* <TablaGeneral
                   showButtonExport
                   tittle={'Editar'}
                   columns={columns_atributos_etapa}
                   rowsData={rows_atributos_etapa}
                   staticscroll={true}
                   stylescroll={"780px"}
+                /> */}
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={rows_atributos_etapa}
+                  columns={columns_atributos_etapa}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
+                  experimentalFeatures={{ newEditingApi: true }}
+                  getRowId={(row) => row.id}
+                  components={{ Toolbar: GridToolbar }}
                 />
               </TabPanel>
             </TabContext>
-
           </Box>
         </Grid>
       </Grid>

@@ -2,6 +2,7 @@ import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectCha
 import type { Deudor, Expediente, FormLiquidacion } from "../../interfaces/liquidacion";
 import { useEffect, useState } from 'react';
 import axios from "axios";
+import SaveIcon from '@mui/icons-material/Save';
 
 interface IProps {
   total_obligacion: number;
@@ -139,24 +140,31 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
           display: 'flex',
           flexDirection: 'column',
           alignContent: 'center',
-          pb: '10px'
+          py: '20px'
         }}
       >
-        <Typography color='#00ACFF'>Total de la obligacion</Typography>
-        <Typography variant="h4">${total_obligacion}</Typography>
+        <Typography color='black' variant="h4">Total de la obligacion</Typography>
+        <Typography color='green' variant="h4" sx={{ textAlign: 'center' }}>${total_obligacion}</Typography>
       </Grid>
       <Stack
         direction="row"
         justifyContent="center"
         spacing={2}
+        sx={{
+          py: '20px'
+        }}
       >
-        <Button
-          color="success"
-          variant="contained"
-          onClick={handle_submit_liquidacion}
-        >
-          Guardar
-        </Button>
+        <Grid xs={12} sm={3}>
+          <Button
+            color="primary"
+            variant="contained"
+            startIcon={<SaveIcon />}
+            fullWidth
+            onClick={handle_submit_liquidacion}
+          >
+            Guardar nueva liquidación
+          </Button>
+        </Grid>
       </Stack>
     </>
   )
