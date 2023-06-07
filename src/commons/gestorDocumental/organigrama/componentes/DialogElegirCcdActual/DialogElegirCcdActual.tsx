@@ -72,7 +72,8 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
   const get_list_ccds = async (): Promise<void> => {
     set_loading(true);
     try {
-      const response_ccds = await dispatch(get_ccds_posibles());
+      const response_ccds = await dispatch(get_ccds_posibles('58'));
+      console.log('response_ccds', response_ccds);
       if ('data' in response_ccds) {
         set_data_ccds_posibles(response_ccds.data);
         const res_ccds_adapter: IList[] = await ccds_choise_adapter(

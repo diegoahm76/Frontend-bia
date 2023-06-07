@@ -18,12 +18,12 @@ import { Title } from '../../../../components/Title';
 import use_ccd from '../hooks/useCCD';
 import { Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import CrearSeriesCcdDialog from '../componentes/CrearSeriesCcdDialog';
-import SearchCcdsDialog from '../componentes/SearchCcdsDialog';
 import {
   to_resume_ccds_service,
   to_finished_ccds_service,
 } from '../store/thunks/ccdThunks';
+import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
+import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {

@@ -234,11 +234,13 @@ export const get_ccds_finished_x_organigrama: any = (id_organigrama: string | nu
   };
 };
 
-export const get_ccds_posibles: any = (id_organigrama?: number) => {
+export const get_ccds_posibles: any = (id_organigrama: string) => {
   return async () => {
     try{
       const { data } = await api.get(
         // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+        /* gestor/activar/get-ccd-posibles/?id_organigrama=1 */
+
         `gestor/activar/get-ccd-posibles/?id_organigrama=${id_organigrama}`
       );
       return data;
