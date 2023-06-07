@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   Grid,
@@ -18,81 +18,26 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import { Title } from '../../../../components/Title';
-import { useAppDispatch } from '../../../../hooks';
-import { get_ccds_posibles } from '../../ccd/store/thunks/ccdThunks';
-import { type IList } from '../../../../interfaces/globalModels';
-import { CustomSelect } from '../../../../components';
-import { control_error } from '../../../../helpers';
+import { Title } from '../../../../../components/Title';
+import { useAppDispatch } from '../../../../../hooks';
+import { get_ccds_posibles } from '../../../ccd/store/thunks/ccdThunks';
+import { type IList } from '../../../../../interfaces/globalModels';
+import { CustomSelect } from '../../../../../components';
+import { control_error } from '../../../../../helpers';
 import {
   cambio_organigrama_actual,
   get_organigramas_posibles,
   get_organigrama_actual,
-} from '../store/thunks/organigramThunks';
+} from '../../store/thunks/organigramThunks';
 import {
   organigramas_choise_adapter,
   ccds_choise_adapter,
-} from '../adapters/organigrama_adapters';
+} from '../../adapters/organigrama_adapters';
 import dayjs from 'dayjs';
-
-interface OrgActual {
-  actual: boolean;
-  descripcion: string;
-  fecha_puesta_produccion: string;
-  fecha_retiro_produccion: string | null;
-  fecha_terminado: string;
-  id_organigrama: number;
-  id_persona_cargo: number | null;
-  justificacion_nueva_version: string | null;
-  nombre: string;
-  ruta_resolucion: string | null;
-  version: string;
-}
-
-interface CCD {
-  id_ccd: string;
-  nombre: string;
-  tca: {
-    nombre: string;
-    version: string;
-  };
-  trd: {
-    nombre: string;
-    version: string;
-  };
-  version: string;
-}
-
-const initial_state = {
-  id_ccd: '',
-  nombre: '',
-  tca: {
-    nombre: '',
-    version: '',
-  },
-  trd: {
-    nombre: '',
-    version: '',
-  },
-  version: '',
-};
-
-interface IProps {
-  is_modal_active: boolean;
-  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-}
-
-interface FormValues {
-  organigrama: number | string;
-  ccd: number;
-  trd: number;
-  tca: number;
-  justificacion: string;
-}
+import type { CCD, FormValues, IProps, OrgActual, keys_object } from './types/types';
+import { initial_state } from './utils/constanst';
 
 const fecha_actual = dayjs().format('YYYY-MM-DD');
-
-type keys_object = 'organigrama' | 'ccd' | 'justificacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogElegirOrganigramaActual = ({

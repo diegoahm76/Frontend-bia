@@ -1,4 +1,3 @@
-import { type Dispatch, type SetStateAction } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   TextField,
@@ -14,21 +13,9 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import { add_organigrams_service } from '../store/thunks/organigramThunks';
-import { useAppDispatch } from '../../../../hooks';
-
-interface IProps {
-  is_modal_active: boolean;
-  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
-}
-
-interface FormValues {
-  nombre: string;
-  version: string;
-  descripcion: string;
-}
-
+import { add_organigrams_service } from '../../store/thunks/organigramThunks';
+import { useAppDispatch } from '../../../../../hooks';
+import type { FormValues, IProps } from './types/type';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogCrearOrganigrama = ({
   is_modal_active,

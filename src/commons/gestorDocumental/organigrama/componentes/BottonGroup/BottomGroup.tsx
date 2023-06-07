@@ -8,13 +8,7 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
-
-const options = [
-  'Create a merge commit',
-  'Squash and merge',
-  'Rebase and merge',
-];
-
+import { options } from './utils/constants';
 // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/explicit-function-return-type
 export default function SplitButton() {
   const [open, set_open] = React.useState(false);

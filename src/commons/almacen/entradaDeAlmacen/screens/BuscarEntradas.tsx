@@ -20,7 +20,6 @@ interface IProps {
   title: string;
   tipos_entrada: any;
   set_articulo: any;
-  set_entrada: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const BuscarEntradasComponent = (props: IProps) => {
@@ -30,7 +29,6 @@ const BuscarEntradasComponent = (props: IProps) => {
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_filtrada, set_grid_filtrada] = useState<any[]>([]);
   const [selected_entrada, set_selected_entrada] = useState<any | null>(null);
-  const [articulo, set_articulo] = useState<any | null>(null);
   const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
   const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
 
@@ -57,7 +55,6 @@ const BuscarEntradasComponent = (props: IProps) => {
   }, []);
 
   const accionar_busqueda: any = () => {
-    set_articulo(null)
     if (fecha_desde === null && fecha_hasta === null && tipo_entrada === "") {
       set_grid_filtrada(grid_busqueda);
       return
@@ -80,13 +77,10 @@ const BuscarEntradasComponent = (props: IProps) => {
 
   const selected_entrada_grid: any = () => {
     if (selected_entrada !== null) {
-      console.log(selected_entrada);
+      props.set_articulo(selected_entrada);
+      props.set_is_modal_active(false);
     }
   };
-
-  useEffect(() => {
-    props.set_articulo(articulo);
-  }, [articulo]);
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises

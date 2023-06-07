@@ -240,8 +240,9 @@ const use_ccd = () => {
     create_asing();
   };
   // submit Crear CCD
-  const on_submit_create_ccd = (): void => {
-    console.log('ccd_current', ccd_current);
+  const on_submit_create_ccd = (data: any): void => {
+    console.log('data', data);
+    console.log('epa la patria', ccd_current);
     if (ccd_current !== null) {
       update_ccd();
     } else {
@@ -321,6 +322,7 @@ const use_ccd = () => {
     reset_create_ccd(initial_state);
     set_save_ccd(false);
     dispatch(get_ccd_current(null));
+    console.log(ccd_current, 'ccd_current')
     clean_asing();
   };
   // Funcion para limpiar el formulario de asignar CCD

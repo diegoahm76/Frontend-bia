@@ -18,18 +18,18 @@ import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlin
 import EditIcon from '@mui/icons-material/EditOutlined';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 // Hooks
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 // Thunks
-import { get_organigrams_service } from '../store/thunks/organigramThunks';
+import { get_organigrams_service } from '../../store/thunks/organigramThunks';
 // Dialogs
-import DialogCrearOrganigrama from './DialogCrearOrganigrama';
-import DialogElegirOrganigramaActual from './DialogElegirOrganigramaActual';
-import DialogDelegarOrganigrama from './DialogDelegarOrganigrama';
+import DialogCrearOrganigrama from '../DialogCrearOrganigrama/DialogCrearOrganigrama';
+import DialogElegirOrganigramaActual from '../DialogElegirOrganigramaActual/DialogElegirOrganigramaActual';
+import DialogDelegarOrganigrama from '../DialogDelegarOrganigrama/DialogDelegarOrganigrama';
 // Slices
-import { current_organigram } from '../store/slices/organigramSlice';
+import { current_organigram } from '../../store/slices/organigramSlice';
 import { toast, type ToastContent } from 'react-toastify';
-import { type IObjOrganigram } from '../interfaces/organigrama';
-import DialogElegirCcdActual from './DialogElegirCcdActual';
+import { type IObjOrganigram } from '../../interfaces/organigrama';
+import DialogElegirCcdActual from '../DialogElegirCcdActual/DialogElegirCcdActual';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -278,7 +278,7 @@ export function ListOrganigramas({
             set_crear_organigrama_is_active(true);
           }}
         >
-          CREAR
+          CREAR ORGANIGRAMA
         </Button>
         <Button
           variant="outlined"
@@ -287,7 +287,7 @@ export function ListOrganigramas({
             set_elegir_organigrama_actual_is_active(true);
           }}
         >
-          ELEGIR ACTUAL
+          ELEGIR ORGANIGRAMA ACTUAL
         </Button>
         <Button
           variant="outlined"
