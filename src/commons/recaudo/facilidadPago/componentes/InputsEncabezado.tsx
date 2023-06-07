@@ -1,9 +1,12 @@
-import { Grid, Box, TextField } from "@mui/material";
-import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { Grid, Box, TextField, FormControl } from "@mui/material";
+import esLocale from 'dayjs/locale/es';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InputsEncabezado: React.FC = () => {
+
   return (
     <>
       <Grid
@@ -63,15 +66,27 @@ export const InputsEncabezado: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Fecha Solicitud"
-                  value={new Date()}
-                  renderInput={(props) => <TextField {...props} />}
-                  onChange={()=>{}}
-                  disabled
-                />
-                </LocalizationProvider>
+                <FormControl fullWidth>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                    <DatePicker
+                      label="Fecha Solicitud"
+                      disabled
+                      inputFormat="YYYY/MM/DD"
+                      openTo="day"
+                      views={[ 'day', 'month', 'year' ]}
+                      value={new Date()}
+                      onChange={()=>{}}
+                      renderInput={(params) => (
+                        <TextField
+                          size='small'
+                          fullWidth
+                          disabled
+                          {...params}
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </FormControl>
               </Grid>
             </Grid>
           </Box>

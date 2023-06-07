@@ -25,6 +25,7 @@ export const TablaCarteraDetallada: React.FC = () => {
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
   const [total, set_total] = useState(0);
+  const [values, set_values] = useState([])
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
@@ -77,25 +78,11 @@ export const TablaCarteraDetallada: React.FC = () => {
     autoTable(report, {
       theme: 'grid',
       head: [['Código Contable', 'Concepto Deuda', 'Nombre Deudor', 'NIT', 'Expediente', 'Resolución', '#Factura', 'Total']],
-      body: [
-        ['25', 'Con ejemplo', 'Diana Quinche', '919832301', '183492', 'RES_PEND', 'FACT_PEND', '3990232.00'],
-        ['2', 'Con ejemplo 2', 'Yeison Piñeros', '129230e23', '3.11.248', 'RES_PEND', 'FACT_PEND', '70854423.05'],
-      ],
-      foot:[['Total General', '', '', '', '', '', '', `${total}`]],
+      body: values,
+      foot:[['Total General', '', '', '', '', '', '', `${total.toFixed(2)}`]],
     })
     report.save('Reporte General de Cartera con Detalle.pdf');
   }
-
-  /* const handle_export_pdf = () => {
-    const report = new JsPDF('portrait','pt','a4');
-    report.html(document.querySelector('#report') as HTMLElement)
-      .then(() => {
-        report.save('Reporte General de Cartera con Detalle.pdf');
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  } */
 
   const columns: GridColDef[] = [
     {
@@ -183,6 +170,12 @@ export const TablaCarteraDetallada: React.FC = () => {
   useEffect(() => {
     set_visible_rows(reportes_recaudo)
   }, [reportes_recaudo])
+
+  useEffect(() => {
+    if(visible_rows.length !== 0){
+      set_values(visible_rows.map((obj) => Object.values(obj)) as any)
+    }
+  }, [visible_rows])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -310,7 +303,7 @@ export const TablaCarteraDetallada: React.FC = () => {
                     label={<strong>Total General</strong>}
                     size="small"
                     fullWidth
-                    value={total}
+                    value={total.toFixed(2)}
                   />
                 </Grid>
             </Stack>
