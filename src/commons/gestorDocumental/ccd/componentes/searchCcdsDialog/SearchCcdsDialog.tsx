@@ -16,9 +16,9 @@ import {
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
-import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
-import { get_classification_ccds_service } from '../store/thunks/ccdThunks';
-import { get_ccd_current } from '../store/slices/ccdSlice';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
+import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
+import { get_ccd_current } from '../../store/slices/ccdSlice';
 
 interface IProps {
   is_modal_active: boolean;
@@ -55,7 +55,10 @@ const SearchCcdModal = ({
 
   // useEffect para cargar los datos de la tabla
   useEffect(() => {
-    void dispatch(get_classification_ccds_service());
+    void dispatch(get_classification_ccds_service(
+      '5f9c7a3a-5b0a-4b0a-8b0a-5f9c7a3a5b0a',
+      '5f9c7a3a-5b0a-4b0a-8b0a-5f9c7a3a5b0a',
+    ));
   }, []);
 
   const columns_ccds: GridColDef[] = [

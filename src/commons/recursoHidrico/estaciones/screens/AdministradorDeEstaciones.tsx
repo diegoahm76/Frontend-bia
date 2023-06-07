@@ -173,8 +173,8 @@ export const AdministradorDeEstaciones: React.FC = () => {
             text: "¿Estas seguro?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#8BC34A",
-            cancelButtonColor: "#B71C1C",
+            confirmButtonColor: "#0EC32C",
+            cancelButtonColor: "#DE1616",
             confirmButtonText: "Si, elminar!",
             cancelButtonText: "Cancelar",
         }).then(async (result) => {

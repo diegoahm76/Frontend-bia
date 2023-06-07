@@ -16,8 +16,8 @@ export const Pantalla: React.FC = () => {
     <section
       
       style={{
-        marginTop: '-90px',
-
+        marginTop: '-64px',
+        // zIndex: -1000,
         position: 'relative',
         backgroundImage: 'url(../image/imagenes/cumpleCormacarena.jpg)',
         backgroundSize: 'cover',

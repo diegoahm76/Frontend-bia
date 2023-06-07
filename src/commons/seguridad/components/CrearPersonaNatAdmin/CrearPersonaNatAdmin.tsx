@@ -91,10 +91,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
   const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
   const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
 
-  useEffect(() => {
-    console.log(watch('departamento_expedicion'));
-  }, [watch('departamento_expedicion')]);
-
   const handle_change_autocomplete = (
     event: React.SyntheticEvent<Element, Event>,
     value: ClaseTercero[],

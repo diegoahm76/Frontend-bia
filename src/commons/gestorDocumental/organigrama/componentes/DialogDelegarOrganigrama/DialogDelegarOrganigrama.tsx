@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction } from 'react';
+import type React from 'react';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -23,32 +23,20 @@ import { LoadingButton } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
-import { CustomSelect } from '../../../../components';
-import DialogBusquedaAvanzadaUserOrganigrama from './DialogBusquedaAvanzadaUserOrganigrama';
-import { useAppSelector } from '../../../../hooks';
-import { get_tipo_documento } from '../../../../request';
-import { control_error } from '../../../../helpers';
-import { type IList } from '../../../../interfaces/globalModels';
-import { type UserDelegacionOrganigrama } from '../interfaces/organigrama';
+import { CustomSelect } from '../../../../../components';
+import DialogBusquedaAvanzadaUserOrganigrama from '../DialogBusquedaAvanzadaUserOrganigrama/DialogBusquedaAvanzadaUserOrganigrama';
+import { useAppSelector } from '../../../../../hooks';
+import { get_tipo_documento } from '../../../../../request';
+import { control_error } from '../../../../../helpers';
+import { type IList } from '../../../../../interfaces/globalModels';
+import { type UserDelegacionOrganigrama } from '../../interfaces/organigrama';
 
 import {
   delegar_organigrama_persona,
   get_nuevo_user_organigrama,
   get_organigrams_service,
-} from '../store/thunks/organigramThunks';
-
-interface IProps {
-  is_modal_active: boolean;
-  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-}
-
-interface FormValues {
-  tipo_documento: string;
-  numero_documento: string;
-  nombre: string;
-}
-
-type keys_object = 'tipo_documento' | 'numero_documento' | 'nombre';
+} from '../../store/thunks/organigramThunks';
+import type { FormValues, IProps, keys_object } from './types/types';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogDelegarOrganigrama = ({
