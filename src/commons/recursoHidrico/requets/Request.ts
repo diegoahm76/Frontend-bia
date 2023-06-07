@@ -7,7 +7,7 @@ import axios from 'axios';
 
 export const alertas = axios.create({
   // baseURL: process.env.REACT_APP_BACKEND_URL,
-  baseURL: 'http://localhost:8000/api/'
+  baseURL: 'https://back-end-bia-beta.up.railway.app/api/'
 });
 export const control_success = (message: ToastContent): any =>
   toast.success(message, {

@@ -18,12 +18,12 @@ import { Title } from '../../../../components/Title';
 import use_ccd from '../hooks/useCCD';
 import { Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import CrearSeriesCcdDialog from '../componentes/CrearSeriesCcdDialog';
-import SearchCcdsDialog from '../componentes/SearchCcdsDialog';
 import {
   to_resume_ccds_service,
   to_finished_ccds_service,
 } from '../store/thunks/ccdThunks';
+import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
+import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -239,7 +239,7 @@ export const CcdScreen: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Registro de series y subseries" />
+            <Title title="Administrar registro de series y subseries" />
             <Box
               component="form"
               sx={{ mt: '20px' }}
@@ -272,10 +272,10 @@ export const CcdScreen: React.FC = () => {
                     <Button
                       onClick={() => {
                         set_create_is_active(true);
-                        set_title('Crear series');
+                        set_title('Administrar series');
                       }}
                     >
-                      CREAR
+                      CREAR SERIE
                     </Button>
 {/*                    <Button disabled>CLONAR</Button>
                     <Button disabled>PREVISUALIZAR</Button> */}
@@ -308,10 +308,10 @@ export const CcdScreen: React.FC = () => {
                     <Button
                       onClick={() => {
                         set_create_is_active(true);
-                        set_title('Crear subseries');
+                        set_title('Administrar subseries');
                       }}
                     >
-                      CREAR
+                      CREAR SUBSERIE
                     </Button>
                     {/* <Button disabled>CLONAR</Button>
                     <Button disabled>PREVISUALIZAR</Button> */}
