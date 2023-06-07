@@ -74,7 +74,7 @@ export const CargoScreen: React.FC = () => {
                                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                                 onClick={() => {
                                     handle_open_editar();
-                                    // set_estacion_editado(params.row);
+                                    set_cargos(params.row);
                                     console.log("se enviaron los siguientes parametros", params.row);
                                 }}
                             />
@@ -104,6 +104,7 @@ export const CargoScreen: React.FC = () => {
         },
     ];
     const [rows, set_rows] = useState<Cargos[]>([]);
+    const [cargos, set_cargos] = useState<Cargos>();
     const [is_crear, set_is_crear] = useState<boolean>(false);
     const [is_editar, set_is_editar] = useState<boolean>(false);
 
@@ -148,7 +149,7 @@ export const CargoScreen: React.FC = () => {
             if (result.isConfirmed) {
                 await eliminar_cargo(id_cargo);
                 void get_traer_cargos()
-                control_success('La estación se eliminó correctamente')
+                control_success('El cargo se eliminó correctamente')
             }
         });
     };
@@ -227,7 +228,7 @@ export const CargoScreen: React.FC = () => {
                 is_modal_active={is_editar}
                 set_is_modal_active={set_is_editar}
                 get_data={get_traer_cargos}
-                data_cargos={rows}
+                data_cargos={cargos}
             />
         </>
     );

@@ -15,8 +15,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ActualizarCargo: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, data_cargos, get_data }) => {
-
+export const EditarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, data_cargos, get_data }) => {
     const {
         register,
         reset,
