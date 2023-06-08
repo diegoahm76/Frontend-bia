@@ -58,9 +58,3 @@ export const GestorDocumentalRoutes: React.FC = () => {
     </Routes>
   );
 };
-     // eslint-disable-next-line no-lone-blocks
-     {/*  <Route path="organigrama/*" element={<OrganigramaRoutes />} />
-      <Route path="ccd/*" element={<CcdRoutes />} />
-      <Route path="trd/*" element={<TrdRoutes />} />
-      <Route path="tca/*" element={<TcaRoutes />} />
-      <Route path="ventanilla_unica/*" element={<VentanillaRoutes />} /> */}
