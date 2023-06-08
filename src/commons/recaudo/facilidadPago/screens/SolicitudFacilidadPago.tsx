@@ -11,7 +11,8 @@ import { useEffect, useState } from 'react';
 import { use_form } from '../../../../hooks/useForm';
 import { useFormLocal } from '../hooks/useFormLocal';
 import { faker } from '@faker-js/faker';
-import { type event } from '../interfaces/interfaces';
+import { type event, type check } from '../interfaces/interfaces';
+import { post_registro_fac_pago } from '../requests/requests';
 
 interface bien {
   id: string;
@@ -24,18 +25,19 @@ interface bien {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SolicitudFacilidadPago: React.FC = () => {
-  const [persona, set_persona] = useState('');
+  const [persona, set_persona] = useState(0);
+  const [num_periodicidad, set_num_periodicidad] = useState(0);
   const [periodicidad, set_periodicidad] = useState('');
   const [limite, set_limite] = useState(0);
   const [arr_periodicidad, set_arr_periodicidad] = useState(Array<number>);
-  const [plazo, set_plazo] = useState('');
+  const [plazo, set_plazo] = useState(0);
+  const [notificacion, set_notificacion] = useState(false);
   const [rows_bienes, set_rows_bienes] = useState(Array<bien>);
   const { form_state, on_input_change } = use_form({});
   const { form_local, handle_change_local } = useFormLocal({});
   const [modal, set_modal] = useState(false);
   const [file_name, set_file_name] = useState('');
 
-  console.log('form', form_state)
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
 
@@ -156,6 +158,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         required
                         autoFocus
                         style={{ opacity: 0 }}
+                        name='documento_soporte'
                         onChange={handle_file_selected}
                       />
                   </Button>
@@ -175,6 +178,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         required
                         autoFocus
                         style={{ opacity: 0 }}
+                        name='consignacion_soporte'
                         onChange={handle_file_selected}
                       />
                   </Button>
@@ -187,20 +191,13 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       defaultValue={""}
                       onChange={(event: event) => {
                         const { value } = event.target
-                        if(value === 'Natural') {
-                          set_persona('1')
-                        }
-                        if(value === 'Juridica') {
-                          set_persona('2')
-                        }
-                        if(value === 'DeudorSolidario') {
-                          set_persona('3')
-                        }
+                        set_persona(parseInt(value))
                       }}
                     >
-                      <MenuItem value='Natural'>Persona Natural</MenuItem>
-                      <MenuItem value='Juridica'>Persona Juridica / Apoderado</MenuItem>
-                      <MenuItem value='DeudorSolidario'>Deudor Solidario</MenuItem>
+                      <MenuItem value='1'>Persona Natural</MenuItem>
+                      <MenuItem value='2'>Persona Juridica / Apoderado</MenuItem>
+                      <MenuItem value='3'>Deudor Solidario Natural</MenuItem>
+                      <MenuItem value='4'>Deudor Solidario Juridico</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -209,7 +206,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
         </Grid>
       </Grid>
       {
-        persona === '1' ? (
+        persona === 1 ? (
           <>
             <Grid
               container
@@ -288,7 +285,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
               </Grid>
             </Grid>
           </>
-        ) : persona === '2' ? (
+        ) : persona === 2 ? (
           <>
             <Grid
               container
@@ -405,7 +402,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
               </Grid>
             </Grid>
           </>
-        ) : persona === '3' ? (
+        ) : persona === 3 ? (
           <>
             <Grid
               container
@@ -419,7 +416,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
-              <h3>Caso Deudor Solidario</h3>
+              <h3>Caso Deudor Solidario Natural</h3>
               <Grid item xs={12}>
                 <Box
                   component="form"
@@ -427,19 +424,104 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={3}>
-                      <FormControl size="small" fullWidth>
-                        <InputLabel>Tipo Deudor Solidario</InputLabel>
-                        <Select
-                          label="Tipo Deudor Solidario"
-                          onChange={on_input_change}
-                          name='tipoDeudor'
-                        >
-                          <MenuItem value='DeudorNatural'>Persona Natural</MenuItem>
-                          <MenuItem value='DeudorJuridico'>Persona Juridica / Apoderado</MenuItem>
-                        </Select>
-                      </FormControl>
+                    <Grid item xs={11} sm={3.5}>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Documento Deudor Solidario'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
                     </Grid>
+                    <Grid item xs={11} sm={3.3}>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {file_name !== '' ? file_name : 'Carga Oficio Respaldando Deuda'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            onChange={handle_file_selected}
+                          />
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        label="Dirección Notificación"
+                        helperText='Escribe la Dirección de Notificación'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='direccion'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        label="Ciudad"
+                        helperText='Escribe la Ciudad'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='ciudad'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        label="Teléfono Contacto"
+                        helperText='Escribe el Teléfono de Contacto'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='telefono'
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </>
+        ) : persona === 4 ? (
+          <>
+            <Grid
+              container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                mb: '20px',
+                mt: '20px',
+                p: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+              }}
+            >
+              <h3>Caso Deudor Solidario Juridico</h3>
+              <Grid item xs={12}>
+                <Box
+                  component="form"
+                  noValidate
+                  autoComplete="off"
+                >
+                  <Grid container spacing={2}>
                     <Grid item xs={11} sm={3.5}>
                       <Button
                         variant="outlined"
@@ -561,32 +643,33 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   <InputLabel>Periodicidad y Modalidad</InputLabel>
                   <Select
                     label="Periodicidad y Modalidad"
-                    name='periodicidadymodalidad'
+                    name='periodicidad'
                     defaultValue={""}
                     onChange={(event: event) => {
                       const { value } = event.target
-                      if(value === 'mensual') {
+                      set_num_periodicidad(parseInt(value))
+                      if(value === '1') {
                         set_periodicidad('meses')
                         set_limite(60)
                       }
-                      if(value === 'trimestral') {
+                      if(value === '3') {
                         set_periodicidad('trimestres')
                         set_limite(20)
                       }
-                      if(value === 'semestral') {
+                      if(value === '6') {
                         set_periodicidad('semestres')
                         set_limite(10)
                       }
-                      if(value === 'anual') {
+                      if(value === '12') {
                         set_periodicidad('años')
                         set_limite(5)
                       }
                     }}
                   >
-                    <MenuItem value="mensual">Mensual</MenuItem>
-                    <MenuItem value="trimestral">Trimestral</MenuItem>
-                    <MenuItem value="semestral">Semestral</MenuItem>
-                    <MenuItem value="anual">Anual</MenuItem>
+                    <MenuItem value='1'>Mensual</MenuItem>
+                    <MenuItem value="3">Trimestral</MenuItem>
+                    <MenuItem value="6">Semestral</MenuItem>
+                    <MenuItem value="12">Anual</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -596,11 +679,11 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   <Select
                     required
                     label={periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}
-                    name='plazo'
+                    name='cuota'
                     defaultValue={""}
                     onChange={(event: event) => {
                       const { value } = event.target
-                      set_plazo(value)
+                      set_plazo(parseInt(value))
                     }}
                   >
                     {
@@ -612,7 +695,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 </FormControl>
               </Grid>
               {
-                periodicidad === 'años' && parseInt(plazo) > 1 || periodicidad === 'semestres' && parseInt(plazo) > 2 || periodicidad === 'trimestres' && parseInt(plazo) > 4 || periodicidad === 'meses' && parseInt(plazo) > 12 ? (
+                periodicidad === 'años' && plazo > 1 || periodicidad === 'semestres' && plazo > 2 || periodicidad === 'trimestres' && plazo > 4 || periodicidad === 'meses' && plazo > 12 ? (
                   <>
                     <Grid item xs={12} sm={3} direction="row" rowSpacing={2}>
                       <FormControl size="small" fullWidth>
@@ -676,7 +759,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
         </Grid>
       </Grid>
       {
-        periodicidad === 'años' && parseInt(plazo) > 1 || periodicidad === 'semestres' && parseInt(plazo) > 2 || periodicidad === 'trimestres' && parseInt(plazo) > 4 || periodicidad === 'meses' && parseInt(plazo) > 12 ? (
+        periodicidad === 'años' && plazo > 1 || periodicidad === 'semestres' && plazo > 2 || periodicidad === 'trimestres' && plazo > 4 || periodicidad === 'meses' && plazo > 12 ? (
           <Grid
           container
           sx={{
@@ -841,13 +924,21 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   helperText="Escribe una observación"
                   size="small"
                   fullWidth
-                  name='observacion'
+                  name='observaciones'
                   onChange={on_input_change}
                 />
               </Grid>
               <FormGroup>
-                <FormControlLabel sx={{color: 'black !important'}} control={<Checkbox />} label="Aceptar términos y condiciones" />
-                <FormControlLabel sx={{color: 'black !important'}} control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
+                <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
+                <FormControlLabel
+                  control={<Checkbox
+                    name='notificaciones'
+                    onChange={(event: check) => {
+                      const { checked } = event.target
+                      set_notificacion(checked)
+                    }}
+                  />}
+                  label="Autorizar notificación por correo electrónico" />
               </FormGroup>
               <Stack
                 direction="row"
@@ -860,10 +951,11 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   variant='contained'
                   startIcon={<SaveIcon />}
                   onClick={() => {
+                    void post_registro_fac_pago({...form_state, fecha_generacion: Date(), id_tipo_actuacion: persona, periodicidad: num_periodicidad, cuotas: plazo, notificaciones: notificacion})
                     handle_open()
                   }}
                 >
-                Enviar Solicitud
+                  Enviar Solicitud
                 </Button>
               </Stack>
           </Box>

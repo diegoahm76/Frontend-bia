@@ -1,34 +1,316 @@
-// import { useEffect, useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// // Componentes de Material UI
-// import {
-//   Grid,
-//   Box,
-//   Stack,
-//   Button,
-//   IconButton,
-//   Avatar,
-//   Chip,
-// } from '@mui/material';
-// // Icons de Material UI
-// import AddIcon from '@mui/icons-material/Add';
-// // import VisibilityIcon from '@mui/icons-material/Visibility';
-// import EditIcon from '@mui/icons-material/Edit';
-// import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-// // Componentes personalizados
-// import { Title } from '../../../../components/Title';
-// // Hooks
-// import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { Grid } from "@mui/material";
+import { Title } from "../../../../components/Title";
+import SeleccionarIngresoCuarentena from "../componentes/SeleccionarIngresoCuarentena";
+import SeleccionarLoteSiembra from "../componentes/SeleccionarLoteSiembra";
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { set_current_plant_quarantine, set_current_nursery, set_current_plant_seed_lot, initial_satate_current_plant_seed_lot } from '../store/slice/materialvegetalSlice';
+import { useEffect, useState } from "react";
+import { add_plant_quarantine_service, annul_plant_quarantine_service, edit_plant_quarantine_service, get_liftings_service, get_mortalities_service, get_person_id_service } from "../store/thunks/materialvegetalThunks";
+import { type IObjNursery, type IObjQuarantine } from "../interfaces/materialvegetal";
+import { useForm } from "react-hook-form";
+import FormButton from "../../../../components/partials/form/FormButton";
+import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
+import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
+import { type GridColDef } from '@mui/x-data-grid';
+import { useSelector } from 'react-redux';
+import { type AuthSlice } from '../../../auth/interfaces';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function IngresoCuarentenaScreen(): JSX.Element {
- 
+  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
-    return (
-      <>
-      <h1>ingreso cuarentena</h1>
-      </>
-    );
-  }
-  
+  const { plant_quarantine_mortalities, plant_quarantine_lifting, planting_person, current_plant_seed_lot, nurseries, current_nursery, current_plant_quarantine } = useAppSelector((state) => state.material_vegetal);
+
+  const { control: control_cuarentena, handleSubmit: handle_submit, reset: reset_cuarentena, getValues: get_values, watch } = useForm<IObjQuarantine>();
+
+
+  const [action, set_action] = useState<string>("Crear")
+  const dispatch = useAppDispatch()
+
+  const columns_levantamiento: GridColDef[] = [
+    {
+        field: 'consec_levan_por_cuaren',
+        headerName: 'Consecutivo levantamiento',
+        width: 200,
+        renderCell: (params) => (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {params.value}
+            </div>
+        ),
+    },
+    {
+      field: 'fecha_levantamiento',
+      headerName: 'Fecha de levantamiento',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {new Date(params.value).toDateString()}
+        </div>
+      ),
+    },
+    {
+        field: 'cantidad_a_levantar',
+        headerName: 'Cantidad',
+        width: 200,
+        renderCell: (params) => (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {params.value}
+            </div>
+        ),
+    },
+    {
+        field: 'observaciones',
+        headerName: 'Observación',
+        width: 150,
+        renderCell: (params) => (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {params.value}
+            </div>
+        ),
+    },
+    
+
+  ];
+
+  const columns_mortalidad: GridColDef[] = [
+    {
+        field: 'consecutivo_mortalidad',
+        headerName: 'Consecutivo mortalidad',
+        width: 200,
+        renderCell: (params) => (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {params.value}
+            </div>
+        ),
+    },
+    {
+      field: 'fecha_mortalidad',
+      headerName: 'Fecha de mortalidad',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {new Date(params.value).toDateString()}
+        </div>
+      ),
+    },
+    {
+        field: 'cantidad_mortalidad',
+        headerName: 'Cantidad',
+        width: 200,
+        renderCell: (params) => (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {params.value}
+            </div>
+        ),
+    },
+    {
+        field: 'observaciones',
+        headerName: 'Observación',
+        width: 150,
+        renderCell: (params) => (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {params.value}
+            </div>
+        ),
+    },
+    
+
+  ];
+
+useEffect(() => {
+  void dispatch(get_person_id_service(userinfo.id_persona))
+}, []);
+
+  useEffect(() => {
+    reset_cuarentena({
+      ...current_plant_quarantine,
+      id_persona_cuarentena: planting_person.id_persona,
+      persona_cuarentena: planting_person.nombre_completo
+    })
+  }, [planting_person]);
+
+  useEffect(() => {
+    if (current_plant_quarantine.id_cuarentena_mat_vegetal !== null) {
+      set_action("editar")
+      if(current_plant_quarantine.id_persona_cuarentena !== null ){
+        void dispatch(get_person_id_service(current_plant_quarantine.id_persona_cuarentena?? 0))
+        void dispatch(get_liftings_service(current_plant_quarantine.id_cuarentena_mat_vegetal??0))
+        void dispatch(get_mortalities_service(current_plant_quarantine.id_cuarentena_mat_vegetal??0))
+      }
+    }
+    reset_cuarentena(current_plant_quarantine)
+  }, [current_plant_quarantine]);
+
+  useEffect(() => {
+    dispatch(set_current_plant_seed_lot(initial_satate_current_plant_seed_lot))
+  }, [current_nursery]);
+
+  useEffect(() => {
+    dispatch(set_current_plant_quarantine({
+      ...current_plant_quarantine,
+      id_vivero: get_values("id_vivero"),
+      id_bien: current_plant_seed_lot.id_bien,
+      agno_lote: current_plant_seed_lot.agno_lote,
+      nro_lote: current_plant_seed_lot.nro_lote,
+      cod_etapa_lote: current_plant_seed_lot.cod_etapa_lote,
+      saldo_disponible: current_plant_seed_lot.saldo_disponible,
+      cantidad_cuarentena: get_values("cantidad_cuarentena"),
+      descrip_corta_diferenciable: get_values("descrip_corta_diferenciable"),
+      id_persona_cuarentena: planting_person.id_persona,
+      persona_cuarentena: planting_person.nombre_completo,
+      motivo: get_values("motivo")
+    }))
+}, [current_plant_seed_lot]);
+
+  useEffect(() => {
+    if (watch("id_vivero") !== null) {
+      const vivero: IObjNursery | undefined = nurseries.find((p: IObjNursery) => p.id_vivero === watch("id_vivero"))
+      if (vivero !== undefined) {
+        dispatch(set_current_nursery(vivero))
+      }
+    }
+  }, [watch("id_vivero")]);
+
+  const on_submit = (data: IObjQuarantine): void => {
+    const form_data: any = new FormData();
+    console.log("submit")
+    if (current_plant_quarantine.id_cuarentena_mat_vegetal !== null && current_plant_quarantine.id_cuarentena_mat_vegetal !== undefined) {
+      set_action("editar")
+      const data_edit = {
+        ...data, cantidad_cuarentena: Number(data.cantidad_cuarentena)
+      }
+      form_data.append('data', JSON.stringify({ ...data_edit }));
+      form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
+      void dispatch(edit_plant_quarantine_service(form_data, current_plant_quarantine.id_cuarentena_mat_vegetal));
+    } else {
+      set_action("crear")
+      const fecha = new Date(data.fecha_cuarentena ?? "").toISOString()
+
+      const data_edit = {
+        ...data, fecha_cuarentena: fecha.slice(0, 10) + " " + fecha.slice(11, 19), cantidad_cuarentena: Number(data.cantidad_cuarentena)
+      }
+      form_data.append('data_ingreso_cuarentena', JSON.stringify({ ...data_edit }));
+      form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
+      void dispatch(add_plant_quarantine_service(form_data));
+    }
+  };
+  const on_submit_annul = (data: IObjQuarantine): void => {
+    const data_annul = {
+      cuarentena_abierta: false,
+      cuarentena_anulada: true,
+      justificacion_anulacion: data.justificacion_anulacion,
+      fecha_anulacion: data.fecha_anulacion,
+      id_persona_anula: data.id_persona_anula,
+    }
+    if (current_plant_quarantine.id_cuarentena_mat_vegetal !== null && current_plant_quarantine.id_cuarentena_mat_vegetal !== undefined) {
+      void dispatch(annul_plant_quarantine_service(current_plant_quarantine.id_cuarentena_mat_vegetal, data_annul));
+    }
+  };
+
+  return (
+    <>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12} marginY={2}>
+          <Title title="Ingreso a cuarentena de material vegetal"></Title>
+        </Grid>
+
+        <SeleccionarIngresoCuarentena
+          control_cuarentena={control_cuarentena}
+          get_values={get_values}
+        />
+    
+        {current_nursery.id_vivero !== null &&
+          <SeleccionarLoteSiembra />
+        }
+        {current_plant_quarantine.id_cuarentena_mat_vegetal !== null && 
+          <Grid
+            container
+            direction="row"
+            padding={2}
+            spacing={2}
+          >
+            {plant_quarantine_lifting.length > 0 && 
+              <Grid item xs={12} md={3}>
+                <BuscarModelo
+                  set_current_model={null}
+                  row_id={"id_item_levanta_cuarentena"}
+                  columns_model={columns_levantamiento}
+                  models={plant_quarantine_lifting}
+                  get_filters_models={null}
+                  set_models={null}
+                  button_submit_label='Historial levantamientos'
+                  form_inputs= {[]}
+                  modal_select_model_title='Historial levantamientos'
+                  modal_form_filters={[]}
+                  button_add_selection_hidden= {true}
+                  md_button={12}
+                  button_icon_class={<PlaylistAddCheckIcon/>}
+                />
+              </Grid>
+            }
+            {plant_quarantine_mortalities.length > 0 && 
+              <Grid item xs={12} md={3}>
+                <BuscarModelo
+                  set_current_model={null}
+                  row_id={"id_item_baja_viveros"}
+                  columns_model={columns_mortalidad}
+                  models={plant_quarantine_mortalities}
+                  get_filters_models={null}
+                  set_models={null}
+                  button_submit_label='Historial mortalidades'
+                  form_inputs= {[]}
+                  modal_select_model_title='Historial mortalidades'
+                  modal_form_filters={[]}
+                  button_add_selection_hidden= {true}
+                  md_button={12}
+                  button_icon_class={<PlaylistAddCheckIcon/>}
+                />
+              </Grid>
+            }
+          </Grid>
+        }
+        <Grid
+          container
+          direction="row"
+          padding={2}
+          spacing={2}
+        >
+          {(((current_plant_quarantine.cantidad_levantada??0) === 0) && ((current_plant_quarantine.cantidad_levantada??0) === 0)) &&
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={handle_submit(on_submit)}
+                icon_class={<SaveIcon />}
+                label={action}
+                type_button="button"
+              />
+            </Grid>
+          }
+          <Grid item xs={12} md={3}>
+            <FormButton
+              variant_button="outlined"
+              on_click_function={handle_submit(on_submit_annul)}
+              icon_class={<CloseIcon />}
+              label={"Anular"}
+              type_button="button"
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+    </>
+  );
+}

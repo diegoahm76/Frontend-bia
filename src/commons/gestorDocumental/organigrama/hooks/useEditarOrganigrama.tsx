@@ -196,6 +196,8 @@ const use_editar_organigrama = () => {
             type="button"
             title="Eliminar"
             onClick={() => {
+              console.log(params.row)
+              console.log(params.row.orden_nivel)
               delete_level(params.row.orden_nivel);
             }}
           >

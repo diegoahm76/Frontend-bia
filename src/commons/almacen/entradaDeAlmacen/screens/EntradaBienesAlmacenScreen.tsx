@@ -15,7 +15,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useAppDispatch } from "../../../../hooks";
-import { crear_entrada_bien, obtener_articulo_codigo, obtener_bodegas, obtener_consecutivo, obtener_porcentajes_iva, obtener_tipos_entrada } from "../thunks/Entradas";
+import { actualizar_entrada_bien, crear_entrada_bien, obtener_articulo_codigo, obtener_bodegas, obtener_consecutivo, obtener_persona, obtener_porcentajes_iva, obtener_tipos_entrada } from "../thunks/Entradas";
 import { control_error } from "../../../../helpers";
 import { get_tipo_documento } from "../../../../request";
 import { BusquedaArticulos } from "../../../../components/BusquedaArticulos";
@@ -35,7 +35,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [info_items, set_info_items] = useState<IInfoItemEntrada[]>([]);
   const [user_info, set_user_info] = useState<any>({});
   const [detalles_entrada, set_detalles_entrada] = useState<any[]>([]);
-  // const [previsualizacion, set_previsualizacion] = useState<any[]>([]);
+  const [entrada_update, set_entrada_update] = useState<boolean>(false);
   const [articulo, set_articulo] = useState<any>({});
   const [buscar_articulo, set_buscar_articulo] = useState<any>(null);
   const [msj_error_articulo, set_msj_error_articulo] = useState<string>("");
@@ -53,7 +53,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const [tipos_documentos, set_tipos_documentos] = useState<any>([]);
   const [iva, set_iva] = useState<string>("");
   const [porcentaje_iva, set_porcentaje_iva] = useState<any>([]);
-  const [proveedor, set_proveedor] = useState<any>({nombre: ""});
+  const [proveedor, set_proveedor] = useState<any>({});
   const [msj_error_iva, set_msj_error_iva] = useState<string>("");
   const [msj_error_proveedor, set_msj_error_proveedor] = useState<string>("");
   const [tipo_documento, set_tipo_documento] = useState<string>("");
@@ -112,6 +112,15 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     dispatch(obtener_consecutivo()).then((response: { success: boolean, numero_entrada: number }) => {
       if (response.success)
         set_numero_entrada(response.numero_entrada);
+    })
+  }
+
+  const obtener_persona_fc: (persona_id: number) => void = (persona_id: number) => {
+    dispatch(obtener_persona(persona_id)).then((response: { success: boolean, detail: string, data: any }) => {
+      if(response.success){
+        set_proveedor(response.data);
+        set_entrada_update(true);
+      }
     })
   }
 
@@ -331,15 +340,18 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   }
 
   const guardar_entrada = (): void => {
-    cargar_entradas();
+    if(info_items.length > 0){
+      cargar_entradas();
+    }
   }
 
   const limpiar_formulario = (): void => {
+    obtener_consecutivo_fc();
     set_entradas(undefined);
     set_info_items([]);
     set_detalles_entrada([]);
     set_articulo("");
-    set_buscar_articulo("");
+    set_buscar_articulo(null);
     set_msj_error_articulo("");
     set_codigo_articulo("");
     set_nombre_articulo("");
@@ -379,9 +391,15 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   useEffect(() => {
     if(entradas !== undefined)
+    if(entrada_update){
+      dispatch(actualizar_entrada_bien(buscar_articulo.id_entrada_almacen,entradas)).then((response: any) =>{
+        console.log("Se actualizó una entrada: ",response);
+      });
+    }else{
       dispatch(crear_entrada_bien(entradas)).then((response: any) =>{
         console.log("Se creo una entrada: ",response);
       });
+    }
   }, [entradas]);
 
   useEffect(() => {
@@ -411,16 +429,30 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   },[detalles_entrada]);
 
   useEffect(() => {
-    if(proveedor !== null){
+    if(proveedor !== null && proveedor !== undefined){
       set_tipo_documento(proveedor.tipo_documento);
       set_numero_documento(proveedor.numero_documento);
+      if((proveedor.nombre_completo === null || proveedor.nombre_completo === undefined) && (proveedor.id_persona !== null && proveedor.id_persona !== undefined))
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        proveedor.nombre_completo = proveedor.primer_nombre + (proveedor.segundo_nombre !== null ? (' '+proveedor.segundo_nombre+' ') : ' ') + proveedor.primer_apellido + (proveedor.segundo_apellido !== null ? (' '+proveedor.segundo_apellido+' ') : '');
       set_msj_error_proveedor("");
       set_msj_error_tdoc("");
     }
   },[proveedor]);
 
   useEffect(() => {
-    buscar_articulo === null ? set_buscar_articulo(null) : set_buscar_articulo(buscar_articulo);
+    if(buscar_articulo !== null){
+      set_numero_entrada(buscar_articulo.numero_entrada_almacen);
+      set_tipo_entrada(buscar_articulo.id_tipo_entrada);
+      set_bodega_ingreso(buscar_articulo.id_bodega);
+      set_motivo(buscar_articulo.motivo);
+      set_observaciones(buscar_articulo.observacion);
+      set_valor_total_entrada(buscar_articulo.valor_total_entrada);
+      set_observaciones(buscar_articulo.observacion);
+      set_observaciones(buscar_articulo.observacion);
+      set_fecha_entrada(dayjs(buscar_articulo.fecha_entrada));
+      obtener_persona_fc(buscar_articulo.id_proveedor);
+    }
   }, [buscar_articulo]);
 
   return (
@@ -923,20 +955,20 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               startIcon={<SaveIcon />}
               onClick={guardar_entrada}
             >
-              Guardar
+              {entrada_update ? 'Actualizar' : 'Guardar' } 
             </Button>
             <Button
               color='error'
               variant='contained'
               startIcon={<DeleteForeverIcon />}
               onClick={() => { set_anular_entrada_is_active(true) }}
-              disabled={false}
+              disabled={!entrada_update}
             >
               Anular
             </Button>
-            <AnularEntradaComponent is_modal_active={anular_entrada_is_active}
+            {anular_entrada_is_active && (<AnularEntradaComponent is_modal_active={anular_entrada_is_active}
               set_is_modal_active={set_anular_entrada_is_active}
-              title={"Anular entrada"} user_info={user_info} id_entrada={0}></AnularEntradaComponent>
+              title={"Anular entrada"} user_info={user_info} id_entrada={buscar_articulo.id_entrada_almacen}></AnularEntradaComponent>)}
             <Button
               color='inherit'
               variant="contained"
@@ -953,12 +985,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
             >
               Buscar
             </Button>
-            <BuscarEntradasComponent is_modal_active={buscar_entrada_is_active}
+            {buscar_entrada_is_active && (<BuscarEntradasComponent is_modal_active={buscar_entrada_is_active}
             set_is_modal_active={set_buscar_entrada_is_active}
             title={"Buscar entrada"} 
             tipos_entrada={tipos_entrada} 
-            set_articulo={set_buscar_articulo} 
-            set_entrada={set_entradas}></BuscarEntradasComponent>
+            set_articulo={set_buscar_articulo}></BuscarEntradasComponent>)}
             <Button
               color='secondary'
               variant='contained'

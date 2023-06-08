@@ -79,8 +79,10 @@ export interface PropsRegister {
   watch: UseFormWatch<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
 }
-export interface PropsRegisterAdmin { 
-  id_persona: number
+export interface PropsRegisterAdmin {
+  id_persona: number;
+  representante_legal?: number | null | undefined;
+  data: DataPersonas | undefined;
   numero_documento: string;
   tipo_documento: string;
   tipo_persona: string;
@@ -460,6 +462,10 @@ export interface ClaseTerceroPersona {
 export interface UpdateAutorizaNotificacion {
   acepta_autorizacion_email: boolean | undefined;
   acepta_autorizacion_sms: boolean | undefined;
+}
+export interface UpdateAutorizaNotificacionPropia {
+  acepta_notificacion_email: boolean | undefined;
+  acepta_notificacion_sms: boolean | undefined;
 }
 
 export interface DatosVinculacionCormacarena {
