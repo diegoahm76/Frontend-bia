@@ -7,7 +7,7 @@ import axios from 'axios';
 
 export const alertas = axios.create({
   // baseURL: process.env.REACT_APP_BACKEND_URL,
-  baseURL: 'http://localhost:8000/api/'
+  baseURL: 'https://back-end-bia-beta.up.railway.app/api/'
 });
 export const control_success = (message: ToastContent): any =>
   toast.success(message, {
@@ -116,7 +116,7 @@ export const crear_confi_alerta = async (configuracion: CrearAlerta): Promise<an
     });
 };
 
-// eliminar persona
+// eliminar estacion
 export const eliminar_estacion = async (idEstacion: number): Promise<any> => {
   return await api.delete(`estaciones/eliminar-estaciones/${idEstacion}`);
 };

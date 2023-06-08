@@ -15,11 +15,10 @@ import { Title } from '../../../../components/Title';
 
 import type {
   GridColDef,
-  // GridValueGetterParams
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
-import CrearSeriesCcdDialog from '../../ccd/componentes/CrearSeriesCcdDialog';
+import CrearSeriesCcdDialog from '../../ccd/componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 // Graficas
 
 const columns: GridColDef[] = [

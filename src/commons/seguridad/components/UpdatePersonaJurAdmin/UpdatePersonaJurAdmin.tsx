@@ -4,7 +4,6 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Typography,
   Button,
   Autocomplete,
   type AutocompleteChangeReason,
@@ -14,16 +13,11 @@ import {
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { LoadingButton } from '@mui/lab';
 import UpdateIcon from '@mui/icons-material/Update';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { CustomSelect } from '../../../../components/CustomSelect';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
-import dayjs, { type Dayjs } from 'dayjs';
 import type {
   ClaseTercero,
   ClaseTerceroPersona,
-  CrearPersonJuridicaAdmin,
   DataJuridicaUpdate,
   PropsRegisterAdmin,
   UpdateAutorizaNotificacion,
@@ -32,7 +26,6 @@ import { Title } from '../../../../components/Title';
 import {
   consultar_clase_tercero,
   consultar_clase_tercero_persona,
-  crear_persona_juridica,
   editar_persona_juridica,
 } from '../../request/Request'
 import { control_error, control_success } from '../../../../helpers';
@@ -47,10 +40,7 @@ import { type AxiosError } from 'axios';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
-  id_persona,
   data,
-  numero_documento,
-  tipo_documento,
   tipo_persona,
   register,
   handleSubmit: handle_submit,
@@ -66,28 +56,18 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
     dpto_notifiacion_opt,
     ciudad_notificacion_opt,
     naturaleza_empresa_opt,
-    error_email,
-    error_phone,
     nacionalidad_empresa,
     naturaleza_empresa,
     dpto_notifiacion,
     ciudad_notificacion,
     direccion_notificaciones,
     is_modal_active,
-    tipo_documento_opt,
-    tipo_documento_representante,
-    documento_representante,
-    is_search,
-    nombre_presentante,
-    validate_exits_representante,
     set_value_direction,
     on_change,
     open_modal,
   } = use_register_persona_j({ watch, setValue: set_value, getValues });
 
   const [type_direction, set_type_direction] = useState('');
-  const [fecha_inicio_cargo_rep_legal, set_fecha_nacimiento] =
-    useState<Dayjs | null>(null);
   const [clase_tercero, set_clase_tercero] = useState<ClaseTercero[]>([]);
   const [clase_tercero_persona, set_clase_tercero_persona] = useState<
     ClaseTercero[]
@@ -181,18 +161,6 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
       }
     }
   };
-
-  // establece la fecha de nacimiento
-  const on_change_birt_day = (value: Dayjs | null): void => {
-    const date = dayjs(value).format('YYYY-MM-DD');
-    set_value('fecha_inicio_cargo_rep_legal', date);
-    set_fecha_nacimiento(value);
-  };
-
-  const search_representante = (): void => {
-    void validate_exits_representante(getValues());
-  };
-
   useEffect(() => {
     void get_datos_clase_tercero();
   }, []);
@@ -200,29 +168,20 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
   useEffect(() => {
     if (data !== undefined) {
       set_value('tipo_persona', data.tipo_persona);
-      set_value('cod_pais_nacionalidad_empresa', data.cod_pais_nacionalidad_empresa);
+      set_value('cod_pais_nacionalidad_empresa',data.cod_pais_nacionalidad_empresa);
+      // set_dpto_notifiacion(data.cod_departamento_notificacion);
       set_value('cod_departamento_notificacion', data.cod_departamento_notificacion);
       set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
       set_value('direccion_notificaciones', data.direccion_notificaciones);
-      set_value('direccion_notificacion_referencia', data.direccion_notificacion_referencia)
-      
+      set_value('direccion_notificacion_referencia', data.direccion_notificacion_referencia);
+      set_value('acepta_notificacion_email', data.acepta_notificacion_email);
+      set_value('acepta_notificacion_sms', data.acepta_notificacion_sms)
+
     }
-      void get_datos_clase_tercero_persona(data?.id_persona as number);
-      
+    void get_datos_clase_tercero_persona(data?.id_persona as number);
+
   }, [data]);
 
-  const on_submit_create_juridica = handle_submit(async (data) => {
-    try {
-      data.ubicacion_georeferenciada = '';
-      data.numero_documento = numero_documento;
-      data.tipo_documento = tipo_documento;
-      data.tipo_persona = tipo_persona;
-      await crear_persona_juridica(data as CrearPersonJuridicaAdmin);
-      control_success('la persona se creó correctamente');
-    } catch (error) {
-      control_error('hubo un error al crear, intentelo de nuevo');
-    }
-  });
   const on_submit_update_juridica = handle_submit(async (datos) => {
     try {
       datos.ubicacion_georeferenciada = '';
@@ -230,22 +189,17 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
       delete datos.cod_departamento_notificacion
       datos.representante_legal = data?.representante_legal
       datos.fecha_inicio_cargo_rep_legal = data?.fecha_inicio_cargo_rep_legal
-      await editar_persona_juridica(id_persona, datos as DataJuridicaUpdate);
-      control_error('hubo un error al actualizar los datos, intentelo de nuevo');
+      await editar_persona_juridica(data?.id_persona, datos as DataJuridicaUpdate);
+      control_success('Se actualizo el usuario correctamente');
     } catch (error) {
-      control_error(error);
+      control_error('Ha ocuriido un error, intente nuevamente');
     }
   });
   return (
     <>
       <form
         onSubmit={(e) => {
-          if (id_persona > 0) {
-            void on_submit_update_juridica(e);
-          }
-          if (id_persona === 0) {
-            void on_submit_create_juridica(e);
-          }
+          void on_submit_update_juridica(e);
         }}
       >
         {/* Datos empresariales */}
@@ -259,15 +213,8 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               size="small"
               label="Dígito de verificación *"
               type="number"
-              disabled={id_persona > 0}
+              disabled={true}
               defaultValue={data?.primer_nombre}
-              error={errors.digito_verificacion?.type === 'required'}
-              helperText={
-                errors.digito_verificacion?.type === 'required'
-                  ? 'Este campo es obligatorio'
-                  : ''
-              }
-              {...register('digito_verificacion', { required: true })}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
@@ -275,15 +222,8 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               fullWidth
               size="small"
               label="Razón social *"
-              disabled={id_persona > 0}
+              disabled={true}
               defaultValue={data?.razon_social}
-              error={errors.razon_social?.type === 'required'}
-              helperText={
-                errors.razon_social?.type === 'required'
-                  ? 'Este campo es obligatorio'
-                  : ''
-              }
-              {...register('razon_social', { required: true })}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
@@ -291,17 +231,8 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               fullWidth
               size="small"
               label="Nombre comercial *"
-              disabled={id_persona > 0}
+              disabled={true}
               defaultValue={data?.nombre_comercial}
-              error={errors.nombre_comercial?.type === 'required'}
-              helperText={
-                errors.nombre_comercial?.type === 'required'
-                  ? 'Este campo es obligatorio'
-                  : ''
-              }
-              {...register('nombre_comercial', {
-                required: true,
-              })}
             />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
@@ -309,7 +240,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               onChange={on_change}
               label="Naturaleza empresa *"
               name="cod_naturaleza_empresa"
-              disabled={id_persona > 0}
+              disabled={true}
               value={naturaleza_empresa}
               options={naturaleza_empresa_opt}
               required={true}
@@ -322,7 +253,7 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               onChange={on_change}
               label="Nacionalidad empresa *"
               name="cod_pais_nacionalidad_empresa"
-              disabled={id_persona > 0}
+              disabled={true}
               value={nacionalidad_empresa}
               options={paises_options}
               required={true}
@@ -330,28 +261,24 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               register={register}
             />
           </Grid>
-          {id_persona > 0 && (
-            <>
-              <Grid item xs={12}>
-                <Stack
-                  justifyContent="flex-end"
-                  sx={{ m: '10px 0 20px 0' }}
-                  direction="row"
-                  spacing={2}
-                >
-                  <Button
-                    variant="outlined"
-                    startIcon={<RemoveRedEyeIcon />}
-                    onClick={() => {
-                      handle_open_historico_datos_r();
-                    }}
-                  >
-                    Historico Datos Restringidos
-                  </Button>
-                </Stack>
-              </Grid>
-            </>
-          )}
+          <Grid item xs={12}>
+            <Stack
+              justifyContent="flex-end"
+              sx={{ m: '10px 0 20px 0' }}
+              direction="row"
+              spacing={2}
+            >
+              <Button
+                variant="outlined"
+                startIcon={<RemoveRedEyeIcon />}
+                onClick={() => {
+                  handle_open_historico_datos_r();
+                }}
+              >
+                Historico Datos Restringidos
+              </Button>
+            </Stack>
+          </Grid>
         </Grid>
         {/* Datos de notificación */}
         <Grid container spacing={2} mt={0.1}>
@@ -442,52 +369,17 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               size="small"
               label="E-mail *"
               defaultValue={data?.email}
-              error={errors.email?.type === 'required' || error_email && id_persona === 0}
+              error={errors.email?.type === 'required'}
               type="email"
               helperText={
                 errors.email?.type === 'required'
-                  ? 'Este campo es obligatorio'
-                  : error_email && id_persona === 0
-                    ? 'Los emails no coinciden'
-                    : ''
+                  ? 'Este campo es obligatorio' : ''
               }
               {...register('email', {
                 required: true,
               })}
             />
           </Grid>
-          {id_persona === 0 && (
-            <>
-              <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Confirme su e-mail *"
-                  error={
-                    errors.confirmar_email?.type === 'required' || error_email
-                  }
-                  type="email"
-                  helperText={
-                    errors.confirmar_email?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : error_email
-                        ? 'Los emails no coinciden'
-                        : ''
-                  }
-                  {...register('confirmar_email', {
-                    required: true,
-                  })}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="caption" fontWeight="bold">
-                  NOTA: Se recomienda el registro de un número celular, este se
-                  usará como medio de recuperación de la cuenta, en caso de que
-                  olvide sus datos de acceso.
-                </Typography>
-              </Grid>
-            </>
-          )}
           <Grid item xs={12} sm={6} md={4}>
             <TextField
               fullWidth
@@ -495,184 +387,54 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               label="Celular"
               defaultValue={data?.telefono_celular}
               onCopy={(e: any) => e.preventDefault()}
-              error={errors.telefono_celular?.type === 'required' || error_phone && id_persona === 0}
+              error={errors.telefono_celular?.type === 'required'}
               helperText={
                 errors.telefono_celular?.type === 'required'
-                  ? 'Este campo es obligatorio'
-                  : error_phone && id_persona === 0
-                    ? 'Los número de celular no son iguales'
-                    : ''
+                  ? 'Este campo es obligatorio' : ''
               }
               {...register('telefono_celular')}
             />
           </Grid>
-          {id_persona === 0 && (
-            <>
-              <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                  fullWidth
-                  size="small"
-                  label="Confirme su celular"
-                  onCopy={(e: any) => e.preventDefault()}
-                  error={error_phone}
-                  helperText={
-                    error_phone ? 'Los número de celular no son iguales' : ''
-                  }
-                  {...register('confirmar_celular')}
-                />
-              </Grid>
-            </>
-          )}
-          {id_persona > 0 && (
-            <>
-              <Grid item xs={12}>
-                <Stack
-                  justifyContent="flex-end"
-                  sx={{ m: '10px 0 20px 0' }}
-                  direction="row"
-                  spacing={2}
-                >
-                  <Button
-                    variant="outlined"
-                    startIcon={<RemoveRedEyeIcon />}
-                    onClick={() => {
-                      handle_open_historico_direcciones();
-                    }}
-                  >
-                    Historico E-mail
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    startIcon={<RemoveRedEyeIcon />}
-                    onClick={() => {
-                      handle_open_historico_email();
-                    }}
-                  >
-                    Historico Direcciones
-                  </Button>
-                </Stack>
-              </Grid>
-            </>
-          )}
+          <Grid item xs={12}>
+            <Stack
+              justifyContent="flex-end"
+              sx={{ m: '10px 0 20px 0' }}
+              direction="row"
+              spacing={2}
+            >
+              <Button
+                variant="outlined"
+                startIcon={<RemoveRedEyeIcon />}
+                onClick={() => {
+                  handle_open_historico_direcciones();
+                }}
+              >
+                Historico E-mail
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<RemoveRedEyeIcon />}
+                onClick={() => {
+                  handle_open_historico_email();
+                }}
+              >
+                Historico Direcciones
+              </Button>
+            </Stack>
+          </Grid>
         </Grid>
         {/* Datos del representante legal */}
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
             <Title title="DATOS DEL REPRESENTANTE LEGAL" />
           </Grid>
-          {id_persona === 0 && (
-            <>
-              <Grid item xs={12} sm={6} md={4}>
-                <CustomSelect
-                  onChange={on_change}
-                  label="Tipo documento *"
-                  name="tipo_documento_representante"
-                  value={tipo_documento_representante}
-                  options={tipo_documento_opt}
-                  disabled={false}
-                  required={true}
-                  errors={errors}
-                  register={register}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                  size="small"
-                  label="Nombre de documento"
-                  disabled={tipo_documento_representante === ''}
-                  fullWidth
-                  error={errors.documento_representante?.type === 'required'}
-                  helperText={
-                    errors.documento_representante?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  {...register('documento_representante')}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <LoadingButton
-                  variant="contained"
-                  fullWidth
-                  color="primary"
-                  type="submit"
-                  loading={is_search}
-                  disabled={is_search || documento_representante === ''}
-                  onClick={() => {
-                    search_representante();
-                  }}
-                >
-                  Buscar
-                </LoadingButton>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                  size="small"
-                  label="Nombre del representante legal"
-                  disabled
-                  fullWidth
-                  value={nombre_presentante}
-                  {...register('nombre_representante_legal')}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Fecha de inicio como representante legal *"
-                    value={fecha_inicio_cargo_rep_legal}
-                    onChange={on_change_birt_day}
-                    renderInput={(params) => (
-                      <TextField
-                        fullWidth
-                        size="small"
-                        {...params}
-                        {...register('fecha_inicio_cargo_rep_legal', {
-                          required: true,
-                        })}
-                        error={
-                          errors.fecha_inicio_cargo_rep_legal?.type ===
-                          'required'
-                        }
-                        helperText={
-                          errors.fecha_inicio_cargo_rep_legal?.type ===
-                            'required'
-                            ? 'Este campo es obligatorio'
-                            : ''
-                        }
-                      />
-                    )}
-                  />
-                </LocalizationProvider>
-              </Grid>
-              {/* BOTONES */}
-              <Grid item spacing={2} justifyContent="end" container>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    sx={{
-                      textAlign: 'center',
-                      color: '#ffff',
-                    }}
-                    href="#/auth/login"
-                  >
-                    <Typography sx={{ color: 'black' }}>Buscar</Typography>
-                  </Button>
-                </Grid>
-              </Grid>
-            </>
-          )}
-          {id_persona !== 0 && data?.representante_legal !== undefined && (
-            <>
-              <Grid item xs={12}>
-                <DatosRepresentanteLegal
-                  id_representante_legal={data?.representante_legal as number}
-                  id_persona={id_persona}
-                  fecha_inicio={'2023-05-15'}
-                />
-              </Grid>
-            </>
-          )}
+          <Grid item xs={12}>
+            <DatosRepresentanteLegal
+              id_representante_legal={data?.representante_legal as number}
+              id_persona={data?.id_persona as number}
+              fecha_inicio={'2023-05-15'}
+            />
+          </Grid>
         </Grid>
         {/* Datos adicionales (opcionales) */}
         <Grid container spacing={2} mt={0.1}>
@@ -709,27 +471,16 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
         </Grid>
         {/* Autorización de notificación y tratamiento de datos */}
         <Grid container spacing={2} mt={0.1}>
-          {id_persona === 0 && (
-            <>
-              <Grid item xs={12}>
-                <Title title="AUTORIZACIÓN DE NOTIFICACIÓN Y TRATAMIENTO DE DATOS" />
-              </Grid>
-            </>
-          )}
-          {id_persona > 0 && (
-            <>
-              <Grid item xs={12}>
-                <Title title="AUTORIZACIÓN DE NOTIFICACIONES" />
-              </Grid>
-            </>
-          )}
+          <Grid item xs={12}>
+            <Title title="AUTORIZACIÓN DE NOTIFICACIONES" />
+          </Grid>
           <Grid item xs={12}>
             <FormControlLabel
               label="¿Autoriza notificaciones judiciales por correo electrónico?"
               control={
                 <Checkbox
                   size="small"
-                  disabled={id_persona > 0}
+                  disabled={true}
                   checked={acepta_notificacion_email}
                   {...register('acepta_notificacion_email')}
                 />
@@ -742,44 +493,40 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               control={
                 <Checkbox
                   size="small"
-                  disabled={id_persona > 0}
+                  disabled={true}
                   checked={acepta_notificacion_sms}
                   {...register('acepta_notificacion_sms')}
                 />
               }
             />
           </Grid>
-          {id_persona > 0 && (
-            <>
-              <Grid item xs={12}>
-                <Stack
-                  justifyContent="flex-end"
-                  sx={{ m: '10px 0 20px 0' }}
-                  direction="row"
-                  spacing={2}
-                >
-                  <Button
-                    variant="outlined"
-                    startIcon={<RemoveRedEyeIcon />}
-                    onClick={() => {
-                      handle_open_dialog_autorizacion();
-                    }}
-                  >
-                    Historico Autorizaciones
-                  </Button>
-                  <Button
-                    variant="contained"
-                    startIcon={<UpdateIcon />}
-                    onClick={() => {
-                      handle_open_dialog_notificaciones();
-                    }}
-                  >
-                    Actualizar Notificaciones
-                  </Button>
-                </Stack>
-              </Grid>
-            </>
-          )}
+          <Grid item xs={12}>
+            <Stack
+              justifyContent="flex-end"
+              sx={{ m: '10px 0 20px 0' }}
+              direction="row"
+              spacing={2}
+            >
+              <Button
+                variant="outlined"
+                startIcon={<RemoveRedEyeIcon />}
+                onClick={() => {
+                  handle_open_dialog_autorizacion();
+                }}
+              >
+                Historico Autorizaciones
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<UpdateIcon />}
+                onClick={() => {
+                  handle_open_dialog_notificaciones();
+                }}
+              >
+                Actualizar Notificaciones
+              </Button>
+            </Stack>
+          </Grid>
         </Grid>
         {/* Datos de clasificación Cormacarena */}
         <Grid container spacing={2} mt={0.1}>
@@ -815,44 +562,21 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
               </>
             )}
           </Grid>
-
           {/* BOTONES */}
-          {id_persona === 0 && (
-            <>
-              <Grid item spacing={2} justifyContent="end" container>
-                <Grid item>
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    fullWidth
-                    color="success"
-                    loading={is_saving}
-                    disabled={is_saving}
-                  >
-                    Guardar
-                  </LoadingButton>
-                </Grid>
-              </Grid>
-            </>
-          )}
-          {id_persona > 0 && (
-            <>
-              <Grid item spacing={2} justifyContent="end" container>
-                <Grid item>
-                  <LoadingButton
-                    type="submit"
-                    variant="contained"
-                    fullWidth
-                    color="success"
-                    loading={is_saving}
-                    disabled={is_saving}
-                  >
-                    Actualizar
-                  </LoadingButton>
-                </Grid>
-              </Grid>
-            </>
-          )}
+          <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                fullWidth
+                color="success"
+                loading={is_saving}
+                disabled={is_saving}
+              >
+                Actualizar
+              </LoadingButton>
+            </Grid>
+          </Grid>
         </Grid>
       </form>
       <DialogGeneradorDeDirecciones
@@ -864,31 +588,31 @@ export const UpdatePersonaJurAdmin: React.FC<PropsRegisterAdmin> = ({
       <DialogHistorialDatosRestringidos
         is_modal_active={is_modal_historico_datos_r}
         set_is_modal_active={set_is_modal_historico_datos_r}
-        id_persona={id_persona ?? 0}
+        id_persona={data?.id_persona ?? 0}
       />
       <DialogHistorialEmail
         is_modal_active={is_modal_active_historico_email}
         set_is_modal_active={set_is_modal_active_historico_email}
-        id_persona={id_persona ?? 0}
+        id_persona={data?.id_persona ?? 0}
         tipo_persona={tipo_persona ?? ''}
       />
 
       <DialogHistorialDirecciones
         is_modal_active={is_modal_active_historico_direcciones}
         set_is_modal_active={set_is_modal_active_historico_direcciones}
-        id_persona={id_persona ?? 0}
+        id_persona={data?.id_persona ?? 0}
         tipo_persona={tipo_persona ?? ''}
       />
       <DialogHistoricoAutorizaNotificaciones
         is_modal_active={is_modal_historico_autorizacion}
         set_is_modal_active={set_is_modal_historico_autorizacion}
-        id_persona={id_persona ?? 0}
+        id_persona={data?.id_persona ?? 0}
         tipo_persona={tipo_persona ?? ''}
       />
       <DialogAutorizaDatos
         is_modal_active={dialog_notificaciones}
         set_is_modal_active={set_dialog_notificaciones}
-        id_persona={id_persona ?? 0}
+        id_persona={data?.id_persona ?? 0}
         data_autorizacion={{
           acepta_autorizacion_email: acepta_notificacion_email,
           acepta_autorizacion_sms: acepta_notificacion_sms,

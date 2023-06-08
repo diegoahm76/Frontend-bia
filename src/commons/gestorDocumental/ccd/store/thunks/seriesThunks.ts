@@ -16,6 +16,7 @@ export const get_series_service: any = () => {
   ): Promise<AxiosResponse | AxiosError> => {
     const { ccd_current } = getState().ccd;
     const id_ccd: number = ccd_current.id_ccd;
+    console.log(id_ccd);
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const { data } = await api.get(`gestor/ccd/series/get/${id_ccd}/`);
@@ -44,10 +45,15 @@ export const create_series_service:any = (
       'modal-serie-subserie-id'
     )!;
     try {
+      console.log(newSeries)
       const id_ccd: number = ccd_current.id_ccd;
-      const { data } = await api.put(
-        `gestor/ccd/series/update/${id_ccd}/`,
-        newSeries
+      const { data } = await api.post(
+        `gestor/ccd/series/create/`,
+        /* `gestor/ccd/series/update/${id_ccd}/`, */
+        {
+          id_ccd,
+          series: newSeries
+        }
       );
       dispatch(get_series_service());
       clean();
