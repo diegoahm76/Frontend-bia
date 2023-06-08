@@ -125,7 +125,7 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
         const res_ccds_adapter: IList[] = await ccds_choise_adapter(response_ccds.data);
         set_list_ccds(res_ccds_adapter);
       } else {
-        control_error("Sin CCD's disponibles para activación");
+        control_error("Sin CCD's disponibles para activación en el organigrama actual");
       }
     } catch (err) {
       control_error(err);
@@ -133,8 +133,6 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
       set_loading(false);
     }
   };
-  
-
   // 4. Filtrar ccd seleccionado para mostrar datos de trd y tca
   useEffect(() => {
     if (ccd_selected !== undefined && ccd_selected !== '') {
