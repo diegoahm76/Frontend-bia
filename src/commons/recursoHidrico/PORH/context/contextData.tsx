@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { createContext, useContext } from 'react';
+import { api } from '../../../../api/axios';
+import { ca } from 'date-fns/locale';
+import { type ResponseServer } from '../../../../interfaces/globalModels';
+import { set } from 'date-fns';
 
 /* interface User {
   name: string;
@@ -8,17 +12,19 @@ import React, { createContext, useContext } from 'react';
 } */
 
 interface UserContext {
-  data: any[];
+  rows: any[];
   filter: any[];
   columns: string[];
   actionIcons: any[];
+  get_data_id: (id: number) => any;
 }
 
-export const DataContext = createContext<UserContext | null>({
-  data: [],
+export const DataContext = createContext<UserContext>({
+  rows: [],
   filter: [],
   columns: [],
-  actionIcons: []
+  actionIcons: [],
+  get_data_id: () => { },
 });
 
 export const UserProvider = ({
@@ -26,10 +32,18 @@ export const UserProvider = ({
 }: {
   children: React.ReactNode;
 }): any => {
-  const [data, setData] = React.useState<any>([]);
+  const [rows, set_rows] = React.useState<any>([]);
   const [filter, setFilter] = React.useState<any>([]);
   const [columns, setColumns] = React.useState<string[]>([]);
   const [actionIcons, setActionIcons] = React.useState<any[]>([]);
+
+  const get_data_id = async (id: number): Promise<any[]> => {
+    const { data } = await api.get<ResponseServer<any[]>>(
+        `hidrico/programas/get/programas/${id}/`
+    );
+    set_rows(data.data);
+    return data.data;
+};
 
   // create a function that find a data in the array
   const findData = (data: any[], id: number): any[] => {
@@ -49,21 +63,22 @@ export const UserProvider = ({
   /* const login = (newUser: User) => {
     setUser(newUser);
   };
-
+ 
    const logout = () => {
     setUser(null);
   };
 */
 
   const value = {
-    data,
-    setData,
+    rows,
+    set_rows,
     filter,
     setFilter,
     columns,
     setColumns,
     actionIcons,
-    setActionIcons
+    setActionIcons,
+    get_data_id,
   };
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };
