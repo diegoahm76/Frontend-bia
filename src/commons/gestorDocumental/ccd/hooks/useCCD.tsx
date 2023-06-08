@@ -20,11 +20,11 @@ import {
   get_organigrams_service,
   get_unitys_service,
 } from '../../organigrama/store/thunks/organigramThunks';
-import { get_series_service } from '../store/thunks/seriesThunks';
+// import { get_series_service } from '../store/thunks/seriesThunks';
 import { get_subseries_service } from '../store/thunks/subseriesThunks';
 import {
   create_assignments_service,
-  get_assignments_service,
+ // get_assignments_service,
 } from '../store/thunks/assignmentsThunks';
 import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
@@ -128,11 +128,16 @@ const use_ccd = () => {
   const data_create_ccd = watch_create_ccd();
 
   //  UseEffect para obtener organigramas
-  useEffect(() => {
+/*  useEffect(() => {
+    console.log(data_create_ccd, 'data_create_ccd')
     if (ccd_current !== null) {
-      const result_name = organigram.filter(
-        (item) => item.id_organigrama === ccd_current.id_organigrama
-      );
+
+      const result_name = organigram.filter((item) => {
+        console.log(ccd_current, 'ccd_current')
+      console.log(organigram, 'organigrama')
+        return item.id_organigrama === ccd_current.id_organigrama
+      })
+      console.log('result_name', result_name)
       const obj: ICCDForm = {
         id_ccd: ccd_current.id_ccd,
         nombre_ccd: ccd_current.nombre,
@@ -144,10 +149,14 @@ const use_ccd = () => {
         version: ccd_current.version,
         fecha_terminado: ccd_current.fecha_terminado,
       };
+      console.log(
+        obj,
+        'obj'
+      )
       reset_create_ccd(obj);
       set_save_ccd(true);
     }
-  }, [ccd_current]);
+  }, [ccd_current]); */
 
   useEffect(() => {
     if (assignments_ccd_current !== null) {
@@ -181,17 +190,18 @@ const use_ccd = () => {
     void dispatch(get_organigrams_service());
   }, [ccd_current]);
   //  UseEffect para obtener series
-  useEffect(() => {
+  //! se retira de momento al mandar un error en la petición durante la primer petición al render de la pantalla
+  /* useEffect(() => {
     void dispatch(get_series_service());
-  }, [ccd_current]);
+  }, [ccd_current]); */
   //  UseEffect para obtener subSeries
   useEffect(() => {
     void dispatch(get_subseries_service());
   }, [ccd_current]);
   //  UseEffect para obtener asignaciones
-  useEffect(() => {
+ /* useEffect(() => {
     void dispatch(get_assignments_service());
-  }, [ccd_current]);
+  }, [ccd_current]); */
 
   // useEffect para obtener el MoldOrganigram (jerarquia de niveles & unidades)
   useEffect(() => {
