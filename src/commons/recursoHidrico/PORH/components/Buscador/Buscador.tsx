@@ -1,44 +1,44 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
-import React, { useContext } from 'react';
-import { TextField, InputLabel, Button } from '@mui/material';
-import { makeStyles } from '@material-ui/core/styles';
-import { DataContext } from '../../context/contextData';
+import { LoadingButton } from '@mui/lab';
+import { Grid, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 
-const styles = makeStyles({
-  root: {
-    '& .MuiTextField-root': {
-      margin: '1rem',
-      width: '25ch'
-    }
-  }
-});
+// interface IProps {
+//   set_porh: any;
+// }
 
-export const BuscadorAtomPORH = (props: any): JSX.Element => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const BusquedaPorh: React.FC = () => {
+  const [is_search, set_is_search] = useState(false);
 
-  const {label} = props;
-  const classes = styles();
-
-  /* if (!data) {
-    return <></>;
-  } */
+  useEffect(() => {
+    set_is_search(false);
+  }, []);
 
   return (
-    <div>
-      <form className={classes.root} noValidate autoComplete="off">
-        <InputLabel htmlFor={
-            label
-        }>{
-          label
-          }</InputLabel>
+    <>
+      <Grid item xs={12} sm={6} md={3}>
         <TextField
-        name = {label}
-         id="outlined-basic" label="Outlined" variant="outlined" />
-         <Button variant="contained">
-          
-         </Button>
-      </form>
-    </div>
+          label="Nombre PORH *"
+          value='PORH RIO CHICAMOCHA'
+          disabled={true}
+          fullWidth
+          size="small"
+          margin="dense"
+          required
+          autoFocus
+        />
+      </Grid>
+      <Grid item xs={12} sm={6} md={2} container justifyContent="end">
+        <LoadingButton
+          type="submit"
+          variant="contained"
+          color="primary"
+          loading={is_search}
+          disabled={is_search}
+        >
+          Buscar
+        </LoadingButton>
+      </Grid>
+    </>
   );
 };

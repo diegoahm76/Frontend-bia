@@ -10,6 +10,8 @@ import { LoadingButton } from '@mui/lab';
 // import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import AddIcon from '@mui/icons-material/Add';
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarPrograma: React.FC = () => {
