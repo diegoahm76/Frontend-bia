@@ -7,9 +7,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import { EstadosProcesoModal } from "../components/estadosProceso/EstadosProcesoModal";
 import type { AtributoEtapa, EtapaProceso } from "../interfaces/proceso";
-import axios from "axios";
 import { DataGrid, GridToolbar, type GridColDef } from "@mui/x-data-grid";
 import { control_error, control_success } from "../../../helpers";
+import { api } from "../../../api/axios";
 // import type { GridRenderCellParams } from "@mui/x-data-grid";
 
 interface RowAtributosEtapa {
@@ -124,7 +124,7 @@ export const EstadosProcesoScreen: React.FC = () => {
   ];
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/procesos/etapas')
+    api.get('recaudo/procesos/etapas')
       .then((response) => {
         set_rows_etapas(response.data.data);
       })
@@ -149,7 +149,7 @@ export const EstadosProcesoScreen: React.FC = () => {
   }
 
   const get_atributos_etapa = (id: number): void => {
-    axios.get(`http://macarenia.bitpointer.co/api/recaudo/procesos/atributos/${id}`)
+    api.get(`recaudo/procesos/atributos/${id}`)
       .then((response) => {
         set_atributos(response.data.data);
       })
@@ -159,7 +159,7 @@ export const EstadosProcesoScreen: React.FC = () => {
   };
 
   const submit_new_atributo = (descripcion: string, obligatorio: number, id_tipo: number): void => {
-    axios.post('http://macarenia.bitpointer.co/api/recaudo/procesos/atributos/', {
+    api.post('recaudo/procesos/atributos/', {
       descripcion,
       obligatorio,
       id_tipo,
