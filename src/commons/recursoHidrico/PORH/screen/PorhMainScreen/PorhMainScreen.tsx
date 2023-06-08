@@ -9,13 +9,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
+import { get_data_id } from '../../components/AgregarProyectos/Services/request.service';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PorhMainScreen: React.FC = () => {
 
   const {
     rows,
-    get_data_id,
+    set_rows,
   } = useContext(DataContext);
  
   const columns: GridColDef[] = [
@@ -95,13 +96,11 @@ export const PorhMainScreen: React.FC = () => {
 
 
   ];
-  // const [rows, set_rows] = useState([]);
 
   const [is_agregar, set_is_agregar] = useState(false);
 
   useEffect(() => {
-    get_data_id(1);
-    console.log(rows);
+    void get_data_id(1, set_rows, 'get/programas');
   }, []);
 
   return (
