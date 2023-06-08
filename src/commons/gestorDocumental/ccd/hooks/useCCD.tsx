@@ -268,7 +268,7 @@ const use_ccd = () => {
     };
     void dispatch(update_ccds_service(new_ccd));
   };
-  console.log(data_asing, 'data_asing');
+  // console.log(data_asing, 'data_asing');
 
   // Funcion para crear la asignacion
   const create_asing = (): void => {
