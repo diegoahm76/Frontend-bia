@@ -10,30 +10,23 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { use_form } from '../../../../../hooks/useForm';
+import { useFormFiles } from '../../hooks/useFormFiles';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegistroRecepcion: React.FC = () => {
-  const [file_name, set_file_name] = useState('');
   const [date, set_date] = useState<Date | null>(new Date());
   const [fecha_string, set_fecha_string] = useState(dayjs(new Date()).format('YYYY-MM-DD'));
   const { form_state, on_input_change } = use_form({});
+  const { form_files, name_files, handle_change_file } = useFormFiles({});
 
-  const handle_date_change = (date: Date | null) => {
+  const handle_change_date = (date: Date | null) => {
     set_date(date);
     set_fecha_string(dayjs(date).format('YYYY-MM-DD'));
   };
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selected_file =
-      event.target.files != null ? event.target.files[0] : null;
-    if (selected_file != null) {
-      set_file_name(selected_file.name);
-    }
-    console.log('archivo', selected_file)
-  };
-
-  console.log('fecha', fecha_string)
-  console.log('texto', form_state)
+  console.log('fecha', fecha_string);
+  console.log('texto', form_state);
+  console.log('archivos', form_files);
 
   return (
     <>
@@ -124,7 +117,7 @@ export const RegistroRecepcion: React.FC = () => {
                       openTo="day"
                       views={[ 'day', 'month', 'year' ]}
                       value={date}
-                      onChange={handle_date_change}
+                      onChange={handle_change_date}
                       renderInput={(params) => (
                         <TextField
                           size='small'
@@ -165,7 +158,7 @@ export const RegistroRecepcion: React.FC = () => {
                   component="label"
                   startIcon={<CloudUploadIcon />}
                 >
-                  {file_name !== '' ? file_name : 'Documento Firmado'}
+                  {name_files.doc_firmado !== undefined ? name_files.doc_firmado : 'Documento Firmado'}
                     <input
                       hidden
                       type="file"
@@ -173,7 +166,7 @@ export const RegistroRecepcion: React.FC = () => {
                       autoFocus
                       style={{ opacity: 0 }}
                       name='doc_firmado'
-                      onChange={handle_file_selected}
+                      onChange={handle_change_file}
                     />
                 </Button>
               </Grid>
@@ -185,7 +178,7 @@ export const RegistroRecepcion: React.FC = () => {
                   component="label"
                   startIcon={<CloudUploadIcon />}
                 >
-                  {file_name !== '' ? file_name : 'Guía Transportador'}
+                  {name_files.guia !== undefined ? name_files.guia : 'Guía Transportador'}
                     <input
                       hidden
                       type="file"
@@ -193,7 +186,7 @@ export const RegistroRecepcion: React.FC = () => {
                       autoFocus
                       style={{ opacity: 0 }}
                       name='guia'
-                      onChange={handle_file_selected}
+                      onChange={handle_change_file}
                     />
                 </Button>
               </Grid>
