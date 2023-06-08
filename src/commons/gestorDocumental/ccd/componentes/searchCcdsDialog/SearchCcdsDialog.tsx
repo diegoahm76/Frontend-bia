@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -17,14 +17,8 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
-// import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
 import { get_ccd_current } from '../../store/slices/ccdSlice';
-
-interface IProps {
-  is_modal_active: boolean;
-  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  title: string;
-}
+import type { IProps } from './types/types';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({

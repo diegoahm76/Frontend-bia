@@ -118,7 +118,6 @@ const CrearSeriesCcdDialog = ({
   // Crear Catalogo de series
   const create_series = (e: any): void => {
     e.preventDefault();
-    console.log('chupenlo hps')
     let new_item: any[] = [];
     if (title_button === 'Agregar') {
       new_item = [
