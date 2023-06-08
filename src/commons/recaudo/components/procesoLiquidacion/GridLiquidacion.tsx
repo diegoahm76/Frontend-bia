@@ -8,59 +8,6 @@ import type { Liquidacion } from "../../interfaces/liquidacion";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { Search } from "@mui/icons-material";
 
-// const rows = [
-//     {
-//         id: 1,
-//         deudor: 'Leonardo Midas',
-//         factura: '2-4324-35-435-23',
-//         monto_inicial: "$23'430.000",
-//         anio: '2021',
-//         periodo: '12/12/2021 a 12/01/2022',
-//         concepto: 'TASA TUA',
-//         codigo_contable: '2432142'
-//     },
-//     {
-//         id: 2,
-//         deudor: 'Leonardo Midas',
-//         factura: '2-4324-35-435-23',
-//         monto_inicial: "$23'430.000",
-//         anio: '2021',
-//         periodo: '12/12/2021 a 12/01/2022',
-//         concepto: 'TASA TUA',
-//         codigo_contable: '2432142'
-//     },
-//     {
-//         id: 3,
-//         deudor: 'Leonardo Midas',
-//         factura: '2-4324-35-435-23',
-//         monto_inicial: "$23'430.000",
-//         anio: '2021',
-//         periodo: '12/12/2021 a 12/01/2022',
-//         concepto: 'TASA TUA',
-//         codigo_contable: '2432142'
-//     },
-//     {
-//         id: 4,
-//         deudor: 'Leonardo Midas',
-//         factura: '2-4324-35-435-23',
-//         monto_inicial: "$23'430.000",
-//         anio: '2021',
-//         periodo: '12/12/2021 a 12/01/2022',
-//         concepto: 'TASA TUA',
-//         codigo_contable: '2432142'
-//     },
-//     {
-//         id: 5,
-//         deudor: 'Leonardo Midas',
-//         factura: '2-4324-35-435-23',
-//         monto_inicial: "$23'430.000",
-//         anio: '2021',
-//         periodo: '12/12/2021 a 12/01/2022',
-//         concepto: 'TASA TUA',
-//         codigo_contable: '2432142'
-//     },
-// ]
-
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
   liquidaciones: Liquidacion[];
