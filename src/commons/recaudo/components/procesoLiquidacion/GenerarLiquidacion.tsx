@@ -1,8 +1,8 @@
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
 import type { Deudor, Expediente, FormLiquidacion } from "../../interfaces/liquidacion";
 import { useEffect, useState } from 'react';
-import axios from "axios";
 import SaveIcon from '@mui/icons-material/Save';
+import { api } from "../../../../api/axios";
 
 interface IProps {
   total_obligacion: number;
@@ -38,7 +38,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   const [expedientes, set_expedientes] = useState<Expediente[]>([]);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/deudores/')
+    api.get('recaudo/liquidaciones/deudores/')
       .then((response) => {
         set_deudores(response.data.data);
       })
@@ -48,7 +48,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
   }, []);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/expedientes')
+    api.get('recaudo/liquidaciones/expedientes')
       .then((response) => {
         set_expedientes(response.data.data);
       })

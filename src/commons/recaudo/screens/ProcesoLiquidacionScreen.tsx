@@ -3,9 +3,9 @@ import { Box, Grid, type SelectChangeEvent, Tab } from "@mui/material"
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { GenerarLiquidacion, DetalleLiquidacion } from "../components/procesoLiquidacion";
 import { Title } from "../../../components"
-import axios from 'axios';
 import type { FormDetalleLiquidacion, FormLiquidacion, Liquidacion, OpcionLiquidacion } from '../interfaces/liquidacion';
 import { DataGrid, type GridColDef, GridToolbar } from '@mui/x-data-grid';
+import { api } from '../../../api/axios';
 
 interface Row {
   id: number;
@@ -73,7 +73,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [rows, set_rows] = useState<Row[]>([]);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/liquidacion-base')
+    api.get('recaudo/liquidaciones/liquidacion-base')
       .then((response) => {
         set_liquidaciones(response.data.data);
       })
@@ -83,7 +83,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/opciones-liquidacion-base/')
+    api.get('recaudo/liquidaciones/opciones-liquidacion-base/')
       .then((response) => {
         set_opciones_liquidacion(response.data.data);
       })
@@ -125,7 +125,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         id_opcion_liq: Number(form.id_opcion_liq),
         id_liquidacion: id
       };
-      axios.post('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/detalles-liquidacion-base/', new_objeto)
+      api.post('recaudo/liquidaciones/detalles-liquidacion-base/', new_objeto)
         .then((response) => {
           console.log(response);
         })
@@ -136,7 +136,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   };
 
   const handle_submit_liquidacion = (): void => {
-    axios.post('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/liquidacion-base/', {
+    api.post('recaudo/liquidaciones/liquidacion-base/', {
       ...form_liquidacion,
       cod_deudor: Number(form_liquidacion.cod_deudor),
       cod_expediente: Number(form_liquidacion.cod_expediente),

@@ -13,37 +13,6 @@ interface IProps {
   handle_post_valores_proceso: () => void;
 }
 
-// const rows_detalle = [
-//   {
-//     id: 1,
-//     atributo: 'Acto administrativo',
-//     a: '',
-//     b: 'File_00002284741132.pdd'
-//   },
-//   {
-//     id: 2,
-//     atributo: 'Fecha de ejecutoriado',
-//     a: '',
-//     b: '21-11-2022'
-//   },
-//   {
-//     id: 3,
-//     atributo: 'Resolución',
-//     a: '',
-//     b: 'Resolucion_482104112022'
-//   },
-//   {
-//     id: 4,
-//     atributo: 'Observaciones',
-//     a: 'No se evidencia voluntad de pago',
-//   },
-//   {
-//     id: 5,
-//     atributo: 'Estudio de credito',
-//     a: 'Si',
-//   },
-// ]
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
 export const CobroCoactivo: React.FC<IProps> = ({ 
   rows_atributos, 

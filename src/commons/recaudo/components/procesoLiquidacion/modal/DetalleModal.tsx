@@ -11,20 +11,13 @@ interface IProps {
   add_new_row: (valor: string, variables: Record<string, string>) => void;
 }
 
-// const tipo_articulo = [{ value: 'estrato1', label: '1' }, { value: 'estrato2', label: '2' }, { value: 'estrato3', label: '3' },]
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DetalleModal: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, opcion_liquidacion, add_new_row }: IProps) => {
   const [variables_datos, set_variables_datos] = useState<Record<string, string>>({});
-  // const [tipo, set_tipo] = useState("");
 
   const handle_close = (): void => {
     set_is_modal_active(false);
   }
-
-  // const handle_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
-  //   set_tipo(event.target.value);
-  // }
 
   const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>, key: string): void => {
     const { value } = event.target;

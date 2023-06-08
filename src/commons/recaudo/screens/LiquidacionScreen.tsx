@@ -37,9 +37,9 @@ import { Modal } from "@material-ui/core";
 import { Liquidator } from "../components/liquidador/liquidator";
 import './LiquidacionScreen.css'
 import { PruebasLiquidacionModal } from "../components/constructorLiquidador/modal/PruebasLiquidacionModal";
-import axios from "axios";
 import type { OpcionLiquidacion } from "../interfaces/liquidacion";
 import { Add, AddCircleOutlineRounded, Build, Save, Science } from "@mui/icons-material";
+import { api } from "../../../api/axios";
 
 interface Rows {
   id: number;
@@ -60,7 +60,7 @@ export const LiquidacionScreen: React.FC = () => {
   const [modal_pruebas, set_modal_pruebas] = useState<boolean>(false);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/opciones-liquidacion-base')
+    api.get('recaudo/liquidaciones/opciones-liquidacion-base')
       .then((response) => {
         set_opciones_liquidaciones(response.data.data);
       })
@@ -239,7 +239,7 @@ export const LiquidacionScreen: React.FC = () => {
     // // console.log("data stringfly", JSON.stringify(data));
     // console.log("generateCode(): ", generateCode())
 
-    axios.post('http://macarenia.bitpointer.co/api/recaudo/liquidaciones/opciones-liquidacion-base/', {
+    api.post('recaudo/liquidaciones/opciones-liquidacion-base/', {
       nombre: formData.nombre_liquidacion,
       funcion: generateCode(),
       variables: variables.reduce((acumulador, valor) => {

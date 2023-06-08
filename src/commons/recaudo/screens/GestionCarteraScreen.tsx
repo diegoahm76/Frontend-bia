@@ -5,12 +5,12 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import { Title } from "../../../components"
 import { EditarCartera } from '../components/GestionCartera/EditarCartera';
 import { CobroCoactivo } from '../components/GestionCartera/CobroCoactivo';
-import axios from 'axios';
 import { DataGrid, GridToolbar, type GridColDef } from '@mui/x-data-grid';
 import type { AtributoEtapa, EtapaProceso, Proceso } from '../interfaces/proceso';
 import EditIcon from '@mui/icons-material/Edit';
 import type { FlujoProceso } from '../interfaces/flujoProceso';
 import { control_error, control_success } from '../../../helpers';
+import { api } from '../../../api/axios';
 // import { TablaGeneral } from '../../../components/TablaGeneral';
 
 interface RowProceso {
@@ -159,7 +159,7 @@ export const GestionCarteraScreen: React.FC = () => {
   ];
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/procesos/procesos-sin-finalizar')
+    api.get('recaudo/procesos/procesos-sin-finalizar')
       .then((response) => {
         set_procesos(response.data.data);
       })
@@ -184,7 +184,7 @@ export const GestionCarteraScreen: React.FC = () => {
   }, [procesos]);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/procesos/flujos')
+    api.get('recaudo/procesos/flujos')
       .then((response) => {
         set_flujos_proceso(response.data.data);
       })
@@ -219,7 +219,7 @@ export const GestionCarteraScreen: React.FC = () => {
 
   const mover_estado_actual = (): void => {
     if (etapa_destino) {
-      axios.get(`http://macarenia.bitpointer.co/api/recaudo/procesos/atributos/${etapa_destino}`)
+      api.get(`recaudo/procesos/atributos/${etapa_destino}`)
         .then((response) => {
           set_atributos_etapa(response.data.data);
           set_input_values({});
@@ -231,7 +231,7 @@ export const GestionCarteraScreen: React.FC = () => {
   };
 
   const handle_post_valores_sin_archivo = (id_atributo: string, value: string): void => {
-    axios.post('http://macarenia.bitpointer.co/api/recaudo/procesos/valores-proceso/', {
+    api.post('recaudo/procesos/valores-proceso/', {
       id_proceso: Number(id_proceso),
       id_atributo: Number(id_atributo),
       valor: value,
@@ -247,7 +247,7 @@ export const GestionCarteraScreen: React.FC = () => {
   };
 
   const handle_post_valores_con_archivo = (id_atributo: string, value: File): void => {
-    axios.postForm('http://macarenia.bitpointer.co/api/recaudo/procesos/valores-proceso/', {
+    api.postForm('recaudo/procesos/valores-proceso/', {
       id_proceso: Number(id_proceso),
       id_atributo: Number(id_atributo),
       documento: value,

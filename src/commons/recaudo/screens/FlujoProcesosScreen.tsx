@@ -8,11 +8,11 @@ import {
 import { Title } from "../../../components"
 import { useCallback, useEffect, useState } from 'react';
 import { FlowChart } from '../components/flowChart/FlowChart';
-import axios from "axios";
 import { getLayoutedElements } from "../components/flowChart/LayoutedElements/getLayoutedElements";
 import { AddFlujoProcesoModal } from "../components/flujoProcesos/modal/AddFlujoProcesoModal";
 import type { EtapaProceso } from "../interfaces/proceso";
 import type { Dataflow, FormDataFlujo } from "../interfaces/flujoProceso";
+import { api } from "../../../api/axios";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FlujoProcesosScreen: React.FC = () => {
@@ -29,7 +29,7 @@ export const FlujoProcesosScreen: React.FC = () => {
   const [is_submit, set_is_submit] = useState<boolean>(false);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/procesos/grafica')
+    api.get('recaudo/procesos/grafica')
       .then((response) => {
         set_dataflow(response.data);
       })
@@ -39,7 +39,7 @@ export const FlujoProcesosScreen: React.FC = () => {
   }, [is_submit]);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/procesos/etapas/')
+    api.get('recaudo/procesos/etapas/')
       .then((response) => {
         set_etapas_proceso(response.data.data);
       })
@@ -88,7 +88,7 @@ export const FlujoProcesosScreen: React.FC = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handle_submit = (): void => {
-    axios.post('http://macarenia.bitpointer.co/api/recaudo/procesos/flujos/', {
+    api.post('recaudo/procesos/flujos/', {
       ...form_data_flujo
     })
       .then((response) => {

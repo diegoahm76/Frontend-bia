@@ -66,27 +66,6 @@ const column_detalle: GridColDef[] = [
   },
 ]
 
-// const rows_detalle = [
-//   {
-//     id: 1,
-//     liquidacion: 'Liquidacion 1',
-//     concepto: 'Interes por mora',
-//     valor_base_liquidacion: '465.402',
-//     formula_aplicada: 'valor*0.02*12',
-//     valor_liquidado: '65000'
-//   },
-//   {
-//     id: 2,
-//     liquidacion: 'Liquidacion 2',
-//     concepto: 'Sancion',
-//     valor_base_liquidacion: '465.402',
-//     formula_aplicada: 'valor*0.1',
-//     valor_liquidado: '465540'
-//   },
-// ]
-
-// const tipo_liquidacion = [{ value: 'liquidacion_mora_sancion', label: 'Liquidacion de mora con sancion' }]
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
 export const DetalleLiquidacion: React.FC<IProps> = ({ opciones_liquidacion, set_total_obligacion, set_form_detalle_liquidacion }: IProps) => {
   const [rows, set_rows] = useState<Row[]>([]);

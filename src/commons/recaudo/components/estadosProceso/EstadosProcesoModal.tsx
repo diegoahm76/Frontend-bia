@@ -23,7 +23,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import type { TipoAtributo } from '../../interfaces/proceso';
-import axios from "axios";
+import { api } from "../../../../api/axios";
 
 interface IProps {
   is_modal_active: boolean;
@@ -42,7 +42,7 @@ export const EstadosProcesoModal: React.FC<IProps> = ({ is_modal_active, set_is_
   const [tipos_atributos, set_tipos_atributos] = useState<TipoAtributo[]>([]);
 
   useEffect(() => {
-    axios.get('http://macarenia.bitpointer.co/api/recaudo/procesos/tipos-atributos')
+    api.get('recaudo/procesos/tipos-atributos')
       .then((response) => {
         set_tipos_atributos(response.data.data);
       })
