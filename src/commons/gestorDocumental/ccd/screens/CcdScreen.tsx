@@ -35,6 +35,7 @@ export const CcdScreen: React.FC = () => {
 
   useEffect(() => {
     set_flag_btn_finish(ccd_current?.fecha_terminado !== null);
+    console.log(ccd_current)
     /* if (ccd_current?.fecha_terminado != null) {
       set_flag_btn_finish(true);
     } else {

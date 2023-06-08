@@ -21,7 +21,7 @@ import {
   get_unitys_service,
 } from '../../organigrama/store/thunks/organigramThunks';
 // import { get_series_service } from '../store/thunks/seriesThunks';
-import { get_subseries_service } from '../store/thunks/subseriesThunks';
+// import { get_subseries_service } from '../store/thunks/subseriesThunks';
 import {
   create_assignments_service,
  // get_assignments_service,
@@ -188,16 +188,18 @@ const use_ccd = () => {
   //  UseEffect para obtener organigramas
   useEffect(() => {
     void dispatch(get_organigrams_service());
-  }, [ccd_current]);
+  }, [
+    /* ccd_current, */
+  ]);
   //  UseEffect para obtener series
   //! se retira de momento al mandar un error en la petición durante la primer petición al render de la pantalla
   /* useEffect(() => {
     void dispatch(get_series_service());
   }, [ccd_current]); */
   //  UseEffect para obtener subSeries
-  useEffect(() => {
+ /* useEffect(() => {
     void dispatch(get_subseries_service());
-  }, [ccd_current]);
+  }, [ccd_current]); */
   //  UseEffect para obtener asignaciones
  /* useEffect(() => {
     void dispatch(get_assignments_service());
