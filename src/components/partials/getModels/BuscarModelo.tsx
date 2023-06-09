@@ -18,7 +18,7 @@ import FormDatePickerController from '../form/FormDatePickerController';
 
 interface IProps {
     form_inputs: any[];
-    button_submit_label: string;
+    button_submit_label?: string;
     modal_select_model_title: string;
     modal_form_filters: any[];
     set_models: any;

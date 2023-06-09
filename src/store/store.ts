@@ -20,23 +20,24 @@ import { assignments_slice } from "../commons/gestorDocumental/ccd/store/slices/
 import {
   marcas_slice,
   porcentajes_slice,
-  medida_slice
-} from '../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice';
-import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/BodegaSlice';
-import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
-import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
-import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
-import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/ObligacionesSlice';
-import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
+  medida_slice,
+} from "../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice";
+import { bodegas_slice } from "../commons/almacen/configuracion/store/slice/BodegaSlice";
+import { cv_others_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos";
+import { cve_vehicle_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo";
+import { solicitud_consumo_slice } from "../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo";
+import { obligaciones_slice } from "../commons/recaudo/facilidadPago/slices/ObligacionesSlice";
+import { deudores_slice } from "../commons/recaudo/facilidadPago/slices/DeudoresSlice";
 import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
 import { funcionarios_slice } from "../commons/recaudo/facilidadPago/slices/FuncionariosSlice";
 import { calidad_personas_slice } from "../commons/recaudo/facilidadPago/slices/CalidadPersonasSlice";
 import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
+import { solicitud_vivero_slice } from "../commons/conservacion/solicitudMaterial/slices/indexSolicitud";
 
 const persist_config = {
-  key: 'macarenia_app',
+  key: "macarenia_app",
   storage,
-  whitelist: ['auth', 'layout']
+  whitelist: ["auth", "layout"],
 };
 
 const app_reducers = combineReducers({
@@ -67,14 +68,15 @@ const app_reducers = combineReducers({
   facilidades: facilidades_slice.reducer,
   funcionarios: funcionarios_slice.reducer,
   calidad_personas: calidad_personas_slice.reducer,
-  solicitud_facilidad: solicitud_facilidad_slice.reducer
+  solicitud_facilidad: solicitud_facilidad_slice.reducer,
+  solicitud_vivero: solicitud_vivero_slice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
 
 export const store = configureStore({
   middleware: [thunk],
-  reducer: persist_reducer
+  reducer: persist_reducer,
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
