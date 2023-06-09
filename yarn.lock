@@ -1182,7 +1182,7 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@blockly/field-date@^6.0.12":
+"@blockly/field-date@6.1.1":
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/@blockly/field-date/-/field-date-6.1.1.tgz#55e1cbd787e47e222626dc9a322ccd8f2334da8a"
   integrity sha512-UUMsLCSvJtSkfKOrCyK8/wBQ6PT9miAMF73omqzPpOt71Pet8gGIvEP6WD1xbecLkE/Oh3tv8U817MOCMFCipA==

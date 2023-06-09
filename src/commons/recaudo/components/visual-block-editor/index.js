@@ -9,7 +9,9 @@ import './generator/generator';
 export const VisualBlockEditor = ({ workspace, readOnly, variables }) => {
 
   return (
-    <BlocklyComponent readOnly={readOnly}
+    <BlocklyComponent
+      readOnly={readOnly}
+      sounds={false}
       trashcan={true}
       media={'media/'}
       grid={{ spacing: 20, length: 3, colour: '#ccc', snap: true }}

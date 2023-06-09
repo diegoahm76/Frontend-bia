@@ -414,8 +414,8 @@ export const LiquidacionScreen: React.FC = () => {
         set_is_modal_active={set_modal_pruebas}
       />
       {(enableTest && open) && (
-        <Modal className='modal-container' open={open} onClose={() => { setOpen(false) }}>
-          <div className='modal'>
+        <Modal className='modal-container-liquidacion' open={open} onClose={() => { setOpen(false) }}>
+          <div className='modal-liquidacion'>
             <Liquidator
               setNotifications={setNotifications}
               variables={variables}
