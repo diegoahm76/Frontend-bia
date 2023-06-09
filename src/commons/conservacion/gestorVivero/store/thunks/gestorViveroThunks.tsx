@@ -9,7 +9,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine,
+  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine, initial_state_current_nursery,
   // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
@@ -69,6 +69,7 @@ export const add_nursery_service: any = (
         nursery
       );
       dispatch(get_nurseries_service());
+      dispatch(current_nursery(initial_state_current_nursery))
       control_success('El vivero se agrego correctamente');
       return data;
     } catch (error: any) {
@@ -93,6 +94,7 @@ export const edit_nursery_service: any = (
         nursery
       );
       dispatch(get_nurseries_service());
+      dispatch(current_nursery(initial_state_current_nursery))
       control_success('El vivero se edito correctamente');
       return data;
     } catch (error: any) {
