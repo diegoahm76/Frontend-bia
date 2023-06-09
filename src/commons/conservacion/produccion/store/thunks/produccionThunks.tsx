@@ -7,7 +7,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons
+  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_current_mezcla, set_bienes,set_current_bien,set_preparaciones,set_current_preparacion, set_preparacion_bienes
 } from '../slice/produccionSlice';
 import { api } from '../../../../../api/axios';
 
@@ -192,7 +192,20 @@ export const get_person_id_service = (
     }
   };
 };
-
+export const get_mezclas_service = (name: string): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/mezclas/get-list-mezclas/?nombre=${name ?? "" }`);
+      console.log(data);
+      dispatch(set_mezclas(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_mezcla_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 // crear cambio de etapa
 export const add_stage_change_service = (
   cambio: any,
@@ -237,6 +250,148 @@ export const edit_siembra_service = (
     } catch (error: any) {
       console.log('add_siembra_service');
       console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// obtener bienes preparacion
+export const get_bien_preparacion_id_service = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/mezclas/get-items-preparacion-mezclas/?id_preparacion_mezcla=${id}/`);
+ 
+      if ("data" in data) {
+        dispatch (set_preparacion_bienes(data.data))
+      } else {
+        // control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_person_document_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener preparaciones filtro
+export const get_preparaciones_service = (
+  mezcla: number,
+  vivero: string,
+  name: string
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/mezclas/filtro-preparacion-mezclas/?id_mezcla=${mezcla?? ""}&id_vivero=${vivero?? ""}&nombre_mezcla=${name?? ""}`);
+      dispatch(set_preparaciones(data.data));
+      console.log(data)
+      if ("data" in data){
+        if (data.data.length>0){
+          control_success("Se encontraron preparaciones")
+        } else {
+          control_error("No se encontraron preparaciones")
+        }
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_vegetal_materials_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// crear cambio de etapa
+export const add_preparacion_service = (
+  preparacion: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put('conservacion/mezclas/crear-preparacion-mezclas/', preparacion);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_siembra_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// editar siembra
+export const edit_preparacion_service = (
+  preparacion: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put('conservacion/mezclas/actualizar-preparacion-mezclas/', preparacion);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_siembra_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener bienes preparacion
+export const annul_preparacion_service = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/mezclas/anular-preparacion-mezclas/${id}/`);
+ 
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_person_document_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// Obtener bienes preparacion
+export const get_bienes_service = (
+  id_vivero: string | number,
+  codigo_bien: string | null,
+  nombre: string | null,
+  ): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
+      // const { data } = await api.get(`conservacion/mezclas/get-insumo-por-codigo-y-nombre/${id_vivero??""}/${codigo_bien??""}/${nombre??""}/`);
+      console.log(data)
+      dispatch(set_bienes(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_planting_goods_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
