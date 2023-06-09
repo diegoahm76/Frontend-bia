@@ -194,7 +194,7 @@ export const CarteraGeneralFecha: React.FC = () => {
               spacing={2}
             >
               <FormControl>
-                <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                   <DatePicker
                     label="Fecha Corte"
                     inputFormat="YYYY/MM/DD"

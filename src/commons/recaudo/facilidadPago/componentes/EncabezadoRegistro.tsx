@@ -5,7 +5,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const InputsEncabezado: React.FC = () => {
+export const EncabezadoRegistro: React.FC = () => {
 
   return (
     <>
@@ -21,7 +21,6 @@ export const InputsEncabezado: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-
         <Grid item xs={12}>
           <Box
             component="form"
@@ -67,7 +66,7 @@ export const InputsEncabezado: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormControl fullWidth>
-                  <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                     <DatePicker
                       label="Fecha Solicitud"
                       disabled

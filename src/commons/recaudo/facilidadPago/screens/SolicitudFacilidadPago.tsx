@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { InputsEncabezado } from '../componentes/InputsEncabezado';
+import { EncabezadoRegistro } from '../componentes/EncabezadoRegistro';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
@@ -119,7 +119,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
   return (
     <>
       <Title title='Solicitud de Facilidad de Pago - Usuario Externo' />
-      <InputsEncabezado />
+      <EncabezadoRegistro />
       <TablaObligacionesSolicitud />
       <Grid
         container
