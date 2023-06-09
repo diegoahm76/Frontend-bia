@@ -146,7 +146,7 @@ const CrearCvComputoForm = ({
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container spacing={2}>
-            <Title title="ESPECIFICACIONES FÍSICAS" />
+            <Title title="Especificasiones físicas" />
 
             <Grid item xs={12} sm={3}>
               <Controller
@@ -339,7 +339,7 @@ const CrearCvComputoForm = ({
 
             <DialogContent sx={{ mb: '0px' }}>
               <Grid container spacing={2}>
-                <Title title="ESPECIFICACIONES TÉCNICAS" />
+                <Title title="Especificaciones técnicas" />
 
                 <Grid item xs={11} sm={3}>
                   <Controller
@@ -452,7 +452,7 @@ const CrearCvComputoForm = ({
             </DialogContent>
             <DialogContent sx={{ mb: '0px' }}>
               <Grid container spacing={2}>
-                <Title title="CARACTERÍSTICAS" />
+                <Title title="Características" />
 
                 <Grid item xs={11} sm={3}>
                   <Controller

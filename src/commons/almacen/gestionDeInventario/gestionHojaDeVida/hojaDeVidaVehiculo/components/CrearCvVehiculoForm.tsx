@@ -315,7 +315,7 @@ const CrearCvVehiculoForm = ({
               />
             </Grid>
 
-            <Title title="ESPECIFICACIONES" />
+            <Title title="Especificaciones" />
             <Grid item xs={12} sm={3}>
               <Controller
                 name="id_marca"
@@ -419,7 +419,7 @@ const CrearCvVehiculoForm = ({
               />
             </Grid>
 
-            <Title title="INFORMACIÓN ADICIONAL" />
+            <Title title="Información adicional" />
             <Grid item xs={12} sm={3}>
               <Controller
                 name="numero_motor"
@@ -560,8 +560,8 @@ const CrearCvVehiculoForm = ({
               />
             </Grid>
 
-            <Title title="CONTROL DE DOCUMENTACIÓN" />
-            <Grid item xs={11} md={5} spacing={2}>
+            <Title title="Control de documentación" />
+            <Grid item xs={11} md={6} spacing={2}>
               <Controller
                 name="tarjeta_operacion"
                 control={control_vehiculo}
@@ -591,7 +591,7 @@ const CrearCvVehiculoForm = ({
               />
             </Grid>
 
-            <Grid item xs={11} md={10} spacing={2}>
+            <Grid item xs={11} md={6} spacing={2}>
               <Controller
                 name="observaciones_adicionales"
                 control={control_vehiculo}

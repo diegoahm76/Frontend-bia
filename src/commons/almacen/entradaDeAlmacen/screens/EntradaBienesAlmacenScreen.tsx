@@ -457,7 +457,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   return (
     <>
-      <h1>Entrada de bienes de Almacen</h1>
       <Grid
         container
         sx={{
@@ -469,6 +468,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+      <h1>Entrada de bienes de Almacen</h1>
         <Grid item md={12} xs={12}>
           <Title title="Entrada" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
@@ -571,7 +571,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
         <Grid item md={12} xs={12}>
           <Title title="Proveedor" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
-            <Grid item container spacing={2}>
+            <Grid item container spacing={3}>
               <Grid item xs={12} sm={3}>
                 <FormControl required size='small' fullWidth>
                   <InputLabel>Tipo de documento</InputLabel>
@@ -601,7 +601,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 />
                 {(msj_error_proveedor !== "") && (<FormHelperText error >El campo Numero documento es obligatorio.</FormHelperText>)}
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
                 <TextField
                   label="Nombre proveedor"
                   type={'text'}
@@ -612,7 +612,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 />
                 {(msj_error_proveedor !== "") && (<FormHelperText error >{msj_error_proveedor}</FormHelperText>)}
               </Grid>
-              <Grid item xs={12} sm={2}>
+              <Grid item xs={12} sm={3}>
                 <Button
                   color='primary'
                   variant='contained'
@@ -632,7 +632,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
             </Grid>
 
           </Box>
-          <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
+          <Box component="form" sx={{ mt: '20px', }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <FormControl required size='small' fullWidth>
