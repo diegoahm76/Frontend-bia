@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { TextField, Button, Select, MenuItem } from '@material-ui/core';
 import './liquidator.css';
 import { LiquidatorService } from './liquidator.api';
+import { modifyVariableInitValue } from '../visual-block-editor/utils';
 
 function Liquidator(props) {
   const [formData, setFormData] = useState(
@@ -61,8 +62,9 @@ function Liquidator(props) {
      * set default values for variables
      */
     localVariables.forEach((v) => {
-      console.log(endCode);
+      endCode= modifyVariableInitValue(endCode, v,initilState[v]);
     });
+    console.log(endCode);
 
     try {
       // eslint-disable-next-line no-eval
