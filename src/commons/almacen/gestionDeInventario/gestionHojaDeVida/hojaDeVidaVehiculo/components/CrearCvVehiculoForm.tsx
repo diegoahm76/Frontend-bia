@@ -561,7 +561,7 @@ const CrearCvVehiculoForm = ({
             </Grid>
 
             <Title title="Control de documentación" />
-            <Grid item xs={11} md={6} spacing={2}>
+            <Grid item xs={11} md={4} spacing={2}>
               <Controller
                 name="tarjeta_operacion"
                 control={control_vehiculo}
@@ -591,7 +591,7 @@ const CrearCvVehiculoForm = ({
               />
             </Grid>
 
-            <Grid item xs={11} md={6} spacing={2}>
+            <Grid item xs={11} md={8} spacing={2}>
               <Controller
                 name="observaciones_adicionales"
                 control={control_vehiculo}

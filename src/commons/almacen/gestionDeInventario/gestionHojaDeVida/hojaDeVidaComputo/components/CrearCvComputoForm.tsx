@@ -145,6 +145,7 @@ const CrearCvComputoForm = ({
 
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
+          
           <Grid container spacing={2}>
             <Title title="Especificasiones físicas" />
 
@@ -338,6 +339,7 @@ const CrearCvComputoForm = ({
             </Grid>
 
             <DialogContent sx={{ mb: '0px' }}>
+
               <Grid container spacing={2}>
                 <Title title="Especificaciones técnicas" />
 

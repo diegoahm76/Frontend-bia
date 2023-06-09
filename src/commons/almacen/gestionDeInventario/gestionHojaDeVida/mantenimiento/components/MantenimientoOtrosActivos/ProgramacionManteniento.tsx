@@ -101,7 +101,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
 
     return (
         <>
-            <Grid
+             <Grid
                 container
                 sx={{
                     position: 'relative',
@@ -112,10 +112,9 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-            <h1>Programación mantenimiento otros activos</h1>
                 <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
-                    <Title title="Búsqueda de artículo" />
+                    <Title title="Programación mantenimiento otros activos" />
                     <ArticuloComponent detalle_seleccionado_prop={detalle_seleccionado} tipo_articulo={"otros activos"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
@@ -188,9 +187,8 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                     {/* PREVISUALIZACION COMPONENT */}
                     <Title title='Previsualización' />
                     <PrevisualizacionComponent data_grid={rows} limpiar_formulario={limpiar_formulario} />
-                </Grid>
-           
-            <Grid container>
+
+                        <Grid container>
                 <Grid item xs={6}>
                     <Box
                         component="form"
@@ -226,7 +224,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                             )}
                         </Stack>
                     </Box>
-                </Grid> </Grid>
+                </Grid>
                 <Grid item xs={6}>
                     <Box
                         component="form"
@@ -288,6 +286,10 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                     </Box>
                 </Grid>
             </Grid>
+                </Grid>
+            </Grid>
+            
+        
         </>
     )
 }

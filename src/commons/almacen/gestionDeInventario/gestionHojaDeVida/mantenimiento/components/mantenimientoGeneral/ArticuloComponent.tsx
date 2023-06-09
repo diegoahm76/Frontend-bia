@@ -24,8 +24,8 @@ interface IProps {
     detalle_seleccionado_prop: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, user_info_prop, limpiar_formulario,detalle_seleccionado_prop}: IProps) => {
-  const dispatch = useAppDispatch();
+export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_details, user_info_prop, limpiar_formulario, detalle_seleccionado_prop }: IProps) => {
+    const dispatch = useAppDispatch();
 
     const {        // States
         title,
@@ -45,16 +45,16 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
     const [nombre, set_nombre] = useState<string | null>("");
 
     const busqueda_articulo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if(e.target.value !== null && e.target.value !== undefined && e.target.value !== ''){
-            if(tipo_articulo ==='vehículos'){
+        if (e.target.value !== null && e.target.value !== undefined && e.target.value !== '') {
+            if (tipo_articulo === 'vehículos') {
                 dispatch(get_cv_vehicle_service(e.target.value)).then((response: any) => {
-                  set_detalle_seleccionado(response);
+                    set_detalle_seleccionado(response);
                 })
-            }else if(tipo_articulo ==='computadores'){
+            } else if (tipo_articulo === 'computadores') {
                 dispatch(get_cv_computer_service(e.target.value)).then((response: any) => {
                     set_detalle_seleccionado(response.data);
                 })
-            }else{
+            } else {
                 dispatch(get_cv_others_service(e.target.value)).then((response: any) => {
                     set_detalle_seleccionado(response);
                 })
@@ -121,23 +121,33 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
                     <Grid item xs={12} sm={4}>
                         <TextField
                             label="Código"
-                            helperText="Ingresar Código"
                             size="small"
                             required
                             value={codigo_bien}
                             onBlur={busqueda_articulo}
                             fullWidth
+                            disabled
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                       
                         />
+
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
                             label="Nombre"
-                            helperText="Nombre"
+                            // helperText="Nombre"
                             size="small"
+                            required
                             value={nombre}
                             fullWidth
                             InputProps={{
                                 readOnly: true,
+                            }}
+                            disabled
+                            InputLabelProps={{
+                                shrink: true,
                             }}
                         />
                     </Grid>
