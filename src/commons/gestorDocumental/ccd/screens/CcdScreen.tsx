@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 // Components Material UI
 import {
@@ -496,11 +497,11 @@ export const CcdScreen: React.FC = () => {
           </Grid>
         </Grid>
       </>
-      <CrearSeriesCcdDialog
+      {/* <CrearSeriesCcdDialog
         is_modal_active={create_is_active}
         set_is_modal_active={set_create_is_active}
         title={title}
-      />
+      /> */}
       {consulta_ccd_is_active && (
         <SearchCcdsDialog
           is_modal_active={consulta_ccd_is_active}
