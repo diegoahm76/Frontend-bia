@@ -19,11 +19,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { control_error, control_success } from '../../../../../helpers';
 import { Title } from '../../../../../components/Title';
-import { eliminar_estado_civil, get_tipos_doc } from '../Request/request';
+import { eliminar_estado_civil, get_estado_civil } from '../Request/request';
 import type { GetEstadoCivil } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
 import { AgregarEstadoCivil } from '../Components/AgregarEstadoCivil';
-import { EditarEstadoCivil } from '../Components/EditarEstadoCivil';
+import { ActualizarEstadoCivil } from '../Components/EditarEstadoCivil';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
@@ -101,30 +101,33 @@ export const EstadoCivilScreen: React.FC = () => {
                                 onClick={() => {
                                     handle_open_editar();
                                     set_estado_civil(params.row);
-                                    console.log("se enviaron los siguientes parametros", params.row);
                                 }}
                             />
                         </Avatar>
                     </IconButton>
-                    <IconButton
-                        onClick={() => {
-                            confirmar_eliminar_estado_civil(params.row.cod_estado_civil as string)
-                        }}
-                    >
-                        <Avatar
-                            sx={{
-                                width: 24,
-                                height: 24,
-                                background: '#fff',
-                                border: '2px solid',
-                            }}
-                            variant="rounded"
-                        >
-                            <DeleteIcon
-                                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                            />
-                        </Avatar>
-                    </IconButton>
+                    {params.row.activo === false && (
+                        <>
+                            <IconButton
+                                onClick={() => {
+                                    confirmar_eliminar_estado_civil(params.row.cod_estado_civil as string)
+                                }}
+                            >
+                                <Avatar
+                                    sx={{
+                                        width: 24,
+                                        height: 24,
+                                        background: '#fff',
+                                        border: '2px solid',
+                                    }}
+                                    variant="rounded"
+                                >
+                                    <DeleteIcon
+                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                    />
+                                </Avatar>
+                            </IconButton>
+                        </>
+                    )}
                 </>
             ),
         },
@@ -143,10 +146,9 @@ export const EstadoCivilScreen: React.FC = () => {
 
     const get_traer_estado_civil = async (): Promise<void> => {
         try {
-            const response = await get_tipos_doc();
+            const response = await get_estado_civil();
             const datos_tipo_doc = response.map(
                 (datos: GetEstadoCivil) => ({
-                    id: datos.id,
                     cod_estado_civil: datos.cod_estado_civil,
                     nombre: datos.nombre,
                     precargado: datos.precargado,
@@ -155,8 +157,8 @@ export const EstadoCivilScreen: React.FC = () => {
                 })
             );
             set_rows(datos_tipo_doc);
-        } catch (err) {
-            control_error(err);
+        } catch (error: any) {
+            control_error(error.response.data.detail);
         }
     };
     const confirmar_eliminar_estado_civil = (estado_civil: string): void => {
@@ -253,11 +255,11 @@ export const EstadoCivilScreen: React.FC = () => {
                 set_is_modal_active={set_is_crear}
                 get_datos={get_traer_estado_civil}
             />
-            <EditarEstadoCivil
+            <ActualizarEstadoCivil
                 is_modal_active={is_editar}
                 set_is_modal_active={set_is_editar}
                 get_data={get_traer_estado_civil}
-                data_cargos={estado_civil}
+                data={estado_civil}
             />
         </>
     );

@@ -75,33 +75,35 @@ export const CargoScreen: React.FC = () => {
                                 onClick={() => {
                                     handle_open_editar();
                                     set_cargos(params.row);
-                                    console.log("se enviaron los siguientes parametros", params.row);
                                 }}
                             />
                         </Avatar>
                     </IconButton>
-                    <IconButton
-                        onClick={() => {
-                            confirmar_eliminar_cargo(params.row.id_cargo as number)
-                        }}
-                    >
-                        <Avatar
-                            sx={{
-                                width: 24,
-                                height: 24,
-                                background: '#fff',
-                                border: '2px solid',
+                    {params.row.activo === false && (
+                        <IconButton
+                            onClick={() => {
+                                confirmar_eliminar_cargo(params.row.id_cargo as number)
                             }}
-                            variant="rounded"
                         >
-                            <DeleteIcon
-                                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                            />
-                        </Avatar>
-                    </IconButton>
+                            <Avatar
+                                sx={{
+                                    width: 24,
+                                    height: 24,
+                                    background: '#fff',
+                                    border: '2px solid',
+                                }}
+                                variant="rounded"
+                            >
+                                <DeleteIcon
+                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                />
+                            </Avatar>
+                        </IconButton>
+                    )}
                 </>
             ),
         },
+
     ];
     const [rows, set_rows] = useState<Cargos[]>([]);
     const [cargos, set_cargos] = useState<Cargos>();
@@ -126,8 +128,8 @@ export const CargoScreen: React.FC = () => {
                 })
             );
             set_rows(datos_cargos);
-        } catch (err) {
-            control_error(err);
+        } catch (error: any) {
+            control_error(error.response.data.detail);
         }
     };
     const confirmar_eliminar_cargo = (id_cargo: number): void => {
@@ -157,23 +159,10 @@ export const CargoScreen: React.FC = () => {
     useEffect(() => {
         void get_traer_cargos();
     }, []);
+    
     return (
         <>
-            <Grid
-                container
-                spacing={1}
-                m={2}
-                p={2}
-                sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px',
-                    m: '10px 0 20px 0',
-                    mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                }}
-            >
+            <Grid container spacing={2} mt={0.1}>
                 <Grid item xs={12}>
                     <Title title="CONFIGURACIONES BÁSICAS CARGOS" />
                 </Grid>

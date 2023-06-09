@@ -3,10 +3,29 @@ import { CcdScreen } from '../screens/CcdScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdRoutes: React.FC = () => {
+
+  const routes = [
+    {
+      path: '',
+      element: () => <CcdScreen />,
+    },
+    {
+      path: '/*',
+      element: () => <Navigate to={'/'} />,
+    },
+  ];
+
   return (
     <Routes>
-      <Route path="" element={<CcdScreen />} />
-      <Route path="/*" element={<Navigate to={'/'} />} />
+      {
+        routes.map((route, index) => (
+          <Route
+            key={index}
+            path={route.path}
+            element={route.element()}
+          />
+        ))
+      }
     </Routes>
   );
 };

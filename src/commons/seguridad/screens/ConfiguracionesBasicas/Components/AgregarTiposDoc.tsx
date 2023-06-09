@@ -3,8 +3,8 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider
 import type React from 'react';
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
-import { crear_estado_civil } from '../Request/request';
-import type { GetEstadoCivil } from '../interfaces/interfaces';
+import { crear_tipos_doc } from '../Request/request';
+import type { TiposDoc } from '../interfaces/interfaces';
 import { control_error, control_success } from '../../../../../helpers';
 
 interface IProps {
@@ -14,7 +14,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, get_datos }) => {
+export const AgregarTiposDoc: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, get_datos }) => {
 
     const [is_loading, set_is_loading] = useState(false);
 
@@ -33,9 +33,9 @@ export const AgregarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_is_m
     const on_submit_cargo: SubmitHandler<FieldValues> = async (data) => {
         try {
             set_is_loading(true);
-            await crear_estado_civil(data as GetEstadoCivil);
+            await crear_tipos_doc(data as TiposDoc);
             set_is_modal_active(false);
-            control_success('Estado civil creado correctamente');
+            control_success('Tipo de documento creado correctamente');
             await get_datos();
             reset();
             set_is_loading(false);
@@ -51,30 +51,30 @@ export const AgregarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_is_m
             maxWidth="xl">
             <Box component="form"
                 onSubmit={handleSubmit(on_submit_cargo)}>
-                <DialogTitle>Crear Estado Civil</DialogTitle>
+                <DialogTitle>Crear Tipo de Documento</DialogTitle>
                 <Divider />
                 <DialogContent>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                label="Codigo Estado Civil"
+                                label="Codigo Tipo Documento"
                                 fullWidth
                                 size="small"
                                 margin="dense"
                                 required
                                 autoFocus
-                                {...register("cod_estado_civil", {
+                                {...register("cod_tipo_documento", {
                                     required: true,
                                 })}
-                                error={Boolean(errors.cod_estado_civil)}
+                                error={Boolean(errors.cod_tipo_documento)}
                                 helperText={
-                                    (errors.cod_estado_civil?.type === "required") ? "Este campo es obligatorio" : ''
+                                    (errors.cod_tipo_documento?.type === "required") ? "Este campo es obligatorio" : ''
                                 }
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                label="Nombre Estado Civil"
+                                label="Nombre Tipo Documento"
                                 fullWidth
                                 size="small"
                                 margin="dense"
