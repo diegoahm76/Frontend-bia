@@ -5,7 +5,7 @@ import { useState, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { crear_cargo } from '../Request/request';
 import type { CrearCargo } from '../interfaces/interfaces';
-import { control_success } from '../../../../../helpers';
+import { control_error, control_success } from '../../../../../helpers';
 
 interface IProps {
     is_modal_active: boolean;
@@ -43,11 +43,9 @@ export const AgregarCargo: React.FC<IProps> = ({ is_modal_active, set_is_modal_a
             await get_datos();
             reset();
             set_is_loading(false);
-        } catch (error) {
+        } catch (error: any) {
             set_is_loading(false);
-            // Manejo de errores
-            console.error('Ha ocurrido un error al crear el cargo');
-            // Puedes mostrar un mensaje de error o realizar alguna acción adicional aquí
+            control_error(error.response.data.detail);
         }
     };
 

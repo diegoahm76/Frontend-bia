@@ -3,9 +3,9 @@ import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, Di
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { EditarEstadoCivil } from '../interfaces/interfaces';
+import type { EditarTiposDoc } from '../interfaces/interfaces';
 import { control_error, control_success } from '../../../../../helpers';
-import { editar_estado_civil } from '../Request/request';
+import { editar_tipos_doc } from '../Request/request';
 
 interface IProps {
     is_modal_active: boolean;
@@ -15,7 +15,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ActualizarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, data, get_data }) => {
+export const ActualizarTipoDoc: React.FC<IProps> = ({ is_modal_active, set_is_modal_active, data, get_data }) => {
     const {
         register,
         reset,
@@ -24,7 +24,7 @@ export const ActualizarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_i
         watch,
         setValue: set_value,
         formState: { errors },
-    } = useForm<EditarEstadoCivil>();
+    } = useForm<EditarTiposDoc>();
 
     const [is_loading, set_is_loading] = useState(false)
 
@@ -39,7 +39,6 @@ export const ActualizarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_i
     useEffect(() => {
         set_value('nombre', data?.nombre);
         set_value('activo', data?.activo);
-        set_value('cod_estado_civil', data?.cod_estado_civil);
     }, []);
 
     useEffect(() => {
@@ -53,16 +52,12 @@ export const ActualizarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_i
         set_is_modal_active(false);
     }
 
-    const on_submit = async (data: EditarEstadoCivil): Promise<any> => {
+    const on_submit = async (datos: EditarTiposDoc): Promise<any> => {
         try {
             set_is_loading(true)
-            const datos_estado_civil = {
-                nombre: data.nombre,
-                activo: data.activo,
-            }
-            await editar_estado_civil(data.cod_estado_civil, datos_estado_civil as EditarEstadoCivil);
+            await editar_tipos_doc(data.cod_tipo_documento, datos);
             set_is_modal_active(false);
-            control_success('estado civil actualizado correctamente')
+            control_success('Tipos de Documento actualizado correctamente')
             void get_data()
             reset();
             set_is_loading(false)
@@ -77,31 +72,13 @@ export const ActualizarEstadoCivil: React.FC<IProps> = ({ is_modal_active, set_i
             onClose={handle_close}
             maxWidth="xl">
             <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
-                <DialogTitle>Editar Estado civil</DialogTitle>
+                <DialogTitle>Editar Tipo de Documento</DialogTitle>
                 <Divider />
                 <DialogContent sx={{ mb: '0px' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
-                                label="Codigo Estado Civil"
-                                fullWidth
-                                size="small"
-                                margin="dense"
-                                required
-                                autoFocus
-                                defaultValue={data?.cod_estado_civil}
-                                {...register("cod_estado_civil", {
-                                    required: true,
-                                })}
-                                error={Boolean(errors.cod_estado_civil)}
-                                helperText={
-                                    (errors.cod_estado_civil?.type === "required") ? "Este campo es obligatorio" : ''
-                                }
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Nombre Estado Civil"
+                                label="Nombre Tipo de Documento"
                                 fullWidth
                                 size="small"
                                 margin="dense"

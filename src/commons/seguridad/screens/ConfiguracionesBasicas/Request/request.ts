@@ -1,6 +1,6 @@
 import { api } from "../../../../../api/axios";
 import type { ResponseServer } from "../../../../../interfaces/globalModels";
-import type { Cargos, CrearCargo, EditarCargo, GetEstadoCivil } from "../interfaces/interfaces";
+import type { Cargos, CrearCargo, EditarCargo, EditarEstadoCivil, EditarTiposDoc, GetEstadoCivil, TiposDoc } from "../interfaces/interfaces";
 
 // export const get_cargos = async (): Promise<AxiosResponse<ResponseServer<Cargos[]>>> => {
 //     return await api.get<ResponseServer<Cargos[]>>(
@@ -42,7 +42,7 @@ export const editar_cargo = async (
 
 // estados civiles
 
-export const get_tipos_doc = async (): Promise<GetEstadoCivil[]> => {
+export const get_estado_civil = async (): Promise<GetEstadoCivil[]> => {
     const { data } = await api.get<GetEstadoCivil[]>(
         `personas/estado-civil/get-list/`
     );
@@ -59,4 +59,45 @@ export const crear_estado_civil = async (
 };
 export const eliminar_estado_civil = async (id_estado_civil: string): Promise<any> => {
     return await api.delete(`personas/estado-civil/delete/${id_estado_civil}`);
+};
+export const editar_estado_civil = async (
+    codigo: string,
+    datos: EditarEstadoCivil
+): Promise<EditarEstadoCivil> => {
+    const response = await api.put(
+        `personas/estado-civil/update/${codigo}/`,
+        datos
+    );
+    return response.data;
+};
+
+// tipos de documento
+
+export const get_tipos_doc = async (): Promise<TiposDoc[]> => {
+    const { data } = await api.get<TiposDoc[]>(
+        `personas/tipos-documento/get-list/`
+    );
+    return data;
+};
+export const crear_tipos_doc = async (
+    datos: TiposDoc
+): Promise<TiposDoc> => {
+    const response = await api.post(
+        `personas/tipos-documento/create/`,
+        datos
+    );
+    return response.data;
+};
+export const eliminar_tipos_doc = async (id_tipos_doc: string): Promise<any> => {
+    return await api.delete(`personas/tipos-documento/delete/${id_tipos_doc}`);
+};
+export const editar_tipos_doc = async (
+    codigo: string,
+    datos: EditarTiposDoc
+): Promise<EditarTiposDoc> => {
+    const response = await api.put(
+        `personas/tipos-documento/update/${codigo}/`,
+        datos
+    );
+    return response.data;
 };
