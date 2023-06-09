@@ -6,7 +6,7 @@ import {
   TextField,
   Stack,
   ButtonGroup,
-  Button,
+  Button
 } from '@mui/material';
 import Select from 'react-select';
 import { DataGrid } from '@mui/x-data-grid';
@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   to_resume_ccds_service,
   to_finished_ccds_service,
-  get_classification_ccds_service,
+  get_classification_ccds_service
 } from '../store/thunks/ccdThunks';
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
@@ -29,18 +29,16 @@ import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { ccd_current } = useAppSelector((state) => state.ccd);
-  const { assignments_ccd } = useAppSelector((state) => state.assignments);
+  const { ccd_current } = useAppSelector((state: any) => state.ccd);
+  const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
   useEffect(() => {
-    set_flag_btn_finish(ccd_current?.fecha_terminado !== null);
-    console.log(ccd_current)
-    /* if (ccd_current?.fecha_terminado != null) {
+    if (ccd_current?.fecha_terminado != null) {
       set_flag_btn_finish(true);
     } else {
       set_flag_btn_finish(false);
-    } */
+    }
   }, [ccd_current]);
 
   // Hooks
@@ -71,7 +69,7 @@ export const CcdScreen: React.FC = () => {
     // register_create_ccd,
     handle_submit,
     handle_submit_create_ccd,
-    clean_ccd,
+    clean_ccd
   } = use_ccd();
 
   return (
@@ -84,7 +82,7 @@ export const CcdScreen: React.FC = () => {
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
+          boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
         <Grid item xs={12}>
@@ -140,7 +138,7 @@ export const CcdScreen: React.FC = () => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error },
+                    fieldState: { error }
                   }) => (
                     <TextField
                       margin="dense"
@@ -168,7 +166,7 @@ export const CcdScreen: React.FC = () => {
                   rules={{ required: true }}
                   render={({
                     field: { onChange, value },
-                    fieldState: { error },
+                    fieldState: { error }
                   }) => (
                     <TextField
                       margin="dense"
@@ -200,10 +198,12 @@ export const CcdScreen: React.FC = () => {
                 variant="outlined"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  void dispatch(get_classification_ccds_service(
-                    control_create_ccd._formValues.nombre_ccd,
-                    control_create_ccd._formValues.version
-                  ))
+                  void dispatch(
+                    get_classification_ccds_service(
+                      control_create_ccd._formValues.nombre_ccd,
+                      control_create_ccd._formValues.version
+                    )
+                  );
                   // console.log(control_create_ccd._formValues.nombre_ccd)
                   // console.log(control_create_ccd._formValues.version)
                   set_consulta_ccd_is_active(true);
@@ -244,7 +244,7 @@ export const CcdScreen: React.FC = () => {
             borderRadius: '15px',
             p: '20px',
             mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
+            boxShadow: '0px 3px 6px #042F4A26'
           }}
         >
           <Grid item xs={12}>
@@ -286,7 +286,7 @@ export const CcdScreen: React.FC = () => {
                     >
                       CREAR SERIE
                     </Button>
-{/*                    <Button disabled>CLONAR</Button>
+                    {/*                    <Button disabled>CLONAR</Button>
                     <Button disabled>PREVISUALIZAR</Button> */}
                   </ButtonGroup>
                 </Grid>
@@ -338,7 +338,7 @@ export const CcdScreen: React.FC = () => {
             borderRadius: '15px',
             p: '20px',
             mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
+            boxShadow: '0px 3px 6px #042F4A26'
           }}
         >
           <Grid item xs={12}>
@@ -360,7 +360,7 @@ export const CcdScreen: React.FC = () => {
                     name="unidades_asignacion"
                     control={control}
                     rules={{
-                      required: true,
+                      required: true
                     }}
                     render={({ field }) => (
                       <Select
@@ -388,7 +388,7 @@ export const CcdScreen: React.FC = () => {
                     name="sries_asignacion"
                     control={control}
                     rules={{
-                      required: true,
+                      required: true
                     }}
                     render={({ field }) => (
                       <Select
@@ -416,7 +416,7 @@ export const CcdScreen: React.FC = () => {
                     name="subserie_asignacion"
                     control={control}
                     rules={{
-                      required: true,
+                      required: true
                     }}
                     render={({ field }) => (
                       <Select

@@ -115,9 +115,9 @@ const CrearSeriesCcdDialog = ({
     set_title_button('Agregar');
   };
 
-  // Crear Catalogo de series
-  const create_series = (e: any): void => {
-    e.preventDefault();
+  // Crear Catalogso de seriess --
+  const create_series = (): void => {
+    console.log('heeeloooo create series')
     let new_item: any[] = [];
     if (title_button === 'Agregar') {
       new_item = [
@@ -139,8 +139,8 @@ const CrearSeriesCcdDialog = ({
     void dispatch(create_series_service(new_item, clean));
   };
   // Crear subseries
-  const create_subseries = (e:any): void => {
-    e.preventDefault();
+  const create_subseries = (): void => {
+
     let new_item: any[] = [];
     if (title_button === 'Agregar') {
       new_item = [
@@ -196,13 +196,13 @@ const CrearSeriesCcdDialog = ({
   };
 
   //  Función para enviar los datos del formulario
-  const on_submit: SubmitHandler<IFormValues> = (e: any) => {
-    switch (title) {
+  const on_submit: SubmitHandler<IFormValues> = (t) => {
+    switch (title_button) {
       case 'Crear Catalogo de series':
-        create_series(e);
+        create_series();
         break;
       case 'Crear catalogo de subseries':
-        create_subseries(e);
+        create_subseries();
         break;
       default:
         break;

@@ -14,12 +14,17 @@ export const get_series_service: any = () => {
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().ccd;
-    const id_ccd: number = ccd_current.id_ccd;
-    console.log(id_ccd);
+    const { ccd } = getState((state: any) => state.ccd.ccd_current);
+    const { id} = ccd.ccd_current;
+    console.log(id)
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const { data } = await api.get(`gestor/ccd/series/get/${id_ccd}/`);
+      const { data } = await api.get(`gestor/ccd/series/get-by-id-ccd/2/`);
+      console.log(
+        '🚀 ~ file: seriesThunks.ts ~ line 37 ~ return ~ data',
+        data
+      )
+
       dispatch(get_series_ccd(data.data));
       // notificationSuccess(data.detail);
       return data;
@@ -39,7 +44,11 @@ export const create_series_service:any = (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().ccd;
+    const { ccd_current } = getState().ccd_slice;
+    console.log(
+      '🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ ccd_current',
+      ccd_current
+    );
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const element_modal_id = document.getElementById(
       'modal-serie-subserie-id'
