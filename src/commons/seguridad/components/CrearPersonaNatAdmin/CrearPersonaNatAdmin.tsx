@@ -818,16 +818,20 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
               Generar dirección
             </Button>
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              size="small"
-              type="textarea"
-              rows="3"
-              label="Complemento dirección"
-              {...register('direccion_laboral_ref')}
-            />
-          </Grid>
+          {id_persona === 0 && (
+            <>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  size="small"
+                  type="textarea"
+                  rows="3"
+                  label="Complemento dirección"
+                  {...register('direccion_laboral_ref')}
+                />
+              </Grid>
+            </>
+          )}
         </Grid>
         {/* Autorización de notificación y tratamiento de datos */}
         <Grid container spacing={2} mt={0.1}>

@@ -7,7 +7,7 @@ import { type GridColDef } from '@mui/x-data-grid';
 
 import {  useAppDispatch } from '../../../../hooks';
 
-import { set_current_despacho } from '../store/slice/viveroSlice';
+import { initial_state_despacho, set_current_despacho } from '../store/slice/viveroSlice';
 import { type IDespacho } from "../interfaces/vivero";
 
 interface IProps {
@@ -113,6 +113,7 @@ const SeleccionarDespacho = ({
           dispatch(set_current_despacho(data.data[0]))
           control_success("Se selecciono el despacho ")
         } else{
+          dispatch(set_current_despacho(initial_state_despacho))
           control_error(data.detail)
         }
   

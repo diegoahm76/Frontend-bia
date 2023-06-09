@@ -104,3 +104,4 @@ export const post_documentos_persona = async (archivo: any = {} ): Promise<any> 
   })
   return data
 }
+

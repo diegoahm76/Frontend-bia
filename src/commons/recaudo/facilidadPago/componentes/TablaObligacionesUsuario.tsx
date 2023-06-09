@@ -247,7 +247,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
               void handle_submit()
             }}
           >
-          Crear Facilidad de Pago
+            Crear Facilidad de Pago
           </Button>
         </Stack>
         </Grid>

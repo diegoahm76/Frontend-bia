@@ -45,7 +45,6 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   getValues,
 }: PropsUpdateJ) => {
   const {
-    is_saving,
     paises_options,
     departamentos_opt,
     dpto_notifiacion_opt,
@@ -82,6 +81,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   
   const [type_direction, set_type_direction] = useState('');
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
+  const [loading, set_loading] = useState<boolean>(false);
 
   const [dialog_notificaciones, set_dialog_notificaciones] =
     useState<boolean>(false);
@@ -110,44 +110,44 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   };
 
   useEffect(() => {
-    console.log('getValues', getValues());
-    console.log('data', data);
     if (data !== null) {
       set_value('tipo_persona', data.tipo_persona);
       set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
       set_value('pais_nacimiento', data.pais_nacimiento);
-      set_value('genero', data.sexo);
+      set_value('sexo', data.sexo);
       set_value('estado_civil', data.estado_civil);
       set_value('departamento_expedicion', data.cod_departamento_expedicion);
-      set_value('ciudad_expedicion', data.cod_municipio_expedicion_id);
+      set_value('cod_municipio_expedicion_id', data.cod_municipio_expedicion_id);
       // residencia
       set_value('pais_residencia', data.pais_residencia);
       set_value('departamento_residencia', data.cod_departamento_residencia);
       set_value('municipio_residencia', data.municipio_residencia);
-      set_value('direccion', data.direccion_residencia);
+      set_value('direccion_residencia', data.direccion_residencia);
       set_value('direccion_residencia_ref', data.direccion_residencia_ref);
       // notificaciones
       set_value('dpto_notifiacion', data.cod_departamento_notificacion);
-      set_value('ciudad_notificacion', data.cod_municipio_notificacion_nal);
+      set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
       set_value('direccion_notificaciones', data.direccion_notificaciones);
       set_value('complemento_direccion', data.direccion_notificacion_referencia);
       // laboral
       set_value('departamento_laboral', data.cod_departamento_laboral);
-      set_value('municipio_laboral', data.cod_municipio_laboral_nal);
+      set_value('cod_municipio_laboral_nal', data.cod_municipio_laboral_nal);
       set_value('direccion_laboral', data.direccion_laboral);
-
     }
   }, [data]);
 
   const on_submit_update_natural = handle_submit(async (datos) => {
     try {
+      set_loading(true);
       datos.ubicacion_georeferenciada = '';
       await editar_persona_natural_cuenta_propia(datos as DataNaturaUpdate);
       control_success('la persona se actualizó correctamente');
+      set_loading(false);
     } catch (error) {
       control_error(
         'Ha ocurrido un error al actualizar la persona, por favor intente nuevamente'
       );
+      set_loading(false);
     }
   });
 
@@ -624,17 +624,6 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
               Generar dirección
             </Button>
           </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              size="small"
-              type="textarea"
-              rows="3"
-              label="Complemento dirección"
-              defaultValue={data.direccion_laboral}
-              {...register('direccion_laboral_ref')}
-            />
-          </Grid>
         </Grid>
         {/* Autorización de notificación y tratamiento de datos */}
         <Grid container spacing={2} mt={0.1}>
@@ -693,8 +682,8 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
                 variant="contained"
                 fullWidth
                 color="success"
-                loading={is_saving}
-                disabled={is_saving}
+                loading={loading}
+                disabled={loading}
               >
                 Actualizar
               </LoadingButton>

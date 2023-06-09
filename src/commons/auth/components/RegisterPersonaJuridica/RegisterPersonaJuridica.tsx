@@ -133,7 +133,7 @@ const DatosEmpresariales: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -340,7 +340,7 @@ const DatosNotificacionNacional: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -492,7 +492,7 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'black' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -630,7 +630,7 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'white' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
@@ -796,7 +796,7 @@ const DatosAcceso: (props: PropsElement) => JSX.Element = ({
               }}
               href="#/auth/login"
             >
-              <Typography sx={{ color: 'white' }}>Volver</Typography>
+              <Typography sx={{ color: 'white' }}>Inicio</Typography>
             </Button>
           </Grid>
           <Grid item>
