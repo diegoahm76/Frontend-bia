@@ -7,7 +7,7 @@ const initial_state = {
 
 // Listar Funcionarios desde Pag. Usuario Interno
 export const get_funcionarios = createAsyncThunk('facilidades_pago/get_funcionarios', async () => {
-  const { data } = await api.get('recaudo/pagos/funcionarios/')
+  const { data } = await api.get(`recaudo/pagos/funcionarios/`)
   return data.data
 })
 
