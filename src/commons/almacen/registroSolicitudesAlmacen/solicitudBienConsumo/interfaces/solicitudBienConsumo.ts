@@ -1,7 +1,7 @@
 export interface ISolicitudConsumo {
   current_solicitud: IObjSolicitud; // solicitud para crear
   solicitudes: IObjSolicitud[]; // solicitudes
-  curren_solicitud_vivero: IObjSolicitudVivero;
+  current_solicitud_vivero: IObjSolicitudVivero;
   solicitudes_vivero: IObjSolicitudVivero[];
   bienes_solicitud: IObjBienesSolicitud[]; // solicit;ud bienes por crear
   bienes: IObjBienConsumo[];

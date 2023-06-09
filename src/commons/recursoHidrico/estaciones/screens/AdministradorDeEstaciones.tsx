@@ -143,7 +143,6 @@ export const AdministradorDeEstaciones: React.FC = () => {
             });
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (estacion) {
-                console.log("Paso a no eliminar")
                 control_error("La estación no se puede eliminar porque contiene datos");
             }
 
@@ -173,8 +172,8 @@ export const AdministradorDeEstaciones: React.FC = () => {
             text: "¿Estas seguro?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#8BC34A",
-            cancelButtonColor: "#B71C1C",
+            confirmButtonColor: "#0EC32C",
+            cancelButtonColor: "#DE1616",
             confirmButtonText: "Si, elminar!",
             cancelButtonText: "Cancelar",
         }).then(async (result) => {

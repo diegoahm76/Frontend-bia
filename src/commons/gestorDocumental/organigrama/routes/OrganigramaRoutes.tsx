@@ -1,17 +1,32 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+// eslint-disable-next-line @typescript-eslint/naming-convention
 import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
 import { OrganigramaScreen } from '../screens/OrganigramaScreen';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
+const routes = [
+  {
+    path: "crear/",
+    name: "crear",
+    component: () => (
+      <OrganigramaScreen/>
+    ),
+  },
+];
+
+
 export const OrganigramaRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="crear/*" element={<OrganigramaScreen />} />
-      <Route
-        path="cambio_organigrama_actual/*"
-        element={<OrganigramaScreen />}
-      />
-      <Route path="/*" element={<Page404 />} />
+      {routes.map((route) => (
+        <Route
+          key={route.path}
+          path={`${route.path}/${route.path === "/" ? "" : "*"}`}
+          element={route.component()}
+        />
+      ))}
+      <Route path="/*" element={<Page404 />} /> 
     </Routes>
   );
 };
