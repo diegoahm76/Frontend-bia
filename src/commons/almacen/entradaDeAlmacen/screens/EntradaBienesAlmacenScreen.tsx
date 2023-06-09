@@ -370,6 +370,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     set_numero_documento("");
     set_bodega_ingreso("22");
     set_iva("");
+    set_entrada_update(false);
     limpiar_detalle();
   }
   const limpiar_detalle = (): void => {
