@@ -70,8 +70,11 @@ export const get_classification_ccds_service: any = (name: string, version: stri
     dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
+      console.log('hellllllllloooooooooooooo')
       const { data } = await api.get(
-        `gestor/ccd/get-ccd/?nombre=${name}&version=${version}`
+        // `gestor/ccd/get-busqueda/?nombre=CCD1.1&version=1.1`
+        `gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`
+        // `gestor/ccd/get-ccd/?nombre=${name}&version=${version}`
       );
       console.log(data.data);
       dispatch(get_ccds(data.data));

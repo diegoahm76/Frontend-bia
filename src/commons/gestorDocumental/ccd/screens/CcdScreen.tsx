@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   to_resume_ccds_service,
   to_finished_ccds_service,
+  get_classification_ccds_service,
 } from '../store/thunks/ccdThunks';
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
@@ -33,11 +34,12 @@ export const CcdScreen: React.FC = () => {
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
   useEffect(() => {
-    if (ccd_current?.fecha_terminado != null) {
+    set_flag_btn_finish(ccd_current?.fecha_terminado !== null);
+    /* if (ccd_current?.fecha_terminado != null) {
       set_flag_btn_finish(true);
     } else {
       set_flag_btn_finish(false);
-    }
+    } */
   }, [ccd_current]);
 
   // Hooks
@@ -197,6 +199,12 @@ export const CcdScreen: React.FC = () => {
                 variant="outlined"
                 startIcon={<SearchIcon />}
                 onClick={() => {
+                  void dispatch(get_classification_ccds_service(
+                    control_create_ccd._formValues.nombre_ccd,
+                    control_create_ccd._formValues.version
+                  ))
+                  // console.log(control_create_ccd._formValues.nombre_ccd)
+                  // console.log(control_create_ccd._formValues.version)
                   set_consulta_ccd_is_active(true);
                   set_title('Consultar CCD');
                 }}

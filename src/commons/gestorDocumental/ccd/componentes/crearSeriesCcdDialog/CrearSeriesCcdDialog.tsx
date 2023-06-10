@@ -64,7 +64,7 @@ const CrearSeriesCcdDialog = ({
     defaultValues: initial_state,
   });
   const data = watch();
-
+  console.log(data);
   // useEffect para cargar los datos de la serie seleccionada
   useEffect(() => {
     if (serie_ccd_current !== null) {
@@ -116,7 +116,8 @@ const CrearSeriesCcdDialog = ({
   };
 
   // Crear Catalogo de series
-  const create_series = (): void => {
+  const create_series = (e: any): void => {
+    e.preventDefault();
     let new_item: any[] = [];
     if (title_button === 'Agregar') {
       new_item = [
@@ -138,7 +139,8 @@ const CrearSeriesCcdDialog = ({
     void dispatch(create_series_service(new_item, clean));
   };
   // Crear subseries
-  const create_subseries = (): void => {
+  const create_subseries = (e:any): void => {
+    e.preventDefault();
     let new_item: any[] = [];
     if (title_button === 'Agregar') {
       new_item = [
@@ -194,13 +196,13 @@ const CrearSeriesCcdDialog = ({
   };
 
   //  Función para enviar los datos del formulario
-  const on_submit: SubmitHandler<IFormValues> = () => {
+  const on_submit: SubmitHandler<IFormValues> = (e: any) => {
     switch (title) {
       case 'Crear Catalogo de series':
-        create_series();
+        create_series(e);
         break;
       case 'Crear catalogo de subseries':
-        create_subseries();
+        create_subseries(e);
         break;
       default:
         break;

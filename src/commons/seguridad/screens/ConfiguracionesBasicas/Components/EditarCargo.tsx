@@ -38,7 +38,6 @@ export const ActualizarCargo: React.FC<IProps> = ({ is_modal_active, set_is_moda
     };
 
     useEffect(() => {
-        console.log(data_cargos)
         set_value('nombre', data_cargos?.nombre);
         set_value('activo', data_cargos?.activo);
     }, []);
@@ -55,7 +54,6 @@ export const ActualizarCargo: React.FC<IProps> = ({ is_modal_active, set_is_moda
     }
 
     const on_submit = async (data: EditarCargo): Promise<any> => {
-        console.log(data)
         try {
             set_is_loading(true)
             const datos_cargos = {
@@ -68,9 +66,9 @@ export const ActualizarCargo: React.FC<IProps> = ({ is_modal_active, set_is_moda
             void get_data()
             reset();
             set_is_loading(false)
-        } catch (error) {
-            set_is_loading(false)
-            control_error('error al actualizar el cargo');
+        } catch (error: any) {
+            set_is_loading(false);
+            control_error(error.response.data.detail);
         }
     };
 
@@ -115,7 +113,7 @@ export const ActualizarCargo: React.FC<IProps> = ({ is_modal_active, set_is_moda
                                             onChange={handle_change_checkbox}
                                         />
                                     }
-                                    label="¿Estado del cargo? *"
+                                    label="Activo *"
                                 />
                             </FormControl>
                         </Grid>

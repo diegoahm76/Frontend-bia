@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -17,14 +17,8 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
-import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
 import { get_ccd_current } from '../../store/slices/ccdSlice';
-
-interface IProps {
-  is_modal_active: boolean;
-  set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  title: string;
-}
+import type { IProps } from './types/types';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -41,25 +35,32 @@ const SearchCcdModal = ({
   useEffect(() => {
     const filter = ccds.filter((item) => {
       return (
-        item.nombre.toLowerCase().includes(world_search.toLowerCase()) ||
-        item.version.toLowerCase().includes(world_search.toLowerCase())
+        item.nombre
+          .toLocaleLowerCase()
+          .includes(world_search.toLocaleLowerCase()) ||
+        item.version
+          .toLocaleLowerCase()
+          .includes(world_search.toLocaleLowerCase())
       );
     });
-    console.log(world_search !== '');
     if (world_search !== '') {
       set_filter_ccds(filter);
     } else {
       set_filter_ccds(ccds);
     }
-  }, [world_search, ccds]);
+  }, [
+    world_search,
+    ccds,
+  ]);
 
+  //! se retira use Effect y se realiza llamado a la función de búsqueda de manera dinamica en el archivo ccdScreen.tsx linea 200
   // useEffect para cargar los datos de la tabla
-  useEffect(() => {
+/*  useEffect(() => {
     void dispatch(get_classification_ccds_service(
-      '5f9c7a3a-5b0a-4b0a-8b0a-5f9c7a3a5b0a',
-      '5f9c7a3a-5b0a-4b0a-8b0a-5f9c7a3a5b0a',
+      'CCD Principal 2',
+      '2.0',
     ));
-  }, []);
+  }, []); */
 
   const columns_ccds: GridColDef[] = [
     {
@@ -102,6 +103,7 @@ const SearchCcdModal = ({
         <>
           <IconButton
             onClick={() => {
+              console.log(params.data);
               dispatch(get_ccd_current(params.data));
               set_is_modal_active(false);
             }}
@@ -139,7 +141,7 @@ const SearchCcdModal = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
       >
         <DialogTitle>
-          Consultar CCD
+          Consultar los CCD que coincidan con el criterio de búsqueda
           <IconButton
             aria-label="close"
             onClick={() => {

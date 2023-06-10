@@ -143,7 +143,6 @@ export const AdministradorDeEstaciones: React.FC = () => {
             });
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             if (estacion) {
-                console.log("Paso a no eliminar")
                 control_error("La estación no se puede eliminar porque contiene datos");
             }
 
