@@ -43,6 +43,11 @@ export const get_assignments_service: any = () => {
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
     const { ccd_current } = getState().CCD;
+    console.log('good morning perros hps')
+    console.log(
+      '🚀 ~ file: assignmentsThunks.ts ~ line 43 ~ return ~ ccd_current',
+      ccd_current
+    );
     try {
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.get(`gestor/ccd/asignar/get/${id_ccd}/`);
