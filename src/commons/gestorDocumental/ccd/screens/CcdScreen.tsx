@@ -190,6 +190,76 @@ export const CcdScreen: React.FC = () => {
                   )}
                 />
               </Grid>
+
+
+              {/* new spaces */}
+
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="valor_aunmento_serie"
+                  control={control_create_ccd}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Valor aumento serie"
+                      variant="outlined"
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio ingresar un valor de aumento de serie'
+                          : 'Ingrese valor aumento serie'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+                      {
+                        /* second new space */
+                      }
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="valor_aumento_subserie"
+                  control={control_create_ccd}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="valor aumento subserie"
+                      variant="outlined"
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio ingresar un valor de aumento de subserie'
+                          : 'Ingrese un valor de aumento subserie'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
+
+
+              {/* end new spaces */}
+
+
+
+
             </Grid>
             <Stack
               direction="row"
