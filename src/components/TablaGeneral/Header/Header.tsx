@@ -38,7 +38,7 @@ export const Header_Table: FC<Header_Table_Props> = ({
             onChange={(e) => {
               set_global_filter(e.currentTarget.value);
             }}
-            placeholder="Search"
+            placeholder="Buscar"
           />
         </span>
 
