@@ -16,7 +16,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarProyectos: React.FC<IProps> = ({
+export const AgregarAvance: React.FC<IProps> = ({
   register,
 }:IProps) => {
 
@@ -24,36 +24,31 @@ export const AgregarProyectos: React.FC<IProps> = ({
 
   // fechas
   const [start_date, set_start_date] = useState<Date | null>(new Date());
-  const [end_date, set_end_date] = useState<Date | null>(new Date());
 
   const handle_start_date_change = (date: Date | null): void => {
     set_start_date(date)
   };
 
-  const handle_end_date_change = (date: Date | null): void => {
-    set_end_date(date)
-  };
-
   return (
     <>
       <Grid item xs={12}>
-        <Title title="INFORMACIÓN DE PROYECTO" />
+        <Title title="REGISTRO DE AVANCE" />
       </Grid>
       <Grid item xs={12} sm={6}>
         <TextField
-          label="Nombre del proyecto"
+          label="ACCIÓN"
           fullWidth
           size="small"
           margin="dense"
           required
           autoFocus
-          {...register("nombre", { required: true })}
+          {...register("accion", { required: true })}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
           <DatePicker
-            label="Fecha Inical"
+            label="Fecha de avance"
             inputFormat="YYYY/MM/DD"
             openTo="day"
             views={['year', 'month', 'day']}
@@ -65,28 +60,7 @@ export const AgregarProyectos: React.FC<IProps> = ({
                 fullWidth
                 size="small"
                 {...params}
-                {...register("vigencia_inicial", { required: true })}
-              />
-            )}
-          />
-        </LocalizationProvider>
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-          <DatePicker
-            label="Fecha Final"
-            inputFormat="YYYY/MM/DD"
-            openTo="day"
-            views={['year', 'month', 'day']}
-            value={end_date}
-            onChange={handle_end_date_change}
-            renderInput={(params) => (
-              <TextField
-                required
-                fullWidth
-                size="small"
-                {...params}
-                {...register("vigencia_final", { required: true })}
+                {...register("fecha_avance", { required: true })}
               />
             )}
           />
@@ -94,14 +68,15 @@ export const AgregarProyectos: React.FC<IProps> = ({
       </Grid>
       <Grid item xs={12} sm={6}>
         <TextField
-          label="Inversión total"
+          label="Descripción"
           fullWidth
           size="small"
           margin="dense"
           required
           autoFocus
           type="text"
-          {...register("inversion", { required: true })}
+          multiline
+          {...register("descripcion", { required: true })}
         />
       </Grid>
       <Grid item spacing={2} justifyContent="end" container>
