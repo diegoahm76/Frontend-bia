@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { InputsEncabezado } from '../componentes/InputsEncabezado';
+import { EncabezadoRegistro } from '../componentes/EncabezadoRegistro';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
@@ -9,7 +9,8 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Close } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { use_form } from '../../../../hooks/useForm';
-import { useFormLocal } from '../hooks/useFormLocal';
+import { useFormText } from '../hooks/useFormText';
+import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
 import { type event, type check } from '../interfaces/interfaces';
 import { post_registro_fac_pago } from '../requests/requests';
@@ -34,20 +35,16 @@ export const SolicitudFacilidadPago: React.FC = () => {
   const [notificacion, set_notificacion] = useState(false);
   const [rows_bienes, set_rows_bienes] = useState(Array<bien>);
   const { form_state, on_input_change } = use_form({});
-  const { form_local, handle_change_local } = useFormLocal({});
+  const { form_text, handle_change_text } = useFormText({});
+  const { form_files, name_files, handle_change_file } = useFormFiles({});
   const [modal, set_modal] = useState(false);
-  const [file_name, set_file_name] = useState('');
 
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selected_file =
-      event.target.files != null ? event.target.files[0] : null;
-    if (selected_file != null) {
-      set_file_name(selected_file.name);
-    }
-  };
+  console.log('texto', form_state);
+  console.log('archivos', form_files);
+  console.log('bienes', form_text);
 
   useEffect(()=>{
     let count:number = 0;
@@ -122,7 +119,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
   return (
     <>
       <Title title='Solicitud de Facilidad de Pago - Usuario Externo' />
-      <InputsEncabezado />
+      <EncabezadoRegistro />
       <TablaObligacionesSolicitud />
       <Grid
         container
@@ -151,7 +148,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     component="label"
                     startIcon={<CloudUploadIcon />}
                   >
-                    {file_name !== '' ? file_name : 'Carga Documento Solicitud'}
+                    {name_files.documento_soporte !== undefined ? name_files.documento_soporte : 'Carga Documento Solicitud'}
                       <input
                         hidden
                         type="file"
@@ -159,7 +156,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         autoFocus
                         style={{ opacity: 0 }}
                         name='documento_soporte'
-                        onChange={handle_file_selected}
+                        onChange={handle_change_file}
                       />
                   </Button>
                 </Grid>
@@ -171,7 +168,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     component="label"
                     startIcon={<CloudUploadIcon />}
                   >
-                    {file_name !== '' ? file_name : 'Carga Soporte Consignación'}
+                    {name_files.consignacion_soporte !== undefined ? name_files.consignacion_soporte : 'Carga Soporte Consignación'}
                       <input
                         hidden
                         type="file"
@@ -179,7 +176,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         autoFocus
                         style={{ opacity: 0 }}
                         name='consignacion_soporte'
-                        onChange={handle_file_selected}
+                        onChange={handle_change_file}
                       />
                   </Button>
                 </Grid>
@@ -236,14 +233,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Documento de Identidad'}
+                        {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento de Identidad'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_identidad'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -315,14 +313,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Documento de Identidad Apoderado'}
+                        {name_files.documento_apoderado !== undefined ? name_files.documento_apoderado : 'Carga Documento de Identidad Apoderado'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_apoderado'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -334,14 +333,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Documento Poder'}
+                        {name_files.documento_poder !== undefined ? name_files.documento_poder :'Carga Documento Poder'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_poder'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -353,14 +353,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Cert. Existencia y Representación Legal'}
+                        {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='certificado_legal'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -432,14 +433,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Documento Deudor Solidario'}
+                        {name_files.documento_deudor !== undefined ? name_files.documento_deudor : 'Carga Documento Deudor Solidario'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_deudor'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -451,14 +453,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Oficio Respaldando Deuda'}
+                        {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_respaldo'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -530,14 +533,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Documento Deudor Solidario'}
+                        {name_files.documento_deudor !== undefined ? name_files.documento_deudor : 'Carga Documento Deudor Solidario'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_deudor'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -549,14 +553,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Oficio Respaldando Deuda'}
+                        {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_respaldo'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -568,14 +573,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Cert. Existencia y Representación Legal'}
+                        {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='certificado_legal'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -721,14 +727,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Garantía Ofrecida'}
+                        {name_files.garantias !== undefined ? name_files.garantias : 'Carga Garantía Ofrecida'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='garantias'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -743,14 +750,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   component="label"
                   startIcon={<CloudUploadIcon />}
                 >
-                  {file_name !== '' ? file_name : 'Carga Documento No Enajenación'}
+                  {name_files.documento_no_enajenacion !== undefined ? name_files.documento_no_enajenacion : 'Carga Documento No Enajenación'}
                     <input
                       hidden
                       type="file"
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      onChange={handle_file_selected}
+                      name='documento_no_enajenacion'
+                      onChange={handle_change_file}
                           />
                 </Button>
               </Grid>
@@ -787,7 +795,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     label="Tipo Bien"
                     name='bien'
                     defaultValue={""}
-                    onChange={handle_change_local}
+                    onChange={handle_change_text}
                   >
                     <MenuItem value="Casa">Casa</MenuItem>
                     <MenuItem value="Auto">Auto</MenuItem>
@@ -802,7 +810,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   label='Identificación'
                   helperText='Escribe el Documento de Identificación'
                   variant="outlined"
-                  onChange={handle_change_local}
+                  onChange={handle_change_text}
                   name='identificacion'
                 />
               </Grid>
@@ -814,7 +822,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   size="small"
                   fullWidth
                   type='number'
-                  onChange={handle_change_local}
+                  onChange={handle_change_text}
                   name='avaluo'
                 />
               </Grid>
@@ -825,7 +833,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   helperText='Escribe la Dirección'
                   size="small"
                   fullWidth
-                  onChange={handle_change_local}
+                  onChange={handle_change_text}
                   name='direccion'
                 />
               </Grid>
@@ -837,14 +845,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   component="label"
                   startIcon={<CloudUploadIcon />}
                 >
-                  {file_name !== '' ? file_name : 'Carga el Documento Impuesto'}
+                  {name_files.documento_impuesto !== undefined ? name_files.documento_impuesto : 'Carga el Documento Impuesto'}
                     <input
                       hidden
                       type="file"
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      onChange={handle_file_selected}
+                      name='documento_impuesto'
+                      onChange={handle_change_file}
                           />
                 </Button>
               </Grid>
@@ -854,7 +863,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   variant='outlined'
                   size='small'
                   onClick={() => {
-                    set_rows_bienes(rows_bienes.concat({...form_local, id: faker.database.mongodbObjectId()}))
+                    set_rows_bienes(rows_bienes.concat({...form_text, id: faker.database.mongodbObjectId()}))
                   }}
                 >
                   Agregar
@@ -981,9 +990,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
               variant='outlined'
               color="primary"
               startIcon={<Close />}
-              onClick={() => {
-                handle_close()
-              }}
+              onClick={handle_close}
             >
               Cerrar
             </Button>
