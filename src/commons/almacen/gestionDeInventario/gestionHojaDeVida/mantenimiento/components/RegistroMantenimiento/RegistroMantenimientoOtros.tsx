@@ -106,8 +106,9 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
                 >
-                 <Grid item xs={12}>
-                    <Title title="Registro mantenimiento de otros activos" />
+                <h1>Registro mantenimiento de otros activos</h1>
+                <Grid item xs={12}>
+                    <Title title="Búsqueda de programación" />
                     <BusquedaProgramacionComponent set_prog_seleccion={set_programacion} parent_details={set_detalle_seleccionado} tipo_articulo={"otros activos"}  limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>

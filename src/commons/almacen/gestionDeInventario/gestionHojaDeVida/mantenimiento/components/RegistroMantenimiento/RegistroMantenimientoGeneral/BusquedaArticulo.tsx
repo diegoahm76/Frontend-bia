@@ -88,10 +88,6 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                             value={id_bien}
                             fullWidth
                             error={mensaje_error_codigo !== ""}
-                            disabled 
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
                         />
                         {(mensaje_error_codigo !== "") && (<FormHelperText error id="tipo-error">{mensaje_error_codigo}</FormHelperText>)}
                     </Grid>
@@ -103,10 +99,6 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                             fullWidth
                             InputProps={{
                                 readOnly: true,
-                            }}
-                            disabled 
-                            InputLabelProps={{
-                              shrink: true,
                             }}
                         />
                     </Grid>

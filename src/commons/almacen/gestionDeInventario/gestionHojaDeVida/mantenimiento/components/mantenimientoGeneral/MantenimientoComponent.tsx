@@ -86,7 +86,7 @@ export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenan
                             rows={4}
                             value={especificacion}
                             label="Especificaciones tecnicas"
-                            // helperText="Ingresar especificaciones tecnicas"
+                            helperText="Ingresar especificaciones tecnicas"
                             size="small"
                             required
                             fullWidth

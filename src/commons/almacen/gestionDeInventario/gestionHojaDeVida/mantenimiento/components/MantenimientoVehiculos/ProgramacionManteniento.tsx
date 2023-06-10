@@ -102,6 +102,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
 
     return (
         <>
+            <h1>Programación mantenimiento vehículos</h1>
             <Grid
                 container
                 sx={{
@@ -113,9 +114,9 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                 <Grid item xs={12}>
+                <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
-                    <Title title="Programación mantenimiento vehículos" />
+                    <Title title="Búsqueda de vehículo" />
                     <ArticuloComponent detalle_seleccionado_prop={detalle_seleccionado} tipo_articulo={"vehículos"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>

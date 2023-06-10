@@ -176,12 +176,12 @@ const CrearBienDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
       >
-        <DialogTitle >Crear bien</DialogTitle>
+        <DialogTitle>Crear bien</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
             <Title title="Seleccione tipo de bien"></Title>
-            <Grid item xs={12} md={2} margin={2}>
+            <Grid item xs={12} md={2} margin={1}>
               <TextField
                 margin="dense"
                 select
@@ -201,7 +201,7 @@ const CrearBienDialogForm = ({
             </Grid>
             <Title title="Informacion del bien"></Title>
 
-            <Grid item xs={12} md={2} margin={2}>
+            <Grid item xs={12} md={2} margin={1}>
               <Controller
                 name="codigo_bien"
                 control={control_bien}
@@ -229,7 +229,7 @@ const CrearBienDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={12} md={2} margin={2}>
+            <Grid item xs={12} md={2} margin={1}>
               <Controller
                 name="nombre"
                 control={control_bien}
@@ -257,7 +257,7 @@ const CrearBienDialogForm = ({
               />
             </Grid>
             {tipo_bien_selected === 'A' ? (
-              <Grid item xs={11} md={2} margin={2}>
+              <Grid item xs={11} md={2} margin={1}>
                 <Controller
                   name="cod_tipo_activo"
                   control={control_bien}
@@ -292,7 +292,7 @@ const CrearBienDialogForm = ({
                 />
               </Grid>
             ) : (
-              <Grid item xs={11} md={2} margin={2}>
+              <Grid item xs={11} md={2} margin={1}>
                 <Controller
                   name="cod_metodo_valoracion"
                   control={control_bien}
@@ -327,7 +327,7 @@ const CrearBienDialogForm = ({
                 />
               </Grid>
             )}
-            <Grid item xs={11} md={3} margin={2}>
+            <Grid item xs={11} md={3} margin={1}>
               <TextField
                 margin="dense"
                 fullWidth
@@ -340,7 +340,7 @@ const CrearBienDialogForm = ({
                 disabled
               />
             </Grid>
-            <Grid item xs={11} md={2} margin={2}>
+            <Grid item xs={11} md={2} margin={1}>
               <Controller
                 name="id_unidad_medida"
                 control={control_bien}
@@ -377,7 +377,7 @@ const CrearBienDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={2} margin={2}>
+            <Grid item xs={11} md={2} margin={1}>
               <Controller
                 name="id_porcentaje_iva"
                 control={control_bien}
@@ -418,7 +418,7 @@ const CrearBienDialogForm = ({
 
             {tipo_bien_selected === 'A' ? (
               <>
-                <Grid item xs={11} md={2} margin={2}>
+                <Grid item xs={11} md={2} margin={1}>
                   <Controller
                     name="cod_tipo_depreciacion"
                     control={control_bien}
@@ -453,7 +453,7 @@ const CrearBienDialogForm = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={11} md={2} margin={2}>
+                <Grid item xs={11} md={2} margin={1}>
                   <Controller
                     name="id_unidad_medida_vida_util"
                     control={control_bien}
@@ -491,7 +491,7 @@ const CrearBienDialogForm = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={11} md={2} margin={2}>
+                <Grid item xs={11} md={2} margin={1}>
                   <Controller
                     name="cantidad_vida_util"
                     control={control_bien}
@@ -520,7 +520,7 @@ const CrearBienDialogForm = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={11} md={2} margin={2}>
+                <Grid item xs={11} md={2} margin={1}>
                   <Controller
                     name="valor_residual"
                     control={control_bien}
@@ -549,7 +549,7 @@ const CrearBienDialogForm = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={11} md={2} margin={2}>
+                <Grid item xs={11} md={2} margin={1}>
                   <Controller
                     name="id_marca"
                     control={control_bien}
@@ -591,7 +591,7 @@ const CrearBienDialogForm = ({
               </>
             ) : (
               <>
-                <Grid item xs={11} md={2} margin={2}>
+                <Grid item xs={11} md={2} margin={1}>
                   <Controller
                     name="stock_minimo"
                     control={control_bien}
@@ -619,7 +619,7 @@ const CrearBienDialogForm = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={11} md={2} margin={2}>
+                <Grid item xs={11} md={2} margin={1}>
                   <Controller
                     name="stock_maximo"
                     control={control_bien}
@@ -647,7 +647,7 @@ const CrearBienDialogForm = ({
                     )}
                   />
                 </Grid>
-                <Grid item xs={11} md={2} margin={2}>
+                <Grid item xs={11} md={2} margin={1}>
                   <Controller
                     name="solicitable_vivero"
                     control={control_bien}
@@ -684,7 +684,7 @@ const CrearBienDialogForm = ({
 
 
 
-            <Grid item xs={11} md={2} margin={2}>
+            <Grid item xs={11} md={2} margin={1}>
               <Controller
                 name="visible_solicitudes"
                 control={control_bien}
@@ -716,7 +716,7 @@ const CrearBienDialogForm = ({
               />
             </Grid>
 
-            <Grid item xs={11} md={2} margin={2}>
+            <Grid item xs={11} md={2} margin={1}>
               <Controller
                 name="maneja_hoja_vida"
                 control={control_bien}
@@ -748,7 +748,7 @@ const CrearBienDialogForm = ({
               />
             </Grid>
 
-            <Grid item xs={11} md={12} margin={2}>
+            <Grid item xs={11} md={12} margin={1}>
               <Controller
                 name="descripcion"
                 control={control_bien}

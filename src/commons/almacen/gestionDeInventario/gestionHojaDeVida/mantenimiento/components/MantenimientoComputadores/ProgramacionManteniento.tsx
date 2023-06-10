@@ -81,7 +81,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
         set_user_info(val);
     }, [set_user_info]);
 
-    const crear_mantenimiento: () => void = () => {
+    const crear_mantenimiento: () => void = () => { 
         dispatch(create_maintenance_service(rows)).then(() => {
             limpiar();
         });
@@ -103,6 +103,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
 
     return (
         <>
+            <h1>Programación mantenimiento computadores</h1>
             <Grid
                 container
                 sx={{
@@ -114,10 +115,9 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-               
                 <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
-                    <Title title="Programación mantenimiento computadores" />
+                    <Title title="Búsqueda de computador" />
                     <ArticuloComponent detalle_seleccionado_prop={detalle_seleccionado} tipo_articulo={"computadores"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
@@ -189,107 +189,106 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                     {/* PREVISUALIZACION COMPONENT */}
                     <Title title='Previsualización' />
                     <PrevisualizacionComponent data_grid={rows} limpiar_formulario={limpiar_formulario} />
-                    <Grid container>
-                        <Grid item xs={6}>
-                            <Box
-                                component="form"
-                                sx={{ mt: '20px', mb: '20px' }}
-                                noValidate
-                                autoComplete="off"
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="flex-start"
-                                    spacing={2}
-                                    sx={{ mt: '20px' }}
-                                >
-                                    <Button
-                                        color='primary'
-                                        variant='contained'
-                                        startIcon={<SearchIcon />}
-                                        onClick={() => {
-                                            set_buscar_programacion_is_active(true);
-                                            set_title_programacion('Buscar programación de computadores');
-                                        }}
-                                    >
-                                        Buscar programación
-                                    </Button>
-                                    {buscar_programacion_is_active && (
-                                        <BuscarProgramacionComponent
-                                            is_modal_active={buscar_programacion_is_active}
-                                            set_is_modal_active={set_buscar_programacion_is_active}
-                                            title={title_programacion}
-                                            prog_details={set_prog_details}
-                                            parent_details={set_details_state}
-                                            tipo_articulo={"computadores"} />
-                                    )}
-                                </Stack>
-                            </Box>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Box
-                                component="form"
-                                sx={{ mt: '20px', mb: '20px' }}
-                                noValidate
-                                autoComplete="off"
-                            >
-                                <Stack
-                                    direction="row"
-                                    justifyContent="flex-end"
-                                    spacing={2}
-                                    sx={{ mt: '20px' }}
-                                >
-                                    <Button
-                                        color='error'
-                                        variant='contained'
-                                        startIcon={<DeleteForeverIcon />}
-                                        onClick={() => {
-                                            set_anular_mantenimiento_is_active(true);
-                                            set_title('Anular mantenimiento de computadores');
-                                        }}
-                                        disabled={programacion == null}
-                                    >
-                                        Anular
-                                    </Button>
-                                    {anular_mantenimiento_is_active && (
-                                        <AnularMantenimientoComponent
-                                            is_modal_active={anular_mantenimiento_is_active}
-                                            set_is_modal_active={set_anular_mantenimiento_is_active}
-                                            title={title}
-                                            user_info={user_info}
-                                            id_programado={programacion.id_programacion_mantenimiento} />
-                                    )}
-                                    <Button
-                                        color='inherit'
-                                        variant="contained"
-                                        startIcon={<CleanIcon />}
-                                        onClick={limpiar}
-                                    >
-                                        Limpiar
-                                    </Button>
-                                    <Button
-                                        color='primary'
-                                        variant='contained'
-                                        startIcon={<SaveIcon />}
-                                        onClick={crear_mantenimiento}
-                                    >
-                                        Guardar
-                                    </Button>
-                                    <Button
-                                        color='inherit'
-                                        variant='contained'
-                                        startIcon={<ClearIcon />}
-                                        onClick={salir_mantenimiento}
-                                    >
-                                        Salir
-                                    </Button>
-                                </Stack>
-                            </Box>
-                        </Grid>
-                    </Grid>
                 </Grid>
             </Grid>
-
+            <Grid container>
+                <Grid item xs={6}>
+                    <Box
+                        component="form"
+                        sx={{ mt: '20px', mb: '20px' }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <Stack
+                            direction="row"
+                            justifyContent="flex-start"
+                            spacing={2}
+                            sx={{ mt: '20px' }}
+                        >
+                            <Button
+                                color='primary'
+                                variant='contained'
+                                startIcon={<SearchIcon />}
+                                onClick={() => {
+                                    set_buscar_programacion_is_active(true);
+                                    set_title_programacion('Buscar programación de computadores');
+                                }}
+                            >
+                                Buscar programación
+                            </Button>
+                            {buscar_programacion_is_active && (
+                                <BuscarProgramacionComponent
+                                    is_modal_active={buscar_programacion_is_active}
+                                    set_is_modal_active={set_buscar_programacion_is_active}
+                                    title={title_programacion}
+                                    prog_details={set_prog_details}
+                                    parent_details={set_details_state} 
+                                    tipo_articulo={"computadores"}/>
+                            )}
+                        </Stack>
+                    </Box>
+                </Grid>
+                <Grid item xs={6}>
+                    <Box
+                        component="form"
+                        sx={{ mt: '20px', mb: '20px' }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <Stack
+                            direction="row"
+                            justifyContent="flex-end"
+                            spacing={2}
+                            sx={{ mt: '20px' }}
+                        >
+                            <Button
+                                color='error'
+                                variant='contained'
+                                startIcon={<DeleteForeverIcon />}
+                                onClick={() => {
+                                    set_anular_mantenimiento_is_active(true);
+                                    set_title('Anular mantenimiento de computadores');
+                                }}
+                                disabled={programacion == null}
+                            >
+                                Anular
+                            </Button>
+                            {anular_mantenimiento_is_active && (
+                                <AnularMantenimientoComponent
+                                    is_modal_active={anular_mantenimiento_is_active}
+                                    set_is_modal_active={set_anular_mantenimiento_is_active}
+                                    title={title}
+                                    user_info={user_info} 
+                                    id_programado={programacion.id_programacion_mantenimiento}/>
+                            )}
+                            <Button
+                                color='inherit'
+                                variant="contained"
+                                startIcon={<CleanIcon />}
+                                onClick={limpiar}
+                            >
+                                Limpiar
+                            </Button>
+                            <Button
+                                color='primary'
+                                variant='contained'
+                                startIcon={<SaveIcon />}
+                                onClick={crear_mantenimiento}
+                            >
+                                Guardar
+                            </Button>
+                            <Button
+                                color='inherit'
+                                variant='contained'
+                                startIcon={<ClearIcon />}
+                                onClick={salir_mantenimiento}
+                            >
+                                Salir
+                            </Button>
+                        </Stack>
+                    </Box>
+                </Grid>
+            </Grid>
         </>
     )
 }
