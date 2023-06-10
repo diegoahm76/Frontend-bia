@@ -177,6 +177,7 @@ export const use_admin_users = (): AdminUserHook => {
 
   const on_submit = handle_submit_admin_user(async (data_user) => {
     try {
+      console.log('data enviada', data_user);
       set_loading_create_or_update(true);
       if (action_admin_users === 'CREATE') {
         const data_create_user = new FormData();

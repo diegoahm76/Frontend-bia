@@ -341,7 +341,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
         }}
       >
-        {userinfo.tipo_usuario === 'E' && <HeaderGov />}
+        {userinfo.tipo_usuario === 'I' && <HeaderGov />}
         <Box
           sx={{
             padding: '0px 20px 20px 20px',
@@ -352,7 +352,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         >
           <Outlet />
         </Box>
-        {userinfo.tipo_usuario === 'E' && <FooterGov />}
+        {userinfo.tipo_usuario === 'I' && <FooterGov />}
       </Box>
     </>
   );

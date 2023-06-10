@@ -125,15 +125,16 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
     set_loading(true);
     try {
       const response_ccds = await dispatch(get_ccds_posibles());
-      if ('data' in response_ccds) {
-        set_data_ccds_posibles(response_ccds.data);
-        const res_ccds_adapter: IList[] = await ccds_choise_adapter(
-          response_ccds.data
-        );
-        set_list_ccds(res_ccds_adapter);
-      } else {
-        control_error("Sin CCD's disponibles para activación");
-      }
+      console.log(response_ccds);
+      // if ('data' in response_ccds) {
+      set_data_ccds_posibles(response_ccds.data);
+      const res_ccds_adapter: IList[] = await ccds_choise_adapter(
+        response_ccds.data
+      );
+      set_list_ccds(res_ccds_adapter);
+      // } else {
+      //   control_error("Sin CCD's disponibles para activación");
+      // }
     } catch (err) {
       control_error(err);
     } finally {

@@ -18,8 +18,6 @@ import type {
   // GridValueGetterParams
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { useState } from 'react';
-import CrearSeriesCcdDialog from '../../ccd/componentes/CrearSeriesCcdDialog';
 // Graficas
 
 const columns: GridColDef[] = [
@@ -87,8 +85,6 @@ const tipos_unidades = [
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TcaScreen: React.FC = () => {
-  const [create_is_active, set_create_is_active] = useState<boolean>(false);
-
   return (
     <>
       <Grid
@@ -240,14 +236,7 @@ export const TcaScreen: React.FC = () => {
                   variant="contained"
                   aria-label=" primary button group"
                 >
-                  <Button
-                    onClick={() => {
-                      set_create_is_active(true);
-                      // set_title('Crear series');
-                    }}
-                  >
-                    CREAR
-                  </Button>
+                  <Button>CREAR</Button>
                   <Button>CLONAR</Button>
                   <Button>PREVISUALIZAR</Button>
                 </ButtonGroup>
@@ -395,11 +384,6 @@ export const TcaScreen: React.FC = () => {
           </Stack>
         </Grid>
       </Grid>
-      <CrearSeriesCcdDialog
-        is_modal_active={create_is_active}
-        set_is_modal_active={set_create_is_active}
-        title="title"
-      />
     </>
   );
 };
