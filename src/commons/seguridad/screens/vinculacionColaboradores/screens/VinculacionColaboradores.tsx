@@ -14,7 +14,7 @@ import { get_tipo_documento } from "../../../../../request";
 import { useNavigate } from "react-router-dom";
 import { BuscadorPersonaDialog } from "../../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoGeneral/BuscadorPersonaDialog";
 import { AxiosError } from "axios";
-import { obtener_persona } from "../Thunks/VinculacionColaboradores";
+import { obtener_persona, vincular_colaborador } from "../Thunks/VinculacionColaboradores";
 import CargoUnidadOrganizacionalComponent from "./CargoUnidadOrganizacional";
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import CreateIcon from '@mui/icons-material/Create';
@@ -83,6 +83,17 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
         }
     }, [vinculacion]);
 
+    useEffect(() => {
+        if (persona_vinculacion !== null && persona_vinculacion !== undefined) {
+            set_cargo_actual(persona_vinculacion.cargo_actual);
+            set_fecha_inicio(dayjs(persona_vinculacion.fecha_inicio_cargo_actual).format("DD-MM-YYYY"));
+            set_fecha_finaliza(dayjs(persona_vinculacion.fecha_a_finalizar_cargo_actual).format("DD-MM-YYYY"));
+            set_obs_vin_cargo(persona_vinculacion.observaciones_vinculacion_cargo_actual);
+            set_unidad_org(persona_vinculacion.unidad_organizacional_actual);
+            set_fecha_asig(dayjs(persona_vinculacion.fecha_asignacion_unidad).format("DD-MM-YYYY"));
+        }
+    }, [persona_vinculacion]);
+
     // trae los datos de vinculacion de una persona
     const get_datos_vinculación = async (): Promise<void> => {
         if (persona.id_persona !== null && persona.id_persona !== undefined) {
@@ -135,7 +146,15 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
     }
 
     const guardar_vinculacion = (): void => {
-
+        const formulario: any = {
+            id_cargo: vinculacion.cargo,
+            id_unidad_organizacional_actual: vinculacion.unidad_organizacional,
+            fecha_a_finalizar_cargo_actual: dayjs(fecha_finaliza).format('YYYY-MM-DD'),
+            observaciones_vinculacion_cargo_actual: obs_vin_cargo
+        }
+        dispatch(vincular_colaborador(persona.id_persona,formulario)).then((response: any) => {
+            console.log('Se creó vinculo', response)
+        })
     }
 
     const salir: () => void = () => {

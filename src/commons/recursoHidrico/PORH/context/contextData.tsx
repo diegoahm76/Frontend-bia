@@ -1,24 +1,29 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { createContext, useContext } from 'react';
 
-/* interface User {
-  name: string;
-  email: string;
-} */
+import React, { createContext } from 'react';
 
 interface UserContext {
-  data: any[];
+  rows_programas: any[];
+  rows_proyectos: any[];
+  rows_actividades: any[];
   filter: any[];
   columns: string[];
   actionIcons: any[];
+  set_rows_programas: (rows: any[]) => void;
+  set_rows_proyectos: (rows: any[]) => void;
+  set_rows_actividades: (rows: any[]) => void;
 }
 
-export const DataContext = createContext<UserContext | null>({
-  data: [],
+export const DataContext = createContext<UserContext>({
+  rows_programas: [],
+  rows_proyectos: [],
+  rows_actividades: [],
   filter: [],
   columns: [],
-  actionIcons: []
+  actionIcons: [],
+  set_rows_programas: () => {},
+  set_rows_proyectos: () => {},
+  set_rows_actividades: () => {},
 });
 
 export const UserProvider = ({
@@ -26,44 +31,26 @@ export const UserProvider = ({
 }: {
   children: React.ReactNode;
 }): any => {
-  const [data, setData] = React.useState<any>([]);
+  const [rows_programas, set_rows_programas] = React.useState<any>([]);
+  const [rows_proyectos, set_rows_proyectos] = React.useState<any>([]);
+  const [rows_actividades, set_rows_actividades] = React.useState<any>([]);
   const [filter, setFilter] = React.useState<any>([]);
   const [columns, setColumns] = React.useState<string[]>([]);
   const [actionIcons, setActionIcons] = React.useState<any[]>([]);
 
-  // create a function that find a data in the array
-  const findData = (data: any[], id: number): any[] => {
-    return data.find((item) => item.id === id);
-  };
-
-  // create a function that delete a data in the array
-  const deleteData = (data: any[], id: number): any[] => {
-    return data.filter((item) => item.id !== id);
-  };
-
-  // create a function that update a data in the array
-  const updateData = (data: any[], newData: any): any[] => {
-    return data.map((item) => (item.id === newData.id ? newData : item));
-  };
-
-  /* const login = (newUser: User) => {
-    setUser(newUser);
-  };
-
-   const logout = () => {
-    setUser(null);
-  };
-*/
-
   const value = {
-    data,
-    setData,
+    rows_programas,
+    set_rows_programas,
+    rows_proyectos,
+    set_rows_proyectos,
+    rows_actividades,
+    set_rows_actividades,
     filter,
     setFilter,
     columns,
     setColumns,
     actionIcons,
-    setActionIcons
+    setActionIcons,
   };
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };
