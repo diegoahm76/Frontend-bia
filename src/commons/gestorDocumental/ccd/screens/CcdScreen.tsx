@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 // Components Material UI
@@ -76,6 +77,7 @@ export const CcdScreen: React.FC = () => {
     clean_ccd
   } = use_ccd() as any;
 
+
   return (
     <>
       <Grid
@@ -91,11 +93,25 @@ export const CcdScreen: React.FC = () => {
       >
         <Grid item xs={12}>
           <Title title="Cuadro de clasificación documental" />
-          <Box
-            component="form"
-            sx={{ mt: '20px' }}
+          <form
+          style={{
+            marginTop: '20px',
+          }}
+          /* onSubmit={handle_submit(
+            () => {
+              on_submit_create_ccd();
+            }
+          )} */
+            onSubmit={
+              (e:any) => {
+                console.log('hola')
+                on_submit_create_ccd(e);
+              }
+            }
+            
+            // sx={{ mt: '20px' }}
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onSubmit={handle_submit_create_ccd(on_submit_create_ccd)}
+            /* onSubmit={handle_submit_create_ccd(on_submit_create_ccd)} */
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
@@ -191,12 +207,11 @@ export const CcdScreen: React.FC = () => {
                 />
               </Grid>
 
-
               {/* new spaces */}
 
               <Grid item xs={12} sm={3}>
                 <Controller
-                  name="valor_aunmento_serie"
+                  name="valor_aumento_serie"
                   control={control_create_ccd}
                   defaultValue=""
                   rules={{ required: true }}
@@ -222,9 +237,7 @@ export const CcdScreen: React.FC = () => {
                   )}
                 />
               </Grid>
-                      {
-                        /* second new space */
-                      }
+              {/* second new space */}
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="valor_aumento_subserie"
@@ -254,12 +267,39 @@ export const CcdScreen: React.FC = () => {
                 />
               </Grid>
 
+              {/* third new spaces  */}
+              {/* fourth new spaces, optional for the support route  */}
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="ruta_de_soporte_ccd"
+                  control={control_create_ccd}
+                  defaultValue=""
+                  rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      // label="Subir archivo soporte ccs"
+                      variant="outlined"
+                      type="file"
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      }
+                    />
+                  )}
+                />
+              </Grid>
 
               {/* end new spaces */}
-
-
-
-
             </Grid>
             <Stack
               direction="row"
@@ -278,8 +318,6 @@ export const CcdScreen: React.FC = () => {
                       control_create_ccd._formValues.version
                     )
                   );
-                  // console.log(control_create_ccd._formValues.nombre_ccd)
-                  // console.log(control_create_ccd._formValues.version)
                   set_consulta_ccd_is_active(true);
                   set_title('Consultar CCD');
                 }}
@@ -292,7 +330,7 @@ export const CcdScreen: React.FC = () => {
                 variant="contained"
                 startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
-                {ccd_current != null ? 'ACTUALIZAR' : 'GUARDAR'}
+                {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </Button>
               <Button
                 color="success"
@@ -305,7 +343,7 @@ export const CcdScreen: React.FC = () => {
                 LIMPIAR
               </Button>
             </Stack>
-          </Box>
+          </form>
         </Grid>
       </Grid>
       {/* {save_ccd && ( */}
@@ -390,7 +428,7 @@ export const CcdScreen: React.FC = () => {
                   >
                     <Button
                       onClick={() => {
-                        set_create_sub_serie_active(true)
+                        set_create_sub_serie_active(true);
                         // set_create_is_active(true);
                         set_title('Administrar subseries');
                       }}
@@ -571,7 +609,7 @@ export const CcdScreen: React.FC = () => {
           </Grid>
         </Grid>
       </>
-       <CrearSeriesCcdDialog
+      <CrearSeriesCcdDialog
         is_modal_active={create_is_active}
         set_is_modal_active={set_create_is_active}
         title={title}

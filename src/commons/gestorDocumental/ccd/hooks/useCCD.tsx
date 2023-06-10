@@ -85,6 +85,8 @@ const use_ccd = () => {
     unidades_organigrama: { label: '', value: 0 },
     version: '',
     fecha_terminado: '',
+    valor_aumento_serie: '',
+    valor_aumento_subserie: '',
   };
   // Estado Inicial de Formulario de Crear Asignación
   const initial_state_asig: ICCDAsingForm = {
@@ -116,7 +118,7 @@ const use_ccd = () => {
     formState: { errors },
   } = useForm({ defaultValues: initial_state_asig });
   const data_asing = watch();
-  //  console.log(data_asing, 'data_asing')
+  // console.log(data_asing, 'data_asing')
 
   // useForm Crear CCD
   const {
@@ -128,6 +130,7 @@ const use_ccd = () => {
     formState: { errors: errors_create_ccd },
   } = useForm<ICCDForm>({ defaultValues: initial_state });
   const data_create_ccd = watch_create_ccd();
+  console.log(data_create_ccd, 'data_create_ccd')
 
   //  UseEffect para obtener organigramas
 /*  useEffect(() => {
@@ -254,9 +257,10 @@ const use_ccd = () => {
     create_asing();
   };
   // submit Crear CCD
-  const on_submit_create_ccd = (data: any): void => {
-    console.log('data', data);
-    console.log('epa la patria', ccd_current);
+  const on_submit_create_ccd = (e: any): void => {
+    e.preventDefault();
+    console.log('hola a todos perros hps desde la vida')
+    // console.log('epa la patria', ccd_current);
     if (ccd_current !== null) {
       update_ccd();
     } else {
@@ -266,11 +270,18 @@ const use_ccd = () => {
 
   // Funcion para crear el CCD
   const create_ccd = (): void => {
+
     const new_ccd = {
       id_organigrama: data_create_ccd.organigrama.value,
       version: data_create_ccd.version,
       nombre: data_create_ccd.nombre_ccd,
+      valor_aumento_serie: data_create_ccd.valor_aumento_serie,
+      valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
     };
+    console.log(
+      'new_ccd',
+      new_ccd
+    )
     void dispatch(create_ccds_service(new_ccd, set_save_ccd));
   };
   // Funcion para actualizar el CCD
@@ -279,6 +290,8 @@ const use_ccd = () => {
       id_organigrama: data_create_ccd.organigrama.value,
       version: data_create_ccd.version,
       nombre: data_create_ccd.nombre_ccd,
+      valor_aumento_serie: data_create_ccd.valor_aumento_serie,
+      valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
     };
     void dispatch(update_ccds_service(new_ccd));
   };

@@ -182,6 +182,10 @@ export const create_ccds_service: any = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.post('gestor/ccd/create/', ccd);
+      console.log(
+        '🚀 ~ file: ccds.ts ~ line 139 ~ return ~ data',
+        data
+      );
       dispatch(get_ccd_current(data.data));
       control_success(data.detail);
       console.log(data.detail, 'success');
