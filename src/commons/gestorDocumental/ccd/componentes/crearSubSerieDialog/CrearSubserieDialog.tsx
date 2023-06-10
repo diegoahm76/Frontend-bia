@@ -24,7 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
 import {
-  create_series_service,
+ /* create_series_service, */
   // , get_series_service
 } from '../../store/thunks/seriesThunks';
 import {
@@ -37,15 +37,15 @@ import type { IFormValues, IProps } from './types/types';
 import { initial_state } from './utils/constant';
 import  EditIcon  from '@mui/icons-material/Edit';
 import  DeleteIcon  from '@mui/icons-material/Delete';
-const CrearSeriesCcdDialog = ({
+const CrearSubSerieCcdDialog = ({
   is_modal_active,
   set_is_modal_active,
   title,
 }: IProps) => {
 
-  const { series_ccd, serie_ccd_current } = useAppSelector(
+ /* const { series_ccd, serie_ccd_current } = useAppSelector(
     (state) => state.series
-  );
+  ); */
   const { subseries_ccd, subseries_ccd_current } = useAppSelector(
     (state) => state.subseries
   );
@@ -67,7 +67,7 @@ const CrearSeriesCcdDialog = ({
   const data = watch();
   console.log(data);
   // useEffect para cargar los datos de la serie seleccionada
-  useEffect(() => {
+/*  useEffect(() => {
     if (serie_ccd_current !== null) {
       reset({
         codigo: serie_ccd_current.codigo,
@@ -80,7 +80,7 @@ const CrearSeriesCcdDialog = ({
       reset(initial_state);
       set_title_button('Agregar');
     }
-  }, [serie_ccd_current]);
+  }, [serie_ccd_current]); */
 
   // useEffect para cargar los datos de la subSerie seleccionada 
   useEffect(() => {
@@ -104,7 +104,7 @@ const CrearSeriesCcdDialog = ({
   // useEffect para limpiar el store de la serie & la subserie seleccionada
   useEffect(() => {
     return () => {
-      dispatch(get_serie_ccd_current(null));
+      // dispatch(get_serie_ccd_current(null));
       dispatch(get_subseries_ccd_current(null));
       clean();
     };
@@ -117,7 +117,7 @@ const CrearSeriesCcdDialog = ({
   };
 
   // Crear Catalogso de seriess --
-  const create_series = (): void => {
+/*  const create_series = (): void => {
     alert('hola');
     console.log('heeeloooo create series')
     let new_item: any[] = [];
@@ -139,7 +139,7 @@ const CrearSeriesCcdDialog = ({
       });
     }
     void dispatch(create_series_service(new_item, clean));
-  };
+  }; */
   // Crear subseries
   const create_subseries = (): void => {
     let new_item: any[] = [];
@@ -172,12 +172,12 @@ const CrearSeriesCcdDialog = ({
   };
 
   // Función para eliminar series
-  const delete_series = (id_serie_doc: number): void => {
+ /* const delete_series = (id_serie_doc: number): void => {
     const new_series = series_ccd.filter(
       (serie: any) => serie.id_serie_doc !== id_serie_doc
     );
     void dispatch(create_series_service(new_series, () => ({})));
-  };
+  }; */
 
   const handleOnClick = (title: string, params: any) => {
     const action =
@@ -189,26 +189,26 @@ const CrearSeriesCcdDialog = ({
   };
 
   const handleDelete = (title: string, params: any) => {
-    if (title === 'Crear Catalogo de series') {
+    delete_subseries(params.data.id_subserie_doc);
+    /* if (title === 'Crear Catalogo de series') {
       delete_series(params.data.id_serie_doc);
     } else {
-      delete_subseries(params.data.id_subserie_doc);
-    }
+    } */
   };
 
   //  Función para enviar los datos del formulario
   const on_submit: SubmitHandler<IFormValues> = (t) => {
-    window.alert(JSON.stringify(t));
+   /* window.alert(JSON.stringify(t));
     switch (title) {
       case 'Crear Catalogo de series':
         create_series();
         break;
-      case 'Crear catalogo de subseries':
+      case 'Crear catalogo de subseries': */
         create_subseries();
-        break;
+      /*  break;
       default:
         break;
-    }
+    } */
   };
 
 
@@ -370,7 +370,7 @@ const CrearSeriesCcdDialog = ({
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={title === 'Crear Catalogo de series' ? series_ccd : subseries_ccd}
+                  rows={/* title === 'Crear Catalogo de series' ? series_ccd :  */subseries_ccd}
                   columns={columns}
                   pageSize={5}
                   rowsPerPageOptions={[10]}
@@ -405,4 +405,4 @@ const CrearSeriesCcdDialog = ({
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default CrearSeriesCcdDialog;
+export default CrearSubSerieCcdDialog;

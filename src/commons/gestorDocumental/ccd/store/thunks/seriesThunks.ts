@@ -6,20 +6,20 @@ import { type AxiosError, type AxiosResponse } from 'axios';
 // Reducers
 import { get_series_ccd } from '../slices/seriesSlice';
 // Interfaces
-import { type ISeriesObject } from '../../interfaces/ccd';
+// import { type ISeriesObject } from '../../interfaces/ccd';
 
 // Consulta series documentales
-export const get_series_service: any = () => {
+export const get_series_service: any = (id_ccd: any) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd } = getState((state: any) => state.ccd.ccd_current);
+    /* const { ccd } = getState((state: any) => state.ccd.ccd_current);
     const { id} = ccd.ccd_current;
-    console.log(id)
+    console.log(id) */
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const { data } = await api.get(`gestor/ccd/series/get-by-id-ccd/2/`);
+      const { data } = await api.get(`gestor/ccd/series/get-by-id-ccd/${id_ccd}/`);
       console.log(
         '🚀 ~ file: seriesThunks.ts ~ line 37 ~ return ~ data',
         data
@@ -37,17 +37,17 @@ export const get_series_service: any = () => {
 
 // Crear, actualizar y/o eliminar series
 export const create_series_service:any = (
-  newSeries: ISeriesObject[],
+  newSeries: any,
   clean: () => void
 ) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().ccd_slice;
+    const { ccd } = getState((state: any) => state.ccd.ccd_current);
     console.log(
       '🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ ccd_current',
-      ccd_current
+      ccd
     );
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const element_modal_id = document.getElementById(
@@ -55,13 +55,13 @@ export const create_series_service:any = (
     )!;
     try {
       console.log(newSeries)
-      const id_ccd: number = ccd_current.id_ccd;
+      // const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.post(
         `gestor/ccd/series/create/`,
         /* `gestor/ccd/series/update/${id_ccd}/`, */
         {
-          id_ccd,
-          series: newSeries
+          ...newSeries,
+          id_ccd: 32,
         }
       );
       dispatch(get_series_service());

@@ -26,6 +26,7 @@ import {
 } from '../store/thunks/ccdThunks';
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
+import CrearSubSerieCcdDialog from '../componentes/crearSubSerieDialog/CrearSubserieDialog';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -52,6 +53,8 @@ export const CcdScreen: React.FC = () => {
     title,
     title_button_asing,
     create_is_active,
+    set_create_sub_serie_active,
+    create_subserie_active,
     consulta_ccd_is_active,
     columns_asignacion,
     control,
@@ -71,7 +74,7 @@ export const CcdScreen: React.FC = () => {
     handle_submit,
     handle_submit_create_ccd,
     clean_ccd
-  } = use_ccd();
+  } = use_ccd() as any;
 
   return (
     <>
@@ -317,7 +320,8 @@ export const CcdScreen: React.FC = () => {
                   >
                     <Button
                       onClick={() => {
-                        set_create_is_active(true);
+                        set_create_sub_serie_active(true)
+                        // set_create_is_active(true);
                         set_title('Administrar subseries');
                       }}
                     >
@@ -497,11 +501,16 @@ export const CcdScreen: React.FC = () => {
           </Grid>
         </Grid>
       </>
-      {/* <CrearSeriesCcdDialog
+       <CrearSeriesCcdDialog
         is_modal_active={create_is_active}
         set_is_modal_active={set_create_is_active}
         title={title}
-      /> */}
+      />
+      <CrearSubSerieCcdDialog
+        is_modal_active={create_subserie_active}
+        set_is_modal_active={set_create_sub_serie_active}
+        title={title}
+      />
       {consulta_ccd_is_active && (
         <SearchCcdsDialog
           is_modal_active={consulta_ccd_is_active}

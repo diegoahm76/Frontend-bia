@@ -28,6 +28,7 @@ import {
 } from '../store/thunks/assignmentsThunks';
 import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
+import { get_series_service } from '../store/thunks/seriesThunks';
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
   const dispatch = useAppDispatch();
@@ -46,22 +47,23 @@ const use_ccd = () => {
   const [title_button_asing, set_title_button_asing] =
     useState<string>('Guardar relación');
   const [create_is_active, set_create_is_active] = useState<boolean>(false);
+  const [create_sub_serie_active, set_create_sub_serie_active] = useState<boolean>(false);
   const [consulta_ccd_is_active, set_consulta_ccd_is_active] =
     useState<boolean>(false);
   const [save_ccd, set_save_ccd] = useState<boolean>(false);
-  const [list_unitys, set_list_unitys] = useState<IList[]>([
+  const [list_unitys, set_list_unitys] = useState<IList[] | any>([
     {
       label: '',
       value: 0,
     },
   ]);
-  const [list_organigrams, set_list_organigrams] = useState<IList[]>([
+  const [list_organigrams, set_list_organigrams] = useState<IList[] | any>([
     {
       label: '',
       value: 0,
     },
   ]);
-  const [list_sries, set_list_sries] = useState<IList[]>([
+  const [list_sries, set_list_sries] = useState<IList[] | any>([
     {
       label: '',
       value: 0,
@@ -193,9 +195,9 @@ const use_ccd = () => {
   ]);
   //  UseEffect para obtener series
   //! se retira de momento al mandar un error en la petición durante la primer petición al render de la pantalla
-  /* useEffect(() => {
+  useEffect(() => {
     void dispatch(get_series_service());
-  }, [ccd_current]); */
+  }, [ccd_current]);
   //  UseEffect para obtener subSeries
  /* useEffect(() => {
     void dispatch(get_subseries_service());
@@ -453,6 +455,9 @@ const use_ccd = () => {
     handle_submit,
     handle_submit_create_ccd,
     clean_ccd,
+
+    create_sub_serie_active,
+    set_create_sub_serie_active,
   };
 };
 
