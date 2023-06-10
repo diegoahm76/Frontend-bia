@@ -35,7 +35,7 @@ const AnularEntradaComponent = ({ is_modal_active, set_is_modal_active, title, u
   };
 
   const guardar_anulacion = (): void => {
-    dispatch(anular_entradas(id_entrada, { justificacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
+    dispatch(anular_entradas(id_entrada, { entrada_anulada: id_entrada,justificacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
       if (response.success) {
         navigate('/home');
         set_is_modal_active(false);

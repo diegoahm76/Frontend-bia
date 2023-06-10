@@ -316,6 +316,7 @@ export const get_organigrama_actual:any = () => {
       const { data } = await api.get(
         'transversal/organigrama/get-organigrama-actual/'
       );
+      //! console.log(data)
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

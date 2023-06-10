@@ -18,12 +18,13 @@ import { Title } from '../../../../components/Title';
 import use_ccd from '../hooks/useCCD';
 import { Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import CrearSeriesCcdDialog from '../componentes/CrearSeriesCcdDialog';
-import SearchCcdsDialog from '../componentes/SearchCcdsDialog';
 import {
   to_resume_ccds_service,
   to_finished_ccds_service,
+  get_classification_ccds_service,
 } from '../store/thunks/ccdThunks';
+import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
+import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -33,11 +34,12 @@ export const CcdScreen: React.FC = () => {
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
   useEffect(() => {
-    if (ccd_current?.fecha_terminado != null) {
+    set_flag_btn_finish(ccd_current?.fecha_terminado !== null);
+    /* if (ccd_current?.fecha_terminado != null) {
       set_flag_btn_finish(true);
     } else {
       set_flag_btn_finish(false);
-    }
+    } */
   }, [ccd_current]);
 
   // Hooks
@@ -197,6 +199,12 @@ export const CcdScreen: React.FC = () => {
                 variant="outlined"
                 startIcon={<SearchIcon />}
                 onClick={() => {
+                  void dispatch(get_classification_ccds_service(
+                    control_create_ccd._formValues.nombre_ccd,
+                    control_create_ccd._formValues.version
+                  ))
+                  // console.log(control_create_ccd._formValues.nombre_ccd)
+                  // console.log(control_create_ccd._formValues.version)
                   set_consulta_ccd_is_active(true);
                   set_title('Consultar CCD');
                 }}
@@ -239,7 +247,7 @@ export const CcdScreen: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Registro de series y subseries" />
+            <Title title="Administrar registro de series y subseries" />
             <Box
               component="form"
               sx={{ mt: '20px' }}
@@ -272,13 +280,13 @@ export const CcdScreen: React.FC = () => {
                     <Button
                       onClick={() => {
                         set_create_is_active(true);
-                        set_title('Crear series');
+                        set_title('Administrar series');
                       }}
                     >
-                      CREAR
+                      CREAR SERIE
                     </Button>
-                    <Button disabled>CLONAR</Button>
-                    <Button disabled>PREVISUALIZAR</Button>
+{/*                    <Button disabled>CLONAR</Button>
+                    <Button disabled>PREVISUALIZAR</Button> */}
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} sm={2}>
@@ -308,13 +316,13 @@ export const CcdScreen: React.FC = () => {
                     <Button
                       onClick={() => {
                         set_create_is_active(true);
-                        set_title('Crear subseries');
+                        set_title('Administrar subseries');
                       }}
                     >
-                      CREAR
+                      CREAR SUBSERIE
                     </Button>
-                    <Button disabled>CLONAR</Button>
-                    <Button disabled>PREVISUALIZAR</Button>
+                    {/* <Button disabled>CLONAR</Button>
+                    <Button disabled>PREVISUALIZAR</Button> */}
                   </ButtonGroup>
                 </Grid>
               </Grid>

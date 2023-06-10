@@ -149,7 +149,7 @@ export const RegisterForm: React.FC = () => {
                 }}
                 href="#/auth/login"
               >
-                <Typography sx={{ color: 'white' }}>Volver</Typography>
+                <Typography sx={{ color: 'white' }}>Inicio</Typography>
               </Button>
             </Grid>
 
