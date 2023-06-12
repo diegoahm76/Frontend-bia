@@ -2,7 +2,7 @@
 import { SetStateAction, useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../../../hooks";
 import { obtener_consecutivo } from "../thunks/EntregaBienes";
-import { Box, Button, FormHelperText, Grid, Stack, TextField } from "@mui/material";
+import { Alert, Box, Button, FormHelperText, Grid, Stack, TextField, Typography } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -260,6 +260,17 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
                     </Box>
                 </Grid>
             </Grid>
+            {actualizar_entrega && (
+                <Alert sx={{ mb: '10px' }} severity="info" action={
+                    <Button color="inherit" size="small" onClick={detalle_entrega}>
+                      Ver detalle
+                    </Button>
+                  }>
+                    <Typography variant="body1" gutterBottom>
+                                Items entregados {dayjs().format("DD/MM/YYYY")} 
+                    </Typography>
+                </Alert>
+            )}
             <Grid
                 container
                 sx={{
@@ -331,7 +342,7 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
                         >
                             {actualizar_entrega ? 'Actualizar selección de bienes' : 'Selección de bienes'}
                         </Button>
-                        { detalle_is_active && (<VistaDetalleEntregaBienes is_modal_active={detalle_is_active} set_is_modal_active={set_detalle_is_active} formulario_entrega={undefined}></VistaDetalleEntregaBienes>)}
+                        {detalle_is_active && (<VistaDetalleEntregaBienes is_modal_active={detalle_is_active} set_is_modal_active={set_detalle_is_active} formulario_entrega={undefined}></VistaDetalleEntregaBienes>)}
                         <Button
                             color='secondary'
                             variant='contained'
