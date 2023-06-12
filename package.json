@@ -37,6 +37,7 @@
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-standard": "^5.0.0",
     "file-saver": "^2.0.5",
+    "framer-motion": "^10.12.16",
     "jspdf": "^2.5.1",
     "leaflet": "^1.9.3",
     "moment": "^2.29.4",
