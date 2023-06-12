@@ -9,7 +9,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine, initial_state_current_nursery,
+  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine, initial_state_current_nursery, initial_state_current_viverista_actual, set_current_nuevo_viverista, set_current_viverista, set_nuevos_viveristas,
   // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
@@ -328,6 +328,149 @@ export const confirmar_items_distribuidos_service = (
     } catch (error: any) {
       console.log('save_items_despacho_service');
       console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener personas filtro
+export const get_nuevos_viveristas_service = (
+  type: string|null,
+  document: string|null,
+  primer_nombre: string|null,
+  primer_apellido: string|null,
+  segundo_nombre: string|null,
+  segundo_apellido: string|null,
+
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `conservacion/viveros/get-persona-viverista-nuevo-lupa/?tipo_documento=${type??""}&numero_documento=${document??""}&primer_nombre=${primer_nombre??""}&primer_apellido=${primer_apellido??""}&segundo_nombre=${segundo_nombre??""}&segundo_apellido=${segundo_apellido??""}`
+      );
+      dispatch(set_nuevos_viveristas(data.data));
+      if (data.data.length > 0) {
+        control_success("Se encontraron viveristas")
+      } else {
+        control_error("No se encontraron viveristas")
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_nuevos_viveristas_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener persona por documento
+export const get_viverista_document_service = (
+  type: string,
+  document: string
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/viveros/get-persona-viverista-nuevo-by-numero-documento/?tipo_documento=${type}&numero_documento=${document}`);
+      if ("data" in data) {
+        if (data.data.length > 0) {
+          dispatch(set_current_nuevo_viverista(data.data))
+          control_success("Se selecciono el viverista")
+        } else {
+          control_error("No se encontro el viverista")
+        }
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_person_document_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener persona por iddocumento
+export const get_viverista_id_service = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/viveros/viverista-actual-by-id-vivero/${id}/`);
+      console.log(data)
+      if ("data" in data) {
+        dispatch (set_current_viverista(data.data))
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      dispatch (set_current_viverista(initial_state_current_viverista_actual))
+      console.log('get_viverista_id_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener viveros viverista
+export const get_viveros_viverista_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('conservacion/viveros/listado-viveros/');
+ 
+      dispatch(get_nurseries(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_viveros_viverista_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// asignar viverista
+export const asignar_viverista_service: any = (
+  id_vivero: string|number,
+  datos: any,
+
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(datos)
+      const { data } = await api.post(
+        `conservacion/viveros/asignacion-viverista/${id_vivero}/`,
+        datos
+      );
+      dispatch(get_nursery_service(id_vivero))
+      control_success('Se asigno el viverista');
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// remover viverista
+export const remover_viverista_service: any = (
+  id_vivero: string|number,
+  datos: any,
+
+  navigate: NavigateFunction
+) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `conservacion/viveros/remover-viverista/${id_vivero}/`,
+        datos
+      );
+      dispatch(get_nursery_service(id_vivero))
+      control_success('Se removio el viverista');
+      return data;
+    } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

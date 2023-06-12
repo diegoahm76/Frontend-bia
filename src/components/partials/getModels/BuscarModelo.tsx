@@ -187,7 +187,6 @@ const BuscarModelo = ({
                         xs={12}
                         md={3}
                     >
-                        
                         <FormButton
                             variant_button="contained"
                             on_click_function={handle_open_select_model}

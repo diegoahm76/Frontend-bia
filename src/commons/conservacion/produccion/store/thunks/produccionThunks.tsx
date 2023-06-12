@@ -7,7 +7,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_current_mezcla, set_bienes,set_current_bien,set_preparaciones,set_current_preparacion, set_preparacion_bienes
+  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_bienes,set_preparaciones, set_preparacion_bienes
 } from '../slice/produccionSlice';
 import { api } from '../../../../../api/axios';
 
@@ -263,8 +263,8 @@ export const get_bien_preparacion_id_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mezclas/get-items-preparacion-mezclas/?id_preparacion_mezcla=${id}/`);
- 
+      const { data } = await api.get(`conservacion/mezclas/get-items-preparacion-mezclas/?id_preparacion_mezcla=${id}`);
+      console.log(data)
       if ("data" in data) {
         dispatch (set_preparacion_bienes(data.data))
       } else {
@@ -272,7 +272,7 @@ export const get_bien_preparacion_id_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('get_person_document_service');
+      console.log('get_bien_preparacion_id_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -346,7 +346,7 @@ export const edit_preparacion_service = (
       }
       return data;
     } catch (error: any) {
-      console.log('add_siembra_service');
+      console.log('edit_preparacion_service');
       console.log(error)
       control_error(error.response.data.detail);
       return error as AxiosError;
@@ -362,7 +362,7 @@ export const annul_preparacion_service = (
     try {
       const { data } = await api.put(`conservacion/mezclas/anular-preparacion-mezclas/${id}/`);
  
-      if (data.success) {
+      if (data.success === true) {
         control_success(data.detail)      
       } else {
         control_error(data.detail)

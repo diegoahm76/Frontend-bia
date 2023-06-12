@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { type IObjMezcla, type IObjPreparacionMezcla, type IObjBienes, IObjPreparacionBienes } from "../interfaces/produccion";
-import { set_mezclas, set_current_mezcla, set_current_preparacion, set_preparaciones, set_current_bien, set_bienes, set_preparacion_bienes } from '../store/slice/produccionSlice';
+import {  type IObjBienes, type IObjPreparacionBienes } from "../interfaces/produccion";
+import { set_current_bien, set_bienes, set_preparacion_bienes } from '../store/slice/produccionSlice';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -16,11 +16,11 @@ const SeleccionarBienPreparacion = () => {
 
 
     const { control: control_bien, reset: reset_bien, getValues: get_values_bien} = useForm<IObjBienes>();
-    const { control: control_preparacion, handleSubmit:handle_submit_preparacion, reset: reset_preparacion } = useForm<IObjPreparacionMezcla>();
+    const { control: control_preparacion, handleSubmit:handle_submit_preparacion, reset: reset_preparacion } = useForm<IObjPreparacionBienes>();
    
     const [action, set_action] = useState<string>("agregar");
     const [aux_insumos, set_aux_insumos] = useState<IObjPreparacionBienes[]>([]);
-    const { preparaciones, nurseries, mezclas, bienes, current_preparacion, current_nursery, current_bien, preparacion_bienes } = useAppSelector((state) => state.produccion);
+    const {  bienes, current_nursery, current_bien, preparacion_bienes } = useAppSelector((state) => state.produccion);
 
     const dispatch = useAppDispatch();
 
@@ -47,7 +47,7 @@ const SeleccionarBienPreparacion = () => {
             ),
         },
         {
-            field: 'saldo_disponible',
+            field: 'cantidad_disponible_bien',
             headerName: 'Saldo disponible',
             width: 200,
             renderCell: (params) => (
@@ -59,7 +59,7 @@ const SeleccionarBienPreparacion = () => {
     ];
 
     const columns_bienes_preparacion: GridColDef[] = [
-        { field: 'id_bien_usado', headerName: 'ID', width: 20 },
+        { field: 'id_item_preparacion_mezcla', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
             headerName: 'Codigo',
@@ -82,7 +82,7 @@ const SeleccionarBienPreparacion = () => {
         },
         
         {
-            field: 'cantidad',
+            field: 'cantidad_usada',
             headerName: 'Cantidad',
             width: 140,
             renderCell: (params) => (
@@ -193,46 +193,50 @@ const SeleccionarBienPreparacion = () => {
     const on_submit_preparacion = (data: IObjPreparacionBienes): void => {   
         if(current_bien.id_bien !== null){
             if(get_values_bien("codigo_bien") === current_bien.codigo_bien){
-                const bien: IObjPreparacionBienes | undefined = aux_insumos.find((p) => p.id_bien_usado === current_bien.id_bien )
+                const bien: IObjPreparacionBienes | undefined = aux_insumos.find((p) => p.id_item_preparacion_mezcla === current_bien.id_bien )
                 let asignada = 0
                 aux_insumos.forEach((option) => {
-                    if (option.id_bien_usado !== bien?.id_bien_usado ) {
+                    if (option.id_item_preparacion_mezcla !== bien?.id_item_preparacion_mezcla ) {
                         asignada = asignada + (option.cantidad_usada ?? 0)
                     }
                 })
 
-                if ((data.cantidad_usada??0) <= (current_bien.saldo_disponible ?? 0))
+                if ((data.cantidad_usada??0) <= (current_bien.cantidad_disponible_bien ?? 0))
                 {  
                     const new_bien: IObjPreparacionBienes = {
-                        id_bien_usado: current_bien.id_bien,
-                        cantidad_usada: Number(data.cantidad_usada),
+                        id_item_preparacion_mezcla: current_bien.id_bien,
+                        cantidad_usada: data.cantidad_usada,
+                        nombre_bien: current_bien.nombre_bien,
+                        codigo_bien: current_bien.codigo_bien,
                         observaciones: data.observaciones,
                     }
                     if (bien === undefined) {
                             set_aux_insumos([...aux_insumos, new_bien])
-                            const restante = (current_bien.saldo_disponible ?? 0) - (new_bien.cantidad_usada ?? 0) 
-                            dispatch(set_current_bien({...current_bien, saldo_disponible: restante}))
+                            const restante = (current_bien.cantidad_disponible_bien ?? 0) - (new_bien.cantidad_usada ?? 0) 
+                            dispatch(set_current_bien({...current_bien, cantidad_disponible_bien: restante}))
+                            reset_preparacion({id_item_preparacion_mezcla: current_bien?.id_bien, cantidad_usada: null, observaciones: null});
                        
                     } else {
                         if (action === "editar") {
                             const aux_items: IObjPreparacionBienes[] = []
                             aux_insumos.forEach((option) => {
-                                if (option.id_bien_usado === current_bien.id_bien) {
+                                if (option.id_item_preparacion_mezcla === current_bien.id_bien) {
                                     aux_items.push(new_bien)
                                 } else {
                                     aux_items.push(option)
                                 }
                             })
                             set_aux_insumos(aux_items)
-                            const restante = (current_bien.saldo_disponible ?? 0) - (new_bien.cantidad_usada ?? 0) 
-                            dispatch(set_current_bien({...current_bien, saldo_disponible: restante}))
+                            const restante = (current_bien.cantidad_disponible_bien ?? 0) - (new_bien.cantidad_usada ?? 0) 
+                            dispatch(set_current_bien({...current_bien, cantidad_disponible_bien: restante}))
+                            reset_preparacion({id_item_preparacion_mezcla: current_bien?.id_bien, cantidad_usada: null, observaciones: null});
                             set_action("agregar")
                         } else {
                             control_error("El bien ya fue agregado")
                         }
                     }
                 } else{
-                    control_error("La cantidad asignada debe ser maximo "+ String(current_bien.saldo_disponible))
+                    control_error("La cantidad asignada debe ser maximo "+ String(current_bien.cantidad_disponible_bien))
                     }
             } else{
                 control_error("Codigo de bien no coincide con el seleccionado")
@@ -244,27 +248,30 @@ const SeleccionarBienPreparacion = () => {
 
     const edit_bien_preparacion = (item: IObjPreparacionBienes): void => {
         set_action("editar")
-        const bien: IObjBienes | undefined =bienes.find((p: IObjBienes) => p.id_bien === item.id_bien_usado)
-        const item_bien = aux_insumos.find((p) => p.id_bien_usado === item.id_bien_usado)
+        const bien: IObjBienes | undefined =bienes.find((p: IObjBienes) => p.id_bien === item.id_item_preparacion_mezcla)
+        const item_bien = aux_insumos.find((p) => p.id_item_preparacion_mezcla === item.id_item_preparacion_mezcla)
         reset_preparacion(item_bien)
         const aux_items: IObjPreparacionBienes[] = []
-        let restante = 0 
         aux_insumos.forEach((option) => {
-            if (option.id_bien_usado !== item.id_bien_usado) {
+            if (option.id_item_preparacion_mezcla !== item.id_item_preparacion_mezcla) {
                 aux_items.push(option)
             }
         })
         if(bien !== undefined){
-            restante = (bien.saldo_disponible ?? 0) + (item_bien?.cantidad_usada?? 0)
-            dispatch(set_current_bien({...bien, saldo_disponible: restante}))
+            dispatch(set_current_bien(bien))
         }
         set_aux_insumos(aux_items)
     };
 
     const delete_bien_preparacion = (item: IObjPreparacionBienes): void => {
+        const bien: IObjBienes | undefined =bienes.find((p: IObjBienes) => p.id_bien === item.id_item_preparacion_mezcla)
+        if(bien !== undefined){
+            dispatch(set_current_bien(bien))
+        }
+        reset_preparacion({id_item_preparacion_mezcla: bien?.id_bien, cantidad_usada: null, observaciones: null});
         const aux_items: IObjPreparacionBienes[] = []
         aux_insumos.forEach((option) => {
-            if (option.id_bien_usado !== item.id_bien_usado) {
+            if (option.id_item_preparacion_mezcla !== item.id_item_preparacion_mezcla) {
                 aux_items.push(option)
             }
         })
@@ -286,8 +293,12 @@ return (
                 models={bienes}
                 get_filters_models={get_bienes}
                 set_models={set_bienes}
-                button_submit_label='Búsqueda de insumos'
+                button_submit_label='Buscar insumo'
                 form_inputs={[
+                    {
+                        datum_type: "title",
+                        title_label: "Seleccionar insumo"
+                    },
                     {
                         datum_type: "input_controller",
                         xs: 12,
@@ -304,7 +315,7 @@ return (
                     {
                         datum_type: "input_controller",
                         xs: 12,
-                        md: 3,
+                        md: 6,
                         control_form: control_bien,
                         control_name: "nombre_bien",
                         default_value: "",
@@ -320,25 +331,25 @@ return (
                     {
                         datum_type: "input_controller",
                         xs: 12,
-                        md: 3,
+                        md: 2,
                         control_form: control_preparacion,
                         control_name: "cantidad_usada",
                         default_value: "",
-                        rules: { required_rule: { rule: true, message: "Debe ingresar cantidad" } },
+                        rules: { required_rule: { rule: true, message: "Debe ingresar cantidad" }, min_rule: { rule: 0.01, message: "La cantidad debe ser mayor a 0" }, max_rule: { rule: current_bien.cantidad_disponible_bien, message: 'La cqantidad no debe ser mayor que '+ String(current_bien.cantidad_disponible_bien) }},
                         label: "Cantidad Usada",
                         type: "text",
-                        disabled: true,
+                        disabled: false,
                         helper_text: ""
                     },
                     {
                         datum_type: "input_controller",
                         xs: 12,
-                        md: 3,
+                        md: 2,
                         control_form: control_bien,
-                        control_name: "saldo_disponible",
+                        control_name: "cantidad_disponible_bien",
                         default_value: "",
                         rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
-                        label: "Disponible",
+                        label: "Cantidad disponible",
                         type: "text",
                         disabled: true,
                         helper_text: ""
@@ -346,7 +357,20 @@ return (
                     {
                         datum_type: "input_controller",
                         xs: 12,
-                        md: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: "unidad_disponible",
+                        default_value: "",
+                        rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
+                        label: "Unidad",
+                        type: "text",
+                        disabled: true,
+                        helper_text: ""
+                    },
+                    {
+                        datum_type: "input_controller",
+                        xs: 12,
+                        md: 6,
                         control_form: control_preparacion,
                         control_name: "observaciones",
                         default_value: "",
@@ -362,10 +386,10 @@ return (
                 ]}
                 title_list='Insumos consumidos'
                 list={aux_insumos}
-                add_item_list={null}
+                add_item_list={handle_submit_preparacion(on_submit_preparacion)}
                 add_list_button_label={action}
                 columns_list={columns_bienes_preparacion}
-                row_list_id={"id_bien_usado"}
+                row_list_id={"id_item_preparacion_mezcla"}
                 modal_select_model_title='Buscar bien'
                 modal_form_filters={[
                     {
@@ -384,7 +408,7 @@ return (
                     {
                         datum_type: "input_controller",
                         xs: 12,
-                        md: 3,
+                        md: 6,
                         control_form: control_bien,
                         control_name: "nombre_bien",
                         default_value: "",
