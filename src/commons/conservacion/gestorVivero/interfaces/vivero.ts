@@ -1,5 +1,3 @@
-
-import { type Persona } from '../../../../interfaces/globalModels';
 export interface INursery {
   nurseries: IObjNursery[];
   current_nursery: IObjNursery;
@@ -20,7 +18,6 @@ export interface INursery {
   current_insumo: IObjBien;
   bienes_bajas: IObjBienBaja[];
   current_bien_baja: IObjBienBaja;
-  persona: Persona;
 }
 
 export interface IList {
@@ -146,37 +143,20 @@ export interface IObjBuscarNuevoViverista {
 }
 
 export interface IObjGenerarBaja {
-  id_baja?: number | null;
-  tipo_baja?: string | null;
-  nro_baja_por_tipo?: number | null;
-  fecha_baja?: string | null;
-  baja_anulado?: boolean | null;
-  justificacion_anulacion?: null;
-  fecha_anulacion?: string | null;
-  id_persona_anula?: number | null;
-  nombre_persona_anula?: string | null;
-  id_vivero?: number | null;
-  nombre_vivero?: string | null;
-  nombre_persona_baja?: string | null;
-  motivo?: string | null;
-  ruta_archivo_soporte?: string | null;
-  id_persona_baja?: number | null;
-
+  id_baja: number | null;
+  tipo_baja: string | null;
+  nro_baja_por_tipo: number | null;
+  fecha_baja: string | null;
+  baja_anulado: boolean | null;
+  justificacion_anulacion: null;
+  fecha_anulacion: string | null;
+  id_persona_anula: number | null;
 }
 export interface IObjBienBaja {
   id_item_baja_viveros: number | null;
-  id_baja: number | null;
-  id_bien: number | null;
   cantidad_baja: number | null;
   observaciones: string | null;
   nro_posicion?: number | null;
-  agno_lote?: number | null;
-  nro_lote?: number | null;
-  cod_etapa_lote?: string | null;
-  consec_cuaren_por_lote_etapa?: number | null;
-  nombre_bien?: string | null;
-  codigo_bien?: string | null;
-  tipo_bien?: string | null;
 }
 export interface IObjBien {
   id_bien: number | null;
