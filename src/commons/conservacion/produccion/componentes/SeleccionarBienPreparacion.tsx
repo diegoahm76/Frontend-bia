@@ -14,7 +14,7 @@ import { get_bienes_service, control_error } from '../store/thunks/produccionThu
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarBienPreparacion = () => {
 
-
+ 
     const { control: control_bien, reset: reset_bien, getValues: get_values_bien} = useForm<IObjBienes>();
     const { control: control_preparacion, handleSubmit:handle_submit_preparacion, reset: reset_preparacion } = useForm<IObjPreparacionBienes>();
    
