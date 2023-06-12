@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type IObjBienConsumo, type IObjFuncionario, type ISolicitudConsumo, type IObjSolicitudVivero, type IObjBienesSolicitud, type UnidadOrganizacional, type IObjPersonaSolicita, type IObjNursery } from '../interfaces/solicitudVivero';
+import { type IObjBienConsumo, type IObjFuncionario, type ISolicitudConsumo, type IObjSolicitudVivero, type IObjBienesSolicitud, type UnidadOrganizacional, type IObjPersonaSolicita, type IObjNursery } from '../../interfaces/solicitudVivero';
 
 
 
@@ -25,6 +25,37 @@ const initial_state_current_solicitud: IObjSolicitudVivero = {
     id_unidad_org_del_solicitante: null
 
 }
+const initial_state_current_nursery: IObjNursery = {
+    id_vivero: null,
+    nombre: '',
+    cod_municipio: '',
+    direccion: '',
+    area_mt2: null,
+    area_propagacion_mt2: null,
+    tiene_area_produccion: false,
+    tiene_areas_pep_sustrato: false,
+    tiene_area_embolsado: false,
+    cod_tipo_vivero: null,
+    fecha_inicio_viverista_actual: null,
+    cod_origen_recursos_vivero: null,
+    fecha_creacion: null,
+    en_funcionamiento: true,
+    fecha_ultima_apertura: null,
+    justificacion_apertura: '',
+    fecha_cierre_actual: null,
+    justificacion_cierre: null,
+    vivero_en_cuarentena: false,
+    fecha_inicio_cuarentena: null,
+    justificacion_cuarentena: null,
+    ruta_archivo_creacion: null,
+    activo: true,
+    item_ya_usado: true,
+    id_viverista_actual: null,
+    id_persona_crea: null,
+    id_persona_abre: null,
+    id_persona_cierra: null,
+    id_persona_cuarentena: null,
+};
 const initial_state_current_bien: IObjBienConsumo = {
     id_bien: null,
     nombre: "",
@@ -60,7 +91,8 @@ const initial_state: ISolicitudConsumo | any = {
     persona_solicita: initial_state_persona_solicita,
     unidad_organizacional: [],
     nro_solicitud: null,
-    nurseries: []
+    nurseries: [],
+    origin_nursery: initial_state_current_nursery,
 }
 
 export const solicitud_vivero_slice = createSlice({

@@ -8,8 +8,8 @@ import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
 import { type IObjFuncionario } from '../interfaces/solicitudVivero';
-import { get_funcionario_document_service, get_funcionario_service, get_person_id_service } from '../slices/solicitudViveroThunks';
-import { set_current_funcionario, set_funcionarios } from '../slices/indexSolicitud';
+import { get_funcionario_document_service, get_funcionario_service, get_person_id_service } from '../store/thunks/solicitudViveroThunks';
+import { set_current_funcionario, set_funcionarios } from '../store/slices/indexSolicitud';
 
 interface IProps {
     title?: string;
@@ -27,7 +27,7 @@ const initial_options: IList[] = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const FuncionarioResponsable = ({
+const PersonaResponsable = ({
     title,
     get_values_solicitud
 
@@ -278,4 +278,4 @@ const FuncionarioResponsable = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default FuncionarioResponsable;
+export default PersonaResponsable;

@@ -3,17 +3,19 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
 
-import { get_solicitud_service } from '../slices/solicitudViveroThunks';
-import { set_current_solicitud, set_solicitudes } from '../slices/indexSolicitud';
+import { get_solicitud_service } from '../store/thunks/solicitudViveroThunks';
+import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSolicitud';
 
 
 
 interface IProps {
+    title?: string;
     control_solicitud: any;
     get_values: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitud = ({
+    title,
     control_solicitud,
     get_values
 }: IProps) => {
@@ -77,6 +79,11 @@ const SeleccionarSolicitud = ({
                     button_submit_label={'Buscar solicitud'}
                     form_inputs={[
 
+                        {
+                            datum_type: "title",
+                            title_label: title ?? "hh"
+
+                        },
                         {
                             datum_type: "input_controller",
                             xs: 12,

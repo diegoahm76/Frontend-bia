@@ -1,10 +1,10 @@
 
 import { toast, type ToastContent } from 'react-toastify';
 
-import { api } from '../../../../api/axios';
+import { api } from '../../../../../api/axios';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
-import { get_unidad_organizacional, set_current_funcionario, set_current_solicitud, set_funcionarios, set_numero_solicitud, set_nurseries, set_persona_solicita } from './indexSolicitud';
+import { get_unidad_organizacional, set_bienes, set_current_funcionario, set_current_solicitud, set_funcionarios, set_numero_solicitud, set_nurseries, set_persona_solicita } from '../slices/indexSolicitud';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -228,6 +228,33 @@ export const get_municipios = (): any => {
             return data;
         } catch (error: any) {
             console.log('get_municipios');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// Obtener bienes vivero
+export const get_bienes_service = (
+    id_vivero: string | number,
+    codigo_bien: string | null,
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero}/${codigo_bien ?? ""}`)
+            const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero}/${codigo_bien ?? ""}`);
+            dispatch(set_bienes(data.data));
+            console.log(data)
+            if (data.data.length > 0) {
+                control_success("Se encontrarón bienes")
+            } else {
+                control_error("No se encontrarón bienes")
+            }
+            return data;
+        } catch (error: any) {
+            // console.log('get_planting_goods_service');
             control_error(error.response.data.detail);
             return error as AxiosError;
         }

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 import { useEffect, useState } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import { Grid } from '@mui/material';
@@ -7,14 +8,13 @@ import type { AuthSlice } from '../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-
-import { Title } from '../../../../components/Title';
 import PersonaResponsable from '../components/PersonaResponsable'
-import { set_current_solicitud, set_persona_solicita } from '../slices/indexSolicitud';
+import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitud';
 import { type IObjSolicitudVivero } from '../interfaces/solicitudVivero';
-import { get_funcionario_id_service, get_num_solicitud, get_nurcery, get_person_id_service, get_uni_organizacional } from '../slices/solicitudViveroThunks';
+import { get_funcionario_id_service, get_num_solicitud, get_nurcery, get_person_id_service, get_uni_organizacional } from '../store/thunks/solicitudViveroThunks';
 import SeleccionarSolicitud from '../components/SeleccionarSolicitud';
 import DestinoSolicitud from '../components/DestinoElementos';
+import SeleccionarBienConsumo from '../components/SeleccionarBien';
 
 
 
@@ -106,10 +106,9 @@ const SolicitudViveroScreen = () => {
 
       }}
     >
-      <Grid item xs={12} marginY={2}>
-        <Title title="Solicitud de consumo "></Title>
-      </Grid>
+
       <SeleccionarSolicitud
+        title={"Solicitudes a viveros"}
         control_solicitud={control_solicitud}
         get_values={get_values} />
 
@@ -119,10 +118,10 @@ const SolicitudViveroScreen = () => {
 
 
       <DestinoSolicitud
-
+        title={"Destino de los elementos"}
         control_solicitud={control_solicitud}
         get_values={get_values} />
-
+      <SeleccionarBienConsumo />
 
 
 
