@@ -7,7 +7,7 @@ import {
   type IObjMezcla,
   type IObjPreparacionMezcla,
   type IObjBienes,
-  IObjPreparacionBienes,
+  type IObjPreparacionBienes,
 } from '../../interfaces/produccion';
 import { type Persona } from "../../../../../interfaces/globalModels";
 
@@ -40,10 +40,10 @@ const initial_state_current_preparacion: IObjPreparacionMezcla = {
   id_preparacion_mezcla: null,
   consec_vivero_mezclas : null,
   id_mezcla: null,
-  fecha_registro: (new Date().toString()),
+  fecha_registro: null,
   preparacion_anulada: false,
   justificacion_anulacion: "",
-  fecha_anulacion: (new Date().toString()),
+  fecha_anulacion: null,
   id_persona_prepara: null,
   fecha_preparacion: (new Date().toString()),
   id_persona_anula:  null,
@@ -56,10 +56,10 @@ const initial_state_current_preparacion: IObjPreparacionMezcla = {
 
 export const initial_state_current_bien: IObjBienes = {
   id_bien: null,
-  unidad_medida: "",
-  saldo_disponible: null,
-  codigo_bien :  null,
-  nombre_bien:null,
+  unidad_disponible: "",
+  cantidad_disponible_bien: null,
+  codigo_bien:  null,
+  nombre_bien: null,
 }
 const initial_statate_current_vegetal_material: IObjVegetalMaterial = {
   id_inventario_vivero: null,
