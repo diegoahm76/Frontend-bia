@@ -12,6 +12,8 @@ import {
     type IObjBienBaja,
     type IObjBien
   } from '../../interfaces/vivero';
+import { type Persona } from "../../../../../interfaces/globalModels";
+
 
 export const initial_state_current_nursery = {
   id_vivero: null,
@@ -114,27 +116,43 @@ export const initial_state_current_viverista_actual: IObjViveristaActual = {
 
 const initial_state_current_bien_baja: IObjBienBaja ={
   id_item_baja_viveros: null,
+  id_baja: null,
+  id_bien: null,
   cantidad_baja: null,
-  observaciones: null
+  observaciones: ""
 }
 const initial_state_current_generar_baja: IObjGenerarBaja={
   id_baja: null,
   tipo_baja: null,
   nro_baja_por_tipo:  null,
-  fecha_baja: null,
+  fecha_baja: (new Date().toString()),
   baja_anulado: null,
   justificacion_anulacion: null,
   fecha_anulacion: null,
   id_persona_anula: null,
 }
 
-const initial_state_current_insumo: IObjBien={
+export const initial_state_current_insumo: IObjBien={
   id_bien: null,
   codigo_bien: null,
   nombre: null,
   tipo_bien: null,
   saldo_disponible: null,
   unidad_medida: null,
+}
+
+const initial_state_person: Persona = {
+  id_persona: null,
+  tipo_persona: "",
+  tipo_documento: "",
+  numero_documento: "",
+  primer_nombre: "",
+  segundo_nombre: "",
+  primer_apellido: "",
+  segundo_apellido: "",
+  nombre_completo: "",
+  razon_social: "",
+  nombre_comercial: "",
 }
 
 const initial_state: INursery = {
@@ -156,7 +174,7 @@ const initial_state: INursery = {
   current_bien_baja: initial_state_current_bien_baja,
   insumos: [],
   current_insumo: initial_state_current_insumo,
-
+  persona: initial_state_person
 };
 
 export const nursery_slice = createSlice({
@@ -227,6 +245,9 @@ export const nursery_slice = createSlice({
     set_current_nursery: (state: INursery, action: PayloadAction<IObjNursery>) => {
       state.current_nursery = action.payload;
     },
+    set_persona: (state: INursery, action: PayloadAction<Persona>) => {
+      state.persona = action.payload;
+    },
   },
 });
 export const { 
@@ -250,5 +271,6 @@ export const {
   set_current_despacho,
   set_insumos,
   set_current_insumo,
-  set_current_nursery
+  set_current_nursery,
+  set_persona
 } = nursery_slice.actions;

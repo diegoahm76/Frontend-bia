@@ -9,7 +9,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine, initial_state_current_nursery, initial_state_current_viverista_actual, set_current_nuevo_viverista, set_current_viverista, set_nuevos_viveristas,
+  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine, initial_state_current_nursery, initial_state_current_viverista_actual, set_bienes_bajas, set_current_genera_baja, set_current_insumo, set_current_nuevo_viverista, set_current_viverista, set_genera_bajas, set_insumos, set_nuevos_viveristas, set_persona,
   // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
@@ -471,6 +471,236 @@ export const remover_viverista_service: any = (
       control_success('Se removio el viverista');
       return data;
     } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener viveros bajas
+export const get_nurseries_baja_service = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get('conservacion/bajas/get-viveros/');
+ 
+      dispatch(get_nurseries(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('get_nurseries_baja_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener bajas filtro
+export const get_bajas_service = (
+  nro: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/bajas/get-bajas-by-filter/?nro_baja=${nro?? ""}`);
+      dispatch(set_genera_bajas(data.data));
+      if ("data" in data){
+        if (data.data.length>0){
+          control_success("Se encontraron bajas")
+        } else {
+          control_error("No se encontraron bajas")
+        }
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bajas_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// get baja nro
+export const get_bajas_nro_service = (
+  nro: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/bajas/get-baja-by-numero-baja/${nro}`);
+      console.log(data)
+      if ("data" in data) {
+        dispatch (set_current_genera_baja(data.data))
+        control_success("Se selecciono baja")
+      } else {
+        control_error("No se encontro baja")
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bajas_nro_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// crear cambio de etapa
+export const add_baja_service = (
+  baja: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put('conservacion/bajas/crear-bajas-vivero/', baja);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_baja_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// editar siembra
+export const edit_baja_service = (
+  baja: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put('conservacion/bajas/actualizar-bajas-vivero/', baja);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('edit_baja_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener bienes preparacion
+export const annul_baja_service = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/bajas/anualar-bajas-vivero/${id}/`);
+ 
+      if (data.success === true) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('annul_baja_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// Obtener bienes baja
+export const get_bienes_service = (
+  id_vivero: string | number,
+  tipo_elemento: string | null,
+  codigo_bien: string | null,
+  nombre: string | null,
+  ): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
+
+      const { data } = await api.get(`conservacion/bajas/busqueda-avanzada-bienes-bajas/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${tipo_elemento ?? ""}`);
+      console.log(data)
+      dispatch(set_insumos(data.data));
+      if (data.success === true) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bienes_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener bien codigo bien
+export const get_bien_code_service = (
+  id_vivero: number,
+  code: string,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/bajas/get-bienes-bajas/${code}/${id_vivero}/`);
+      console.log(data)
+      if ("data" in data) {
+        dispatch (set_current_insumo(data.data))
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bien_code_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener bienes preparacion
+export const get_bien_baja_id_service = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/bajas/get-items-by-baja/${id}`);
+      console.log(data)
+      if ("data" in data) {
+        dispatch (set_bienes_bajas(data.data))
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bien_baja_id_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener persona por iddocumento
+export const get_person_id_service = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`personas/get-by-id/${id}/`);
+ 
+      if ("data" in data) {
+        dispatch (set_persona({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
+          nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido)}))
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
