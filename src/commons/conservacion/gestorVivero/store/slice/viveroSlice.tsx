@@ -125,14 +125,14 @@ const initial_state_current_generar_baja: IObjGenerarBaja={
   id_baja: null,
   tipo_baja: null,
   nro_baja_por_tipo:  null,
-  fecha_baja: null,
+  fecha_baja: (new Date().toString()),
   baja_anulado: null,
   justificacion_anulacion: null,
   fecha_anulacion: null,
   id_persona_anula: null,
 }
 
-const initial_state_current_insumo: IObjBien={
+export const initial_state_current_insumo: IObjBien={
   id_bien: null,
   codigo_bien: null,
   nombre: null,

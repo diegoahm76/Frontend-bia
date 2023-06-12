@@ -335,12 +335,12 @@ return (
                     {
                         datum_type: "input_controller",
                         xs: 12,
-                        md: 2,
+                        md: 3,
                         control_form: control_baja,
                         control_name: "cantidad_baja",
                         default_value: "",
                         rules: { required_rule: { rule: true, message: "Debe ingresar cantidad" }, min_rule: { rule: 0.01, message: "La cantidad debe ser mayor a 0" }, max_rule: { rule: current_insumo.saldo_disponible, message: 'La cqantidad no debe ser mayor que '+ String(current_insumo.saldo_disponible) }},
-                        label: "Cantidad Usada",
+                        label: "Cantidad a bajar",
                         type: "text",
                         disabled: false,
                         helper_text: ""
@@ -348,7 +348,7 @@ return (
                     {
                         datum_type: "input_controller",
                         xs: 12,
-                        md: 2,
+                        md: 3,
                         control_form: control_bien,
                         control_name: "saldo_disponible",
                         default_value: "",
@@ -374,7 +374,7 @@ return (
                     {
                         datum_type: "input_controller",
                         xs: 12,
-                        md: 6,
+                        md: 4,
                         control_form: control_baja,
                         control_name: "observaciones",
                         default_value: "",
@@ -388,7 +388,7 @@ return (
                       },
 
                 ]}
-                title_list='Insumos consumidos'
+                title_list='Bienes a dar de baja'
                 list={aux_insumos}
                 add_item_list={handle_submit_baja(on_submit_baja)}
                 add_list_button_label={action}
@@ -396,6 +396,21 @@ return (
                 row_list_id={"id_bien"}
                 modal_select_model_title='Buscar bien'
                 modal_form_filters={[
+                    {
+                        datum_type: "select_controller",
+                        xs: 12,
+                        md: 2,
+                        control_form: control_bien,
+                        control_name: "tipo_bien",
+                        default_value: "",
+                        rules: { required_rule: { rule: true, message: "Seleccione tipo de bien" } },
+                        label: "Tipo de bien",
+                        disabled: false,
+                        helper_text: "debe seleccionar campo",
+                        select_options: [{ label: "Insumo", value: "IN" }, { label: "Herramienta", value: "HE" }, { label: "Semilla", value: "SE" }],
+                        option_label: "label",
+                        option_key: "value",
+                    },
                     {
                         datum_type: "input_controller",
                         xs: 12,
@@ -412,7 +427,7 @@ return (
                     {
                         datum_type: "input_controller",
                         xs: 12,
-                        md: 6,
+                        md: 3,
                         control_form: control_bien,
                         control_name: "nombre_bien",
                         default_value: "",

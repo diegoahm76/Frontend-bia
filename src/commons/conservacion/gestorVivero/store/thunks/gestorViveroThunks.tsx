@@ -9,7 +9,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine, initial_state_current_nursery, initial_state_current_viverista_actual, set_bienes_bajas, set_current_genera_baja, set_current_insumo, set_current_nuevo_viverista, set_current_viverista, set_genera_bajas, set_insumos, set_nuevos_viveristas,
+  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine, initial_state_current_nursery, initial_state_current_viverista_actual, set_bienes_bajas, set_current_genera_baja, set_current_insumo, set_current_nuevo_viverista, set_current_viverista, set_genera_bajas, set_insumos, set_nuevos_viveristas, set_persona,
   // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
@@ -620,6 +620,8 @@ export const get_bienes_service = (
   ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
+
       const { data } = await api.get(`conservacion/bajas/busqueda-avanzada-bienes-bajas/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${tipo_elemento ?? ""}`);
       console.log(data)
       dispatch(set_insumos(data.data));
@@ -676,6 +678,29 @@ export const get_bien_baja_id_service = (
       return data;
     } catch (error: any) {
       console.log('get_bien_baja_id_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener persona por iddocumento
+export const get_person_id_service = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`personas/get-by-id/${id}/`);
+ 
+      if ("data" in data) {
+        dispatch (set_persona({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
+          nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido)}))
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_person_document_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

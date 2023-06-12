@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
-import { api } from '../../../../api/axios';
-import { Chip, Grid } from '@mui/material';
-import { type ToastContent, toast } from 'react-toastify';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import {  useAppDispatch, useAppSelector } from '../../../../hooks';
-import { set_genera_bajas, set_current_genera_baja,set_bienes_bajas,set_current_bien_baja, set_viveristas, set_current_viverista, set_historicos_viveristas, set_current_historico_viverista, set_nuevos_viveristas, set_current_nuevo_viverista} from '../store/slice/viveroSlice';
-import { IObjBienBaja, type IDespacho, IObjGenerarBaja, IObjNursery } from "../interfaces/vivero";
+import { set_genera_bajas, set_current_genera_baja} from '../store/slice/viveroSlice';
+import { type IObjNursery } from "../interfaces/vivero";
 import { get_bajas_nro_service, get_bajas_service, get_nurseries_baja_service } from '../store/thunks/gestorViveroThunks';
+import { Grid } from '@mui/material';
 
 
 interface IProps {
@@ -150,8 +148,8 @@ const SeleccionarBajasHerramientas = ({
                           control_form: control_genera_bajas,
                           control_name: "nro_baja_por_tipo",
                           default_value: "",
-                          rules: { required_rule: { rule: true, message: "Numero de baja requerido" } },
-                          label: "Nuero baja",
+                          rules: { required_rule: { rule: false, message: "Numero de baja requerido" } },
+                          label: "Numero baja",
                           type: "number",
                           disabled: false,
                           helper_text: "",
@@ -208,7 +206,7 @@ const SeleccionarBajasHerramientas = ({
                     control_name: "fecha_baja",
                     default_value: "",
                     rules: { required_rule: { rule: true, message: "Debe seleccionar fecha" } },
-                    label: "Fecha de preparación",
+                    label: "Fecha de baja",
                     type: "text",
                     disabled: true,
                     helper_text: ""
