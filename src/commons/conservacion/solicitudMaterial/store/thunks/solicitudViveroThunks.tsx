@@ -34,6 +34,35 @@ const control_success = (message: ToastContent) =>
     });
 
 
+// CREAR SOLICITUD
+export const crear_solicitud: any = (
+    solicitud: any,
+
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(solicitud)
+            const { data } = await api.post('conservacion/solicitudes/create/', solicitud);
+            //  dispatch(get_solicitud_consumo_id());
+            console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+
+        };
+    }
+}
+
 
 // obtener persona por documento
 export const get_funcionario_document_service = (
@@ -235,8 +264,8 @@ export const get_municipios = (): any => {
 };
 
 
-// Obtener bienes vivero
-export const get_bienes_service = (
+// Obtener bienes vivero por codigo
+export const get_bienes_service_codigo = (
     id_vivero: string | number,
     codigo_bien: string | null,
 
@@ -245,6 +274,34 @@ export const get_bienes_service = (
         try {
             console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero}/${codigo_bien ?? ""}`)
             const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero}/${codigo_bien ?? ""}`);
+            dispatch(set_bienes(data.data));
+            console.log(data)
+            if (data.data.length > 0) {
+                control_success("Se encontrarón bienes")
+            } else {
+                control_error("No se encontrarón bienes")
+            }
+            return data;
+        } catch (error: any) {
+            // console.log('get_planting_goods_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
+// Obtener bienes vivero 
+export const get_bienes_service = (
+    id_vivero: string | number,
+
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=MV`)
+            const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=MV`);
             dispatch(set_bienes(data.data));
             console.log(data)
             if (data.data.length > 0) {

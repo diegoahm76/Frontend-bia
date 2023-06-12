@@ -131,7 +131,9 @@ const DestinoSolicitud = ({
                             disabled: false,
                             helper_text: "debe seleccionar campo",
                             select_options: municipalities,
-                            option_label: "nombre",
+                            option_label: "label",
+                            option_key: "value",
+
 
                         },
 
@@ -145,7 +147,7 @@ const DestinoSolicitud = ({
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Nombre del predio",
                             type: "text",
-                            disabled: true,
+                            disabled: false,
                             helper_text: ""
                         },
                         {
@@ -158,7 +160,7 @@ const DestinoSolicitud = ({
                             rules: { required_rule: { rule: true, message: "requerido" } },
                             label: "Dirección del predio:",
                             type: "text",
-                            disabled: true,
+                            disabled: false,
                             helper_text: ""
                         },
                     ]}

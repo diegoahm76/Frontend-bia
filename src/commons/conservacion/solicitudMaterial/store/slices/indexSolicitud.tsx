@@ -78,11 +78,13 @@ const initial_state_current_funcionario: IObjFuncionario = {
 
 const initial_state_persona_solicita = {
     id_persona: null,
+    id_unidad_organizacional_actual: null,
     nombre: "",
     unidad_organizacional: "",
 }
 
-const initial_state: ISolicitudConsumo | any = {
+const initial_state: ISolicitudConsumo = {
+    bienes: [],
     current_solicitud: initial_state_current_solicitud,
     solicitudes: [],
     bienes_solicitud: [],
@@ -92,7 +94,8 @@ const initial_state: ISolicitudConsumo | any = {
     unidad_organizacional: [],
     nro_solicitud: null,
     nurseries: [],
-    origin_nursery: initial_state_current_nursery,
+    current_nursery: initial_state_current_nursery,
+    funcionarios: [],
 }
 
 export const solicitud_vivero_slice = createSlice({
@@ -108,6 +111,10 @@ export const solicitud_vivero_slice = createSlice({
         set_nurseries: (state: ISolicitudConsumo, action: PayloadAction<IObjNursery[]>) => {
             state.nurseries = action.payload;
         },
+        set_current_nursery: (state: ISolicitudConsumo, action: PayloadAction<IObjNursery>) => {
+            state.current_nursery = action.payload;
+        },
+
 
         set_current_solicitud: (
             state: ISolicitudConsumo,
@@ -171,4 +178,4 @@ export const solicitud_vivero_slice = createSlice({
 
 })
 
-export const { set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_bienes, set_current_bien, get_unidad_organizacional, set_funcionarios, set_numero_solicitud, set_persona_solicita, set_current_funcionario, set_nurseries } = solicitud_vivero_slice.actions;
+export const { set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_bienes, set_current_bien, get_unidad_organizacional, set_funcionarios, set_numero_solicitud, set_persona_solicita, set_current_funcionario, set_nurseries, set_current_nursery } = solicitud_vivero_slice.actions;

@@ -71,7 +71,7 @@ const SeleccionarSolicitud = ({
             >
                 <BuscarModelo
                     set_current_model={set_current_solicitud}
-                    row_id={"id_vivero_solicitud"}
+                    row_id={"id_solicitud_vivero"}
                     columns_model={columns_solicitudes}
                     models={solicitudes}
                     get_filters_models={get_solicitudes_filtro}
@@ -89,7 +89,7 @@ const SeleccionarSolicitud = ({
                             xs: 12,
                             md: 3,
                             control_form: control_solicitud,
-                            control_name: "nro_solicitud_por_tipo",
+                            control_name: "nro_solicitud",
                             default_value: "",
                             rules: {},
                             label: "Numero solicitud",

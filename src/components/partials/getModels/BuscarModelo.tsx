@@ -182,21 +182,21 @@ const BuscarModelo = ({
                         <TypeDatum key={index} form_input={option} />
                     ))}
                     {(show_search_button ?? true) &&
-                    <Grid
-                        item
-                        xs={12}
-                        md={3}
-                    >
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={handle_open_select_model}
-                            icon_class={<SearchIcon />}
-                            label={button_submit_label ?? "BUSCAR"}
-                            type_button="button"
-                            disabled={button_submit_disabled ?? false}
-                        />
-                        
-                    </Grid>
+                        <Grid
+                            item
+                            xs={12}
+                            md={3}
+                        >
+                            <FormButton
+                                variant_button="contained"
+                                on_click_function={handle_open_select_model}
+                                icon_class={<SearchIcon />}
+                                label={button_submit_label ?? "BUSCAR"}
+                                type_button="button"
+                                disabled={button_submit_disabled ?? false}
+                            />
+
+                        </Grid>
                     }
                 </>
             }

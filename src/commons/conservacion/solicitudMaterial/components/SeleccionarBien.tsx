@@ -7,7 +7,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
 import { set_bienes, set_bienes_solicitud, set_current_bien } from "../store/slices/indexSolicitud";
 import { useForm } from "react-hook-form";
-import { get_bienes_service } from "../store/thunks/solicitudViveroThunks";
+import { get_bienes_service, get_bienes_service_codigo } from "../store/thunks/solicitudViveroThunks";
 
 
 
@@ -22,7 +22,7 @@ const SeleccionarBienConsumo = () => {
     // const [action, set_action] = useState<string>("agregar");
     const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjBienConsumo>();
     const { control: control_bien_solicitud, handleSubmit: handle_submit_item_solicitud } = useForm<IObjBienesSolicitud>();
-    const { unidades_medida, bienes, bienes_solicitud, current_bien, origin_nursery } = useAppSelector((state) => state.solic_consumo);
+    const { bienes, bienes_solicitud, current_bien, current_nursery } = useAppSelector((state) => state.solicitud_vivero);
     const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesSolicitud[]>([]);
     const [action, set_action] = useState<string>("crear");
 
@@ -65,6 +65,27 @@ const SeleccionarBienConsumo = () => {
                 </div>
             ),
         },
+        {
+            field: 'nombre',
+            headerName: 'Nombre',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
+        {
+            field: 'saldo_total_produccion',
+            headerName: 'Saldo disponible',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
+
 
 
     ];
@@ -91,8 +112,8 @@ const SeleccionarBienConsumo = () => {
             ),
         },
         {
-            field: 'tipo_bien',
-            headerName: 'Tipo',
+            field: 'saldo_total_produccion',
+            headerName: 'Saldo disponible',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -225,27 +246,23 @@ const SeleccionarBienConsumo = () => {
 
 
     const get_bienes_filtro: any = (async () => {
-        console.log("buscar...")
-        const id_vivero = origin_nursery.id_vivero
+        console.log(current_nursery)
+        const id_vivero = current_nursery.id_vivero
         if (id_vivero !== null && id_vivero !== undefined) {
-            const codigo_bien = get_values_bien("codigo_bien") ?? ""
-            void dispatch(get_bienes_service(id_vivero, codigo_bien))
+
+            void dispatch(get_bienes_service(id_vivero))
+
         }
 
 
     })
 
     const search_bien: any = (async () => {
-        try {
-            const id_vivero = origin_nursery.id_vivero
-            if (id_vivero !== null && id_vivero !== undefined) {
-                //  const codigo = get_values_bien("codigo_bien") ?? ""
-                //   const data = await dispatch(get_bienes_service(id_vivero, codigo))
-            }
-        } catch (error) {
-            console.error(error);
+        const id_vivero = current_nursery.id_vivero
+        if (id_vivero !== null && id_vivero !== undefined) {
+            const codigo_bien = get_values_bien("codigo_bien") ?? ""
+            void dispatch(get_bienes_service_codigo(id_vivero, codigo_bien))
         }
-
     })
 
 
@@ -266,7 +283,6 @@ const SeleccionarBienConsumo = () => {
                     get_filters_models={get_bienes_filtro}
                     set_models={set_bienes}
                     button_submit_label='Buscar bien'
-
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -315,19 +331,28 @@ const SeleccionarBienConsumo = () => {
                             helper_text: ""
                         },
                         {
-                            datum_type: "select_controller",
+                            datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_bien_solicitud,
-                            control_name: "id_unidad_medida",
+                            control_form: control_bien,
+                            control_name: "saldo_total_produccion",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Unidad ",
-                            disabled: false,
+                            label: "Saldo disponible",
+                            disabled: true,
                             helper_text: "debe seleccionar campo",
-                            select_options: unidades_medida,
-                            option_label: "nombre",
-                            option_key: "id_unidad_medida"
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "unidad_medida",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            label: "Unidad de medida",
+                            disabled: true,
+                            helper_text: "debe seleccionar campo",
                         },
                         {
                             datum_type: "input_controller",
@@ -348,7 +373,7 @@ const SeleccionarBienConsumo = () => {
                     title_list='Bienes consumidos'
                     list={aux_bienes_solicitud}
                     add_item_list={handle_submit_item_solicitud(on_submit_item_solicitud)}
-                    add_list_button_label={null}
+                    add_list_button_label={""}
                     columns_list={columns_bienes_solicitud}
                     row_list_id={"id_bien"}
                     modal_select_model_title='Buscar bien'
@@ -378,7 +403,7 @@ const SeleccionarBienConsumo = () => {
                             type: "text",
                             disabled: false,
                             helper_text: ""
-                        },
+                        }
                     ]}
                 />
 

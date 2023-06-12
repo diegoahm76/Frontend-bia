@@ -32,8 +32,8 @@ import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/Facil
 import { funcionarios_slice } from "../commons/recaudo/facilidadPago/slices/FuncionariosSlice";
 import { calidad_personas_slice } from "../commons/recaudo/facilidadPago/slices/CalidadPersonasSlice";
 import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
-import { solicitud_vivero_slice } from "../commons/conservacion/solicitudMaterial/slices/indexSolicitud";
-import { reportes_recaudo_slice } from "../commons/recaudo/reportes/slices/ReportesSlice";
+import { solicitud_vivero_slice } from "../commons/conservacion/solicitudMaterial/store/slices/indexSolicitud";
+// import { reportes_recaudo_slice } from "../commons/recaudo/reportes/slices/ReportesSlice";
 
 const persist_config = {
   key: "macarenia_app",

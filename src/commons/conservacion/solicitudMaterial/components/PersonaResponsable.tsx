@@ -37,7 +37,7 @@ const PersonaResponsable = ({
 
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_persona, reset: reset_persona, getValues: get_values } = useForm<IObjFuncionario>();
-    const { funcionarios, current_funcionario } = useAppSelector((state) => state.solic_consumo);
+    const { funcionarios, current_funcionario } = useAppSelector((state) => state.solicitud_vivero);
 
     const [document_type, set_document_type] = useState<IList[]>(initial_options);
 
@@ -56,7 +56,7 @@ const PersonaResponsable = ({
         },
         {
             field: 'nombre_completo',
-            headerName: 'Nombre',
+            headerName: 'Nombre Completo',
             width: 300,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -67,8 +67,8 @@ const PersonaResponsable = ({
         },
 
         {
-            field: 'id_unidad_para_la_que_solicita',
-            headerName: 'unidad',
+            field: 'nombre_unidad_organizacional_actual',
+            headerName: 'Unidad organizacional actual',
             width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
