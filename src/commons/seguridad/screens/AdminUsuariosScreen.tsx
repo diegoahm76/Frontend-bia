@@ -94,6 +94,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
+    numero_documento,
     set_users_x_person_is_active,
     set_data_register,
     set_tipo_documento,
@@ -294,6 +295,7 @@ export const AdminUsuariosScreen: React.FC = () => {
                     label="Número de documento *"
                     type="number"
                     size="small"
+                    value={numero_documento}
                     disabled={tipo_persona === '' ?? true}
                     inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     error={errors.numero_documento?.type === 'required'}

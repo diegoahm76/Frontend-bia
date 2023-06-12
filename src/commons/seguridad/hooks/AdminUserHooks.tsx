@@ -97,11 +97,13 @@ export const use_admin_users = (): AdminUserHook => {
     IList[]
   >([]);
   const [tipo_documento, set_tipo_documento] = useState('');
+  const [numero_documento, set_numero_documento] = useState('');
   const [tipo_persona, set_tipo_persona] = useState('');
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
   const [roles_opt, set_roles_opt] = useState<IList2[]>([]);
-  const rol_fixed = [roles_opt[0]];
-  const [roles, set_roles] = useState<IList2[]>([...rol_fixed]);
+  // const rol_fixed = [roles_opt[0]];
+  // const [roles, set_roles] = useState<IList2[]>([...rol_fixed]);
+  const [roles, set_roles] = useState<IList2[]>([]);
   const [tipo_usuario, set_tipo_usuario] = useState('');
   const [activo, set_activo] = useState('');
   const [bloqueado, set_bloqueado] = useState('');
@@ -176,8 +178,8 @@ export const use_admin_users = (): AdminUserHook => {
   };
 
   const on_submit = handle_submit_admin_user(async (data_user) => {
+    console.log('data enviada', data_user);
     try {
-      console.log('data enviada', data_user);
       set_loading_create_or_update(true);
       if (action_admin_users === 'CREATE') {
         const data_create_user = new FormData();
@@ -344,7 +346,7 @@ export const use_admin_users = (): AdminUserHook => {
     set_check_user_is_blocked(true);
     if (data_person_search.id_persona !== 0) {
       set_tipo_documento(data_person_search.tipo_documento);
-      // set_numero_documento(data_person_search.numero_documento);
+      set_numero_documento(data_person_search.numero_documento);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -422,7 +424,7 @@ export const use_admin_users = (): AdminUserHook => {
     if (user_info.id_usuario !== 0) {
       console.log(action_admin_users);
       set_tipo_documento(user_info.tipo_documento);
-      // set_numero_documento(user_info.numero_documento);
+      set_numero_documento(user_info.numero_documento);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -523,6 +525,7 @@ export const use_admin_users = (): AdminUserHook => {
       );
 
       console.log('Si hay data user');
+      set_tipo_persona(user_info.tipo_persona);
       set_data_disponible(true);
       dispatch(set_action_admin_users('EDIT'));
     } else {
@@ -590,8 +593,9 @@ export const use_admin_users = (): AdminUserHook => {
     users_x_person_is_active,
     tipo_documento_opt,
     tipo_documento,
+    numero_documento,
     tipo_persona_opt,
-    rol_fixed,
+    // rol_fixed,
     set_historial_cambios_estado_is_active,
     set_users_x_person_is_active,
     on_submit,
