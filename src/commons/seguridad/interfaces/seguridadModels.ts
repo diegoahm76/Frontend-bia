@@ -132,6 +132,7 @@ export interface AdminUserHook {
   loading: boolean;
   tipo_documento: string;
   tipo_documento_opt: IList[];
+  numero_documento: string;
   tipo_persona: string;
   tipo_persona_opt: IList[];
   tipo_usuario_opt: IList[];
@@ -142,7 +143,7 @@ export interface AdminUserHook {
   bloqueado_opt: IList[];
   roles: IList2[];
   roles_opt: IList2[];
-  rol_fixed: IList2[];
+  // rol_fixed: IList2[];
   users_x_person_is_active: boolean;
   set_historial_cambios_estado_is_active: Dispatch<SetStateAction<boolean>>;
   set_users_x_person_is_active:Dispatch<SetStateAction<boolean>>; 
