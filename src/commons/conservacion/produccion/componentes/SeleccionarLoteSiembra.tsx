@@ -1,32 +1,32 @@
 
 import { useForm } from 'react-hook-form';
-import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Grid, IconButton, Tooltip} from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import SeleccionarModeloDialogForm from "../../../../components/partials/getModels/SeleccionarModeloDialogForm";
 import { type GridColDef } from '@mui/x-data-grid';
-import { type IObjGoods, type IObjTransferGoods } from "../interfaces/distribucion";
-import { set_transfer_goods, set_current_good, set_goods } from '../store/slice/distribucionSlice';
-import { control_error, get_good_code_service, get_goods_service } from '../store/thunks/distribucionThunks';
+import { type IObjItemMortalidad, type IObjSiembraMV } from "../interfaces/produccion";
+import { set_current_siembra_material_vegetal, set_items_mortalidad, set_siembras_material_vegetal } from '../store/slice/produccionSlice';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
+import { control_error, get_lots_code_service, get_lots_service } from '../store/thunks/produccionThunks';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarBienSiembra = () => {
+const SeleccionarLoteSiembra = () => {
 
 
-    const { control: control_bien, reset: reset_bien, getValues: get_values_bien} = useForm<IObjGoods>();
-    const { control: control_traslado, handleSubmit:handle_submit_traslado, reset: reset_traslado } = useForm<IObjTransferGoods>();
-    const [aux_transfer_goods, set_aux_transfer_goods] = useState<IObjTransferGoods[]>([]);
-    
-    const [action, set_action] = useState<string>("agregar");
-    const [bienes, set_bienes] = useState<any[]>([]);
+    const { control: control_bien, reset: reset_bien, getValues: get_values_bien} = useForm<IObjSiembraMV>();
+    const { control: control_mortalidad, handleSubmit:handle_submit_mortalidad, reset: reset_mortalidad } = useForm<IObjItemMortalidad>();
+
+  
+    const [bienes, set_bienes] = useState<any>([]);
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
+    const [action, set_action] = useState<string>("agregar");
+    const [aux_insumos, set_aux_insumos] = useState<IObjItemMortalidad[]>([]);
 
 
-    const { current_transfer, goods, transfer_goods, origin_nursery, current_good } = useAppSelector((state) => state.distribucion);
+    const { current_nursery, current_siembra_material_vegetal, siembras_material_vegetal, current_mortalidad, items_mortalidad } = useAppSelector((state) => state.produccion);
     const dispatch = useAppDispatch();
 
     const columns_bienes: GridColDef[] = [
@@ -42,7 +42,7 @@ const SeleccionarBienSiembra = () => {
             ),
         },
         {
-            field: 'nombre',
+            field: 'nombre_bien',
             headerName: 'Nombre',
             width: 200,
             renderCell: (params) => (
@@ -82,7 +82,7 @@ const SeleccionarBienSiembra = () => {
             ),
         },
         {
-            field: 'saldo_disponible',
+            field: 'saldo_disponible_registro',
             headerName: 'Cantidad disponible',
             width: 150,
             renderCell: (params) => (
@@ -95,7 +95,8 @@ const SeleccionarBienSiembra = () => {
 
     ];
 
-    const columns_bienes_siembra: GridColDef[] = [
+    const columns_bienes_mortalidad: GridColDef[] = [
+        { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
             headerName: 'Codigo',
@@ -117,8 +118,8 @@ const SeleccionarBienSiembra = () => {
             ),
         },
         {
-            field: 'agno_lote_origen',
-            headerName: 'Año lote origen',
+            field: 'nro_lote',
+            headerName: 'Nro lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -127,8 +128,8 @@ const SeleccionarBienSiembra = () => {
             ),
         },
         {
-            field: 'nro_lote_origen',
-            headerName: '# lote origen',
+            field: 'agno_lote',
+            headerName: 'Año lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -137,8 +138,8 @@ const SeleccionarBienSiembra = () => {
             ),
         },
         {
-            field: 'cod_etapa_lote_origen',
-            headerName: 'Etapa origen',
+            field: 'cod_etapa_lote',
+            headerName: 'Etapa lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -146,10 +147,9 @@ const SeleccionarBienSiembra = () => {
                 </div>
             ),
         },
-        
         {
-            field: 'cantidad_a_trasladar',
-            headerName: 'Cantidad  a trasladar',
+            field: 'cantidad_baja',
+            headerName: 'Cantidad',
             width: 140,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -158,38 +158,8 @@ const SeleccionarBienSiembra = () => {
             ),
         },
         {
-            field: 'altura_lote_destion_en_cms',
-            headerName: 'Altura final',
-            width: 140,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-        },
-        {
-            field: 'agno_lote_destino_MV',
-            headerName: 'Año lote destino',
-            width: 150,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-        },
-        {
-            field: 'nro_lote_destino_MV',
-            headerName: '# lote destino',
-            width: 150,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-        },
-        {
-            field: 'cod_etapa_lote_destino_MV',
-            headerName: 'Etapa destino',
+            field: 'observaciones',
+            headerName: 'Observacion',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -207,7 +177,7 @@ const SeleccionarBienSiembra = () => {
                         <Tooltip title="Editar">
                             <IconButton
                                 onClick={() => {
-                                    edit_bien_traslado(params.row)
+                                    edit_bien_mortalidad(params.row)
 
                                 }}
                             >
@@ -231,7 +201,7 @@ const SeleccionarBienSiembra = () => {
                         <Tooltip title="Borrar">
                             <IconButton
                                 onClick={() => {
-                                    delete_bien_traslado(params.row)
+                                    delete_bien_mortalidad(params.row)
                                 }}
                             >
                                 <Avatar
@@ -255,23 +225,25 @@ const SeleccionarBienSiembra = () => {
             ),
         },
     ];
+
+    
    
     const get_bienes: any = (async () => {
-        const id_vivero = origin_nursery.id_vivero
+        const id_vivero = current_nursery.id_vivero
         if (id_vivero !== null && id_vivero !== undefined) {
             const codigo_bien = get_values_bien("codigo_bien") ?? ""
-            const nombre = get_values_bien("nombre")??""
-            const tipo_bien = get_values_bien("cod_tipo_elemento_vivero")??""
-            void dispatch(get_goods_service(id_vivero, codigo_bien, nombre, tipo_bien));
+            const nombre = get_values_bien("nombre_bien")??""
+            const cod_etapa = get_values_bien("cod_etapa_lote")??""
+            void dispatch(get_lots_service(id_vivero, codigo_bien, nombre, cod_etapa));
         }
     })
 
     const search_bien: any = (async () => {
         try {
-            const id_vivero = origin_nursery.id_vivero
+            const id_vivero = current_nursery.id_vivero
             if (id_vivero !== null && id_vivero !== undefined) {
                 const codigo = get_values_bien("codigo_bien") ?? ""
-                const data = await dispatch(get_good_code_service(id_vivero, codigo));
+                const data = await dispatch(get_lots_code_service(id_vivero, codigo));
                 set_bienes(data)
             }
           } catch (error) {
@@ -283,8 +255,8 @@ const SeleccionarBienSiembra = () => {
     useEffect(() => {
         if('success' in bienes){
             if(bienes.success === true){
-                if('modal' in bienes){
-                    if(bienes.modal === true){
+                if('data' in bienes){
+                    if(bienes.data.length > 1){
                         set_select_model_is_active(true);
                     }
                 }
@@ -292,86 +264,88 @@ const SeleccionarBienSiembra = () => {
         }
     }, [bienes]);
 
-    
-
 
     useEffect(() => {
-        // const id_vivero = origin_nursery.id_vivero
+        reset_bien(current_siembra_material_vegetal)
+        set_action("agregar")
+    }, [current_siembra_material_vegetal]);
+
+    useEffect(() => {
+        if(current_siembra_material_vegetal.id_inventario_vivero === null)
+            {reset_bien(current_siembra_material_vegetal)
+        }
+    }, [current_mortalidad]);
+
+    useEffect(() => {
+        // const id_vivero = current_nursery.id_vivero
         // if (id_vivero !== null && id_vivero !== undefined) {
         //     void dispatch(get_goods_service(id_vivero));
         // }
         set_action("agregar")
-    }, [origin_nursery]);
+    }, [current_nursery]);
 
     useEffect(() => {
-        console.log(transfer_goods)
-        set_aux_transfer_goods(transfer_goods)
-    }, [transfer_goods]);
+        set_aux_insumos(items_mortalidad)
+    }, [items_mortalidad]);
 
     useEffect(() => {
-        dispatch(set_transfer_goods(aux_transfer_goods))
-    }, [aux_transfer_goods]);
+        dispatch(set_items_mortalidad(aux_insumos))
+    }, [aux_insumos]);
 
-    useEffect(() => {
-        reset_bien(current_good)
-        set_action("agregar")
-    }, [current_good]);
-    
-    const on_submit_traslado = (data: IObjTransferGoods): void => {   
-        if(current_good.id_bien !== null){
-            if(get_values_bien("codigo_bien") === current_good.codigo_bien){
-                const bien: IObjTransferGoods | undefined = aux_transfer_goods.find((p) => p.id_bien_origen === current_good.id_bien )
+    const on_submit_mortalidad = (data: IObjItemMortalidad): void => {   
+        if(current_siembra_material_vegetal.id_bien !== null){
+            if(get_values_bien("codigo_bien") === current_siembra_material_vegetal.codigo_bien){
+                const bien: IObjItemMortalidad | undefined = aux_insumos.find((p) => p.id_bien === current_siembra_material_vegetal.id_bien )
                 let asignada = 0
-                aux_transfer_goods.forEach((option) => {
-                    if (option.id_bien_origen !== bien?.id_bien_origen ) {
-                        asignada = asignada + (option.cantidad_a_trasladar ?? 0)
+                aux_insumos.forEach((option) => {
+                    if (option.id_bien !== bien?.id_bien ) {
+                        asignada = asignada + (option.cantidad_baja ?? 0)
                     }
                 })
-                if ((data.cantidad_a_trasladar??0) <= (current_good.saldo_disponible ?? 0))
-                {  
-                    const new_bien: IObjTransferGoods = {
-                        id_item_traslado_viveros: current_transfer.id_traslado ?? null,
-                        agno_lote_origen: current_good.agno_lote,
-                        nro_lote_origen: current_good.nro_lote,
-                        cod_etapa_lote_origen: current_good.cod_etapa_lote,
-                        agno_lote_destino_MV: data.agno_lote_destino_MV ?? null,
-                        nro_lote_destino_MV: data.nro_lote_destino_MV ?? null,
-                        cod_etapa_lote_destino_MV: data.cod_etapa_lote_destino_MV ?? null,
-                        cantidad_a_trasladar: Number(data.cantidad_a_trasladar),
-                        altura_lote_destion_en_cms:(current_good.cod_etapa_lote === null)?null : (data.altura_lote_destion_en_cms??null) !== null ? Number(data.altura_lote_destion_en_cms): null,
-                        id_traslado: current_transfer.id_traslado,
-                        id_bien_origen: current_good.id_bien,
-                        codigo_bien: current_good.codigo_bien,
-                        nombre_bien: current_good.nombre,
-                        es_semilla_vivero: current_good.es_semilla_vivero,
-                        nro_posicion: null
-                    }
 
+                if ((data.cantidad_baja??0) <= (current_siembra_material_vegetal.saldo_disponible_registro ?? 0))
+                {  
+                    const new_bien: IObjItemMortalidad = {
+                        id_item_baja_viveros: null,
+                        id_baja: current_mortalidad.id_baja,
+                        agno_lote: current_siembra_material_vegetal.agno_lote,
+                        nro_lote: current_siembra_material_vegetal.nro_lote,
+                        cod_etapa_lote: current_siembra_material_vegetal.cod_etapa_lote,
+                        id_bien: current_siembra_material_vegetal.id_bien,
+                        cantidad_baja: Number(data.cantidad_baja),
+                        nombre_bien: current_siembra_material_vegetal.nombre_bien,
+                        codigo_bien: current_siembra_material_vegetal.codigo_bien,
+                        observaciones: data.observaciones,
+                        unidad_medida: current_siembra_material_vegetal.unidad_medida,
+                        consec_cuaren_por_lote_etapa: null
+                    }
                     if (bien === undefined) {
-                            set_aux_transfer_goods([...aux_transfer_goods, new_bien])
-                            const restante = (current_good.saldo_disponible ?? 0) - (new_bien.cantidad_a_trasladar ?? 0) 
-                            dispatch(set_current_good({...current_good, saldo_disponible: restante}))
-                        
+                            set_aux_insumos([...aux_insumos, new_bien])
+                            const restante = (current_siembra_material_vegetal.saldo_disponible_registro ?? 0) - (new_bien.cantidad_baja ?? 0) 
+                            dispatch(set_current_siembra_material_vegetal({...current_siembra_material_vegetal, saldo_disponible_registro: restante}))
+                            reset_mortalidad({id_bien: current_siembra_material_vegetal?.id_bien, cantidad_baja: null, observaciones: null});
+                       
                     } else {
                         if (action === "editar") {
-                            const aux_items: IObjTransferGoods[] = []
-                            aux_transfer_goods.forEach((option) => {
-                                if (option.id_bien_origen === current_good.id_bien) {
+                            const aux_items: IObjItemMortalidad[] = []
+                            aux_insumos.forEach((option) => {
+                                if (option.id_bien === current_siembra_material_vegetal.id_bien) {
                                     aux_items.push(new_bien)
                                 } else {
                                     aux_items.push(option)
                                 }
                             })
-                            set_aux_transfer_goods(aux_items)
-                            const restante = (current_good.saldo_disponible ?? 0) - (new_bien.cantidad_a_trasladar ?? 0) 
-                            dispatch(set_current_good({...current_good, saldo_disponible: restante}))
+                            set_aux_insumos(aux_items)
+                            const restante = (current_siembra_material_vegetal.saldo_disponible_registro ?? 0) - (new_bien.cantidad_baja ?? 0) 
+                            dispatch(set_current_siembra_material_vegetal({...current_siembra_material_vegetal, saldo_disponible_registro: restante}))
+                            reset_mortalidad({id_bien: current_siembra_material_vegetal?.id_bien, cantidad_baja: null, observaciones: null});
                             set_action("agregar")
                         } else {
                             control_error("El bien ya fue agregado")
                         }
                     }
                 } else{
-                    control_error("La cantidad asignada debe ser maximo "+ String(current_good.saldo_disponible))
+                    control_error("La cantidad asignada debe ser maximo "+ String(current_siembra_material_vegetal.saldo_disponible_registro))
                     }
             } else{
                 control_error("Codigo de bien no coincide con el seleccionado")
@@ -381,34 +355,42 @@ const SeleccionarBienSiembra = () => {
         }
     };
 
-    const edit_bien_traslado = (item: IObjTransferGoods): void => {
+    const edit_bien_mortalidad = (item: IObjItemMortalidad): void => {
         set_action("editar")
-        const bien: IObjGoods | undefined =goods.find((p: IObjGoods) => p.id_bien === item.id_bien_origen)
-        const item_bien = aux_transfer_goods.find((p) => p.id_bien_origen === item.id_bien_origen)
-        reset_traslado(item_bien)
-        const aux_items: IObjTransferGoods[] = []
-        let restante = 0 
-        aux_transfer_goods.forEach((option) => {
-            if (option.id_bien_origen !== item.id_bien_origen) {
+        const bien: IObjSiembraMV | undefined =siembras_material_vegetal.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
+        const item_bien = aux_insumos.find((p) => p.id_bien === item.id_bien)
+        reset_mortalidad(item_bien)
+        const aux_items: IObjItemMortalidad[] = []
+        aux_insumos.forEach((option) => {
+            if (option.id_bien !== item.id_bien) {
                 aux_items.push(option)
             }
         })
+        console.log(bien)
         if(bien !== undefined){
-            restante = (bien.saldo_disponible ?? 0) + (item_bien?.cantidad_a_trasladar?? 0)
-            dispatch(set_current_good({...bien, saldo_disponible: restante}))
+            dispatch(set_current_siembra_material_vegetal(bien))
         }
-        set_aux_transfer_goods(aux_items)
+        set_aux_insumos(aux_items)
     };
 
-    const delete_bien_traslado = (item: IObjTransferGoods): void => {
-        const aux_items: IObjTransferGoods[] = []
-        aux_transfer_goods.forEach((option) => {
-            if (option.id_bien_origen !== item.id_bien_origen) {
+    const delete_bien_mortalidad = (item: IObjItemMortalidad): void => {
+        const bien: IObjSiembraMV | undefined =siembras_material_vegetal.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
+        console.log(bien)
+
+        if(bien !== undefined){
+            dispatch(set_current_siembra_material_vegetal(bien))
+        }
+        reset_mortalidad({id_bien: bien?.id_bien, cantidad_baja: null, observaciones: null});
+        const aux_items: IObjItemMortalidad[] = []
+        aux_insumos.forEach((option) => {
+            if (option.id_bien !== item.id_bien) {
                 aux_items.push(option)
             }
         })
-        set_aux_transfer_goods(aux_items)
+        set_aux_insumos(aux_items)
     };
+    
+
 
     return (
         <>
@@ -419,19 +401,153 @@ const SeleccionarBienSiembra = () => {
                 borderRadius={2}
             >
                 <BuscarModelo
-                    set_current_model={set_current_good}
+                    set_current_model={set_current_siembra_material_vegetal}
                     row_id={"id_inventario_vivero"}
                     columns_model={columns_bienes}
-                    models={goods}
+                    models={siembras_material_vegetal}
                     get_filters_models={get_bienes}
-                    set_models={set_transfer_goods}
+                    set_models={set_siembras_material_vegetal}
                     button_submit_label='Buscar bien'
-                    button_submit_disabled= {origin_nursery.id_vivero === null}
+                    button_submit_disabled= {false}
                     form_inputs={[
                         {
                             datum_type: "title",
                             title_label: "Seleccione bien"
                         },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "codigo_bien",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
+                            label: "Codigo bien",
+                            type: "number",
+                            disabled: current_mortalidad.id_baja !== null,
+                            helper_text: "",
+                            on_blur_function: search_bien,
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "nombre_bien",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
+                            label: "Nombre",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "nro_lote",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
+                            label: "Numero de lote",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "agno_lote",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "Debe seleccionar un bien" } },
+                            label: "Año lote",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "select_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_bien,
+                            control_name: "cod_etapa_lote",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Etapa de lote",
+                            helper_text: "",
+                            disabled: true,
+                            select_options: [{ label: "Germinación", value: "G" },{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
+                            option_label: "label",
+                            option_key: "value"
+                          }
+                    ]}
+                    form_inputs_list={[
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_mortalidad,
+                            control_name: "cantidad_baja",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Debe ingresar cantidad" }, min_rule: { rule: 0.01, message: "La cantidad debe ser mayor a 0" }, max_rule: { rule: current_siembra_material_vegetal.saldo_disponible_registro, message: 'La cqantidad no debe ser mayor que '+ String(current_siembra_material_vegetal.saldo_disponible_registro) }},
+                            label: "Cantidad Usada",
+                            type: "text",
+                            disabled: false,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_bien,
+                            control_name: "saldo_disponible_registro",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
+                            label: "Cantidad disponible",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_bien,
+                            control_name: "unidad_medida",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
+                            label: "Unidad",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 6,
+                            control_form: control_mortalidad,
+                            control_name: "observaciones",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Observación requerida" } },
+                            label: "Observacion",
+                            type: "text",
+                            multiline_text: true,
+                            rows_text: 4,
+                            disabled: false,
+                            helper_text: ""
+                          },
+    
+                    ]}
+                    title_list='Insumos consumidos'
+                    list={aux_insumos}
+                    add_item_list={handle_submit_mortalidad(on_submit_mortalidad)}
+                    add_list_button_label={action}
+                    columns_list={columns_bienes_mortalidad}
+                    row_list_id={"id_bien"}
+                    modal_select_model_title='Buscar bien'
+                    modal_form_filters={[
                         {
                             datum_type: "input_controller",
                             xs: 12,
@@ -451,40 +567,13 @@ const SeleccionarBienSiembra = () => {
                             xs: 12,
                             md: 3,
                             control_form: control_bien,
-                            control_name: "nombre",
+                            control_name: "nombre_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
+                            rules: {},
                             label: "Nombre",
                             type: "text",
-                            disabled: true,
+                            disabled: false,
                             helper_text: ""
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "saldo_disponible",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
-                            label: "Cantidad disponible",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "agno_lote",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "Debe seleccionar un bien" } },
-                            label: "Año lote",
-                            type: "text",
-                            disabled: true,
-                            helper_text: "",
-                            hidden_text: get_values_bien("es_semilla_vivero") !== false
                         },
                         {
                             datum_type: "select_controller",
@@ -493,136 +582,26 @@ const SeleccionarBienSiembra = () => {
                             control_form: control_bien,
                             control_name: "cod_etapa_lote",
                             default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            rules: {},
                             label: "Etapa de lote",
                             helper_text: "",
-                            disabled: true,
-                            select_options: [{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
+                            disabled: false,
+                            select_options: [{ label: "Germinación", value: "G" },{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
                             option_label: "label",
-                            option_key: "value",
-                            hidden_text: get_values_bien("es_semilla_vivero") !== false
-                          },
-                    ]}
-                    form_inputs_list={[
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 2,
-                            control_form: control_traslado,
-                            control_name: "cod_etapa_lote_destino_MV",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Etapa de lote destino",
-                            helper_text: "debe seleccionar campo",
-                            select_options: [{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
-                            option_label: "label",
-                            option_key: "value",
-                            hidden_text: get_values_bien("es_semilla_vivero") !== false,
-                            disabled: current_transfer.id_traslado !== null,
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_traslado,
-                            control_name: "altura_lote_destion_en_cms",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "Ingrese la altura" } },
-                            label: "Altura planta (cms)",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                            hidden_text: get_values_bien("es_semilla_vivero") !== false
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_traslado,
-                            control_name: "cantidad_a_trasladar",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "Ingrese cantidad" }, min_rule: { rule: 0.01, message: "Cantidad debe ser mayor que 0" }, max_rule: { rule: current_good.saldo_disponible, message: "La cantidad disponible es "+String(current_good.saldo_disponible) +"" }  },
-                            label: "Cantidad a trasladar",
-                            type: "number",
-                            disabled: false,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 1,
-                            control_form: control_bien,
-                            control_name: "unidad_medida",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "Debe seleccionar bien" } },
-                            label: "Unidad",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-
-                    ]}
-                    title_list='Bienes trasladados'
-                    list={aux_transfer_goods}
-                    add_item_list={handle_submit_traslado(on_submit_traslado)}
-                    add_list_button_label={"agregar"}
-                    columns_list={columns_bienes_siembra}
-                    row_list_id={"id_item_traslado_viveros"}
-                    modal_select_model_title='Buscar bien'
-                    modal_form_filters={[
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "cod_tipo_elemento_vivero",
-                            default_value: "",
-                            rules: { },
-                            label: "Tipo de bien",
-                            disabled: false,
-                            helper_text: "",
-                            select_options: [{label: "Semillas", value: "Semillas"}, {label: "Insumos", value: "Insumos"}, {label: "Plantas", value: "Plantas"}, {label: "Herramientas", value: "Herramientas"}],
-                            option_label: "label",
-                            option_key: "value",
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "codigo_bien",
-                            default_value: "",
-                            rules: {},
-                            label: "Codigo bien",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "nombre",
-                            default_value: "",
-                            rules: {},
-                            label: "Nombre",
-                            type: "text",
-                            disabled: false,
-                            helper_text: ""
-                        },
+                            option_key: "value"
+                          }
                     ]}
                 />
 
                 <SeleccionarModeloDialogForm
-                    set_current_model={set_current_good}
+                    set_current_model={set_current_siembra_material_vegetal}
                     is_modal_active={select_model_is_active}
                     set_is_modal_active={set_select_model_is_active}
                     modal_title={"Seleccionar lote de material vegetal"}
                     form_filters={[]}
-                    set_models={set_goods}
+                    set_models={set_siembras_material_vegetal}
                     get_filters_models={null}
-                    models={goods}
+                    models={siembras_material_vegetal}
                     columns_model={columns_bienes}
                     row_id={"id_inventario_vivero"}
                     title_table_modal={"Resultados de la busqueda"}
@@ -634,4 +613,4 @@ const SeleccionarBienSiembra = () => {
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarBienSiembra;
+export default SeleccionarLoteSiembra;

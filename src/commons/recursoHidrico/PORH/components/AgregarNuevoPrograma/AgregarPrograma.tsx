@@ -14,12 +14,14 @@ import AddIcon from '@mui/icons-material/Add';
 
 interface IProps {
   register: any,
+  watch: any
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarPrograma: React.FC<IProps> = ({
   register,
-}:IProps) => {
+  watch
+}: IProps) => {
 
 
   const [is_agregar, set_is_agregar] = useState(false);
@@ -115,8 +117,8 @@ export const AgregarPrograma: React.FC<IProps> = ({
       <Grid container spacing={2} mt={0.1}>
         {is_agregar && (
           <>
-            <AgregarProyectos 
-            register={register}
+            <AgregarProyectos
+              register={register}
             />
           </>
         )}
