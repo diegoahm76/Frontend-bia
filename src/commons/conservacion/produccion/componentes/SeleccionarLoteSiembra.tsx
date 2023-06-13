@@ -1,6 +1,6 @@
 
 import { useForm } from 'react-hook-form';
-import { Avatar, Grid, IconButton, Tooltip} from '@mui/material';
+import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import SeleccionarModeloDialogForm from "../../../../components/partials/getModels/SeleccionarModeloDialogForm";
 import { type GridColDef } from '@mui/x-data-grid';
@@ -16,10 +16,10 @@ import EditIcon from '@mui/icons-material/Edit';
 const SeleccionarLoteSiembra = () => {
 
 
-    const { control: control_bien, reset: reset_bien, getValues: get_values_bien} = useForm<IObjSiembraMV>();
-    const { control: control_mortalidad, handleSubmit:handle_submit_mortalidad, reset: reset_mortalidad } = useForm<IObjItemMortalidad>();
+    const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjSiembraMV>();
+    const { control: control_mortalidad, handleSubmit: handle_submit_mortalidad, reset: reset_mortalidad } = useForm<IObjItemMortalidad>();
 
-  
+
     const [bienes, set_bienes] = useState<any>([]);
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     const [action, set_action] = useState<string>("agregar");
@@ -91,7 +91,7 @@ const SeleccionarLoteSiembra = () => {
                 </div>
             ),
         },
-        
+
 
     ];
 
@@ -173,67 +173,67 @@ const SeleccionarLoteSiembra = () => {
             width: 90,
             renderCell: (params) => (
                 <>
-                    
-                        <Tooltip title="Editar">
-                            <IconButton
-                                onClick={() => {
-                                    edit_bien_mortalidad(params.row)
 
+                    <Tooltip title="Editar">
+                        <IconButton
+                            onClick={() => {
+                                edit_bien_mortalidad(params.row)
+
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    width: 24,
+                                    height: 24,
+                                    background: '#fff',
+                                    border: '2px solid',
                                 }}
+                                variant="rounded"
                             >
-                                <Avatar
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        background: '#fff',
-                                        border: '2px solid',
-                                    }}
-                                    variant="rounded"
-                                >
-                                    <EditIcon
-                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                    />
+                                <EditIcon
+                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                />
 
-                                </Avatar>
-                            </IconButton>
-                        </Tooltip>
-                    
-                        <Tooltip title="Borrar">
-                            <IconButton
-                                onClick={() => {
-                                    delete_bien_mortalidad(params.row)
+                            </Avatar>
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Borrar">
+                        <IconButton
+                            onClick={() => {
+                                delete_bien_mortalidad(params.row)
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    width: 24,
+                                    height: 24,
+                                    background: '#fff',
+                                    border: '2px solid',
                                 }}
+                                variant="rounded"
                             >
-                                <Avatar
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        background: '#fff',
-                                        border: '2px solid',
-                                    }}
-                                    variant="rounded"
-                                >
-                                    <DeleteIcon
-                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                    />
+                                <DeleteIcon
+                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                />
 
-                                </Avatar>
-                            </IconButton>
-                        </Tooltip>
-                    
+                            </Avatar>
+                        </IconButton>
+                    </Tooltip>
+
                 </>
             ),
         },
     ];
 
-    
-   
+
+
     const get_bienes: any = (async () => {
         const id_vivero = current_nursery.id_vivero
         if (id_vivero !== null && id_vivero !== undefined) {
             const codigo_bien = get_values_bien("codigo_bien") ?? ""
-            const nombre = get_values_bien("nombre_bien")??""
-            const cod_etapa = get_values_bien("cod_etapa_lote")??""
+            const nombre = get_values_bien("nombre_bien") ?? ""
+            const cod_etapa = get_values_bien("cod_etapa_lote") ?? ""
             void dispatch(get_lots_service(id_vivero, codigo_bien, nombre, cod_etapa));
         }
     })
@@ -246,17 +246,17 @@ const SeleccionarLoteSiembra = () => {
                 const data = await dispatch(get_lots_code_service(id_vivero, codigo));
                 set_bienes(data)
             }
-          } catch (error) {
+        } catch (error) {
             console.error(error);
-          }
-        
-      })
+        }
+
+    })
 
     useEffect(() => {
-        if('success' in bienes){
-            if(bienes.success === true){
-                if('data' in bienes){
-                    if(bienes.data.length > 1){
+        if ('success' in bienes) {
+            if (bienes.success === true) {
+                if ('data' in bienes) {
+                    if (bienes.data.length > 1) {
                         set_select_model_is_active(true);
                     }
                 }
@@ -271,8 +271,8 @@ const SeleccionarLoteSiembra = () => {
     }, [current_siembra_material_vegetal]);
 
     useEffect(() => {
-        if(current_siembra_material_vegetal.id_inventario_vivero === null)
-            {reset_bien(current_siembra_material_vegetal)
+        if (current_siembra_material_vegetal.id_inventario_vivero === null) {
+            reset_bien(current_siembra_material_vegetal)
         }
     }, [current_mortalidad]);
 
@@ -292,19 +292,19 @@ const SeleccionarLoteSiembra = () => {
         dispatch(set_items_mortalidad(aux_insumos))
     }, [aux_insumos]);
 
-    const on_submit_mortalidad = (data: IObjItemMortalidad): void => {   
-        if(current_siembra_material_vegetal.id_bien !== null){
-            if(get_values_bien("codigo_bien") === current_siembra_material_vegetal.codigo_bien){
-                const bien: IObjItemMortalidad | undefined = aux_insumos.find((p) => p.id_bien === current_siembra_material_vegetal.id_bien )
+    const on_submit_mortalidad = (data: IObjItemMortalidad): void => {
+        if (current_siembra_material_vegetal.id_bien !== null) {
+            if (get_values_bien("codigo_bien") === current_siembra_material_vegetal.codigo_bien) {
+                const bien: IObjItemMortalidad | undefined = aux_insumos.find((p) => p.id_bien === current_siembra_material_vegetal.id_bien)
                 let asignada = 0
                 aux_insumos.forEach((option) => {
-                    if (option.id_bien !== bien?.id_bien ) {
+                    if (option.id_bien !== bien?.id_bien) {
+                        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                         asignada = asignada + (option.cantidad_baja ?? 0)
                     }
                 })
 
-                if ((data.cantidad_baja??0) <= (current_siembra_material_vegetal.saldo_disponible_registro ?? 0))
-                {  
+                if ((data.cantidad_baja ?? 0) <= (current_siembra_material_vegetal.saldo_disponible_registro ?? 0)) {
                     const new_bien: IObjItemMortalidad = {
                         id_item_baja_viveros: null,
                         id_baja: current_mortalidad.id_baja,
@@ -319,11 +319,11 @@ const SeleccionarLoteSiembra = () => {
                         unidad_medida: current_siembra_material_vegetal.unidad_medida
                     }
                     if (bien === undefined) {
-                            set_aux_insumos([...aux_insumos, new_bien])
-                            const restante = (current_siembra_material_vegetal.saldo_disponible_registro ?? 0) - (new_bien.cantidad_baja ?? 0) 
-                            dispatch(set_current_siembra_material_vegetal({...current_siembra_material_vegetal, saldo_disponible_registro: restante}))
-                            reset_mortalidad({id_bien: current_siembra_material_vegetal?.id_bien, cantidad_baja: null, observaciones: null});
-                       
+                        set_aux_insumos([...aux_insumos, new_bien])
+                        const restante = (current_siembra_material_vegetal.saldo_disponible_registro ?? 0) - (new_bien.cantidad_baja ?? 0)
+                        dispatch(set_current_siembra_material_vegetal({ ...current_siembra_material_vegetal, saldo_disponible_registro: restante }))
+                        reset_mortalidad({ id_bien: current_siembra_material_vegetal?.id_bien, cantidad_baja: null, observaciones: null });
+
                     } else {
                         if (action === "editar") {
                             const aux_items: IObjItemMortalidad[] = []
@@ -335,28 +335,28 @@ const SeleccionarLoteSiembra = () => {
                                 }
                             })
                             set_aux_insumos(aux_items)
-                            const restante = (current_siembra_material_vegetal.saldo_disponible_registro ?? 0) - (new_bien.cantidad_baja ?? 0) 
-                            dispatch(set_current_siembra_material_vegetal({...current_siembra_material_vegetal, saldo_disponible_registro: restante}))
-                            reset_mortalidad({id_bien: current_siembra_material_vegetal?.id_bien, cantidad_baja: null, observaciones: null});
+                            const restante = (current_siembra_material_vegetal.saldo_disponible_registro ?? 0) - (new_bien.cantidad_baja ?? 0)
+                            dispatch(set_current_siembra_material_vegetal({ ...current_siembra_material_vegetal, saldo_disponible_registro: restante }))
+                            reset_mortalidad({ id_bien: current_siembra_material_vegetal?.id_bien, cantidad_baja: null, observaciones: null });
                             set_action("agregar")
                         } else {
                             control_error("El bien ya fue agregado")
                         }
                     }
-                } else{
-                    control_error("La cantidad asignada debe ser maximo "+ String(current_siembra_material_vegetal.saldo_disponible_registro))
-                    }
-            } else{
+                } else {
+                    control_error("La cantidad asignada debe ser maximo " + String(current_siembra_material_vegetal.saldo_disponible_registro))
+                }
+            } else {
                 control_error("Codigo de bien no coincide con el seleccionado")
             }
-        } else{
+        } else {
             control_error("Debe seleccionar el bien")
         }
     };
 
     const edit_bien_mortalidad = (item: IObjItemMortalidad): void => {
         set_action("editar")
-        const bien: IObjSiembraMV | undefined =bienes.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
+        const bien: IObjSiembraMV | undefined = bienes.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
         const item_bien = aux_insumos.find((p) => p.id_bien === item.id_bien)
         reset_mortalidad(item_bien)
         const aux_items: IObjItemMortalidad[] = []
@@ -365,18 +365,18 @@ const SeleccionarLoteSiembra = () => {
                 aux_items.push(option)
             }
         })
-        if(bien !== undefined){
+        if (bien !== undefined) {
             dispatch(set_current_siembra_material_vegetal(bien))
         }
         set_aux_insumos(aux_items)
     };
 
     const delete_bien_mortalidad = (item: IObjItemMortalidad): void => {
-        const bien: IObjSiembraMV | undefined =bienes.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
-        if(bien !== undefined){
+        const bien: IObjSiembraMV | undefined = bienes.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
+        if (bien !== undefined) {
             dispatch(set_current_siembra_material_vegetal(bien))
         }
-        reset_mortalidad({id_bien: bien?.id_bien, cantidad_baja: null, observaciones: null});
+        reset_mortalidad({ id_bien: bien?.id_bien, cantidad_baja: null, observaciones: null });
         const aux_items: IObjItemMortalidad[] = []
         aux_insumos.forEach((option) => {
             if (option.id_bien !== item.id_bien) {
@@ -385,7 +385,7 @@ const SeleccionarLoteSiembra = () => {
         })
         set_aux_insumos(aux_items)
     };
-    
+
 
 
     return (
@@ -404,7 +404,7 @@ const SeleccionarLoteSiembra = () => {
                     get_filters_models={get_bienes}
                     set_models={set_siembras_material_vegetal}
                     button_submit_label='Buscar bien'
-                    button_submit_disabled= {current_mortalidad.id_baja !== null}
+                    button_submit_disabled={current_mortalidad.id_baja !== null}
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -474,10 +474,10 @@ const SeleccionarLoteSiembra = () => {
                             label: "Etapa de lote",
                             helper_text: "",
                             disabled: true,
-                            select_options: [{ label: "Germinación", value: "G" },{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
+                            select_options: [{ label: "Germinación", value: "G" }, { label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
                             option_label: "label",
                             option_key: "value"
-                          }
+                        }
                     ]}
                     form_inputs_list={[
                         {
@@ -487,7 +487,7 @@ const SeleccionarLoteSiembra = () => {
                             control_form: control_mortalidad,
                             control_name: "cantidad_baja",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Debe ingresar cantidad" }, min_rule: { rule: 0.01, message: "La cantidad debe ser mayor a 0" }, max_rule: { rule: current_siembra_material_vegetal.saldo_disponible_registro, message: 'La cqantidad no debe ser mayor que '+ String(current_siembra_material_vegetal.saldo_disponible_registro) }},
+                            rules: { required_rule: { rule: true, message: "Debe ingresar cantidad" }, min_rule: { rule: 0.01, message: "La cantidad debe ser mayor a 0" }, max_rule: { rule: current_siembra_material_vegetal.saldo_disponible_registro, message: 'La cqantidad no debe ser mayor que ' + String(current_siembra_material_vegetal.saldo_disponible_registro) } },
                             label: "Cantidad Usada",
                             type: "text",
                             disabled: false,
@@ -533,8 +533,8 @@ const SeleccionarLoteSiembra = () => {
                             rows_text: 4,
                             disabled: false,
                             helper_text: ""
-                          },
-    
+                        },
+
                     ]}
                     title_list='Insumos consumidos'
                     list={aux_insumos}
@@ -582,10 +582,10 @@ const SeleccionarLoteSiembra = () => {
                             label: "Etapa de lote",
                             helper_text: "",
                             disabled: false,
-                            select_options: [{ label: "Germinación", value: "G" },{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
+                            select_options: [{ label: "Germinación", value: "G" }, { label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
                             option_label: "label",
                             option_key: "value"
-                          }
+                        }
                     ]}
                 />
 
@@ -602,7 +602,7 @@ const SeleccionarLoteSiembra = () => {
                     row_id={"id_inventario_vivero"}
                     title_table_modal={"Resultados de la busqueda"}
                 />
-                
+
             </Grid>
         </>
     );

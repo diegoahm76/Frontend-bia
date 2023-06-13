@@ -10,8 +10,8 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import PersonaResponsable from '../components/PersonaResponsable'
 import { set_current_nursery, set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitud';
-import { type IObjNursery, type IObjSolicitudVivero } from '../interfaces/solicitudVivero';
-import { crear_solicitud, get_funcionario_id_service, get_num_solicitud, get_nurcery, get_person_id_service, get_uni_organizacional } from '../store/thunks/solicitudViveroThunks';
+import { type IObjBienesSolicitud, type IObjNursery, type IObjSolicitudVivero } from '../interfaces/solicitudVivero';
+import { crear_solicitud, get_bienes_solicitud, get_funcionario_id_service, get_num_solicitud, get_nurcery, get_person_id_service, get_uni_organizacional } from '../store/thunks/solicitudViveroThunks';
 import SeleccionarSolicitud from '../components/SeleccionarSolicitud';
 import DestinoSolicitud from '../components/DestinoElementos';
 import SeleccionarBienConsumo from '../components/SeleccionarBien';
@@ -36,6 +36,8 @@ const SolicitudViveroScreen = () => {
     console.log(userinfo)
 
   }, [])
+
+
   useEffect(() => {
     console.log(watch("id_vivero_solicitud"))
     if (watch("id_vivero_solicitud") !== null) {
@@ -61,7 +63,8 @@ const SolicitudViveroScreen = () => {
         void dispatch(get_person_id_service(current_solicitud.id_persona_solicita))
 
     }
-    if (current_solicitud.id_vivero_solicitud !== null) {
+    if (current_solicitud.id_solicitud_vivero !== null && current_solicitud.id_solicitud_vivero !== undefined) {
+      void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_vivero))
       if (current_solicitud.id_funcionario_responsable_und_destino !== current_funcionario.id_persona) {
         console.log("jgjkglg")
         void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_und_destino ?? 0))
@@ -73,6 +76,7 @@ const SolicitudViveroScreen = () => {
 
   useEffect(() => {
     dispatch(set_current_solicitud({ ...current_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, id_unidad_org_del_responsable: persona_solicita.id_unidad_organizacional_actual }))
+    console.log(persona_solicita)
   }, [persona_solicita]);
 
   useEffect(() => {
@@ -87,18 +91,25 @@ const SolicitudViveroScreen = () => {
 
   }, [current_funcionario]);
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const on_submit = (data: IObjSolicitudVivero) => {
+  const on_submit = (data: IObjSolicitudVivero): void => {
+    console.log(data)
+    const form_data: any = new FormData();
+    const fecha = new Date(data.fecha_solicitud ?? "").toISOString()
+    const fecha_retiro = new Date(data.fecha_retiro_material ?? "").toISOString()
 
-    const data_aux = {
-      data_solicitud: { ...data, fecha_anulacion_solicitante: null },
-      data_items_solicitados: bienes_solicitud.map((item: any, index: any) => ({
-        ...item,
-        nro_posicion: index,
-      })),
+    const data_edit = {
+      ...data, fecha_solicitud: fecha.slice(0, 10) + " " + fecha.slice(11, 19), fecha_retiro_material: fecha_retiro.slice(0, 10)
     }
+    const aux_items: IObjBienesSolicitud[] = []
+    bienes_solicitud.forEach((element: IObjBienesSolicitud, index: number) => {
+      aux_items.push({ ...element, nro_posicion: index })
+    });
+    form_data.append('data_solicitud', JSON.stringify({ ...data_edit }));
+    form_data.append('ruta_arcruta_archivo_tecnico', data.ruta_archivo_info_tecnico);
+    form_data.append('data_items_solicitados', JSON.stringify(aux_items));
+    void dispatch(crear_solicitud(form_data));
+  }
 
-    void dispatch(crear_solicitud(data_aux));
-  };
 
 
 

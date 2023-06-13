@@ -4,7 +4,7 @@ import { toast, type ToastContent } from 'react-toastify';
 import { api } from '../../../../../api/axios';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
-import { get_unidad_organizacional, set_bienes, set_current_funcionario, set_current_solicitud, set_funcionarios, set_numero_solicitud, set_nurseries, set_persona_solicita } from '../slices/indexSolicitud';
+import { get_unidad_organizacional, set_bienes, set_bienes_solicitud, set_current_funcionario, set_funcionarios, set_numero_solicitud, set_nurseries, set_persona_solicita, set_solicitudes } from '../slices/indexSolicitud';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -102,7 +102,7 @@ export const get_person_id_service = (id: number,): any => {
             const { data } = await api.get(`personas/get-by-id/${id}/`);
             console.log(data)
             if ("data" in data) {
-                dispatch(set_persona_solicita({ id_persona: data.data.id_persona, unidad_organizacional: data.data.nombre_unidad_organizacional_actual, nombre: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
+                dispatch(set_persona_solicita({ id_persona: data.data.id_persona, unidad_organizacional: data.data.nombre_unidad_organizacional_actual, id_unidad_organizacional_actual: data.data.id_unidad_organizacional_actual, nombre: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
 
             } else {
                 control_error(data.detail)
@@ -214,7 +214,26 @@ export const get_solicitud_service = (): any => {
         try {
             const { data } = await api.get(`conservacion/solicitudes/get-listar-solicitudes/`);
             console.log('Solicitudes recuperadas:', data);
-            dispatch(set_current_solicitud(data));
+            dispatch(set_solicitudes(data.data));
+
+            // dispatch(setID(Number(id)))
+            return data;
+        } catch (error: any) {
+            console.log('get_solicitud_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// OBTENER SOLICITUD POR APROBAR COORDINADOR
+
+export const get_solicitud_aprobacion = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`conservacion/funcionario/coordinador/list-solicitudes/`);
+            console.log('Solicitudes recuperadas:', data);
+            dispatch(set_solicitudes(data.data));
 
             // dispatch(setID(Number(id)))
             return data;
@@ -303,6 +322,30 @@ export const get_bienes_service = (
             console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=MV`)
             const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=MV`);
             dispatch(set_bienes(data.data));
+            console.log(data)
+            if (data.data.length > 0) {
+                control_success("Se encontrarón bienes")
+            } else {
+                control_error("No se encontrarón bienes")
+            }
+            return data;
+        } catch (error: any) {
+            // console.log('get_planting_goods_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+// Obtener bienes por numero de solicitud
+
+export const get_bienes_solicitud = (
+    id_solicitud_viveros: number | null,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(`conservacion/solicitudes/get-listar-solicitudes-by-id/${id_solicitud_viveros ?? ""}`)
+            const { data } = await api.get(`conservacion/solicitudes/get-listar-solicitudes-by-id/${id_solicitud_viveros ?? ""}/`);
+            dispatch(set_bienes_solicitud(data.data));
             console.log(data)
             if (data.data.length > 0) {
                 control_success("Se encontrarón bienes")

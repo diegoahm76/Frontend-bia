@@ -5,7 +5,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type IObjBienConsumo, type IObjFuncionario, type ISolicitudConsumo, type IObjSolicitudVivero, type IObjBienesSolicitud, type UnidadOrganizacional, type IObjPersonaSolicita, type IObjNursery } from '../../interfaces/solicitudVivero';
 
 
-
+const fecha = (new Date())
+fecha.setDate(fecha.getDate() + 1)
 const initial_state_current_solicitud: IObjSolicitudVivero = {
     nro_solicitud: null,
     fecha_solicitud: (new Date().toString()),
@@ -19,7 +20,7 @@ const initial_state_current_solicitud: IObjSolicitudVivero = {
     con_municipio_destino: null,
     nombre_predio_destino: "",
     direccion_destino: "",
-    fecha_retiro_material: (new Date().toString()),
+    fecha_retiro_material: fecha.toString(),
     ruta_archivo_info_tecnico: null,
     id_persona_solicita: null,
     id_unidad_org_del_solicitante: null

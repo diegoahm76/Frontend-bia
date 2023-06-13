@@ -41,8 +41,8 @@ interface IProps {
     button_add_selection_hidden?: boolean | null;
     md_button?: number | null;
     button_icon_class?: any;
-    show_search_button?: boolean | null
-
+    show_search_button?: boolean | null,
+    show_button_table?: boolean | null,
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -71,7 +71,8 @@ const BuscarModelo = ({
     button_add_selection_hidden,
     md_button,
     button_icon_class,
-    show_search_button
+    show_search_button,
+    show_button_table
 }: IProps) => {
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -211,6 +212,7 @@ const BuscarModelo = ({
                     borderTop={1}
                     borderColor="lightgray"
                 >
+
                     {(show_inputs ?? true) &&
                         <>
                             {form_inputs_list?.map((option, index) => (
@@ -222,16 +224,20 @@ const BuscarModelo = ({
                                 xs={12}
                                 md={3}
                             >
-                                <FormButton
-                                    variant_button="contained"
-                                    on_click_function={add_item_list}
-                                    icon_class={<PlaylistAddCheckIcon />}
-                                    label={add_list_button_label ?? "AGREGAR"}
-                                    type_button="button"
-                                />
+                                {(show_button_table ?? true) &&
+                                    <FormButton
+                                        variant_button="contained"
+                                        on_click_function={add_item_list}
+                                        icon_class={<PlaylistAddCheckIcon />}
+                                        label={add_list_button_label ?? "AGREGAR"}
+                                        type_button="button"
+                                    />
+                                }
                             </Grid>
                         </>
                     }
+
+
 
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '80%' }}>

@@ -3,20 +3,20 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
 
-import { get_solicitud_service } from '../store/thunks/solicitudViveroThunks';
+import { get_solicitud_service, } from '../store/thunks/solicitudViveroThunks';
 import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSolicitud';
 
 
 
 interface IProps {
     title?: string;
-    control_solicitud: any;
+    control_solicitud_aprobada: any;
     get_values: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarSolicitud = ({
+const SeleccionarSolicitudAprobada = ({
     title,
-    control_solicitud,
+    control_solicitud_aprobada,
     get_values
 }: IProps) => {
 
@@ -86,7 +86,7 @@ const SeleccionarSolicitud = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "nro_solicitud",
                             default_value: "",
                             rules: {},
@@ -100,12 +100,12 @@ const SeleccionarSolicitud = ({
                             datum_type: "select_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "id_vivero_solicitud",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
                             label: "Vivero Origen",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "debe seleccionar campo",
                             select_options: nurseries,
                             option_label: "nombre",
@@ -116,21 +116,21 @@ const SeleccionarSolicitud = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "nro_info_tecnico",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
                             label: "Informe técnico Nro:",
                             type: "text",
                             multiline_text: true,
-                            disabled: false,
+                            disabled: true,
                             helper_text: ""
                         },
                         {
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "fecha_solicitud",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -143,7 +143,7 @@ const SeleccionarSolicitud = ({
                             datum_type: "date_picker_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "fecha_retiro_material",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -153,11 +153,12 @@ const SeleccionarSolicitud = ({
                             format: "YYYY-MM-DD",
                             helper_text: ""
                         },
+
                         {
                             datum_type: "input_controller",
                             xs: 12,
                             md: 12,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "observaciones",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
@@ -165,14 +166,14 @@ const SeleccionarSolicitud = ({
                             type: "text",
                             multiline_text: true,
                             rows_text: 4,
-                            disabled: false,
+                            disabled: true,
                             helper_text: ""
                         },
                         {
                             datum_type: "input_controller",
                             xs: 12,
                             md: 12,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "motivo",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -180,19 +181,19 @@ const SeleccionarSolicitud = ({
                             type: "text",
                             multiline_text: true,
                             rows_text: 4,
-                            disabled: false,
+                            disabled: true,
                             helper_text: ""
                         },
                         {
                             datum_type: "select_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "id_unidad_para_la_que_solicita",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
                             label: "Unidad organizacional",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "debe seleccionar campo",
                             select_options: unidad_organizacional,
                             option_label: "nombre",
@@ -204,7 +205,7 @@ const SeleccionarSolicitud = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "persona_solicita",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -217,7 +218,7 @@ const SeleccionarSolicitud = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "nombre_unidad_organizacional",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
@@ -226,19 +227,7 @@ const SeleccionarSolicitud = ({
                             disabled: true,
                             helper_text: ""
                         },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_solicitud,
-                            control_name: "nombre_unidad_organizacional",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Unidad a la que pertenece:",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
+
                     ]}
                     modal_select_model_title='Buscar solicitud'
                     modal_form_filters={[
@@ -246,13 +235,13 @@ const SeleccionarSolicitud = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 2,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "id_solicitud_consumibles",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Número de solicitud",
                             type: "number",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         }
                     ]}
@@ -263,4 +252,4 @@ const SeleccionarSolicitud = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarSolicitud;
+export default SeleccionarSolicitudAprobada;
