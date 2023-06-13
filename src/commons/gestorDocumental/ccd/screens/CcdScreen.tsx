@@ -29,6 +29,7 @@ import {
 import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 import CrearSubSerieCcdDialog from '../componentes/crearSubSerieDialog/CrearSubserieDialog';
+import { get_ccd_current } from '../store/slices/ccdSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -226,6 +227,9 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
+                      
+                        // disabled={ccd_current?.fecha_terminado !== null}
+                      
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -256,6 +260,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subserie"
                       variant="outlined"
+                      // disabled={ccd_current?.fecha_terminado !== null}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -330,7 +335,7 @@ export const CcdScreen: React.FC = () => {
                     } */
                     console.log(data);
                     if (data.data.length > 0 && control_create_ccd._formValues.nombre_ccd !== "" && control_create_ccd._formValues.version !== "") {
-
+                  dispatch(get_ccd_current(data.data[0]));
                   set_consulta_ccd_is_active(true);
                   set_title('Consultar CCD');
                   // set_ccd_current(data);
