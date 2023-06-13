@@ -79,10 +79,7 @@ export function CambioEtapaScreen(): JSX.Element {
 
   const on_submit_annul = (data: IObjChange): void => {
     if(current_stage_change.id_cambio_de_etapa !== null && current_stage_change.id_cambio_de_etapa !== undefined){
-      const form_data = {
-        justificacion_anulacion: data.justificacion_anulacion
-      }
-      void dispatch(annul_stage_change_service(current_stage_change.id_cambio_de_etapa, form_data));
+      void dispatch(annul_stage_change_service(current_stage_change.id_cambio_de_etapa, data));
     }
     
     
@@ -124,24 +121,26 @@ export function CambioEtapaScreen(): JSX.Element {
           padding={2}
           spacing={2}
         >
-          <Grid item xs={12} md={3}>
-            <FormButton
-              variant_button="contained"
-              on_click_function={handle_submit(on_submit)}
-              icon_class={<SaveIcon />}
-              label={action}
-              type_button="button"
-            />
-          </Grid>
+          {!(current_stage_change.cambio_anulado === true) &&
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={handle_submit(on_submit)}
+                icon_class={<SaveIcon />}
+                label={action}
+                type_button="button"
+              />
+            </Grid>
+          }
           
           <Grid item xs={12} md={3}>
             <AnularEliminar
-              action= "Anular" 
+              action= {current_stage_change.cambio_anulado === true ? "Detalle anulación" :"Anular" }
               button_icon_class= {<Block/>}
               button_disabled= {false}
-              modal_title= {"Anular cambio de etapa"}
-              button_submit_label= {"Anular"}
-              button_submit_disabled= {false}
+              modal_title= {current_stage_change.cambio_anulado === true ? "Detalle anulación" :"Anular cambio de etapa"}
+              button_submit_label= { "Anular"}
+              button_submit_disabled= {current_stage_change.cambio_anulado}
               button_submit_icon_class= {<Block/>}
               button_submit_action= {handle_submit(on_submit_annul)}
               modal_inputs= {[

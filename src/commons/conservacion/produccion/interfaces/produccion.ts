@@ -101,6 +101,7 @@ export interface IObjChange {
   persona_anula?: string | null;
   fecha_anula?: string | null;
   justificacion_anulacion?: string | null;
+  cambio_anulado?: boolean | null;
 
 }
 
