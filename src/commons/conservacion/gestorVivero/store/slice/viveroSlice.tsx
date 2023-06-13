@@ -7,7 +7,7 @@ import {
     type IObjDistribucion
   } from '../../interfaces/vivero';
 
-const initial_state_current_nursery = {
+export const initial_state_current_nursery = {
   id_vivero: null,
   nombre: '',
   cod_municipio: '',
@@ -38,7 +38,7 @@ const initial_state_current_nursery = {
   id_persona_cierra: null,
   id_persona_cuarentena: null,
 };
-const initial_state_despacho: IDespacho = {
+export const initial_state_despacho: IDespacho = {
   id_despacho_entrante: null,
   numero_despacho_consumo: null,
   fecha_ingreso: "",
