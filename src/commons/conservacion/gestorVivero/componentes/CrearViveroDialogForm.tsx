@@ -192,9 +192,9 @@ const CrearViveroDialogForm = ({
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container>
-            <Title title="INFORMACION PRINCIPAL"></Title>
-            <Grid item xs={11} md={5} margin={1}>
+          <Grid container spacing={2}>
+            <Title title="Informacion pricipal"></Title>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="nombre"
                 control={control_vivero}
@@ -223,7 +223,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="cod_municipio"
                 control={control_vivero}
@@ -260,7 +260,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="direccion"
                 control={control_vivero}
@@ -289,7 +289,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="area_mt2"
                 control={control_vivero}
@@ -327,7 +327,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="cod_tipo_vivero"
                 control={control_vivero}
@@ -364,8 +364,9 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Title title="DETALLES VIVERO"></Title>
-            <Grid item xs={11} md={5} margin={1}>
+            <Title title="Detalles vivero"></Title>
+            
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="area_propagacion_mt2"
                 control={control_vivero}
@@ -399,7 +400,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="tiene_area_produccion"
                 control={control_vivero}
@@ -433,7 +434,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="tiene_areas_pep_sustrato"
                 control={control_vivero}
@@ -467,7 +468,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="tiene_area_embolsado"
                 control={control_vivero}
@@ -501,7 +502,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="cod_origen_recursos_vivero"
                 control={control_vivero}
@@ -539,12 +540,12 @@ const CrearViveroDialogForm = ({
               />
             </Grid>
             {action === 'create' ? (
-              <Grid item xs={11} md={5} margin={1}>
+              <Grid item xs={11} md={5} margin={0}>
                 <TextField
                   margin="dense"
                   fullWidth
                   size="small"
-                  label="archivo"
+                  // label="archivo"
                   variant="outlined"
                   type="file"
                   onChange={on_change_file}

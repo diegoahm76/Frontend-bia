@@ -159,8 +159,8 @@ const CrearCvVehiculoForm = ({
           {action === 'create'
             ? 'Crear hoja de vida'
             : action === 'detail'
-            ? 'Detalle  Hoja de vida'
-            : 'Editar hoja de vida'}
+              ? 'Detalle  Hoja de vida'
+              : 'Editar hoja de vida'}
         </DialogTitle>
 
         <Divider />
@@ -420,7 +420,7 @@ const CrearCvVehiculoForm = ({
             </Grid>
 
             <Title title="Información adicional" />
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={3}  >
               <Controller
                 name="numero_motor"
                 control={control_vehiculo}
@@ -535,7 +535,7 @@ const CrearCvVehiculoForm = ({
               />
             </Grid>
 
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={3}  >
               <Controller
                 name="capacidad_extintor"
                 control={control_vehiculo}
@@ -560,6 +560,7 @@ const CrearCvVehiculoForm = ({
               />
             </Grid>
 
+            <div style={{ marginBottom: '4.4rem' }} />
             <Title title="Control de documentación" />
             <Grid item xs={11} md={4} spacing={2}>
               <Controller

@@ -482,6 +482,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -579,6 +583,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     label="Tipo de documento"
                     onChange={cambio_tipo_documento}
                     error={msj_error_tdoc !== ""}
+                     disabled
+                            
                   >
                     {tipos_documentos.map((tipos: any) => (
                       <MenuItem key={tipos.value} value={tipos.value}>
@@ -597,6 +603,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   fullWidth
                   value={proveedor.numero_documento ?? ""}
                   error={msj_error_proveedor !== ""}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
                 />
                 {(msj_error_proveedor !== "") && (<FormHelperText error >El campo Numero documento es obligatorio.</FormHelperText>)}
               </Grid>
@@ -608,6 +618,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   fullWidth
                   value={proveedor.nombre_completo ?? ""}
                   error={msj_error_proveedor !== ""}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
                 />
                 {(msj_error_proveedor !== "") && (<FormHelperText error >{msj_error_proveedor}</FormHelperText>)}
               </Grid>
@@ -659,12 +673,16 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
                 />
               </Grid>
-              <Grid item xs={12} sm={2}>
+              <Grid item xs={12} sm={1.4}>
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <Button
+                  <Button sx={{ width: "auto"}}
                     color='primary'
                     variant='contained'
                     startIcon={<AttachFileIcon />}
@@ -673,7 +691,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   </Button>
                 </div>
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={5}>
                 <TextField
                   label="Elaborado por"
                   type={'text'}
@@ -683,6 +701,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  disabled
                 />
               </Grid>
             </Grid>
@@ -726,6 +745,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   error={msj_error_articulo !== ""}
                   InputProps={{
                     readOnly: true,
+                  }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
                   }}
                 />
                 {(msj_error_articulo !== "") && (<FormHelperText error >{msj_error_articulo}</FormHelperText>)}
@@ -783,6 +806,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     label="% Iva"
                     onChange={cambio_iva}
                     error={msj_error_iva !== ""}
+                    
                   >
                     {porcentaje_iva.map((bg: any) => (
                       <MenuItem key={bg.id_porcentaje_iva} value={bg.id_porcentaje_iva}>
@@ -803,6 +827,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -814,6 +842,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   value={valor_total_item}
                   InputProps={{
                     readOnly: true,
+                  }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
                   }}
                 />
               </Grid>
@@ -848,6 +880,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   value={valor_total_entrada}
                   InputProps={{
                     readOnly: true,
+                  }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
                   }}
                 />
               </Grid>
@@ -935,82 +971,85 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           </Box>
 
         </Grid>
+    <Grid container justifyContent="flex-end">
 
-      </Grid>
-    
-      <Grid item xs={6}>
-        <Box
-          component="form"
-          sx={{ mt: '20px', mb: '20px' }}
-          noValidate
-          autoComplete="off"
-        >
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mt: '20px' }}
+
+        <Grid item xs={7}>
+          <Box
+            component="form"
+            sx={{ mt: '20px', mb: '20px' }}
+            noValidate
+            autoComplete="off"
           >
-            <Button
-              color='primary'
-              variant='contained'
-              startIcon={<SaveIcon />}
-              onClick={guardar_entrada}
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mt: '20px' }}
             >
-              {entrada_update ? 'Actualizar' : 'Guardar'}
-            </Button>
-            <Button
-              color='error'
-              variant='contained'
-              startIcon={<DeleteForeverIcon />}
-              onClick={() => { set_anular_entrada_is_active(true) }}
-              disabled={!entrada_update}
-            >
-              Anular
-            </Button>
-            {anular_entrada_is_active && (<AnularEntradaComponent is_modal_active={anular_entrada_is_active}
-              set_is_modal_active={set_anular_entrada_is_active}
-              title={"Anular entrada"} user_info={user_info} id_entrada={buscar_articulo.id_entrada_almacen}></AnularEntradaComponent>)}
-            <Button
-              color='inherit'
-              variant="contained"
-              startIcon={<CleanIcon />}
-              onClick={limpiar_formulario}
-            >
-              Limpiar
-            </Button>
-            <Button
-              color='secondary'
-              variant='contained'
-              startIcon={<SearchIcon />}
-              onClick={() => { set_buscar_entrada_is_active(true) }}
-            >
-              Buscar
-            </Button>
-            {buscar_entrada_is_active && (<BuscarEntradasComponent is_modal_active={buscar_entrada_is_active}
-              set_is_modal_active={set_buscar_entrada_is_active}
-              title={"Buscar entrada"}
-              tipos_entrada={tipos_entrada}
-              set_articulo={set_buscar_articulo}></BuscarEntradasComponent>)}
-            <Button
-              color='secondary'
-              variant='contained'
-              startIcon={<PrintIcon />}
-              onClick={() => { window.print() }}
-            >
-              Imprimir
-            </Button>
-            <Button
-              color='error'
-              variant='contained'
-              startIcon={<ClearIcon />}
-              onClick={salir_entrada}
-            >
-              Salir
-            </Button>
-          </Stack>
-        </Box>
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<SaveIcon />}
+                onClick={guardar_entrada}
+              >
+                {entrada_update ? 'Actualizar' : 'Guardar'}
+              </Button>
+              <Button
+                color='error'
+                variant='contained'
+                startIcon={<DeleteForeverIcon />}
+                onClick={() => { set_anular_entrada_is_active(true) }}
+                disabled={!entrada_update}
+              >
+                Anular
+              </Button>
+              {anular_entrada_is_active && (<AnularEntradaComponent is_modal_active={anular_entrada_is_active}
+                set_is_modal_active={set_anular_entrada_is_active}
+                title={"Anular entrada"} user_info={user_info} id_entrada={buscar_articulo.id_entrada_almacen}></AnularEntradaComponent>)}
+              <Button
+                color='inherit'
+                variant="contained"
+                startIcon={<CleanIcon />}
+                onClick={limpiar_formulario}
+              >
+                Limpiar
+              </Button>
+              <Button
+                color='secondary'
+                variant='contained'
+                startIcon={<SearchIcon />}
+                onClick={() => { set_buscar_entrada_is_active(true) }}
+              >
+                Buscar
+              </Button>
+              {buscar_entrada_is_active && (<BuscarEntradasComponent is_modal_active={buscar_entrada_is_active}
+                set_is_modal_active={set_buscar_entrada_is_active}
+                title={"Buscar entrada"}
+                tipos_entrada={tipos_entrada}
+                set_articulo={set_buscar_articulo}></BuscarEntradasComponent>)}
+              <Button
+                color='secondary'
+                variant='contained'
+                startIcon={<PrintIcon />}
+                onClick={() => { window.print() }}
+              >
+                Imprimir
+              </Button>
+              <Button
+                color='error'
+                variant='contained'
+                startIcon={<ClearIcon />}
+                onClick={salir_entrada}
+              >
+                Salir
+              </Button>
+            </Stack>
+          </Box>
+        </Grid>
       </Grid>
+      </Grid>
+  
     </>
   );
 }

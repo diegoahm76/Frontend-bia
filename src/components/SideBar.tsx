@@ -398,7 +398,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           }}
         >
           <Outlet />
-        </Box>
+        </Box> 
         {userinfo.tipo_usuario === 'E' && <FooterGov />}
       </Box>
     </>
