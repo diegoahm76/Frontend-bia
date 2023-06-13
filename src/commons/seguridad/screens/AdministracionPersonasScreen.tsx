@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useState } from 'react';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import type {
@@ -19,6 +20,8 @@ import { UpdatePersonaJurAdmin } from '../components/UpdatePersonaJurAdmin/Updat
 export const AdministracionPersonasScreen: React.FC = () => {
   const [persona, set_persona] = useState<InfoPersona>();
   const [datos_persona, set_datos_persona] = useState<DataPersonas>();
+  const [is_register, set_is_register] = useState(false);
+  const [is_update, set_is_update] = useState(false);
   const {
     errors,
     is_valid,
@@ -27,19 +30,25 @@ export const AdministracionPersonasScreen: React.FC = () => {
     register,
     set_value,
     watch,
+    reset,
   } = use_register();
 
 
   const on_result = async (info_persona: InfoPersona): Promise<void> => {
     try {
       set_persona(info_persona);
+      set_is_update(false);
+      set_is_register(true);
+  
       const {
         data: { data },
       } = await consultar_datos_persona(info_persona.id_persona);
       if (data.id_persona !== 0) {
-        console.log(data)
         set_datos_persona(data);
+        set_is_update(true);
+        set_is_register(false);
       }
+  
     } catch (err) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404) {
@@ -47,7 +56,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
       }
     }
   };
-
+  
   return (
     <>
       <Grid container>
@@ -64,72 +73,84 @@ export const AdministracionPersonasScreen: React.FC = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        {datos_persona?.tipo_persona === 'N' && (
+        {is_update && (
           <>
-            <UpdatePersonaNatAdmin
-              id_persona={datos_persona.id_persona}
-              numero_documento={datos_persona.numero_documento}
-              data={datos_persona}
-              tipo_persona={datos_persona.tipo_persona}
-              tipo_documento={datos_persona.tipo_documento}
-              errors={errors}
-              handleSubmit={handle_submit}
-              isValid={is_valid}
-              register={register}
-              setValue={set_value}
-              getValues={get_values}
-              watch={watch}
-            />
+            {datos_persona && datos_persona?.tipo_persona === 'N' && (
+              <>
+                <UpdatePersonaNatAdmin
+                  id_persona={datos_persona.id_persona}
+                  numero_documento={datos_persona.numero_documento}
+                  data={datos_persona}
+                  tipo_persona={datos_persona.tipo_persona}
+                  tipo_documento={datos_persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                  reset={reset}
+                />
+              </>
+            )}
+            {datos_persona !== undefined && datos_persona?.tipo_persona === 'J' && (
+              <>
+                <UpdatePersonaJurAdmin
+                  id_persona={datos_persona.id_persona}
+                  data={datos_persona}
+                  numero_documento={datos_persona?.numero_documento}
+                  tipo_persona={datos_persona.tipo_persona}
+                  tipo_documento={datos_persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                  reset={reset}
+                />
+              </>
+            )}
           </>
         )}
-        {datos_persona?.tipo_persona === 'J' && (
+        {is_register && (
           <>
-            <UpdatePersonaJurAdmin
-              id_persona={datos_persona.id_persona}
-              data={datos_persona}
-              numero_documento={datos_persona?.numero_documento}
-              tipo_persona={datos_persona.tipo_persona}
-              tipo_documento={datos_persona.tipo_documento}
-              errors={errors}
-              handleSubmit={handle_submit}
-              isValid={is_valid}
-              register={register}
-              setValue={set_value}
-              getValues={get_values}
-              watch={watch}
-            />
-          </>
-        )}
-        {persona?.tipo_persona === 'N' && (
-          <>
-            <CrearPersonaNatAdmin
-              numero_documento={persona.numero_documento}
-              tipo_persona={persona.tipo_persona}
-              tipo_documento={persona.tipo_documento}
-              errors={errors}
-              handleSubmit={handle_submit}
-              isValid={is_valid}
-              register={register}
-              setValue={set_value}
-              getValues={get_values}
-              watch={watch}
-            />
-          </>
-        )}
-        {persona?.tipo_persona === 'J' && (
-          <>
-            <CrearPersonaJurAdmin
-              numero_documento={persona?.numero_documento}
-              tipo_persona={persona.tipo_persona}
-              tipo_documento={persona.tipo_documento}
-              errors={errors}
-              handleSubmit={handle_submit}
-              isValid={is_valid}
-              register={register}
-              setValue={set_value}
-              getValues={get_values}
-              watch={watch}
-            />
+            {persona?.tipo_persona === 'N' && (
+              <>
+                <CrearPersonaNatAdmin
+                  numero_documento={persona.numero_documento}
+                  tipo_persona={persona.tipo_persona}
+                  tipo_documento={persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                  reset={reset}
+                />
+              </>
+            )}
+            {persona?.tipo_persona === 'J' && (
+              <>
+                <CrearPersonaJurAdmin
+                  numero_documento={persona?.numero_documento}
+                  tipo_persona={persona.tipo_persona}
+                  tipo_documento={persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                  reset={reset}
+                />
+              </>
+            )}
           </>
         )}
       </Grid>

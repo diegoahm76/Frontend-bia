@@ -23,7 +23,7 @@ import dayjs, { type Dayjs } from 'dayjs';
 import type {
   ClaseTercero,
   CrearPersonNaturalAdmin,
-  PropsRegister,
+  PropsRegisterAdministrador,
 } from '../../../../interfaces/globalModels';
 import { control_error, control_success } from '../../../../helpers';
 import {
@@ -34,7 +34,7 @@ import { Title } from '../../../../components';
 import { use_register_persona_n } from '../../../auth/hooks/registerPersonaNaturalHook';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
+export const CrearPersonaNatAdmin: React.FC<PropsRegisterAdministrador> = ({
   numero_documento,
   tipo_documento,
   tipo_persona,
@@ -44,7 +44,8 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
   errors,
   watch,
   getValues,
-}: PropsRegister) => {
+  reset,
+}: PropsRegisterAdministrador) => {
   const {
     is_saving,
     paises_options,
@@ -91,10 +92,6 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
   const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
   const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
 
-  useEffect(() => {
-    console.log(watch('departamento_expedicion'));
-  }, [watch('departamento_expedicion')]);
-
   const handle_change_autocomplete = (
     event: React.SyntheticEvent<Element, Event>,
     value: ClaseTercero[],
@@ -135,6 +132,7 @@ export const CrearPersonaNatAdmin: React.FC<PropsRegister> = ({
       data.tipo_persona = tipo_persona;
       await crear_persona_natural(data as CrearPersonNaturalAdmin);
       control_success('la persona se creó correctamente');
+      reset(); // resetea el formulario
     } catch (error) {
       control_error('hubo un error al crear, intentelo de nuevo');
 

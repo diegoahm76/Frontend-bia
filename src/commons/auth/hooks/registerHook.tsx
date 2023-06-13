@@ -206,6 +206,7 @@ export const use_register = (): ReisterHookNew => {
     set_value,
     validate_exits,
     watch,
+    reset,
     on_submit,
     get_values,
   };
