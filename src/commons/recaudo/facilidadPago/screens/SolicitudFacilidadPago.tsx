@@ -12,16 +12,15 @@ import { use_form } from '../../../../hooks/useForm';
 import { useFormText } from '../hooks/useFormText';
 import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
-import { type event, type check } from '../interfaces/interfaces';
-import { post_registro_fac_pago } from '../requests/requests';
+import { type event, type check, type Deudor, type Bien } from '../interfaces/interfaces';
+import { post_registro_fac_pago, post_registro_bienes } from '../requests/requests';
+import { useSelector } from 'react-redux';
 
-interface bien {
-  id: string;
-  bien: string;
-  identificacion: string;
-  avaluo: number;
-  direccion: string;
-  docImpuesto: string;
+
+interface RootState {
+  deudores: {
+    deudores: Deudor;
+  }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -33,12 +32,12 @@ export const SolicitudFacilidadPago: React.FC = () => {
   const [arr_periodicidad, set_arr_periodicidad] = useState(Array<number>);
   const [plazo, set_plazo] = useState(0);
   const [notificacion, set_notificacion] = useState(false);
-  const [rows_bienes, set_rows_bienes] = useState(Array<bien>);
+  const [rows_bienes, set_rows_bienes] = useState(Array<Bien>);
   const { form_state, on_input_change } = use_form({});
   const { form_text, handle_change_text } = useFormText({});
   const { form_files, name_files, handle_change_file } = useFormFiles({});
   const [modal, set_modal] = useState(false);
-
+  const { deudores } = useSelector((state: RootState) => state.deudores);
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
 
@@ -46,7 +45,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
   console.log('archivos', form_files);
   console.log('bienes', form_text);
 
-  useEffect(()=>{
+  useEffect(() => {
     let count:number = 0;
     const arr:number[] = []
     for (let i=0; i<limite; i++){
@@ -58,7 +57,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
 
   const columns_bienes: GridColDef[] = [
     {
-      field: 'bien',
+      field: 'descripcion',
       headerName: 'Tipo Bien',
       width: 150,
       renderCell: (params) => (
@@ -68,7 +67,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
       ),
     },
     {
-      field: 'identificacion',
+      field: 'id_tipo_bien',
       headerName: 'Identificación',
       width: 150,
       renderCell: (params) => (
@@ -78,7 +77,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
       ),
     },
     {
-      field: 'avaluo',
+      field: 'valor',
       headerName: 'Avalúo',
       width: 150,
       renderCell: (params) => (
@@ -98,7 +97,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
       ),
     },
     {
-      field: 'docImpuesto',
+      field: 'documento_soporte',
       headerName: 'Doc. Impuestos',
       width: 150,
       renderCell: (params) => (
@@ -140,7 +139,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
             autoComplete="off"
           >
             <Grid container spacing={2}>
-              <Grid item xs={11} sm={3}>
+              <Grid item xs={11} sm={5}>
                   <Button
                     variant="outlined"
                     fullWidth
@@ -160,7 +159,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       />
                   </Button>
                 </Grid>
-                <Grid item xs={11} sm={3.1}>
+                <Grid item xs={11} sm={5}>
                   <Button
                     variant="outlined"
                     fullWidth
@@ -180,7 +179,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       />
                   </Button>
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={5}>
                   <FormControl size='small' fullWidth>
                     <InputLabel>Calidad en que actúa la persona</InputLabel>
                     <Select
@@ -225,7 +224,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={11} sm={3.2}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -245,7 +244,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           />
                       </Button>
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Dirección Notificación"
@@ -256,7 +255,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         name='direccion'
                       />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Ciudad"
@@ -267,7 +266,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         name='ciudad'
                       />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Teléfono Contacto"
@@ -305,7 +304,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={11} sm={4}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -325,7 +324,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           />
                       </Button>
                     </Grid>
-                    <Grid item xs={11} sm={3}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -345,7 +344,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           />
                       </Button>
                     </Grid>
-                    <Grid item xs={11} sm={4.4}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -365,7 +364,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           />
                       </Button>
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Dirección Notificación"
@@ -376,7 +375,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         name='direccion'
                       />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Ciudad"
@@ -387,7 +386,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         name='ciudad'
                       />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Teléfono Contacto"
@@ -425,7 +424,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={11} sm={3.5}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -445,7 +444,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           />
                       </Button>
                     </Grid>
-                    <Grid item xs={11} sm={3.3}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -465,7 +464,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           />
                       </Button>
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Dirección Notificación"
@@ -476,7 +475,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         name='direccion'
                       />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Ciudad"
@@ -487,7 +486,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         name='ciudad'
                       />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Teléfono Contacto"
@@ -525,7 +524,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={11} sm={3.5}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -545,7 +544,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           />
                       </Button>
                     </Grid>
-                    <Grid item xs={11} sm={3.3}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -565,7 +564,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           />
                       </Button>
                     </Grid>
-                    <Grid item xs={11} sm={4.4}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -585,7 +584,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                           />
                       </Button>
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Dirección Notificación"
@@ -596,7 +595,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         name='direccion'
                       />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Ciudad"
@@ -607,7 +606,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         name='ciudad'
                       />
                     </Grid>
-                    <Grid item xs={12} sm={3}>
+                    <Grid item xs={12} sm={5}>
                       <TextField
                         required
                         label="Teléfono Contacto"
@@ -644,7 +643,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
             autoComplete="off"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={5}>
                 <FormControl size="small" fullWidth>
                   <InputLabel>Periodicidad y Modalidad</InputLabel>
                   <Select
@@ -679,7 +678,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={5}>
                 <FormControl size="small" fullWidth>
                   <InputLabel>{periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}</InputLabel>
                   <Select
@@ -703,7 +702,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
               {
                 periodicidad === 'años' && plazo > 1 || periodicidad === 'semestres' && plazo > 2 || periodicidad === 'trimestres' && plazo > 4 || periodicidad === 'meses' && plazo > 12 ? (
                   <>
-                    <Grid item xs={12} sm={3} direction="row" rowSpacing={2}>
+                    <Grid item xs={12} sm={5} direction="row" rowSpacing={2}>
                       <FormControl size="small" fullWidth>
                         <InputLabel>Garantía Ofrecida</InputLabel>
                         <Select
@@ -719,7 +718,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={11} sm={3}>
+                    <Grid item xs={11} sm={5}>
                       <Button
                         variant="outlined"
                         fullWidth
@@ -742,7 +741,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   </>
                 ) : null
               }
-              <Grid item xs={11} sm={3.4}>
+              <Grid item xs={11} sm={5}>
                 <Button
                   variant="outlined"
                   fullWidth
@@ -759,7 +758,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       style={{ opacity: 0 }}
                       name='documento_no_enajenacion'
                       onChange={handle_change_file}
-                          />
+                    />
                 </Button>
               </Grid>
             </Grid>
@@ -788,12 +787,12 @@ export const SolicitudFacilidadPago: React.FC = () => {
             autoComplete="off"
           >
             <Grid container spacing={2} marginBottom={3}>
-              <Grid item xs={12} sm={3} >
+              <Grid item xs={12} sm={3.1} >
               <FormControl size="small" fullWidth>
                   <InputLabel>Tipo Bien</InputLabel>
                   <Select
                     label="Tipo Bien"
-                    name='bien'
+                    name='descripcion'
                     defaultValue={""}
                     onChange={handle_change_text}
                   >
@@ -802,7 +801,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} sm={3} >
+              <Grid item xs={12} sm={3.1} >
                 <TextField
                   required
                   size="small"
@@ -811,10 +810,10 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   helperText='Escribe el Documento de Identificación'
                   variant="outlined"
                   onChange={handle_change_text}
-                  name='identificacion'
+                  name='id_tipo_bien'
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3.1}>
                 <TextField
                   required
                   label="Avalúo"
@@ -823,10 +822,10 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   fullWidth
                   type='number'
                   onChange={handle_change_text}
-                  name='avaluo'
+                  name='valor'
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3.1}>
                 <TextField
                   required
                   label="Dirección"
@@ -845,24 +844,24 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   component="label"
                   startIcon={<CloudUploadIcon />}
                 >
-                  {name_files.documento_impuesto !== undefined ? name_files.documento_impuesto : 'Carga el Documento Impuesto'}
+                  {name_files.documento_soporte !== undefined ? name_files.documento_soporte : 'Carga el Documento Impuesto'}
                     <input
                       hidden
                       type="file"
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      name='documento_impuesto'
+                      name='documento_soporte'
                       onChange={handle_change_file}
-                          />
+                    />
                 </Button>
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3.1}>
                 <Button
                   color='primary'
                   variant='outlined'
-                  size='small'
                   onClick={() => {
+                    void post_registro_bienes({...form_text, cod_deudor: deudores.codigo})
                     set_rows_bienes(rows_bienes.concat({...form_text, id: faker.database.mongodbObjectId()}))
                   }}
                 >
@@ -883,7 +882,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                   }}
                 >
-                  <Grid item xs={12}>
+                  <Grid item xs={15}>
                     <Grid item>
                       <Box sx={{ width: '100%' }}>
                         <DataGrid
@@ -919,7 +918,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
+        <Grid item xs={15}>
           <Box
             component="form"
             noValidate
@@ -960,7 +959,20 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   variant='contained'
                   startIcon={<SaveIcon />}
                   onClick={() => {
-                    void post_registro_fac_pago({...form_state, fecha_generacion: Date(), id_tipo_actuacion: persona, periodicidad: num_periodicidad, cuotas: plazo, notificaciones: notificacion})
+                    void post_registro_fac_pago({
+                      ...form_state,
+                      fecha_generacion: Date(),
+                      id_deudor_actuacion: deudores.codigo,
+                      id_tipo_actuacion: persona,
+                      periodicidad: num_periodicidad,
+                      cuotas: plazo,
+                      notificaciones: notificacion,
+                      documento_soporte: form_files.documento_soporte,
+                      consignacion_soporte: form_files.consignacion_soporte,
+                      documento_garantia: form_files.documento_garantia,
+                      documento_no_enajenacion: form_files.documento_no_enajenacion,
+                      id_funcionario: 1
+                    })
                     handle_open()
                   }}
                 >

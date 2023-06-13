@@ -26,6 +26,7 @@ interface RootState {
 export const VisualizarSolicitudAdmin: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
+  const [check_dbme, set_check_dbme] = useState(false);
   const [existe] = useState(true); // Mientras nos conectamos con el Backend
   const [modal, set_modal] = useState(false);
   const [modal_anular, set_modal_anular] = useState(false);
@@ -51,15 +52,12 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
     }
   };
 
-  /* useEffect(()=>{
-    void get_bienes_deudor(1)
-  },[]) */
-
   useEffect(() => {
     if(solicitud_facilidad.id_deudor_actuacion !== undefined){
       try {
         void dispatch(get_datos_deudor(solicitud_facilidad.id_deudor_actuacion));
         void dispatch(get_datos_contacto(solicitud_facilidad.id_deudor_actuacion));
+        // void get_bienes_deudor(solicitud_facilidad.id_deudor_actuacion);
       } catch (error: any) {
         throw new Error(error);
       }
@@ -165,10 +163,10 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               <Grid item xs={12} sm={3.5}>
                 <FormControlLabel
                   control={ <Checkbox
-                    name='BDME'
+                    name='reportado_dbme'
                     onChange={(event: check) => {
                       const { checked } = event.target
-                      console.log('Reportado en BDME', checked)
+                      set_check_dbme(checked)
                     }}
                   />}
                   label="Usuario reportado en BDME"
@@ -325,10 +323,16 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                 startIcon={<SaveIcon />}
                 sx={{ marginTop: '30px' }}
                 onClick={() => {
-                  void post_respuesta_fac_pago({...form_state, id_facilidades_pago: solicitud_facilidad.id, id_funcionario: solicitud_facilidad.id_funcionario, consulta_dbme: file })
+                  void post_respuesta_fac_pago({
+                    ...form_state,
+                    id_facilidades_pago: solicitud_facilidad.id,
+                    id_funcionario: solicitud_facilidad.id_funcionario,
+                    reportado_dbme: check_dbme,
+                    consulta_dbme: file
+                  })
                 }}
               >
-              Actualizar / Enviar
+                Actualizar / Enviar
               </Button>
             </Stack>
           </Box>
