@@ -494,7 +494,7 @@ export const edit_plant_quarantine_service = (
   };
 };
 
-// borrar siembra
+// anular cuarentena
 export const annul_plant_quarantine_service = (
   id: number,
   quarantine: any

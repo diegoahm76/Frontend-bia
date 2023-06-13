@@ -7,14 +7,15 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // import { add_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_items_mortalidad_service } from "../store/thunks/produccionThunks";
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
 import SeleccionarLoteSiembra from "../componentes/SeleccionarLoteSiembra";
 import { type IObjNursery, type IObjItemMortalidad, type IObjMortalidad } from "../interfaces/produccion";
 import { initial_state_current_material_vegetal, set_current_siembra_material_vegetal, set_current_nursery, set_items_mortalidad, set_current_mortalidad } from "../store/slice/produccionSlice";
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import { add_mortalidad_service, edit_mortalidad_service, get_bien_mortalidad_id_service, get_nro_mortalidad_service, get_person_id_service } from "../store/thunks/produccionThunks";
+import { add_mortalidad_service, annul_mortalidad_service, edit_mortalidad_service, get_bien_mortalidad_id_service, get_nro_mortalidad_service, get_person_id_service } from "../store/thunks/produccionThunks";
 import { useForm } from "react-hook-form";
+import AnularEliminar from "../../componentes/AnularEliminar";
+import Block from '@mui/icons-material/Block';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function MortalidadPlantasScreen(): JSX.Element {
@@ -105,12 +106,12 @@ export function MortalidadPlantasScreen(): JSX.Element {
       void dispatch(add_mortalidad_service(form_data));
     }
   };
-  // const annul_siembra = (): void => {
+  const on_submit_annul = (data: IObjMortalidad): void => {
     
-  //   if (current_mortalidad.id_baja !== null && current_mortalidad.id_baja !== undefined) {
-  //     void dispatch(annul_preparacion_service(current_mortalidad.id_baja));
-  //   } 
-  // };
+    if (current_mortalidad.id_baja !== null && current_mortalidad.id_baja !== undefined) {
+      void dispatch(annul_mortalidad_service(current_mortalidad.id_baja, data));
+    }
+  };
  
 
     return (
@@ -142,24 +143,87 @@ export function MortalidadPlantasScreen(): JSX.Element {
         padding={2}
         spacing={2}
       >
-        <Grid item xs={12} md={3}>
-          <FormButton
-            variant_button="contained"
-            on_click_function={handle_submit(on_submit)}
-            icon_class={<SaveIcon />}
-            label={action}
-            type_button="button"
-          />
-        </Grid>
+        {!(current_mortalidad.baja_anulado === true) &&
+
+          <Grid item xs={12} md={3}>
+            <FormButton
+              variant_button="contained"
+              on_click_function={handle_submit(on_submit)}
+              icon_class={<SaveIcon />}
+              label={action}
+              type_button="button"
+            />
+          </Grid>
+        }
        
         <Grid item xs={12} md={3}>
-          <FormButton
-            variant_button="outlined"
-            on_click_function={null}
-            icon_class={<CloseIcon />}
-            label={"Cancelar"}
-            type_button="button"
-          />
+            <AnularEliminar
+              action= {current_mortalidad.baja_anulado === true ? "Detalle anulación" :"Anular" }
+              button_icon_class= {<Block/>}
+              button_disabled= {false}
+              modal_title= {current_mortalidad.baja_anulado === true ? "Detalle anulación" :"Anular mortalidad"}
+              button_submit_label= { "Anular"}
+              button_submit_disabled= {current_mortalidad.baja_anulado}
+              button_submit_icon_class= {<Block/>}
+              button_submit_action= {handle_submit(on_submit_annul)}
+              modal_inputs= {[
+                {
+                  datum_type: "input_controller",
+                  xs: 12,
+                  md: 2,
+                  control_form: control_mortalidad,
+                  control_name: "nro_baja_por_tipo",
+                  default_value: current_mortalidad.nro_baja_por_tipo,
+                  rules: { required_rule: { rule: false, message: "Numero de baja requerido" } },
+                  label: "Numero baja",
+                  type: "number",
+                  disabled: true,
+                  helper_text: "",
+              },
+                {
+                  datum_type: "input_controller",
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_mortalidad,
+                  control_name: current_mortalidad.baja_anulado === true ? "persona_anula":"persona",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
+                  label: "Anulación realizada por",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+              },
+                {
+                  datum_type: "date_picker_controller",
+                  xs: 12,
+                  md: 4,
+                  control_form: control_mortalidad,
+                  control_name: current_mortalidad.baja_anulado === true ? "fecha_anulacion":"fecha",
+                  default_value: (new Date().toString()),
+                  rules: { required_rule: { rule: true, message: "requerido" } },
+                  label: "Fecha actual",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+                },
+                {
+                  datum_type: "input_controller",
+                  xs: 12,
+                  md: 12,
+                  control_form: control_mortalidad,
+                  control_name: "justificacion_anulacion",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Observación requerida" } },
+                  label: "Justificacion",
+                  type: "text",
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: ""
+                },
+              ]}
+            />
         </Grid>
       </Grid>
     </Grid>

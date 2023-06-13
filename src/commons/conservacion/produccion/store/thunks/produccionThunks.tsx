@@ -648,7 +648,7 @@ export const annul_mortalidad_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.delete(`conservacion/mortalidad/anular/${id}/`, mortalidad);
+      const { data } = await api.put(`conservacion/mortalidad/anular/${id}/`, mortalidad);
       console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
