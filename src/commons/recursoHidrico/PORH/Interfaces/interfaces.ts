@@ -23,10 +23,13 @@ export interface GetPrograma {
     fecha_fin:    string;
 }
 export interface GetProyectos {
-    id_programa:      number;
+    id_proyecto:      number;
     nombre:           string;
     vigencia_inicial: string;
     vigencia_final:   string;
+    inversion:        number;
+    fecha_registro:   string;
+    id_programa:      number;
 }
 export interface GetActividades {
     id_actividades: number;
