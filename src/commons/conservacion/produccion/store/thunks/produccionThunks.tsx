@@ -7,7 +7,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_bienes,set_preparaciones, set_preparacion_bienes, set_siembras_material_vegetal, set_current_siembra_material_vegetal, set_mortalidades, set_current_mortalidad, set_items_mortalidad, set_nro_mortalidad
+  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_bienes,set_preparaciones, set_preparacion_bienes, set_siembras_material_vegetal, set_current_siembra_material_vegetal, set_mortalidades, set_current_mortalidad, set_items_mortalidad, set_nro_mortalidad, set_persona_anula
 } from '../slice/produccionSlice';
 import { api } from '../../../../../api/axios';
 
@@ -192,6 +192,30 @@ export const get_person_id_service = (
     }
   };
 };
+
+// obtener persona por iddocumento
+export const get_person_anula_service = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`personas/get-by-id/${id}/`);
+ 
+      if ("data" in data) {
+        dispatch (set_persona_anula({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
+          nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido)}))
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_person_document_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 export const get_mezclas_service = (name: string): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -213,6 +237,31 @@ export const add_stage_change_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.post('conservacion/etapas/guardar-cambio-etapa/', cambio);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_siembra_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// crear cambio de etapa
+export const annul_stage_change_service = (
+  id: number,
+  cambio: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/etapas/anular-cambio-etapa/${id}/`, cambio);
       console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {

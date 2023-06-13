@@ -167,7 +167,9 @@ const initial_state: IProduccion = {
   siembras_material_vegetal: [],
   current_siembra_material_vegetal: initial_state_current_material_vegetal,
   items_mortalidad: [],
-  nro_mortalidad: null
+  nro_mortalidad: null,
+  persona_anula: initial_state_person,
+
 }
 
 export const produccion_slice = createSlice({
@@ -240,6 +242,10 @@ export const produccion_slice = createSlice({
       state.nro_mortalidad = action.payload;
     },
 
+    set_persona_anula: (state: IProduccion,action:PayloadAction <Persona>)=> {
+      state.persona_anula = action.payload;
+    },
+
 
   },
 });
@@ -264,5 +270,6 @@ export const {
   set_items_mortalidad,
   set_siembras_material_vegetal,
   set_current_siembra_material_vegetal,
-  set_nro_mortalidad
+  set_nro_mortalidad,
+  set_persona_anula
  } = produccion_slice.actions;

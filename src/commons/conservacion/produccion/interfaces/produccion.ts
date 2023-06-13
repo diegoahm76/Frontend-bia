@@ -24,6 +24,8 @@ export interface IProduccion {
   current_siembra_material_vegetal: IObjSiembraMV;
   items_mortalidad: IObjItemMortalidad[];
   nro_mortalidad: number | null;
+  persona_anula: Persona;
+
 }
 
 export interface IObjItemMortalidad {
@@ -95,6 +97,10 @@ export interface IObjChange {
   nombre?: string | null;
   desc_etapa_lote_destino?: string | null;
   desc_etapa_lote_origen?: string | null;
+  id_persona_anula?:  number | null;
+  persona_anula?: string | null;
+  fecha_anula?: string | null;
+  justificacion_anulacion?: string | null;
 
 }
 

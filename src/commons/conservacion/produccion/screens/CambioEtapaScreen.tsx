@@ -10,9 +10,13 @@ import { type IObjNursery, type IObjChange } from "../interfaces/produccion";
 import { useForm } from "react-hook-form";
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
+// import CloseIcon from '@mui/icons-material/Close';
 import PersonaCambia from "../componentes/PersonaCambia";
-import { add_stage_change_service } from "../store/thunks/produccionThunks";
+import { add_stage_change_service, annul_stage_change_service } from "../store/thunks/produccionThunks";
+import AnularEliminar from "../../componentes/AnularEliminar";
+import Block from '@mui/icons-material/Block';
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CambioEtapaScreen(): JSX.Element {
@@ -53,20 +57,6 @@ export function CambioEtapaScreen(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const on_submit = (data: IObjChange) => {
     const form_data:any = new FormData();
-   
-    // if (current_stage_change.id_siembra !== null && current_stage_change.id_siembra !== undefined) {
-    //   set_action("editar")
-    //   const data_edit = {
-    //     ...data, distancia_entre_semillas: Number(data.distancia_entre_semillas)
-    //   }
-    //   const data_update = {
-    //     data_siembra: data_edit,
-    //     data_bienes_consumidos: planting_goods
-    //   }
-    //   console.log("editar")
-    //   console.log(data_update)
-    //     void dispatch(edit_siembra_service(data_update, current_stage_change.id_siembra));
-    // } else {
       set_action("crear")
       console.log(data)
       const fecha = new Date(data.fecha_cambio??"").toISOString()
@@ -84,7 +74,19 @@ export function CambioEtapaScreen(): JSX.Element {
       form_data.append('id_persona_cambia', data.id_persona_cambia);
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
       void dispatch(add_stage_change_service(form_data));
-    // }
+  
+  };
+
+  const on_submit_annul = (data: IObjChange): void => {
+    if(current_stage_change.id_cambio_de_etapa !== null && current_stage_change.id_cambio_de_etapa !== undefined){
+      const form_data = {
+        justificacion_anulacion: data.justificacion_anulacion
+      }
+      void dispatch(annul_stage_change_service(current_stage_change.id_cambio_de_etapa, form_data));
+    }
+    
+    
+  
   };
   
   return (
@@ -133,12 +135,74 @@ export function CambioEtapaScreen(): JSX.Element {
           </Grid>
           
           <Grid item xs={12} md={3}>
-            <FormButton
-              variant_button="outlined"
-              on_click_function={null}
-              icon_class={<CloseIcon />}
-              label={"Cancelar"}
-              type_button="button"
+            <AnularEliminar
+              action= "Anular" 
+              button_icon_class= {<Block/>}
+              button_disabled= {false}
+              modal_title= {"Anular cambio de etapa"}
+              button_submit_label= {"Anular"}
+              button_submit_disabled= {false}
+              button_submit_icon_class= {<Block/>}
+              button_submit_action= {handle_submit(on_submit_annul)}
+              modal_inputs= {[
+                {
+                  datum_type: "select_controller",
+                  xs: 12,
+                  md: 4,
+                  control_form: control_cambio,
+                  control_name: "id_vivero",
+                  default_value: current_stage_change.id_vivero,
+                  rules: { required_rule: { rule: true, message: "Vivero requerido" } },
+                  label: "Vivero",
+                  disabled: true,
+                  helper_text: "",
+                  select_options: nurseries,
+                  option_label: "nombre",
+                  option_key: "id_vivero",
+                },
+                {
+                  datum_type: "input_controller",
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_cambio,
+                  control_name: "persona_anula",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
+                  label: "Preparación realizada por",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+              },
+                {
+                  datum_type: "date_picker_controller",
+                  xs: 12,
+                  md: 4,
+                  control_form: control_cambio,
+                  control_name: "fecha_anula",
+                  default_value: (new Date().toString()),
+                  rules: { required_rule: { rule: true, message: "requerido" } },
+                  label: "Fecha actual",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+                },
+                {
+                  datum_type: "input_controller",
+                  xs: 12,
+                  md: 12,
+                  control_form: control_cambio,
+                  control_name: "justificacion_anulacion",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Observación requerida" } },
+                  label: "Justificacion",
+                  type: "text",
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: ""
+                },
+              ]}
             />
           </Grid>
         </Grid>
