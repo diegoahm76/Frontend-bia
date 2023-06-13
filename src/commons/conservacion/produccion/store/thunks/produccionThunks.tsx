@@ -477,7 +477,7 @@ export const get_mortalidades_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=2${nro??""}`);
+      const { data } = await api.get(`conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=${nro??""}`);
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data)
@@ -508,7 +508,7 @@ export const get_mortalidad_nro_service = (
       console.log(data)
       if (data.success === true) {
         dispatch(set_current_mortalidad(data.data))
-        control_success(data.detail)      
+        control_success("sé selecciono la mortalidad")      
       } else {
         control_error(data.detail)
       }

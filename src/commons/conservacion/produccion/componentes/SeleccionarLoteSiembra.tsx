@@ -138,7 +138,7 @@ const SeleccionarLoteSiembra = () => {
             ),
         },
         {
-            field: 'cod_etapa_lore',
+            field: 'cod_etapa_lote',
             headerName: 'Etapa lote',
             width: 150,
             renderCell: (params) => (
@@ -312,11 +312,12 @@ const SeleccionarLoteSiembra = () => {
                         nro_lote: current_siembra_material_vegetal.nro_lote,
                         cod_etapa_lote: current_siembra_material_vegetal.cod_etapa_lote,
                         id_bien: current_siembra_material_vegetal.id_bien,
-                        cantidad_baja: data.cantidad_baja,
+                        cantidad_baja: Number(data.cantidad_baja),
                         nombre_bien: current_siembra_material_vegetal.nombre_bien,
                         codigo_bien: current_siembra_material_vegetal.codigo_bien,
                         observaciones: data.observaciones,
-                        unidad_medida: current_siembra_material_vegetal.unidad_medida
+                        unidad_medida: current_siembra_material_vegetal.unidad_medida,
+                        consec_cuaren_por_lote_etapa: null
                     }
                     if (bien === undefined) {
                             set_aux_insumos([...aux_insumos, new_bien])
@@ -356,7 +357,7 @@ const SeleccionarLoteSiembra = () => {
 
     const edit_bien_mortalidad = (item: IObjItemMortalidad): void => {
         set_action("editar")
-        const bien: IObjSiembraMV | undefined =bienes.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
+        const bien: IObjSiembraMV | undefined =siembras_material_vegetal.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
         const item_bien = aux_insumos.find((p) => p.id_bien === item.id_bien)
         reset_mortalidad(item_bien)
         const aux_items: IObjItemMortalidad[] = []
@@ -365,6 +366,7 @@ const SeleccionarLoteSiembra = () => {
                 aux_items.push(option)
             }
         })
+        console.log(bien)
         if(bien !== undefined){
             dispatch(set_current_siembra_material_vegetal(bien))
         }
@@ -372,7 +374,9 @@ const SeleccionarLoteSiembra = () => {
     };
 
     const delete_bien_mortalidad = (item: IObjItemMortalidad): void => {
-        const bien: IObjSiembraMV | undefined =bienes.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
+        const bien: IObjSiembraMV | undefined =siembras_material_vegetal.find((p: IObjSiembraMV) => p.id_bien === item.id_bien)
+        console.log(bien)
+
         if(bien !== undefined){
             dispatch(set_current_siembra_material_vegetal(bien))
         }
@@ -404,7 +408,7 @@ const SeleccionarLoteSiembra = () => {
                     get_filters_models={get_bienes}
                     set_models={set_siembras_material_vegetal}
                     button_submit_label='Buscar bien'
-                    button_submit_disabled= {current_mortalidad.id_baja !== null}
+                    button_submit_disabled= {false}
                     form_inputs={[
                         {
                             datum_type: "title",

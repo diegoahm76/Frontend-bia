@@ -35,7 +35,7 @@ export interface IObjItemMortalidad {
   agno_lote: number | null;
   nro_lote: number | null;
   cod_etapa_lote: string | null;
-  consec_cuaren_por_lote_etapa?: string | null;
+  consec_cuaren_por_lote_etapa: string | null;
   cantidad_baja: number | null;
   observaciones: string | null;
   nro_posicion?: number | null;

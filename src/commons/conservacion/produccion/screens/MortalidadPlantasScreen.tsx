@@ -10,10 +10,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
 import SeleccionarLoteSiembra from "../componentes/SeleccionarLoteSiembra";
 import { type IObjNursery, type IObjItemMortalidad, type IObjMortalidad } from "../interfaces/produccion";
-import { initial_state_current_material_vegetal, set_current_siembra_material_vegetal, set_current_nursery, set_items_mortalidad } from "../store/slice/produccionSlice";
+import { initial_state_current_material_vegetal, set_current_siembra_material_vegetal, set_current_nursery, set_items_mortalidad, set_current_mortalidad } from "../store/slice/produccionSlice";
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import { add_mortalidad_service, edit_mortalidad_service, get_bien_mortalidad_id_service, get_person_id_service } from "../store/thunks/produccionThunks";
+import { add_mortalidad_service, edit_mortalidad_service, get_bien_mortalidad_id_service, get_nro_mortalidad_service, get_person_id_service } from "../store/thunks/produccionThunks";
 import { useForm } from "react-hook-form";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -39,10 +39,19 @@ export function MortalidadPlantasScreen(): JSX.Element {
 
   useEffect(() => {
     void dispatch(get_person_id_service(userinfo.id_persona))
+    void dispatch(get_nro_mortalidad_service())
   }, []);
-
   useEffect(() => {
-    if(current_mortalidad.id_baja !== null){
+    dispatch(set_current_mortalidad({
+      ...current_mortalidad,
+      nro_baja_por_tipo: nro_mortalidad,
+      id_persona_baja: changing_person?.id_persona, 
+      persona_baja: changing_person.nombre_completo
+    }))
+  }, [nro_mortalidad]);
+  
+  useEffect(() => {
+    if(current_mortalidad.id_baja !== null && current_mortalidad.id_baja !== undefined){
       set_action("editar")   
       void dispatch(get_bien_mortalidad_id_service(current_mortalidad.id_baja)); 
       if(current_mortalidad.id_persona_baja !== null ){
@@ -78,7 +87,7 @@ export function MortalidadPlantasScreen(): JSX.Element {
       form_data.append('data_mortalidad', JSON.stringify({ ...data }));
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
       form_data.append('data_items_mortalidad', JSON.stringify(aux_items));
-        void dispatch(edit_mortalidad_service(current_mortalidad.id_baja, form_data));
+      void dispatch(edit_mortalidad_service(current_mortalidad.id_baja, form_data));
     } else {
       set_action("crear")
       const fecha = new Date(data.fecha_baja??"").toISOString()
@@ -93,7 +102,7 @@ export function MortalidadPlantasScreen(): JSX.Element {
       form_data.append('data_mortalidad', JSON.stringify({ ...data_edit }));
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
       form_data.append('data_items_mortalidad', JSON.stringify(aux_items));
-        void dispatch(add_mortalidad_service(form_data));
+      void dispatch(add_mortalidad_service(form_data));
     }
   };
   // const annul_siembra = (): void => {
@@ -118,7 +127,7 @@ export function MortalidadPlantasScreen(): JSX.Element {
       }}
     >
       <Grid item xs={12} marginY={2}>
-        <Title title="Preparación Mezclas"></Title>
+        <Title title="Registro de mortalidad de plantas"></Title>
       </Grid>
       <SeleccionarMortalidad
         control_mortalidad={control_mortalidad}
