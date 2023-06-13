@@ -7,6 +7,7 @@ import type {
   UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
+  UseFormReset,
   UseFormSetValue,
   UseFormWatch
 } from 'react-hook-form';
@@ -372,6 +373,7 @@ export interface ReisterHookNew {
   get_values: UseFormGetValues<FieldValues>;
   validate_exits: (data: FieldValues) => Promise<void>;
   watch: UseFormWatch<FieldValues>;
+  reset: UseFormReset<FieldValues>;
   on_submit: (data: FieldValues) => Promise<void>;
 }
 
