@@ -5,7 +5,7 @@ import { TrdScreen } from '../screens/TrdScreen';
 export const TrdRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="trd" element={<TrdScreen />} />
+      <Route path="" element={<TrdScreen />} />
       <Route path="/*" element={<Navigate to={'/'} />} />
     </Routes>
   );

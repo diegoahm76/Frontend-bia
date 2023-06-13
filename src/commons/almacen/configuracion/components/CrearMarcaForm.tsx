@@ -13,8 +13,6 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { activate_deactivate_marca_service, delete_marca_service, get_marca_service } from '../store/thunks/MarcaMedidaPorcentajeThunks';
 import { marca_seleccionada } from '../store/slice/MarcaMedidaPorcentajeSlice';
 
-
-
 const initial_state_marca_seleccionada = {
  
   id_marca: null,

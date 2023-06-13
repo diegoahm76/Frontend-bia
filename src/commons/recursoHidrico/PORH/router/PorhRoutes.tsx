@@ -1,15 +1,19 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-// import React from 'react'
-
 import type { ReactElement } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { PorhMain } from '../screen/PorhMain/PorhMain';
+import { Page404 } from '../../../../screens/404';
+import { PorhMainScreen } from '../screen/PorhMainScreen/PorhMainScreen';
+import { UserProvider } from '../context/contextData';
+import { AvanceScreen } from '../screen/AvencesScreen/AvancesScreen';
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export const PorhRoutes = (): ReactElement => {
   return (
+    <UserProvider>
     <Routes>
-      <Route path="/" element={<PorhMain />} />
-      <Route path="/*" element={<div>Ruta no encontrado</div>} />
+      <Route path="contenido_programatico/*" element={<PorhMainScreen/>} />
+      <Route path="avances_proyectos/*" element={<AvanceScreen/>}/>
+      <Route path="/*" element={<Page404 />} />
     </Routes>
+    </UserProvider>
   );
 };
