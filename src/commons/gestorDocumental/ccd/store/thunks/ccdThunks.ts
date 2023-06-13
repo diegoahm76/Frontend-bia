@@ -65,21 +65,37 @@ export const get_finished_ccd_service = ():any => {
 };
 // Obtener Cuadro de Clasificación Documental
 export const get_classification_ccds_service = (name: string, version: string): any => {
-  console.log('get_classification_ccds_service');
+ // console.log('get_classification_ccds_service');
 
   return async (dispatch: Dispatch<any>): Promise<AxiosResponse | AxiosError> => {
     try {
-      console.log('hello');
+      // console.log('hello');
       const { data } = await api.get(`gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`);
-      console.log('helllooo');
+      // console.log('helllooo');
       if (name === '' || version === '') {
         await notification_error('Debe ingresar el nombre y la versión del CCD');
       } else if (data.data.length === 0) {
         await notification_error(`No se encontró el CCD ${name} - ${version}`);
       } else {
-        console.log(data.data);
+        // console.log(data.data);
         dispatch(get_ccds(data.data));
-        get_series_service(data.data[0].id_ccd)(dispatch);
+        const series_service = get_series_service(data.data[0].id_ccd);
+dispatch(series_service)
+  .then(() => {
+    // Aquí puedes ejecutar la resolución de la promesa
+    console.log('La función principal se ha completado correctamente.');
+  })
+  .catch((error: any) => {
+    // Manejar cualquier error ocurrido durante la ejecución de la función principal
+    console.error('Ocurrió un error durante la ejecución de la función principal:', error);
+  });
+
+        console.log(
+          'get_classification_ccds_service',
+          data
+        )
+       // get_subseries_service(data.data[0].id_ccd)(dispatch);
+
       }
       
       return data;
@@ -158,7 +174,7 @@ export const to_resume_ccds_service: any = (
     }
   };
 };
-// Finalizar Cuadro de Clasificación Documental
+//! Finalizar Cuadro de Clasificación Documental
 export const to_finished_ccds_service: any = (
   set_flag_btn_finish: (arg0: boolean) => void
 ) => {

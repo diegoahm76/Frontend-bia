@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-void */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
@@ -225,27 +226,12 @@ const create_series = (): void => {
     } else {
       void dispatch(delete_series_service(new_series, params, () => ({})));
     }
-
-    /* const new_series = series_ccd.filter(
-      (serie: any) => serie.id_serie_doc !== id_serie_doc
-    );
-    void dispatch(create_series_service(new_series, () => ({}))); */
   };
 
-  //  Función para enviar los datos del formulario
-  const on_submit: SubmitHandler<IFormValues> = () => {
+  // ? se considera innecesario el uso de esta función delntro del código, ya que la lógica puede ser manejada por la funcióm create_series
+ /*  const on_submit: SubmitHandler<IFormValues> = () => {
     create_series();
-    /* window.alert(JSON.stringify(t));
-    switch (title) {
-      case 'Crear Catalogo de series':
-        break;
-      case 'Crear catalogo de subseries':
-        create_subseries(e);
-        break;
-      default:
-        break;
-    } */
-  };
+  }; */
 
   const columns: GridColDef[] = [
     {
@@ -308,12 +294,6 @@ const create_series = (): void => {
         set_is_modal_active(false);
       }}
     >
-      {/* <form
-        onSubmit={(e) => {
-          void handle_submit(on_submit); // Pasar el evento e a handle_submit
-          console.log(errors);
-        }}
-      > */}
       <DialogTitle>
         {title}
         <IconButton
@@ -338,11 +318,9 @@ const create_series = (): void => {
           onSubmit={(e) => {
             e.preventDefault();
 
-            console.log('hollllllllaslkaksjalkjalksdjlkajsdlkajslkdjaslkjdlka');
+           // console.log('hollllllllaslkaksjalkjalksdjlkajsdlkajslkdjaslkjdlka');
            create_series();
-            /* void handle_submit(() => {
-            }); */ 
-            console.log(errors);
+            // console.log(errors);
           }}
           autoComplete="off"
         >
