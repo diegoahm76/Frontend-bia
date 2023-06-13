@@ -12,7 +12,7 @@ import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
 // import CloseIcon from '@mui/icons-material/Close';
 import PersonaCambia from "../componentes/PersonaCambia";
-import { add_stage_change_service, annul_stage_change_service } from "../store/thunks/produccionThunks";
+import { add_stage_change_service, annul_stage_change_service, edit_stage_change_service } from "../store/thunks/produccionThunks";
 import AnularEliminar from "../../componentes/AnularEliminar";
 import Block from '@mui/icons-material/Block';
 
@@ -34,6 +34,7 @@ export function CambioEtapaScreen(): JSX.Element {
   useEffect(() => {
     reset_cambio(current_stage_change)
     if(current_stage_change.id_cambio_de_etapa !== null){
+      set_action("editar")   
       console.log(current_stage_change)
       // sdispatch(set_current_vegetal_material({ id_bien: current_stage_change.id_bien, codigo_bien: (current_stage_change.codigo??""), nombre: (current_stage_change.nombre??""), agno_lote: current_stage_change.agno_lote, nro_lote: current_stage_change.nro_lote, cod_etapa_lote: current_stage_change.cod_etapa_lote_origen, etapa_lote: (current_stage_change.desc_etapa_lote_origen??""), cantidad_disponible: current_stage_change.cantidad_disponible_al_crear }))
     }                                                             
@@ -57,6 +58,17 @@ export function CambioEtapaScreen(): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const on_submit = (data: IObjChange) => {
     const form_data:any = new FormData();
+
+    if(current_stage_change.id_cambio_de_etapa !== null && current_stage_change.id_cambio_de_etapa !== undefined){
+      set_action("editar")
+      form_data.append('altura_lote_en_cms', Number(data.altura_lote_en_cms));
+      form_data.append('observaciones', data.observaciones);
+      form_data.append('id_persona_cambia', data.id_persona_cambia);
+      form_data.append('cantidad_movida', Number(data.cantidad_movida));
+      form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
+      
+      void dispatch(edit_stage_change_service(form_data, current_stage_change.id_cambio_de_etapa));
+    } else {
       set_action("crear")
       console.log(data)
       const fecha = new Date(data.fecha_cambio??"").toISOString()
@@ -74,16 +86,13 @@ export function CambioEtapaScreen(): JSX.Element {
       form_data.append('id_persona_cambia', data.id_persona_cambia);
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
       void dispatch(add_stage_change_service(form_data));
-  
+    }
   };
 
   const on_submit_annul = (data: IObjChange): void => {
     if(current_stage_change.id_cambio_de_etapa !== null && current_stage_change.id_cambio_de_etapa !== undefined){
       void dispatch(annul_stage_change_service(current_stage_change.id_cambio_de_etapa, data));
     }
-    
-    
-  
   };
   
   return (

@@ -279,6 +279,31 @@ export const annul_stage_change_service = (
   };
 };
 
+// editar cambio etapa
+export const edit_stage_change_service = (
+  cambio: any,
+  id: number
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/etapas/actualizar-cambio-etapa/${id}/`, cambio);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('edit_stage_change_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // editar siembra
 export const edit_siembra_service = (
   siembra: any,

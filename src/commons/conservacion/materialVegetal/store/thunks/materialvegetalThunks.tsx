@@ -501,7 +501,7 @@ export const annul_plant_quarantine_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.delete(`conservacion/ingreso-cuarentena/anular/${id}/`, quarantine);
+      const { data } = await api.put(`conservacion/ingreso-cuarentena/anular/${id}/`, quarantine);
       console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
@@ -665,7 +665,7 @@ export const annul_lifting_quarantine_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.delete(`conservacion/ingreso-cuarentena/anular/${id}/`, quarantine);
+      const { data } = await api.put(`conservacion/levantamiento-cuarentena/anular-levantamiento-cuarentena/${id}/`, quarantine);
       console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
