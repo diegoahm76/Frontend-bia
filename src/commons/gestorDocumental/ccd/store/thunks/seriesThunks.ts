@@ -75,8 +75,7 @@ export const delete_series_service:any = (
 
 //! post action for create series
 export const create_series_service:any = (
-  newSeries: any,
-  params_ccd_info: any,
+  body: any,
   clean: () => void,
 ) => {
   return async (
@@ -86,10 +85,10 @@ export const create_series_service:any = (
     try {
       const { data } = await api.post(
         `gestor/ccd/series/create/`,
-        newSeries
+        body
       );
       dispatch(get_series_service(
-        params_ccd_info.id
+        body.id_ccd
       ));
       clean();
       console.log(

@@ -129,7 +129,11 @@ const create_series = (): void => {
       data,
       ccd_current,
     )
-
+    return void dispatch(create_series_service({
+      nombre: data.nombre,
+      codigo: data.codigo,
+      id_ccd: ccd_current?.id_ccd
+    }, clean));
     /* const updatedSeries = series_ccd.map((item: any) => {
       if (item.id_serie_doc === id_serie_doc) {
         return {
