@@ -18,7 +18,7 @@ const initial_state = {
 
 // Ver Reporte Detallado Cartera
 export const get_cartera_detallada = createAsyncThunk('reportes_recaudo/cartera_detallada', async () => {
-  const { data } = await api.get('recaudo/reportes/reporte-general-detallado/')
+  const { data } = await api.get(`recaudo/reportes/reporte-general-detallado/`)
   return data.data
 })
 
@@ -30,13 +30,13 @@ export const get_filtro_cartera_detallada = createAsyncThunk('reportes_recaudo/f
 
 // Ver Reporte Facilidad de Pago General
 export const get_facilidad_general = createAsyncThunk('reportes_recaudo/facilidad_general', async () => {
-  const { data } = await api.get('recaudo/reportes/reporte-facilidades-pagos/')
+  const { data } = await api.get(`recaudo/reportes/reporte-facilidades-pagos/`)
   return data.data
 })
 
 // Ver Reporte Detallado Facilidad
 export const get_facilidad_detallada = createAsyncThunk('reportes_recaudo/facilidad_detallada', async () => {
-  const { data } = await api.get('recaudo/reportes/reporte-facilidades-pagos-detalle/')
+  const { data } = await api.get(`recaudo/reportes/reporte-facilidades-pagos-detalle/`)
   return data.data
 })
 
@@ -48,7 +48,7 @@ export const get_filtro_facilidad_detallada = createAsyncThunk('reportes_recaudo
 
 // Ver Reporte General por Edades
 export const get_cartera_edades = createAsyncThunk('reportes_recaudo/cartera_edades', async () => {
-  const { data } = await api.get('recaudo/reportes/reporte-cartera-edades/')
+  const { data } = await api.get(`recaudo/reportes/reporte-cartera-edades/`)
   return data.data
 })
 

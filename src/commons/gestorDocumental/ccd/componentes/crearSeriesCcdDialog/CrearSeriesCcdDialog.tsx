@@ -210,7 +210,7 @@ const CrearSeriesCcdDialog = ({
       case 'Crear Catalogo de series':
         break;
       case 'Crear catalogo de subseries':
-        create_subseries();
+        create_subseries(e);
         break;
       default:
         break;
