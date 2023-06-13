@@ -78,6 +78,7 @@ export const get_classification_ccds_service: any = (name: string, version: stri
       );
       console.log(data.data);
       dispatch(get_ccds(data.data));
+      get_series_service(data.data[0].id_ccd)(dispatch);
       return data;
     } catch (error: any) {
       console.log(error, 'error');
@@ -181,6 +182,10 @@ export const create_ccds_service: any = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.post('gestor/ccd/create/', ccd);
+      console.log(
+        '🚀 ~ file: ccds.ts ~ line 139 ~ return ~ data',
+        data
+      );
       dispatch(get_ccd_current(data.data));
       control_success(data.detail);
       console.log(data.detail, 'success');
