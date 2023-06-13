@@ -1,7 +1,19 @@
-import { type BaseSyntheticEvent, type Dispatch, type SetStateAction } from 'react';
-import type{ FieldErrors,   UseFormRegister,  UseFormReset } from 'react-hook-form';
+import {
+  type BaseSyntheticEvent,
+  type Dispatch,
+  type SetStateAction
+} from 'react';
+import type {
+  FieldErrors,
+  UseFormRegister,
+  UseFormReset
+} from 'react-hook-form';
 import type { DataPersonas, IList } from '../../../interfaces/globalModels';
-import { type AutocompleteChangeDetails, type AutocompleteChangeReason, type SelectChangeEvent } from '@mui/material';
+import {
+  type AutocompleteChangeDetails,
+  type AutocompleteChangeReason,
+  type SelectChangeEvent
+} from '@mui/material';
 
 export interface IList2 {
   value: number;
@@ -122,7 +134,7 @@ export interface AdminUserHook {
   action_admin_users: string;
   user_info: Users;
   loading_create_or_update: boolean;
-  loading_inputs:boolean;
+  loading_inputs: boolean;
   selected_image: string | ArrayBuffer | null;
   check_user_is_active: boolean;
   check_user_is_blocked: boolean;
@@ -146,25 +158,25 @@ export interface AdminUserHook {
   // rol_fixed: IList2[];
   users_x_person_is_active: boolean;
   set_historial_cambios_estado_is_active: Dispatch<SetStateAction<boolean>>;
-  set_users_x_person_is_active:Dispatch<SetStateAction<boolean>>; 
-  on_submit: (e?: BaseSyntheticEvent<object, any,any> | undefined) => Promise<void>;
-  on_change: (e: SelectChangeEvent<string>)=> void;
+  set_users_x_person_is_active: Dispatch<SetStateAction<boolean>>;
+  on_submit: (
+    e?: BaseSyntheticEvent<object, any, any> | undefined
+  ) => Promise<void>;
+  on_change: (e: SelectChangeEvent<string>) => void;
   handle_change_autocomplete: (
     event: React.SyntheticEvent<Element, Event>,
     value: IList2[],
     reason: AutocompleteChangeReason,
     details?: AutocompleteChangeDetails<IList2>
-    ) => void;
-  handle_change: (e: React.ChangeEvent<HTMLInputElement>) => void; 
-  handle_image_select: (
-    event: React.ChangeEvent<HTMLInputElement>
   ) => void;
-  register_admin_user: UseFormRegister<DataAadminUser>; 
+  handle_change: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handle_image_select: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  register_admin_user: UseFormRegister<DataAadminUser>;
   set_data_register: Dispatch<SetStateAction<DataAadminUser>>;
   set_tipo_documento: Dispatch<SetStateAction<string>>;
   set_tipo_persona: Dispatch<SetStateAction<string>>;
   set_data_disponible: Dispatch<SetStateAction<boolean>>;
-  set_loading_inputs:Dispatch<SetStateAction<boolean>>; 
+  set_loading_inputs: Dispatch<SetStateAction<boolean>>;
   reset_admin_user: UseFormReset<DataAadminUser>;
 }
 
@@ -404,3 +416,11 @@ export interface RolSlice {
 //   value: boolean;
 //   id: number;
 // }
+
+export interface UsersRol {
+  id_rol?: number;
+  id_usuario?: number;
+  nombre_usuario: string;
+  id_persona?: number;
+  nombre_persona: string;
+}

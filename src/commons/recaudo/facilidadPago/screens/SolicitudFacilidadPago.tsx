@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { InputsEncabezado } from '../componentes/InputsEncabezado';
+import { EncabezadoRegistro } from '../componentes/EncabezadoRegistro';
 import { TablaObligacionesSolicitud } from '../componentes/TablaObligacionesSolicitud';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
@@ -9,9 +9,11 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Close } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { use_form } from '../../../../hooks/useForm';
-import { useFormLocal } from '../hooks/useFormLocal';
+import { useFormText } from '../hooks/useFormText';
+import { useFormFiles } from '../hooks/useFormFiles';
 import { faker } from '@faker-js/faker';
-import { type event } from '../interfaces/interfaces';
+import { type event, type check } from '../interfaces/interfaces';
+import { post_registro_fac_pago } from '../requests/requests';
 
 interface bien {
   id: string;
@@ -24,28 +26,25 @@ interface bien {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SolicitudFacilidadPago: React.FC = () => {
-  const [persona, set_persona] = useState('');
+  const [persona, set_persona] = useState(0);
+  const [num_periodicidad, set_num_periodicidad] = useState(0);
   const [periodicidad, set_periodicidad] = useState('');
   const [limite, set_limite] = useState(0);
   const [arr_periodicidad, set_arr_periodicidad] = useState(Array<number>);
-  const [plazo, set_plazo] = useState('');
+  const [plazo, set_plazo] = useState(0);
+  const [notificacion, set_notificacion] = useState(false);
   const [rows_bienes, set_rows_bienes] = useState(Array<bien>);
   const { form_state, on_input_change } = use_form({});
-  const { form_local, handle_change_local } = useFormLocal({});
+  const { form_text, handle_change_text } = useFormText({});
+  const { form_files, name_files, handle_change_file } = useFormFiles({});
   const [modal, set_modal] = useState(false);
-  const [file_name, set_file_name] = useState('');
 
-  console.log('form', form_state)
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
 
-  const handle_file_selected = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selected_file =
-      event.target.files != null ? event.target.files[0] : null;
-    if (selected_file != null) {
-      set_file_name(selected_file.name);
-    }
-  };
+  console.log('texto', form_state);
+  console.log('archivos', form_files);
+  console.log('bienes', form_text);
 
   useEffect(()=>{
     let count:number = 0;
@@ -120,7 +119,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
   return (
     <>
       <Title title='Solicitud de Facilidad de Pago - Usuario Externo' />
-      <InputsEncabezado />
+      <EncabezadoRegistro />
       <TablaObligacionesSolicitud />
       <Grid
         container
@@ -149,14 +148,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     component="label"
                     startIcon={<CloudUploadIcon />}
                   >
-                    {file_name !== '' ? file_name : 'Carga Documento Solicitud'}
+                    {name_files.documento_soporte !== undefined ? name_files.documento_soporte : 'Carga Documento Solicitud'}
                       <input
                         hidden
                         type="file"
                         required
                         autoFocus
                         style={{ opacity: 0 }}
-                        onChange={handle_file_selected}
+                        name='documento_soporte'
+                        onChange={handle_change_file}
                       />
                   </Button>
                 </Grid>
@@ -168,14 +168,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     component="label"
                     startIcon={<CloudUploadIcon />}
                   >
-                    {file_name !== '' ? file_name : 'Carga Soporte Consignación'}
+                    {name_files.consignacion_soporte !== undefined ? name_files.consignacion_soporte : 'Carga Soporte Consignación'}
                       <input
                         hidden
                         type="file"
                         required
                         autoFocus
                         style={{ opacity: 0 }}
-                        onChange={handle_file_selected}
+                        name='consignacion_soporte'
+                        onChange={handle_change_file}
                       />
                   </Button>
                 </Grid>
@@ -187,20 +188,13 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       defaultValue={""}
                       onChange={(event: event) => {
                         const { value } = event.target
-                        if(value === 'Natural') {
-                          set_persona('1')
-                        }
-                        if(value === 'Juridica') {
-                          set_persona('2')
-                        }
-                        if(value === 'DeudorSolidario') {
-                          set_persona('3')
-                        }
+                        set_persona(parseInt(value))
                       }}
                     >
-                      <MenuItem value='Natural'>Persona Natural</MenuItem>
-                      <MenuItem value='Juridica'>Persona Juridica / Apoderado</MenuItem>
-                      <MenuItem value='DeudorSolidario'>Deudor Solidario</MenuItem>
+                      <MenuItem value='1'>Persona Natural</MenuItem>
+                      <MenuItem value='2'>Persona Juridica / Apoderado</MenuItem>
+                      <MenuItem value='3'>Deudor Solidario Natural</MenuItem>
+                      <MenuItem value='4'>Deudor Solidario Juridico</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -209,7 +203,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
         </Grid>
       </Grid>
       {
-        persona === '1' ? (
+        persona === 1 ? (
           <>
             <Grid
               container
@@ -239,14 +233,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Documento de Identidad'}
+                        {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento de Identidad'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_identidad'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -288,7 +283,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
               </Grid>
             </Grid>
           </>
-        ) : persona === '2' ? (
+        ) : persona === 2 ? (
           <>
             <Grid
               container
@@ -318,14 +313,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Documento de Identidad Apoderado'}
+                        {name_files.documento_apoderado !== undefined ? name_files.documento_apoderado : 'Carga Documento de Identidad Apoderado'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_apoderado'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -337,14 +333,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Documento Poder'}
+                        {name_files.documento_poder !== undefined ? name_files.documento_poder :'Carga Documento Poder'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_poder'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -356,14 +353,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Cert. Existencia y Representación Legal'}
+                        {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='certificado_legal'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -405,7 +403,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
               </Grid>
             </Grid>
           </>
-        ) : persona === '3' ? (
+        ) : persona === 3 ? (
           <>
             <Grid
               container
@@ -419,7 +417,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
               }}
             >
-              <h3>Caso Deudor Solidario</h3>
+              <h3>Caso Deudor Solidario Natural</h3>
               <Grid item xs={12}>
                 <Box
                   component="form"
@@ -427,19 +425,6 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   autoComplete="off"
                 >
                   <Grid container spacing={2}>
-                    <Grid item xs={12} sm={3}>
-                      <FormControl size="small" fullWidth>
-                        <InputLabel>Tipo Deudor Solidario</InputLabel>
-                        <Select
-                          label="Tipo Deudor Solidario"
-                          onChange={on_input_change}
-                          name='tipoDeudor'
-                        >
-                          <MenuItem value='DeudorNatural'>Persona Natural</MenuItem>
-                          <MenuItem value='DeudorJuridico'>Persona Juridica / Apoderado</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
                     <Grid item xs={11} sm={3.5}>
                       <Button
                         variant="outlined"
@@ -448,14 +433,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Documento Deudor Solidario'}
+                        {name_files.documento_deudor !== undefined ? name_files.documento_deudor : 'Carga Documento Deudor Solidario'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_deudor'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -467,14 +453,115 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Oficio Respaldando Deuda'}
+                        {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='documento_respaldo'
+                            onChange={handle_change_file}
+                          />
+                      </Button>
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        label="Dirección Notificación"
+                        helperText='Escribe la Dirección de Notificación'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='direccion'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        label="Ciudad"
+                        helperText='Escribe la Ciudad'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='ciudad'
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={3}>
+                      <TextField
+                        required
+                        label="Teléfono Contacto"
+                        helperText='Escribe el Teléfono de Contacto'
+                        size="small"
+                        fullWidth
+                        onChange={on_input_change}
+                        name='telefono'
+                      />
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Grid>
+            </Grid>
+          </>
+        ) : persona === 4 ? (
+          <>
+            <Grid
+              container
+              sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                mb: '20px',
+                mt: '20px',
+                p: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+              }}
+            >
+              <h3>Caso Deudor Solidario Juridico</h3>
+              <Grid item xs={12}>
+                <Box
+                  component="form"
+                  noValidate
+                  autoComplete="off"
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={11} sm={3.5}>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {name_files.documento_deudor !== undefined ? name_files.documento_deudor : 'Carga Documento Deudor Solidario'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            name='documento_deudor'
+                            onChange={handle_change_file}
+                          />
+                      </Button>
+                    </Grid>
+                    <Grid item xs={11} sm={3.3}>
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        size='medium'
+                        component="label"
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
+                          <input
+                            hidden
+                            type="file"
+                            required
+                            autoFocus
+                            style={{ opacity: 0 }}
+                            name='documento_respaldo'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -486,14 +573,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Cert. Existencia y Representación Legal'}
+                        {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='certificado_legal'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -561,32 +649,33 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   <InputLabel>Periodicidad y Modalidad</InputLabel>
                   <Select
                     label="Periodicidad y Modalidad"
-                    name='periodicidadymodalidad'
+                    name='periodicidad'
                     defaultValue={""}
                     onChange={(event: event) => {
                       const { value } = event.target
-                      if(value === 'mensual') {
+                      set_num_periodicidad(parseInt(value))
+                      if(value === '1') {
                         set_periodicidad('meses')
                         set_limite(60)
                       }
-                      if(value === 'trimestral') {
+                      if(value === '3') {
                         set_periodicidad('trimestres')
                         set_limite(20)
                       }
-                      if(value === 'semestral') {
+                      if(value === '6') {
                         set_periodicidad('semestres')
                         set_limite(10)
                       }
-                      if(value === 'anual') {
+                      if(value === '12') {
                         set_periodicidad('años')
                         set_limite(5)
                       }
                     }}
                   >
-                    <MenuItem value="mensual">Mensual</MenuItem>
-                    <MenuItem value="trimestral">Trimestral</MenuItem>
-                    <MenuItem value="semestral">Semestral</MenuItem>
-                    <MenuItem value="anual">Anual</MenuItem>
+                    <MenuItem value='1'>Mensual</MenuItem>
+                    <MenuItem value="3">Trimestral</MenuItem>
+                    <MenuItem value="6">Semestral</MenuItem>
+                    <MenuItem value="12">Anual</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -596,11 +685,11 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   <Select
                     required
                     label={periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}
-                    name='plazo'
+                    name='cuota'
                     defaultValue={""}
                     onChange={(event: event) => {
                       const { value } = event.target
-                      set_plazo(value)
+                      set_plazo(parseInt(value))
                     }}
                   >
                     {
@@ -612,7 +701,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                 </FormControl>
               </Grid>
               {
-                periodicidad === 'años' && parseInt(plazo) > 1 || periodicidad === 'semestres' && parseInt(plazo) > 2 || periodicidad === 'trimestres' && parseInt(plazo) > 4 || periodicidad === 'meses' && parseInt(plazo) > 12 ? (
+                periodicidad === 'años' && plazo > 1 || periodicidad === 'semestres' && plazo > 2 || periodicidad === 'trimestres' && plazo > 4 || periodicidad === 'meses' && plazo > 12 ? (
                   <>
                     <Grid item xs={12} sm={3} direction="row" rowSpacing={2}>
                       <FormControl size="small" fullWidth>
@@ -638,14 +727,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                         component="label"
                         startIcon={<CloudUploadIcon />}
                       >
-                        {file_name !== '' ? file_name : 'Carga Garantía Ofrecida'}
+                        {name_files.garantias !== undefined ? name_files.garantias : 'Carga Garantía Ofrecida'}
                           <input
                             hidden
                             type="file"
                             required
                             autoFocus
                             style={{ opacity: 0 }}
-                            onChange={handle_file_selected}
+                            name='garantias'
+                            onChange={handle_change_file}
                           />
                       </Button>
                     </Grid>
@@ -660,14 +750,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   component="label"
                   startIcon={<CloudUploadIcon />}
                 >
-                  {file_name !== '' ? file_name : 'Carga Documento No Enajenación'}
+                  {name_files.documento_no_enajenacion !== undefined ? name_files.documento_no_enajenacion : 'Carga Documento No Enajenación'}
                     <input
                       hidden
                       type="file"
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      onChange={handle_file_selected}
+                      name='documento_no_enajenacion'
+                      onChange={handle_change_file}
                           />
                 </Button>
               </Grid>
@@ -676,7 +767,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
         </Grid>
       </Grid>
       {
-        periodicidad === 'años' && parseInt(plazo) > 1 || periodicidad === 'semestres' && parseInt(plazo) > 2 || periodicidad === 'trimestres' && parseInt(plazo) > 4 || periodicidad === 'meses' && parseInt(plazo) > 12 ? (
+        periodicidad === 'años' && plazo > 1 || periodicidad === 'semestres' && plazo > 2 || periodicidad === 'trimestres' && plazo > 4 || periodicidad === 'meses' && plazo > 12 ? (
           <Grid
           container
           sx={{
@@ -704,7 +795,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                     label="Tipo Bien"
                     name='bien'
                     defaultValue={""}
-                    onChange={handle_change_local}
+                    onChange={handle_change_text}
                   >
                     <MenuItem value="Casa">Casa</MenuItem>
                     <MenuItem value="Auto">Auto</MenuItem>
@@ -719,7 +810,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   label='Identificación'
                   helperText='Escribe el Documento de Identificación'
                   variant="outlined"
-                  onChange={handle_change_local}
+                  onChange={handle_change_text}
                   name='identificacion'
                 />
               </Grid>
@@ -731,7 +822,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   size="small"
                   fullWidth
                   type='number'
-                  onChange={handle_change_local}
+                  onChange={handle_change_text}
                   name='avaluo'
                 />
               </Grid>
@@ -742,7 +833,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   helperText='Escribe la Dirección'
                   size="small"
                   fullWidth
-                  onChange={handle_change_local}
+                  onChange={handle_change_text}
                   name='direccion'
                 />
               </Grid>
@@ -754,14 +845,15 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   component="label"
                   startIcon={<CloudUploadIcon />}
                 >
-                  {file_name !== '' ? file_name : 'Carga el Documento Impuesto'}
+                  {name_files.documento_impuesto !== undefined ? name_files.documento_impuesto : 'Carga el Documento Impuesto'}
                     <input
                       hidden
                       type="file"
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      onChange={handle_file_selected}
+                      name='documento_impuesto'
+                      onChange={handle_change_file}
                           />
                 </Button>
               </Grid>
@@ -771,7 +863,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   variant='outlined'
                   size='small'
                   onClick={() => {
-                    set_rows_bienes(rows_bienes.concat({...form_local, id: faker.database.mongodbObjectId()}))
+                    set_rows_bienes(rows_bienes.concat({...form_text, id: faker.database.mongodbObjectId()}))
                   }}
                 >
                   Agregar
@@ -841,13 +933,21 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   helperText="Escribe una observación"
                   size="small"
                   fullWidth
-                  name='observacion'
+                  name='observaciones'
                   onChange={on_input_change}
                 />
               </Grid>
               <FormGroup>
                 <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
-                <FormControlLabel control={<Checkbox />} label="Autorizar notificación por correo electrónico" />
+                <FormControlLabel
+                  control={<Checkbox
+                    name='notificaciones'
+                    onChange={(event: check) => {
+                      const { checked } = event.target
+                      set_notificacion(checked)
+                    }}
+                  />}
+                  label="Autorizar notificación por correo electrónico" />
               </FormGroup>
               <Stack
                 direction="row"
@@ -860,10 +960,11 @@ export const SolicitudFacilidadPago: React.FC = () => {
                   variant='contained'
                   startIcon={<SaveIcon />}
                   onClick={() => {
+                    void post_registro_fac_pago({...form_state, fecha_generacion: Date(), id_tipo_actuacion: persona, periodicidad: num_periodicidad, cuotas: plazo, notificaciones: notificacion})
                     handle_open()
                   }}
                 >
-                Enviar Solicitud
+                  Enviar Solicitud
                 </Button>
               </Stack>
           </Box>
@@ -889,9 +990,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
               variant='outlined'
               color="primary"
               startIcon={<Close />}
-              onClick={() => {
-                handle_close()
-              }}
+              onClick={handle_close}
             >
               Cerrar
             </Button>

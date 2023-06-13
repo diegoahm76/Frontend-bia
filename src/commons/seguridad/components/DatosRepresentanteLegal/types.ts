@@ -1,5 +1,6 @@
 
 export interface PropsDatosRepresentanteLegal {
-    id_persona: number | undefined;
-    id_representante_legal: number | null | undefined;
+    id_persona: number;
+    id_representante_legal: number;
+    fecha_inicio: string;
 }

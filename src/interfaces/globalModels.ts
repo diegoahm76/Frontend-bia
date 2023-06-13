@@ -79,8 +79,10 @@ export interface PropsRegister {
   watch: UseFormWatch<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
 }
-export interface PropsRegisterAdmin { 
-  id_persona: number
+export interface PropsRegisterAdmin {
+  id_persona: number;
+  representante_legal?: number | null | undefined;
+  data: DataPersonas | undefined;
   numero_documento: string;
   tipo_documento: string;
   tipo_persona: string;

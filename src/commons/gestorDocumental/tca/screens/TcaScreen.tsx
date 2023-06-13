@@ -15,7 +15,6 @@ import { Title } from '../../../../components/Title';
 
 import type {
   GridColDef,
-  // GridValueGetterParams
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
 // Graficas

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { InputsEncabezadoAdmin } from '../componentes/InputsEncabezadoAdmin';
+import { EncabezadoAdmin } from '../componentes/EncabezadoAdmin';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle, FormControlLabel, Checkbox } from "@mui/material";
 import { Close } from '@mui/icons-material';
@@ -51,6 +51,10 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
     }
   };
 
+  /* useEffect(()=>{
+    void get_bienes_deudor(1)
+  },[]) */
+
   useEffect(() => {
     if(solicitud_facilidad.id_deudor_actuacion !== undefined){
       try {
@@ -65,7 +69,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   return (
     <>
       <Title title='Visualizar Solicitud Facilidad de Pago - Usuario Cormacarena'/>
-      <InputsEncabezadoAdmin fecha_solicitud={solicitud_facilidad.fecha_generacion} />
+      <EncabezadoAdmin fecha_solicitud={solicitud_facilidad.fecha_generacion} />
       <Grid
         container
         sx={{
@@ -165,7 +169,8 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     onChange={(event: check) => {
                       const { checked } = event.target
                       console.log('Reportado en BDME', checked)
-                    }} />}
+                    }}
+                  />}
                   label="Usuario reportado en BDME"
                 />
               </Grid>
@@ -260,7 +265,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                           }
                         }}
                       >
-                      Crear Resolución
+                        Crear Resolución
                       </Button>
                     </Grid>
                     <Grid item sm={5}>
@@ -269,7 +274,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                         variant='contained'
                         onClick={() => {}}
                       >
-                      Ver Resolución
+                        Ver Resolución
                       </Button>
                     </Grid>
                   </>

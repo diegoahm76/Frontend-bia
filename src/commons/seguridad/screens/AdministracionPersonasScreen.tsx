@@ -3,7 +3,6 @@ import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import type {
   DataPersonas,
   InfoPersona,
-  key_data_persona,
 } from '../../../interfaces/globalModels';
 import { Divider, Grid } from '@mui/material';
 import { Title } from '../../../components/Title';
@@ -13,11 +12,15 @@ import { control_error } from '../../../helpers';
 import type { AxiosError } from 'axios';
 import { CrearPersonaNatAdmin } from '../components/CrearPersonaNatAdmin/CrearPersonaNatAdmin';
 import { CrearPersonaJurAdmin } from '../components/CrearPersonaJurAdmin/CrearPersonaJurAdmin';
+import { UpdatePersonaNatAdmin } from '../components/UpdatePersonaNatAdmin/UpdatePersonaNatAdmin';
+import { UpdatePersonaJurAdmin } from '../components/UpdatePersonaJurAdmin/UpdatePersonaJurAdmin';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdministracionPersonasScreen: React.FC = () => {
   const [persona, set_persona] = useState<InfoPersona>();
   const [datos_persona, set_datos_persona] = useState<DataPersonas>();
+  const [is_register, set_is_register] = useState(false);
+  const [is_update, set_is_update] = useState(false);
   const {
     errors,
     is_valid,
@@ -28,27 +31,20 @@ export const AdministracionPersonasScreen: React.FC = () => {
     watch,
   } = use_register();
 
+
   const on_result = async (info_persona: InfoPersona): Promise<void> => {
     try {
       set_persona(info_persona);
+      set_is_update(false)
+      set_is_register(true)
+
       const {
         data: { data },
       } = await consultar_datos_persona(info_persona.id_persona);
-
       if (data.id_persona !== 0) {
         set_datos_persona(data);
-        const fields = get_values();
-        console.log(fields, 'fields')
-        for (const key in fields) {
-          const temp = key as key_data_persona;
-          set_value(key, data[temp]);
-        }
-        set_value('fecha_nacimiento', data.fecha_nacimiento);
-        set_value('departamento_expedicion', data.cod_departamento_expedicion);
-        set_value('ciudad_expedicion', data.cod_departamento_expedicion);
-        set_value('departamento_residencia', data.cod_departamento_residencia);
-
-        console.log(datos_persona);
+        set_is_update(true)
+        set_is_register(false)
       }
     } catch (err) {
       const temp = err as AxiosError;
@@ -74,37 +70,80 @@ export const AdministracionPersonasScreen: React.FC = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        {persona?.tipo_persona === 'N' && (
+        {is_update && (
           <>
-            <CrearPersonaNatAdmin
-              id_persona={persona.id_persona}
-              numero_documento={persona.numero_documento}
-              tipo_persona={persona.tipo_persona}
-              tipo_documento={persona.tipo_documento}
-              errors={errors}
-              handleSubmit={handle_submit}
-              isValid={is_valid}
-              register={register}
-              setValue={set_value}
-              getValues={get_values}
-              watch={watch}
-            />
+            {datos_persona !== undefined && datos_persona?.tipo_persona === 'N' && (
+              <>
+                <UpdatePersonaNatAdmin
+                  id_persona={datos_persona.id_persona}
+                  numero_documento={datos_persona.numero_documento}
+                  data={datos_persona}
+                  tipo_persona={datos_persona.tipo_persona}
+                  tipo_documento={datos_persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                />
+              </>
+            )}
+            {datos_persona !== undefined && datos_persona?.tipo_persona === 'J' && (
+              <>
+                <UpdatePersonaJurAdmin
+                  id_persona={datos_persona.id_persona}
+                  data={datos_persona}
+                  numero_documento={datos_persona?.numero_documento}
+                  tipo_persona={datos_persona.tipo_persona}
+                  tipo_documento={datos_persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                />
+              </>
+            )}
           </>
         )}
-        {persona?.tipo_persona === 'J' && (
+        {is_register && (
           <>
-            <CrearPersonaJurAdmin
-              numero_documento={persona.numero_documento}
-              tipo_persona={persona.tipo_persona}
-              tipo_documento={persona.tipo_documento}
-              errors={errors}
-              handleSubmit={handle_submit}
-              isValid={is_valid}
-              register={register}
-              setValue={set_value}
-              getValues={get_values}
-              watch={watch}
-            />
+            {persona?.tipo_persona === 'N' && (
+              <>
+                <CrearPersonaNatAdmin
+                  numero_documento={persona.numero_documento}
+                  tipo_persona={persona.tipo_persona}
+                  tipo_documento={persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                />
+              </>
+            )}
+            {persona?.tipo_persona === 'J' && (
+              <>
+                <CrearPersonaJurAdmin
+                  numero_documento={persona?.numero_documento}
+                  tipo_persona={persona.tipo_persona}
+                  tipo_documento={persona.tipo_documento}
+                  errors={errors}
+                  handleSubmit={handle_submit}
+                  isValid={is_valid}
+                  register={register}
+                  setValue={set_value}
+                  getValues={get_values}
+                  watch={watch}
+                />
+              </>
+            )}
           </>
         )}
       </Grid>

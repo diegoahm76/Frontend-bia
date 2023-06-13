@@ -35,6 +35,7 @@ interface IProps {
     row_id: string | number;
     set_current_model: any;
     title_table_modal?: string | null;
+    button_add_selection_hidden?: boolean | null;
 
 }
 
@@ -51,7 +52,8 @@ const SeleccionarModeloDialogForm = ({
     columns_model,
     row_id,
     set_current_model,
-    title_table_modal
+    title_table_modal,
+    button_add_selection_hidden
 }: IProps) => {
     const dispatch = useAppDispatch();
     const [selected_row, set_selected_row] = useState([]);
@@ -224,13 +226,15 @@ const SeleccionarModeloDialogForm = ({
                     >
                         CANCELAR
                     </Button>
-                    <Button
-                        variant="contained"
-                        onClick={select_model}
-                        startIcon={<PlaylistAddCheckIcon />}
-                    >
-                        Agregar seleccion
-                    </Button>
+                    {!(button_add_selection_hidden ?? false)  && 
+                        <Button
+                            variant="contained"
+                            onClick={select_model}
+                            startIcon={<PlaylistAddCheckIcon />}
+                        >
+                            Agregar seleccion
+                        </Button>
+                    }
                 </Stack>
             </DialogActions>
         </Dialog>

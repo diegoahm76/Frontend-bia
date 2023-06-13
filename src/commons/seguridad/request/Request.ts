@@ -214,3 +214,13 @@ export const editar_persona_natural_cuenta_propia = async (
   );
   return response.data;
 };
+// editar datos persona naturual
+export const editar_persona_juridica_cuenta_propia = async (
+  datos: DataJuridicaUpdate
+): Promise<any> => {
+  const response = await api.patch(
+    `personas/persona-juridica/self/update/`,
+    datos
+  );
+  return response.data;
+};

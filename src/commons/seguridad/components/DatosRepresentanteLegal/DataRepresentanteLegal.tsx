@@ -13,11 +13,12 @@ import { DialogRepresentanteLegal } from '../DialogCambioRepresentanteLegal/Dial
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { DialogHistoricoRepresentanteLegal } from '../HistoricoRepresentanteLegal/HistoricoRepresentanteLegal';
 import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJuridicaHook';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosRepresentanteLegal: React.FC<
   PropsDatosRepresentanteLegal
-> = ({ id_representante_legal, id_persona }: PropsDatosRepresentanteLegal) => {
+> = ({ id_representante_legal, id_persona, fecha_inicio}: PropsDatosRepresentanteLegal) => {
   const {
     register,
     formState: { errors },
@@ -200,19 +201,19 @@ export const DatosRepresentanteLegal: React.FC<
         result_representante_datalle.cod_departamento_laboral,
     });
   };
-  const get_datos_representante_legal = async (): Promise<void> => {
+  const get_datos_representante_legal = async (id_representante_legal: number): Promise<void> => {
     try {
       const {
         data: { data: response },
-      } = await consultar_datos_persona(id_representante_legal ?? 0);
+      } = await consultar_datos_persona(id_representante_legal);
       set_datos_representante(response);
     } catch (err) {
-      control_error(err);
+      control_error('Ocurrio un error con los datos del representante legal');
     }
   };
 
   useEffect(() => {
-    void get_datos_representante_legal();
+    void get_datos_representante_legal(id_representante_legal);
   }, [id_representante_legal !== undefined && id_representante_legal !== 0]);
 
   const tipos_doc = [
@@ -248,169 +249,161 @@ export const DatosRepresentanteLegal: React.FC<
 
   return (
     <>
-      <Grid item xs={12} spacing={2}>
-        <form>
-          <Grid container spacing={2}>
-            {/* datos de representante legal */}
-            {datos_representante !== undefined &&
-              datos_representante !== null && (
-                <>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Tipo de Documento"
-                      id="tipo-doc-representante"
-                      select
-                      fullWidth
-                      size="small"
-                      margin="dense"
-                      required
-                      autoFocus
-                      disabled
-                      value={datos_representante?.tipo_documento}
-                    >
-                      {tipos_doc.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Número Identificación"
-                      id="documento_representante"
-                      type="number"
-                      fullWidth
-                      size="small"
-                      margin="dense"
-                      required
-                      value={datos_representante?.numero_documento}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      label="Representante Legal"
-                      type="text"
-                      fullWidth
-                      size="small"
-                      margin="dense"
-                      required
-                      autoFocus
-                      value={datos_representante?.primer_nombre}
-                      disabled
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      type="text"
-                      size="small"
-                      label="Dirección"
-                      disabled
-                      required
-                      autoFocus
-                      value={datos_representante?.direccion_notificaciones}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      type="text"
-                      size="small"
-                      label="Telefono"
-                      disabled
-                      required
-                      autoFocus
-                      value={datos_representante?.telefono_celular}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <CustomSelect
-                      label="Ciudad"
-                      name="cod_municipio_notificacion_nal"
-                      value={
-                        datos_representante?.cod_municipio_notificacion_nal
-                      }
-                      options={ciudad_notificacion_opt}
-                      disabled={
-                        datos_representante?.cod_departamento_notificacion ===
-                          '' ?? true
-                      }
-                      required={true}
-                      errors={errors}
-                      register={register}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      type="email"
-                      size="small"
-                      label="E-mail"
-                      disabled
-                      required
-                      autoFocus
-                      value={datos_representante?.email_empresarial}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        label="Fecha de inicio como representante legal"
-                        inputFormat="YYYY-MM-DD"
-                        openTo="day"
-                        value={datos_representante.fecha_inicio_cargo_rep_legal}
-                        views={['year', 'month', 'day']}
-                        renderInput={(params) => (
-                          <TextField
-                            required
-                            fullWidth
-                            // value={datos_persona?.fecha_nacimiento}
-                            size="small"
-                            {...params}
-                          />
-                        )}
-                        onChange={function (
-                          value: string | null,
-                          keyboardInputValue?: string | undefined
-                        ): void {
-                          throw new Error('Function not implemented.');
-                        }}
+      <Grid container spacing={2}>
+        {/* datos de representante legal */}
+        {datos_representante !== undefined &&
+          datos_representante !== null && (
+            <>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Tipo de Documento"
+                  id="tipo-doc-representante"
+                  select
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  required
+                  autoFocus
+                  disabled
+                  value={datos_representante?.tipo_documento}
+                >
+                  {tipos_doc.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Número Identificación"
+                  id="documento_representante"
+                  type="number"
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  required
+                  value={datos_representante?.numero_documento}
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Representante Legal"
+                  type="text"
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  required
+                  autoFocus
+                  value={datos_representante?.primer_nombre}
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  type="text"
+                  size="small"
+                  label="Dirección"
+                  disabled
+                  required
+                  autoFocus
+                  value={datos_representante?.direccion_notificaciones}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  type="text"
+                  size="small"
+                  label="Telefono"
+                  disabled
+                  required
+                  autoFocus
+                  value={datos_representante?.telefono_celular}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <CustomSelect
+                  label="Ciudad"
+                  name="cod_municipio_notificacion_nal"
+                  value={
+                    datos_representante?.cod_municipio_notificacion_nal
+                  }
+                  options={ciudad_notificacion_opt}
+                  disabled={true}
+                  required={true}
+                  errors={errors}
+                  register={register}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  type="email"
+                  size="small"
+                  label="E-mail"
+                  disabled
+                  required
+                  autoFocus
+                  value={datos_representante?.email_empresarial}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Fecha de inicio como representante legal"
+                    inputFormat="YYYY-MM-DD"
+                    openTo="day"
+                    value={dayjs(fecha_inicio)}
+                    views={['year', 'month', 'day']}
+                    renderInput={(params) => (
+                      <TextField
+                        fullWidth
+                        size="small"
+                        {...params}
                       />
-                    </LocalizationProvider>
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Stack
-                      justifyContent="flex-end"
-                      sx={{ m: '0 0 0 0' }}
-                      direction="row"
-                      spacing={2}
-                    >
-                      <DialogRepresentanteLegal
-                        onResult={result_representante}
-                      />
-                      <Button
-                        variant="outlined"
-                        startIcon={<RemoveRedEyeIcon />}
-                        onClick={() => {
-                          handle_open_historico_representante();
-                        }}
-                      >
-                        Historico Representante Legal
-                      </Button>
-                    </Stack>
-                  </Grid>
-                </>
-              )}
-          </Grid>
-        </form>
-        <DialogHistoricoRepresentanteLegal
-          is_modal_active={is_modal_active_historico_representante}
-          set_is_modal_active={set_is_modal_active_historico_representante}
-          id_persona={id_persona}
-        />
+                    )}
+                    onChange={function (
+                      value: string | null,
+                      keyboardInputValue?: string | undefined
+                    ): void {
+                      throw new Error('Function not implemented.');
+                    }}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12}>
+                <Stack
+                  justifyContent="flex-end"
+                  sx={{ m: '0 0 0 0' }}
+                  direction="row"
+                  spacing={2}
+                >
+                  <DialogRepresentanteLegal
+                    onResult={result_representante}
+                  />
+                  <Button
+                    variant="outlined"
+                    startIcon={<RemoveRedEyeIcon />}
+                    onClick={() => {
+                      handle_open_historico_representante();
+                    }}
+                  >
+                    Historico Representante Legal
+                  </Button>
+                </Stack>
+              </Grid>
+            </>
+          )}
       </Grid>
+
+      <DialogHistoricoRepresentanteLegal
+        is_modal_active={is_modal_active_historico_representante}
+        set_is_modal_active={set_is_modal_active_historico_representante}
+        id_persona={id_persona}
+      />
     </>
   );
 };

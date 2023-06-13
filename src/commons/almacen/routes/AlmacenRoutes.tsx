@@ -8,8 +8,11 @@ import { EntradaBienesAlmacenRoutes } from "../entradaDeAlmacen/routes/EntradaAl
 import { ReportesIndicadoresAnaliticaRoutes } from "../reportesIndicadoresAnalitca/routes/ReportesIndicadoresAnaliticaRoutes";
 import { GestionInventarioRoutes } from "../gestionDeInventario/gestionHojaDeVida/routes/GestionInventarioRoutes";
 import SolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudBienConsumoScreen";
+import { AdministracionVehiculosRoutes } from "../administracionDeVehiculos/routes/AdministracionVehiculosRoutes";
 import AprobacionSolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudConsumoScreen";
 import DespachoBienesConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/despachoSolicitudScreen";
+import SolicitudConsumoViveroScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudConsumoViveroScreen";
+import AprobacionSolicitudViveroScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudViveroScreen";
 
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
@@ -26,6 +29,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="entrada_almacen/*"
         element={<EntradaBienesAlmacenRoutes />}
+      />
+      <Route
+        path="administracion_vehiculo/*"
+        element={<AdministracionVehiculosRoutes />}
       />
 
       <Route
@@ -46,8 +53,16 @@ export const AlmacenRoutes: React.FC = () => {
         element={<SolicitudConsumoScreen />}
       />
       <Route
+        path="solicitud_consumo_vivero/*"
+        element={<SolicitudConsumoViveroScreen />}
+      />
+      <Route
         path="aprobacion_solicitud_consumo/*"
         element={<AprobacionSolicitudConsumoScreen />}
+      />
+      <Route
+        path="aprobacion_solicitud_vivero/*"
+        element={<AprobacionSolicitudViveroScreen />}
       />
       <Route
         path="despacho_solicitud_aprobada/*"
