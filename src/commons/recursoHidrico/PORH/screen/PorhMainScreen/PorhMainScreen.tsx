@@ -24,7 +24,7 @@ export const PorhMainScreen: React.FC = () => {
     reset,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     handleSubmit,
-    // watch,
+    watch,
     // setValue: set_value,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors },
@@ -39,6 +39,12 @@ export const PorhMainScreen: React.FC = () => {
 
   const columns: GridColDef[] = [
 
+    {
+      field: 'id_programa',
+      headerName: 'No PROGRAMA',
+      sortable: true,
+      width: 170,
+    },
     {
       field: 'nombre',
       headerName: 'NOMBRE PROGRAMA',
@@ -141,14 +147,22 @@ export const PorhMainScreen: React.FC = () => {
   const [is_editar, set_is_editar] = useState(false);
   const [is_seleccionar, set_is_seleccionar] = useState(false);
 
+  const fetch_data = async (): Promise<void> => {
+    try {
+      await get_data_id(1, set_rows_programas, 'get/programas');
+    } catch (error) {
+      control_error(error);
+    }
+  };
+
   useEffect(() => {
-    void get_data_id(1, set_rows_programas, 'get/programas');
+    void fetch_data();
   }, []);
 
-  const on_submit = async (form: any, set_rows_programas: any, rows_programas: any): Promise<void> => {
+
+  const on_submit = async (form: any, set_rows_programas: any, rows_programas: any, rows_actividades: any): Promise<void> => {
     try {
       await post_programa(form, set_rows_programas, rows_programas, rows_proyectos, rows_actividades);
-      // await get_data_id(1, set_rows_cargos, 'get/cargos');
       reset();
       control_success('Programa agregado correctamente')
     } catch (err) {
@@ -161,7 +175,7 @@ export const PorhMainScreen: React.FC = () => {
     <>
       <form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises, no-void
-        onSubmit={handleSubmit((form) => void on_submit(form, set_rows_programas, rows_programas))}
+        onSubmit={handleSubmit((form) => void on_submit(form, set_rows_programas, rows_programas, rows_actividades))}
       >
         <Grid
           container
@@ -182,15 +196,16 @@ export const PorhMainScreen: React.FC = () => {
             <Title title="CONTENIDO PROGRAMÁTICO PLAN DE ORDENAMIENTO DE RECURSO HÍDRICO" />
           </Grid>
           <BusquedaPorh />
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Programas
-            </Typography>
-            <Divider />
-          </Grid>
-          <Grid item xs={12}>
-            {rows_programas.length > 0 && (
-              <>
+          {rows_programas.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Programas
+                </Typography>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+
                 <DataGrid
                   autoHeight
                   rows={rows_programas}
@@ -199,9 +214,10 @@ export const PorhMainScreen: React.FC = () => {
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                 />
-              </>
-            )}
-            {/* <Grid item xs={12}>
+              </Grid>
+            </>
+          )}
+          {/* <Grid item xs={12}>
                         <Grid container justifyContent="center" textAlign="center">
                             <Alert icon={false} severity="info">
                                 <LinearProgress />
@@ -209,7 +225,6 @@ export const PorhMainScreen: React.FC = () => {
                             </Alert>
                         </Grid>
                     </Grid> */}
-          </Grid>
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <LoadingButton
@@ -228,6 +243,7 @@ export const PorhMainScreen: React.FC = () => {
             <>
               <AgregarPrograma
                 register={register}
+                watch = {watch}
               />
             </>
           )}

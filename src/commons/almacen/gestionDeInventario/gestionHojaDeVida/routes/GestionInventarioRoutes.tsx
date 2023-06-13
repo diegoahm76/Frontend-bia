@@ -9,6 +9,7 @@ import { CrearHojaVidaOtrosActivosScreen } from "../hojaDeVidaOtrosActivos/scree
 import { RegistroMantenimientoComComponent } from "../mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoCom";
 import { RegistroMantenimientoVehComponent } from "../mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoVeh";
 import { RegistroMantenimientoOtrosComponent } from "../mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoOtros";
+import { EntregaBienesRoutes } from "../../movimientos/entregaDeComResDon/routes/EntregaBienesRoutes";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionInventarioRoutes: React.FC = () => {
@@ -23,6 +24,7 @@ export const GestionInventarioRoutes: React.FC = () => {
       <Route path="mantenimiento_equipos/ejecucion_mantenimiento_otros_activos/*" element={<RegistroMantenimientoOtrosComponent />} />
       <Route path="cv_vehiculo/*" element={<CrearHojaVidaVehiculoScreen />} />
       <Route path="cv_otros_activos/*" element={<CrearHojaVidaOtrosActivosScreen />} />
+      <Route path="movimientos/*" element={<EntregaBienesRoutes />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );
