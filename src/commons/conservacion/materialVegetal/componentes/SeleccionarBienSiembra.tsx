@@ -311,24 +311,28 @@ const SeleccionarBienSiembra = () => {
 
     const edit_bien_siembra = (item: IObjPlantingGoods): void => {
         set_action("editar")
-        const bien: IObjGoods | undefined =goods.find((p: IObjGoods) => p.id_bien === item.id_bien_consumido)
         const item_bien = aux_planting_goods.find((p) => p.id_bien_consumido === item.id_bien_consumido)
         reset_siembra(item_bien)
         const aux_items: IObjPlantingGoods[] = []
-        let restante = 0 
         aux_planting_goods.forEach((option) => {
             if (option.id_bien_consumido !== item.id_bien_consumido) {
                 aux_items.push(option)
             }
         })
-        if(bien !== undefined){
-            restante = (bien.cantidad_disponible_bien ?? 0) + (item_bien?.cantidad?? 0)
-            dispatch(set_current_good({...bien, cantidad_disponible_bien: restante}))
-        }
+        // if(bien !== undefined){
+        //     restante = (bien.cantidad_disponible_bien ?? 0) + (item_bien?.cantidad?? 0)
+        //     dispatch(set_current_good({...bien, cantidad_disponible_bien: restante}))
+        // }
         set_aux_planting_goods(aux_items)
     };
 
     const delete_bien_siembra = (item: IObjPlantingGoods): void => {
+        const bien: IObjGoods | undefined =goods.find((p: IObjGoods) => p.id_bien === item.id_bien_consumido)
+        console.log("bien",bien)
+        if(bien !== undefined){
+            console.log(bien)
+            dispatch(set_current_good(bien))
+        }
         const aux_items: IObjPlantingGoods[] = []
         aux_planting_goods.forEach((option) => {
             if (option.id_bien_consumido !== item.id_bien_consumido) {

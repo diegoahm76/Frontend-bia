@@ -162,6 +162,7 @@ const SeleccionarCambio = ({
           models={stage_changes}
           get_filters_models={get_cambios}
           set_models={set_stage_changes}
+          button_submit_disabled= {current_nursery.id_vivero === null}
           button_submit_label='Buscar cambios de etapa'
           form_inputs={[
             {

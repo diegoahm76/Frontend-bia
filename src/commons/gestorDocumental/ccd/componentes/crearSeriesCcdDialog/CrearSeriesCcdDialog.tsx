@@ -25,6 +25,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
 import {
+  delete_series_service,
   create_series_service
   // , get_series_service
 } from '../../store/thunks/seriesThunks';
@@ -37,6 +38,7 @@ import type { IFormValues, IProps } from './types/types';
 import { initial_state } from './utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { notification_error } from '../../store/thunks/ccdThunks';
 const CrearSeriesCcdDialog = ({
   is_modal_active,
   set_is_modal_active,
@@ -64,7 +66,10 @@ const CrearSeriesCcdDialog = ({
     defaultValues: initial_state
   });
   const data = watch();
-  console.log(data);
+  console.log(
+    '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 86 ~ CrearSeriesCcdDialog ~ data crear serie ccd',
+    data
+  );
   // useEffect para cargar los datos de la serie seleccionada
   useEffect(() => {
     if (serie_ccd_current !== null) {
@@ -115,10 +120,21 @@ const CrearSeriesCcdDialog = ({
     set_title_button('Agregar');
   };
 
-  // Crear Catalogso de seriess --
-  const create_series = (): void => {
+  //! Crear Catalogso de seriess --
+const create_series = (): void => {
     const { id_serie_doc, nombre, codigo } = data;
-    const updatedSeries = series_ccd.map((item: any) => {
+
+    console.log(
+      '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 120 ~ create_series ~ data',
+      data,
+      ccd_current,
+    )
+    return void dispatch(create_series_service({
+      nombre: data.nombre,
+      codigo: data.codigo,
+      id_ccd: ccd_current?.id_ccd
+    }, clean));
+    /* const updatedSeries = series_ccd.map((item: any) => {
       if (item.id_serie_doc === id_serie_doc) {
         return {
           ...item,
@@ -130,21 +146,18 @@ const CrearSeriesCcdDialog = ({
     });
     const newSeries =
       title_button === 'Agregar'
-        ? 
-           
-            {
-              // id_serie_doc: data.id_serie_doc,
-              nombre: data.nombre,
-              codigo: Number(data.codigo),
-              // id_ccd: ccd_current?.id_ccd
-            }
-          
-        : updatedSeries;
-    console.log(
+        ? {
+            id_serie_doc: data.id_serie_doc,
+            nombre: data.nombre,
+            codigo: Number(data.codigo)
+            id_ccd: ccd_current?.id_ccd
+          }
+        : updatedSeries; */
+    /* console.log(
       '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 120 ~ create_series ~ newSeries',
       newSeries
-    );
-    return void dispatch(create_series_service(newSeries, clean));
+    ); */
+    // return void dispatch(create_series_service(newSeries, clean));
   };
   // Crear subseries
   /* const create_subseries = (): void => {
@@ -178,14 +191,16 @@ const CrearSeriesCcdDialog = ({
   }; */
 
   // Función para eliminar series
-  const delete_series = (id_serie_doc: number): void => {
+  /* const delete_series = (id_serie_doc: number): void => {
     const new_series = series_ccd.filter(
       (serie: any) => serie.id_serie_doc !== id_serie_doc
     );
     void dispatch(create_series_service(new_series, () => ({})));
-  };
+  }; */
 
   const handleOnClick = (params: any) => {
+    // editar serie
+
     /* const action =
       title === 'Crear Catalogo de series'
         ? get_serie_ccd_current(params.data)
@@ -194,12 +209,27 @@ const CrearSeriesCcdDialog = ({
     dispatch(get_serie_ccd_current(params.data));
   };
 
-  const handleDelete = (params: any) => {
-    delete_series(params.data.id_serie_doc);
-    /* if (title === 'Crear Catalogo de series') { */
-    /* } else {
-      delete_subseries(params.data.id_subserie_doc);
-    } */
+  const handleDeleteSeries = async (params: any) => {
+    console.log(params);
+    console.log(series_ccd);
+
+    const new_series = series_ccd.filter(
+      (serie: any) => serie.id_serie_doc !== params.row.id_serie_doc
+    );
+
+    if (params?.row?.tiene_subseries) {
+      set_is_modal_active(false);
+      await notification_error(
+        'No se puede eliminar una serie con subseries asociadas, debe eliminarse primero las subseries asociadas'
+      );
+    } else {
+      void dispatch(delete_series_service(new_series, params, () => ({})));
+    }
+
+    /* const new_series = series_ccd.filter(
+      (serie: any) => serie.id_serie_doc !== id_serie_doc
+    );
+    void dispatch(create_series_service(new_series, () => ({}))); */
   };
 
   //  Función para enviar los datos del formulario
@@ -250,7 +280,7 @@ const CrearSeriesCcdDialog = ({
               />
             </Avatar>
           </IconButton>
-          <IconButton onClick={() => handleDelete(params)}>
+          <IconButton onClick={() => void handleDeleteSeries(params)}>
             <Avatar
               sx={{
                 width: 24,
@@ -307,13 +337,11 @@ const CrearSeriesCcdDialog = ({
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={(e) => {
             e.preventDefault();
-            
-            console.log(
-              'hollllllllaslkaksjalkjalksdjlkajsdlkajslkdjaslkjdlka'
-            );
-            create_series();
+
+            console.log('hollllllllaslkaksjalkjalksdjlkajsdlkajslkdjaslkjdlka');
+           create_series();
             /* void handle_submit(() => {
-            }); */
+            }); */ 
             console.log(errors);
           }}
           autoComplete="off"
