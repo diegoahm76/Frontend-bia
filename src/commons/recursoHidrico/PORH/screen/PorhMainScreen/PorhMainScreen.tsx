@@ -11,19 +11,40 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
 import { BusquedaPorh } from '../../components/Buscador/Buscador';
-import { get_data_id } from '../../Request/request';
+import { get_data_id, post_programa } from '../../Request/request';
 import { EditarPrograma } from '../../components/ActualizarPrograma/EditarPrograma';
+import { useForm } from 'react-hook-form';
+import { control_error } from '../../../../../helpers';
+import { control_success } from '../../../requets/Request';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PorhMainScreen: React.FC = () => {
+  const {
+    register,
+    reset,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    handleSubmit,
+    watch,
+    // setValue: set_value,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    formState: { errors },
+  } = useForm();
 
   const {
     rows_programas,
     set_rows_programas,
+    rows_proyectos,
+    rows_actividades,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
 
+    {
+      field: 'id_programa',
+      headerName: 'No PROGRAMA',
+      sortable: true,
+      width: 170,
+    },
     {
       field: 'nombre',
       headerName: 'NOMBRE PROGRAMA',
@@ -126,13 +147,36 @@ export const PorhMainScreen: React.FC = () => {
   const [is_editar, set_is_editar] = useState(false);
   const [is_seleccionar, set_is_seleccionar] = useState(false);
 
+  const fetch_data = async (): Promise<void> => {
+    try {
+      await get_data_id(1, set_rows_programas, 'get/programas');
+    } catch (error) {
+      control_error(error);
+    }
+  };
+
   useEffect(() => {
-    void get_data_id(1, set_rows_programas, 'get/programas');
+    void fetch_data();
   }, []);
+
+
+  const on_submit = async (form: any, set_rows_programas: any, rows_programas: any, rows_actividades: any): Promise<void> => {
+    try {
+      await post_programa(form, set_rows_programas, rows_programas, rows_proyectos, rows_actividades);
+      reset();
+      control_success('Programa agregado correctamente')
+    } catch (err) {
+      control_error(err);
+    }
+  }
+
 
   return (
     <>
-      <form>
+      <form
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises, no-void
+        onSubmit={handleSubmit((form) => void on_submit(form, set_rows_programas, rows_programas, rows_actividades))}
+      >
         <Grid
           container
           spacing={2}
@@ -152,26 +196,28 @@ export const PorhMainScreen: React.FC = () => {
             <Title title="CONTENIDO PROGRAMÁTICO PLAN DE ORDENAMIENTO DE RECURSO HÍDRICO" />
           </Grid>
           <BusquedaPorh />
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Programas
-            </Typography>
-            <Divider />
-          </Grid>
-          <Grid item xs={12}>
-            {rows_programas.length > 0 && (
-              <>
+          {rows_programas.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Programas
+                </Typography>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+
                 <DataGrid
                   autoHeight
                   rows={rows_programas}
                   columns={columns}
-                  getRowId={(row) => row.nombre}
+                  getRowId={(row) => row.id_programa}
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                 />
-              </>
-            )}
-            {/* <Grid item xs={12}>
+              </Grid>
+            </>
+          )}
+          {/* <Grid item xs={12}>
                         <Grid container justifyContent="center" textAlign="center">
                             <Alert icon={false} severity="info">
                                 <LinearProgress />
@@ -179,7 +225,6 @@ export const PorhMainScreen: React.FC = () => {
                             </Alert>
                         </Grid>
                     </Grid> */}
-          </Grid>
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <LoadingButton
@@ -196,12 +241,18 @@ export const PorhMainScreen: React.FC = () => {
           </Grid>
           {is_agregar && (
             <>
-              <AgregarPrograma />
+              <AgregarPrograma
+                register={register}
+                watch = {watch}
+              />
             </>
           )}
           {is_editar && (
             <>
-              <EditarPrograma />
+              <EditarPrograma
+                data={rows_programas}
+                register={register}
+              />
             </>
           )}
           {is_seleccionar && (
@@ -209,8 +260,6 @@ export const PorhMainScreen: React.FC = () => {
               {/* <AgregarPrograma /> */}
             </>
           )}
-
-
           <Grid item xs={12}>
             <Divider />
           </Grid>

@@ -40,7 +40,8 @@ interface IProps {
     button_submit_disabled?: boolean | null;
     button_add_selection_hidden?: boolean | null;
     md_button?: number | null;
-    button_icon_class?: any
+    button_icon_class?: any;
+    show_search_button?: boolean | null
 
 }
 
@@ -69,7 +70,8 @@ const BuscarModelo = ({
     button_submit_disabled,
     button_add_selection_hidden,
     md_button,
-    button_icon_class
+    button_icon_class,
+    show_search_button
 }: IProps) => {
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -179,12 +181,13 @@ const BuscarModelo = ({
                     {form_inputs.map((option, index) => (
                         <TypeDatum key={index} form_input={option} />
                     ))}
-
+                    {(show_search_button ?? true) &&
                     <Grid
                         item
                         xs={12}
                         md={3}
                     >
+                        
                         <FormButton
                             variant_button="contained"
                             on_click_function={handle_open_select_model}
@@ -193,7 +196,9 @@ const BuscarModelo = ({
                             type_button="button"
                             disabled={button_submit_disabled ?? false}
                         />
+                        
                     </Grid>
+                    }
                 </>
             }
             <Divider />
