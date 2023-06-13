@@ -431,10 +431,11 @@ export const edit_preparacion_service = (
 // obtener bienes preparacion
 export const annul_preparacion_service = (
   id: number,
+  preparacion: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/mezclas/anular-preparacion-mezclas/${id}/`);
+      const { data } = await api.put(`conservacion/mezclas/anular-preparacion-mezclas/${id}/`, preparacion);
  
       if (data.success === true) {
         control_success(data.detail)      

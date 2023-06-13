@@ -7,15 +7,15 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // import { add_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_preparacion_bienes_service } from "../store/thunks/produccionThunks";
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
 import SeleccionarBienPreparacion from "../componentes/SeleccionarBienPreparacion";
 import { type IObjMezcla, type IObjNursery, type IObjPreparacionBienes, type IObjPreparacionMezcla } from "../interfaces/produccion";
 import { initial_state_current_bien, set_current_bien, set_current_nursery, set_preparacion_bienes } from "../store/slice/produccionSlice";
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import { add_preparacion_service, edit_preparacion_service, get_bien_preparacion_id_service, get_person_id_service } from "../store/thunks/produccionThunks";
+import { add_preparacion_service, annul_preparacion_service, edit_preparacion_service, get_bien_preparacion_id_service, get_person_id_service } from "../store/thunks/produccionThunks";
 import { useForm } from "react-hook-form";
-
+import AnularEliminar from "../../componentes/AnularEliminar";
+import Block from '@mui/icons-material/Block';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function PreparacionMezclaScreen(): JSX.Element {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -135,12 +135,11 @@ export function PreparacionMezclaScreen(): JSX.Element {
         void dispatch(add_preparacion_service(data_update));
     }
   };
-  // const annul_siembra = (): void => {
-    
-  //   if (current_preparacion.id_preparacion_mezcla !== null && current_preparacion.id_preparacion_mezcla !== undefined) {
-  //     void dispatch(annul_preparacion_service(current_preparacion.id_preparacion_mezcla));
-  //   } 
-  // };
+  const on_submit_annul = (data: IObjPreparacionMezcla): void => {
+    if (current_preparacion.id_preparacion_mezcla !== null && current_preparacion.id_preparacion_mezcla !== undefined) {
+      void dispatch(annul_preparacion_service(current_preparacion.id_preparacion_mezcla, data));
+    }
+  };
  
 
     return (
@@ -172,24 +171,75 @@ export function PreparacionMezclaScreen(): JSX.Element {
         padding={2}
         spacing={2}
       >
-        <Grid item xs={12} md={3}>
-          <FormButton
-            variant_button="contained"
-            on_click_function={handle_submit(on_submit)}
-            icon_class={<SaveIcon />}
-            label={action}
-            type_button="button"
-          />
-        </Grid>
+        {!(current_preparacion.preparacion_anulada === true) &&
+
+          <Grid item xs={12} md={3}>
+            <FormButton
+              variant_button="contained"
+              on_click_function={handle_submit(on_submit)}
+              icon_class={<SaveIcon />}
+              label={action}
+              type_button="button"
+            />
+          </Grid>
+        }
        
         <Grid item xs={12} md={3}>
-          <FormButton
-            variant_button="outlined"
-            on_click_function={null}
-            icon_class={<CloseIcon />}
-            label={"Cancelar"}
-            type_button="button"
-          />
+            <AnularEliminar
+              action= {current_preparacion.preparacion_anulada === true ? "Detalle anulación" :"Anular" }
+              button_icon_class= {<Block/>}
+              button_disabled= {false}
+              modal_title= {current_preparacion.preparacion_anulada === true ? "Detalle anulación" :"Anular preparación"}
+              button_submit_label= { "Anular"}
+              button_submit_disabled= {current_preparacion.preparacion_anulada}
+              button_submit_icon_class= {<Block/>}
+              button_submit_action= {handle_submit(on_submit_annul)}
+              modal_inputs= {[
+               
+                {
+                  datum_type: "input_controller",
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_preparacion,
+                  control_name: current_preparacion.preparacion_anulada === true ? "nombre_persona_anula":"persona",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
+                  label: "Anulación realizada por",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+              },
+                {
+                  datum_type: "date_picker_controller",
+                  xs: 12,
+                  md: 4,
+                  control_form: control_preparacion,
+                  control_name: current_preparacion.preparacion_anulada === true ? "fecha_anulacion":"fecha",
+                  default_value: (new Date().toString()),
+                  rules: { required_rule: { rule: true, message: "requerido" } },
+                  label: "Fecha actual",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+                },
+                {
+                  datum_type: "input_controller",
+                  xs: 12,
+                  md: 12,
+                  control_form: control_preparacion,
+                  control_name: "justificacion_anulacion",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Observación requerida" } },
+                  label: "Justificacion",
+                  type: "text",
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: ""
+                },
+              ]}
+            />
         </Grid>
       </Grid>
     </Grid>

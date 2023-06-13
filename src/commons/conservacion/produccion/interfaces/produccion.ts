@@ -175,8 +175,9 @@ export interface IObjPreparacionMezcla{
   cantidad_creada: number | null;
   observaciones: string | null;
   nombre_mezcla?: string | null;
-  nombre_persona_prepara?: string | null;
   unidad_medida?: string | null;
+  nombre_persona_prepara?: string | null;
+  nombre_persona_anula?: string | null;
 }
 
 export interface IObjBienes{

@@ -106,8 +106,8 @@ export function MortalidadPlantasScreen(): JSX.Element {
       void dispatch(add_mortalidad_service(form_data));
     }
   };
+  
   const on_submit_annul = (data: IObjMortalidad): void => {
-    
     if (current_mortalidad.id_baja !== null && current_mortalidad.id_baja !== undefined) {
       void dispatch(annul_mortalidad_service(current_mortalidad.id_baja, data));
     }
