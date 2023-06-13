@@ -7,7 +7,10 @@ import {
   type IObjMezcla,
   type IObjPreparacionMezcla,
   type IObjBienes,
-  IObjPreparacionBienes,
+  type IObjPreparacionBienes,
+  type IObjItemMortalidad,
+  type IObjSiembraMV,
+  type IObjMortalidad
 } from '../../interfaces/produccion';
 import { type Persona } from "../../../../../interfaces/globalModels";
 
@@ -40,10 +43,10 @@ const initial_state_current_preparacion: IObjPreparacionMezcla = {
   id_preparacion_mezcla: null,
   consec_vivero_mezclas : null,
   id_mezcla: null,
-  fecha_registro: (new Date().toString()),
+  fecha_registro: null,
   preparacion_anulada: false,
   justificacion_anulacion: "",
-  fecha_anulacion: (new Date().toString()),
+  fecha_anulacion: null,
   id_persona_prepara: null,
   fecha_preparacion: (new Date().toString()),
   id_persona_anula:  null,
@@ -56,10 +59,10 @@ const initial_state_current_preparacion: IObjPreparacionMezcla = {
 
 export const initial_state_current_bien: IObjBienes = {
   id_bien: null,
-  unidad_medida: "",
-  saldo_disponible: null,
-  codigo_bien :  null,
-  nombre_bien:null,
+  unidad_disponible: "",
+  cantidad_disponible_bien: null,
+  codigo_bien:  null,
+  nombre_bien: null,
 }
 const initial_statate_current_vegetal_material: IObjVegetalMaterial = {
   id_inventario_vivero: null,
@@ -119,6 +122,29 @@ const initial_state_person: Persona = {
   tiene_usuario: true,
 }
 
+export const initial_state_current_material_vegetal: IObjSiembraMV = {
+  id_inventario_vivero: null,
+  id_bien: null,
+  codigo_bien: null,
+  nombre_bien: null,
+  agno_lote: null,
+  nro_lote: null,
+  cod_etapa_lote: null,
+  desc_etapa_lote: null,
+  saldo_disponible_registro: null,
+  unidad_medida: null,
+  registros_cuarentena: null,
+}
+
+
+export const initial_state_current_mortalidad: IObjMortalidad = {
+  id_baja: null,
+	fecha_baja: (new Date().toString()),
+	motivo: null,
+  ruta_archivo_soporte: null,
+  id_vivero: null,
+}
+
 
 const initial_state: IProduccion = {
   nurseries: [],
@@ -136,6 +162,14 @@ const initial_state: IProduccion = {
   preparaciones: [],
   current_preparacion: initial_state_current_preparacion,
   preparacion_bienes: [],
+  mortalidades: [],
+  current_mortalidad: initial_state_current_mortalidad,
+  siembras_material_vegetal: [],
+  current_siembra_material_vegetal: initial_state_current_material_vegetal,
+  items_mortalidad: [],
+  nro_mortalidad: null,
+  persona_anula: initial_state_person,
+
 }
 
 export const produccion_slice = createSlice({
@@ -189,6 +223,30 @@ export const produccion_slice = createSlice({
     set_preparacion_bienes: (state: IProduccion,action:PayloadAction <IObjPreparacionBienes[]>)=> {
       state.preparacion_bienes = action.payload;
     },
+    set_mortalidades: (state: IProduccion,action:PayloadAction <IObjMortalidad[]>)=> {
+      state.mortalidades = action.payload;
+    },  
+    set_current_mortalidad: (state: IProduccion,action:PayloadAction <IObjMortalidad>)=> {
+      state.current_mortalidad = action.payload;
+    },
+    set_items_mortalidad: (state: IProduccion,action:PayloadAction <IObjItemMortalidad[]>)=> {
+      state.items_mortalidad = action.payload;
+    },
+    set_siembras_material_vegetal: (state: IProduccion,action:PayloadAction <IObjSiembraMV[]>)=> {
+      state.siembras_material_vegetal = action.payload;
+    },  
+    set_current_siembra_material_vegetal: (state: IProduccion,action:PayloadAction <IObjSiembraMV>)=> {
+      state.current_siembra_material_vegetal = action.payload;
+    },
+    set_nro_mortalidad: (state: IProduccion,action:PayloadAction <number | null>)=> {
+      state.nro_mortalidad = action.payload;
+    },
+
+    set_persona_anula: (state: IProduccion,action:PayloadAction <Persona>)=> {
+      state.persona_anula = action.payload;
+    },
+
+
   },
 });
 export const { 
@@ -206,5 +264,12 @@ export const {
   set_current_bien,
   set_preparaciones,
   set_current_preparacion,
-  set_preparacion_bienes
+  set_preparacion_bienes,
+  set_mortalidades,
+  set_current_mortalidad,
+  set_items_mortalidad,
+  set_siembras_material_vegetal,
+  set_current_siembra_material_vegetal,
+  set_nro_mortalidad,
+  set_persona_anula
  } = produccion_slice.actions;
