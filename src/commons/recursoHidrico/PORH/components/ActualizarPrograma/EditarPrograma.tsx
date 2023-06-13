@@ -16,9 +16,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { DataContext } from '../../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { get_data_id } from '../../Request/request';
+import { control_error } from '../../../../../helpers';
+import type{ GetPrograma } from '../../Interfaces/interfaces';
 
 interface IProps {
-    data: any;
+    data: GetPrograma[];
     register: any;
 }
 
@@ -32,14 +34,14 @@ export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
 
   const columns: GridColDef[] = [
     {
-      field: 'id_programa',
-      headerName: 'No Programa',
+      field: 'id_proyecto',
+      headerName: 'No Proyecto',
       sortable: true,
       width: 170,
     },
     {
       field: 'nombre',
-      headerName: 'NOMBRE PROGRAMA',
+      headerName: 'NOMBRE',
       sortable: true,
       width: 170,
     },
@@ -115,10 +117,19 @@ export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
 
   const [is_agregar, set_is_agregar] = useState(false);
 
+  const fetch_data = async (id_programa: number): Promise<void> => {
+    try {
+      await get_data_id(id_programa, set_rows_proyectos, 'get/proyectos/por/programas');
+    } catch (error) {
+      control_error(error);
+    }
+  };
+
   useEffect(() => {
-    console.log('data', data);
-    void get_data_id(1, set_rows_proyectos, 'get/proyectos/por/programas');
+    void fetch_data(data[0].id_programa);
+    // console.log('nombre', rows_proyectos[0].nombre)
   }, []);
+
 
   // fechas
   const [start_date, set_start_date] = useState<Date | null>(new Date());
@@ -145,7 +156,7 @@ export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
             size="small"
             margin="dense"
             required
-            defaultValue={data.nombre}
+            defaultValue={data[0].nombre}
             autoFocus
           />
         </Grid>
@@ -200,12 +211,11 @@ export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
             <>
               <DataGrid
                 autoHeight
-                key={1+2}
                 rows={rows_proyectos}
                 columns={columns}
-                getRowId={(row) => row.nombre}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
+                getRowId={(row) => row.id_proyecto}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
               />
             </>
           )}

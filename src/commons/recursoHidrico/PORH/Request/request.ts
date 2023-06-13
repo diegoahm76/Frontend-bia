@@ -17,29 +17,36 @@ export const post_programa = async (
   set_data: any,
   programas: any,
   proyectos: any,
-  actividades: any,
+  actividades: any
 ): Promise<any> => {
   const response = await api.post(
     `hidrico/programas/programa/recurso/hidrico/create/`,
     {
       ...form,
+      id_programa: form.id_programa,
       nombre: form.nombre_programa,
-      fecha_inicio: dayjs(form.fecha_inicio,).format('YYYY-MM-DD'),
-      fecha_fin: dayjs(form.fecha_fin,).format('YYYY-MM-DD'),
+      fecha_inicio: dayjs(form.fecha_inicio).format('YYYY-MM-DD'),
+      fecha_fin: dayjs(form.fecha_fin).format('YYYY-MM-DD'),
       proyectos: [
-        ...proyectos,
-        {
-          nombre: form.nombre,
-          vigencia_inicial: dayjs(form.vigencia_inicial,).format('YYYY-MM-DD'),
-          vigencia_final: dayjs(form.vigencia_final,).format('YYYY-MM-DD'),
-          inversion: form.inversion,
-          actividades: [
-            ...actividades,
-            {
-              nombre: form.descripcion,
-            }
-          ]
-        }
+        ...proyectos.map((proyecto: any) => {
+          return {
+            id_proyecto: proyecto.id_proyecto,
+            nombre: proyecto.nombre,
+            vigencia_inicial: dayjs(proyecto.vigencia_inicial).format('YYYY-MM-DD'),
+            vigencia_final: dayjs(proyecto.vigencia_final).format('YYYY-MM-DD'),
+            inversion: proyecto.inversion,
+            actividades: [
+              ...proyecto.actividades.map((actividad: any) => {
+                return {
+                  nombre: actividad.nombre,
+                };
+              }),
+              {
+                nombre: form.descripcion, // Nueva actividad asociada al proyecto
+              },
+            ],
+          };
+        }),
       ],
     }
   );

@@ -25,7 +25,7 @@ export const PorhMainScreen: React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     handleSubmit,
     watch,
-    // setValue: set_value,
+    setValue: set_value,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     formState: { errors },
   } = useForm();
@@ -146,6 +146,8 @@ export const PorhMainScreen: React.FC = () => {
   const [is_agregar, set_is_agregar] = useState(false);
   const [is_editar, set_is_editar] = useState(false);
   const [is_seleccionar, set_is_seleccionar] = useState(false);
+  const [id_programa, set_id_programa] = useState<number | null>(null);
+  // const [id_proyecto, set_id_proyecto] = useState<number | null>(null);
 
   const fetch_data = async (): Promise<void> => {
     try {
@@ -160,8 +162,10 @@ export const PorhMainScreen: React.FC = () => {
   }, []);
 
 
-  const on_submit = async (form: any, set_rows_programas: any, rows_programas: any, rows_actividades: any): Promise<void> => {
+  const on_submit = async (form: any, set_rows_programas: any, rows_programas: any, rows_proyectos: any, rows_actividades: any): Promise<void> => {
     try {
+      console.log()
+      form.id_programa = id_programa
       await post_programa(form, set_rows_programas, rows_programas, rows_proyectos, rows_actividades);
       reset();
       control_success('Programa agregado correctamente')
@@ -175,7 +179,7 @@ export const PorhMainScreen: React.FC = () => {
     <>
       <form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises, no-void
-        onSubmit={handleSubmit((form) => void on_submit(form, set_rows_programas, rows_programas, rows_actividades))}
+        onSubmit={handleSubmit((form) => void on_submit(form, set_rows_programas, rows_programas, rows_proyectos, rows_actividades))}
       >
         <Grid
           container
@@ -230,6 +234,7 @@ export const PorhMainScreen: React.FC = () => {
               <LoadingButton
                 variant="outlined"
                 onClick={() => {
+                  set_id_programa(null)
                   set_is_agregar(true)
                   set_is_editar(false)
                   set_is_seleccionar(false)
@@ -243,7 +248,8 @@ export const PorhMainScreen: React.FC = () => {
             <>
               <AgregarPrograma
                 register={register}
-                watch = {watch}
+                watch={watch}
+                set_value = {set_value}
               />
             </>
           )}
@@ -276,7 +282,7 @@ export const PorhMainScreen: React.FC = () => {
               <LoadingButton
                 variant="outlined"
                 color='warning'
-                type='submit'
+              // type='submit'
               >
                 Salir
               </LoadingButton>
