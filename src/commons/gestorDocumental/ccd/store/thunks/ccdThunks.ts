@@ -12,7 +12,7 @@ import { type DataCambioCCDActual } from '../../interfaces/ccd';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const notification_error = async (
+export const notification_error = async (
   message = 'Algo pasó, intente de nuevo',
   text = ''
 ) =>
@@ -26,7 +26,7 @@ const notification_error = async (
   }).fire();
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_error = (message: ToastContent) =>
+export const control_error = (message: ToastContent) =>
   toast.error(message, {
     position: 'bottom-right',
     autoClose: 3000,
@@ -39,7 +39,7 @@ const control_error = (message: ToastContent) =>
   });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const control_success = (message: ToastContent) =>
+export const control_success = (message: ToastContent) =>
   toast.success(message, {
     position: 'bottom-right',
     autoClose: 3000,
