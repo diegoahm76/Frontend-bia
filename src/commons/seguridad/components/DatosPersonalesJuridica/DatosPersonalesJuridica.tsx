@@ -68,6 +68,7 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
     watch('acepta_notificacion_sms') ?? data?.acepta_notificacion_sms ?? false;
 
   const [is_saving, set_is_saving] = useState<boolean>(false);
+  const [id_reoresentante_legal, set_id_reoresentante_legal] = useState(0);
 
   // abrir modal actualizar Notificaciones
   const handle_open_dialog_notificaciones = (): void => {
@@ -94,17 +95,14 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
     try {
       set_is_saving(true);
       datos.ubicacion_georeferenciada = '';
-      datos.representante_legal = data?.representante_legal;
-      datos.fecha_inicio_cargo_rep_legal = '2023-05-31'
+      datos.representante_legal = id_reoresentante_legal;
       await editar_persona_juridica_cuenta_propia(
         datos as DataJuridicaUpdate
       );
       control_success('la persona se actualizó correctamente');
       set_is_saving(false);
-    } catch (error) {
-      control_error(
-        'Ha ocurrido un error al actualizar la persona, por favor intente nuevamente'
-      );
+    } catch (error: any) {
+      control_error(error.response.data.detail);
       set_is_saving(false);
     }
   });
@@ -225,17 +223,17 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
               />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
-                  <CustomSelect
-                    onChange={on_change}
-                    label="Ciudad *"
-                    name="cod_municipio_notificacion_nal"
-                    value={ciudad_notificacion}
-                    options={ciudad_notificacion_opt}
-                    disabled={dpto_notifiacion === '' ?? true}
-                    required={true}
-                    errors={errors}
-                    register={register}
-                  />
+              <CustomSelect
+                onChange={on_change}
+                label="Ciudad *"
+                name="cod_municipio_notificacion_nal"
+                value={ciudad_notificacion}
+                options={ciudad_notificacion_opt}
+                disabled={dpto_notifiacion === '' ?? true}
+                required={true}
+                errors={errors}
+                register={register}
+              />
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <TextField
@@ -321,6 +319,12 @@ export const DatosPersonalesJuridica: React.FC<PropsUpdateJ> = ({
                 id_representante_legal={data?.representante_legal ?? 0}
                 id_persona={data?.id_persona}
                 fecha_inicio={data.fecha_inicio_cargo_rep_legal}
+                errors={errors}
+                register={register}
+                setValue={set_value}
+                getValues={getValues}
+                watch={watch}
+                set_id_reoresentante_legal={set_id_reoresentante_legal}
               />
             </Grid>
           </Grid>
