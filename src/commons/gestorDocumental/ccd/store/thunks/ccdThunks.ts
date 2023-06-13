@@ -10,6 +10,7 @@ import { get_series_service } from './seriesThunks';
 import { get_subseries_service } from './subseriesThunks';
 import { type DataCambioCCDActual } from '../../interfaces/ccd';
 
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const notification_error = async (
   message = 'Algo pasó, intente de nuevo',
@@ -63,6 +64,35 @@ export const get_finished_ccd_service = ():any => {
   };
 };
 // Obtener Cuadro de Clasificación Documental
+export const get_classification_ccds_service = (name: string, version: string): any => {
+  console.log('get_classification_ccds_service');
+
+  return async (dispatch: Dispatch<any>): Promise<AxiosResponse | AxiosError> => {
+    try {
+      console.log('hello');
+      const { data } = await api.get(`gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`);
+      console.log('helllooo');
+      if (name === '' || version === '') {
+        await notification_error('Debe ingresar el nombre y la versión del CCD');
+      } else if (data.data.length === 0) {
+        await notification_error(`No se encontró el CCD ${name} - ${version}`);
+      } else {
+        console.log(data.data);
+        dispatch(get_ccds(data.data));
+        get_series_service(data.data[0].id_ccd)(dispatch);
+      }
+      
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+//* Revisar esta función - nel
+/*
+
 export const get_classification_ccds_service: any = (name: string, version: string) => {
   //! se debe
   console.log('get_classification_ccds_service');
@@ -76,17 +106,31 @@ export const get_classification_ccds_service: any = (name: string, version: stri
         `gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`
         // `gestor/ccd/get-ccd/?nombre=${name}&version=${version}`
       );
+      if(name === '' || version === '') {
+        await notification_error(`Debe ingresar el nombre y la versión del CCD`);
+        return data;
+      }
+
+      if (data.data.length === 0) {
+        await notification_error(`No se encontró el CCD ${name} - ${version}`);
+        return data;
+      }
+
       console.log(data.data);
+      // set_consulta_ccd_is_active(true);
       dispatch(get_ccds(data.data));
       get_series_service(data.data[0].id_ccd)(dispatch);
       return data;
     } catch (error: any) {
-      console.log(error, 'error');
+      // console.log(error, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
+
+"
+*/
 
 // Reanudar Cuadro de Clasificación Documental
 export const to_resume_ccds_service: any = (
@@ -100,7 +144,11 @@ export const to_resume_ccds_service: any = (
     try {
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(`gestor/ccd/resume/${id_ccd}/`);
-      dispatch(get_classification_ccds_service());
+      //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
+      dispatch(get_classification_ccds_service(
+        ccd_current.nombre,
+        ccd_current.version
+      ));
       set_flag_btn_finish(false);
       control_success(data.detail);
       return data;
@@ -124,7 +172,12 @@ export const to_finished_ccds_service: any = (
       const { data } = await api.put(
         `gestor/ccd/finish/${id_ccd}/?confirm=false`
       );
-      dispatch(get_classification_ccds_service());
+        //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
+      // ? revisar la manera en la que está recibiendo los parametros
+      dispatch(get_classification_ccds_service(
+        ccd_current.nombre,
+        ccd_current.version
+      ));
       control_success(data.detail);
       set_flag_btn_finish(true);
       return data;
@@ -150,7 +203,12 @@ export const to_finished_ccds_service: any = (
               .put(`gestor/ccd/finish/${id_ccd}/?confirm=true`)
               .then((response) => {
                 control_success(response.data.detail);
-                dispatch(get_classification_ccds_service());
+                //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
+      // ? revisar la manera en la que está recibiendo los parametros
+                dispatch(get_classification_ccds_service(
+                  ccd_current.nombre,
+                  ccd_current.version
+                ));
                 dispatch(get_series_service());
                 dispatch(get_subseries_service());
                 set_flag_btn_finish(true);

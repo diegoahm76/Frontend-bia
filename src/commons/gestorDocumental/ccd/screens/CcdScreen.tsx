@@ -319,9 +319,28 @@ export const CcdScreen: React.FC = () => {
                       control_create_ccd._formValues.nombre_ccd,
                       control_create_ccd._formValues.version
                     )
-                  );
+                  ).then((data: any) => {
+                  /*  if (data.data.length > 0) {
+
+                      set_ccd_current(data.data[0]);
+                      set_save_ccd(false);
+                      set_create_ccd_is_active(false);
+                      set_update_ccd_is_active(true);
+                      set_delete_ccd_is_active(true);
+                    } */
+                    console.log(data);
+                    if (data.data.length > 0 && control_create_ccd._formValues.nombre_ccd !== "" && control_create_ccd._formValues.version !== "") {
+
                   set_consulta_ccd_is_active(true);
                   set_title('Consultar CCD');
+                  // set_ccd_current(data);
+                  // set_save_ccd(false);
+                  // set_create_ccd_is_active(false);
+                  // set_update_ccd_is_active(false);
+                  // set_delete_ccd_is_active(false);
+                    }
+                  });
+                  
                 }}
               >
                 BUSCAR
