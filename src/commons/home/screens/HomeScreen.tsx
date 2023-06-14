@@ -4,8 +4,8 @@ import { Pantalla } from "../portada/Pantalla";
 export const HomeScreen: React.FC = () => {
 
   return (
-    <>
+  
       <Pantalla/>
-    </>
+    
   );
 };

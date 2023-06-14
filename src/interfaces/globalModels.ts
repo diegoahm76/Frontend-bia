@@ -7,6 +7,7 @@ import type {
   UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
+  UseFormReset,
   UseFormSetValue,
   UseFormWatch
 } from 'react-hook-form';
@@ -79,9 +80,7 @@ export interface PropsRegister {
   watch: UseFormWatch<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
 }
-export interface PropsRegisterAdmin {
-  id_persona: number;
-  representante_legal?: number | null | undefined;
+export interface PropsRegisterAdministrador {
   numero_documento: string;
   tipo_documento: string;
   tipo_persona: string;
@@ -92,6 +91,26 @@ export interface PropsRegisterAdmin {
   isValid: boolean;
   watch: UseFormWatch<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
+  reset: UseFormReset<FieldValues>;
+
+}
+
+export interface PropsRegisterAdmin {
+  id_persona: number;
+  representante_legal?: number | null | undefined;
+  data: DataPersonas;
+  numero_documento: string;
+  tipo_documento: string;
+  tipo_persona: string;
+  register: UseFormRegister<FieldValues>;
+  handleSubmit: UseFormHandleSubmit<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  isValid: boolean;
+  watch: UseFormWatch<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+  reset: UseFormReset<FieldValues>;
+
 }
 export interface PropsUpdateJ {
   data: DataPersonas;

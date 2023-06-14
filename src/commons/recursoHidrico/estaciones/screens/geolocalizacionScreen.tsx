@@ -50,14 +50,11 @@ export const GeolocalizacionScreen: React.FC = () => {
       }));
 
       set_info(pos_maped);
-      console.log('paso', pos_maped);
-
     } catch (err: unknown) {
       const temp_error = err as AxiosError
       console.log("Error", temp_error)
       if (temp_error.response?.status === 404) {
         control_error("No se encontraron estaciones");
-        console.log("No hay datos");
         set_dato([]);
       } else {
         // Otro error, mostrar mensaje de error genérico
@@ -90,8 +87,6 @@ export const GeolocalizacionScreen: React.FC = () => {
         velocidad_agua: ultimo_dato.velocidad_agua,
         id_estacion: ultimo_dato.id_estacion,
       };
-      console.log("Paso");
-      console.log("Datos", [datos]);
       set_dato([datos])
     } catch (err: unknown) {
       const temp_error = err as AxiosError
@@ -186,6 +181,7 @@ export const GeolocalizacionScreen: React.FC = () => {
             Tipo: {estacion.cod_tipo_estacion} <br />
             Latitud: {estacion.latitud} <br />
             Longitud: {estacion.longitud} <br /><br />
+            <div>Nivel de agua: {dato[0].nivel_agua} m</div>
             <div>Fecha: {dato[0].fecha_registro}</div>
             <div>Temperatura: {dato[0].temperatura_ambiente} °C </div>
             <div>Humedad: {dato[0].humedad_ambiente} %RH</div>
@@ -194,7 +190,6 @@ export const GeolocalizacionScreen: React.FC = () => {
             <div>Dirección del viento: {dato[0].direccion_viento} °</div>
             <div>Precipitación: {dato[0].precipitacion} mm</div>
             <div>Luminosidad: {dato[0].luminosidad} kLux </div>
-            <div>Nivel de agua: {dato[0].nivel_agua} m</div>
             <div>Velocidad del agua: {dato[0].velocidad_agua} m/s</div>
 
           </Box>
@@ -207,6 +202,7 @@ export const GeolocalizacionScreen: React.FC = () => {
             Tipo: {estacion.cod_tipo_estacion} <br />
             Latitud: {estacion.latitud} <br />
             Longitud: {estacion.longitud} <br /><br />
+            <div>Nivel de agua: {dato_migracion[0].nivel_agua} m</div>
             <div>Temperatura: {dato_migracion[0].temperatura} °C</div>
             <div>Fecha: {dato_migracion[0].fecha}</div>
             <div>Humedad: {dato_migracion[0].humedad_relativa} %</div>
@@ -215,7 +211,6 @@ export const GeolocalizacionScreen: React.FC = () => {
             <div>Presión rel: {dato_migracion[0].presion_atm_rel} Hpa</div>
             <div>Intensidad: {dato_migracion[0].intensidad} mm</div>
             <div>Precipitación: {dato_migracion[0].precipitacion} mm</div>
-            <div>Nivel de agua: {dato_migracion[0].nivel_agua} m</div>
             <div>Velocidad del rio: {dato_migracion[0].velocidad_rio} m/s</div>
             <div>Caudal: {dato_migracion[0].caudal} m3/s</div>
             <div>Voltaje: {dato_migracion[0].voltaje} V</div>
@@ -248,7 +243,7 @@ export const GeolocalizacionScreen: React.FC = () => {
             attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
           />
 
-          {markers}          
+          {markers}
         </MapContainer>
       </Box>
     </Grid>
