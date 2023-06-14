@@ -732,11 +732,12 @@ export const get_incidencias_service = (
 
 // crearincidencia
 export const add_incidencia_service = (
+  id_vivero: number,
   incidencia: any,
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.post('conservacion/incidencias/create-incidencias/', incidencia);
+      const { data } = await api.post(`conservacion/incidencias/create-incidencias/${id_vivero}/`, incidencia);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
         control_success(data.detail)      

@@ -7,8 +7,8 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
 import SeleccionarIncidencia from "../componentes/SeleccionarIncidencia";
-import SeleccionarLoteCuarentena from "../componentes/SeleccionarLoteCuarentena";
-import SeleccionarBienPreparacion from "../componentes/SeleccionarBienPreparacion";
+import SeleccionarLoteCuarentena from "../componentes/SeleccionarLoteCuarentena"; 
+import SeleccionarBienIncidencia from "../componentes/SeleccionarBienIncidencia";
 import { type IObjNursery, type IObjPreparacionBienes, type IObjIncidencia } from "../interfaces/produccion";
 import { initial_state_current_material_vegetal, set_current_siembra_material_vegetal, set_current_nursery, initial_state_current_bien, set_current_bien, set_preparacion_bienes, set_current_incidencia } from "../store/slice/produccionSlice";
 import { useSelector } from 'react-redux';
@@ -116,11 +116,16 @@ export function RegistroIncidenciaScreen(): JSX.Element {
       preparacion_bienes.forEach((element: IObjPreparacionBienes, index: number) => {
         aux_items.push({...element, nro_posicion: index, id_bien_usado: element.id_item_preparacion_mezcla})
       });
+      const aux = {
+        data_incidencia: { ...data_edit },
+        items_detalle: aux_items
+      }
+      console.log(aux)
      
       form_data.append('data_incidencia', JSON.stringify({ ...data_edit }));
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
       form_data.append('items_detalle', JSON.stringify(aux_items));
-      void dispatch(add_incidencia_service(form_data));
+      void dispatch(add_incidencia_service(current_nursery.id_vivero ?? 0, form_data));
     }
   };
   
@@ -154,7 +159,7 @@ export function RegistroIncidenciaScreen(): JSX.Element {
       {current_nursery.id_vivero !== null &&
       <>
         <SeleccionarLoteCuarentena/>
-        <SeleccionarBienPreparacion/>
+        <SeleccionarBienIncidencia/>
       </>
       }
       <Grid

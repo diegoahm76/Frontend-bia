@@ -148,6 +148,7 @@ export const initial_state_current_incidencia: IObjIncidencia = {
   altura_lote_en_cms: null,
   nombre_incidencia: null,
   descripcion: null,
+  consec_cuaren_lote_etapa: null
 }
 
 export const initial_state_current_mortalidad: IObjMortalidad = {
