@@ -2,10 +2,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type IObjBienConsumo, type IObjFuncionario, type ISolicitudConsumo, type IObjSolicitudVivero, type IObjBienesSolicitud, type UnidadOrganizacional, type IObjPersonaSolicita, type IObjNursery } from '../interfaces/solicitudVivero';
+import { type IObjBienConsumo, type IObjFuncionario, type ISolicitudConsumo, type IObjSolicitudVivero, type IObjBienesSolicitud, type UnidadOrganizacional, type IObjPersonaSolicita, type IObjNursery } from '../../interfaces/solicitudVivero';
 
 
-
+const fecha = (new Date())
+fecha.setDate(fecha.getDate() + 1)
 const initial_state_current_solicitud: IObjSolicitudVivero = {
     nro_solicitud: null,
     fecha_solicitud: (new Date().toString()),
@@ -19,12 +20,43 @@ const initial_state_current_solicitud: IObjSolicitudVivero = {
     con_municipio_destino: null,
     nombre_predio_destino: "",
     direccion_destino: "",
-    fecha_retiro_material: (new Date().toString()),
+    fecha_retiro_material: fecha.toString(),
     ruta_archivo_info_tecnico: null,
     id_persona_solicita: null,
     id_unidad_org_del_solicitante: null
 
 }
+const initial_state_current_nursery: IObjNursery = {
+    id_vivero: null,
+    nombre: '',
+    cod_municipio: '',
+    direccion: '',
+    area_mt2: null,
+    area_propagacion_mt2: null,
+    tiene_area_produccion: false,
+    tiene_areas_pep_sustrato: false,
+    tiene_area_embolsado: false,
+    cod_tipo_vivero: null,
+    fecha_inicio_viverista_actual: null,
+    cod_origen_recursos_vivero: null,
+    fecha_creacion: null,
+    en_funcionamiento: true,
+    fecha_ultima_apertura: null,
+    justificacion_apertura: '',
+    fecha_cierre_actual: null,
+    justificacion_cierre: null,
+    vivero_en_cuarentena: false,
+    fecha_inicio_cuarentena: null,
+    justificacion_cuarentena: null,
+    ruta_archivo_creacion: null,
+    activo: true,
+    item_ya_usado: true,
+    id_viverista_actual: null,
+    id_persona_crea: null,
+    id_persona_abre: null,
+    id_persona_cierra: null,
+    id_persona_cuarentena: null,
+};
 const initial_state_current_bien: IObjBienConsumo = {
     id_bien: null,
     nombre: "",
@@ -47,11 +79,13 @@ const initial_state_current_funcionario: IObjFuncionario = {
 
 const initial_state_persona_solicita = {
     id_persona: null,
+    id_unidad_organizacional_actual: null,
     nombre: "",
     unidad_organizacional: "",
 }
 
-const initial_state: ISolicitudConsumo | any = {
+const initial_state: ISolicitudConsumo = {
+    bienes: [],
     current_solicitud: initial_state_current_solicitud,
     solicitudes: [],
     bienes_solicitud: [],
@@ -60,7 +94,9 @@ const initial_state: ISolicitudConsumo | any = {
     persona_solicita: initial_state_persona_solicita,
     unidad_organizacional: [],
     nro_solicitud: null,
-    nurseries: []
+    nurseries: [],
+    current_nursery: initial_state_current_nursery,
+    funcionarios: [],
 }
 
 export const solicitud_vivero_slice = createSlice({
@@ -76,6 +112,10 @@ export const solicitud_vivero_slice = createSlice({
         set_nurseries: (state: ISolicitudConsumo, action: PayloadAction<IObjNursery[]>) => {
             state.nurseries = action.payload;
         },
+        set_current_nursery: (state: ISolicitudConsumo, action: PayloadAction<IObjNursery>) => {
+            state.current_nursery = action.payload;
+        },
+
 
         set_current_solicitud: (
             state: ISolicitudConsumo,
@@ -139,4 +179,4 @@ export const solicitud_vivero_slice = createSlice({
 
 })
 
-export const { set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_bienes, set_current_bien, get_unidad_organizacional, set_funcionarios, set_numero_solicitud, set_persona_solicita, set_current_funcionario, set_nurseries } = solicitud_vivero_slice.actions;
+export const { set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_bienes, set_current_bien, get_unidad_organizacional, set_funcionarios, set_numero_solicitud, set_persona_solicita, set_current_funcionario, set_nurseries, set_current_nursery } = solicitud_vivero_slice.actions;

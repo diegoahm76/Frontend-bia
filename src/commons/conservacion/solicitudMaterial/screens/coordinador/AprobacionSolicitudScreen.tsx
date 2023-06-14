@@ -22,12 +22,12 @@
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function AprobacionSolicitudCScreen(): JSX.Element {
+export function AprobacionSolicitudScreen(): JSX.Element {
  
 
     return (
       <>
-      <h1>aprobacion solicitud coordinador</h1>
+      <h1>aprobacion solicitud funcionario</h1>
       </>
     );
   }

@@ -1,32 +1,27 @@
 import { Grid, } from '@mui/material';
-import BuscarModelo from "../../../../../components/partials/getModels/BuscarModelo";
+import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_solicitud_service, get_solicitudes_id_persona_service } from '../store/solicitudBienConsumoThunks';
-import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSolicitudBienesConsumo';
-import type { AuthSlice } from '../../../../auth/interfaces';
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
+import { get_solicitud_service_vivero, get_solicitudes_id_persona_service } from '../../store/solicitudBienConsumoThunks';
+import { set_current_solicitud, set_solicitudes } from '../../store/slices/indexSolicitudBienesConsumo';
+import type { AuthSlice } from '../../../../../auth/interfaces';
 import { useSelector } from 'react-redux';
 
 
 interface IProps {
-    control_solicitud_aprobacion: any;
+    title?: string;
+    control_solicitud_aprobacion_vivero: any;
     get_values: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarSolicitudAprobada = ({
-    control_solicitud_aprobacion,
+const SeleccionarSolicitudAprobadaVivero = ({
+    title,
+    control_solicitud_aprobacion_vivero,
     get_values
 }: IProps) => {
 
-
-
-
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-
     const { unidad_organizacional, solicitudes } = useAppSelector((state) => state.solic_consumo);
-
-
-
 
     const dispatch = useAppDispatch();
 
@@ -71,7 +66,7 @@ const SeleccionarSolicitudAprobada = ({
     const search_solicitud: any = (async () => {
         const solicitud_id = get_values("id_solicitud_consumibles")
         if (solicitud_id !== null) {
-            void dispatch(get_solicitud_service(solicitud_id))
+            void dispatch(get_solicitud_service_vivero(solicitud_id))
         }
     })
 
@@ -95,10 +90,15 @@ const SeleccionarSolicitudAprobada = ({
                     button_submit_label='Buscar solicitud'
                     form_inputs={[
                         {
+                            datum_type: "title",
+                            title_label: title ?? "hh"
+
+                        },
+                        {
                             datum_type: "input_controller",
                             xs: 5,
                             md: 2,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "id_solicitud_consumibles",
                             default_value: "",
                             rules: {},
@@ -112,7 +112,7 @@ const SeleccionarSolicitudAprobada = ({
                             datum_type: "input_controller",
                             xs: 5,
                             md: 2,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "nro_solicitud_por_tipo",
                             default_value: "",
                             rules: {},
@@ -126,7 +126,7 @@ const SeleccionarSolicitudAprobada = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 8,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "fecha_solicitud",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -138,8 +138,8 @@ const SeleccionarSolicitudAprobada = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
-                            control_form: control_solicitud_aprobacion,
+                            md: 6,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "persona_solicita",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -151,8 +151,8 @@ const SeleccionarSolicitudAprobada = ({
                         {
                             datum_type: "select_controller",
                             xs: 12,
-                            md: 3,
-                            control_form: control_solicitud_aprobacion,
+                            md: 6,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "id_unidad_para_la_que_solicita",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
@@ -163,23 +163,23 @@ const SeleccionarSolicitudAprobada = ({
                             option_label: "nombre",
                             option_key: "id_unidad_organizacional"
                         },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_solicitud_aprobacion,
-                            control_name: "id_funcionario_responsable_unidad",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Funcionario responsable",
-                            disabled: true,
-                            helper_text: "",
-                        },
+                        // {
+                        //     datum_type: "input_controller",
+                        //     xs: 12,
+                        //     md: 3,
+                        //     control_form: control_solicitud_aprobacion_vivero,
+                        //     control_name: "id_funcionario_responsable_unidad",
+                        //     default_value: "",
+                        //     rules: { required_rule: { rule: true, message: "requerido" } },
+                        //     label: "Funcionario responsable",
+                        //     disabled: true,
+                        //     helper_text: "",
+                        // },
                         {
                             datum_type: "input_controller",
                             xs: 12,
                             md: 12,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "observacion",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -194,7 +194,7 @@ const SeleccionarSolicitudAprobada = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 12,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "motivo",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -210,7 +210,7 @@ const SeleccionarSolicitudAprobada = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "nombre_unidad_organizacional",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -224,7 +224,7 @@ const SeleccionarSolicitudAprobada = ({
                             datum_type: "select_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "estado_aprobacion_responsable",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
@@ -241,7 +241,7 @@ const SeleccionarSolicitudAprobada = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 12,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "justificacion_rechazo_responsable",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -257,7 +257,7 @@ const SeleccionarSolicitudAprobada = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 8,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "fecha_aprobacion_responsable",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -291,7 +291,7 @@ const SeleccionarSolicitudAprobada = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 2,
-                            control_form: control_solicitud_aprobacion,
+                            control_form: control_solicitud_aprobacion_vivero,
                             control_name: "id_solicitud_consumibles",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -309,5 +309,5 @@ const SeleccionarSolicitudAprobada = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarSolicitudAprobada;
+export default SeleccionarSolicitudAprobadaVivero;
 

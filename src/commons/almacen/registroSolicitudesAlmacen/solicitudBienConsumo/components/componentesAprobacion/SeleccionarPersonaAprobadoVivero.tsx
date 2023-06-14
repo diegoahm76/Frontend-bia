@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
-import { api } from '../../../../api/axios';
+
+import { api } from '../../../../../../api/axios';
+
 import { useForm } from 'react-hook-form';
 import { Grid } from '@mui/material';
-import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
+import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { type AuthSlice } from '../../../auth/interfaces';
-import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
-import { type IObjFuncionario } from '../interfaces/solicitudVivero';
-import { get_funcionario_document_service, get_funcionario_service, get_person_id_service } from '../store/thunks/solicitudViveroThunks';
-import { set_current_funcionario, set_funcionarios } from '../store/slices/indexSolicitud';
+import { type AuthSlice } from '../../../../../auth/interfaces';
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks/hooks';
+import { type IObjFuncionario } from '../../interfaces/solicitudBienConsumo';
+import { get_funcionario_document_service, get_funcionario_service, get_person_id_service } from '../../store/solicitudBienConsumoThunks';
+import { set_current_funcionario, set_funcionarios } from '../../store/slices/indexSolicitudBienesConsumo';
 
 interface IProps {
     title?: string;
@@ -27,7 +29,7 @@ const initial_options: IList[] = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const PersonaResponsable = ({
+const PersonaResponsableVivero = ({
     title,
     get_values_solicitud
 
@@ -36,8 +38,8 @@ const PersonaResponsable = ({
     const dispatch = useAppDispatch();
 
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-    const { control: control_persona_aprobacion, reset: reset_persona, getValues: get_values } = useForm<IObjFuncionario>();
-    const { funcionarios, current_funcionario } = useAppSelector((state) => state.solicitud_vivero);
+    const { control: control_persona, reset: reset_persona, getValues: get_values } = useForm<IObjFuncionario>();
+    const { funcionarios, current_funcionario } = useAppSelector((state) => state.solic_consumo);
 
     const [document_type, set_document_type] = useState<IList[]>(initial_options);
 
@@ -67,8 +69,8 @@ const PersonaResponsable = ({
         },
 
         {
-            field: 'id_unidad_para_la_que_solicita',
-            headerName: 'unidad',
+            field: 'nombre_unidad_organizacional_actual',
+            headerName: 'Unidad organizacional actual',
             width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -148,8 +150,8 @@ const PersonaResponsable = ({
                     models={funcionarios}
                     get_filters_models={get_funcionarios}
                     set_models={set_funcionarios}
+                    show_search_button={false}
                     reset_values={reset_persona}
-                    button_submit_label='BUSCAR'
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -160,7 +162,7 @@ const PersonaResponsable = ({
                             datum_type: "select_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_persona_aprobacion,
+                            control_form: control_persona,
                             control_name: "tipo_documento",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
@@ -175,7 +177,7 @@ const PersonaResponsable = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_persona_aprobacion,
+                            control_form: control_persona,
                             control_name: "numero_documento",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
@@ -189,7 +191,7 @@ const PersonaResponsable = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_persona_aprobacion,
+                            control_form: control_persona,
                             control_name: "nombre_completo",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
@@ -202,7 +204,7 @@ const PersonaResponsable = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_persona_aprobacion,
+                            control_form: control_persona,
                             control_name: "nombre_unidad_organizacional_actual",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
@@ -218,7 +220,7 @@ const PersonaResponsable = ({
                             datum_type: "select_controller",
                             xs: 12,
                             md: 2,
-                            control_form: control_persona_aprobacion,
+                            control_form: control_persona,
                             control_name: "tipo_documento",
                             default_value: "",
                             rules: {},
@@ -233,7 +235,7 @@ const PersonaResponsable = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 2,
-                            control_form: control_persona_aprobacion,
+                            control_form: control_persona,
                             control_name: "numero_documento",
                             default_value: "",
                             rules: {},
@@ -246,7 +248,7 @@ const PersonaResponsable = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 4,
-                            control_form: control_persona_aprobacion,
+                            control_form: control_persona,
                             control_name: "primer_nombre",
                             default_value: "",
                             rules: {},
@@ -259,7 +261,7 @@ const PersonaResponsable = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 4,
-                            control_form: control_persona_aprobacion,
+                            control_form: control_persona,
                             control_name: "primer_apellido",
                             default_value: "",
                             rules: {},
@@ -278,4 +280,4 @@ const PersonaResponsable = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default PersonaResponsable;
+export default PersonaResponsableVivero;
