@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useState } from 'react';
 import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import type {
@@ -29,23 +30,25 @@ export const AdministracionPersonasScreen: React.FC = () => {
     register,
     set_value,
     watch,
+    reset,
   } = use_register();
 
 
   const on_result = async (info_persona: InfoPersona): Promise<void> => {
     try {
       set_persona(info_persona);
-      set_is_update(false)
-      set_is_register(true)
-
+      set_is_update(false);
+      set_is_register(true);
+  
       const {
         data: { data },
       } = await consultar_datos_persona(info_persona.id_persona);
       if (data.id_persona !== 0) {
         set_datos_persona(data);
-        set_is_update(true)
-        set_is_register(false)
+        set_is_update(true);
+        set_is_register(false);
       }
+  
     } catch (err) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404) {
@@ -53,7 +56,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
       }
     }
   };
-
+  
   return (
     <Box sx={{
       position: 'relative',
@@ -79,7 +82,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
         </Grid>
         {is_update && (
           <>
-            {datos_persona !== undefined && datos_persona?.tipo_persona === 'N' && (
+            {datos_persona && datos_persona?.tipo_persona === 'N' && (
               <>
                 <UpdatePersonaNatAdmin
                   id_persona={datos_persona.id_persona}
@@ -94,6 +97,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
                   setValue={set_value}
                   getValues={get_values}
                   watch={watch}
+                  reset={reset}
                 />
               </>
             )}
@@ -112,6 +116,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
                   setValue={set_value}
                   getValues={get_values}
                   watch={watch}
+                  reset={reset}
                 />
               </>
             )}
@@ -132,6 +137,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
                   setValue={set_value}
                   getValues={get_values}
                   watch={watch}
+                  reset={reset}
                 />
               </>
             )}
@@ -148,6 +154,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
                   setValue={set_value}
                   getValues={get_values}
                   watch={watch}
+                  reset={reset}
                 />
               </>
             )}

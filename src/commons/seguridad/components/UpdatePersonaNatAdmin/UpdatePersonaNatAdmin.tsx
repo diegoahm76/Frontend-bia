@@ -53,9 +53,9 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
   errors,
   watch,
   getValues,
+  reset,
 }: PropsRegisterAdmin) => {
   const {
-    is_saving,
     paises_options,
     departamentos_opt,
     dpto_notifiacion_opt,
@@ -107,6 +107,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
     useState<boolean>(false);
   const [dialog_notificaciones, set_dialog_notificaciones] =
     useState<boolean>(false);
+  const [loading, set_loading] = useState<boolean>(false);
 
   // watchers
   const misma_direccion = watch('misma_direccion') ?? false;
@@ -163,25 +164,30 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
       const response = await consultar_clase_tercero();
       set_clase_tercero(response);
     } catch (err) {
-      control_error(err);
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404) {
+        control_error(err);
+      }
     }
   };
   const get_datos_clase_tercero_persona = async (
-    id: number | undefined
+    id: number
   ): Promise<void> => {
     try {
       const response = await consultar_clase_tercero_persona(id);
-      const data_persona_clase_tercero = response.map(
-        (item: ClaseTerceroPersona) => ({
-          value: item.id_clase_tercero,
-          label: item.nombre,
-        })
-      );
-      set_value(
-        'datos_clasificacion_persona',
-        data_persona_clase_tercero.map((e) => e.value)
-      );
-      set_clase_tercero_persona(data_persona_clase_tercero);
+      if (response?.length > 0) {
+        const data_persona_clase_tercero = response.map(
+          (item: ClaseTerceroPersona) => ({
+            value: item.id_clase_tercero,
+            label: item.nombre,
+          })
+        );
+        set_value(
+          'datos_clasificacion_persona',
+          data_persona_clase_tercero.map((e) => e.value)
+        );
+        set_clase_tercero_persona(data_persona_clase_tercero);
+      }
     } catch (err) {
       const temp = err as AxiosError;
       if (temp.response?.status !== 404) {
@@ -191,42 +197,60 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
   };
   useEffect(() => {
     if (data !== undefined) {
-      set_value('tipo_persona', data.tipo_persona);
-      set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
-      set_value('pais_nacimiento', data.pais_nacimiento);
-      set_value('sexo', data.sexo);
-      set_value('estado_civil', data.estado_civil);
-      set_value('departamento_expedicion', data.cod_departamento_expedicion);
-      set_value('cod_municipio_expedicion_id', data.cod_municipio_expedicion_id);
-      // residencia
-      set_value('pais_residencia', data.pais_residencia);
-      set_value('departamento_residencia', data.cod_departamento_residencia);
-      set_value('municipio_residencia', data.municipio_residencia);
-      set_value('direccion_residencia', data.direccion_residencia);
-      set_value('direccion_residencia_ref', data.direccion_residencia_ref);
-      // notificaciones
-      set_value('dpto_notifiacion', data.cod_departamento_notificacion);
-      set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
-      set_value('direccion_notificaciones', data.direccion_notificaciones);
-      set_value('complemento_direccion', data.direccion_notificacion_referencia);
-      // laboral
-      set_value('departamento_laboral', data.cod_departamento_laboral);
-      set_value('cod_municipio_laboral_nal', data.cod_municipio_laboral_nal);
-      set_value('direccion_laboral', data.direccion_laboral);
+      const timeout = setTimeout(() => {
 
+        set_value('tipo_persona', data.tipo_persona);
+        set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
+        set_value('fecha_nacimiento', data.fecha_nacimiento);
+        set_value('pais_nacimiento', data.pais_nacimiento);
+        set_value('sexo', data.sexo);
+        set_value('estado_civil', data.estado_civil);
+        set_value('departamento_expedicion', data.cod_departamento_expedicion);
+        set_value('cod_municipio_expedicion_id', data.cod_municipio_expedicion_id);
+        // residencia
+        set_value('pais_residencia', data.pais_residencia);
+        set_value('departamento_residencia', data.cod_departamento_residencia);
+        set_value('municipio_residencia', data.municipio_residencia);
+        set_value('direccion_residencia', data.direccion_residencia);
+        set_value('direccion_residencia_ref', data.direccion_residencia_ref);
+        // notificaciones
+        set_value('dpto_notifiacion', data.cod_departamento_notificacion);
+        set_value('cod_departamento_notificacion', data.cod_departamento_notificacion);
+        set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
+        set_value('direccion_notificaciones', data.direccion_notificaciones);
+        set_value('complemento_direccion', data.direccion_notificacion_referencia);
+        set_value('email', data.email);
+        set_value('telefono_celular', data.telefono_celular);
 
-      void get_datos_clase_tercero();
-      void get_datos_clase_tercero_persona(data?.id_persona);
+        // laboral
+        set_value('departamento_laboral', data.cod_departamento_laboral);
+        set_value('cod_municipio_laboral_nal', data.cod_municipio_laboral_nal);
+        set_value('direccion_laboral', data.direccion_laboral);
+
+        set_value('nombre_comercial', data.nombre_comercial);
+        set_value('telefono_fijo_residencial', data.telefono_fijo_residencial);
+
+        void get_datos_clase_tercero();
+        if (data?.id_persona !== undefined) {
+          void get_datos_clase_tercero_persona(data?.id_persona);
+        }
+      }, 1000);
+      return () => { clearTimeout(timeout); };
+
     }
   }, [data]);
 
   const on_submit_update_natural = handle_submit(async (datos: any) => {
     try {
+      set_loading(true);
       delete datos.dpto_notifiacion;
       datos.ubicacion_georeferenciada = '';
-      await editar_persona_natural(data?.id_persona as number, datos as DataNaturaUpdate);
+      await editar_persona_natural(data?.id_persona, datos as DataNaturaUpdate);
       control_success('Los datos se actualizaron correctamente');
+      set_loading(false);
+      reset(); // limpiar formulario
     } catch (error) {
+      set_loading(false);
       control_error('hubo un error al actualizar los datos, intentelo de nuevo');
     }
   });
@@ -237,7 +261,6 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
         <>
           <form
             onSubmit={(e) => {
-              console.log(errors, 'errors');
               void on_submit_update_natural(e);
             }}
           >
@@ -601,7 +624,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                   fullWidth
                   size="small"
                   label="E-mail *"
-                  defaultValue={data.email}
+                  defaultValue={data?.email}
                   error={errors.email?.type === 'required'}
                   type="email"
                   helperText={
@@ -619,7 +642,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                   fullWidth
                   size="small"
                   label="Celular"
-                  defaultValue={data.telefono_celular}
+                  defaultValue={data?.telefono_celular}
                   error={errors.telefono_celular?.type === 'required'}
                   type="text"
                   helperText={
@@ -724,7 +747,7 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                   disabled
                   fullWidth
                   {...register('direccion_laboral', {
-                    required: true,
+                    required: false,
                   })}
                   value={direccion_laboral}
                 />
@@ -856,8 +879,8 @@ export const UpdatePersonaNatAdmin: React.FC<PropsRegisterAdmin> = ({
                     variant="contained"
                     fullWidth
                     color="success"
-                    loading={is_saving}
-                    disabled={is_saving}
+                    loading={loading}
+                    disabled={loading}
                   >
                     Actualizar
                   </LoadingButton>

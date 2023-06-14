@@ -188,7 +188,6 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
         });
 
         if (data?.length > 0) {
-          console.log('data', data);
           set_rows(data);
         }
       } catch (error) {
@@ -250,7 +249,7 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
                   {...register('numero_documento', {})}
                 />
               </Grid>
-              {tipo_documento_av !== 'NT' ? (
+              {tipo_documento_av !== 'NT' && (
                 <>
                   <Grid item xs={12} sm={6} md={3}>
                     <TextField
@@ -269,25 +268,6 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
                     />
                   </Grid>
                 </>
-              ) : (
-                <>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      fullWidth
-                      label="Razón social"
-                      size="small"
-                      {...register('razon_social')}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={3}>
-                    <TextField
-                      fullWidth
-                      label="Nombre comercial"
-                      size="small"
-                      {...register('nombre_comercial')}
-                    />
-                  </Grid>
-                </>
               )}
               <Grid item xs={12} container justifyContent="end">
                 <LoadingButton
@@ -300,24 +280,27 @@ export const DialogRepresentanteLegal: React.FC<PropsBuscador> = ({
                   Buscar
                 </LoadingButton>
               </Grid>
-              <Grid item xs={12}>
-                <Typography>Resultados de la búsqueda</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Box sx={{ height: 400, width: '100%' }}>
-                  {rows.length > 0 ? (
-                    <DataGrid
-                      rows={rows}
-                      columns={columns}
-                      pageSize={5}
-                      getRowId={(row) => row.id_persona}
-                      rowsPerPageOptions={[5]}
-                    />
-                  ) : (
-                    <CircularProgress color="secondary" />
-                  )}
-                </Box>
-              </Grid>
+              {rows.length > 0 ? (
+                <>
+                  <Grid item xs={12}>
+                    <Typography>Resultados de la búsqueda</Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ height: 400, width: '100%' }}>
+
+                      <DataGrid
+                        rows={rows}
+                        columns={columns}
+                        pageSize={5}
+                        getRowId={(row) => row.id_persona}
+                        rowsPerPageOptions={[5]}
+                      />
+                    </Box>
+                  </Grid>
+                </>
+              ) : (
+                <CircularProgress color="secondary" />
+              )}
             </Grid>
           </form>
         </DialogContent>

@@ -41,6 +41,7 @@
     "file-saver": "^2.0.5",
     "framer-motion": "^10.12.16",
     "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.29",
     "leaflet": "^1.9.3",
     "moment": "^2.29.4",
     "primeicons": "^6.0.1",
@@ -70,6 +71,7 @@
     "swiper": "^9.1.0",
     "typescript": "*",
     "uuid": "^9.0.0",
+    "uuidv4": "^6.2.13",
     "web-vitals": "^2.1.0",
     "xlsx": "^0.18.5"
   },

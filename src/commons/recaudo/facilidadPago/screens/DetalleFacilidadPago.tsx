@@ -12,7 +12,7 @@ export const DetalleFacilidadPago: React.FC = () => {
 
   return (
     <>
-      <Title title={`Detalle de la Facilidad de Pago ${'#2121231'}`} />
+      <Title title={estado !== 'Cancelada/Anulada' ? `Detalle de la Facilidad de Pago ${'#2121231'}` : `Facilidad de Pago Cancelada o Bloqueada ${'#2121231'}`} />
       <Grid
         container
         sx={{

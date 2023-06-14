@@ -10,11 +10,19 @@ import { LoadingButton } from '@mui/lab';
 // import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add';
 
+interface IProps {
+  register: any,
+  watch: any
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarPrograma: React.FC = () => {
+export const AgregarPrograma: React.FC<IProps> = ({
+  register,
+  watch
+}: IProps) => {
+
 
   const [is_agregar, set_is_agregar] = useState(false);
 
@@ -44,6 +52,7 @@ export const AgregarPrograma: React.FC = () => {
             margin="dense"
             required
             autoFocus
+            {...register("nombre_programa", { required: true })}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -61,6 +70,10 @@ export const AgregarPrograma: React.FC = () => {
                   fullWidth
                   size="small"
                   {...params}
+                  {...register('fecha_inicial', {
+                    required: true,
+                  })}
+
                 />
               )}
             />
@@ -81,6 +94,9 @@ export const AgregarPrograma: React.FC = () => {
                   fullWidth
                   size="small"
                   {...params}
+                  {...register('fecha_fin', {
+                    required: true,
+                  })}
                 />
               )}
             />
@@ -91,20 +107,9 @@ export const AgregarPrograma: React.FC = () => {
             <LoadingButton
               variant="outlined"
               onClick={() => { set_is_agregar(true) }}
+              startIcon={<AddIcon />}
             >
               Agregar Nuevo Proyecto
-            </LoadingButton>
-          </Grid>
-          <Grid item>
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              fullWidth
-              color="success"
-            // loading={is_saving}
-            // disabled={is_saving}
-            >
-              Guardar
             </LoadingButton>
           </Grid>
         </Grid>
@@ -112,7 +117,9 @@ export const AgregarPrograma: React.FC = () => {
       <Grid container spacing={2} mt={0.1}>
         {is_agregar && (
           <>
-            <AgregarProyectos />
+            <AgregarProyectos
+              register={register}
+            />
           </>
         )}
       </Grid>
