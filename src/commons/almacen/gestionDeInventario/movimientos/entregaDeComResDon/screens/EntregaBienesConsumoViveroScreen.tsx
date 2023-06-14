@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { SetStateAction, useEffect, useState } from "react";
+
+import { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../../../../hooks";
 import { obtener_consecutivo } from "../thunks/EntregaBienes";
 import { Alert, Box, Button, FormHelperText, Grid, Stack, TextField, Typography } from "@mui/material";
@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import AnularEntregaComponent from "./AnularEntrega";
 import VistaDetalleEntregaBienes from "./VistaDetalleEntregaBienes";
 import BuscarEntradasCRDComponent from "./BuscarEntradasCRD";
-import { obtener_bodegas, obtener_tipos_entrada } from "../../../../entradaDeAlmacen/thunks/Entradas";
+import { obtener_tipos_entrada } from "../../../../entradaDeAlmacen/thunks/Entradas";
 import { control_error } from "../../../../../../helpers";
 import BuscarBodegaComponent from "./BuscarBodega";
 import BuscarEntregasCRDComponent from "./BuscarEntregasCRD";
