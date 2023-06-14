@@ -239,8 +239,8 @@ export const EditarProyecto: React.FC<IProps> = (
               rows={rows_actividades}
               columns={columns}
               getRowId={(row) => row.id_actividades}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
               disableSelectionOnClick
             />
           </Grid>

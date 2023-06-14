@@ -38,8 +38,6 @@ export const EditarPrograma: React.FC<IProps> = (
     set_value,
     set_id_proyecto,
     watch,
-    set_data,
-    is_seleccionar_programa
   }:
     IProps) => {
 
@@ -267,8 +265,8 @@ export const EditarPrograma: React.FC<IProps> = (
                 rows={rows_proyectos}
                 columns={columns}
                 getRowId={(row) => row.id_proyecto}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
               />
             </Grid>
           </>

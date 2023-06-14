@@ -50,19 +50,19 @@ export const PorhMainScreen: React.FC = () => {
       field: 'nombre',
       headerName: 'NOMBRE PROGRAMA',
       sortable: true,
-      width: 170,
+      width: 250,
     },
     {
       field: 'fecha_inicio',
       headerName: 'FECHA INICIO',
       sortable: true,
-      width: 170,
+      width: 250,
     },
     {
       field: 'fecha_fin',
       headerName: 'FECHA FIN',
       sortable: true,
-      width: 170,
+      width: 250,
     },
     {
       field: 'ACCIONES',
@@ -75,7 +75,6 @@ export const PorhMainScreen: React.FC = () => {
             <>
               <IconButton
                 onClick={() => {
-                  console.log(params.row);
                   set_id_programa(params.row.id_programa as number);
                   set_data(params.row);
                   set_is_agregar(false);
@@ -272,13 +271,21 @@ export const PorhMainScreen: React.FC = () => {
                 set_value={set_value}
                 set_id_proyecto={set_id_proyecto}
                 set_data={set_data}
+                is_seleccionar_programa={is_seleccionar}
               />
             </>
           )}
           {is_seleccionar && (
             <>
-              {/* <AgregarPrograma /> */}
-            </>
+              <Grid item>
+                <LoadingButton
+                  variant="contained"
+                  color='success'
+                  type='submit'
+                >
+                  Finalizar
+                </LoadingButton>
+              </Grid>            </>
           )}
           <Grid item xs={12}>
             <Divider />
@@ -301,15 +308,31 @@ export const PorhMainScreen: React.FC = () => {
                 Salir
               </LoadingButton>
             </Grid>
-            <Grid item>
-              <LoadingButton
-                variant="contained"
-                color='success'
-                type='submit'
-              >
-                Finalizar
-              </LoadingButton>
-            </Grid>
+            {!is_editar ? (
+              <>
+                <Grid item>
+                  <LoadingButton
+                    variant="contained"
+                    color='success'
+                    type='submit'
+                  >
+                    Finalizar
+                  </LoadingButton>
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item>
+                  <LoadingButton
+                    variant="contained"
+                    color='success'
+                    type='submit'
+                  >
+                    Actualizar
+                  </LoadingButton>
+                </Grid>
+              </>
+            )}
           </Grid>
         </Grid>
       </form >
