@@ -22,7 +22,7 @@ export const AgregarProyectos: React.FC<IProps> = ({
   register,
   watch,
   set_value,
-}:IProps) => {
+}: IProps) => {
 
   const [is_agregar, set_is_agregar] = useState(false);
 

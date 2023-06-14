@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { Avatar, Divider, IconButton, TextField, Typography } from '@mui/material';
@@ -17,17 +19,29 @@ import { DataContext } from '../../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { get_data_id } from '../../Request/request';
 import { control_error } from '../../../../../helpers';
-import type { GetPrograma } from '../../Interfaces/interfaces';
+import { EditarProyecto } from '../ActualizarProyecto/EditarProyectos';
+import type { GetProyectos } from '../../Interfaces/interfaces';
+
+
 
 interface IProps {
-  data: GetPrograma[];
+  data: any;
   watch: any;
   register: any;
   set_value: any;
   set_id_proyecto: any;
+  set_data: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarPrograma: React.FC<IProps> = ({ data, register, set_value, set_id_proyecto, watch }: IProps) => {
+export const EditarPrograma: React.FC<IProps> = (
+  { data,
+    register,
+    set_value,
+    set_id_proyecto,
+    watch,
+    set_data,
+  }:
+    IProps) => {
 
   const {
     rows_proyectos,
@@ -81,8 +95,11 @@ export const EditarPrograma: React.FC<IProps> = ({ data, register, set_value, se
                   <EditIcon
                     sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                     onClick={() => {
-                      // handle_open_editar();
-                      // set_cargos(params.row);
+                      set_id_proyecto(params.row.id_proyecto as number)
+                      set_data_proyectos(params.row)
+                      set_is_agregar(false)
+                      set_is_editar(true)
+                      set_is_seleccionar(false)
                     }}
                   />
                 </Avatar>
@@ -117,10 +134,32 @@ export const EditarPrograma: React.FC<IProps> = ({ data, register, set_value, se
 
   ];
 
+
+  const [form, setform] = useState({
+    nombre: '',
+    fecha_inicial: '',
+    fecha_fin: '',
+    id_programa: '',
+
+  })
+
+  const handle_change = (e: any) => {
+    console.log('e.target.name', e.target.value)
+    setform({
+      ...data,
+      [e.target.name]: e.target.value
+    })
+  }
+
   const [is_agregar, set_is_agregar] = useState(false);
+  const [is_editar, set_is_editar] = useState(false);
+  const [is_seleccionar, set_is_seleccionar] = useState(false);
+
   // fechas
   const [start_date, set_start_date] = useState<Date | null>(new Date());
   const [end_date, set_end_date] = useState<Date | null>(new Date());
+
+  const [data_proyectos, set_data_proyectos] = useState<GetProyectos>();
 
   const handle_start_date_change = (date: Date | null): void => {
     set_value('fecha_inicial', date)
@@ -141,19 +180,18 @@ export const EditarPrograma: React.FC<IProps> = ({ data, register, set_value, se
   };
 
   useEffect(() => {
-    void fetch_data(data[0].id_programa);
-    // console.log('nombre', rows_proyectos[0].nombre)
-  }, []);
+    console.log('data editar programa', data)
+    void fetch_data(data.id_programa);
+  }, [data.id_programa]);
 
   useEffect(() => {
-    if (data.length > 0) {
-      console.log('data', data)
-      set_start_date(new Date(data[0].fecha_inicio))
-      set_value('fecha_fin', data[0].fecha_fin)
-      set_value('fecha_inicio', data[0].fecha_inicio)
-      set_end_date(new Date(data[0].fecha_fin))
+    if (data !== undefined) {
+      set_start_date(new Date(data.fecha_inicio))
+      set_value('fecha_fin', data.fecha_fin)
+      set_value('fecha_inicio', data.fecha_inicio)
+      set_end_date(new Date(data.fecha_fin))
     }
-  }, [data]);
+  }, [data !== undefined]);
 
   return (
     <>
@@ -168,7 +206,10 @@ export const EditarPrograma: React.FC<IProps> = ({ data, register, set_value, se
             size="small"
             margin="dense"
             required
-            defaultValue={data[0].nombre}
+            name="nombre"
+            onChange={handle_change
+            }
+            value={data.nombre}
             autoFocus
           />
         </Grid>
@@ -238,6 +279,8 @@ export const EditarPrograma: React.FC<IProps> = ({ data, register, set_value, se
               variant="outlined"
               onClick={() => {
                 set_is_agregar(true)
+                set_is_editar(false)
+                set_is_seleccionar(false)
                 set_id_proyecto(null)
               }}
             >
@@ -256,6 +299,23 @@ export const EditarPrograma: React.FC<IProps> = ({ data, register, set_value, se
             />
           </>
         )}
+        {is_editar && (
+          <>
+            <EditarProyecto
+              data={data_proyectos}
+              register={register}
+              watch={watch}
+              set_value={set_value}
+              set_id_proyecto={set_id_proyecto}
+            />
+          </>
+        )}
+        {is_seleccionar && (
+          <>
+            {/* <AgregarPrograma /> */}
+          </>
+        )}
+
       </Grid>
     </>
   );

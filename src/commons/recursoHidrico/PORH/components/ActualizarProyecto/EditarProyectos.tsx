@@ -15,9 +15,26 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
 import { get_data_id } from '../../Request/request';
+import { control_error } from '../../../../../helpers';
+
+interface IProps {
+  data: any;
+  watch: any;
+  register: any;
+  set_value: any;
+  set_id_proyecto: any;
+}
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarProyecto: React.FC = () => {
+export const EditarProyecto: React.FC<IProps> = (
+  { data,
+    register,
+    set_value,
+    set_id_proyecto,
+    watch
+  }:
+    IProps) => {
 
   const {
     rows_actividades,
@@ -27,7 +44,7 @@ export const EditarProyecto: React.FC = () => {
   const columns: GridColDef[] = [
 
     {
-      field: 'id_actividad',
+      field: 'id_actividades',
       headerName: 'No ACTIVIDAD',
       sortable: true,
       width: 170,
@@ -99,22 +116,41 @@ export const EditarProyecto: React.FC = () => {
 
   const [is_agregar, set_is_agregar] = useState(false);
 
+  const fetch_data = async (id_proyecto: number): Promise<void> => {
+    try {
+      await get_data_id(id_proyecto, set_rows_actividades, 'get/actividades/por/proyectos');
+    } catch (error) {
+      control_error(error);
+    }
+  };
+
   useEffect(() => {
-    void get_data_id(1, set_rows_actividades, 'get/actividades/por/proyectos');
-  }, []);
+    void fetch_data(data.id_proyecto);
+  }, [data]);
+
+  useEffect(() => {
+    if (data !== undefined) {
+      set_start_date(new Date(data.vigencia_inicial))
+      set_value('vigencia_final', data.vigencia_final)
+      set_value('vigencia_inicial', data.vigencia_inicial)
+      set_end_date(new Date(data.vigencia_final))
+    }
+  }, [data !== undefined]);
+
 
   // fechas
   const [start_date, set_start_date] = useState<Date | null>(new Date());
   const [end_date, set_end_date] = useState<Date | null>(new Date());
 
   const handle_start_date_change = (date: Date | null): void => {
+    set_value('vigencia_inicial', date)
     set_start_date(date)
   };
 
   const handle_end_date_change = (date: Date | null): void => {
+    set_value('vigencia_final', date)
     set_end_date(date)
   };
-
   return (
     <>
       <Grid item xs={12}>
@@ -127,7 +163,9 @@ export const EditarProyecto: React.FC = () => {
           size="small"
           margin="dense"
           required
+          defaultValue={data.nombre}
           autoFocus
+          {...register("nombre", { required: true })}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -145,6 +183,7 @@ export const EditarProyecto: React.FC = () => {
                 fullWidth
                 size="small"
                 {...params}
+                {...register("vigencia_inicial", { required: true })}
               />
             )}
           />
@@ -165,6 +204,7 @@ export const EditarProyecto: React.FC = () => {
                 fullWidth
                 size="small"
                 {...params}
+                {...register("vigencia_final", { required: true })}
               />
             )}
           />
@@ -178,7 +218,9 @@ export const EditarProyecto: React.FC = () => {
           margin="dense"
           required
           autoFocus
+          defaultValue={data.inversion}
           type="text"
+          {...register("inversion", { required: true })}
         />
       </Grid>
       {rows_actividades.length > 0 && (
@@ -196,7 +238,7 @@ export const EditarProyecto: React.FC = () => {
               autoHeight
               rows={rows_actividades}
               columns={columns}
-              getRowId={(row) => row.id_actividad}
+              getRowId={(row) => row.id_actividades}
               pageSize={10}
               rowsPerPageOptions={[10]}
               disableSelectionOnClick
@@ -213,19 +255,6 @@ export const EditarProyecto: React.FC = () => {
             Agregar Nueva Actividad
           </LoadingButton>
         </Grid>
-
-        <Grid item>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            fullWidth
-            color="success"
-          // loading={is_saving}
-          // disabled={is_saving}
-          >
-            Guardar
-          </LoadingButton>
-        </Grid>
       </Grid>
       {is_agregar && (
         <>
@@ -233,7 +262,7 @@ export const EditarProyecto: React.FC = () => {
             <Typography variant="subtitle1" fontWeight="bold">
               Descripción de la actividad
             </Typography>
-            {/* <Divider /> */}
+            <Divider />
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -244,21 +273,8 @@ export const EditarProyecto: React.FC = () => {
               required
               autoFocus
               multiline
+              {...register("descripcion", { required: true })}
             />
-          </Grid>
-          <Grid item spacing={2} justifyContent="end" container>
-            <Grid item>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                fullWidth
-                color="success"
-              // loading={is_saving}
-              // disabled={is_saving}
-              >
-                Actualizar
-              </LoadingButton>
-            </Grid>
           </Grid>
         </>
       )}

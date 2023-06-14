@@ -16,6 +16,7 @@ import { EditarPrograma } from '../../components/ActualizarPrograma/EditarProgra
 import { useForm } from 'react-hook-form';
 import { control_error } from '../../../../../helpers';
 import { control_success } from '../../../requets/Request';
+import type { GetPrograma } from '../../Interfaces/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PorhMainScreen: React.FC = () => {
@@ -72,7 +73,16 @@ export const PorhMainScreen: React.FC = () => {
         if (fecha_fin !== null && new Date(fecha_fin) > new Date()) {
           return (
             <>
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  console.log(params.row);
+                  set_id_programa(params.row.id_programa as number);
+                  set_data(params.row);
+                  set_is_agregar(false);
+                  set_is_editar(true);
+                  set_is_seleccionar(false);
+                }}
+              >
                 <Avatar
                   sx={{
                     width: 24,
@@ -83,13 +93,10 @@ export const PorhMainScreen: React.FC = () => {
                   variant="rounded"
                 >
                   <EditIcon
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                    onClick={() => {
-                      set_id_programa(params.row.id_programa as number)
-                      set_is_agregar(false)
-                      set_is_editar(true)
-                      set_is_seleccionar(false)
-                      // set_cargos(params.row);
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
                     }}
                   />
                 </Avatar>
@@ -109,15 +116,19 @@ export const PorhMainScreen: React.FC = () => {
                   variant="rounded"
                 >
                   <DeleteIcon
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
                   />
                 </Avatar>
               </IconButton>
               <IconButton
                 onClick={() => {
-                  set_is_agregar(false)
-                  set_is_editar(false)
-                  set_is_seleccionar(true)
+                  set_is_agregar(false);
+                  set_is_editar(false);
+                  set_is_seleccionar(true);
                 }}
               >
                 <Avatar
@@ -130,11 +141,14 @@ export const PorhMainScreen: React.FC = () => {
                   variant="rounded"
                 >
                   <ChecklistIcon
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
                   />
                 </Avatar>
               </IconButton>
-
             </>
           );
         } else {
@@ -149,6 +163,7 @@ export const PorhMainScreen: React.FC = () => {
   const [is_seleccionar, set_is_seleccionar] = useState(false);
   const [id_programa, set_id_programa] = useState<number | null>(null);
   const [id_proyecto, set_id_proyecto] = useState<number | null>(null);
+  const [data, set_data] = useState<GetPrograma>();
 
   const fetch_data = async (): Promise<void> => {
     try {
@@ -163,14 +178,15 @@ export const PorhMainScreen: React.FC = () => {
   }, []);
 
 
-  const on_submit = async (form: any, set_rows_programas: any, rows_programas: any, rows_proyectos: any, rows_actividades: any): Promise<void> => {
+  const on_submit = async (form: any): Promise<void> => {
+    console.log(form)
+    // console.log(...resgister)
     try {
-      console.log()
       form.id_programa = id_programa
       form.id_proyecto = id_proyecto
       await post_programa(form, set_rows_programas, rows_programas, rows_proyectos, rows_actividades);
       reset();
-      control_success('Programa agregado correctamente')
+      control_success('Se creó correctamente')
     } catch (err) {
       control_error(err);
     }
@@ -181,7 +197,7 @@ export const PorhMainScreen: React.FC = () => {
     <>
       <form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises, no-void
-        onSubmit={handleSubmit((form) => void on_submit(form, set_rows_programas, rows_programas, rows_proyectos, rows_actividades))}
+        onSubmit={handleSubmit((form) => void on_submit(form))}
       >
         <Grid
           container
@@ -217,8 +233,8 @@ export const PorhMainScreen: React.FC = () => {
                   rows={rows_programas}
                   columns={columns}
                   getRowId={(row) => row.id_programa}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
+                  pageSize={10}
+                  rowsPerPageOptions={[10]}
                 />
               </Grid>
             </>
@@ -250,11 +266,12 @@ export const PorhMainScreen: React.FC = () => {
           {is_editar && (
             <>
               <EditarPrograma
-                data={rows_programas}
+                data={data}
                 register={register}
                 watch={watch}
                 set_value={set_value}
                 set_id_proyecto={set_id_proyecto}
+                set_data={set_data}
               />
             </>
           )}
