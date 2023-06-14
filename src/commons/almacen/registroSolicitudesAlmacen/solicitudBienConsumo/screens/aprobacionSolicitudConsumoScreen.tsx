@@ -19,7 +19,7 @@ import SeleccionarSolicitudAprobada from '../components/SeleccionarSolicitudApro
 const AprobacionSolicitudConsumoScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud_aprobacion, handleSubmit: handle_submit, reset: reset_solicitud_aprobacion, getValues: get_values } = useForm<IObjSolicitud>();
-    const [action] = useState<string>("Aprobar solicitud de consumo");
+    const [action] = useState<string>("Guardar");
     const { nro_solicitud, current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state) => state.solic_consumo);
 
     const dispatch = useAppDispatch();

@@ -10,13 +10,14 @@ import type { AuthSlice } from '../../../../auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { set_current_nursery, set_current_solicitud, set_persona_solicita } from '../../store/slices/indexSolicitud';
-import { type IObjBienesSolicitud, type IObjNursery, type IObjSolicitudVivero } from '../../interfaces/solicitudVivero';
-import { crear_solicitud, get_bienes_solicitud, get_funcionario_id_service, get_num_solicitud, get_nurcery, get_person_id_service, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
+import { type IObjNursery, type IObjSolicitudVivero } from '../../interfaces/solicitudVivero';
+import { aprobacion_solicitud_funcionacio, get_bienes_solicitud, get_funcionario_id_service, get_num_solicitud, get_nurcery, get_person_id_service, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import SeleccionarSolicitudAprobada from '../../components/SeleccionarSolicitudAprobacion';
 import DestinoAprobacion from '../../components/DestinoEleAprobacion';
 import PersonaResponsableAprobacion from '../../components/PersonaRespoAprobacion';
 import SeleccionBienAprobacion from '../../components/SeleccionBienAprobacion';
+import Aprobacion from '../../components/Aprobacion';
 
 
 
@@ -25,7 +26,7 @@ import SeleccionBienAprobacion from '../../components/SeleccionBienAprobacion';
 const AprobacionSolicitudCoordinadorScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { control: control_solicitud_aprobada, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values, watch } = useForm<IObjSolicitudVivero>();
-  const { nro_solicitud, current_solicitud, nurseries, persona_solicita, current_funcionario, bienes_solicitud } = useAppSelector((state) => state.solicitud_vivero);
+  const { nro_solicitud, current_solicitud, nurseries, persona_solicita, current_funcionario, } = useAppSelector((state) => state.solicitud_vivero);
   const [action] = useState<string>("Aprobación de solicitud");
   const dispatch = useAppDispatch();
 
@@ -93,25 +94,40 @@ const AprobacionSolicitudCoordinadorScreen = () => {
 
   }, [current_funcionario]);
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const on_submit = (data: IObjSolicitudVivero): void => {
-    console.log(data)
-    const form_data: any = new FormData();
-    const fecha = new Date(data.fecha_solicitud ?? "").toISOString()
-    const fecha_retiro = new Date(data.fecha_retiro_material ?? "").toISOString()
+  // const on_submit = (data: IObjSolicitudVivero): void => {
+  //   console.log(data)
+  //   const form_data: any = new FormData();
+  //   const fecha = new Date(data.fecha_solicitud ?? "").toISOString()
+  //   const fecha_retiro = new Date(data.fecha_retiro_material ?? "").toISOString()
 
-    const data_edit = {
-      ...data, fecha_solicitud: fecha.slice(0, 10) + " " + fecha.slice(11, 19), fecha_retiro_material: fecha_retiro.slice(0, 10)
+  //   const data_edit = {
+  //     ...data, fecha_solicitud: fecha.slice(0, 10) + " " + fecha.slice(11, 19), fecha_retiro_material: fecha_retiro.slice(0, 10)
+  //   }
+  //   const aux_items: IObjBienesSolicitud[] = []
+  //   bienes_solicitud.forEach((element: IObjBienesSolicitud, index: number) => {
+  //     aux_items.push({ ...element, nro_posicion: index })
+  //   });
+  //   form_data.append('data_solicitud', JSON.stringify({ ...data_edit }));
+  //   form_data.append('ruta_arcruta_archivo_tecnico', data.ruta_archivo_info_tecnico);
+  //   form_data.append('data_items_solicitados', JSON.stringify(aux_items));
+  //   void dispatch(crear_solicitud(form_data));
+  // }
+
+  const on_submit_aprobacion = (data: IObjSolicitudVivero): void => {
+
+    const form_data = {
+
+      estado_aprobacion_responsable: data.estado_aprobacion_responsable,
+      justificacion_rechazo_responsable: data.justificacion_aprobacion_responsable,
+      fecha_aprobacion_responsable: null,
+      revisada_responsable: null,
+      solicitud_abierta: null,
+      fecha_cierra_solicitud: null
     }
-    const aux_items: IObjBienesSolicitud[] = []
-    bienes_solicitud.forEach((element: IObjBienesSolicitud, index: number) => {
-      aux_items.push({ ...element, nro_posicion: index })
-    });
-    form_data.append('data_solicitud', JSON.stringify({ ...data_edit }));
-    form_data.append('ruta_arcruta_archivo_tecnico', data.ruta_archivo_info_tecnico);
-    form_data.append('data_items_solicitados', JSON.stringify(aux_items));
-    void dispatch(crear_solicitud(form_data));
-  }
 
+    void dispatch(aprobacion_solicitud_funcionacio(form_data, data.id_solicitud_vivero))
+    console.log(form_data)
+  }
 
 
 
@@ -151,6 +167,10 @@ const AprobacionSolicitudCoordinadorScreen = () => {
 
       <SeleccionBienAprobacion />
 
+      <Aprobacion
+        control_solicitud_aprobada={control_solicitud_aprobada}
+        get_values={get_values} />
+
 
 
       <Grid
@@ -162,7 +182,7 @@ const AprobacionSolicitudCoordinadorScreen = () => {
         <Grid item xs={12} md={3}>
           <FormButton
             variant_button="contained"
-            on_click_function={handle_submit(on_submit)}
+            on_click_function={handle_submit(on_submit_aprobacion)}
             icon_class={< LibraryAddCheckIcon />}
             label={action}
             type_button="button" />

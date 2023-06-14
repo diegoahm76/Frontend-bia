@@ -360,3 +360,26 @@ export const get_bienes_solicitud = (
         }
     };
 };
+// APROBAR SOLICITUD 
+
+export const aprobacion_solicitud_funcionacio: any = (
+
+    id: string | number
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.patch(
+                `conservacion/funcionario/procesar-solicitud-responsable/${id}/`
+            );
+            console.log(data)
+            dispatch(get_solicitud_service());
+            control_success('Se aprobo la solicitud');
+
+            return data;
+        } catch (error: any) {
+            console.log('aprobar solicitud');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};

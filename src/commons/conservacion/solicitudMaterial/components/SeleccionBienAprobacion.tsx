@@ -278,7 +278,6 @@ const SeleccionBienAprobacion = () => {
                     get_filters_models={get_bienes_filtro}
                     set_models={set_bienes}
                     show_search_button={false}
-
                     form_inputs_list={[
 
 

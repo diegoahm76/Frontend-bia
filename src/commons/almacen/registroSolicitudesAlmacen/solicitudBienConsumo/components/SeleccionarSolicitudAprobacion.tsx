@@ -18,9 +18,6 @@ const SeleccionarSolicitudAprobada = ({
     get_values
 }: IProps) => {
 
-
-
-
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
     const { unidad_organizacional, solicitudes } = useAppSelector((state) => state.solic_consumo);
