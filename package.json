@@ -6,6 +6,8 @@
     "@blockly/field-date": "^6.0.12",
     "@ckeditor/ckeditor5-build-classic": "^37.1.0",
     "@ckeditor/ckeditor5-react": "^6.0.0",
+    "@craco/craco": "^7.1.0",
+    "@craco/types": "^7.1.0",
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@fontsource/roboto": "^4.5.8",
@@ -101,6 +103,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@locator/babel-jsx": "^0.2.4",
+    "@locator/runtime": "^0.2.4",
     "@types/jspdf": "^2.0.0",
     "@types/leaflet": "^1.9.3",
     "@types/react-datepicker": "^4.10.0",
