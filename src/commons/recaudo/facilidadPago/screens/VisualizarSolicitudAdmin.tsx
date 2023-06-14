@@ -216,7 +216,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                           }
                         }}
                       >
-                      Crear Plan de Pagos
+                        Crear Plan de Pagos
                       </Button>
                     </Grid>
                     <Grid item sm={5}>
@@ -225,7 +225,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                         variant='contained'
                         onClick={() => {}}
                       >
-                      Ver Plan de Pagos
+                        Ver Plan de Pagos
                       </Button>
                     </Grid>
                   </>
