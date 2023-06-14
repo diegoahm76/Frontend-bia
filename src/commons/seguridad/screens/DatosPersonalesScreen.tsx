@@ -8,7 +8,7 @@ import { consultar_datos_persona } from "../request/Request";
 import { DatosPersonalesNatural } from "../components/DatosPersonalesNatiral/DatosPersonalesNatiral";
 import { DatosPersonalesJuridica } from "../components/DatosPersonalesJuridica/DatosPersonalesJuridica";
 import { use_register } from "../../auth/hooks/registerHook";
-
+import {Grid} from '@mui/material';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DatosPersonalesScreen: React.FC = () => {
@@ -44,7 +44,15 @@ export const DatosPersonalesScreen: React.FC = () => {
 
 
   return (
-    <>
+    <Grid container sx={{
+      position: 'relative',
+      background: '#FAFAFA',
+      borderRadius: '15px',
+      p: '20px',
+      mb: '20px',
+      boxShadow: '0px 3px 6px #042F4A26',
+    }}
+    >
       {datos?.tipo_persona === 'N' && (
         <>
           <DatosPersonalesNatural
@@ -72,6 +80,6 @@ export const DatosPersonalesScreen: React.FC = () => {
           watch={watch}/>
         </>
       )}
-    </>
+    </Grid>
   );
 };
