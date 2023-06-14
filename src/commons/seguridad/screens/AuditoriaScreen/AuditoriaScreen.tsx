@@ -217,9 +217,7 @@ export const AuditoriaScreen = (): JSX.Element => {
                       />
                     )}
                   />
-                  <Typography className="label_selects">
-                    Fecha inicial{' '}
-                  </Typography>
+              
                 </LocalizationProvider>
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -255,9 +253,7 @@ export const AuditoriaScreen = (): JSX.Element => {
                       />
                     )}
                   />
-                  <Typography className="label_selects">
-                    Fecha final{' '}
-                  </Typography>
+            
                 </LocalizationProvider>
               </Grid>
               {
