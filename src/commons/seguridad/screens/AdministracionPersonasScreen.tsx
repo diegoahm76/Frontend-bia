@@ -4,7 +4,7 @@ import type {
   DataPersonas,
   InfoPersona,
 } from '../../../interfaces/globalModels';
-import { Divider, Grid } from '@mui/material';
+import { Divider, Grid,Box } from '@mui/material';
 import { Title } from '../../../components/Title';
 import { use_register } from '../../auth/hooks/registerHook';
 import { consultar_datos_persona } from '../request/Request';
@@ -55,7 +55,14 @@ export const AdministracionPersonasScreen: React.FC = () => {
   };
 
   return (
-    <>
+    <Box sx={{
+      position: 'relative',
+      background: '#FAFAFA',
+      borderRadius: '15px',
+      p: '20px',
+      mb: '20px',
+      boxShadow: '0px 3px 6px #042F4A26',
+    }}>
       <Grid container>
         <Grid item xs={12}>
           <Title title="ADMINISTRADOR DE PERSONAS" />
@@ -66,7 +73,7 @@ export const AdministracionPersonasScreen: React.FC = () => {
           void on_result(data);
         }}
       />
-      <Grid container spacing={2}>
+      <Grid container  spacing={2}>
         <Grid item xs={12}>
           <Divider />
         </Grid>
@@ -147,6 +154,6 @@ export const AdministracionPersonasScreen: React.FC = () => {
           </>
         )}
       </Grid>
-    </>
+    </Box>
   );
 };
