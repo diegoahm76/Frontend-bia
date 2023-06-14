@@ -35,18 +35,25 @@ export const post_programa = async (
             vigencia_inicial: dayjs(proyecto.vigencia_inicial).format('YYYY-MM-DD'),
             vigencia_final: dayjs(proyecto.vigencia_final).format('YYYY-MM-DD'),
             inversion: proyecto.inversion,
-            actividades: [
-              ...proyecto.actividades.map((actividad: any) => {
-                return {
-                  nombre: actividad.nombre,
-                };
-              }),
-              {
-                nombre: form.descripcion, // Nueva actividad asociada al proyecto
-              },
-            ],
+            actividades: proyecto.actividades.map((actividad: any) => {
+              return {
+                nombre: actividad.nombre,
+              };
+            }),
           };
         }),
+        {
+          id_proyecto: form.id_proyecto,
+          nombre: form.nombre,
+          vigencia_inicial: dayjs(form.vigencia_inicial).format('YYYY-MM-DD'),
+          vigencia_final: dayjs(form.vigencia_final).format('YYYY-MM-DD'),
+          inversion: form.inversion,
+          actividades: [
+            {
+              nombre: form.descripcion,
+            },
+          ],
+        },
       ],
     }
   );

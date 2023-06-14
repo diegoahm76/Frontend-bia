@@ -17,15 +17,17 @@ import { DataContext } from '../../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { get_data_id } from '../../Request/request';
 import { control_error } from '../../../../../helpers';
-import type{ GetPrograma } from '../../Interfaces/interfaces';
+import type { GetPrograma } from '../../Interfaces/interfaces';
 
 interface IProps {
-    data: GetPrograma[];
-    register: any;
+  data: GetPrograma[];
+  watch: any;
+  register: any;
+  set_value: any;
+  set_id_proyecto: any;
 }
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
+export const EditarPrograma: React.FC<IProps> = ({ data, register, set_value, set_id_proyecto, watch }: IProps) => {
 
   const {
     rows_proyectos,
@@ -116,6 +118,19 @@ export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
   ];
 
   const [is_agregar, set_is_agregar] = useState(false);
+  // fechas
+  const [start_date, set_start_date] = useState<Date | null>(new Date());
+  const [end_date, set_end_date] = useState<Date | null>(new Date());
+
+  const handle_start_date_change = (date: Date | null): void => {
+    set_value('fecha_inicial', date)
+    set_start_date(date)
+  };
+
+  const handle_end_date_change = (date: Date | null): void => {
+    set_value('fecha_fin', date)
+    set_end_date(date)
+  };
 
   const fetch_data = async (id_programa: number): Promise<void> => {
     try {
@@ -130,18 +145,15 @@ export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
     // console.log('nombre', rows_proyectos[0].nombre)
   }, []);
 
-
-  // fechas
-  const [start_date, set_start_date] = useState<Date | null>(new Date());
-  const [end_date, set_end_date] = useState<Date | null>(new Date());
-
-  const handle_start_date_change = (date: Date | null): void => {
-    set_start_date(date)
-  };
-
-  const handle_end_date_change = (date: Date | null): void => {
-    set_end_date(date)
-  };
+  useEffect(() => {
+    if (data.length > 0) {
+      console.log('data', data)
+      set_start_date(new Date(data[0].fecha_inicio))
+      set_value('fecha_fin', data[0].fecha_fin)
+      set_value('fecha_inicio', data[0].fecha_inicio)
+      set_end_date(new Date(data[0].fecha_fin))
+    }
+  }, [data]);
 
   return (
     <>
@@ -200,15 +212,15 @@ export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
             />
           </LocalizationProvider>
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            Proyectos
-          </Typography>
-          <Divider />
-        </Grid>
-        <Grid item xs={12}>
-          {rows_proyectos.length > 0 && (
-            <>
+        {rows_proyectos.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                Proyectos
+              </Typography>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
               <DataGrid
                 autoHeight
                 rows={rows_proyectos}
@@ -217,22 +229,17 @@ export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
               />
-            </>
-          )}
-          {/* <Grid item xs={12}>
-                        <Grid container justifyContent="center" textAlign="center">
-                            <Alert icon={false} severity="info">
-                                <LinearProgress />
-                                <Typography>No se encontraron resultados...</Typography>
-                            </Alert>
-                        </Grid>
-                    </Grid> */}
-        </Grid>
+            </Grid>
+          </>
+        )}
         <Grid item spacing={2} justifyContent="end" container>
           <Grid item>
             <LoadingButton
               variant="outlined"
-              onClick={() => { set_is_agregar(true) }}
+              onClick={() => {
+                set_is_agregar(true)
+                set_id_proyecto(null)
+              }}
             >
               Agregar Nuevo Proyecto
             </LoadingButton>
@@ -242,8 +249,10 @@ export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
       <Grid container spacing={2} mt={0.1}>
         {is_agregar && (
           <>
-            <AgregarProyectos 
-            register={register}
+            <AgregarProyectos
+              register={register}
+              watch={watch}
+              set_value={set_value}
             />
           </>
         )}

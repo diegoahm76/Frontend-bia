@@ -85,6 +85,7 @@ export const PorhMainScreen: React.FC = () => {
                   <EditIcon
                     sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                     onClick={() => {
+                      set_id_programa(params.row.id_programa as number)
                       set_is_agregar(false)
                       set_is_editar(true)
                       set_is_seleccionar(false)
@@ -147,7 +148,7 @@ export const PorhMainScreen: React.FC = () => {
   const [is_editar, set_is_editar] = useState(false);
   const [is_seleccionar, set_is_seleccionar] = useState(false);
   const [id_programa, set_id_programa] = useState<number | null>(null);
-  // const [id_proyecto, set_id_proyecto] = useState<number | null>(null);
+  const [id_proyecto, set_id_proyecto] = useState<number | null>(null);
 
   const fetch_data = async (): Promise<void> => {
     try {
@@ -166,6 +167,7 @@ export const PorhMainScreen: React.FC = () => {
     try {
       console.log()
       form.id_programa = id_programa
+      form.id_proyecto = id_proyecto
       await post_programa(form, set_rows_programas, rows_programas, rows_proyectos, rows_actividades);
       reset();
       control_success('Programa agregado correctamente')
@@ -221,14 +223,6 @@ export const PorhMainScreen: React.FC = () => {
               </Grid>
             </>
           )}
-          {/* <Grid item xs={12}>
-                        <Grid container justifyContent="center" textAlign="center">
-                            <Alert icon={false} severity="info">
-                                <LinearProgress />
-                                <Typography>No se encontraron resultados...</Typography>
-                            </Alert>
-                        </Grid>
-                    </Grid> */}
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <LoadingButton
@@ -249,7 +243,7 @@ export const PorhMainScreen: React.FC = () => {
               <AgregarPrograma
                 register={register}
                 watch={watch}
-                set_value = {set_value}
+                set_value={set_value}
               />
             </>
           )}
@@ -258,6 +252,9 @@ export const PorhMainScreen: React.FC = () => {
               <EditarPrograma
                 data={rows_programas}
                 register={register}
+                watch={watch}
+                set_value={set_value}
+                set_id_proyecto={set_id_proyecto}
               />
             </>
           )}

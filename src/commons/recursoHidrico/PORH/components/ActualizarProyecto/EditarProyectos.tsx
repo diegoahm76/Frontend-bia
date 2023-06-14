@@ -27,14 +27,14 @@ export const EditarProyecto: React.FC = () => {
   const columns: GridColDef[] = [
 
     {
-      field: 'id_proyecto',
-      headerName: 'No PROYECTO',
+      field: 'id_actividad',
+      headerName: 'No ACTIVIDAD',
       sortable: true,
       width: 170,
     },
     {
       field: 'nombre',
-      headerName: 'NOMBRE PROYECTO',
+      headerName: 'NOMBRE',
       sortable: true,
       width: 170,
     },
@@ -181,15 +181,16 @@ export const EditarProyecto: React.FC = () => {
           type="text"
         />
       </Grid>
-      <Grid item xs={12}>
-        <Typography variant="subtitle1" fontWeight="bold">
-          Actividades
-        </Typography>
-        <Divider />
-      </Grid>
-      <Grid item xs={12}>
-        {rows_actividades.length > 0 && (
-          <>
+      {rows_actividades.length > 0 && (
+        <>
+
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Actividades
+            </Typography>
+            <Divider />
+          </Grid>
+          <Grid item xs={12}>
             <DataGrid
               density="compact"
               autoHeight
@@ -200,17 +201,9 @@ export const EditarProyecto: React.FC = () => {
               rowsPerPageOptions={[10]}
               disableSelectionOnClick
             />
-          </>
-        )}
-        {/* <Grid item xs={12}>
-                        <Grid container justifyContent="center" textAlign="center">
-                            <Alert icon={false} severity="info">
-                                <LinearProgress />
-                                <Typography>No se encontraron resultados...</Typography>
-                            </Alert>
-                        </Grid>
-                    </Grid> */}
-      </Grid>
+          </Grid>
+        </>
+      )}
       <Grid item spacing={2} justifyContent="end" container>
         <Grid item>
           <LoadingButton

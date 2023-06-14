@@ -123,6 +123,8 @@ export const AgregarPrograma: React.FC<IProps> = ({
           <>
             <AgregarProyectos
               register={register}
+              watch={watch}
+              set_value={set_value}
             />
           </>
         )}
