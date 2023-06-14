@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { TextField, Button, Select, MenuItem } from '@material-ui/core';
 import './liquidator.css';
 import { LiquidatorService } from './liquidator.api';
-<<<<<<< HEAD
+import { modifyVariableInitValue } from '../visual-block-editor/utils';
 
 function Liquidator(props) {
   const [formData, setFormData] = useState(
@@ -20,24 +20,12 @@ function Liquidator(props) {
   const [isVisible, setIsVisible] = useState(props.test ?? false);
   const [textValue, setTextValue] = useState('');
   const [liquidaciones, setLiquidaciones] = useState([]);
-=======
-import { modifyVariableInitValue } from '../visual-block-editor/utils';
-
-
-function Liquidator(props) {
-
-  const [formData, setFormData] = useState((props.variables ?? []).reduce((acc, variable) => { acc[variable] = ''; return acc; }, { liquidador: '' }));
-  const [isVisible, setIsVisible] = useState(props.test ?? false);
-  const [textValue,setTextValue]= useState('');
-  const [liquidaciones,setLiquidaciones]= useState([]);
->>>>>>> Develop
   const [localVariables, setLocalVariables] = useState([]);
   const [externalRawCode, setExternalRawCode] = useState(null);
 
   useEffect(() => {
     setLocalVariables(props.variables ?? []);
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-<<<<<<< HEAD
     if (props.preview) return;
     LiquidatorService.findAll().then((data) => {
       setLiquidaciones(data);
@@ -52,24 +40,6 @@ function Liquidator(props) {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     setIsVisible(!isVisible);
   };
-=======
-    if(props.preview) return;
-    LiquidatorService.findAll()
-    .then(data => {
-      setLiquidaciones(data);
-    })
-  }, [props.preview,props.variables ]);
-
-  const onChange = async (e) => {
-    const id = e.target.value
-    const liquidacion = await LiquidatorService.findOne(id)
-    setLocalVariables(liquidacion.variables)
-    setExternalRawCode(liquidacion.funcion)
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-    setIsVisible(!isVisible);
-
-  }
->>>>>>> Develop
   const handleInputChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
@@ -85,30 +55,20 @@ function Liquidator(props) {
     const result = executeCode(endCode, formData);
 
     const dollarUSLocale = Intl.NumberFormat('en-US');
-<<<<<<< HEAD
     setTextValue('$ ' + dollarUSLocale.format(result));
-=======
-    setTextValue("$ "+dollarUSLocale.format(result));
->>>>>>> Develop
   };
   const executeCode = (endCode, initilState) => {
     /**
      * set default values for variables
      */
     localVariables.forEach((v) => {
-<<<<<<< HEAD
-      console.log(endCode);
+      endCode= modifyVariableInitValue(endCode, v,initilState[v]);
     });
-=======
-        endCode= modifyVariableInitValue(endCode, v,initilState[v]);
-    })
     console.log(endCode);
->>>>>>> Develop
 
     try {
       // eslint-disable-next-line no-eval
       const result = eval(endCode);
-<<<<<<< HEAD
       if (result === undefined) {
         props.setNotifications({
           open: true,
@@ -132,30 +92,11 @@ function Liquidator(props) {
     <div className="App">
       <header className="title">
         <h3>Prueba Liquidador</h3>
-=======
-      if(result === undefined){
-        props.setNotifications({ open: true, message: 'No se ha encontrado resultado, revisa tu diseño', type: 'error' });
-      }
-      console.log("code executed: ",result);
-      return result
-    } catch (error) {
-      props.setNotifications({ open: true, message: 'Error al ejecutar el código', type: 'error' });
-      return undefined
-    }
-
-    }
-
-  return (
-    <div className="App">
-      <header className='title'>
-        <h3 >Prueba Liquidador</h3>
->>>>>>> Develop
         <div>Resultado: {textValue && <span>{textValue}</span>}</div>
       </header>
       <div className="split">
         <div className="left">
           <form onSubmit={handleSubmit}>
-<<<<<<< HEAD
             {!props.preview && (
               <Select
                 variant="outlined"
@@ -200,42 +141,6 @@ function Liquidator(props) {
             <Button variant="contained" color="primary" type="submit">
               Calcular
             </Button>
-=======
-         {!props.preview &&  <Select
-              variant="outlined"
-              margin="normal"
-              fullWidth
-              placeholder='Seleccione liquidador'
-              name="liquidador"
-              label="Liquidador a usar"
-              onChange={onChange}
-              >
-                {liquidaciones.map((liquidacion,i) => {
-                  return <MenuItem key={liquidacion.id} value={liquidacion.id} selected={i === 0}>{liquidacion.descripcion}</MenuItem>
-                })}
-            </Select>}
-            { (isVisible || props.preview ) && localVariables?.map( variable =>{
-
-              return <TextField
-              key={variable}
-              label={variable?.toUpperCase()}
-              name={variable}
-              required
-              size="medium"
-              type="number"
-              value={formData[variable]}
-              onChange={handleInputChange}
-              variant="outlined"
-              margin="normal"
-              fullWidth
-
-            />
-            }) }
-            <Button variant="contained" color="primary" type="submit">
-              Calcular
-            </Button>
-
->>>>>>> Develop
           </form>
         </div>
       </div>
@@ -243,8 +148,4 @@ function Liquidator(props) {
   );
 }
 
-<<<<<<< HEAD
 export { Liquidator };
-=======
-export {Liquidator};
->>>>>>> Develop

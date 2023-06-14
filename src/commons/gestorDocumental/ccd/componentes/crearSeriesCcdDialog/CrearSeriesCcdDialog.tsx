@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-void */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
