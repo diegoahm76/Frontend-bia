@@ -691,7 +691,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   </Button>
                 </div>
               </Grid>
-              <Grid item xs={12} sm={5}>
+              <Grid item xs={12} sm={4.4}>
                 <TextField
                   label="Elaborado por"
                   type={'text'}
