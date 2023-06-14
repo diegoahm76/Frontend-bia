@@ -14,12 +14,19 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { useNavigate } from "react-router-dom";
 import AnularEntregaComponent from "./AnularEntrega";
 import VistaDetalleEntregaBienes from "./VistaDetalleEntregaBienes";
+import BuscarEntradasCRDComponent from "./BuscarEntradasCRD";
+import { obtener_bodegas, obtener_tipos_entrada } from "../../../../entradaDeAlmacen/thunks/Entradas";
+import { control_error } from "../../../../../../helpers";
+import BuscarBodegaComponent from "./BuscarBodega";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntregaBienesConsumoViveroScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [user_info, set_user_info] = useState<any>({});
+    const [entrada, set_entrada] = useState<any>(null);
+    const [bodega, set_bodega] = useState<any>(null);
+    const [tipos_entrada, set_tipos_entrada] = useState<any>([]);
     const [numero_entrega, set_numero_entrega] = useState<number>(0);
     const [fecha_entrega, set_fecha_entrega] = useState<Dayjs>(dayjs());
     const [msj_error_fecha_entrega, set_msj_error_fecha_entrega] = useState<string>("");
@@ -39,7 +46,31 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
     useEffect(() => {
         obtener_usuario();
         obtener_consecutivo_fc();
+        void obtener_tipos_entrada_fc();
     }, []);
+
+    useEffect(() => {
+        if (entrada !== null) {
+            set_numero_documento(entrada.numero_entrada_almacen);
+            set_tipo(tipos_entrada.find((te: any) => te.cod_tipo_entrada === entrada.id_tipo_entrada).nombre);
+        }
+    }, [entrada]);
+
+    useEffect(() => {
+        if (bodega !== null) {
+            set_nombre_bodega(bodega.nombre);
+            set_municipio_bodega(bodega.cod_municipio);
+        }
+    }, [bodega]);
+
+    const obtener_tipos_entrada_fc = async (): Promise<void> => {
+        try {
+            const { data: { data: response } } = await obtener_tipos_entrada();
+            set_tipos_entrada(response ?? []);
+        } catch (err) {
+            control_error(err);
+        }
+    };
 
     const obtener_usuario: () => void = () => {
         const data = localStorage.getItem('persist:macarenia_app');
@@ -195,7 +226,8 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
                                         Búsqueda
                                     </Button>
                                 </Stack>
-                                {buscar_es_is_active && (<></>)}
+                                {buscar_es_is_active && (<BuscarEntradasCRDComponent is_modal_active={buscar_es_is_active} set_is_modal_active={set_buscar_es_is_active} title={"Búsqueda de entradas por compensaciones, resarcimientos y donaciones"}
+                                    set_entrada={set_entrada}></BuscarEntradasCRDComponent>)}
                             </Grid>
                         </Grid>
                     </Box>
@@ -254,7 +286,7 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
                                         Búsqueda
                                     </Button>
                                 </Stack>
-                                {buscar_bp_is_active && (<></>)}
+                                {buscar_bp_is_active && (<BuscarBodegaComponent is_modal_active={buscar_bp_is_active} set_is_modal_active={set_buscar_bp_is_active} title={"Buscar bodega principal"} set_bodega={set_bodega}></BuscarBodegaComponent>)}
                             </Grid>
                         </Grid>
                     </Box>
@@ -263,11 +295,11 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
             {actualizar_entrega && (
                 <Alert sx={{ mb: '10px' }} severity="info" action={
                     <Button color="inherit" size="small" onClick={detalle_entrega}>
-                      Ver detalle
+                        Ver detalle
                     </Button>
-                  }>
+                }>
                     <Typography variant="body1" gutterBottom>
-                                Items entregados {dayjs().format("DD/MM/YYYY")} 
+                        Items entregados {dayjs().format("DD/MM/YYYY")}
                     </Typography>
                 </Alert>
             )}
