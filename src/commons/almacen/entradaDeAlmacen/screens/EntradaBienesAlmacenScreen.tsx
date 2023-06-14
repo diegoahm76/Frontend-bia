@@ -117,7 +117,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const obtener_persona_fc: (persona_id: number) => void = (persona_id: number) => {
     dispatch(obtener_persona(persona_id)).then((response: { success: boolean, detail: string, data: any }) => {
-      if (response.success) {
+      if(response.success){
         set_proveedor(response.data);
         set_entrada_update(true);
       }
@@ -167,10 +167,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   }
 
   const cambio_fecha_entrada = (date: Dayjs | null): void => {
-    if (date !== null) {
+    if(date !== null){
       set_fecha_entrada(date);
       set_msj_error_fecha_entrada("");
-    } else {
+    }else{
       set_msj_error_fecha_entrada("El campo fecha entrada es obligatorio.");
     }
   };
@@ -184,8 +184,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const buscar_x_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value !== null && e.target.value !== undefined && e.target.value !== "") {
       set_codigo_articulo(parseInt(e.target.value));
-      dispatch(obtener_articulo_codigo(e.target.value)).then((response: { success: boolean, detail: string, data: any }) => {
-        if (response.success) {
+      dispatch(obtener_articulo_codigo(e.target.value)).then((response: {success: boolean,detail: string, data: any}) => {
+        if(response.success){
           set_articulo(response.data);
         }
       }).catch((error: any) => {
@@ -198,18 +198,18 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     set_observaciones(e.target.value);
   };
   const cambio_cantidad: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (parseInt(e.target.value) > 0) {
+    if(parseInt(e.target.value) > 0){
       set_cantidad(e.target.value);
       set_msj_error_cantidad("");
-    } else {
+    }else{
       set_msj_error_cantidad("El campo Cantidad no puede ser menor a 1.");
     }
   };
   const cambio_valor_unidad: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (parseInt(e.target.value) >= 0) {
+    if(parseInt(e.target.value) >= 0){
       set_valor_unidad(e.target.value);
       set_msj_error_vu("");
-    } else {
+    }else{
       set_msj_error_vu("El campo Valor unidad no puede ser menor a 0.");
     }
   };
@@ -227,17 +227,17 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   }
 
   const calcular_totales = (): void => {
-    const iva_porcentaje = porcentaje_iva.find((pi: any) => pi.id_porcentaje_iva === iva);
-    const total_iva = ((parseInt(valor_unidad) * (iva_porcentaje.porcentaje / 100)));
-    const total_unidad = parseInt(valor_unidad) + total_iva;
-    const total_entrada = total_unidad * parseInt(cantidad);
-    set_valor_iva(total_iva.toString());
-    set_valor_total_item(total_unidad.toString());
-    set_valor_total_entrada(total_entrada);
+      const iva_porcentaje = porcentaje_iva.find((pi: any) => pi.id_porcentaje_iva === iva);
+      const total_iva = ((parseInt(valor_unidad) * (iva_porcentaje.porcentaje/100)));
+      const total_unidad = parseInt(valor_unidad) + total_iva;
+      const total_entrada = total_unidad * parseInt(cantidad);
+      set_valor_iva(total_iva.toString());
+      set_valor_total_item(total_unidad.toString());
+      set_valor_total_entrada(total_entrada);
   }
 
   const validar_entrada = (): void => {
-    if (validar_formulario()) {
+    if(validar_formulario()){
       articulo.cod_tipo_bien === "A" ? set_entrada_af_is_active(true) : carga_info_items();
     }
   }
@@ -245,19 +245,19 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const cargar_entradas = (): void => {
     const encabezado: IInfoEntrada = {
       id_entrada_almacen: numero_entrada,
-      fecha_entrada: fecha_entrada.format("YYYY-MM-DD HH:mm:ss"),
-      motivo,
-      observacion: observaciones,
-      id_proveedor: proveedor.id_persona,
-      id_tipo_entrada: parseInt(tipo_entrada),
-      id_bodega: parseInt(bodega_ingreso),
+      fecha_entrada: fecha_entrada.format("YYYY-MM-DD HH:mm:ss"), 
+      motivo, 
+      observacion: observaciones, 
+      id_proveedor: proveedor.id_persona, 
+      id_tipo_entrada: parseInt(tipo_entrada),  
+      id_bodega: parseInt(bodega_ingreso), 
       valor_total_entrada
     };
-    set_entradas({ ...entradas, info_entrada: encabezado, info_items_entrada: info_items });
+    set_entradas({...entradas, info_entrada: encabezado,info_items_entrada: info_items});
   }
 
   const carga_info_items = (): void => {
-    if (detalles_entrada.length > 0) {
+    if(detalles_entrada.length > 0){
       detalles_entrada.forEach((info_item: any) => {
         set_info_items(prevArray => [...prevArray, {
           id_entrada_local: String(uuid()),
@@ -279,7 +279,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           tiene_hoja_vida: info_item.abrir_hdv,
         }])
       });
-    } else {
+    }else{
       set_info_items(prevArray => [...prevArray, {
         id_entrada_local: String(uuid()),
         id_item_entrada_almacen: null,
@@ -301,38 +301,38 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     }
     set_detalles_entrada([]);
   }
-
-  const validar_formulario = (): boolean => {
-    let validar = true;
-    if (tipo_entrada === "") {
+  
+  const validar_formulario = (): boolean =>{
+  let validar = true;
+    if(tipo_entrada === ""){
       set_msj_error_tipo("El campo Tipo de entrada es obligatorio.");
       validar = false;
     }
-    if (motivo === "") {
+    if(motivo === ""){
       set_msj_error_motivo("El campo Motivo es obligatorio.");
       validar = false;
     }
-    if (proveedor.tipo_documento === undefined || tipo_documento === undefined || tipo_documento === "") {
+    if(proveedor.tipo_documento === undefined || tipo_documento === undefined || tipo_documento === ""){
       set_msj_error_tdoc("El campo Tipo de documento es obligatorio.");
       validar = false;
     }
-    if (proveedor.nombre_completo === undefined || proveedor.nombre_completo === "") {
+    if(proveedor.nombre_completo === undefined || proveedor.nombre_completo === ""){
       set_msj_error_proveedor("El campo Nombre proveedor es obligatorio.");
       validar = false;
     }
-    if (articulo.nombre === undefined || articulo.nombre === "") {
+    if(articulo.nombre === undefined || articulo.nombre === ""){
       set_msj_error_articulo("El campo Nombre articulo es obligatorio.");
       validar = false;
     }
-    if (cantidad === "") {
+    if(cantidad === ""){
       set_msj_error_cantidad("El campo Cantidad es obligatorio.");
       validar = false;
     }
-    if (iva === "" || iva === undefined) {
+    if(iva === "" || iva === undefined){
       set_msj_error_iva("El campo % Iva es obligatorio.");
       validar = false;
     }
-    if (valor_unidad === "") {
+    if(valor_unidad === ""){
       set_msj_error_vu("El campo Cantidad es obligatorio.");
       validar = false;
     }
@@ -340,7 +340,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   }
 
   const guardar_entrada = (): void => {
-    if (info_items.length > 0) {
+    if(info_items.length > 0){
       cargar_entradas();
     }
   }
@@ -362,7 +362,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     set_observaciones("");
     set_motivo("");
     set_msj_error_motivo("");
-    set_proveedor({ nombre: "" });
+    set_proveedor({nombre: ""});
     set_msj_error_proveedor("");
     set_tipo_documento("");
     set_msj_error_tdoc("");
@@ -391,58 +391,58 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   }
 
   useEffect(() => {
-    if (entradas !== undefined)
-      if (entrada_update) {
-        dispatch(actualizar_entrada_bien(buscar_articulo.id_entrada_almacen, entradas)).then((response: any) => {
-          console.log("Se actualizó una entrada: ", response);
-        });
-      } else {
-        dispatch(crear_entrada_bien(entradas)).then((response: any) => {
-          console.log("Se creo una entrada: ", response);
-        });
-      }
+    if(entradas !== undefined)
+    if(entrada_update){
+      dispatch(actualizar_entrada_bien(buscar_articulo.id_entrada_almacen,entradas)).then((response: any) =>{
+        console.log("Se actualizó una entrada: ",response);
+      });
+    }else{
+      dispatch(crear_entrada_bien(entradas)).then((response: any) =>{
+        console.log("Se creo una entrada: ",response);
+      });
+    }
   }, [entradas]);
 
   useEffect(() => {
-    if (cantidad !== "" && valor_unidad !== "" && (iva !== "" && iva !== undefined)) {
+    if(cantidad !== "" && valor_unidad !== "" && (iva !== "" && iva !== undefined)){
       calcular_totales();
-    } else {
+    }else{
       set_valor_iva("");
       set_valor_total_item("");
       set_valor_total_entrada(0);
     }
-  }, [cantidad, valor_unidad, iva]);
+  },[cantidad, valor_unidad, iva]);
 
   useEffect(() => {
-    if (articulo !== null && articulo !== undefined) {
+    if(articulo !== null && articulo !== undefined){
       set_codigo_articulo(articulo.codigo_bien);
       set_nombre_articulo(articulo.nombre);
       set_iva(articulo.id_porcentaje_iva);
       set_msj_error_articulo("");
       limpiar_detalle();
-    }
-  }, [articulo]);
+    } 
+  },[articulo]);
 
   useEffect(() => {
-    if (detalles_entrada.length > 0) {
+    if(detalles_entrada.length > 0){
       carga_info_items();
     }
-  }, [detalles_entrada]);
+  },[detalles_entrada]);
 
   useEffect(() => {
-    if (proveedor !== null && proveedor !== undefined) {
+    if(proveedor !== null && proveedor !== undefined){
       set_tipo_documento(proveedor.tipo_documento);
       set_numero_documento(proveedor.numero_documento);
-      if ((proveedor.nombre_completo === null || proveedor.nombre_completo === undefined) && (proveedor.id_persona !== null && proveedor.id_persona !== undefined))
+      if((proveedor.nombre_completo === null || proveedor.nombre_completo === undefined) && (proveedor.id_persona !== null && proveedor.id_persona !== undefined))
         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        proveedor.nombre_completo = proveedor.primer_nombre + (proveedor.segundo_nombre !== null ? (' ' + proveedor.segundo_nombre + ' ') : ' ') + proveedor.primer_apellido + (proveedor.segundo_apellido !== null ? (' ' + proveedor.segundo_apellido + ' ') : '');
+        proveedor.nombre_completo = proveedor.primer_nombre + (proveedor.segundo_nombre !== null ? (' '+proveedor.segundo_nombre+' ') : ' ') + proveedor.primer_apellido + (proveedor.segundo_apellido !== null ? (' '+proveedor.segundo_apellido+' ') : '');
       set_msj_error_proveedor("");
       set_msj_error_tdoc("");
     }
-  }, [proveedor]);
+  },[proveedor]);
 
   useEffect(() => {
-    if (buscar_articulo !== null) {
+    if(buscar_articulo !== null){
       set_numero_entrada(buscar_articulo.numero_entrada_almacen);
       set_tipo_entrada(buscar_articulo.id_tipo_entrada);
       set_bodega_ingreso(buscar_articulo.id_bodega);
@@ -469,8 +469,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+      <h1>Entrada de bienes de Almacen</h1>
         <Grid item md={12} xs={12}>
-          <Title title="Entrada de bienes de Almacén" />
+          <Title title="Entrada" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={4}>
@@ -539,9 +540,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   label="Motivo"
                   size="small"
                   fullWidth
-                  onChange={cambio_motivo}
-                  error={msj_error_motivo !== ""} />
-                {(msj_error_motivo !== "") && (<FormHelperText error >{msj_error_motivo}</FormHelperText>)}
+                  onChange={cambio_motivo} 
+                  error={msj_error_motivo !== ""}/>
+              {(msj_error_motivo !== "") && (<FormHelperText error >{msj_error_motivo}</FormHelperText>)}
               </Grid>
             </Grid>
           </Box>
@@ -636,11 +637,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   Buscar proveedor
                 </Button>
                 {abrir_modal_proveedor && (
-                  <BuscadorPersonaDialog
-                    is_modal_active={abrir_modal_proveedor}
-                    set_is_modal_active={set_abrir_modal_proveedor}
-                    title={"Busqueda de proveedor"}
-                    set_persona={set_proveedor} />
+                    <BuscadorPersonaDialog
+                        is_modal_active={abrir_modal_proveedor}
+                        set_is_modal_active={set_abrir_modal_proveedor}
+                        title={"Busqueda de proveedor"}
+                        set_persona={set_proveedor} />
                 )}
               </Grid>
             </Grid>
@@ -800,7 +801,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                 {(msj_error_vu !== "") && (<FormHelperText error >{msj_error_vu}</FormHelperText>)}
               </Grid>
               <Grid item xs={12} sm={1}>
-                <FormControl required size='small' fullWidth>
+              <FormControl required size='small' fullWidth>
                   <InputLabel>% Iva</InputLabel>
                   <Select
                     value={iva}
@@ -904,12 +905,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
               Agregar
             </Button>
             {entrada_af_is_active && (
-              <EntradaArticuloFijoComponent
+                  <EntradaArticuloFijoComponent
                 is_modal_active={entrada_af_is_active}
                 set_is_modal_active={set_entrada_af_is_active}
                 articulo_entrada={articulo}
-                cantidad_entrada={parseInt(cantidad)} detalles_entrada={set_detalles_entrada} />
-            )}
+                cantidad_entrada={parseInt(cantidad)} detalles_entrada={set_detalles_entrada}/>
+                )}
           </Stack>
         </Grid>
       </Grid>
@@ -956,17 +957,15 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                       style={{ width: '10%' }}
                     ></Column>
                     <Column header="Acciones" align={'center'} body={(rowData) => {
-                      return <Button color="error" size="small" variant='contained' onClick={() => {
-                        const index = info_items.findIndex((i: any) => i.id_entrada_local === rowData.id_entrada_local);
-                        info_items.splice(index, 1);
+                      return <Button color="error" size="small" variant='contained' onClick={() => { 
+                        const index = info_items.findIndex((i:any) => i.id_entrada_local === rowData.id_entrada_local);
+                        info_items.splice(index,1);
                         set_info_items([...info_items]);
                       }}><DeleteForeverIcon fontSize="small" /></Button>;
                     }}></Column>
                   </DataTable>
                 </div>
-
               </Grid>
-
             </Grid>
 
           </Box>

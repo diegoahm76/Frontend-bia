@@ -58,10 +58,6 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                             InputProps={{
                                 readOnly: true,
                             }}
-                            disabled 
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -73,10 +69,6 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                             value={codigo_bien}
                             InputProps={{
                                 readOnly: true,
-                            }}
-                            disabled 
-                            InputLabelProps={{
-                              shrink: true,
                             }}
                         />
                     </Grid>
@@ -90,10 +82,6 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                             InputProps={{
                                 readOnly: true,
                             }}
-                            disabled 
-                            InputLabelProps={{
-                              shrink: true,
-                            }}
                         />
                     </Grid>
                     <Grid item xs={12} sm={3}>
@@ -105,10 +93,6 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                             value={porcentaje_iva}
                             InputProps={{
                                 readOnly: true,
-                            }}
-                            disabled 
-                            InputLabelProps={{
-                              shrink: true,
                             }}
                         />
                     </Grid>

@@ -92,7 +92,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
 
     return (
         <>
-
+            <h1>Registro mantenimiento de vehículos</h1>
             <Grid
                 container
                 sx={{
@@ -104,9 +104,9 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                 <Grid item xs={12}>
-                    <Title title="Registro mantenimiento de vehículos" />
-                    <BusquedaProgramacionComponent set_prog_seleccion={set_programacion} parent_details={set_detalle_seleccionado} tipo_articulo={"vehículos"} limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles} accion_guardar={accion_guardar} />
+                <Grid item xs={12}>
+                    <Title title="Búsqueda de programación" />
+                    <BusquedaProgramacionComponent set_prog_seleccion={set_programacion} parent_details={set_detalle_seleccionado} tipo_articulo={"vehículos"} limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
             <Grid
@@ -122,7 +122,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
             >
                 <Grid item xs={12}>
                     <Title title="Búsqueda de vehículos" />
-                    <BusquedaArticuloComponent tipo_articulo={"vehículos"} parent_details={set_detalle_seleccionado} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} accion_guardar={accion_guardar} />
+                    <BusquedaArticuloComponent tipo_articulo={"vehículos"} parent_details={set_detalle_seleccionado} limpiar_formulario={limpiar_formulario} detalle_programacion={detalle_seleccionado} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
             <Grid container
@@ -150,8 +150,11 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                 }}>
                 <Grid item xs={12}>
                     <Title title='Detalles' />
-                    <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalle} accion_guardar={accion_guardar} fecha_dias={fecha_dias} />
-                    <Grid item md={12} xs={12}>
+                    <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalle} accion_guardar={accion_guardar} fecha_dias={fecha_dias}/>
+                </Grid>
+            </Grid>
+            <Grid container>
+                <Grid item md={12} xs={12}>
                     <Box
                         component="form"
                         sx={{ mt: '20px', mb: '20px' }}
@@ -193,9 +196,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                         </Stack>
                     </Box>
                 </Grid>
-                </Grid>
             </Grid>
-        
         </>
     )
 }
