@@ -45,12 +45,12 @@ export const ArriendoVehiculosScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if(!abrir_hdv)
+    if (!abrir_hdv)
       set_es_agendable(false);
   }, [abrir_hdv]);
 
   useEffect(() => {
-    if(arriendo !== null){
+    if (arriendo !== null) {
       set_nombre_vehiculo(arriendo.nombre);
       set_placa(arriendo.placa);
       set_marca(arriendo.id_marca);
@@ -167,10 +167,10 @@ export const ArriendoVehiculosScreen: React.FC = () => {
   }
 
   const crear_arriendo = (formulario: crear_arriendo): void => {
-    dispatch(crear_arriendo_veh(formulario)).then((response: {success:boolean ,detail:string, data: any}) => {
-      if(response.success){
+    dispatch(crear_arriendo_veh(formulario)).then((response: { success: boolean, detail: string, data: any }) => {
+      if (response.success) {
         limpiar_formulario();
-        if(formulario.asignar_hoja_de_vida){
+        if (formulario.asignar_hoja_de_vida) {
           console.log('Redirecciona a hoja de vida');
         }
       }
@@ -178,16 +178,16 @@ export const ArriendoVehiculosScreen: React.FC = () => {
   }
 
   const actualiza_arriendo = (formulario: crear_arriendo): void => {
-    dispatch(crear_arriendo_veh(formulario)).then((response: {success:boolean ,detail:string, data: any}) => {
-      if(response.success){
+    dispatch(crear_arriendo_veh(formulario)).then((response: { success: boolean, detail: string, data: any }) => {
+      if (response.success) {
         limpiar_formulario();
       }
     })
   }
 
   const elimina_arriendo = (): void => {
-    dispatch(eliminar_arriendo_veh(arriendo.id_vehiculo_arrendado)).then((response: {success:boolean ,detail:string, data: any}) => {
-      if(response.success){
+    dispatch(eliminar_arriendo_veh(arriendo.id_vehiculo_arrendado)).then((response: { success: boolean, detail: string, data: any }) => {
+      if (response.success) {
         limpiar_formulario();
       }
     })
@@ -218,8 +218,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
 
   return (
     <>
-      <h1>Administrar vehículo arrendado</h1>
-      <Grid
+       <Grid
         container
         sx={{
           position: 'relative',
@@ -231,7 +230,7 @@ export const ArriendoVehiculosScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <Title title="Vehículo" />
+          <Title title="Administrar vehículo arrendado" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={3}>
@@ -375,7 +374,6 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                     <CheckIcon /> {abrir_hdv ? "Si" : "No"}
                   </ToggleButton>
                 </Stack>
-
               </Grid>
               <Grid item xs={12} sm={3}>
                 <FormLabel sx={{ mt: '9px' }}>Es agendable: </FormLabel>
@@ -391,60 +389,62 @@ export const ArriendoVehiculosScreen: React.FC = () => {
                   <CheckIcon /> {es_agendable ? "Si" : "No"}
                 </ToggleButton>
               </Grid>
+              <Grid container justifyContent="flex-end">
+                <Grid item xs={6}>
+                  <Box
+                    component="form"
+                    sx={{ mt: '20px', mb: '20px' }}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <Stack
+                      direction="row"
+                      justifyContent="flex-end"
+                      spacing={2}
+                      sx={{ mt: '20px' }}
+                    >
+                      <Button
+                        color='secondary'
+                        variant='contained'
+                        startIcon={<SearchIcon />}
+                        onClick={() => { set_buscar_arriendo(true) }}
+                      >
+                        Buscar
+                      </Button>
+                      {buscar_arriendo && (<BuscarArriendoComponent is_modal_active={buscar_arriendo} set_is_modal_active={set_buscar_arriendo}
+                        title={"Buscar arriendo"} lista_marcas={lista_marcas} arriendo_veh={set_arriendo}></BuscarArriendoComponent>)}
+                      <Button
+                        color='primary'
+                        variant='contained'
+                        startIcon={<SaveIcon />}
+                        onClick={guardar_formulario}
+                      >
+                        {actualiza ? 'Actualizar' : 'Guardar'}
+                      </Button>
+                      <Button
+                        color='secondary'
+                        variant='contained'
+                        startIcon={<ClearIcon />}
+                        onClick={salir_entrada}
+                      >
+                        Salir
+                      </Button>
+                      <Button
+                        color='error'
+                        variant='contained'
+                        startIcon={<DeleteForeverIcon />}
+                        onClick={elimina_arriendo}
+                        disabled={!actualiza}
+                      >
+                        Borrar
+                      </Button>
+                    </Stack>
+                  </Box>
+                </Grid>
+              </Grid>
             </Grid>
           </Box>
         </Grid>
-      </Grid>
-      <Grid item xs={6}>
-        <Box
-          component="form"
-          sx={{ mt: '20px', mb: '20px' }}
-          noValidate
-          autoComplete="off"
-        >
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mt: '20px' }}
-          >
-            <Button
-              color='secondary'
-              variant='contained'
-              startIcon={<SearchIcon />}
-              onClick={() => { set_buscar_arriendo(true) }}
-            >
-              Buscar
-            </Button>
-            {buscar_arriendo && (<BuscarArriendoComponent is_modal_active={buscar_arriendo} set_is_modal_active={set_buscar_arriendo}
-             title={"Buscar arriendo"} lista_marcas={lista_marcas} arriendo_veh={set_arriendo}></BuscarArriendoComponent>)}
-            <Button
-              color='primary'
-              variant='contained'
-              startIcon={<SaveIcon />}
-              onClick={guardar_formulario}
-            >
-              {actualiza ? 'Actualizar' : 'Guardar'}
-            </Button>
-            <Button
-              color='secondary'
-              variant='contained'
-              startIcon={<ClearIcon />}
-              onClick={salir_entrada}
-            >
-              Salir
-            </Button>
-            <Button
-              color='error'
-              variant='contained'
-              startIcon={<DeleteForeverIcon />}
-              onClick={elimina_arriendo}
-              disabled={!actualiza}
-            >
-              Borrar
-            </Button>
-          </Stack>
-        </Box>
       </Grid>
     </>
   );

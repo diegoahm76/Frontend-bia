@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 // import { useNavigate } from 'react-router-dom';
 // Componentes de Material UI
-import { Grid, Box, IconButton, Avatar, Chip, Tooltip, DialogTitle, } from '@mui/material';
+import { Grid, Box, IconButton, Avatar, Chip, Tooltip,  } from '@mui/material';
 // Icons de Material UI
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
@@ -204,7 +204,7 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                 }}
             >
                 <Grid item xs={12}>
-                    <DialogTitle>Activos</DialogTitle>
+                    {/* <DialogTitle>Activos</DialogTitle> */}
 
                     <Title title="Activos"></Title>
 

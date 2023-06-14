@@ -284,6 +284,7 @@ const use_ccd = () => {
     )
     void dispatch(create_ccds_service(new_ccd, set_save_ccd));
   };
+  //! ..... revisar la forma en la que se sube la ruta del archivo
   // Funcion para actualizar el CCD
   const update_ccd = (): void => {
     const new_ccd = {

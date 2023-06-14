@@ -533,7 +533,7 @@ export const EditarParametosReferenciaDialog: React.FC<IProps> = ({ is_modal_act
               Cancelar
             </Button>
             <Button variant="contained" color="primary" type="submit">
-              Actializar
+              Actualizar
             </Button>
           </DialogActions>
         </form>

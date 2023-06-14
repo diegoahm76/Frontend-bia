@@ -137,7 +137,8 @@ const CrearCvOtrosActivosForm = ({
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container spacing={2}>
-            <Title title="ESPECIFICACIONES" />
+
+            <Title title="Información"  />
 
             <Grid item xs={12} sm={3}>
               <Controller
@@ -241,9 +242,10 @@ const CrearCvOtrosActivosForm = ({
               />
             </Grid>
 
-            <DialogContent sx={{ mb: '0px' }}>
-              <Grid container spacing={2}>
-                <Title title="" />
+            {/* <DialogContent sx={{ mb: '0px' }}> */}
+              {/* <Grid container spacing={2}> */}
+                
+                <Title title="Especificaciones" />
 
 
                 <Grid item xs={11} md={12} >
@@ -332,8 +334,8 @@ const CrearCvOtrosActivosForm = ({
 
 
               </Grid>
-            </DialogContent>
-          </Grid>
+            {/* </DialogContent> */}
+          {/* </Grid> */}
         </DialogContent>
 
         <DialogActions>

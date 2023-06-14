@@ -52,6 +52,7 @@ export const CrearMarcaPorcentajeMedidaScreen: React.FC = () => {
           </TabPanel>
         </TabContext>
       </Box>
+ 
     </Grid>
   );
   

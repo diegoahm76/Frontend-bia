@@ -2,15 +2,16 @@ import { Grid } from "@mui/material";
 import { Title } from "../../../../components/Title";
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IObjTransferGoods, type IObjNursery, type IObjTransfer } from "../interfaces/distribucion";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { add_transfer_service, get_person_id_service, get_transfer_goods_service, edit_traslado_service } from "../store/thunks/distribucionThunks";
+import { add_transfer_service, get_person_id_service, get_transfer_goods_service, edit_traslado_service, annul_transfer_service } from "../store/thunks/distribucionThunks";
 import SeleccionarTraslado from "../componentes/SeleccionarTraslado";
 import SeleccionarBienTraslado from "../componentes/SeleccionarBienTraslado";
 import { set_destination_nursery, set_origin_nursery } from "../store/slice/distribucionSlice";
+import AnularEliminar from "../../componentes/AnularEliminar";
+import Block from '@mui/icons-material/Block';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -114,6 +115,12 @@ export function TrasladoScreen(): JSX.Element {
     }
   };
 
+  const on_submit_annul = (data: IObjTransfer): void => {
+    if(current_transfer.id_traslado !== null && current_transfer.id_traslado !== undefined){
+      void dispatch(annul_transfer_service(current_transfer.id_traslado, data));
+    }
+  };
+
   return (
     <>
       <Grid
@@ -145,23 +152,85 @@ export function TrasladoScreen(): JSX.Element {
           padding={2}
           spacing={2}
         >
+          {!(current_transfer.traslado_anulado === true) &&
+
+            <Grid item xs={12} md={3}>
+              <FormButton
+                variant_button="contained"
+                on_click_function={handle_submit(on_submit)}
+                icon_class={<SaveIcon />}
+                label={action}
+                type_button="button"
+              />
+            </Grid>
+          }
           <Grid item xs={12} md={3}>
-            <FormButton
-              variant_button="contained"
-              on_click_function={handle_submit(on_submit)}
-              icon_class={<SaveIcon />}
-              label={action}
-              type_button="button"
-            />
-          </Grid>
-          
-          <Grid item xs={12} md={3}>
-            <FormButton
-              variant_button="outlined"
-              on_click_function={null}
-              icon_class={<CloseIcon />}
-              label={"Eliminar"}
-              type_button="button"
+            <AnularEliminar
+              action= {current_transfer.traslado_anulado === true ? "Detalle anulación" :"Anular" }
+              button_icon_class= {<Block/>}
+              button_disabled= {false}
+              modal_title= {current_transfer.traslado_anulado === true ? "Detalle anulación" :"Anular traslado"}
+              button_submit_label= { "Anular"}
+              button_submit_disabled= {current_transfer.traslado_anulado}
+              button_submit_icon_class= {<Block/>}
+              button_submit_action= {handle_submit(on_submit_annul)}
+              modal_inputs= {[
+                {
+                  datum_type: "input_controller",
+                  xs: 12,
+                  md: 3,
+                  control_form: control_traslado,
+                  control_name: "nro_traslado",
+                  default_value: current_transfer.nro_traslado,
+                  rules: { required_rule: { rule: false, message: "requerida" }  },
+                  label: "# de traslado",
+                  type: "number",
+                  disabled: current_transfer.id_traslado !== null,
+                  helper_text: current_transfer.nro_traslado === null?"Ingrese para buscar traslado":"",
+                },
+                {
+                  datum_type: "input_controller",
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_traslado,
+                  control_name: "persona_anula",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
+                  label: "Persona anula",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+              },
+                {
+                  datum_type: "date_picker_controller",
+                  xs: 12,
+                  md: 4,
+                  control_form: control_traslado,
+                  control_name: "fecha_anulado1",
+                  default_value: (new Date().toString()),
+                  rules: { required_rule: { rule: true, message: "requerido" } },
+                  label: "Fecha actual",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+                },
+                {
+                  datum_type: "input_controller",
+                  xs: 12,
+                  md: 12,
+                  control_form: control_traslado,
+                  control_name: "justificacion_anulacion",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Observación requerida" } },
+                  label: "Justificacion",
+                  type: "text",
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: ""
+                },
+              ]}
             />
           </Grid>
         </Grid>
