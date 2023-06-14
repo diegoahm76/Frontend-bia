@@ -4,15 +4,23 @@ import { FileDownloadOutlined, FilterAltOffOutlined, SearchOutlined } from '@mui
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { get_cartera_edades, get_filtro_cartera_edades } from '../slices/ReportesSlice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { type event } from '../../facilidadPago/interfaces/interfaces';
-import { TablaCarteraEdad } from '../componentes/TablaCarteraEdad';
+import { TablaCarteraEdad, TablaCarteraEdadProps } from '../componentes/TablaCarteraEdad';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CarteraGeneralEdad: React.FC = () => {
   const [filter, set_filter] = useState('');
-  const [consulta, set_consulta] = useState(false);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
+  useEffect(() => {
+    try {
+      void dispatch(get_cartera_edades());
+      set_filter('');
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  }, [])
 
   return (
     <>
@@ -53,7 +61,6 @@ export const CarteraGeneralEdad: React.FC = () => {
                     onChange={(event: event)=>{
                       const { value } = event.target
                       set_filter(value)
-                      set_consulta(false)
                     }}
                   >
                     <MenuItem value='0 a 180 días'>0 a 180 Días</MenuItem>
@@ -68,7 +75,6 @@ export const CarteraGeneralEdad: React.FC = () => {
                 onClick={() => {
                   try {
                     void dispatch(get_filtro_cartera_edades({ valor: filter}));
-                    set_consulta(true)
                   } catch (error: any) {
                     throw new Error(error);
                   }
@@ -83,7 +89,7 @@ export const CarteraGeneralEdad: React.FC = () => {
                 onClick={() => {
                   try {
                     void dispatch(get_cartera_edades());
-                    set_filter('')
+                    set_filter('');
                   } catch (error: any) {
                     throw new Error(error);
                   }
@@ -118,22 +124,37 @@ export const CarteraGeneralEdad: React.FC = () => {
             </Stack>
             </Stack>
             {
-              filter === '0 a 180 días' && consulta ? (
+              filter === '0 a 180 días' ? (
                 <>
                   <h3>0 a 180 días</h3>
                   <TablaCarteraEdad />
                 </>
-              ) : filter === '181 a 360 días' && consulta ? (
+              ) : filter === '181 a 360 días' ? (
                 <>
                   <h3>181 a 360 días</h3>
                   <TablaCarteraEdad />
                 </>
-              ) : filter === 'mayor a 361 días' && consulta ? (
+              ) : filter === 'mayor a 361 días' ? (
                 <>
                   <h3>Mayor a 361 días</h3>
                   <TablaCarteraEdad />
                 </>
-              ) : null
+              ) : (
+                <>
+                  <Grid item mt='50px'>
+                    <h4>0 a 180 días</h4>
+                    <TablaCarteraEdadProps id_rango={1} />
+                  </Grid>
+                  <Grid item mt='50px'>
+                    <h4>181 a 360 días</h4>
+                    <TablaCarteraEdadProps id_rango={2} />
+                  </Grid>
+                  <Grid item mt='50px'>
+                    <h4>Mayor a 361 días</h4>
+                    <TablaCarteraEdadProps id_rango={3} />
+                  </Grid>
+                </>
+              )
             }
           </Box>
         </Grid>

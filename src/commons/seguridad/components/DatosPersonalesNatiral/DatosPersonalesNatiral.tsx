@@ -78,7 +78,7 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
   } = use_register_persona_n({ watch, setValue: set_value, getValues });
 
   const { tipo_persona_opt } = use_register();
-  
+
   const [type_direction, set_type_direction] = useState('');
   const [fecha_nacimiento, set_fecha_nacimiento] = useState<Dayjs | null>(null);
   const [loading, set_loading] = useState<boolean>(false);
@@ -111,28 +111,42 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
 
   useEffect(() => {
     if (data !== null) {
-      set_value('tipo_persona', data.tipo_persona);
-      set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
-      set_value('pais_nacimiento', data.pais_nacimiento);
-      set_value('sexo', data.sexo);
-      set_value('estado_civil', data.estado_civil);
-      set_value('departamento_expedicion', data.cod_departamento_expedicion);
-      set_value('cod_municipio_expedicion_id', data.cod_municipio_expedicion_id);
-      // residencia
-      set_value('pais_residencia', data.pais_residencia);
-      set_value('departamento_residencia', data.cod_departamento_residencia);
-      set_value('municipio_residencia', data.municipio_residencia);
-      set_value('direccion_residencia', data.direccion_residencia);
-      set_value('direccion_residencia_ref', data.direccion_residencia_ref);
-      // notificaciones
-      set_value('dpto_notifiacion', data.cod_departamento_notificacion);
-      set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
-      set_value('direccion_notificaciones', data.direccion_notificaciones);
-      set_value('complemento_direccion', data.direccion_notificacion_referencia);
-      // laboral
-      set_value('departamento_laboral', data.cod_departamento_laboral);
-      set_value('cod_municipio_laboral_nal', data.cod_municipio_laboral_nal);
-      set_value('direccion_laboral', data.direccion_laboral);
+      const timeout = setTimeout(() => {
+
+        set_value('tipo_persona', data.tipo_persona);
+        set_fecha_nacimiento(dayjs(data.fecha_nacimiento));
+        set_value('fecha_nacimiento', data.fecha_nacimiento);
+        set_value('pais_nacimiento', data.pais_nacimiento);
+        set_value('sexo', data.sexo);
+        set_value('estado_civil', data.estado_civil);
+        set_value('departamento_expedicion', data.cod_departamento_expedicion);
+        set_value('cod_municipio_expedicion_id', data.cod_municipio_expedicion_id);
+        // residencia
+        set_value('pais_residencia', data.pais_residencia);
+        set_value('departamento_residencia', data.cod_departamento_residencia);
+        set_value('municipio_residencia', data.municipio_residencia);
+        set_value('direccion_residencia', data.direccion_residencia);
+        set_value('direccion_residencia_ref', data.direccion_residencia_ref);
+        // notificaciones
+        set_value('dpto_notifiacion', data.cod_departamento_notificacion);
+        set_value('cod_departamento_notificacion', data.cod_departamento_notificacion);
+        set_value('cod_municipio_notificacion_nal', data.cod_municipio_notificacion_nal);
+        set_value('ciudad_notificacion', data.cod_municipio_notificacion_nal);
+        set_value('direccion_notificaciones', data.direccion_notificaciones);
+        set_value('complemento_direccion', data.direccion_notificacion_referencia);
+
+        // laboral
+        set_value('departamento_laboral', data.cod_departamento_laboral);
+        set_value('cod_municipio_laboral_nal', data.cod_municipio_laboral_nal);
+        set_value('direccion_laboral', data.direccion_laboral);
+        set_value('dpto_notifiacion', getValues('cod_departamento_notificacion'));
+        set_value('cod_departamento_notificacion', getValues('cod_departamento_notificacion'));
+        set_value('cod_municipio_notificacion_nal', getValues('cod_municipio_notificacion_nal'));
+        set_value('ciudad_notificacion', getValues('cod_municipio_notificacion_nal'));
+        set_value('direccion_notificaciones', getValues('direccion_notificaciones'));
+        set_value('complemento_direccion', getValues('complemento_direccion'));
+      }, 1000);
+      return () => { clearTimeout(timeout); };
     }
   }, [data]);
 
@@ -155,7 +169,6 @@ export const DatosPersonalesNatural: React.FC<PropsUpdateJ> = ({
     <>
       <form
         onSubmit={(e) => {
-          console.log(errors);
           void on_submit_update_natural(e);
         }}
       >

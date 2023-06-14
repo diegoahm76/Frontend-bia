@@ -96,9 +96,10 @@ export const VistaSolicitud: React.FC = () => {
 
   return (
     <>
-      <Grid container spacing={5}>
-        <Grid item xs={12} sm={3}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={3.4}>
           <Button
+            fullWidth
             color='primary'
             variant='outlined'
             size='medium'
@@ -108,8 +109,9 @@ export const VistaSolicitud: React.FC = () => {
             Ver Documento Solicitud
           </Button>
         </Grid>
-        <Grid item xs={12} sm={3.1}>
+        <Grid item xs={12} sm={3.4}>
           <Button
+            fullWidth
             color='primary'
             variant='outlined'
             size='medium'
@@ -119,7 +121,7 @@ export const VistaSolicitud: React.FC = () => {
             Ver Soporte Consignación
           </Button>
         </Grid>
-        <Grid item xs={12} sm={3.1}>
+        <Grid item xs={12} sm={3.4}>
           <TextField
             label="Calidad en que actúa la persona"
             size="small"
@@ -141,7 +143,7 @@ export const VistaSolicitud: React.FC = () => {
             ) : null
           }
         </Grid>
-        <Grid item xs={12} sm={2.9}>
+        <Grid item xs={12} sm={3.4}>
           <TextField
             label="Periodicidad y Modalidad"
             size="small"
@@ -150,7 +152,7 @@ export const VistaSolicitud: React.FC = () => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={2.9}>
+        <Grid item xs={12} sm={3.4}>
           <TextField
             label="Plazo"
             size="small"
@@ -161,6 +163,7 @@ export const VistaSolicitud: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3.4}>
           <Button
+            fullWidth
             color='primary'
             variant='outlined'
             size='medium'
@@ -170,8 +173,9 @@ export const VistaSolicitud: React.FC = () => {
             Ver Documento No Enajenación
           </Button>
         </Grid>
-        <Grid item xs={12} sm={2.9}>
+        <Grid item xs={12} sm={3.4}>
           <Button
+            fullWidth
             color='primary'
             variant='outlined'
             size='medium'

@@ -80,7 +80,7 @@ const SeleccionarTraslado = ({
       width: 200,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.siembra_abierta ? (
+        return params.row.traslado_anulado ? (
           <Chip size="small" label="ANULADO" color="error" variant="outlined" />
         ) : (
           <Chip size="small" label="ACTIVO" color="success" variant="outlined" />
