@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
+
 import { api } from '../../../../../../api/axios';
+
 import { useForm } from 'react-hook-form';
 import { Grid } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../../../auth/interfaces';
-
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks/hooks';
-
 import { type IObjFuncionario } from '../../interfaces/solicitudBienConsumo';
 import { get_funcionario_document_service, get_funcionario_service, get_person_id_service } from '../../store/solicitudBienConsumoThunks';
 import { set_current_funcionario, set_funcionarios } from '../../store/slices/indexSolicitudBienesConsumo';
@@ -29,7 +29,7 @@ const initial_options: IList[] = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const FuncionarioResponsable = ({
+const PersonaResponsableVivero = ({
     title,
     get_values_solicitud
 
@@ -150,8 +150,8 @@ const FuncionarioResponsable = ({
                     models={funcionarios}
                     get_filters_models={get_funcionarios}
                     set_models={set_funcionarios}
+                    show_search_button={false}
                     reset_values={reset_persona}
-                    button_submit_label='BUSCAR'
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -280,4 +280,4 @@ const FuncionarioResponsable = ({
 }
 
 // eslint-disable-next-line no-restricted-syntax
-export default FuncionarioResponsable;
+export default PersonaResponsableVivero;
