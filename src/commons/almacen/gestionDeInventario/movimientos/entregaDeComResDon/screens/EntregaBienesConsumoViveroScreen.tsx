@@ -18,6 +18,7 @@ import BuscarEntradasCRDComponent from "./BuscarEntradasCRD";
 import { obtener_bodegas, obtener_tipos_entrada } from "../../../../entradaDeAlmacen/thunks/Entradas";
 import { control_error } from "../../../../../../helpers";
 import BuscarBodegaComponent from "./BuscarBodega";
+import BuscarEntregasCRDComponent from "./BuscarEntregasCRD";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EntregaBienesConsumoViveroScreen: React.FC = () => {
@@ -26,6 +27,7 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
     const [user_info, set_user_info] = useState<any>({});
     const [entrada, set_entrada] = useState<any>(null);
     const [bodega, set_bodega] = useState<any>(null);
+    const [entrega, set_entrega] = useState<any>(null);
     const [tipos_entrada, set_tipos_entrada] = useState<any>([]);
     const [numero_entrega, set_numero_entrega] = useState<number>(0);
     const [fecha_entrega, set_fecha_entrega] = useState<Dayjs>(dayjs());
@@ -42,7 +44,8 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
     const [buscar_entrega_is_active, set_buscar_entrega_is_active] = useState<boolean>(false);
     const [anular_entrega_is_active, set_anular_entrega_is_active] = useState<boolean>(false);
     const [detalle_is_active, set_detalle_is_active] = useState<boolean>(false);
-
+    const [fecha_despacho, set_fecha_despacho] = useState<string>("");
+    
     useEffect(() => {
         obtener_usuario();
         obtener_consecutivo_fc();
@@ -62,6 +65,14 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
             set_municipio_bodega(bodega.cod_municipio);
         }
     }, [bodega]);
+
+    useEffect(() => {
+        if (entrega !== null) {
+            set_fecha_despacho(dayjs(entrega.fecha_despacho).format("DD/MM/YYYY"))
+            set_actualizar_entrega(true);
+            console.log(entrega);
+        }
+    }, [entrega]);
 
     const obtener_tipos_entrada_fc = async (): Promise<void> => {
         try {
@@ -299,7 +310,7 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
                     </Button>
                 }>
                     <Typography variant="body1" gutterBottom>
-                        Items entregados {dayjs().format("DD/MM/YYYY")}
+                        Items entregados {fecha_despacho}
                     </Typography>
                 </Alert>
             )}
@@ -383,6 +394,7 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
                         >
                             Consultar entrega
                         </Button>
+                        {buscar_entrega_is_active && (<BuscarEntregasCRDComponent is_modal_active={buscar_entrega_is_active} set_is_modal_active={set_buscar_entrega_is_active} title={"Búsqueda de entregas"} set_entrega={set_entrega}></BuscarEntregasCRDComponent>)}
                         <Button
                             color='error'
                             variant='contained'

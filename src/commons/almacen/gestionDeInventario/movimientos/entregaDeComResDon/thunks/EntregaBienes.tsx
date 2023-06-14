@@ -56,6 +56,19 @@ export const obtener_entradas_entregas: any = () => {
       }
     };
   };
+
+// Obtener todas las entregas que han sido realizadas
+export const obtener_entregas: any = () => {
+    return async () => {
+      try {
+        const { data } = await api.get('almacen/entregas/get-entregas/');
+        return data;
+      } catch (error: any) {
+        control_error(error.response.data.detail);
+        return error as AxiosError;
+      }
+    };
+  };
   
 
 // Crear entrada
