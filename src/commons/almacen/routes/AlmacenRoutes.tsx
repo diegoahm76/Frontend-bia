@@ -12,6 +12,7 @@ import { AdministracionVehiculosRoutes } from "../administracionDeVehiculos/rout
 import AprobacionSolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudConsumoScreen";
 import DespachoBienesConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/despachoSolicitudScreen";
 import SolicitudConsumoViveroScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudConsumoViveroScreen";
+import AprobacionSolicitudViveroScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudViveroScreen";
 
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
@@ -59,6 +60,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="aprobacion_solicitud_consumo/*"
         element={<AprobacionSolicitudConsumoScreen />}
+      />
+      <Route
+        path="aprobacion_solicitud_vivero/*"
+        element={<AprobacionSolicitudViveroScreen />}
       />
       <Route
         path="despacho_solicitud_aprobada/*"

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { InputsEncabezadoAdmin } from '../componentes/InputsEncabezadoAdmin';
+import { EncabezadoAdmin } from '../componentes/EncabezadoAdmin';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle, FormControlLabel, Checkbox } from "@mui/material";
 import { Close } from '@mui/icons-material';
@@ -69,7 +69,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   return (
     <>
       <Title title='Visualizar Solicitud Facilidad de Pago - Usuario Cormacarena'/>
-      <InputsEncabezadoAdmin fecha_solicitud={solicitud_facilidad.fecha_generacion} />
+      <EncabezadoAdmin fecha_solicitud={solicitud_facilidad.fecha_generacion} />
       <Grid
         container
         sx={{

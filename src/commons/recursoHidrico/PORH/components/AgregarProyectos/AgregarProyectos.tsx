@@ -11,8 +11,14 @@ import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
+interface IProps {
+  register: any,
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarProyectos: React.FC = () => {
+export const AgregarProyectos: React.FC<IProps> = ({
+  register,
+}:IProps) => {
 
   const [is_agregar, set_is_agregar] = useState(false);
 
@@ -41,6 +47,7 @@ export const AgregarProyectos: React.FC = () => {
           margin="dense"
           required
           autoFocus
+          {...register("nombre", { required: true })}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -58,6 +65,7 @@ export const AgregarProyectos: React.FC = () => {
                 fullWidth
                 size="small"
                 {...params}
+                {...register("vigencia_inicial", { required: true })}
               />
             )}
           />
@@ -78,6 +86,7 @@ export const AgregarProyectos: React.FC = () => {
                 fullWidth
                 size="small"
                 {...params}
+                {...register("vigencia_final", { required: true })}
               />
             )}
           />
@@ -92,6 +101,7 @@ export const AgregarProyectos: React.FC = () => {
           required
           autoFocus
           type="text"
+          {...register("inversion", { required: true })}
         />
       </Grid>
       <Grid item spacing={2} justifyContent="end" container>
@@ -101,19 +111,6 @@ export const AgregarProyectos: React.FC = () => {
             onClick={() => { set_is_agregar(true) }}
           >
             Agregar Nueva Actividad
-          </LoadingButton>
-        </Grid>
-
-        <Grid item>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            fullWidth
-            color="success"
-          // loading={is_saving}
-          // disabled={is_saving}
-          >
-            Guardar
           </LoadingButton>
         </Grid>
       </Grid>
@@ -134,21 +131,8 @@ export const AgregarProyectos: React.FC = () => {
               required
               autoFocus
               multiline
+              {...register("descripcion", { required: true })}
             />
-          </Grid>
-          <Grid item spacing={2} justifyContent="end" container>
-            <Grid item>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                fullWidth
-                color="success"
-              // loading={is_saving}
-              // disabled={is_saving}
-              >
-                Guardar
-              </LoadingButton>
-            </Grid>
           </Grid>
         </>
       )}

@@ -296,8 +296,7 @@ const CrearViveroDialogForm = ({
                 defaultValue={0}
                 rules={{
                   required: true,
-                  min: 0,
-                  max: getValues('area_propagacion_mt2') ?? '',
+                  min: getValues('area_propagacion_mt2') ?? '',
                 }}
                 render={({
                   field: { onChange, value },
@@ -318,7 +317,7 @@ const CrearViveroDialogForm = ({
                       error != null
                         ? error.type === 'required'
                           ? 'El area es requerida'
-                          : `El valor del area debe ser menor al area de propagacion (${
+                          : `El valor del area debe ser mayor al area de propagacion (${
                               getValues('area_propagacion_mt2') ?? ''
                             })`
                         : 'Ingrese area'
@@ -371,7 +370,7 @@ const CrearViveroDialogForm = ({
                 name="area_propagacion_mt2"
                 control={control_vivero}
                 defaultValue={0}
-                rules={{ required: true, min: getValues('area_mt2') ?? '' }}
+                rules={{ required: true, max: getValues('area_mt2') ?? '' }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -391,7 +390,7 @@ const CrearViveroDialogForm = ({
                       error != null
                         ? error.type === 'required'
                           ? 'El area de propagacion es requerida'
-                          : `El valor del area debe ser mayor al area (${
+                          : `El valor del area debe ser mmenor al area (${
                               getValues('area_mt2') ?? ''
                             })`
                         : 'Ingrese area'

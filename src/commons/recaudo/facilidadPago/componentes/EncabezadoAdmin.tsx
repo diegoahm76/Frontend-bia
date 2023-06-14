@@ -15,7 +15,7 @@ interface Fecha {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const InputsEncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
+export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
   const [obligaciones, set_obligaciones] = useState(false);
   const { deudores } = useSelector((state: RootState) => state.deudores);
 
@@ -103,7 +103,7 @@ export const InputsEncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
                     set_obligaciones(true)
                   }}
                 >
-                Consultar listado obligaciones
+                  Consultar listado obligaciones
                 </Button>
               </Grid>
             </Grid>

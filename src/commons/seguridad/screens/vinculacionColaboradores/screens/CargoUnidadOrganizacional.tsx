@@ -5,9 +5,7 @@ import dayjs, { type Dayjs } from "dayjs";
 import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
-import { useAppDispatch } from "../../../../../hooks";
 import { Title } from "../../../../../components/Title";
-import { obtener_cargos, obtener_unidades_org } from "../Thunks/VinculacionColaboradores"
 import CheckIcon from '@mui/icons-material/Check';
 
 interface IProps {
@@ -15,17 +13,16 @@ interface IProps {
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
     title: string,
     persona_vinculacion: any
-    vinculacion: any
+    vinculacion: any,
+    tipos_cargos: any,
+    lista_unidad_org: any,
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const CargoUnidadOrganizacionalComponent = (props: IProps) => {
-    const dispatch = useAppDispatch();
-    const [tipos_cargos, set_tipos_cargos] = useState<any[]>([]);
     const [cargo, set_cargo] = useState<string>("");
     const [cargo_desc, set_cargo_desc] = useState<string>("");
     const [msj_error_cargo, set_msj_error_cargo] = useState<string>("");
-    const [lista_unidad_org, set_lista_unidad_org] = useState<any[]>([]);
     const [unidad_organizacional, set_unidad_organizacional] = useState<string>("");
     const [unidad_org_desc, set_unidad_org_desc] = useState<string>("");
     const [msj_error_unidad_org, set_msj_error_unidad_org] = useState<string>("");
@@ -43,15 +40,10 @@ const CargoUnidadOrganizacionalComponent = (props: IProps) => {
     const [msj_error_obs_desvincula, set_msj_error_obs_desvincula] = useState<string>("");
 
     useEffect(() => {
-        obtener_cargos_fc();
-        obtener_unidades_org_fc();
-    }, []);
-
-    useEffect(() => {
         if (props.persona_vinculacion !== null && props.persona_vinculacion !== undefined) {
-            set_cargo(props.persona_vinculacion.cargo);
+            set_cargo(props.persona_vinculacion.cargo === 0 ? obtener_id_cargo() : props.persona_vinculacion.cargo);
             set_cargo_desc(props.persona_vinculacion.cargo_desc);
-            set_unidad_organizacional(props.persona_vinculacion.unidad_organizacional);
+            set_unidad_organizacional(props.persona_vinculacion.unidad_organizacional === 0 ? obtener_id_unidad_org() : props.persona_vinculacion.unidad_org_desc);
             set_unidad_org_desc(props.persona_vinculacion.unidad_org_desc);
             set_fecha_inicio(props.persona_vinculacion.fecha_inicio);
             set_fecha_asignacion(props.persona_vinculacion.fecha_asignacion);
@@ -64,29 +56,23 @@ const CargoUnidadOrganizacionalComponent = (props: IProps) => {
         }
     }, [props.persona_vinculacion]);
 
-    const obtener_cargos_fc = (): void => {
-        dispatch(obtener_cargos()).then((response: { success: boolean, detail: string, data: any }) => {
-            if (response.success)
-                set_tipos_cargos(response.data)
-        })
+    const obtener_id_cargo = (): number => {
+        return props.tipos_cargos.find((tc: any) => tc.nombre ===  props.persona_vinculacion.cargo_actual).id_cargo;
     }
 
-    const obtener_unidades_org_fc = (): void => {
-        dispatch(obtener_unidades_org()).then((response: { success: boolean, data: any }) => {
-            if (response.success)
-                set_lista_unidad_org(response.data)
-        })
+    const obtener_id_unidad_org = (): number => {
+        return props.lista_unidad_org.find((luo: any) => luo.nombre ===  props.persona_vinculacion.unidad_org_desc).id_unidad_organizacional;
     }
 
     const cambio_cargo: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
-        set_cargo_desc(tipos_cargos.find((tc: any) => tc.id_cargo === e.target.value).nombre);
+        set_cargo_desc(props.tipos_cargos.find((tc: any) => tc.id_cargo === e.target.value).nombre);
         set_cargo(e.target.value);
         if (e.target.value !== null && e.target.value !== "")
             set_msj_error_cargo("");
     }
 
     const cambio_unidad_organizacional: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
-        set_unidad_org_desc(lista_unidad_org.find((uo: any) => uo.id_unidad_organizacional === e.target.value).nombre);
+        set_unidad_org_desc(props.lista_unidad_org.find((uo: any) => uo.id_unidad_organizacional === e.target.value).nombre);
         set_unidad_organizacional(e.target.value);
         if (e.target.value !== null && e.target.value !== "")
             set_msj_error_unidad_org("");
@@ -204,7 +190,7 @@ const CargoUnidadOrganizacionalComponent = (props: IProps) => {
                                                 onChange={cambio_cargo}
                                                 error={msj_error_cargo !== ""}
                                             >
-                                                {tipos_cargos.map((tipos: any) => (
+                                                {props.tipos_cargos.map((tipos: any) => (
                                                     <MenuItem key={tipos.id_cargo} value={tipos.id_cargo}>
                                                         {tipos.nombre}
                                                     </MenuItem>
@@ -296,7 +282,7 @@ const CargoUnidadOrganizacionalComponent = (props: IProps) => {
                                                 onChange={cambio_unidad_organizacional}
                                                 error={msj_error_unidad_org !== ""}
                                             >
-                                                {lista_unidad_org.map((tipos: any) => (
+                                                {props.lista_unidad_org.map((tipos: any) => (
                                                     <MenuItem key={tipos.id_unidad_organizacional} value={tipos.id_unidad_organizacional}>
                                                         {tipos.nombre}
                                                     </MenuItem>

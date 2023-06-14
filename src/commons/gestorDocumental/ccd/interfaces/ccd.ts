@@ -24,6 +24,8 @@ export interface ICCDForm {
   fecha_terminado: null | Date | string;
   organigrama: IList;
   unidades_organigrama: IList;
+  valor_aumento_serie: string | number;
+  valor_aumento_subserie: string | number;
 }
 export interface ICCDAsingForm {
   sries_asignacion: IList;

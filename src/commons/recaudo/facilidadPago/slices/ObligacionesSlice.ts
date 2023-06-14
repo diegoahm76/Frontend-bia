@@ -7,13 +7,13 @@ const initial_state = {
 
 // Listar Obligaciones desde Pag. Usuario Externo
 export const get_obligaciones = createAsyncThunk('facilidades_pago/get_obligaciones', async () => {
-  const { data } = await api.get('recaudo/pagos/listado-obligaciones/')
+  const { data } = await api.get(`recaudo/pagos/listado-obligaciones/`)
   return data
 })
 
 // Listar Obligaciones de Usuario Externo desde Pag. Usuario Interno
 export const get_obligaciones_id = createAsyncThunk('facilidades_pago/get_obligaciones_id', async (identificacion: string) => {
-  const { data } = await api.get(`recaudo/pagos/consulta-deudores-obligaciones/${identificacion}`)
+  const { data } = await api.get(`recaudo/pagos/consulta-deudores-obligaciones/${identificacion}/`)
   return data.data
 })
 

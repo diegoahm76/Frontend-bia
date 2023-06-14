@@ -103,8 +103,11 @@ const SearchCcdModal = ({
         <>
           <IconButton
             onClick={() => {
-              console.log(params.data);
-              dispatch(get_ccd_current(params.data));
+              console.log(
+                'params.data',
+                params,
+              );
+              dispatch(get_ccd_current(params));
               set_is_modal_active(false);
             }}
           >

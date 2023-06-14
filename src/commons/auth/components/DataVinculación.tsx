@@ -7,6 +7,7 @@ import { Divider, Grid, TextField } from "@mui/material";
 import { Title } from "../../../components/Title";
 import { control_error } from "../../../helpers";
 import { consultar_vinculacion_persona } from "../../seguridad/request/Request";
+import { type AxiosError } from "axios";
 
 interface Props {
     id_persona: number | undefined;
@@ -35,8 +36,11 @@ export const DatosVinculacion: React.FC<Props> = ({
                 set_is_ver_datos_vinculacion(true)
             }
         } catch (err) {
-            control_error(err);
-        }
+            const temp = err as AxiosError;
+            if (temp.response?.status !== 404) {
+              control_error(err);
+            }
+          }
     };
 
     return (

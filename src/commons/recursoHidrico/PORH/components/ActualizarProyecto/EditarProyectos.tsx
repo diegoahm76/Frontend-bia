@@ -193,6 +193,7 @@ export const EditarProyecto: React.FC = () => {
             <DataGrid
               density="compact"
               autoHeight
+              key={1+3}
               rows={rows_actividades}
               columns={columns}
               getRowId={(row) => row.nombre}
