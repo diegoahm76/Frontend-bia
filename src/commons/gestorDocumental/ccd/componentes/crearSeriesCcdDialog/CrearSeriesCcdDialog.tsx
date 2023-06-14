@@ -217,7 +217,7 @@ const create_series = (): void => {
       (serie: any) => serie.id_serie_doc !== params.row.id_serie_doc
     );
 
-    if (params?.row?.tiene_subseries) {
+    if (params?.row?.tiene_subseries === true) {
       set_is_modal_active(false);
       await notification_error(
         'No se puede eliminar una serie con subseries asociadas, debe eliminarse primero las subseries asociadas'

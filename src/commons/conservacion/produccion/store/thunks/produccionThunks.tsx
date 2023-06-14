@@ -7,7 +7,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_bienes,set_preparaciones, set_preparacion_bienes, set_siembras_material_vegetal, set_current_siembra_material_vegetal, set_mortalidades, set_current_mortalidad, set_items_mortalidad, set_nro_mortalidad, set_persona_anula
+  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_bienes,set_preparaciones, set_preparacion_bienes, set_siembras_material_vegetal, set_current_siembra_material_vegetal, set_mortalidades, set_current_mortalidad, set_items_mortalidad, set_nro_mortalidad, set_persona_anula, set_incidencias
 } from '../slice/produccionSlice';
 import { api } from '../../../../../api/axios';
 
@@ -177,7 +177,7 @@ export const get_person_id_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`personas/get-by-id/${id}/`);
- 
+      console.log(data)
       if ("data" in data) {
         dispatch (set_changing_person({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
           nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido)}))
@@ -698,6 +698,125 @@ export const get_nro_mortalidad_service = (): any => {
       return data;
     } catch (error: any) {
       console.log('get_nro_mortalidad_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// obtener incidenciaes filtro
+export const get_incidencias_service = (
+  nro: number | null,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/incidencia/get-incidencia-by-nro/?nro_registro_incidencia=${nro??""}`);
+      // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      console.log(data)
+      if (data.success === true) {
+        dispatch(set_incidencias(data.data))
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_incidenciaes_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// crearincidencia
+export const add_incidencia_service = (
+  incidencia: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post('conservacion/incidencias/create-incidencias/', incidencia);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_incidencia_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// editar ingreso a cuarentena
+export const edit_incidencia_service = (
+  id: number,
+  incidencia: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/incidencias/actualizacion-incidencias/${id}/`, incidencia);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('edit_incidencia_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// borrar siembra
+export const annul_incidencia_service = (
+  id: number,
+  incidencia: any
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/incidencias/anulacion-incidencias/${id}/`, incidencia);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)   
+         
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('annul_incidencia_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener bienes incidencia
+export const get_bien_incidencia_id_service = (
+  id: number,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/incidencias/get-consumo-by-incidencia/${id}`);
+      console.log(data)
+      if ("data" in data) {
+        // dispatch (set_items_incidencia(data.data))
+      } else {
+        // control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bien_incidencia_id_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

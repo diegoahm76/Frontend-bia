@@ -70,16 +70,14 @@ export function CambioEtapaScreen(): JSX.Element {
       void dispatch(edit_stage_change_service(form_data, current_stage_change.id_cambio_de_etapa));
     } else {
       set_action("crear")
-      console.log(data)
       const fecha = new Date(data.fecha_cambio??"").toISOString()
-
       form_data.append('id_bien', data.id_bien);
       form_data.append('id_vivero', data.id_vivero);
       form_data.append('agno_lote', data.agno_lote);
       form_data.append('nro_lote', data.nro_lote);
       form_data.append('cod_etapa_lote_origen', data.cod_etapa_lote_origen);
       form_data.append('fecha_cambio', fecha.slice(0,10) + " " + fecha.slice(11,19));
-      form_data.append('cantidad_disponible_al_crear', data.cantidad_disponible_al_crear);
+      form_data.append('cantidad_disponible_al_crear', Number(data.cantidad_disponible_al_crear) ?? 100);
       form_data.append('cantidad_movida', Number(data.cantidad_movida));
       form_data.append('altura_lote_en_cms', Number(data.altura_lote_en_cms));
       form_data.append('observaciones', data.observaciones);
