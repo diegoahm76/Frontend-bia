@@ -6,7 +6,7 @@ import { type IObjBienConsumo, type IObjFuncionario, type ISolicitudConsumo, typ
 
 
 const fecha = (new Date())
-fecha.setDate(fecha.getDate() + 1)
+fecha.setDate(fecha.getDate() + 10)
 const initial_state_current_solicitud: IObjSolicitudVivero = {
     nro_solicitud: null,
     fecha_solicitud: (new Date().toString()),

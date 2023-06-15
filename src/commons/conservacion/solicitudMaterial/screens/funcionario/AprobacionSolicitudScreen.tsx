@@ -9,7 +9,7 @@ import FormButton from "../../../../../components/partials/form/FormButton";
 import { useForm } from 'react-hook-form';
 import { set_current_nursery, set_current_solicitud } from '../../store/slices/indexSolicitud';
 import { type IObjNursery, type IObjSolicitudVivero } from '../../interfaces/solicitudVivero';
-import { aprobacion_solicitud_funcionacio, get_bienes_solicitud, get_funcionario_id_service, get_nurcery, get_person_id_service, get_solicitud_service, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
+import { aprobacion_solicitud_funcionacio, get_bienes_solicitud, get_funcionario_id_service, get_nurcery, get_person_id_service, get_solicitud_aprobacion, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import SeleccionarSolicitudAprobada from '../../components/SeleccionarSolicitudAprobacion';
 import DestinoAprobacion from '../../components/DestinoEleAprobacion';
@@ -31,7 +31,7 @@ const AprobacionSolicitudScreen = () => {
   useEffect(() => {
     void dispatch(get_uni_organizacional());
     void dispatch(get_nurcery())
-    void dispatch(get_solicitud_service())
+    void dispatch(get_solicitud_aprobacion())
   }, [])
 
 
@@ -102,11 +102,10 @@ const AprobacionSolicitudScreen = () => {
   // }
 
   const on_submit_aprobacion = (data: IObjSolicitudVivero): void => {
-
+    console.log("aprobacion...")
     const form_data = {
-
       estado_aprobacion_responsable: data.estado_aprobacion_responsable,
-      justificacion_rechazo_responsable: data.justificacion_aprobacion_responsable,
+      justificacion_aprobacion_responsable: data.justificacion_aprobacion_responsable,
       fecha_aprobacion_responsable: null,
       revisada_responsable: null,
       solicitud_abierta: null,
@@ -114,7 +113,6 @@ const AprobacionSolicitudScreen = () => {
     }
 
     void dispatch(aprobacion_solicitud_funcionacio(form_data, data.id_solicitud_vivero))
-    console.log(form_data)
   }
 
 
@@ -176,11 +174,7 @@ const AprobacionSolicitudScreen = () => {
             type_button="button" />
         </Grid>
 
-        <Grid item xs={12} md={10}>
-
-
-
-        </Grid>
+      
 
       </Grid>
     </Grid>
