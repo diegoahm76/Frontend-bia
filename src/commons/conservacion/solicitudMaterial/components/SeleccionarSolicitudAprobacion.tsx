@@ -11,7 +11,7 @@ interface IProps {
     title?: string;
     control_solicitud_aprobada: any;
     get_values: any;
-    function_search: any;
+    function_search?: any;
     despacho?: boolean | null;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
