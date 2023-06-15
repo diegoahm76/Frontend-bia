@@ -447,13 +447,14 @@ export const annul_solicitud_service = (
 // APROBAR SOLICITUD 
 
 export const aprobacion_solicitud_funcionacio: any = (
-
+    solicitud: any,
     id: string | number
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.patch(
-                `conservacion/funcionario/procesar-solicitud-responsable/${id}/`
+                `conservacion/funcionario/procesar-solicitud-responsable/${id}/`,
+                solicitud
             );
             console.log(data)
             dispatch(get_solicitud_service());

@@ -102,11 +102,10 @@ const AprobacionSolicitudScreen = () => {
   // }
 
   const on_submit_aprobacion = (data: IObjSolicitudVivero): void => {
-
+    console.log("aprobacion...")
     const form_data = {
-
       estado_aprobacion_responsable: data.estado_aprobacion_responsable,
-      justificacion_rechazo_responsable: data.justificacion_aprobacion_responsable,
+      justificacion_aprobacion_responsable: data.justificacion_aprobacion_responsable,
       fecha_aprobacion_responsable: null,
       revisada_responsable: null,
       solicitud_abierta: null,
@@ -114,7 +113,6 @@ const AprobacionSolicitudScreen = () => {
     }
 
     void dispatch(aprobacion_solicitud_funcionacio(form_data, data.id_solicitud_vivero))
-    console.log(form_data)
   }
 
 
@@ -176,11 +174,7 @@ const AprobacionSolicitudScreen = () => {
             type_button="button" />
         </Grid>
 
-        <Grid item xs={12} md={10}>
-
-
-
-        </Grid>
+      
 
       </Grid>
     </Grid>
