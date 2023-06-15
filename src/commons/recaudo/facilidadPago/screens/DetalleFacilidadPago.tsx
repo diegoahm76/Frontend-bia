@@ -245,7 +245,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                     startIcon={<Add />}
                     sx={{ marginTop: '30px' }}
                     onClick={() => {
-                      navigate('/') // aún no se ha construido esta pantalla
+                      navigate('../reposicion_externa')
                     }}
                   >
                     Crear recurso de reposición

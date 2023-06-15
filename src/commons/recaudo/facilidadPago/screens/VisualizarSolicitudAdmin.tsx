@@ -303,7 +303,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     color="primary"
                     startIcon={<SaveIcon />}
                     onClick={()=>{
-                      navigate('/') // aún no se ha construido esta pantalla
+                      navigate('../incumplimiento')
                   }}
                   >
                     Si
