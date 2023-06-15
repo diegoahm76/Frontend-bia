@@ -6,6 +6,9 @@ export interface ICCD {
 }
 
 export interface ICCDObject {
+  nombre_unidad_organizacional: string | number;
+  valor_aumento_serie: string | number;
+  valor_aumento_subserie: string | number;
   id_ccd: number;
   id_organigrama: number;
   version: string;
@@ -18,6 +21,7 @@ export interface ICCDObject {
   actual: boolean;
 }
 export interface ICCDForm {
+  ruta_soporte?: any;
   id_ccd: number;
   version: string;
   nombre_ccd: string;
