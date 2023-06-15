@@ -288,7 +288,7 @@ export const get_solicitud_service = (): any => {
 export const get_solicitud_aprobacion = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`conservacion/funcionario/get-solicitud/`);
+            const { data } = await api.get(`conservacion/funcionario/list-solicitudes/`);
             console.log('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.data));
 
