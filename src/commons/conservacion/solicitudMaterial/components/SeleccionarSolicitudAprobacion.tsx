@@ -1,9 +1,8 @@
 import { Grid, } from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
+import { useAppSelector } from '../../../../hooks/hooks';
 
-import { get_solicitud_service, } from '../store/thunks/solicitudViveroThunks';
 import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSolicitud';
 
 
@@ -24,39 +23,51 @@ const SeleccionarSolicitudAprobada = ({
 
     const { unidad_organizacional, solicitudes, nurseries } = useAppSelector((state: { solicitud_vivero: any; }) => state.solicitud_vivero);
 
-
-    const dispatch = useAppDispatch();
-
     const columns_solicitudes: GridColDef[] = [
         { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
         {
             field: 'fecha_solicitud',
             headerName: 'Fecha de solicitud',
-            width: 400,
+            width: 200,
             renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
+              <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {new Date(params.value).toDateString()}
+              </div>
             ),
-
-        },
+          },
         {
-            field: 'persona_solicita',
-            headerName: 'Observación',
+            field: 'fecha_retiro_material',
+            headerName: 'Fecha retiro del material',
+            width: 200,
+            renderCell: (params) => (
+              <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                {new Date(params.value).toDateString()}
+              </div>
+            ),
+          },
+        {
+            field: 'nombre_unidad_organizacional_destino',
+            headerName: 'Unidad organizacional destino',
             width: 350,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
                 </div>
             ),
-
+        },
+        {
+            field: 'persona_solicita',
+            headerName: 'Persona solicita',
+            width: 350,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
         },
 
     ];
 
-    const get_solicitudes_filtro: any = (async () => {
-        void dispatch(get_solicitud_service())
-    })
 
     return (
         <>
@@ -72,9 +83,9 @@ const SeleccionarSolicitudAprobada = ({
                     row_id={"id_solicitud_vivero"}
                     columns_model={columns_solicitudes}
                     models={solicitudes}
-                    get_filters_models={get_solicitudes_filtro}
+                    get_filters_models={null}
                     set_models={set_solicitudes}
-                    button_submit_label={'Buscar solicitud'}
+                    button_submit_label={'Seleccionar solicitud'}
                     form_inputs={[
 
                         {
@@ -85,7 +96,7 @@ const SeleccionarSolicitudAprobada = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_solicitud_aprobada,
                             control_name: "nro_solicitud",
                             default_value: "",
@@ -115,7 +126,7 @@ const SeleccionarSolicitudAprobada = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_solicitud_aprobada,
                             control_name: "nro_info_tecnico",
                             default_value: "",
@@ -142,7 +153,7 @@ const SeleccionarSolicitudAprobada = ({
                         {
                             datum_type: "date_picker_controller",
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_solicitud_aprobada,
                             control_name: "fecha_retiro_material",
                             default_value: "",
@@ -157,7 +168,7 @@ const SeleccionarSolicitudAprobada = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 12,
+                            md: 6,
                             control_form: control_solicitud_aprobada,
                             control_name: "observaciones",
                             default_value: "",
@@ -172,7 +183,7 @@ const SeleccionarSolicitudAprobada = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 12,
+                            md: 6,
                             control_form: control_solicitud_aprobada,
                             control_name: "motivo",
                             default_value: "",
@@ -229,22 +240,10 @@ const SeleccionarSolicitudAprobada = ({
                         },
 
                     ]}
-                    modal_select_model_title='Buscar solicitud'
-                    modal_form_filters={[
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 2,
-                            control_form: control_solicitud_aprobada,
-                            control_name: "id_solicitud_consumibles",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Número de solicitud",
-                            type: "number",
-                            disabled: true,
-                            helper_text: "",
-                        }
-                    ]}
+                    title_table_modal= "Solicitudes pendientes por aprobar"
+                    modal_active_init= {true}
+                    modal_select_model_title='Listado de solicitudes'
+                    modal_form_filters={[]}
                 />
             </Grid>
         </>

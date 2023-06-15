@@ -85,7 +85,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_solicitud,
                             control_name: "nro_solicitud",
                             default_value: "",
@@ -115,7 +115,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_solicitud,
                             control_name: "nro_info_tecnico",
                             default_value: "",
@@ -134,7 +134,7 @@ const SeleccionarSolicitud = ({
                             control_name: "fecha_solicitud",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Fecha de ingreso",
+                            label: "Fecha solicitud",
                             type: "text",
                             disabled: true,
                             helper_text: ""
@@ -142,7 +142,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "date_picker_controller",
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_solicitud,
                             control_name: "fecha_retiro_material",
                             default_value: "",
@@ -186,7 +186,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "select_controller",
                             xs: 12,
-                            md: 3,
+                            md: 4,
                             control_form: control_solicitud,
                             control_name: "id_unidad_para_la_que_solicita",
                             default_value: "",
@@ -203,7 +203,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 4,
                             control_form: control_solicitud,
                             control_name: "persona_solicita",
                             default_value: "",
@@ -216,20 +216,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
-                            control_form: control_solicitud,
-                            control_name: "nombre_unidad_organizacional",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Unidad a la que pertenece:",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
+                            md: 4,
                             control_form: control_solicitud,
                             control_name: "nombre_unidad_organizacional",
                             default_value: "",

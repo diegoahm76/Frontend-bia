@@ -171,10 +171,6 @@ export const solicitud_vivero_slice = createSlice({
         ) => {
             state.persona_solicita = action.payload;
         },
-
-
-
-
     }
 
 })

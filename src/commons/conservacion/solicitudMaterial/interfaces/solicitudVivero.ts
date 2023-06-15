@@ -88,8 +88,10 @@ export interface IObjSolicitudVivero {
   id_unidad_org_del_responsable?: number | null;
   id_persona_cierre_no_dispo_viveros?: number | null;
   id_persona_coord_viveros?: number | null;
-  persona_solicita?: string | null;
   nombre_unidad_organizacional?: string | null;
+  persona_solicita?: string | null;
+  persona_responsable?: string | null;
+  nombre_unidad_organizacional_destino?: string | null;
 }
 
 export interface IObjBienesSolicitud {
@@ -136,6 +138,7 @@ export interface IObjBienConsumo {
   id_porcentaje_iva?: number | null;
   id_unidad_medida_vida_util?: number | null;
   id_bien_padre?: number | null;
+  tipo_bien?: string | null;
 }
 
 export interface IObjNursery {
