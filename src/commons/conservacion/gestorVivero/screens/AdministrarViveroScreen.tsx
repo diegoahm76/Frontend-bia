@@ -11,6 +11,7 @@ import {
   Avatar,
   Chip,
   Tooltip,
+  TextField,
 } from '@mui/material';
 // Icons de Material UI
 import AddIcon from '@mui/icons-material/Add';
@@ -34,6 +35,7 @@ import { activate_deactivate_nursery_service, delete_nursery_service, get_nurser
 import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
 // // Slices
 import { current_nursery } from '../store/slice/viveroSlice';
+
 
 const initial_state_current_nursery = {
   id_vivero: null,
@@ -70,8 +72,10 @@ const initial_state_current_nursery = {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdministrarViveroScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const  [action, set_action ] = useState<string>("create");
+  const [action, set_action] = useState<string>("create");
   const { nurseries } = useAppSelector((state) => state.nursery);
+  const [search_text, setsearch_text] = useState('');
+
   const [add_nursery_is_active, set_add_nursery_is_active] =
     useState<boolean>(false);
 
@@ -160,7 +164,7 @@ export function AdministrarViveroScreen(): JSX.Element {
       width: 300,
       renderCell: (params) => (
         <>
-        <Tooltip title="Detalle">
+          <Tooltip title="Detalle">
             <IconButton
               onClick={() => {
                 dispatch(current_nursery(params.row));
@@ -180,7 +184,6 @@ export function AdministrarViveroScreen(): JSX.Element {
                 <ArticleIcon
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
-
               </Avatar>
             </IconButton>
           </Tooltip>
@@ -204,7 +207,6 @@ export function AdministrarViveroScreen(): JSX.Element {
                 <EditIcon
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
-
               </Avatar>
             </IconButton>
           </Tooltip>
@@ -231,18 +233,16 @@ export function AdministrarViveroScreen(): JSX.Element {
                     sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                   />
                 }
-
               </Avatar>
             </IconButton>
           </Tooltip>
-
-          {params.row.activo === true && params.row.id_viverista_actual?
+          {params.row.activo === true && params.row.id_viverista_actual ?
             <>
               <Tooltip title={params.row.en_funcionamiento ? "Cerrar" : "Abrir"}>
-               
+
                 <IconButton
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                  href= {`#/app/conservacion/gestor_vivero/apertura_cierre/${params.row.id_vivero}/`}
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                  href={`#/app/conservacion/gestor_vivero/apertura_cierre/${params.row.id_vivero}/`}
                 >
                   <Avatar
                     sx={{
@@ -264,37 +264,36 @@ export function AdministrarViveroScreen(): JSX.Element {
 
                   </Avatar>
                 </IconButton>
-                
               </Tooltip>
-              {((params.row.fecha_ultima_apertura !== null || params.row.fecha_ultima_apertura !== "") && params.row.en_funcionamiento === true ) ?
+              {((params.row.fecha_ultima_apertura !== null || params.row.fecha_ultima_apertura !== "") && params.row.en_funcionamiento === true) ?
 
-              <Tooltip title={params.row.vivero_en_cuarentena ? "Finalizar cuarentena" : "Iniciar cuarentena"}>
-                <IconButton
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                  href= {`#/app/conservacion/gestor_vivero/cuarentena/${params.row.id_vivero}/`}
-                >
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
+                <Tooltip title={params.row.vivero_en_cuarentena ? "Finalizar cuarentena" : "Iniciar cuarentena"}>
+                  <IconButton
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    href={`#/app/conservacion/gestor_vivero/cuarentena/${params.row.id_vivero}/`}
                   >
-                    {params.row.vivero_en_cuarentena ?
-                      <BusinessIcon
-                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                      /> :
-                      <DomainDisabledIcon
-                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                      />
-                    }
+                    <Avatar
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        background: '#fff',
+                        border: '2px solid',
+                      }}
+                      variant="rounded"
+                    >
+                      {params.row.vivero_en_cuarentena ?
+                        <BusinessIcon
+                          sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                        /> :
+                        <DomainDisabledIcon
+                          sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                        />
+                      }
 
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-              :null}
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+                : null}
             </>
             : null
           }
@@ -317,7 +316,6 @@ export function AdministrarViveroScreen(): JSX.Element {
                   <DeleteIcon
                     sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                   />
-
                 </Avatar>
               </IconButton>
             </Tooltip>
@@ -356,17 +354,29 @@ export function AdministrarViveroScreen(): JSX.Element {
                 set_action("create")
                 set_add_nursery_is_active(true);
               }}
+              style={{ width: '200px', height: '55px', }}
             >
               Crear vivero
             </Button>
+            <TextField
+              label="Buscar"
+              value={search_text}
+              onChange={(e) => { setsearch_text(e.target.value) }}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              style={{ width: '200px', height: '50px' }}
+
+            />
           </Stack>
           <Grid item>
-
             <Box sx={{ width: '100%' }}>
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={nurseries}
+                rows={nurseries.filter((row) =>
+                  row.nombre.toLowerCase().includes(search_text.toLowerCase())
+                )}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
@@ -378,7 +388,7 @@ export function AdministrarViveroScreen(): JSX.Element {
           <CrearViveroDialogForm
             is_modal_active={add_nursery_is_active}
             set_is_modal_active={set_add_nursery_is_active}
-            action = {action}
+            action={action}
           />
         </Grid>
       </Grid>
