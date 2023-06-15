@@ -125,7 +125,7 @@ const CrearSeriesCcdDialog = ({
 const create_series = (): void => {
      const { id_serie_doc, nombre, codigo } = data;
   console.log(id_serie_doc, nombre, codigo);
-    const updatedSeries = series_ccd.map((item: any) => {
+    /* const updatedSeries = series_ccd.map((item: any) => {
       if (item.id_serie_doc === id_serie_doc) {
         return {
           ...item,
@@ -142,20 +142,20 @@ const create_series = (): void => {
         nombre: data.nombre,
         codigo: Number(data.codigo),
         id_ccd: ccd_current?.id_ccd,
-      } : updatedSeries;
+      } : updatedSeries; */
 
 
     //! create series is ok
-    /* return void dispatch(create_series_service({
+     return void dispatch(create_series_service({
       nombre: data.nombre,
       codigo: data.codigo,
       id_ccd: ccd_current?.id_ccd
-    }, clean)); */
+    }, clean));
     //! close function create series is ok
 
 
 
-    return void dispatch(create_series_service(newSeries, clean));
+    // return void dispatch(create_series_service(newSeries, clean));
   };
 
 
@@ -316,6 +316,7 @@ const create_series = (): void => {
                 size="small"
                 label="Nombre"
                 variant="outlined"
+                value={data.nombre}
               />
               {errors.nombre !== null && <p>{errors.nombre?.message}</p>}
             </Grid>
@@ -329,6 +330,7 @@ const create_series = (): void => {
                 label="Código"
                 disabled={title_button === 'Actualizar'}
                 variant="outlined"
+                value={data.codigo}
               />
               {errors.codigo !== null && <p>{errors.codigo?.message}</p>}
 

@@ -39,7 +39,7 @@ export const CcdScreen: React.FC = () => {
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
   useEffect(() => {
-    set_flag_btn_finish(ccd_current?.fecha_terminado !== undefined);
+    set_flag_btn_finish(ccd_current?.fecha_terminado !== null);
     console.log(
       '🚀 ~ file: CcdScreen.tsx ~ line 45 ~ useEffect ~ ccd_current?.fecha_terminado',
       ccd_current?.fecha_terminado
@@ -614,7 +614,7 @@ export const CcdScreen: React.FC = () => {
               {flag_btn_finish ? (
                 <Button
                   onClick={() => {
-                    void dispatch(to_resume_ccds_service(set_flag_btn_finish));
+                    void dispatch(to_resume_ccds_service(set_flag_btn_finish,  ccd_current));
                   }}
                   color="success"
                   variant="contained"
@@ -626,7 +626,7 @@ export const CcdScreen: React.FC = () => {
                 <Button
                   onClick={() => {
                     void dispatch(
-                      to_finished_ccds_service(set_flag_btn_finish)
+                      to_finished_ccds_service(set_flag_btn_finish,  ccd_current)
                     );
                   }}
                   color="success"

@@ -143,23 +143,25 @@ export const get_classification_ccds_service: any = (name: string, version: stri
 
 // Reanudar Cuadro de Clasificación Documental
 export const to_resume_ccds_service: any = (
-  set_flag_btn_finish: (arg0: boolean) => void
+  set_flag_btn_finish: (arg0: boolean) => void,
+  ccd_current:  any,
 ) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
-  ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().CCD;
+  ): Promise<any> => {
+    // const { ccd_current } = getState().CCD;
+    console.log(ccd_current, 'ccd_current')
     try {
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(`gestor/ccd/resume/${id_ccd}/`);
-      //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
-      dispatch(
+      console.log(data, 'data');
+     /* dispatch(
         get_classification_ccds_service(ccd_current.nombre, ccd_current.version)
       );
       set_flag_btn_finish(false);
-      control_success(data.detail);
-      return data;
+      control_success(data.detail); */
+      // return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
