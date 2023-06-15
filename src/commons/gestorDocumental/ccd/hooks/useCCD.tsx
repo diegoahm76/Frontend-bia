@@ -133,13 +133,14 @@ const use_ccd = () => {
   console.log(data_create_ccd, 'data_create_ccd')
 
   //  UseEffect para obtener organigramas
-/*  useEffect(() => {
+ useEffect(() => {
     console.log(data_create_ccd, 'data_create_ccd')
     if (ccd_current !== null) {
 
       const result_name = organigram.filter((item) => {
-        console.log(ccd_current, 'ccd_current')
+      console.log(ccd_current, 'ccd_current')
       console.log(organigram, 'organigrama')
+      
         return item.id_organigrama === ccd_current.id_organigrama
       })
       console.log('result_name', result_name)
@@ -150,18 +151,25 @@ const use_ccd = () => {
           label: result_name[0].nombre,
           value: ccd_current.id_organigrama,
         },
-        unidades_organigrama: { label: '', value: 0 },
+        unidades_organigrama: {
+          label: ccd_current.nombre_unidad_organizacional,
+          value: ccd_current.nombre_unidad_organizacional,
+         },
         version: ccd_current.version,
         fecha_terminado: ccd_current.fecha_terminado,
+        valor_aumento_serie: ccd_current.valor_aumento_serie,
+        valor_aumento_subserie: ccd_current.valor_aumento_subserie,
+        ruta_soporte: ccd_current.ruta_soporte,
       };
-      console.log(
+      /* console.log(
         obj,
         'obj'
       )
+      */
       reset_create_ccd(obj);
       set_save_ccd(true);
     }
-  }, [ccd_current]); */
+  }, [ccd_current]);
 
   useEffect(() => {
     if (assignments_ccd_current !== null) {
@@ -194,7 +202,7 @@ const use_ccd = () => {
   useEffect(() => {
     void dispatch(get_organigrams_service());
   }, [
-    /* ccd_current, */
+     ccd_current, 
   ]);
   //  UseEffect para obtener series
   //! se retira de momento al mandar un error en la petición durante la primer petición al render de la pantalla
@@ -206,7 +214,7 @@ const use_ccd = () => {
     void dispatch(get_subseries_service());
   }, [ccd_current]); */
   //  UseEffect para obtener asignaciones
- /* useEffect(() => {
+  /* useEffect(() => {
     void dispatch(get_assignments_service());
   }, [ccd_current]); */
 
@@ -277,6 +285,7 @@ const use_ccd = () => {
       nombre: data_create_ccd.nombre_ccd,
       valor_aumento_serie: data_create_ccd.valor_aumento_serie,
       valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
+      ruta_soporte: data_create_ccd.ruta_soporte,
     };
     console.log(
       'new_ccd',

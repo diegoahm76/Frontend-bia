@@ -39,7 +39,11 @@ export const CcdScreen: React.FC = () => {
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
   useEffect(() => {
-    set_flag_btn_finish(ccd_current?.fecha_terminado !== null);
+    set_flag_btn_finish(ccd_current?.fecha_terminado !== undefined);
+    console.log(
+      '🚀 ~ file: CcdScreen.tsx ~ line 45 ~ useEffect ~ ccd_current?.fecha_terminado',
+      ccd_current?.fecha_terminado
+    )
     /* if (ccd_current?.fecha_terminado != null) {
       set_flag_btn_finish(true);
     } else {
@@ -107,7 +111,8 @@ export const CcdScreen: React.FC = () => {
           )} */
             onSubmit={
               (e:any) => {
-                console.log('hola')
+                // console.log('hola')
+                console.log(e)
                 on_submit_create_ccd(e);
               }
             }
@@ -116,7 +121,7 @@ export const CcdScreen: React.FC = () => {
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             /* onSubmit={handle_submit_create_ccd(on_submit_create_ccd)} */
           >
-            <Grid container spacing={2}>
+             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="organigrama"
@@ -348,7 +353,7 @@ export const CcdScreen: React.FC = () => {
                   
                 }}
               >
-                BUSCAR
+                BUSCAR CCD
               </Button>
               <Button
                 type="submit"
@@ -366,7 +371,7 @@ export const CcdScreen: React.FC = () => {
                   clean_ccd();
                 }}
               >
-                LIMPIAR
+                LIMPIAR CAMPOS
               </Button>
             </Stack>
           </form>
