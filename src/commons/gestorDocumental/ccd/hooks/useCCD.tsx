@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 // Components
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
@@ -29,6 +29,8 @@ import {
 import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
 import { get_series_service } from '../store/thunks/seriesThunks';
+import { get_subseries_service } from '../store/thunks/subseriesThunks';
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
   const dispatch = useAppDispatch();
@@ -210,9 +212,9 @@ const use_ccd = () => {
     void dispatch(get_series_service());
   }, [ccd_current]);
   //  UseEffect para obtener subSeries
- /* useEffect(() => {
+ useEffect(() => {
     void dispatch(get_subseries_service());
-  }, [ccd_current]); */
+  }, [ccd_current]);
   //  UseEffect para obtener asignaciones
   /* useEffect(() => {
     void dispatch(get_assignments_service());
@@ -363,11 +365,13 @@ const use_ccd = () => {
     clean_asing();
   };
   // Funcion para limpiar el formulario de asignar CCD
-  const clean_asing = (): void => {
-    reset(initial_state_asig);
-    set_title_button_asing('Guardar relación');
-    dispatch(get_assignments_ccd_current(null));
-  };
+
+  const clean_asing = useCallback((): void => {
+  reset(initial_state_asig);
+  set_title_button_asing('Guardar relación');
+  dispatch(get_assignments_ccd_current(null));
+  dispatch(get_series_service());
+}, [dispatch, reset, set_title_button_asing]);
 
   // Funcion para eliminar Asignaciones
   // const delete_asing = (id: any): void => {
