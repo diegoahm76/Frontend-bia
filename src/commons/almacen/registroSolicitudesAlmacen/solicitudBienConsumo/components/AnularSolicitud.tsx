@@ -108,7 +108,7 @@ const AnularSolicitudModal = ({
 
 
                     </Grid>
-                    <Grid item xs={11} md={3} margin={1} >
+                    <Grid item xs={12} md={12} margin={1} >
                         <Controller
                             name="persona_solicita"
                             control={control_solicitud}
