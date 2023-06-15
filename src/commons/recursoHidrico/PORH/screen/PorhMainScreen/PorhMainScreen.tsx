@@ -4,19 +4,19 @@ import { AgregarPrograma } from '../../components/AgregarNuevoPrograma/AgregarPr
 import { useContext, useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { Avatar, Divider, IconButton, Typography } from '@mui/material';
-// import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
 import { BusquedaPorh } from '../../components/Buscador/Buscador';
-import { get_data_id, post_programa } from '../../Request/request';
+import { editar_activdad, editar_programa, editar_proyecto, get_data_id, post_programa } from '../../Request/request';
 import { EditarPrograma } from '../../components/ActualizarPrograma/EditarPrograma';
 import { useForm } from 'react-hook-form';
 import { control_error } from '../../../../../helpers';
 import { control_success } from '../../../requets/Request';
 import type { GetPrograma } from '../../Interfaces/interfaces';
+import { SeleccionarPrograma } from '../../components/SeleccionarPrograma/SeleccionarPrograma';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PorhMainScreen: React.FC = () => {
@@ -36,6 +36,20 @@ export const PorhMainScreen: React.FC = () => {
     set_rows_programas,
     rows_proyectos,
     rows_actividades,
+    is_agregar_programa,
+    set_is_agregar_programa,
+    is_editar_programa,
+    set_is_editar_programa,
+    is_seleccionar_programa,
+    set_is_seleccionar_programa,
+    is_agregar_actividad,
+    is_agregar_proyecto,
+    is_editar_actividad,
+    is_editar_proyecto,
+    id_actividad,
+    id_proyecto,
+    set_id_programa,
+    id_programa,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -70,98 +84,97 @@ export const PorhMainScreen: React.FC = () => {
       width: 200,
       renderCell: (params: any) => {
         const fecha_fin = params.row.fecha_fin;
-        if (fecha_fin !== null && new Date(fecha_fin) > new Date()) {
-          return (
-            <>
-              <IconButton
-                onClick={() => {
-                  set_id_programa(params.row.id_programa as number);
-                  set_data(params.row);
-                  set_is_agregar(false);
-                  set_is_editar(true);
-                  set_is_seleccionar(false);
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
+        return (
+          <>
+            {fecha_fin !== null && new Date(fecha_fin) > new Date() && (
+              <>
+                <IconButton
+                  onClick={() => {
+                    set_id_programa(params.row.id_programa as number);
+                    set_data(params.row);
+                    set_is_agregar_programa(false);
+                    set_is_editar_programa(true);
+                    set_is_seleccionar_programa(false);
                   }}
-                  variant="rounded"
                 >
-                  <EditIcon
+                  <Avatar
                     sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px',
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
                     }}
-                  />
-                </Avatar>
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  // confirmar_eliminar_cargo(params.row.id_cargo as number)
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
+                    variant="rounded"
+                  >
+                    <EditIcon
+                      sx={{
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
+                      }}
+                    />
+                  </Avatar>
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    // confirmar_eliminar_cargo(params.row.id_cargo as number)
                   }}
-                  variant="rounded"
                 >
-                  <DeleteIcon
+                  <Avatar
                     sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px',
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
                     }}
-                  />
-                </Avatar>
-              </IconButton>
-              <IconButton
-                onClick={() => {
-                  set_is_agregar(false);
-                  set_is_editar(false);
-                  set_is_seleccionar(true);
+                    variant="rounded"
+                  >
+                    <DeleteIcon
+                      sx={{
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
+                      }}
+                    />
+                  </Avatar>
+                </IconButton>
+              </>
+            )}
+            <IconButton
+              onClick={() => {
+                set_id_programa(params.row.id_programa as number);
+                set_data(params.row);
+                set_is_agregar_programa(false);
+                set_is_editar_programa(false);
+                set_is_seleccionar_programa(true);
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
                 }}
+                variant="rounded"
               >
-                <Avatar
+                <ChecklistIcon
                   sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px',
                   }}
-                  variant="rounded"
-                >
-                  <ChecklistIcon
-                    sx={{
-                      color: 'primary.main',
-                      width: '18px',
-                      height: '18px',
-                    }}
-                  />
-                </Avatar>
-              </IconButton>
-            </>
-          );
-        } else {
-          return null;
-        }
+                />
+              </Avatar>
+            </IconButton>
+
+          </>
+
+        );
       },
     },
   ];
 
-  const [is_agregar, set_is_agregar] = useState(false);
-  const [is_editar, set_is_editar] = useState(false);
-  const [is_seleccionar, set_is_seleccionar] = useState(false);
-  const [id_programa, set_id_programa] = useState<number | null>(null);
-  const [id_proyecto, set_id_proyecto] = useState<number | null>(null);
   const [data, set_data] = useState<GetPrograma>();
 
   const fetch_data = async (): Promise<void> => {
@@ -176,27 +189,64 @@ export const PorhMainScreen: React.FC = () => {
     void fetch_data();
   }, []);
 
-
-  const on_submit = async (form: any): Promise<void> => {
-    console.log(form)
-    // console.log(...resgister)
+  const on_submit = handleSubmit(async (form) => {
     try {
       form.id_programa = id_programa
       form.id_proyecto = id_proyecto
       await post_programa(form, set_rows_programas, rows_programas, rows_proyectos, rows_actividades);
       reset();
       control_success('Se creó correctamente')
+      await fetch_data();
     } catch (err) {
       control_error(err);
     }
-  }
+  });
 
+  const on_submit_editar = handleSubmit(async (form) => {
+    try {
+      await editar_programa(id_programa as number, form);
+      // reset();
+      control_success('Se editó correctamente')
+    } catch (err) {
+      control_error(err);
+    }
+  });
+  const on_submit_editar_proyecto = handleSubmit(async (form) => {
+    try {
+      await editar_proyecto(id_proyecto as number, form);
+      // reset();
+      control_success('Se editó correctamente')
+    } catch (err) {
+      control_error(err);
+    }
+  });
+  const on_submit_editar_actividad = handleSubmit(async (form) => {
+    try {
+      await editar_activdad(id_actividad as number, form);
+      // reset();
+      control_success('Se editó correctamente')
+    } catch (err) {
+      control_error(err);
+    }
+  });
 
   return (
     <>
       <form
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises, no-void
-        onSubmit={handleSubmit((form) => void on_submit(form))}
+        onSubmit={(form) => {
+          if (is_agregar_programa || is_agregar_actividad || is_agregar_proyecto) {
+            void on_submit(form)
+          }
+          if (is_editar_programa) {
+            void on_submit_editar(form)
+          }
+          if (is_editar_actividad) {
+            void on_submit_editar_actividad(form)
+          }
+          if (is_editar_proyecto) {
+            void on_submit_editar_proyecto(form)
+          }
+        }}
       >
         <Grid
           container
@@ -232,8 +282,8 @@ export const PorhMainScreen: React.FC = () => {
                   rows={rows_programas}
                   columns={columns}
                   getRowId={(row) => row.id_programa}
-                  pageSize={10}
-                  rowsPerPageOptions={[10]}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
                 />
               </Grid>
             </>
@@ -244,16 +294,16 @@ export const PorhMainScreen: React.FC = () => {
                 variant="outlined"
                 onClick={() => {
                   set_id_programa(null)
-                  set_is_agregar(true)
-                  set_is_editar(false)
-                  set_is_seleccionar(false)
+                  set_is_agregar_programa(true)
+                  set_is_editar_programa(false)
+                  set_is_seleccionar_programa(false)
                 }}
               >
                 Agregar programa
               </LoadingButton>
             </Grid>
           </Grid>
-          {is_agregar && (
+          {is_agregar_programa && (
             <>
               <AgregarPrograma
                 register={register}
@@ -262,30 +312,27 @@ export const PorhMainScreen: React.FC = () => {
               />
             </>
           )}
-          {is_editar && (
+          {is_editar_programa && (
             <>
               <EditarPrograma
                 data={data}
                 register={register}
                 watch={watch}
                 set_value={set_value}
-                set_id_proyecto={set_id_proyecto}
                 set_data={set_data}
-                is_seleccionar_programa={is_seleccionar}
               />
             </>
           )}
-          {is_seleccionar && (
+          {is_seleccionar_programa && (
             <>
-              <Grid item>
-                <LoadingButton
-                  variant="contained"
-                  color='success'
-                  type='submit'
-                >
-                  Finalizar
-                </LoadingButton>
-              </Grid>            </>
+              <SeleccionarPrograma
+                data={data}
+                register={register}
+                watch={watch}
+                set_value={set_value}
+                set_data={set_data}
+              />
+            </>
           )}
           <Grid item xs={12}>
             <Divider />
@@ -308,30 +355,26 @@ export const PorhMainScreen: React.FC = () => {
                 Salir
               </LoadingButton>
             </Grid>
-            {!is_editar ? (
-              <>
-                <Grid item>
-                  <LoadingButton
-                    variant="contained"
-                    color='success'
-                    type='submit'
-                  >
-                    Finalizar
-                  </LoadingButton>
-                </Grid>
-              </>
+            {!is_editar_programa || !is_editar_actividad || !is_editar_proyecto ? (
+              <Grid item>
+                <LoadingButton
+                  variant="contained"
+                  color='success'
+                  type='submit'
+                >
+                  Finalizar
+                </LoadingButton>
+              </Grid>
             ) : (
-              <>
-                <Grid item>
-                  <LoadingButton
-                    variant="contained"
-                    color='success'
-                    type='submit'
-                  >
-                    Actualizar
-                  </LoadingButton>
-                </Grid>
-              </>
+              <Grid item>
+                <LoadingButton
+                  variant="contained"
+                  color='success'
+                  type='submit'
+                >
+                  Actualizar
+                </LoadingButton>
+              </Grid>
             )}
           </Grid>
         </Grid>

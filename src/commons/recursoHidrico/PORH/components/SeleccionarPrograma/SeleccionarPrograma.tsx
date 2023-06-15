@@ -21,22 +21,21 @@ import { get_data_id } from '../../Request/request';
 import { control_error } from '../../../../../helpers';
 import { EditarProyecto } from '../ActualizarProyecto/EditarProyectos';
 import type { GetProyectos } from '../../Interfaces/interfaces';
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import { SeleccionarProyecto } from '../SeleccionarProyecto/SeleccionarProyecto';
 
 interface IProps {
   data: any;
   watch: any;
   register: any;
   set_value: any;
-  set_id_proyecto: any;
   set_data: any;
-  is_seleccionar_programa: boolean;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarPrograma: React.FC<IProps> = (
+export const SeleccionarPrograma: React.FC<IProps> = (
   { data,
     register,
     set_value,
-    set_id_proyecto,
     watch,
   }:
     IProps) => {
@@ -44,6 +43,13 @@ export const EditarPrograma: React.FC<IProps> = (
   const {
     rows_proyectos,
     set_rows_proyectos,
+    is_agregar_proyecto,
+    set_is_agregar_proyecto,
+    is_editar_proyecto,
+    set_is_editar_proyecto,
+    is_seleccionar_proyecto,
+    set_is_seleccionar_proyecto,
+    set_id_proyecto,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -51,25 +57,31 @@ export const EditarPrograma: React.FC<IProps> = (
       field: 'id_proyecto',
       headerName: 'No Proyecto',
       sortable: true,
-      width: 170,
+      width: 120,
     },
     {
       field: 'nombre',
       headerName: 'NOMBRE',
       sortable: true,
-      width: 170,
+      width: 250,
     },
     {
       field: 'vigencia_inicial',
       headerName: 'VIGENCIA INICIAL',
       sortable: true,
-      width: 170,
+      width: 250,
     },
     {
       field: 'vigencia_final',
       headerName: 'VIGENCIA FINAL',
       sortable: true,
-      width: 170,
+      width: 250,
+    },
+    {
+      field: 'inversion',
+      headerName: 'INVERSIÓN',
+      sortable: true,
+      width: 250,
     },
     {
       field: 'ACCIONES',
@@ -95,9 +107,9 @@ export const EditarPrograma: React.FC<IProps> = (
                     onClick={() => {
                       set_id_proyecto(params.row.id_proyecto as number)
                       set_data_proyectos(params.row)
-                      set_is_agregar(false)
-                      set_is_editar(true)
-                      set_is_seleccionar(false)
+                      set_is_agregar_proyecto(false)
+                      set_is_editar_proyecto(true)
+                      set_is_seleccionar_proyecto(false)
                     }}
                   />
                 </Avatar>
@@ -121,6 +133,34 @@ export const EditarPrograma: React.FC<IProps> = (
                   />
                 </Avatar>
               </IconButton>
+              <IconButton
+                onClick={() => {
+                  set_id_proyecto(params.row.id_proyecto as number)
+                  set_data_proyectos(params.row)
+                  set_is_agregar_proyecto(false)
+                  set_is_editar_proyecto(false)
+                  set_is_seleccionar_proyecto(true)
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <ChecklistIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+
             </>
           );
         } else {
@@ -131,27 +171,6 @@ export const EditarPrograma: React.FC<IProps> = (
 
 
   ];
-
-
-  const [form, setform] = useState({
-    nombre: '',
-    fecha_inicial: '',
-    fecha_fin: '',
-    id_programa: '',
-
-  })
-
-  const handle_change = (e: any) => {
-    console.log('e.target.name', e.target.value)
-    setform({
-      ...data,
-      [e.target.name]: e.target.value
-    })
-  }
-
-  const [is_agregar, set_is_agregar] = useState(false);
-  const [is_editar, set_is_editar] = useState(false);
-  const [is_seleccionar, set_is_seleccionar] = useState(false);
 
   // fechas
   const [start_date, set_start_date] = useState<Date | null>(new Date());
@@ -178,7 +197,6 @@ export const EditarPrograma: React.FC<IProps> = (
   };
 
   useEffect(() => {
-    console.log('data editar programa', data)
     void fetch_data(data.id_programa);
   }, [data.id_programa]);
 
@@ -205,8 +223,7 @@ export const EditarPrograma: React.FC<IProps> = (
             margin="dense"
             required
             name="nombre"
-            onChange={handle_change
-            }
+            disabled
             value={data.nombre}
             autoFocus
           />
@@ -219,11 +236,13 @@ export const EditarPrograma: React.FC<IProps> = (
               openTo="day"
               views={['year', 'month', 'day']}
               value={start_date}
+              disabled
               onChange={handle_start_date_change}
               renderInput={(params) => (
                 <TextField
                   required
                   fullWidth
+                  disabled
                   size="small"
                   {...params}
                 />
@@ -239,11 +258,13 @@ export const EditarPrograma: React.FC<IProps> = (
               openTo="day"
               views={['year', 'month', 'day']}
               value={end_date}
+              disabled
               onChange={handle_end_date_change}
               renderInput={(params) => (
                 <TextField
                   required
                   fullWidth
+                  disabled
                   size="small"
                   {...params}
                 />
@@ -271,16 +292,16 @@ export const EditarPrograma: React.FC<IProps> = (
             </Grid>
           </>
         )}
-        {is_agregar && (
+        {!is_editar_proyecto && (
           <>
             <Grid item spacing={2} justifyContent="end" container>
               <Grid item>
                 <LoadingButton
                   variant="outlined"
                   onClick={() => {
-                    set_is_agregar(true)
-                    set_is_editar(false)
-                    set_is_seleccionar(false)
+                    set_is_agregar_proyecto(true)
+                    set_is_editar_proyecto(false)
+                    set_is_seleccionar_proyecto(false)
                     set_id_proyecto(null)
                   }}
                 >
@@ -292,7 +313,7 @@ export const EditarPrograma: React.FC<IProps> = (
         )}
       </Grid >
       <Grid container spacing={2} mt={0.1}>
-        {is_agregar && (
+        {is_agregar_proyecto && (
           <>
             <AgregarProyectos
               register={register}
@@ -301,20 +322,26 @@ export const EditarPrograma: React.FC<IProps> = (
             />
           </>
         )}
-        {is_editar && (
+        {is_editar_proyecto && (
           <>
             <EditarProyecto
+              data={data_proyectos}
+              set_data={set_data_proyectos}
+              register={register}
+              watch={watch}
+              set_value={set_value}
+            />
+          </>
+        )}
+        {is_seleccionar_proyecto && (
+          <>
+            <SeleccionarProyecto
               data={data_proyectos}
               register={register}
               watch={watch}
               set_value={set_value}
               set_id_proyecto={set_id_proyecto}
             />
-          </>
-        )}
-        {is_seleccionar && (
-          <>
-            {/* <AgregarPrograma /> */}
           </>
         )}
 

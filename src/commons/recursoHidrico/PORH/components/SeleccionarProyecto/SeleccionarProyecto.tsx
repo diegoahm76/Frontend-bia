@@ -16,6 +16,8 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
 import { get_data_id } from '../../Request/request';
 import { control_error } from '../../../../../helpers';
+import ChecklistIcon from '@mui/icons-material/Checklist';
+import type { GetActividades } from '../../Interfaces/interfaces';
 
 interface IProps {
   data: any;
@@ -27,7 +29,7 @@ interface IProps {
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarProyecto: React.FC<IProps> = (
+export const SeleccionarProyecto: React.FC<IProps> = (
   { data,
     register,
     set_value,
@@ -39,6 +41,13 @@ export const EditarProyecto: React.FC<IProps> = (
   const {
     rows_actividades,
     set_rows_actividades,
+    is_agregar_actividad,
+    set_is_agregar_actividad,
+    is_editar_actividad,
+    set_is_editar_actividad,
+    is_seleccionar_actividad,
+    set_is_seleccionar_actividad,
+    set_id_actividad,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -51,15 +60,15 @@ export const EditarProyecto: React.FC<IProps> = (
     },
     {
       field: 'nombre',
-      headerName: 'NOMBRE',
+      headerName: 'DESCRIPCIÓN',
       sortable: true,
-      width: 170,
+      width: 300,
     },
     {
       field: 'fecha_registro',
       headerName: 'FECHA REGISTRO',
       sortable: true,
-      width: 170,
+      width: 250,
     },
     {
       field: 'ACCIONES',
@@ -68,7 +77,16 @@ export const EditarProyecto: React.FC<IProps> = (
       renderCell: (params) => {
         return (
           <>
-            <IconButton>
+            <IconButton
+              onClick={() => {
+                // set_id_programa(params.row.id_programa as number);
+                set_data_actividad(params.row);
+                set_id_actividad(params.row.id_actividades as number);
+                set_is_agregar_actividad(false);
+                set_is_editar_actividad(true);
+                set_is_seleccionar_actividad(false);
+              }}
+            >
               <Avatar
                 sx={{
                   width: 24,
@@ -80,10 +98,6 @@ export const EditarProyecto: React.FC<IProps> = (
               >
                 <EditIcon
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                  onClick={() => {
-                    // handle_open_editar();
-                    // set_cargos(params.row);
-                  }}
                 />
               </Avatar>
             </IconButton>
@@ -106,6 +120,35 @@ export const EditarProyecto: React.FC<IProps> = (
                 />
               </Avatar>
             </IconButton>
+            <IconButton
+              onClick={() => {
+                // set_id_programa(params.row.id_programa as number);
+                set_data_actividad(params.row);
+                set_id_actividad(params.row.id_actividades as number);
+                set_is_agregar_actividad(false);
+                set_is_editar_actividad(false);
+                set_is_seleccionar_actividad(true);
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <ChecklistIcon
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+
           </>
         );
       },
@@ -113,8 +156,6 @@ export const EditarProyecto: React.FC<IProps> = (
 
 
   ];
-
-  const [is_agregar, set_is_agregar] = useState(false);
 
   const fetch_data = async (id_proyecto: number): Promise<void> => {
     try {
@@ -134,11 +175,14 @@ export const EditarProyecto: React.FC<IProps> = (
       set_value('vigencia_final', data.vigencia_final)
       set_value('vigencia_inicial', data.vigencia_inicial)
       set_end_date(new Date(data.vigencia_final))
+      set_value('descripcion', data_actividad?.nombre)
     }
   }, [data !== undefined]);
 
+  const descripcion = watch('descripcion');
 
   // fechas
+  const [data_actividad, set_data_actividad] = useState<GetActividades>();
   const [start_date, set_start_date] = useState<Date | null>(new Date());
   const [end_date, set_end_date] = useState<Date | null>(new Date());
 
@@ -246,18 +290,26 @@ export const EditarProyecto: React.FC<IProps> = (
           </Grid>
         </>
       )}
-      {is_agregar && (
+      {!is_editar_actividad && (
         <>
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <LoadingButton
                 variant="outlined"
-                onClick={() => { set_is_agregar(true) }}
+                onClick={() => {
+                  set_is_agregar_actividad(true);
+                  set_is_editar_actividad(false);
+                  set_is_seleccionar_actividad(false);
+                }}
               >
                 Agregar Nueva Actividad
               </LoadingButton>
             </Grid>
           </Grid>
+        </>
+      )}
+      {is_agregar_actividad || is_seleccionar_actividad || is_editar_actividad ? (
+        <>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
               Descripción de la actividad
@@ -270,6 +322,8 @@ export const EditarProyecto: React.FC<IProps> = (
               fullWidth
               size="small"
               margin="dense"
+              disabled={is_seleccionar_actividad}
+              value={descripcion}
               required
               autoFocus
               multiline
@@ -277,7 +331,8 @@ export const EditarProyecto: React.FC<IProps> = (
             />
           </Grid>
         </>
-      )}
+      ) : null}
+
     </>
   );
 };
