@@ -9,7 +9,7 @@ import FormButton from "../../../../../components/partials/form/FormButton";
 import { useForm } from 'react-hook-form';
 import { set_current_nursery, set_current_solicitud } from '../../store/slices/indexSolicitud';
 import { type IObjNursery, type IObjSolicitudVivero } from '../../interfaces/solicitudVivero';
-import { aprobacion_solicitud_funcionacio, get_bienes_solicitud, get_funcionario_id_service, get_nurcery, get_person_id_service, get_solicitud_service, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
+import { aprobacion_solicitud_funcionacio, get_bienes_solicitud, get_funcionario_id_service, get_nurcery, get_person_id_service, get_solicitud_aprobacion, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import SeleccionarSolicitudAprobada from '../../components/SeleccionarSolicitudAprobacion';
 import DestinoAprobacion from '../../components/DestinoEleAprobacion';
@@ -31,7 +31,7 @@ const AprobacionSolicitudScreen = () => {
   useEffect(() => {
     void dispatch(get_uni_organizacional());
     void dispatch(get_nurcery())
-    void dispatch(get_solicitud_service())
+    void dispatch(get_solicitud_aprobacion())
   }, [])
 
 
@@ -60,7 +60,7 @@ const AprobacionSolicitudScreen = () => {
       void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_vivero))
       if (current_solicitud.id_funcionario_responsable_und_destino !== current_funcionario.id_persona) {
         void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_und_destino ?? 0))
-    
+
       }
     }
 

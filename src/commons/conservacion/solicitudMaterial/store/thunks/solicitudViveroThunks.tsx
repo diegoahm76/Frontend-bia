@@ -288,7 +288,7 @@ export const get_solicitud_service = (): any => {
 export const get_solicitud_aprobacion = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`conservacion/funcionario/coordinador/list-solicitudes/`);
+            const { data } = await api.get(`conservacion/funcionario/list-solicitudes/`);
             console.log('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.data));
 
@@ -378,7 +378,7 @@ export const get_bienes_service = (
     return async (dispatch: Dispatch<any>) => {
         try {
             console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=MV`)
-            const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=${tipo_bien??""}&codigo_bien=${codigo_bien??""}&nombre=${nombre_bien??""}`);
+            const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=${tipo_bien ?? ""}&codigo_bien=${codigo_bien ?? ""}&nombre=${nombre_bien ?? ""}`);
             dispatch(set_bienes(data.data));
             console.log(data)
             if (data.data.length > 0) {
@@ -423,26 +423,26 @@ export const get_bienes_solicitud = (
 export const annul_solicitud_service = (
     id: number,
     solicitud: any
-  ): any => {
+): any => {
     return async (dispatch: Dispatch<any>) => {
-      try {
-        const { data } = await api.put(`conservacion/solicitudes/anular-solicitud/${id}/`, solicitud);
-        console.log(data)
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        if (data.success) {
-          control_success(data.detail)   
-           
-        } else {
-          control_error(data.detail)
+        try {
+            const { data } = await api.put(`conservacion/solicitudes/anular-solicitud/${id}/`, solicitud);
+            console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail)
+
+            } else {
+                control_error(data.detail)
+            }
+            return data;
+        } catch (error: any) {
+            console.log('annul_solicitud_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
         }
-        return data;
-      } catch (error: any) {
-        console.log('annul_solicitud_service');
-        control_error(error.response.data.detail);
-        return error as AxiosError;
-      }
     };
-  };
+};
 
 // APROBAR SOLICITUD 
 

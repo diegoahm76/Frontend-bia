@@ -3,7 +3,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
 
-import { get_solicitud_service } from '../store/thunks/solicitudViveroThunks';
+import { get_solicitud_aprobacion } from '../store/thunks/solicitudViveroThunks';
 import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSolicitud';
 
 
@@ -55,7 +55,7 @@ const SeleccionarSolicitud = ({
     ];
 
     const get_solicitudes_filtro: any = (async () => {
-        void dispatch(get_solicitud_service())
+        void dispatch(get_solicitud_aprobacion())
     })
 
     return (
