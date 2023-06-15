@@ -9,7 +9,7 @@ import FormButton from "../../../../../components/partials/form/FormButton";
 import { useForm } from 'react-hook-form';
 import { set_current_nursery, set_current_solicitud } from '../../store/slices/indexSolicitud';
 import { type IObjNursery, type IObjSolicitudVivero } from '../../interfaces/solicitudVivero';
-import { aprobacion_solicitud_funcionacio, get_bienes_solicitud, get_funcionario_id_service, get_nurcery, get_person_id_service, get_solicitud_aprobacion, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
+import { aprobacion_solicitud_funcionario, get_bienes_solicitud, get_funcionario_id_service, get_nurcery, get_person_id_service, get_solicitud_aprobacion, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import SeleccionarSolicitudAprobada from '../../components/SeleccionarSolicitudAprobacion';
 import DestinoAprobacion from '../../components/DestinoEleAprobacion';
@@ -112,7 +112,7 @@ const AprobacionSolicitudScreen = () => {
       fecha_cierra_solicitud: null
     }
 
-    void dispatch(aprobacion_solicitud_funcionacio(form_data, data.id_solicitud_vivero))
+    void dispatch(aprobacion_solicitud_funcionario(form_data, data.id_solicitud_vivero))
   }
 
 
@@ -174,7 +174,7 @@ const AprobacionSolicitudScreen = () => {
             type_button="button" />
         </Grid>
 
-      
+
 
       </Grid>
     </Grid>

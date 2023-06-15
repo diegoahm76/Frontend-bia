@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import { Page404 } from '../../../../screens/404';
 import SolicitudViveroScreen from '../screens/SolicitudViveroScreen';
 import AprobacionSolicitudScreen from '../screens/funcionario/AprobacionSolicitudScreen';
-import { AprobacionSolicitudCoordinadorScreen } from '../screens/coordinador/AprobacionSolicitudScreen';
+import AprobacionSolicitudCoordinadorScreen from '../screens/coordinador/AprobacionSolicitudScreen';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SolicitudMaterialRoutes: React.FC = () => {
   return (

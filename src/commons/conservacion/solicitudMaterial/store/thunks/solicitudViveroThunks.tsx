@@ -283,12 +283,30 @@ export const get_solicitud_service = (): any => {
     };
 };
 
-// OBTENER SOLICITUD POR APROBAR COORDINADOR
+// OBTENER SOLICITUD POR APROBAR funcionario
 
 export const get_solicitud_aprobacion = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`conservacion/funcionario/list-solicitudes/`);
+            const { data } = await api.get(`conservacion/funcionario/get-solicitud/`);
+            console.log('Solicitudes recuperadas:', data);
+            dispatch(set_solicitudes(data.data));
+
+            // dispatch(setID(Number(id)))
+            return data;
+        } catch (error: any) {
+            console.log('get_solicitud_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+// OBTENER SOLICITUD POR APROBAR COORDINADOR
+
+export const get_solicitud_aprobacion_coordinador = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`conservacion/funcionario/coordinador/list-solicitudes/`);
             console.log('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.data));
 
@@ -444,9 +462,9 @@ export const annul_solicitud_service = (
     };
 };
 
-// APROBAR SOLICITUD 
+// APROBAR SOLICITUD funcionario
 
-export const aprobacion_solicitud_funcionacio: any = (
+export const aprobacion_solicitud_funcionario: any = (
     solicitud: any,
     id: string | number
 ) => {
@@ -454,6 +472,30 @@ export const aprobacion_solicitud_funcionacio: any = (
         try {
             const { data } = await api.patch(
                 `conservacion/funcionario/procesar-solicitud-responsable/${id}/`,
+                solicitud
+            );
+            console.log(data)
+            dispatch(get_solicitud_service());
+            control_success('Se aprobo la solicitud');
+
+            return data;
+        } catch (error: any) {
+            console.log('aprobar solicitud');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+// APROBAR SOLICITUD coordinador
+
+export const aprobacion_solicitud_coordinador: any = (
+    solicitud: any,
+    id: string | number
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.patch(
+                `conservacion/funcionario/coordinador/procesar-solicitud/${id}/`,
                 solicitud
             );
             console.log(data)
