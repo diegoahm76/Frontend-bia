@@ -99,47 +99,6 @@ export const get_classification_ccds_service = (
   };
 };
 
-//* Revisar esta función - nel
-/*
-
-export const get_classification_ccds_service: any = (name: string, version: string) => {
-  //! se debe
-  console.log('get_classification_ccds_service');
-  return async (
-    dispatch: Dispatch<any>
-  ): Promise<AxiosResponse | AxiosError> => {
-    try {
-      console.log('hellllllllloooooooooooooo')
-      const { data } = await api.get(
-        // `gestor/ccd/get-busqueda/?nombre=CCD1.1&version=1.1`
-        `gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`
-        // `gestor/ccd/get-ccd/?nombre=${name}&version=${version}`
-      );
-      if(name === '' || version === '') {
-        await notification_error(`Debe ingresar el nombre y la versión del CCD`);
-        return data;
-      }
-
-      if (data.data.length === 0) {
-        await notification_error(`No se encontró el CCD ${name} - ${version}`);
-        return data;
-      }
-
-      console.log(data.data);
-      // set_consulta_ccd_is_active(true);
-      dispatch(get_ccds(data.data));
-      get_series_service(data.data[0].id_ccd)(dispatch);
-      return data;
-    } catch (error: any) {
-      // console.log(error, 'error');
-      control_error(error.response.data.detail);
-      return error as AxiosError;
-    }
-  };
-};
-
-"
-*/
 
 // Reanudar Cuadro de Clasificación Documental
 export const to_resume_ccds_service: any = (
