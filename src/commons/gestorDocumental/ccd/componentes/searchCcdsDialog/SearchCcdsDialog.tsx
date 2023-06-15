@@ -115,8 +115,6 @@ const SearchCcdModal = ({
                   params.row.version,
                 )
               )
-              
-
               // dispatch(get_ccd_current(params));
               set_is_modal_active(false);
             }}

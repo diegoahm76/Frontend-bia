@@ -17,11 +17,11 @@ export interface ICCDObject {
   fecha_puesta_produccion: null | Date;
   fecha_retiro_produccion: null | Date;
   justificacion: null | string;
-  ruta_soporte: string;
+  ruta_soporte: File | string | any;
   actual: boolean;
 }
 export interface ICCDForm {
-  ruta_soporte?: any;
+  ruta_soporte?: File | string | any;
   id_ccd: number;
   version: string;
   nombre_ccd: string;
