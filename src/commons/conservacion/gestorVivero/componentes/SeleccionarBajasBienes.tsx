@@ -37,7 +37,7 @@ const SeleccionarBajasBienes = () => {
             ),
         },
         {
-            field: 'nombre_bien',
+            field: 'nombre',
             headerName: 'Nombre',
             width: 200,
             renderCell: (params) => (
@@ -71,7 +71,7 @@ const SeleccionarBajasBienes = () => {
             ),
         },
         {
-            field: 'nombre_bien',
+            field: 'nombre',
             headerName: 'Nombre',
             width: 150,
             renderCell: (params) => (
@@ -208,7 +208,7 @@ const SeleccionarBajasBienes = () => {
                         id_item_baja_viveros: null,
                         id_baja: current_genera_baja.id_baja ?? null,
                         id_bien: current_insumo.id_bien,
-                        cantidad_baja: data.cantidad_baja,
+                        cantidad_baja: Number(data.cantidad_baja),
                         nombre_bien: current_insumo.nombre,
                         codigo_bien: current_insumo.codigo_bien,
                         observaciones: data.observaciones,
@@ -321,7 +321,7 @@ return (
                         xs: 12,
                         md: 6,
                         control_form: control_bien,
-                        control_name: "nombre_bien",
+                        control_name: "nombre",
                         default_value: "",
                         rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
                         label: "Nombre",

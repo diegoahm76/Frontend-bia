@@ -1,4 +1,4 @@
-import { Grid, } from "@mui/material";
+import { Avatar, Grid, IconButton, Tooltip, } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../hooks";
 import { type IObjBienConsumo, type IObjBienesSolicitud } from "../interfaces/solicitudVivero";
 import { useEffect, useState, } from "react";
@@ -7,8 +7,9 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
 import { set_bienes, set_bienes_solicitud, set_current_bien } from "../store/slices/indexSolicitud";
 import { useForm } from "react-hook-form";
-import { get_bienes_service, get_bienes_service_codigo } from "../store/thunks/solicitudViveroThunks";
-
+import { control_error, get_bienes_service, get_bienes_service_codigo } from "../store/thunks/solicitudViveroThunks";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 
@@ -21,8 +22,8 @@ const SeleccionarBienConsumo = () => {
 
     // const [action, set_action] = useState<string>("agregar");
     const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjBienConsumo>();
-    const { control: control_bien_solicitud, handleSubmit: handle_submit_item_solicitud } = useForm<IObjBienesSolicitud>();
-    const { bienes, bienes_solicitud, current_bien, current_nursery } = useAppSelector((state) => state.solicitud_vivero);
+    const { control: control_bien_solicitud, handleSubmit: handle_submit_item_solicitud, reset: reset_bien_solicitud } = useForm<IObjBienesSolicitud>();
+    const { bienes, bienes_solicitud, current_bien, current_nursery, current_solicitud } = useAppSelector((state) => state.solicitud_vivero);
     const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesSolicitud[]>([]);
     const [action, set_action] = useState<string>("crear");
 
@@ -42,8 +43,7 @@ const SeleccionarBienConsumo = () => {
         reset_bien(current_bien)
     }, [current_bien]);
 
-
-    const columns_bienes: GridColDef[] = [
+    const columns_bienes_mv: GridColDef[] = [
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
@@ -66,6 +66,59 @@ const SeleccionarBienConsumo = () => {
             ),
         },
         {
+            field: 'nombre_cientifico',
+            headerName: 'Nombre cientifico',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
+        {
+            field: 'saldo_total_produccion',
+            headerName: 'Saldo producción',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
+        {
+            field: 'saldo_total_distribucion',
+            headerName: 'Saldo distribución',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
+        {
+            field: 'saldo_total_apartado',
+            headerName: 'Saldo apartado',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
+    ];
+    const columns_bienes_insumo: GridColDef[] = [
+        { field: 'id_bien', headerName: 'ID', width: 20 },
+        {
+            field: 'codigo_bien',
+            headerName: 'Código',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
+        {
             field: 'nombre',
             headerName: 'Nombre',
             width: 200,
@@ -76,7 +129,7 @@ const SeleccionarBienConsumo = () => {
             ),
         },
         {
-            field: 'saldo_total_produccion',
+            field: 'saldo_disponible',
             headerName: 'Saldo disponible',
             width: 200,
             renderCell: (params) => (
@@ -85,9 +138,6 @@ const SeleccionarBienConsumo = () => {
                 </div>
             ),
         },
-
-
-
     ];
     const columns_bienes_solicitud: GridColDef[] = [
         { field: 'id_bien_consumido', headerName: 'ID', width: 20 },
@@ -105,16 +155,6 @@ const SeleccionarBienConsumo = () => {
             field: 'nombre_bien',
             headerName: 'Nombre',
             width: 150,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-        },
-        {
-            field: 'saldo_total_produccion',
-            headerName: 'Saldo disponible',
-            width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -148,10 +188,10 @@ const SeleccionarBienConsumo = () => {
             renderCell: (params) => (
                 <>
 
-                    {/* <Tooltip title="Editar">
+                    <Tooltip title="Editar">
                             <IconButton
                                 onClick={() => {
-                                    edit_bien_siembra(params.row)
+                                    edit_bien_solicitud(params.row)
 
                                 }}
                             >
@@ -170,12 +210,12 @@ const SeleccionarBienConsumo = () => {
 
                                 </Avatar>
                             </IconButton>
-                        </Tooltip> */}
+                        </Tooltip> 
 
-                    {/* <Tooltip title="Borrar">
+                    <Tooltip title="Borrar">
                             <IconButton
                                 onClick={() => {
-                                    delete_bien_siembra(params.row)
+                                    delete_bien_solicitud(params.row)
                                 }}
                             >
                                 <Avatar
@@ -194,7 +234,7 @@ const SeleccionarBienConsumo = () => {
                                 </Avatar>
                             </IconButton>
                         </Tooltip>
-                     */}
+                     
                 </>
             ),
         },
@@ -206,14 +246,13 @@ const SeleccionarBienConsumo = () => {
                 const bien: IObjBienesSolicitud | undefined = aux_bienes_solicitud.find((p) => p.id_bien === current_bien.id_bien)
 
                 const new_bien: IObjBienesSolicitud = {
-                    //  id_item_solicitud_consumible: null,
+                    id_item_solicitud_viveros: data.id_item_solicitud_viveros ?? null,
+                    id_solicitud_viveros: current_solicitud.id_solicitud_vivero,
                     codigo_bien: current_bien.codigo_bien ?? "",
                     nombre_bien: current_bien.nombre ?? "",
                     id_bien: current_bien.id_bien ?? null,
                     cantidad: data.cantidad,
                     observaciones: data.observaciones,
-                    //    id_unidad_medida: data.id_unidad_medida,
-                    //  id_solicitud_consumibles: current_solicitud.id_solicitud_consumibles ?? null
                 }
 
                 if (bien === undefined) {
@@ -232,29 +271,27 @@ const SeleccionarBienConsumo = () => {
                         set_aux_bienes_solicitud(aux_items)
                         set_action("agregar")
                     } else {
-                        // control_error("El bien ya fue agregado")
+                        control_error("El bien ya fue agregado")
                     }
                 }
             } else {
-                //  control_error("Codigo de bien no coincide con el seleccionado")
+                control_error("Codigo de bien no coincide con el seleccionado")
             }
         } else {
-            //  control_error("Debe seleccionar el bien")
+            control_error("Debe seleccionar el bien")
         }
 
     };
 
 
     const get_bienes_filtro: any = (async () => {
-        console.log(current_nursery)
         const id_vivero = current_nursery.id_vivero
         if (id_vivero !== null && id_vivero !== undefined) {
-
-            void dispatch(get_bienes_service(id_vivero))
-
+            const tipo_bien = get_values_bien("tipo_bien") ?? ""
+            const codigo_bien = get_values_bien("codigo_bien") ?? ""
+            const nombre = get_values_bien("nombre") ?? ""
+            void dispatch(get_bienes_service(id_vivero, tipo_bien, codigo_bien, nombre))
         }
-
-
     })
 
     const search_bien: any = (async () => {
@@ -264,6 +301,42 @@ const SeleccionarBienConsumo = () => {
             void dispatch(get_bienes_service_codigo(id_vivero, codigo_bien))
         }
     })
+
+    const edit_bien_solicitud = (item: IObjBienesSolicitud): void => {
+        set_action("editar")
+        const item_bien = aux_bienes_solicitud.find((p) => p.id_bien === item.id_bien)
+        reset_bien_solicitud(item_bien)
+        const aux_items: IObjBienesSolicitud[] = []
+        aux_bienes_solicitud.forEach((option) => {
+            if (option.id_bien !== item.id_bien) {
+                aux_items.push(option)
+            }
+        })
+        // if(bien !== undefined){
+        //     restante = (bien.cantidad_disponible_bien ?? 0) + (item_bien?.cantidad?? 0)
+        //     dispatch(set_current_good({...bien, cantidad_disponible_bien: restante}))
+        // }
+        set_aux_bienes_solicitud(aux_items)
+    };
+
+    const delete_bien_solicitud = (item: IObjBienesSolicitud): void => {
+        const bien: IObjBienConsumo | undefined =bienes.find((p: IObjBienConsumo) => p.id_bien === item.id_bien)
+        console.log("bien",bien)
+        if(bien !== undefined){
+            console.log(bien)
+            dispatch(set_current_bien(bien))
+        }
+        const aux_items: IObjBienesSolicitud[] = []
+        aux_bienes_solicitud.forEach((option) => {
+            if (option.id_bien !== item.id_bien) {
+                aux_items.push(option)
+            }
+        })
+        set_aux_bienes_solicitud(aux_items)
+        // if(item.id_item_solicitud_viveros !== null && item.id_item_solicitud_viveros !== undefined){
+        //     void dispatch(delete_item_solicitud_service(current_solicitud.id_solicitud_vivero, [item]))
+        // }
+    };
 
 
 
@@ -278,7 +351,7 @@ const SeleccionarBienConsumo = () => {
                 <BuscarModelo
                     set_current_model={set_current_bien}
                     row_id={"id_bien"}
-                    columns_model={columns_bienes}
+                    columns_model={get_values_bien("tipo_bien") === "MV"? columns_bienes_mv : columns_bienes_insumo}
                     models={bienes}
                     get_filters_models={get_bienes_filtro}
                     set_models={set_bienes}
@@ -305,7 +378,7 @@ const SeleccionarBienConsumo = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 6,
                             control_form: control_bien,
                             control_name: "nombre",
                             default_value: "",
@@ -335,29 +408,17 @@ const SeleccionarBienConsumo = () => {
                             xs: 12,
                             md: 3,
                             control_form: control_bien,
-                            control_name: "saldo_total_produccion",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Saldo disponible",
-                            disabled: true,
-                            helper_text: "debe seleccionar campo",
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
                             control_name: "unidad_medida",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar bien" } },
                             label: "Unidad de medida",
                             disabled: true,
-                            helper_text: "debe seleccionar campo",
+                            helper_text: "",
                         },
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 5,
+                            md: 6,
                             control_form: control_bien_solicitud,
                             control_name: "observaciones",
                             default_value: "",
@@ -373,11 +434,26 @@ const SeleccionarBienConsumo = () => {
                     title_list='Bienes consumidos'
                     list={aux_bienes_solicitud}
                     add_item_list={handle_submit_item_solicitud(on_submit_item_solicitud)}
-                    add_list_button_label={""}
+                    add_list_button_label={"Agregar"}
                     columns_list={columns_bienes_solicitud}
                     row_list_id={"id_bien"}
                     modal_select_model_title='Buscar bien'
                     modal_form_filters={[
+                        {
+                            datum_type: "select_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "tipo_bien",
+                            default_value: "MV",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Tipo bien",
+                            helper_text: "",
+                            disabled: false,
+                            select_options: [{ label: "Planta", value: "MV" },{ label: "Insumo", value: "IN" }],
+                            option_label: "label",
+                            option_key: "value"
+                          },
                         {
                             datum_type: "input_controller",
                             xs: 12,

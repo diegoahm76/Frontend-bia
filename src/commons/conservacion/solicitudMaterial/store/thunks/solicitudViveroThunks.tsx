@@ -4,7 +4,7 @@ import { toast, type ToastContent } from 'react-toastify';
 import { api } from '../../../../../api/axios';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
-import { get_unidad_organizacional, set_bienes, set_bienes_solicitud, set_current_funcionario, set_funcionarios, set_numero_solicitud, set_nurseries, set_persona_solicita, set_solicitudes } from '../slices/indexSolicitud';
+import { get_unidad_organizacional, set_bienes, set_bienes_solicitud, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud, set_nurseries, set_persona_solicita, set_solicitudes } from '../slices/indexSolicitud';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -37,12 +37,69 @@ const control_success = (message: ToastContent) =>
 // CREAR SOLICITUD
 export const crear_solicitud: any = (
     solicitud: any,
-
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             console.log(solicitud)
             const { data } = await api.post('conservacion/solicitudes/create/', solicitud);
+            //  dispatch(get_solicitud_consumo_id());
+            console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+
+        };
+    }
+}
+// EDITAR SOLICITUD
+export const editar_solicitud: any = (
+    id: number,
+    solicitud: any,
+    // bienes: any
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(solicitud)
+            const { data } = await api.put(`conservacion/solicitudes/update-solicitud/${id}/`, solicitud);
+            // await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, bienes);
+            //  dispatch(get_solicitud_consumo_id());
+            console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+
+        };
+    }
+}
+// EDITAR SOLICITUD
+export const delete_item_solicitud_service: any = (
+    id: number,
+    item: any,
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(item)
+            const { data } = await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, item);
             //  dispatch(get_solicitud_consumo_id());
             console.log(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -293,7 +350,7 @@ export const get_bienes_service_codigo = (
         try {
             console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero}/${codigo_bien ?? ""}`)
             const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero}/${codigo_bien ?? ""}`);
-            dispatch(set_bienes(data.data));
+            dispatch(set_current_bien(data.data));
             console.log(data)
             if (data.data.length > 0) {
                 control_success("Se encontrarón bienes")
@@ -314,13 +371,14 @@ export const get_bienes_service_codigo = (
 // Obtener bienes vivero 
 export const get_bienes_service = (
     id_vivero: string | number,
-
-
+    tipo_bien: string | null,
+    codigo_bien: string | null,
+    nombre_bien: string | null
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=MV`)
-            const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=MV`);
+            const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=${tipo_bien??""}&codigo_bien=${codigo_bien??""}&nombre=${nombre_bien??""}`);
             dispatch(set_bienes(data.data));
             console.log(data)
             if (data.data.length > 0) {
@@ -348,9 +406,9 @@ export const get_bienes_solicitud = (
             dispatch(set_bienes_solicitud(data.data));
             console.log(data)
             if (data.data.length > 0) {
-                control_success("Se encontrarón bienes")
+                // control_success("Se encontrarón bienes")
             } else {
-                control_error("No se encontrarón bienes")
+                // control_error("No se encontrarón bienes")
             }
             return data;
         } catch (error: any) {
@@ -360,6 +418,32 @@ export const get_bienes_solicitud = (
         }
     };
 };
+
+// anular solicitud
+export const annul_solicitud_service = (
+    id: number,
+    solicitud: any
+  ): any => {
+    return async (dispatch: Dispatch<any>) => {
+      try {
+        const { data } = await api.put(`conservacion/solicitudes/anular-solicitud/${id}/`, solicitud);
+        console.log(data)
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        if (data.success) {
+          control_success(data.detail)   
+           
+        } else {
+          control_error(data.detail)
+        }
+        return data;
+      } catch (error: any) {
+        console.log('annul_solicitud_service');
+        control_error(error.response.data.detail);
+        return error as AxiosError;
+      }
+    };
+  };
+
 // APROBAR SOLICITUD 
 
 export const aprobacion_solicitud_funcionacio: any = (

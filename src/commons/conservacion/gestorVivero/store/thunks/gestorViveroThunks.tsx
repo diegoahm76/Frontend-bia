@@ -500,6 +500,7 @@ export const get_bajas_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`conservacion/bajas/get-bajas-by-filter/?nro_baja=${nro?? ""}`);
+      console.log(data)
       dispatch(set_genera_bajas(data.data));
       if ("data" in data){
         if (data.data.length>0){
@@ -549,7 +550,7 @@ export const add_baja_service = (
       const { data } = await api.put('conservacion/bajas/crear-bajas-vivero/', baja);
       console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (data.success) {
+      if (data.succes) {
         control_success(data.detail)      
       } else {
         control_error(data.detail)
@@ -573,7 +574,7 @@ export const edit_baja_service = (
       const { data } = await api.put('conservacion/bajas/actualizar-bajas-vivero/', baja);
       console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      if (data.success) {
+      if (data.succes) {
         control_success(data.detail)      
       } else {
         control_error(data.detail)
@@ -588,15 +589,16 @@ export const edit_baja_service = (
   };
 };
 
-// obtener bienes preparacion
+// anular baja
 export const annul_baja_service = (
   id: number,
+  baja: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/bajas/anualar-bajas-vivero/${id}/`);
+      const { data } = await api.put(`conservacion/bajas/anualar-bajas-vivero/${id}/`, baja);
  
-      if (data.success === true) {
+      if (data.succes === true) {
         control_success(data.detail)      
       } else {
         control_error(data.detail)
@@ -706,3 +708,5 @@ export const get_person_id_service = (
     }
   };
 };
+
+

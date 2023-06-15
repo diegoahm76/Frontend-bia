@@ -245,7 +245,7 @@ const SeleccionBienAprobacion = () => {
         const id_vivero = current_nursery.id_vivero
         if (id_vivero !== null && id_vivero !== undefined) {
 
-            void dispatch(get_bienes_service(id_vivero))
+            // void dispatch(get_bienes_service(id_vivero))
 
         }
 

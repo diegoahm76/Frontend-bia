@@ -126,7 +126,7 @@ const initial_state_current_generar_baja: IObjGenerarBaja={
   tipo_baja: null,
   nro_baja_por_tipo:  null,
   fecha_baja: (new Date().toString()),
-  baja_anulado: null,
+  baja_anulado: false,
   justificacion_anulacion: null,
   fecha_anulacion: null,
   id_persona_anula: null,

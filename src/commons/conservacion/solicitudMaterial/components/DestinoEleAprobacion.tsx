@@ -157,7 +157,7 @@ const DestinoAprobacion = ({
                             rules: { required_rule: { rule: true, message: "requerido" } },
                             label: "Dirección del predio:",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: ""
                         },
                     ]}

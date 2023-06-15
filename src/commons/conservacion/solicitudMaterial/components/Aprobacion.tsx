@@ -82,7 +82,7 @@ const Aprobacion = ({
                         {
                             datum_type: "select_controller",
                             xs: 12,
-                            md: 3,
+                            md: 12,
                             control_form: control_solicitud_aprobada,
                             control_name: "estado_aprobacion_responsable",
                             default_value: "",

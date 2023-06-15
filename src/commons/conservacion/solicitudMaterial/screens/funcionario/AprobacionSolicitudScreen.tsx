@@ -1,17 +1,15 @@
 /* eslint-disable react/jsx-no-undef */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import "react-datepicker/dist/react-datepicker.css";
 import { Grid } from '@mui/material';
 import FormButton from "../../../../../components/partials/form/FormButton";
-import type { AuthSlice } from '../../../../auth/interfaces';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
-import { set_current_nursery, set_current_solicitud, set_persona_solicita } from '../../store/slices/indexSolicitud';
+import { set_current_nursery, set_current_solicitud } from '../../store/slices/indexSolicitud';
 import { type IObjNursery, type IObjSolicitudVivero } from '../../interfaces/solicitudVivero';
-import { aprobacion_solicitud_funcionacio, get_bienes_solicitud, get_funcionario_id_service, get_num_solicitud, get_nurcery, get_person_id_service, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
+import { aprobacion_solicitud_funcionacio, get_bienes_solicitud, get_funcionario_id_service, get_nurcery, get_person_id_service, get_solicitud_service, get_uni_organizacional } from '../../store/thunks/solicitudViveroThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import SeleccionarSolicitudAprobada from '../../components/SeleccionarSolicitudAprobacion';
 import DestinoAprobacion from '../../components/DestinoEleAprobacion';
@@ -22,22 +20,18 @@ import Aprobacion from '../../components/Aprobacion';
 
 
 
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const AprobacionSolicitudCoordinadorScreen = () => {
-  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
+const AprobacionSolicitudScreen = () => {
+
   const { control: control_solicitud_aprobada, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values, watch } = useForm<IObjSolicitudVivero>();
-  const { nro_solicitud, current_solicitud, nurseries, persona_solicita, current_funcionario, } = useAppSelector((state) => state.solicitud_vivero);
-  const [action] = useState<string>("Aprobación de solicitud");
+  const { current_solicitud, nurseries, persona_solicita, current_funcionario, } = useAppSelector((state) => state.solicitud_vivero);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     void dispatch(get_uni_organizacional());
-    void dispatch(get_num_solicitud());
     void dispatch(get_nurcery())
-    console.log(get_nurcery)
-    dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }))
-    console.log(userinfo)
-
+    void dispatch(get_solicitud_service())
   }, [])
 
 
@@ -51,10 +45,6 @@ const AprobacionSolicitudCoordinadorScreen = () => {
     }
   }, [watch("id_vivero_solicitud")]);
 
-  useEffect(() => {
-    dispatch(set_current_solicitud({ ...current_solicitud, nro_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, }))
-
-  }, [nro_solicitud]);
 
   useEffect(() => {
     // console.log(current_solicitud)
@@ -69,9 +59,8 @@ const AprobacionSolicitudCoordinadorScreen = () => {
     if (current_solicitud.id_solicitud_vivero !== null && current_solicitud.id_solicitud_vivero !== undefined) {
       void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_vivero))
       if (current_solicitud.id_funcionario_responsable_und_destino !== current_funcionario.id_persona) {
-        console.log("jgjkglg")
         void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_und_destino ?? 0))
-        console.log("ok")
+    
       }
     }
 
@@ -79,7 +68,6 @@ const AprobacionSolicitudCoordinadorScreen = () => {
 
   useEffect(() => {
     dispatch(set_current_solicitud({ ...current_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, id_unidad_org_del_responsable: persona_solicita.id_unidad_organizacional_actual }))
-    console.log(persona_solicita)
   }, [persona_solicita]);
 
   useEffect(() => {
@@ -184,7 +172,7 @@ const AprobacionSolicitudCoordinadorScreen = () => {
             variant_button="contained"
             on_click_function={handle_submit(on_submit_aprobacion)}
             icon_class={< LibraryAddCheckIcon />}
-            label={action}
+            label={"Aprobar solicitud"}
             type_button="button" />
         </Grid>
 
@@ -205,4 +193,4 @@ const AprobacionSolicitudCoordinadorScreen = () => {
 
 
 // eslint-disable-next-line no-restricted-syntax
-export default AprobacionSolicitudCoordinadorScreen;
+export default AprobacionSolicitudScreen;

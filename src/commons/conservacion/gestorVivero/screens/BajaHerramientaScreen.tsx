@@ -7,15 +7,15 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // import { add_siembra_service, edit_siembra_service,  get_germination_beds_id_service,  get_germination_beds_service, get_bienes_bajas_service } from "../store/thunks/produccionThunks";
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
 import SeleccionarBajasBienes from "../componentes/SeleccionarBajasBienes";
 import { type IObjNursery, type IObjBienBaja, type IObjGenerarBaja } from "../interfaces/vivero";
 import { initial_state_current_insumo, set_current_insumo, set_current_nursery, set_bienes_bajas } from "../store/slice/viveroSlice";
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
-import { add_baja_service, edit_baja_service, get_bien_baja_id_service, get_person_id_service } from "../store/thunks/gestorViveroThunks";
+import { add_baja_service, annul_baja_service, edit_baja_service, get_bien_baja_id_service, get_person_id_service } from "../store/thunks/gestorViveroThunks";
 import { useForm } from "react-hook-form";
-
+import AnularEliminar from "../../componentes/AnularEliminar";
+import Block from '@mui/icons-material/Block';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function BajaHerramientaScreen(): JSX.Element {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -97,12 +97,12 @@ export function BajaHerramientaScreen(): JSX.Element {
       void dispatch(add_baja_service(form_data));
     }
   };
-  // const annul_siembra = (): void => {
+  const on_submit_annul = (data: IObjGenerarBaja): void => {
     
-  //   if (current_genera_baja.id_baja !== null && current_genera_baja.id_baja !== undefined) {
-  //     void dispatch(annul_preparacion_service(current_genera_baja.id_baja));
-  //   } 
-  // };
+    if (current_genera_baja.id_baja !== null && current_genera_baja.id_baja !== undefined) {
+      void dispatch(annul_baja_service(current_genera_baja.id_baja, data));
+    }
+  };
  
 
     return (
@@ -134,24 +134,87 @@ export function BajaHerramientaScreen(): JSX.Element {
         padding={2}
         spacing={2}
       >
-        <Grid item xs={12} md={3}>
-          <FormButton
-            variant_button="contained"
-            on_click_function={handle_submit(on_submit)}
-            icon_class={<SaveIcon />}
-            label={action}
-            type_button="button"
-          />
-        </Grid>
+        {!(current_genera_baja.baja_anulado === true) &&
+
+          <Grid item xs={12} md={3}>
+            <FormButton
+              variant_button="contained"
+              on_click_function={handle_submit(on_submit)}
+              icon_class={<SaveIcon />}
+              label={action}
+              type_button="button"
+            />
+          </Grid>
+        }
        
         <Grid item xs={12} md={3}>
-          <FormButton
-            variant_button="outlined"
-            on_click_function={null}
-            icon_class={<CloseIcon />}
-            label={"Cancelar"}
-            type_button="button"
-          />
+            <AnularEliminar
+              action= {current_genera_baja.baja_anulado === true ? "Detalle anulación" :"Anular" }
+              button_icon_class= {<Block/>}
+              button_disabled= {false}
+              modal_title= {current_genera_baja.baja_anulado === true ? "Detalle anulación" :"Anular baja"}
+              button_submit_label= { "Anular"}
+              button_submit_disabled= {current_genera_baja.baja_anulado}
+              button_submit_icon_class= {<Block/>}
+              button_submit_action= {handle_submit(on_submit_annul)}
+              modal_inputs= {[
+                {
+                  datum_type: "input_controller",
+                  xs: 12,
+                  md: 2,
+                  control_form: control_baja,
+                  control_name: "nro_baja_por_tipo",
+                  default_value: current_genera_baja.nro_baja_por_tipo,
+                  rules: { required_rule: { rule: false, message: "Numero de baja requerido" } },
+                  label: "Numero baja",
+                  type: "number",
+                  disabled: true,
+                  helper_text: "",
+              },
+                {
+                  datum_type: "input_controller",
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_baja,
+                  control_name: current_genera_baja.baja_anulado === true ? "nombre_persona_anula":"persona",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
+                  label: "Anulación realizada por",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+              },
+                {
+                  datum_type: "date_picker_controller",
+                  xs: 12,
+                  md: 4,
+                  control_form: control_baja,
+                  control_name: current_genera_baja.baja_anulado === true ? "fecha_anulacion":"fecha",
+                  default_value: (new Date().toString()),
+                  rules: { required_rule: { rule: true, message: "requerido" } },
+                  label: "Fecha actual",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+                },
+                {
+                  datum_type: "input_controller",
+                  xs: 12,
+                  md: 12,
+                  control_form: control_baja,
+                  control_name: "justificacion_anulacion",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Observación requerida" } },
+                  label: "Justificacion",
+                  type: "text",
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: ""
+                },
+              ]}
+            />
         </Grid>
       </Grid>
     </Grid>

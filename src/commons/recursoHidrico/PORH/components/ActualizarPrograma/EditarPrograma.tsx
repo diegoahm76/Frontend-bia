@@ -17,9 +17,13 @@ import { DataContext } from '../../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { get_data_id } from '../../Request/request';
 
+interface IProps {
+    data: any;
+    register: any;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarPrograma: React.FC = () => {
+export const EditarPrograma: React.FC<IProps> = ({data, register}: IProps) => {
 
   const {
     rows_proyectos,
@@ -112,6 +116,7 @@ export const EditarPrograma: React.FC = () => {
   const [is_agregar, set_is_agregar] = useState(false);
 
   useEffect(() => {
+    console.log('data', data);
     void get_data_id(1, set_rows_proyectos, 'get/proyectos/por/programas');
   }, []);
 
@@ -140,6 +145,7 @@ export const EditarPrograma: React.FC = () => {
             size="small"
             margin="dense"
             required
+            defaultValue={data.nombre}
             autoFocus
           />
         </Grid>
@@ -194,6 +200,7 @@ export const EditarPrograma: React.FC = () => {
             <>
               <DataGrid
                 autoHeight
+                key={1+2}
                 rows={rows_proyectos}
                 columns={columns}
                 getRowId={(row) => row.nombre}
@@ -220,24 +227,14 @@ export const EditarPrograma: React.FC = () => {
               Agregar Nuevo Proyecto
             </LoadingButton>
           </Grid>
-          <Grid item>
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              fullWidth
-              color="success"
-            // loading={is_saving}
-            // disabled={is_saving}
-            >
-              Actualizar
-            </LoadingButton>
-          </Grid>
         </Grid>
       </Grid >
       <Grid container spacing={2} mt={0.1}>
         {is_agregar && (
           <>
-            <AgregarProyectos />
+            <AgregarProyectos 
+            register={register}
+            />
           </>
         )}
       </Grid>

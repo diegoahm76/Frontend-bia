@@ -6,7 +6,7 @@ import FormSelectController from "../form/FormSelectController";
 import FormButton from "../form/FormButton";
 import { Title } from '../../Title';
 import SearchIcon from '@mui/icons-material/Search';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SeleccionarModeloDialogForm from "./SeleccionarModeloDialogForm";
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
@@ -43,6 +43,7 @@ interface IProps {
     button_icon_class?: any;
     show_search_button?: boolean | null,
     show_button_table?: boolean | null,
+    modal_active_init?: boolean | null,
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -72,7 +73,8 @@ const BuscarModelo = ({
     md_button,
     button_icon_class,
     show_search_button,
-    show_button_table
+    show_button_table,
+    modal_active_init
 }: IProps) => {
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -162,6 +164,11 @@ const BuscarModelo = ({
             />;
         }
     }
+    useEffect(() => {
+        if(modal_active_init !== null && modal_active_init !== undefined){
+            set_select_model_is_active(modal_active_init);
+        }
+      }, [])
 
     const handle_open_select_model = (): void => {
         set_select_model_is_active(true);

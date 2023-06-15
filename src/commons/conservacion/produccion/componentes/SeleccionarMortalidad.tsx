@@ -85,8 +85,8 @@ const SeleccionarMortalidad = ({
     }, [file]);
     useEffect(() => {
         if(current_mortalidad.id_baja !== null){
-          if (current_mortalidad.ruta_archivo_soporte !== null) {
-            set_file_name(current_mortalidad.ruta_archivo_soporte)
+          if (current_mortalidad.ruta_archivo_soporte !== null && current_mortalidad.ruta_archivo_soporte !== undefined) {
+            set_file_name(String(current_mortalidad.ruta_archivo_soporte))
           }
         }
       }, [current_mortalidad]);

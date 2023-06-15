@@ -119,7 +119,7 @@ const SeleccionarBajasHerramientas = ({
           >
               <BuscarModelo
                   set_current_model={set_current_genera_baja}
-                  row_id={"id_baja"}
+                  row_id={"nro_baja_por_tipo"}
                   columns_model={columns_baja}
                   models={genera_bajas}
                   get_filters_models={get_bajas}
@@ -175,10 +175,10 @@ const SeleccionarBajasHerramientas = ({
                         xs: 12,
                         md: 12,
                         control_form: control_genera_bajas,
-                        control_name: "observaciones",
+                        control_name: "motivo",
                         default_value: "",
                         rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                        label: "Observacion",
+                        label: "Motivo",
                         type: "text",
                         multiline_text: true,
                         rows_text: 4,
