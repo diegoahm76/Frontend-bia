@@ -123,43 +123,42 @@ const CrearSeriesCcdDialog = ({
 
   //! Crear Catalogso de seriess --
 const create_series = (): void => {
-    const { id_serie_doc, nombre, codigo } = data;
-
-    console.log(
-      '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 120 ~ create_series ~ data',
-      data,
-      ccd_current,
-    )
-    return void dispatch(create_series_service({
-      nombre: data.nombre,
-      codigo: data.codigo,
-      id_ccd: ccd_current?.id_ccd
-    }, clean));
-    /* const updatedSeries = series_ccd.map((item: any) => {
+     const { id_serie_doc, nombre, codigo } = data;
+  console.log(id_serie_doc, nombre, codigo);
+    const updatedSeries = series_ccd.map((item: any) => {
       if (item.id_serie_doc === id_serie_doc) {
         return {
           ...item,
           nombre: data.nombre,
-          codigo: Number(data.codigo)
+          codigo: Number(data.codigo),
         };
       }
       return item;
     });
+
+
     const newSeries =
-      title_button === 'Agregar'
-        ? {
-            id_serie_doc: data.id_serie_doc,
-            nombre: data.nombre,
-            codigo: Number(data.codigo)
-            id_ccd: ccd_current?.id_ccd
-          }
-        : updatedSeries; */
-    /* console.log(
-      '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 120 ~ create_series ~ newSeries',
-      newSeries
-    ); */
-    // return void dispatch(create_series_service(newSeries, clean));
+      title_button === 'Agregar' ? {
+        nombre: data.nombre,
+        codigo: Number(data.codigo),
+        id_ccd: ccd_current?.id_ccd,
+      } : updatedSeries;
+
+
+    //! create series is ok
+    /* return void dispatch(create_series_service({
+      nombre: data.nombre,
+      codigo: data.codigo,
+      id_ccd: ccd_current?.id_ccd
+    }, clean)); */
+    //! close function create series is ok
+
+
+
+    return void dispatch(create_series_service(newSeries, clean));
   };
+
+
   // Crear subseries
   /* const create_subseries = (): void => {
     let new_item: any[] = [];
@@ -183,25 +182,9 @@ const create_series = (): void => {
     void dispatch(create_subseries_service(new_item, clean));
   }; */
 
-  // Función para eliminar subseries
-  /* const delete_subseries = (id_subserie_doc: number | null): void => {
-    const new_subseries = subseries_ccd.filter(
-      (subseries: any) => subseries.id_subserie_doc !== id_subserie_doc
-    );
-    void dispatch(create_subseries_service(new_subseries, () => ({})));
-  }; */
-
-  // Función para eliminar series
-  /* const delete_series = (id_serie_doc: number): void => {
-    const new_series = series_ccd.filter(
-      (serie: any) => serie.id_serie_doc !== id_serie_doc
-    );
-    void dispatch(create_series_service(new_series, () => ({})));
-  }; */
 
   const handleOnClick = (params: any) => {
     // editar serie
-
     /* const action =
       title === 'Crear Catalogo de series'
         ? get_serie_ccd_current(params.data)
@@ -344,6 +327,7 @@ const create_series = (): void => {
                 {...register('codigo', { required: true })}
                 size="small"
                 label="Código"
+                disabled={title_button === 'Actualizar'}
                 variant="outlined"
               />
               {errors.codigo !== null && <p>{errors.codigo?.message}</p>}

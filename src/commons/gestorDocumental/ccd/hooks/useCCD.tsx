@@ -138,7 +138,7 @@ const use_ccd = () => {
     if (ccd_current !== null) {
 
       const result_name = organigram.filter((item) => {
-        // console.log(ccd_current, 'ccd_current')
+      console.log(ccd_current, 'ccd_current')
       console.log(organigram, 'organigrama')
       
         return item.id_organigrama === ccd_current.id_organigrama
@@ -151,11 +151,15 @@ const use_ccd = () => {
           label: result_name[0].nombre,
           value: ccd_current.id_organigrama,
         },
-        unidades_organigrama: { label: '', value: 0 },
+        unidades_organigrama: {
+          label: ccd_current.nombre_unidad_organizacional,
+          value: ccd_current.nombre_unidad_organizacional,
+         },
         version: ccd_current.version,
         fecha_terminado: ccd_current.fecha_terminado,
-        valor_aumento_serie: '',
-        valor_aumento_subserie: ''
+        valor_aumento_serie: ccd_current.valor_aumento_serie,
+        valor_aumento_subserie: ccd_current.valor_aumento_subserie,
+        ruta_soporte: ccd_current.ruta_soporte,
       };
       /* console.log(
         obj,
@@ -281,6 +285,7 @@ const use_ccd = () => {
       nombre: data_create_ccd.nombre_ccd,
       valor_aumento_serie: data_create_ccd.valor_aumento_serie,
       valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
+      ruta_soporte: data_create_ccd.ruta_soporte,
     };
     console.log(
       'new_ccd',

@@ -112,6 +112,7 @@ export const CcdScreen: React.FC = () => {
             onSubmit={
               (e:any) => {
                 // console.log('hola')
+                console.log(e)
                 on_submit_create_ccd(e);
               }
             }
@@ -120,7 +121,7 @@ export const CcdScreen: React.FC = () => {
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             /* onSubmit={handle_submit_create_ccd(on_submit_create_ccd)} */
           >
-            <Grid container spacing={2}>
+             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="organigrama"
