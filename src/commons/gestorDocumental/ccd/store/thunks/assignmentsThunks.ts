@@ -9,6 +9,7 @@ import { toast, type ToastContent } from 'react-toastify';
 // import { FormValuesUnitys, IObjCreateOrganigram, IObjLevels } from '../../../organigrama/interfaces/organigrama';
 import { get_assignments_ccd } from '../slices/assignmentsSlice';
 import { type Dispatch } from 'react';
+// import { ccd_slice } from './../slices/ccdSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
@@ -42,14 +43,13 @@ export const get_assignments_service: any = () => {
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().CCD;
-    console.log('good morning perros hps')
+    const current = getState().ccd_current;
     console.log(
-      '🚀 ~ file: assignmentsThunks.ts ~ line 43 ~ return ~ ccd_current',
-      ccd_current
-    );
+      '🚀 ~ file: assignmentsThunks.ts ~ line 54 ~ return ~ ccd_current',
+      current
+    )
     try {
-      const id_ccd: number = ccd_current.id_ccd;
+      const id_ccd: number = current.id_ccd;
       const { data } = await api.get(`gestor/ccd/asignar/get/${id_ccd}/`);
       const new_data = data.data.map((item: any, index: number) => {
         return { ...item, id: index + 1 };
