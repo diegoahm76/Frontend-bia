@@ -67,10 +67,10 @@ const CrearSeriesCcdDialog = ({
     defaultValues: initial_state
   });
   const data = watch();
-  console.log(
+  /* console.log(
     '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 86 ~ CrearSeriesCcdDialog ~ data crear serie ccd',
     data
-  );
+  ); */
   // useEffect para cargar los datos de la serie seleccionada
   useEffect(() => {
     if (serie_ccd_current !== null) {

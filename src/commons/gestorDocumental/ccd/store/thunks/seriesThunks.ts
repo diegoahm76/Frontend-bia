@@ -22,6 +22,10 @@ export const get_series_service: any = (id_ccd: any) => {
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       const response = await api.get(`gestor/ccd/series/get-by-id-ccd/${id_ccd}/`);
+      console.log(
+        '🚀 ~ file: seriesThunks.ts ~ line 30 ~ return ~ response',
+        response.data
+      )
       dispatch(get_series_ccd(response.data.data));
       // notificationSuccess(data.detail);
       return response.data;

@@ -1,0 +1,33 @@
+#blocklyDiv {
+  height: 400px;
+  width: 95%;
+  position: absolute;
+  background-color: #18181b;
+}
+
+#blocklyToolboxDiv {
+  background-color: #18181b;
+}
+
+.btn-process {
+  position: absolute;
+  top: 50px;
+  right: 130px;
+  z-index: 1;
+  padding: .6em;
+  background-color: #2c73ae;
+  color: white;
+  font-size: 1.7vmin;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.blocklyToolboxDiv {
+  max-height: fit-content;
+  background-color: #18181b;
+}
+
+#blocklyDiv {
+  color: white;
+}
