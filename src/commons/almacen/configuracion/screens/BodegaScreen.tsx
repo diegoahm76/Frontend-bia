@@ -69,7 +69,7 @@ export function BodegaScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Bodegas"></Title>
+          <Title title="Bodegas "></Title>
         </Grid>
         < SeleccionarBodega
           control_bodega={control_aux_bodega}

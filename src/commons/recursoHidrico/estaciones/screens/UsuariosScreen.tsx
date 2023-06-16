@@ -197,6 +197,7 @@ export const UsuariosScreen: React.FC = () => {
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
+          mt: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}>
         <style>
@@ -228,7 +229,7 @@ export const UsuariosScreen: React.FC = () => {
               alignContent: 'center',
             }}
           >
-            <Title title="PARTES INTERESADAS"></Title>
+            <Title title="Partes interesadas"></Title>
           </Grid>
           <Typography sx={{ mt: '10px' }}>
             Estación:
@@ -307,7 +308,7 @@ export const UsuariosScreen: React.FC = () => {
                   alignContent: 'center',
                 }} spacing={2}
               >
-                <Title title="INFORMACIÓN GENERAL"></Title>
+                <Title title="Información general"></Title>
               </Grid>
               <Grid item>
                 <Box>

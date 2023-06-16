@@ -118,7 +118,7 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
                 autoComplete="off"
             >
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={5}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             label="Código"
                             helperText="Ingresar Código"
@@ -129,7 +129,7 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
                             fullWidth
                         />
                     </Grid>
-                    <Grid item xs={12} sm={5}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             label="Nombre"
                             helperText="Nombre"
@@ -141,7 +141,7 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={2}>
+                    <Grid item xs={12} sm={4}>
                         <Stack
                             direction="row"
                             justifyContent="flex-end"

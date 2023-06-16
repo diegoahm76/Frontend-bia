@@ -79,20 +79,18 @@ const AprobacionSolicitudConsumoScreen = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
+                mt: '23px',
                 boxShadow: '0px 3px 6px #042F4A26',
-
             }}
         >
             <Title title="Aprobación de solicitudes de consumo "></Title>
-            <Grid item xs={12} marginY={2}>
+            {/* <Grid item xs={12} marginY={2}>
 
 
-            </Grid>
-            <Grid item xs={12} marginY={2}>
+            </Grid> */}
+            <Grid item xs={12} marginY={0}> 
                 <SeleccionarSolicitudAprobada control_solicitud_aprobacion={control_solicitud_aprobacion} get_values={get_values}
                 />
-
-
             </Grid>
             <Grid
                 container

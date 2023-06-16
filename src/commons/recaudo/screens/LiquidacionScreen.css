@@ -1,4 +1,4 @@
-.modal {
+.modal-liquidacion {
     background-color: white;
     width: 500px;
     max-width: 100%;
@@ -7,7 +7,7 @@
     padding-bottom: 15px;
 }
 
-.modal-container {
+.modal-container-liquidacion {
     display: flex;
     justify-content: center;
     align-items: center;
