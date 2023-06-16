@@ -18,6 +18,7 @@ import AnularSolicitudModal from '../components/AnularSolicitudVivero';
 import SeleccionarSolicitudVivero from '../components/componenteBusqueda/SeleccionarSolicitudVivero';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
+// import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
 
 
 
@@ -116,11 +117,12 @@ const SolicitudConsumoViveroScreen = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
+                top:"30px",
                 boxShadow: '0px 3px 6px #042F4A26',
 
             }}
         >
-            <Title title="SOLICITUD DE CONSUMO PARA VIVERO"></Title>
+            <Title title="Solicitud de consumo para vivero"></Title>
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitudVivero
                     control_solicitud_vivero={control_solicitud_vivero}

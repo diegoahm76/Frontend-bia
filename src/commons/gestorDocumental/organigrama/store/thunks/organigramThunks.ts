@@ -332,6 +332,7 @@ export const get_organigramas_posibles:any = () => {
       const { data } = await api.get(
         'transversal/organigrama/get-organigramas-posibles/'
       );
+      console.log(data);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

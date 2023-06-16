@@ -1,17 +1,16 @@
 
-import { useForm } from 'react-hook-form';
-import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
+import { Grid} from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { type IObjMezcla, type IObjPreparacionMezcla, type IObjBienes } from "../interfaces/produccion";
-import { set_mezclas, set_current_mezcla, set_current_preparacion, set_preparaciones } from '../store/slice/produccionSlice';
+import { set_current_preparacion, set_preparaciones } from '../store/slice/produccionSlice';
 
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { useEffect, useState } from 'react';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import { useEffect } from 'react';
+// import DeleteIcon from '@mui/icons-material/Delete';
+// import EditIcon from '@mui/icons-material/Edit';
 import { get_mezclas_service, get_nurseries_service, get_preparaciones_service } from '../store/thunks/produccionThunks';
-import { isNamespaceImport } from 'typescript';
+import { type IObjMezcla } from '../interfaces/produccion';
+
 
 interface IProps {
     control_preparacion: any;
@@ -23,9 +22,9 @@ const SeleccionarMezcla = ({
     get_values
   }: IProps) => {
 
-    const [action, set_action] = useState<string>("agregar");
+    // const [action, set_action] = useState<string>("agregar");
 
-    const { preparaciones, nurseries, mezclas } = useAppSelector((state) => state.produccion);
+    const { preparaciones, nurseries, mezclas, current_preparacion } = useAppSelector((state) => state.produccion);
     const dispatch = useAppDispatch();
 
     const columns_preparacion: GridColDef[] = [
@@ -46,7 +45,7 @@ const SeleccionarMezcla = ({
             width: 350,
             renderCell: (params) => (
               <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                {(mezclas.find((p) => p.id_mezcla === params.value))?.nombre ?? ""}
+                {(mezclas.find((p: IObjMezcla) => p.id_mezcla === params.value))?.nombre ?? ""}
               </div>
             ),
           },
@@ -116,7 +115,7 @@ const SeleccionarMezcla = ({
                         {
                         datum_type: "select_controller",
                         xs: 12,
-                        md: 3,
+                        md: current_preparacion.id_preparacion_mezcla === null?6:5,
                         control_form: control_preparacion,
                         control_name: "id_vivero",
                         default_value: "",
@@ -131,7 +130,7 @@ const SeleccionarMezcla = ({
                         {
                             datum_type: "select_controller",
                             xs: 12,
-                            md: 3,
+                            md: current_preparacion.id_preparacion_mezcla === null?6:4,
                             control_form: control_preparacion,
                             control_name: "id_mezcla",
                             default_value: "",
@@ -155,16 +154,30 @@ const SeleccionarMezcla = ({
                             type: "number",
                             disabled: false,
                             helper_text: "",
+                            hidden_text: current_preparacion.id_preparacion_mezcla === null
                         },
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_preparacion,
-                            control_name: "fecha_preparacion",
+                            control_name: "cantidad_creada",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Debe seleccionar fecha" } },
-                            label: "Fecha de preparación",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar cantidad a crear" } },
+                            label: "Cantidad creada",
+                            type: "number",
+                            disabled: false,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_preparacion,
+                            control_name: "unidad_medida",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar mezcla" } },
+                            label: "unidad",
                             type: "text",
                             disabled: true,
                             helper_text: ""
@@ -172,20 +185,7 @@ const SeleccionarMezcla = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
-                            control_form: control_preparacion,
-                            control_name: "cantidad_creada",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "Debe seleccionar cantidad a crear" } },
-                            label: "Cantidad creada",
-                            type: "number",
-                            disabled: true,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
+                            md: 4,
                             control_form: control_preparacion,
                             control_name: "nombre_persona_prepara",
                             default_value: "",
@@ -198,7 +198,20 @@ const SeleccionarMezcla = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 12,
+                            md: 4,
+                            control_form: control_preparacion,
+                            control_name: "fecha_preparacion",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar fecha" } },
+                            label: "Fecha de preparación",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 9,
                             control_form: control_preparacion,
                             control_name: "observaciones",
                             default_value: "",

@@ -338,7 +338,7 @@ const SeleccionarBienSiembra = () => {
                         nro_lote_destino_MV: data.nro_lote_destino_MV ?? null,
                         cod_etapa_lote_destino_MV: data.cod_etapa_lote_destino_MV ?? null,
                         cantidad_a_trasladar: Number(data.cantidad_a_trasladar),
-                        altura_lote_destion_en_cms: (data.altura_lote_destion_en_cms??null) !== null ? Number(data.altura_lote_destion_en_cms): null,
+                        altura_lote_destion_en_cms:(current_good.cod_etapa_lote === null)?null : (data.altura_lote_destion_en_cms??null) !== null ? Number(data.altura_lote_destion_en_cms): null,
                         id_traslado: current_transfer.id_traslado,
                         id_bien_origen: current_good.id_bien,
                         codigo_bien: current_good.codigo_bien,

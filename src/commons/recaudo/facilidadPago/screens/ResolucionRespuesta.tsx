@@ -4,9 +4,8 @@ import { Grid, Box, Button, Stack, TextField, Dialog, DialogTitle, DialogContent
 import { Close } from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useState } from 'react';
+import { EditorTexto } from '../componentes/EditorTexto/EditorTexto';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ResolucionRespuesta: React.FC = () => {
@@ -25,7 +24,7 @@ export const ResolucionRespuesta: React.FC = () => {
 
   return (
     <>
-      <Title title='Crear Resolución de Respuesta - Usuario Cormacarena'/>
+      <Title title="Crear Resolución de Respuesta - Usuario Cormacarena"></Title>
       <Grid
         container
         sx={{
@@ -38,7 +37,7 @@ export const ResolucionRespuesta: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <h3>Datos de Encabezado</h3>
+        <Title title="Datos de Encabezado"></Title>
         <Grid item xs={12}>
           <Box
             component="form"
@@ -96,7 +95,7 @@ export const ResolucionRespuesta: React.FC = () => {
             autoComplete="off"
             mb='40px'
           >
-            <h3>Crear Documento</h3>
+            <Title title="Crear Documento"></Title>
             <Grid container spacing={2} mb='20px'>
               <Grid item xs={11} sm={3}>
                 <Button
@@ -118,26 +117,7 @@ export const ResolucionRespuesta: React.FC = () => {
                 </Button>
               </Grid>
             </Grid>
-            <CKEditor
-              editor={ ClassicEditor }
-              data="<p></p>"
-              onReady={ editor => {
-                  console.log( 'Editor is ready to use!', editor );
-              } }
-              onChange={ ( event, editor ) => {
-                  const data = editor.getData();
-                  console.log( { event, editor, data } );
-              } }
-              onBlur={ ( event, editor ) => {
-                  console.log( 'Blur.', editor );
-              } }
-              onFocus={ ( event, editor ) => {
-                  console.log( 'Focus.', editor );
-              } }
-              config={ {
-                placeholder: 'Puede empezar a escribir aquí',
-              } }
-            />
+            <EditorTexto />
             <Stack
               direction="row"
               justifyContent="right"
