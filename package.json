@@ -50,6 +50,7 @@
     "react-apexcharts": "^1.4.0",
     "react-chartjs-2": "^5.2.0",
     "react-cosmos": "^5.7.2",
+    "react-data-export": "^0.6.0",
     "react-datepicker": "^4.10.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
