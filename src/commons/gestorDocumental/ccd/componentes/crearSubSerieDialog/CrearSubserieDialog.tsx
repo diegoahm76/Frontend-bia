@@ -18,32 +18,30 @@ import {
   Grid,
   IconButton,
   TextField,
-  Avatar,
+  Avatar
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
+import /* create_series_service, */
+// , get_series_service
+'../../store/thunks/seriesThunks';
 import {
- /* create_series_service, */
-  // , get_series_service
-} from '../../store/thunks/seriesThunks';
-import {
-  create_subseries_service,
+  create_subseries_service
   //, get_subseries_service
 } from '../../store/thunks/subseriesThunks';
 import { get_serie_ccd_current } from '../../store/slices/seriesSlice';
 import { get_subseries_ccd_current } from '../../store/slices/subseriesSlice';
 import type { IFormValues, IProps } from './types/types';
 import { initial_state } from './utils/constant';
-import  EditIcon  from '@mui/icons-material/Edit';
-import  DeleteIcon  from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 const CrearSubSerieCcdDialog = ({
   is_modal_active,
   set_is_modal_active,
-  title,
+  title
 }: IProps) => {
-
- /* const { series_ccd, serie_ccd_current } = useAppSelector(
+   /* const { series_ccd , serie_ccd_current } = useAppSelector(
     (state) => state.series
   ); */
   const { subseries_ccd, subseries_ccd_current } = useAppSelector(
@@ -60,20 +58,24 @@ const CrearSubSerieCcdDialog = ({
     handleSubmit: handle_submit,
     reset,
     watch,
-    formState: { errors },
+    formState: { errors }
   } = useForm<IFormValues>({
-    defaultValues: initial_state,
+    defaultValues: initial_state
   });
   const data = watch();
-  console.log(data);
+  // console.log(data);
   // useEffect para cargar los datos de la serie seleccionada
-/*  useEffect(() => {
+ /*  useEffect(() => {
+    console.log(
+      '🚀 ~ file: CrearSubserieDialog.tsx ~ line 95 ~ useEffect ~ serie_ccd_current',
+      serie_ccd_current
+    );
     if (serie_ccd_current !== null) {
       reset({
         codigo: serie_ccd_current.codigo,
         nombre: serie_ccd_current.nombre,
         id_subserie_doc: null,
-        id_serie_doc: serie_ccd_current.id_serie_doc,
+        id_serie_doc: serie_ccd_current.id_serie_doc
       });
       set_title_button('Actualizar');
     } else {
@@ -82,14 +84,14 @@ const CrearSubSerieCcdDialog = ({
     }
   }, [serie_ccd_current]); */
 
-  // useEffect para cargar los datos de la subSerie seleccionada 
+  // useEffect para cargar los datos de la subSerie seleccionada
   useEffect(() => {
     if (subseries_ccd_current !== null) {
       reset({
         codigo: subseries_ccd_current.codigo,
         nombre: subseries_ccd_current.nombre,
         id_subserie_doc: subseries_ccd_current.id_subserie_doc,
-        id_serie_doc: null,
+        id_serie_doc: null
       });
       set_title_button('Actualizar');
     } else {
@@ -117,7 +119,7 @@ const CrearSubSerieCcdDialog = ({
   };
 
   // Crear Catalogso de seriess --
-/*  const create_series = (): void => {
+  /*  const create_series = (): void => {
     alert('hola');
     console.log('heeeloooo create series')
     let new_item: any[] = [];
@@ -150,8 +152,8 @@ const CrearSubSerieCcdDialog = ({
           id_subserie_doc: data.id_subserie_doc,
           nombre: data.nombre,
           codigo: data.codigo,
-          id_ccd: ccd_current?.id_ccd,
-        },
+          id_ccd: ccd_current?.id_ccd
+        }
       ];
     } else {
       new_item = subseries_ccd.map((item: any) => {
@@ -163,8 +165,8 @@ const CrearSubSerieCcdDialog = ({
     void dispatch(create_subseries_service(new_item, clean));
   };
 
-   // Función para eliminar subseries
-   const delete_subseries = (id_subserie_doc: number | null): void => {
+  // Función para eliminar subseries
+  const delete_subseries = (id_subserie_doc: number | null): void => {
     const new_subseries = subseries_ccd.filter(
       (subseries: any) => subseries.id_subserie_doc !== id_subserie_doc
     );
@@ -172,7 +174,7 @@ const CrearSubSerieCcdDialog = ({
   };
 
   // Función para eliminar series
- /* const delete_series = (id_serie_doc: number): void => {
+  /* const delete_series = (id_serie_doc: number): void => {
     const new_series = series_ccd.filter(
       (serie: any) => serie.id_serie_doc !== id_serie_doc
     );
@@ -198,32 +200,31 @@ const CrearSubSerieCcdDialog = ({
 
   //  Función para enviar los datos del formulario
   const on_submit: SubmitHandler<IFormValues> = (t) => {
-   /* window.alert(JSON.stringify(t));
+    /* window.alert(JSON.stringify(t));
     switch (title) {
       case 'Crear Catalogo de series':
         create_series();
         break;
       case 'Crear catalogo de subseries': */
-        create_subseries();
-      /*  break;
+    create_subseries();
+    /*  break;
       default:
         break;
     } */
   };
-
 
   const columns: GridColDef[] = [
     {
       headerName: 'Codigo',
       field: 'codigo',
       minWidth: 150,
-      maxWidth: 200,
+      maxWidth: 200
     },
     {
       headerName: 'Nombre',
       field: 'nombre',
       minWidth: 150,
-      maxWidth: 200,
+      maxWidth: 200
     },
     {
       headerName: 'Acciones',
@@ -238,7 +239,7 @@ const CrearSubSerieCcdDialog = ({
                 width: 24,
                 height: 24,
                 background: '#fff',
-                border: '2px solid',
+                border: '2px solid'
               }}
               variant="rounded"
             >
@@ -255,7 +256,7 @@ const CrearSubSerieCcdDialog = ({
                 width: 24,
                 height: 24,
                 background: '#fff',
-                border: '2px solid',
+                border: '2px solid'
               }}
               variant="rounded"
             >
@@ -265,13 +266,9 @@ const CrearSubSerieCcdDialog = ({
             </Avatar>
           </IconButton>
         </>
-      ),
-    },
+      )
+    }
   ];
-
-
-
-
 
   return (
     <Dialog
@@ -281,10 +278,11 @@ const CrearSubSerieCcdDialog = ({
         set_is_modal_active(false);
       }}
     >
-      <Box component="form"
+      <Box
+        component="form"
         onSubmit={() => {
           void handle_submit(on_submit);
-          console.log(errors)
+          console.log(errors);
         }}
       >
         <DialogTitle>
@@ -298,7 +296,7 @@ const CrearSubSerieCcdDialog = ({
               position: 'absolute',
               right: 8,
               top: 8,
-              color: (theme) => theme.palette.grey[500],
+              color: (theme) => theme.palette.grey[500]
             }}
           >
             <CloseIcon />
@@ -309,9 +307,9 @@ const CrearSubSerieCcdDialog = ({
           <Box
             component="form"
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onSubmit={ () => {
+            onSubmit={() => {
               void handle_submit(on_submit);
-              console.log(errors)
+              console.log(errors);
             }}
             autoComplete="off"
           >
@@ -370,7 +368,9 @@ const CrearSubSerieCcdDialog = ({
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={/* title === 'Crear Catalogo de series' ? series_ccd :  */subseries_ccd}
+                  rows={
+                    /* title === 'Crear Catalogo de series' ? series_ccd :  */ subseries_ccd
+                  }
                   columns={columns}
                   pageSize={5}
                   rowsPerPageOptions={[10]}

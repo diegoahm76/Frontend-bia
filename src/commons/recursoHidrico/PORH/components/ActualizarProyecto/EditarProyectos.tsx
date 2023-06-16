@@ -1,124 +1,62 @@
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
-import { Avatar, Divider, IconButton, TextField, Typography } from '@mui/material';
-import { useContext, useEffect, useState } from 'react';
-import { LoadingButton } from '@mui/lab';
+import { TextField, } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import "react-datepicker/dist/react-datepicker.css";
 import esLocale from 'dayjs/locale/es';
-// import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-// import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { DataContext } from '../../context/contextData';
-import { get_data_id } from '../../Request/request';
+interface IProps {
+  data: any;
+  set_data: any;
+  watch: any;
+  register: any;
+  set_value: any;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarProyecto: React.FC = () => {
+export const EditarProyecto: React.FC<IProps> = (
+  { data,
+    set_data,
+    register,
+    set_value,
+    watch
+  }:
+    IProps) => {
 
-  const {
-    rows_actividades,
-    set_rows_actividades,
-  } = useContext(DataContext);
-
-  const columns: GridColDef[] = [
-
-    {
-      field: 'id_proyecto',
-      headerName: 'No PROYECTO',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'nombre',
-      headerName: 'NOMBRE PROYECTO',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'fecha_registro',
-      headerName: 'FECHA REGISTRO',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'ACCIONES',
-      headerName: 'ACCIONES',
-      width: 200,
-      renderCell: (params) => {
-        return (
-          <>
-            <IconButton>
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <EditIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                  onClick={() => {
-                    // handle_open_editar();
-                    // set_cargos(params.row);
-                  }}
-                />
-              </Avatar>
-            </IconButton>
-            <IconButton
-              onClick={() => {
-                // confirmar_eliminar_cargo(params.row.id_cargo as number)
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <DeleteIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
-          </>
-        );
-      },
-    },
-
-
-  ];
-
-  const [is_agregar, set_is_agregar] = useState(false);
+  const nombre = watch('nombre');
+  const inversion = watch('inversion');
 
   useEffect(() => {
-    void get_data_id(1, set_rows_actividades, 'get/actividades/por/proyectos');
-  }, []);
+    if (data !== undefined) {
+      set_start_date(new Date(data.vigencia_inicial))
+      set_value('vigencia_final', data.vigencia_final)
+      set_value('vigencia_inicial', data.vigencia_inicial)
+      set_end_date(new Date(data.vigencia_final))
+      set_value('nombre', data.nombre)
+      set_value('inversion', data.inversion)
+    }
+  }, [data !== undefined]);
+
 
   // fechas
   const [start_date, set_start_date] = useState<Date | null>(new Date());
   const [end_date, set_end_date] = useState<Date | null>(new Date());
 
   const handle_start_date_change = (date: Date | null): void => {
+    set_value('vigencia_inicial', date)
     set_start_date(date)
   };
 
   const handle_end_date_change = (date: Date | null): void => {
+    set_value('vigencia_final', date)
     set_end_date(date)
   };
-
   return (
     <>
       <Grid item xs={12}>
-        <Title title="INFORMACIÓN DE PROYECTO" />
+        <Title title="EDICIÓN INFORMACIÓN DE PROYECTO" />
       </Grid>
       <Grid item xs={12} sm={6}>
         <TextField
@@ -127,7 +65,9 @@ export const EditarProyecto: React.FC = () => {
           size="small"
           margin="dense"
           required
+          value={nombre}
           autoFocus
+          {...register("nombre", { required: true })}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -145,6 +85,7 @@ export const EditarProyecto: React.FC = () => {
                 fullWidth
                 size="small"
                 {...params}
+                {...register("vigencia_inicial", { required: true })}
               />
             )}
           />
@@ -165,6 +106,7 @@ export const EditarProyecto: React.FC = () => {
                 fullWidth
                 size="small"
                 {...params}
+                {...register("vigencia_final", { required: true })}
               />
             )}
           />
@@ -178,99 +120,11 @@ export const EditarProyecto: React.FC = () => {
           margin="dense"
           required
           autoFocus
+          value={inversion}
           type="text"
+          {...register("inversion", { required: true })}
         />
       </Grid>
-      <Grid item xs={12}>
-        <Typography variant="subtitle1" fontWeight="bold">
-          Actividades
-        </Typography>
-        <Divider />
-      </Grid>
-      <Grid item xs={12}>
-        {rows_actividades.length > 0 && (
-          <>
-            <DataGrid
-              density="compact"
-              autoHeight
-              key={1+3}
-              rows={rows_actividades}
-              columns={columns}
-              getRowId={(row) => row.nombre}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
-              disableSelectionOnClick
-              experimentalFeatures={{ newEditingApi: true }}
-            />
-          </>
-        )}
-        {/* <Grid item xs={12}>
-                        <Grid container justifyContent="center" textAlign="center">
-                            <Alert icon={false} severity="info">
-                                <LinearProgress />
-                                <Typography>No se encontraron resultados...</Typography>
-                            </Alert>
-                        </Grid>
-                    </Grid> */}
-      </Grid>
-      <Grid item spacing={2} justifyContent="end" container>
-        <Grid item>
-          <LoadingButton
-            variant="outlined"
-            onClick={() => { set_is_agregar(true) }}
-          >
-            Agregar Nueva Actividad
-          </LoadingButton>
-        </Grid>
-
-        <Grid item>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            fullWidth
-            color="success"
-          // loading={is_saving}
-          // disabled={is_saving}
-          >
-            Guardar
-          </LoadingButton>
-        </Grid>
-      </Grid>
-      {is_agregar && (
-        <>
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Descripción de la actividad
-            </Typography>
-            {/* <Divider /> */}
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Descripción de la actividad"
-              fullWidth
-              size="small"
-              margin="dense"
-              required
-              autoFocus
-              multiline
-            />
-          </Grid>
-          <Grid item spacing={2} justifyContent="end" container>
-            <Grid item>
-              <LoadingButton
-                type="submit"
-                variant="contained"
-                fullWidth
-                color="success"
-              // loading={is_saving}
-              // disabled={is_saving}
-              >
-                Actualizar
-              </LoadingButton>
-            </Grid>
-          </Grid>
-        </>
-      )}
     </>
   );
 };

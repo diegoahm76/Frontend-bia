@@ -67,10 +67,10 @@ const CrearSeriesCcdDialog = ({
     defaultValues: initial_state
   });
   const data = watch();
-  console.log(
+  /* console.log(
     '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 86 ~ CrearSeriesCcdDialog ~ data crear serie ccd',
     data
-  );
+  ); */
   // useEffect para cargar los datos de la serie seleccionada
   useEffect(() => {
     if (serie_ccd_current !== null) {
@@ -123,43 +123,42 @@ const CrearSeriesCcdDialog = ({
 
   //! Crear Catalogso de seriess --
 const create_series = (): void => {
-    const { id_serie_doc, nombre, codigo } = data;
-
-    console.log(
-      '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 120 ~ create_series ~ data',
-      data,
-      ccd_current,
-    )
-    return void dispatch(create_series_service({
-      nombre: data.nombre,
-      codigo: data.codigo,
-      id_ccd: ccd_current?.id_ccd
-    }, clean));
+     const { id_serie_doc, nombre, codigo } = data;
+  console.log(id_serie_doc, nombre, codigo);
     /* const updatedSeries = series_ccd.map((item: any) => {
       if (item.id_serie_doc === id_serie_doc) {
         return {
           ...item,
           nombre: data.nombre,
-          codigo: Number(data.codigo)
+          codigo: Number(data.codigo),
         };
       }
       return item;
     });
+
+
     const newSeries =
-      title_button === 'Agregar'
-        ? {
-            id_serie_doc: data.id_serie_doc,
-            nombre: data.nombre,
-            codigo: Number(data.codigo)
-            id_ccd: ccd_current?.id_ccd
-          }
-        : updatedSeries; */
-    /* console.log(
-      '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 120 ~ create_series ~ newSeries',
-      newSeries
-    ); */
+      title_button === 'Agregar' ? {
+        nombre: data.nombre,
+        codigo: Number(data.codigo),
+        id_ccd: ccd_current?.id_ccd,
+      } : updatedSeries; */
+
+
+    //! create series is ok
+     return void dispatch(create_series_service({
+      nombre: data.nombre,
+      codigo: data.codigo,
+      id_ccd: ccd_current?.id_ccd
+    }, clean));
+    //! close function create series is ok
+
+
+
     // return void dispatch(create_series_service(newSeries, clean));
   };
+
+
   // Crear subseries
   /* const create_subseries = (): void => {
     let new_item: any[] = [];
@@ -183,25 +182,9 @@ const create_series = (): void => {
     void dispatch(create_subseries_service(new_item, clean));
   }; */
 
-  // Función para eliminar subseries
-  /* const delete_subseries = (id_subserie_doc: number | null): void => {
-    const new_subseries = subseries_ccd.filter(
-      (subseries: any) => subseries.id_subserie_doc !== id_subserie_doc
-    );
-    void dispatch(create_subseries_service(new_subseries, () => ({})));
-  }; */
-
-  // Función para eliminar series
-  /* const delete_series = (id_serie_doc: number): void => {
-    const new_series = series_ccd.filter(
-      (serie: any) => serie.id_serie_doc !== id_serie_doc
-    );
-    void dispatch(create_series_service(new_series, () => ({})));
-  }; */
 
   const handleOnClick = (params: any) => {
     // editar serie
-
     /* const action =
       title === 'Crear Catalogo de series'
         ? get_serie_ccd_current(params.data)
@@ -226,27 +209,12 @@ const create_series = (): void => {
     } else {
       void dispatch(delete_series_service(new_series, params, () => ({})));
     }
-
-    /* const new_series = series_ccd.filter(
-      (serie: any) => serie.id_serie_doc !== id_serie_doc
-    );
-    void dispatch(create_series_service(new_series, () => ({}))); */
   };
 
-  //  Función para enviar los datos del formulario
-  const on_submit: SubmitHandler<IFormValues> = () => {
+  // ? se considera innecesario el uso de esta función delntro del código, ya que la lógica puede ser manejada por la funcióm create_series
+ /*  const on_submit: SubmitHandler<IFormValues> = () => {
     create_series();
-    /* window.alert(JSON.stringify(t));
-    switch (title) {
-      case 'Crear Catalogo de series':
-        break;
-      case 'Crear catalogo de subseries':
-        create_subseries(e);
-        break;
-      default:
-        break;
-    } */
-  };
+  }; */
 
   const columns: GridColDef[] = [
     {
@@ -309,12 +277,6 @@ const create_series = (): void => {
         set_is_modal_active(false);
       }}
     >
-      {/* <form
-        onSubmit={(e) => {
-          void handle_submit(on_submit); // Pasar el evento e a handle_submit
-          console.log(errors);
-        }}
-      > */}
       <DialogTitle>
         {title}
         <IconButton
@@ -339,11 +301,9 @@ const create_series = (): void => {
           onSubmit={(e) => {
             e.preventDefault();
 
-            console.log('hollllllllaslkaksjalkjalksdjlkajsdlkajslkdjaslkjdlka');
+           // console.log('hollllllllaslkaksjalkjalksdjlkajsdlkajslkdjaslkjdlka');
            create_series();
-            /* void handle_submit(() => {
-            }); */ 
-            console.log(errors);
+            // console.log(errors);
           }}
           autoComplete="off"
         >
@@ -356,6 +316,7 @@ const create_series = (): void => {
                 size="small"
                 label="Nombre"
                 variant="outlined"
+                value={data.nombre}
               />
               {errors.nombre !== null && <p>{errors.nombre?.message}</p>}
             </Grid>
@@ -367,7 +328,9 @@ const create_series = (): void => {
                 {...register('codigo', { required: true })}
                 size="small"
                 label="Código"
+                disabled={title_button === 'Actualizar'}
                 variant="outlined"
+                value={data.codigo}
               />
               {errors.codigo !== null && <p>{errors.codigo?.message}</p>}
 

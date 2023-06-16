@@ -11,7 +11,7 @@ import {
 // import EditIcon from '@mui/icons-material/Edit';
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import ChecklistIcon from '@mui/icons-material/Checklist';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+// import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
 import { BusquedaPorh } from '../../components/Buscador/Buscador';
 import {
@@ -45,111 +45,111 @@ export const AvanceScreen: React.FC = () => {
         rows_avances,
     } = useContext(DataContext);
 
-    const columns: GridColDef[] = [
+    // const columns: GridColDef[] = [
 
-        {
-            field: 'accion',
-            headerName: 'ACCIÓN',
-            sortable: true,
-            width: 170,
-        },
-        {
-            field: 'descripcion',
-            headerName: 'descripcion',
-            sortable: true,
-            width: 170,
-        },
-        {
-            field: 'fecha_reporte',
-            headerName: 'FECHA REPORTE',
-            sortable: true,
-            width: 170,
-        },
-        {
-            field: 'evidencia',
-            headerName: 'EVIDENCIA',
-            sortable: true,
-            width: 170,
-        },
-        // {
-        //   field: 'ACCIONES',
-        //   headerName: 'ACCIONES',
-        //   width: 200,
-        //   renderCell: (params: any) => {
-        //     const fecha_fin = params.row.fecha_fin;
-        //     if (fecha_fin !== null && new Date(fecha_fin) > new Date()) {
-        //       return (
-        //         <>
-        //           <IconButton>
-        //             <Avatar
-        //               sx={{
-        //                 width: 24,
-        //                 height: 24,
-        //                 background: '#fff',
-        //                 border: '2px solid',
-        //               }}
-        //               variant="rounded"
-        //             >
-        //               <EditIcon
-        //                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-        //                 onClick={() => {
-        //                   set_is_agregar(false)
-        //                   set_is_editar(true)
-        //                   set_is_seleccionar(false)
-        //                   // set_cargos(params.row);
-        //                 }}
-        //               />
-        //             </Avatar>
-        //           </IconButton>
-        //           <IconButton
-        //             onClick={() => {
-        //               // confirmar_eliminar_cargo(params.row.id_cargo as number)
-        //             }}
-        //           >
-        //             <Avatar
-        //               sx={{
-        //                 width: 24,
-        //                 height: 24,
-        //                 background: '#fff',
-        //                 border: '2px solid',
-        //               }}
-        //               variant="rounded"
-        //             >
-        //               <DeleteIcon
-        //                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-        //               />
-        //             </Avatar>
-        //           </IconButton>
-        //           <IconButton
-        //             onClick={() => {
-        //               set_is_agregar(false)
-        //               set_is_editar(false)
-        //               set_is_seleccionar(true)
-        //             }}
-        //           >
-        //             <Avatar
-        //               sx={{
-        //                 width: 24,
-        //                 height: 24,
-        //                 background: '#fff',
-        //                 border: '2px solid',
-        //               }}
-        //               variant="rounded"
-        //             >
-        //               <ChecklistIcon
-        //                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-        //               />
-        //             </Avatar>
-        //           </IconButton>
+    //     {
+    //         field: 'accion',
+    //         headerName: 'ACCIÓN',
+    //         sortable: true,
+    //         width: 170,
+    //     },
+    //     {
+    //         field: 'descripcion',
+    //         headerName: 'descripcion',
+    //         sortable: true,
+    //         width: 170,
+    //     },
+    //     {
+    //         field: 'fecha_reporte',
+    //         headerName: 'FECHA REPORTE',
+    //         sortable: true,
+    //         width: 170,
+    //     },
+    //     {
+    //         field: 'evidencia',
+    //         headerName: 'EVIDENCIA',
+    //         sortable: true,
+    //         width: 170,
+    //     },
+    //     // {
+    //     //   field: 'ACCIONES',
+    //     //   headerName: 'ACCIONES',
+    //     //   width: 200,
+    //     //   renderCell: (params: any) => {
+    //     //     const fecha_fin = params.row.fecha_fin;
+    //     //     if (fecha_fin !== null && new Date(fecha_fin) > new Date()) {
+    //     //       return (
+    //     //         <>
+    //     //           <IconButton>
+    //     //             <Avatar
+    //     //               sx={{
+    //     //                 width: 24,
+    //     //                 height: 24,
+    //     //                 background: '#fff',
+    //     //                 border: '2px solid',
+    //     //               }}
+    //     //               variant="rounded"
+    //     //             >
+    //     //               <EditIcon
+    //     //                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+    //     //                 onClick={() => {
+    //     //                   set_is_agregar(false)
+    //     //                   set_is_editar(true)
+    //     //                   set_is_seleccionar(false)
+    //     //                   // set_cargos(params.row);
+    //     //                 }}
+    //     //               />
+    //     //             </Avatar>
+    //     //           </IconButton>
+    //     //           <IconButton
+    //     //             onClick={() => {
+    //     //               // confirmar_eliminar_cargo(params.row.id_cargo as number)
+    //     //             }}
+    //     //           >
+    //     //             <Avatar
+    //     //               sx={{
+    //     //                 width: 24,
+    //     //                 height: 24,
+    //     //                 background: '#fff',
+    //     //                 border: '2px solid',
+    //     //               }}
+    //     //               variant="rounded"
+    //     //             >
+    //     //               <DeleteIcon
+    //     //                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+    //     //               />
+    //     //             </Avatar>
+    //     //           </IconButton>
+    //     //           <IconButton
+    //     //             onClick={() => {
+    //     //               set_is_agregar(false)
+    //     //               set_is_editar(false)
+    //     //               set_is_seleccionar(true)
+    //     //             }}
+    //     //           >
+    //     //             <Avatar
+    //     //               sx={{
+    //     //                 width: 24,
+    //     //                 height: 24,
+    //     //                 background: '#fff',
+    //     //                 border: '2px solid',
+    //     //               }}
+    //     //               variant="rounded"
+    //     //             >
+    //     //               <ChecklistIcon
+    //     //                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+    //     //               />
+    //     //             </Avatar>
+    //     //           </IconButton>
 
-        //         </>
-        //       );
-        //     } else {
-        //       return null;
-        //     }
-        //   },
-        // },
-    ];
+    //     //         </>
+    //     //       );
+    //     //     } else {
+    //     //       return null;
+    //     //     }
+    //     //   },
+    //     // },
+    // ];
 
     const [is_agregar, set_is_agregar] = useState(false);
     const [is_editar, set_is_editar] = useState(false);
@@ -223,7 +223,7 @@ export const AvanceScreen: React.FC = () => {
                                     </Typography>
                                     <Divider />
                                 </Grid>
-                                <DataGrid
+                                {/* <DataGrid
                                     autoHeight
                                     key={1+4}
                                     rows={rows_avances}
@@ -231,7 +231,7 @@ export const AvanceScreen: React.FC = () => {
                                     getRowId={(row) => row.nombre}
                                     pageSize={5}
                                     rowsPerPageOptions={[5]}
-                                />
+                                /> */}
                             </>
                         ) : (
                             <Grid item xs={12}>
