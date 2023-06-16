@@ -291,14 +291,19 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
+                      // value={value}
                       variant="outlined"
                       type="file"
                       InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        const files = (e.target as HTMLInputElement).files; // Accede a la propiedad "files" del elemento de entrada de archivo
+                      // onChange={onChange}
+                    onChange={(e) => {
+                        const files = (e.target as HTMLInputElement).files;
+                        
                         if (files && files.length > 0) {
-                          onChange(files[0]); // Actualiza el valor del campo con el archivo seleccionado
+                          onChange(files[0]);
+                          console.log(files[0]);
                         }
+                        // console.log(value);
                       }}
                       error={!!error}
                       helperText={
@@ -408,18 +413,26 @@ export const CcdScreen: React.FC = () => {
                   <Controller
                     name="series"
                     control={control}
-                    render={({ field }) => (
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
                       <Select
-                        {...field}
+                      // {...field}
+                        value={value}
+                        onChange={
+                          (selectedOption: any) => {
+                            onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                            // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
+  
+                            //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
+                            console.log('Valor seleccionado:', selectedOption);
+                          }
+                        }
                         options={list_sries}
+                        isClearable
+                        isSearchable
                         placeholder="Seleccionar"
-                        onChange={(selectedOption) => {
-                          field.onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
-                          // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
-
-                          //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
-                          console.log('Valor seleccionado:', selectedOption);
-                        }}
                       />
                     )}
                   />

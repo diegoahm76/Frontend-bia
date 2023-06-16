@@ -1,3 +1,4 @@
+/* eslint-disable no-unreachable */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { type Dispatch } from 'react';
 import { api } from '../../../../../api/axios';
@@ -8,7 +9,7 @@ import { toast, type ToastContent } from 'react-toastify';
 // Interfaces
 import { get_ccd_current, get_ccds } from '../slices/ccdSlice';
 import { get_series_service } from './seriesThunks';
-import { get_subseries_service } from './subseriesThunks';
+// import { get_subseries_service } from './subseriesThunks';
 import { type DataCambioCCDActual } from '../../interfaces/ccd';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -127,19 +128,33 @@ export const to_resume_ccds_service: any = (
     }
   };
 };
+
+
+
 //! Finalizar Cuadro de Clasificación Documental
 export const to_finished_ccds_service: any = (
-  set_flag_btn_finish: (arg0: boolean) => void
+  set_flag_btn_finish: (arg0: boolean) => void,
+  ccd_current: any,
 ) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
-  ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().ccd;
+  ): Promise</* AxiosResponse | AxiosError */ any > => {
     try {
+
+
+      if(ccd_current.id_ccd === undefined || ccd_current.id_ccd === 0 || ccd_current.id_ccd === null){
+        // Mostrar una alerta antes de continuar
+        throw new Error('La propiedad "id_ccd" de ccd_current es falsa.');
+        alert('La propiedad "id" de ccd_current es falsa.');
+        return;
+      }
+
+
+
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(
-        `gestor/ccd/finish/${id_ccd}/?confirm=false`
+        `gestor/ccd/finish/${id_ccd}`
       );
       //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
       // ? revisar la manera en la que está recibiendo los parametros
@@ -150,57 +165,76 @@ export const to_finished_ccds_service: any = (
       set_flag_btn_finish(true);
       return data;
     } catch (error: any) {
-      if (error.response.data.delete === true) {
-        const message_detail: string = error.response.data.detail;
-        const message: string = error.response.data.data
-          .map((item: any) => item)
-          .join(', ');
-
-        void Swal.fire({
-          title: '¿Está seguro de finalizar el CCD?',
-          text: `${message_detail}, Estas son las faltanes: ${message}. Las podemos eliminar del sistema`,
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Si, finalizar!'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            const id_ccd: number = ccd_current.id_ccd;
-            api
-              .put(`gestor/ccd/finish/${id_ccd}/?confirm=true`)
-              .then((response) => {
-                control_success(response.data.detail);
-                //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
-                // ? revisar la manera en la que está recibiendo los parametros
-                dispatch(
-                  get_classification_ccds_service(
-                    ccd_current.nombre,
-                    ccd_current.version
-                  )
-                );
-                dispatch(get_series_service());
-                dispatch(get_subseries_service());
-                set_flag_btn_finish(true);
-              })
-              .catch((error) => {
-                control_error(error.response.data.detail);
-              });
-          }
-        });
-      } else {
-        const message: string = error.response.data.data
-          .map((item: any) => item)
-          .join(', ');
-        void notification_error(
-          error.response.data.detail,
-          `Estas son las faltanes: ${message}`
-        );
-      }
-      return error as AxiosError;
+      console.log(error)
+      control_error('No se pudo finalizar el CCD, no hay ccd actual disponible para finalizar');
+      // return error as AxiosError;
     }
   };
 };
+
+
+
+/*
+
+      if (error.response.data.delete === true) {
+        /* const message_detail: string = error.response.data.detail;
+        const message: string = error.response.data.data
+          .map((item: any) => item)
+          .join(', '); 
+
+          void Swal.fire({
+            title: '¿Está seguro de finalizar el CCD?',
+            // text: `${message_detail}, Estas son las faltanes: ${message}. Las podemos eliminar del sistema`,
+            text: ` Estas son las faltanes:. Las podemos eliminar del sistema`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, finalizar!'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              const id_ccd: number = ccd_current.id_ccd;
+              api
+                .put(`gestor/ccd/finish/${id_ccd}/?confirm=true`)
+                 .put(`gestor/ccd/finish/${id_ccd}/?confirm=true`)
+                .then((response) => {
+                  control_success(response.data.detail);
+                  //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
+                  // ? revisar la manera en la que está recibiendo los parametros
+                  dispatch(
+                    get_classification_ccds_service(
+                      ccd_current.nombre,
+                      ccd_current.version
+                    )
+                  );
+                  dispatch(get_series_service());
+                  dispatch(get_subseries_service());
+                  set_flag_btn_finish(true);
+                })
+                .catch((error) => {
+                  control_error(error.response.data.detail);
+                });
+            }
+          });
+        } else {
+          const message: string = error.response.data.data
+            .map((item: any) => item)
+            .join(', ');
+            console.log(error.response.data.detail, 'error.response.data.detail')
+          void notification_error(
+            error.response.data.detail,
+             `Estas son las faltanes: ${message}`
+            `Estas son las faltanes:`
+          );
+        }
+        return error as AxiosError;
+
+*/
+
+
+
+
+
 
 // Crear Cuadro de Clasificación Documental (CCD)
 export const create_ccds_service: any = (
@@ -210,7 +244,7 @@ export const create_ccds_service: any = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.post('gestor/ccd/create/', ccd);
-      console.log('🚀 ~ file: ccds.ts ~ line 139 ~ return ~ data', data);
+      // console.log('🚀 ~ file: ccds.ts ~ line 139 ~ return ~ data', data);
       dispatch(get_ccd_current(data.data));
       control_success(data.detail);
       console.log(data.detail, 'success');
