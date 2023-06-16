@@ -17,7 +17,7 @@ export interface ICCDObject {
   fecha_puesta_produccion: null | Date;
   fecha_retiro_produccion: null | Date;
   justificacion: null | string;
-  ruta_soporte: File | string | any;
+  ruta_soporte?: File | string | any;
   actual: boolean;
 }
 export interface ICCDForm {
@@ -26,10 +26,10 @@ export interface ICCDForm {
   version: string;
   nombre_ccd: string;
   fecha_terminado: null | Date | string;
-  organigrama: IList;
-  unidades_organigrama: IList;
-  valor_aumento_serie: string | number;
-  valor_aumento_subserie: string | number;
+  organigrama: IList | any;
+  unidades_organigrama: IList | any;
+  valor_aumento_serie: string | number | any;
+  valor_aumento_subserie: string | number | any;
 }
 export interface ICCDAsingForm {
   sries_asignacion: IList;
