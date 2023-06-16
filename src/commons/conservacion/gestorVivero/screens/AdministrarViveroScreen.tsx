@@ -3,13 +3,10 @@ import { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // Componentes de Material UI
 
-
-import { utils, writeFile } from 'xlsx';
-
+import ButtonGroup from '@mui/material/ButtonGroup';
 import 'jspdf-autotable';
-
 import JsPDF from 'jspdf';
-
+import * as XLSX from 'xlsx';
 
 import {
   Grid,
@@ -359,11 +356,14 @@ export function AdministrarViveroScreen(): JSX.Element {
       data.push(row_data);
     });
 
-    const worksheet = utils.aoa_to_sheet([headers, ...data]);
-    const workbook = utils.book_new();
-    utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]); // Combina headers con los subarreglos de data
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
 
-    writeFile(workbook, 'tab.xlsx');
+    const file_i = Math.random(); // Reemplaza con la variable que contenga el ID
+    const file_nnn = `productos_${file_i}.xlsx`; // Nombre del archivo con el ID concatenado
+
+    XLSX.writeFile(workbook, file_nnn);
   };
 
   const export_pdf = (): void => {
@@ -401,6 +401,20 @@ export function AdministrarViveroScreen(): JSX.Element {
   };
 
 
+
+  const button_style = {
+    color: 'white',
+    backgroundColor: '#335B1E',
+    border: '3px solid black',
+    borderRadius: '50%',
+    width: '40px',
+    height: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: '10px'
+  };
+
   return (
     <>
       <Grid
@@ -428,15 +442,18 @@ export function AdministrarViveroScreen(): JSX.Element {
             >
               Crear vivero
             </Button>
-
-
-
-            <i className="pi pi-file-excel" style={{ fontSize: '1.5rem', color: 'green', margin: 10 }} onClick={export_to_excel}></i>
-            <i className="pi pi-file-excel" style={{ fontSize: '1.5rem', color: 'red', margin: 10 }} onClick={export_pdf}></i>
-
-
           </Stack>
 
+          <ButtonGroup style={{ margin: 7 }}  >
+            <Button style={button_style} onClick={export_to_excel}>
+              <i className="pi pi-file-excel"></i>
+            </Button>
+
+            <Button style={button_style} onClick={export_pdf}>
+              <i className="pi pi-file-pdf"></i>
+            </Button>
+
+          </ButtonGroup>
           <Grid item>
 
             <Box sx={{ width: '100%' }}>
