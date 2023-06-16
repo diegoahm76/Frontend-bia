@@ -354,7 +354,7 @@ export const CcdScreen: React.FC = () => {
                 type="submit"
                 color="primary"
                 variant="contained"
-                startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
+                startIcon={<SyncIcon />}
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </Button>
@@ -362,9 +362,6 @@ export const CcdScreen: React.FC = () => {
                 color="success"
                 variant="contained"
                 startIcon={<CleanIcon />}
-                onClick={() => {
-                  clean_ccd();
-                }}
               >
                 LIMPIAR
               </Button>
@@ -391,26 +388,10 @@ export const CcdScreen: React.FC = () => {
               component="form"
               sx={{ mt: '20px' }}
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onSubmit={handle_submit(on_submit)}
               autoComplete="off"
             >
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={2}>
-                  <Controller
-                    name="sries"
-                    control={control}
-                    render={() => (
-                      <Select options={list_sries} placeholder="Seleccionar" />
-                    )}
-                  />
-                  {errors.sries !== null && (
-                    <div className="col-12">
-                      <small className="text-center text-danger">
-                        Este campo es obligatorio
-                      </small>
-                    </div>
-                  )}
-                </Grid>
+                <Grid item xs={12} sm={2}></Grid>
                 <Grid item xs={12} sm={4}>
                   <ButtonGroup
                     variant="contained"
@@ -429,7 +410,7 @@ export const CcdScreen: React.FC = () => {
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  <Controller
+                  {/* <Controller
                     name="subserie"
                     control={control}
                     render={() => (
@@ -445,7 +426,7 @@ export const CcdScreen: React.FC = () => {
                         Este campo es obligatorio
                       </small>
                     </div>
-                  )}
+                  )} */}
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <ButtonGroup
@@ -582,14 +563,14 @@ export const CcdScreen: React.FC = () => {
                     variant="contained"
                     startIcon={<SaveIcon />}
                   >
-                    {title_button_asing}
+                    EXPLORE TITS
                   </Button>
                 </Grid>
               </Grid>
             </Box>
             <Grid item>
               <Box sx={{ width: '100%' }}>
-                <DataGrid
+                {/* <DataGrid
                   density="compact"
                   autoHeight
                   rows={assignments_ccd}
@@ -597,7 +578,7 @@ export const CcdScreen: React.FC = () => {
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                   experimentalFeatures={{ newEditingApi: true }}
-                />
+                /> */}
               </Box>
             </Grid>
             <Stack
@@ -606,31 +587,21 @@ export const CcdScreen: React.FC = () => {
               spacing={2}
               sx={{ mt: '20px' }}
             >
-              {flag_btn_finish ? (
-                <Button
-                  onClick={() => {
-                    void dispatch(to_resume_ccds_service(set_flag_btn_finish));
-                  }}
-                  color="success"
-                  variant="contained"
-                  startIcon={<SaveIcon />}
-                >
-                  REANUDAR
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    void dispatch(
-                      to_finished_ccds_service(set_flag_btn_finish)
-                    );
-                  }}
-                  color="success"
-                  variant="contained"
-                  startIcon={<SaveIcon />}
-                >
-                  TERMINAR
-                </Button>
-              )}
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<SaveIcon />}
+              >
+                REANUDAR
+              </Button>
+
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<SaveIcon />}
+              >
+                TERMINAR
+              </Button>
             </Stack>
           </Grid>
         </Grid>
