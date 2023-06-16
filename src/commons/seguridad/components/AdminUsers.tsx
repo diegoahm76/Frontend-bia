@@ -9,7 +9,7 @@ import {
   Autocomplete,
   Avatar,
   Skeleton,
-  Chip,
+  // Chip,
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
@@ -42,7 +42,7 @@ export const AdminUsers: React.FC = () => {
     bloqueado_opt,
     roles,
     roles_opt,
-    rol_fixed,
+    // rol_fixed,
     on_submit,
     on_change,
     handle_change_autocomplete,
@@ -66,7 +66,7 @@ export const AdminUsers: React.FC = () => {
               <>
                 <Grid container spacing={2} sx={{ mt: '5px' }}>
                   <Box sx={{ ml: '16px', width: '100%' }}>
-                    <Title title={`Datos personales`} />
+                    <Title title={`Datos personales ${tipo_persona}`} />
                   </Box>
                   {tipo_persona === 'N' ? (
                     <>
@@ -284,6 +284,29 @@ export const AdminUsers: React.FC = () => {
                           option.value === value.value
                         }
                         value={roles ?? []}
+                        renderInput={(params) => (
+                          <TextField
+                            key={params.id}
+                            {...params}
+                            label="Selección de roles"
+                            placeholder="Roles asignados"
+                          />
+                        )}
+                        {...register_admin_user('roles')}
+                        onChange={handle_change_autocomplete}
+                      />
+                    )}
+                    {/* {roles_opt.length > 0 && (
+                      <Autocomplete
+                        disabled={tipo_usuario === 'E' && true}
+                        multiple
+                        fullWidth
+                        options={roles_opt}
+                        getOptionLabel={(option) => option?.label}
+                        isOptionEqualToValue={(option, value) =>
+                          option.value === value.value
+                        }
+                        value={roles ?? []}
                         renderTags={(tagValue, getTagProps) =>
                           tagValue.map((option, index) => (
                             // eslint-disable-next-line react/jsx-key
@@ -305,7 +328,7 @@ export const AdminUsers: React.FC = () => {
                         {...register_admin_user('roles')}
                         onChange={handle_change_autocomplete}
                       />
-                    )}
+                    )} */}
                   </Grid>
                 </Grid>
               </>

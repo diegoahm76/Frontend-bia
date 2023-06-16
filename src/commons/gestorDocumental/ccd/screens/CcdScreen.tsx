@@ -229,8 +229,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
-                      // disabled={ccd_current?.fecha_terminado !== null}
-
+                      disabled={ccd_current != null}
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -261,7 +260,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subserie"
                       variant="outlined"
-                      // disabled={ccd_current?.fecha_terminado !== null}
+                      disabled={ccd_current !== null}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -291,14 +290,24 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
+                      // value={value}
                       variant="outlined"
                       type="file"
+                      disabled={
+                        ccd_current?.fecha_terminado !== null &&
+                        ccd_current?.fecha_terminado !== '' &&
+                        ccd_current?.fecha_terminado !== undefined
+                      }
                       InputLabelProps={{ shrink: true }}
+                      // onChange={onChange}
                       onChange={(e) => {
-                        const files = (e.target as HTMLInputElement).files; // Accede a la propiedad "files" del elemento de entrada de archivo
+                        const files = (e.target as HTMLInputElement).files;
+
                         if (files && files.length > 0) {
-                          onChange(files[0]); // Actualiza el valor del campo con el archivo seleccionado
+                          onChange(files[0]);
+                          console.log(files[0]);
                         }
+                        // console.log(value);
                       }}
                       error={!!error}
                       helperText={
@@ -362,7 +371,7 @@ export const CcdScreen: React.FC = () => {
                 type="submit"
                 color="primary"
                 variant="contained"
-                startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
+                startIcon={<SyncIcon />}
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </Button>
@@ -400,7 +409,6 @@ export const CcdScreen: React.FC = () => {
               component="form"
               sx={{ mt: '20px' }}
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onSubmit={handle_submit(on_submit)}
               autoComplete="off"
             >
               <Grid container spacing={2}>
@@ -408,18 +416,24 @@ export const CcdScreen: React.FC = () => {
                   <Controller
                     name="series"
                     control={control}
-                    render={({ field }) => (
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
                       <Select
-                        {...field}
-                        options={list_sries}
-                        placeholder="Seleccionar"
-                        onChange={(selectedOption) => {
-                          field.onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                        // {...field}
+                        value={value}
+                        onChange={(selectedOption: any) => {
+                          onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
                           // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
 
                           //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
                           console.log('Valor seleccionado:', selectedOption);
                         }}
+                        options={list_sries}
+                        isClearable
+                        isSearchable
+                        placeholder="Seleccionar"
                       />
                     )}
                   />
@@ -483,7 +497,7 @@ export const CcdScreen: React.FC = () => {
                         Este campo es obligatorio
                       </small>
                     </div>
-                  )}
+                  )} 
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <ButtonGroup
@@ -617,18 +631,28 @@ export const CcdScreen: React.FC = () => {
                 <Grid item xs={12} sm={3}>
                   <Button
                     fullWidth
+                    onClick={() => {
+                      /* void dispatch(
+                        to_assign_ccds_service(
+                          ccd_current,
+                          set_flag_btn_finish,
+                          set_title_button_asing
+                        )
+                      ); */
+                      console.log('guardando la relación de asignaciones');
+                    }}
                     color="primary"
                     variant="contained"
                     startIcon={<SaveIcon />}
                   >
-                    {title_button_asing}
+                    EXPLORE TITS
                   </Button>
                 </Grid>
               </Grid>
             </Box>
             <Grid item>
               <Box sx={{ width: '100%' }}>
-                <DataGrid
+                {/* <DataGrid
                   density="compact"
                   autoHeight
                   rows={assignments_ccd}
@@ -636,7 +660,7 @@ export const CcdScreen: React.FC = () => {
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                   experimentalFeatures={{ newEditingApi: true }}
-                />
+                /> */}
               </Box>
             </Grid>
             <Stack

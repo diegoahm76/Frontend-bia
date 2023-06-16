@@ -1,0 +1,40 @@
+{
+  "nodes": [
+    {
+      "id": "1",
+      "data": {
+        "nombre": "John Doe",
+        "fecha": "2022-04-13",
+        "descripcion": "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+      }
+    },
+    {
+      "id": "2",
+      "data": {
+        "nombre": "Jane Doe",
+        "fecha": "2022-07-25",
+        "descripcion": "Sed ut perspiciatis unde omnis iste natus error sit"
+      }
+    },
+    {
+      "id": "3",
+      "data": {
+        "nombre": "No name",
+        "fecha": "2022-11-7",
+        "descripcion": "At vero eos et accusamus et iusto odio dignissimos ducimus"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1-2",
+      "source": "1",
+      "target": "2"
+    },
+    {
+      "id": "e2-3",
+      "source": "2",
+      "target": "3"
+    }
+  ]
+}
