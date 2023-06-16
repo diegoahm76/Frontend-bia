@@ -39,11 +39,16 @@ export const CcdScreen: React.FC = () => {
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
   useEffect(() => {
-    set_flag_btn_finish(ccd_current?.fecha_terminado !== null);
+    set_flag_btn_finish(
+      ccd_current?.fecha_terminado !== null &&
+        ccd_current?.fecha_terminado !== '' &&
+        ccd_current?.fecha_terminado !== undefined
+    );
+
     console.log(
       '🚀 ~ file: CcdScreen.tsx ~ line 45 ~ useEffect ~ ccd_current?.fecha_terminado',
       ccd_current?.fecha_terminado
-    )
+    );
     /* if (ccd_current?.fecha_terminado != null) {
       set_flag_btn_finish(true);
     } else {
@@ -84,7 +89,6 @@ export const CcdScreen: React.FC = () => {
     clean_ccd
   } = use_ccd() as any;
 
-
   return (
     <>
       <Grid
@@ -101,27 +105,20 @@ export const CcdScreen: React.FC = () => {
         <Grid item xs={12}>
           <Title title="Cuadro de clasificación documental" />
           <form
-          style={{
-            marginTop: '20px',
-          }}
-          /* onSubmit={handle_submit(
-            () => {
-              on_submit_create_ccd();
-            }
-          )} */
-            onSubmit={
-              (e:any) => {
-                // console.log('hola')
-                console.log(e)
-                on_submit_create_ccd(e);
-              }
-            }
-            
+            style={{
+              marginTop: '20px'
+            }}
+            onSubmit={(e: any) => {
+              // console.log('hola')
+              console.log(e);
+              on_submit_create_ccd(e);
+            }}
+
             // sx={{ mt: '20px' }}
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             /* onSubmit={handle_submit_create_ccd(on_submit_create_ccd)} */
           >
-             <Grid container spacing={2}>
+            <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="organigrama"
@@ -232,9 +229,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
-                      
-                        // disabled={ccd_current?.fecha_terminado !== null}
-                      
+                      disabled={ccd_current != null}
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -265,7 +260,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subserie"
                       variant="outlined"
-                      // disabled={ccd_current?.fecha_terminado !== null}
+                      disabled={ccd_current !== null}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -283,7 +278,7 @@ export const CcdScreen: React.FC = () => {
               {/* fourth new spaces, optional for the support route  */}
               <Grid item xs={12} sm={3}>
                 <Controller
-                  name="ruta_de_soporte_ccd"
+                  name="ruta_soporte"
                   control={control_create_ccd}
                   defaultValue=""
                   rules={{ required: false }}
@@ -295,14 +290,28 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
-                      // label="Subir archivo soporte ccs"
+                      // value={value}
                       variant="outlined"
                       type="file"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
+                      disabled={
+                        ccd_current?.fecha_terminado !== null &&
+                        ccd_current?.fecha_terminado !== '' &&
+                        ccd_current?.fecha_terminado !== undefined
+                      }
+                      InputLabelProps={{ shrink: true }}
+                      // onChange={onChange}
+                      onChange={(e) => {
+                        const files = (e.target as HTMLInputElement).files;
+
+                        if (files && files.length > 0) {
+                          onChange(files[0]);
+                          console.log(files[0]);
+                        }
+                        // console.log(value);
+                      }}
+                      error={!!error}
                       helperText={
-                        error != null
+                        error
                           ? 'Es obligatorio subir un archivo'
                           : 'Seleccione un archivo'
                       }
@@ -330,7 +339,7 @@ export const CcdScreen: React.FC = () => {
                       control_create_ccd._formValues.version
                     )
                   ).then((data: any) => {
-                  /*  if (data.data.length > 0) {
+                    /*  if (data.data.length > 0) {
 
                       set_ccd_current(data.data[0]);
                       set_save_ccd(false);
@@ -339,18 +348,21 @@ export const CcdScreen: React.FC = () => {
                       set_delete_ccd_is_active(true);
                     } */
                     console.log(data);
-                    if (data.data.length > 0 && control_create_ccd._formValues.nombre_ccd !== "" && control_create_ccd._formValues.version !== "") {
-                  dispatch(get_ccd_current(data.data[0]));
-                  set_consulta_ccd_is_active(true);
-                  set_title('Consultar CCD');
-                  // set_ccd_current(data);
-                  // set_save_ccd(false);
-                  // set_create_ccd_is_active(false);
-                  // set_update_ccd_is_active(false);
-                  // set_delete_ccd_is_active(false);
+                    if (
+                      data.data.length > 0 &&
+                      control_create_ccd._formValues.nombre_ccd !== '' &&
+                      control_create_ccd._formValues.version !== ''
+                    ) {
+                      dispatch(get_ccd_current(data.data[0]));
+                      set_consulta_ccd_is_active(true);
+                      set_title('Consultar CCD');
+                      // set_ccd_current(data);
+                      // set_save_ccd(false);
+                      // set_create_ccd_is_active(false);
+                      // set_update_ccd_is_active(false);
+                      // set_delete_ccd_is_active(false);
                     }
                   });
-                  
                 }}
               >
                 BUSCAR CCD
@@ -359,7 +371,7 @@ export const CcdScreen: React.FC = () => {
                 type="submit"
                 color="primary"
                 variant="contained"
-                startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
+                startIcon={<SyncIcon />}
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </Button>
@@ -369,6 +381,7 @@ export const CcdScreen: React.FC = () => {
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   clean_ccd();
+                  // clean formulario
                 }}
               >
                 LIMPIAR CAMPOS
@@ -396,16 +409,32 @@ export const CcdScreen: React.FC = () => {
               component="form"
               sx={{ mt: '20px' }}
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onSubmit={handle_submit(on_submit)}
               autoComplete="off"
             >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={2}>
                   <Controller
-                    name="sries"
+                    name="series"
                     control={control}
-                    render={() => (
-                      <Select options={list_sries} placeholder="Seleccionar" />
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
+                      <Select
+                        // {...field}
+                        value={value}
+                        onChange={(selectedOption: any) => {
+                          onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                          // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
+
+                          //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
+                          console.log('Valor seleccionado:', selectedOption);
+                        }}
+                        options={list_sries}
+                        isClearable
+                        isSearchable
+                        placeholder="Seleccionar"
+                      />
                     )}
                   />
                   {errors.sries !== null && (
@@ -434,13 +463,31 @@ export const CcdScreen: React.FC = () => {
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  <Controller
+                  {/* <Controller
                     name="subserie"
                     control={control}
                     render={() => (
                       <Select
                         options={list_subsries}
                         placeholder="Seleccionar"
+                      />
+                    )}
+                  /> */}
+                  <Controller
+                    name="subserie"
+                    control={control}
+                    render={({ field }) => (
+                      <Select
+                        {...field}
+                        options={list_subsries}
+                        placeholder="Seleccionar"
+                        onChange={(selectedOption) => {
+                          field.onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                          // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
+
+                          //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
+                          console.log('Valor seleccionado:', selectedOption);
+                        }}
                       />
                     )}
                   />
@@ -450,7 +497,7 @@ export const CcdScreen: React.FC = () => {
                         Este campo es obligatorio
                       </small>
                     </div>
-                  )}
+                  )} 
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <ButtonGroup
@@ -500,6 +547,7 @@ export const CcdScreen: React.FC = () => {
                     Unidades
                     <samp className="text-danger">*</samp>
                   </label>
+                  {/* este controler debe ser reemplazado por uno que me permite un dinamismo de los datos del ccd */}
                   <Controller
                     name="unidades_asignacion"
                     control={control}
@@ -583,18 +631,28 @@ export const CcdScreen: React.FC = () => {
                 <Grid item xs={12} sm={3}>
                   <Button
                     fullWidth
+                    onClick={() => {
+                      /* void dispatch(
+                        to_assign_ccds_service(
+                          ccd_current,
+                          set_flag_btn_finish,
+                          set_title_button_asing
+                        )
+                      ); */
+                      console.log('guardando la relación de asignaciones');
+                    }}
                     color="primary"
                     variant="contained"
                     startIcon={<SaveIcon />}
                   >
-                    {title_button_asing}
+                    EXPLORE TITS
                   </Button>
                 </Grid>
               </Grid>
             </Box>
             <Grid item>
               <Box sx={{ width: '100%' }}>
-                <DataGrid
+                {/* <DataGrid
                   density="compact"
                   autoHeight
                   rows={assignments_ccd}
@@ -602,7 +660,7 @@ export const CcdScreen: React.FC = () => {
                   pageSize={5}
                   rowsPerPageOptions={[5]}
                   experimentalFeatures={{ newEditingApi: true }}
-                />
+                /> */}
               </Box>
             </Grid>
             <Stack
@@ -614,7 +672,9 @@ export const CcdScreen: React.FC = () => {
               {flag_btn_finish ? (
                 <Button
                   onClick={() => {
-                    void dispatch(to_resume_ccds_service(set_flag_btn_finish,  ccd_current));
+                    void dispatch(
+                      to_resume_ccds_service(set_flag_btn_finish, ccd_current)
+                    );
                   }}
                   color="success"
                   variant="contained"
@@ -626,7 +686,7 @@ export const CcdScreen: React.FC = () => {
                 <Button
                   onClick={() => {
                     void dispatch(
-                      to_finished_ccds_service(set_flag_btn_finish,  ccd_current)
+                      to_finished_ccds_service(set_flag_btn_finish, ccd_current)
                     );
                   }}
                   color="success"
