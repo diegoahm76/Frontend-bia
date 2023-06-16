@@ -229,8 +229,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
-                      // disabled={ccd_current?.fecha_terminado !== null}
-
+                      disabled={ccd_current != null}
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -261,7 +260,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subserie"
                       variant="outlined"
-                      // disabled={ccd_current?.fecha_terminado !== null}
+                      disabled={ccd_current !== null}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -294,11 +293,16 @@ export const CcdScreen: React.FC = () => {
                       // value={value}
                       variant="outlined"
                       type="file"
+                      disabled={
+                        ccd_current?.fecha_terminado !== null &&
+                        ccd_current?.fecha_terminado !== '' &&
+                        ccd_current?.fecha_terminado !== undefined
+                      }
                       InputLabelProps={{ shrink: true }}
                       // onChange={onChange}
-                    onChange={(e) => {
+                      onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
-                        
+
                         if (files && files.length > 0) {
                           onChange(files[0]);
                           console.log(files[0]);
@@ -418,17 +422,15 @@ export const CcdScreen: React.FC = () => {
                       fieldState: { error }
                     }) => (
                       <Select
-                      // {...field}
+                        // {...field}
                         value={value}
-                        onChange={
-                          (selectedOption: any) => {
-                            onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
-                            // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
-  
-                            //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
-                            console.log('Valor seleccionado:', selectedOption);
-                          }
-                        }
+                        onChange={(selectedOption: any) => {
+                          onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                          // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
+
+                          //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
+                          console.log('Valor seleccionado:', selectedOption);
+                        }}
                         options={list_sries}
                         isClearable
                         isSearchable
@@ -630,6 +632,16 @@ export const CcdScreen: React.FC = () => {
                 <Grid item xs={12} sm={3}>
                   <Button
                     fullWidth
+                    onClick={() => {
+                      /* void dispatch(
+                        to_assign_ccds_service(
+                          ccd_current,
+                          set_flag_btn_finish,
+                          set_title_button_asing
+                        )
+                      ); */
+                      console.log('guardando la relación de asignaciones');
+                    }}
                     color="primary"
                     variant="contained"
                     startIcon={<SaveIcon />}

@@ -258,27 +258,34 @@ export const create_ccds_service: any = (
   };
 };
 // Update Cuadro de Clasificación Documental
-export const update_ccds_service: any = (ccd: {
-  nombre: any;
-  version: any;
-}) => {
+export const update_ccds_service: any = (
+  formData: any, 
+  data_create_ccd: any,
+) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
-  ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().ccd;
+  ): Promise<any> => {
+
+    // console.log(data_create_ccd, 'ccd_current')
+    // console.log(formData, 'formData')
+    // const { ccd_current } = getState().ccd;
     try {
-      const id_ccd: number = ccd_current.id_ccd;
-      const { data } = await api.patch(`gestor/ccd/update/${id_ccd}/`, ccd);
-      dispatch(
-        get_ccd_current({
-          ...ccd_current,
-          nombre: ccd.nombre,
-          version: ccd.version
+      const id_ccd: number = data_create_ccd.id_ccd;
+      const { data } = await api.patch(`gestor/ccd/update/${id_ccd}/`, {
+        ...data_create_ccd,
+        nombre: data_create_ccd.nombre_ccd,
+        version: data_create_ccd.version,
+        ruta_soporte: data_create_ccd.ruta_soporte,
+      });
+      console.log(data_create_ccd, 'data_create_ccd')
+      /* dispatch(
+        get_ccd_current(
+          ...data_create_ccd,
         })
-      );
+      ); */
       control_success(data.detail);
-      return data;
+      // return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
