@@ -97,7 +97,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="CATÁLOGO DE BIENES" />
+          <Title title="Catálogo de bienes " />
           <Stack direction="row" spacing={2} sx={{ m: "20px 0" }}>
             <Button
               variant="outlined"

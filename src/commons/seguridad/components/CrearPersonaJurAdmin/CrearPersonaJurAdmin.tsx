@@ -20,7 +20,7 @@ import dayjs, { type Dayjs } from 'dayjs';
 import type {
   ClaseTercero,
   CrearPersonJuridicaAdmin,
-  PropsRegister,
+  PropsRegisterAdministrador,
 } from '../../../../interfaces/globalModels';
 import { Title } from '../../../../components/Title';
 import {
@@ -32,7 +32,7 @@ import { use_register_persona_j } from '../../../auth/hooks/registerPersonaJurid
 import { type AxiosError } from 'axios';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const CrearPersonaJurAdmin: React.FC<PropsRegister> = ({
+export const CrearPersonaJurAdmin: React.FC<PropsRegisterAdministrador> = ({
   numero_documento,
   tipo_documento,
   tipo_persona,
@@ -43,7 +43,8 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegister> = ({
   isValid: is_valid,
   watch,
   getValues,
-}: PropsRegister) => {
+  reset,
+}: PropsRegisterAdministrador) => {
   const {
     is_saving,
     paises_options,
@@ -125,6 +126,7 @@ export const CrearPersonaJurAdmin: React.FC<PropsRegister> = ({
       data.tipo_persona = tipo_persona;
       await crear_persona_juridica(data as CrearPersonJuridicaAdmin);
       control_success('la persona se creó correctamente');
+      reset(); // resetea el formulario
     } catch (error) {
       control_error('hubo un error al crear, intentelo de nuevo');
     }

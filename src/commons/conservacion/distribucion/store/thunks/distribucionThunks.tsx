@@ -259,6 +259,31 @@ export const edit_traslado_service = (
   };
 };
 
+// crear cambio de etapa
+export const annul_transfer_service = (
+  id: number,
+  transfer: any,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(`conservacion/traslados/anular-traslados/${id}/`, transfer);
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if (data.success) {
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('add_siembra_service');
+      console.log(error)
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // // borrar siembra
 // export const delete_siembra_service = (
 //   id: number
