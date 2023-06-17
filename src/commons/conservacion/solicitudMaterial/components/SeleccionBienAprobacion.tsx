@@ -7,6 +7,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
 import { set_bienes, set_bienes_solicitud, set_current_bien } from "../store/slices/indexSolicitud";
 import { useForm } from "react-hook-form";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { get_bienes_service, } from "../store/thunks/solicitudViveroThunks";
 
 

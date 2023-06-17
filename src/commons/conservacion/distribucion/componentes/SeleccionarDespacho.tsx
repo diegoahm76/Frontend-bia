@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { Grid} from '@mui/material';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
@@ -38,6 +39,7 @@ const SeleccionarDespacho = ({
     const dispatch = useAppDispatch();
     const [file, set_file] = useState<any>(null);
     const [file_name, set_file_name] = useState<any>("");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [document_type, set_document_type] = useState<IList[]>(initial_options);
 
 
