@@ -127,6 +127,7 @@ export const CcdScreen: React.FC = () => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      // disabled={ccd_current != null}
                       value={field.value}
                       options={list_organigrams}
                       placeholder="Seleccionar"
