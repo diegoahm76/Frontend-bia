@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
@@ -7,7 +8,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_current_mezcla, set_bienes,set_current_bien,set_preparaciones,set_current_preparacion, set_preparacion_bienes
+  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_bienes, set_preparaciones, set_preparacion_bienes
 } from '../slice/produccionSlice';
 import { api } from '../../../../../api/axios';
 
