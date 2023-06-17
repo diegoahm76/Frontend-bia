@@ -98,7 +98,7 @@ export const add_organigrams_service:any = (organigrama: any, set_position_tab_o
         try {
             console.log(organigrama);   
             const { data } = await api.post("transversal/organigrama/create/", organigrama);
-            
+            console.log(data);
             dispatch(get_organigrams_service());
             dispatch(current_organigram(data.detail));
             control_success("El organigrama se agrego correctamente");
@@ -142,6 +142,7 @@ export const to_finalize_organigram_service:any = (id: string, set_position_tab_
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.put(`transversal/organigrama/finalizar/${id}/`);
+            console.log(data);
             dispatch(get_organigrams_service());
             void Swal.fire({
                 position: "center", icon: "info", title: "Atención", text: data.detail,
@@ -161,6 +162,7 @@ export const to_resume_organigram_service:any = (id: string) => {
   return async (dispatch: Dispatch<any>) => {
       try {
           const { data } = await api.put(`transversal/organigrama/reanudar-organigrama/${id}/`);
+          console.log(data);
           dispatch(get_organigrams_service());
           void Swal.fire({
               position: "center", icon: "info", title: "Atención", text: data.detail,
@@ -332,6 +334,7 @@ export const get_organigramas_posibles:any = () => {
       const { data } = await api.get(
         'transversal/organigrama/get-organigramas-posibles/'
       );
+      console.log(data);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

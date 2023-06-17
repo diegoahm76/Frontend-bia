@@ -12,7 +12,7 @@ export const DetalleFacilidadPago: React.FC = () => {
 
   return (
     <>
-      <Title title={`Detalle de la Facilidad de Pago ${'#2121231'}`} />
+      <Title title={estado !== 'Cancelada/Anulada' ? `Detalle de la Facilidad de Pago ${'#2121231'}` : `Facilidad de Pago Cancelada o Bloqueada ${'#2121231'}`} />
       <Grid
         container
         sx={{
@@ -245,7 +245,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                     startIcon={<Add />}
                     sx={{ marginTop: '30px' }}
                     onClick={() => {
-                      navigate('/') // aún no se ha construido esta pantalla
+                      navigate('../reposicion_externa')
                     }}
                   >
                     Crear recurso de reposición

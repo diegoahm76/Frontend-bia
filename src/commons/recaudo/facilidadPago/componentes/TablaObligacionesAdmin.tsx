@@ -66,7 +66,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
       ),
     },
     {
-      field: 'obligacion',
+      field: 'numero_radicacion',
       headerName: 'Número Radicación F.P.',
       width: 200,
       renderCell: (params) => (
@@ -250,8 +250,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
         onClose={handle_close}
         maxWidth="xs"
       >
-        <Box component="form"
-          onSubmit={()=>{}}>
+        <Box component="form">
           <DialogTitle>¿Está seguro de realizar la reasignación de usuario?</DialogTitle>
           <DialogActions>
             <Button
@@ -259,7 +258,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
               color="primary"
               startIcon={<Close />}
               onClick={() => {
-                handle_open_sub();
+                handle_open_sub()
                 set_modal_option('no')
                 handle_close()
             }}
@@ -286,17 +285,14 @@ export const TablaObligacionesAdmin: React.FC = () => {
         onClose={handle_close_sub}
         maxWidth="xs"
       >
-        <Box component="form"
-          onSubmit={()=>{}}>
+        <Box component="form">
           <DialogTitle>{modal_option === 'si' ? 'Reasignación ejecutada con éxito' : 'Reasignación cancelada'}</DialogTitle>
           <DialogActions>
             <Button
               variant='outlined'
               color="primary"
               startIcon={<Close />}
-              onClick={()=>{
-                handle_close_sub()
-            }}
+              onClick={handle_close_sub}
             >
               Cerrar
             </Button>

@@ -20,13 +20,14 @@ export interface Obligacion {
   nombre: string;
   fecha_inicio: string;
   id_expediente: number;
-  nroResolucion: string; // este parametro no esta contemplado en back
+  numero_resolucion: string;
   monto_inicial: string;
   valor_intereses: string;
   dias_mora: number;
 }
 
 export interface ObligacionesUsuario {
+  id_deudor: number;
   nombre_completo: string;
   numero_identificacion: string;
   email: string;
@@ -37,7 +38,7 @@ export interface FacilidadPago {
   id_facilidad: number;
   nombre_de_usuario: string;
   identificacion: string;
-  obligacion: string; // este parametro no esta contemplado en back nro radicación fp
+  numero_radicacion: string;
   fecha_generacion: string;
 }
 
@@ -87,17 +88,28 @@ export interface Contacto {
 }
 
 export interface RegistroFacilidadPago {
-  id_deudor_actuacion: number; // de dónde lo saco
+  id_deudor_actuacion: number;
   id_tipo_actuacion: number;
-  id_funcionario: number; // no tiene sentido
+  id_funcionario: number;
   fecha_generacion: string;
   observaciones: string;
   periodicidad: number;
   cuotas: number;
-  id_tasas_interes: number; // para que es y de dónde lo saco
+  id_tasas_interes: number;
   documento_soporte: string;
   consignacion_soporte: string;
   documento_garantia: string;
   documento_no_enajenacion: string;
   notificaciones: boolean;
+}
+
+export interface Bien {
+  cod_deudor : number;
+  id_tipo_bien : number;
+  descripcion : string;
+  direccion : string;
+  estado : string;
+  documento_soporte : string;
+  valor : number;
+  id_ubicacion : string;
 }

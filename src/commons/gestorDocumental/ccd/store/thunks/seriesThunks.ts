@@ -1,28 +1,34 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { type Dispatch } from 'react';
-import Swal from 'sweetalert2';
+// Axios
 import { api } from '../../../../../api/axios';
 // Types
 import { type AxiosError, type AxiosResponse } from 'axios';
 // Reducers
 import { get_series_ccd } from '../slices/seriesSlice';
+import { control_error, control_success } from './ccdThunks';
 // Interfaces
-import { type ISeriesObject } from '../../interfaces/ccd';
+// import { type ISeriesObject } from '../../interfaces/ccd';
 
 // Consulta series documentales
-export const get_series_service: any = () => {
+export const get_series_service: any = (id_ccd: any) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().ccd;
-    const id_ccd: number = ccd_current.id_ccd;
-    console.log(id_ccd);
+    /* const { ccd } = getState((state: any) => state.ccd.ccd_current);
+    const { id} = ccd.ccd_current;
+    console.log(id) */
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const { data } = await api.get(`gestor/ccd/series/get/${id_ccd}/`);
-      dispatch(get_series_ccd(data.data));
+      const response = await api.get(`gestor/ccd/series/get-by-id-ccd/${id_ccd}/`);
+      console.log(
+        '🚀 ~ file: seriesThunks.ts ~ line 30 ~ return ~ response',
+        response.data
+      )
+      dispatch(get_series_ccd(response.data.data));
       // notificationSuccess(data.detail);
-      return data;
+      return response.data;
     } catch (error: any) {
       // notificationError(error.response.data.detail);
       return error as AxiosError;
@@ -30,53 +36,69 @@ export const get_series_service: any = () => {
   };
 };
 
+
+//! se debe revisar el servicio porque las peticiones http deben ir por separado no dentro de una misma peticion el post, put and delete
+
+
 // Crear, actualizar y/o eliminar series
-export const create_series_service:any = (
-  newSeries: ISeriesObject[],
-  clean: () => void
+export const delete_series_service:any = (
+  newSeries: any,
+  params_ccd_info: any,
+  clean: () => void,
 ) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().ccd;
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const element_modal_id = document.getElementById(
-      'modal-serie-subserie-id'
-    )!;
     try {
-      console.log(newSeries)
-      const id_ccd: number = ccd_current.id_ccd;
-      const { data } = await api.post(
-        `gestor/ccd/series/create/`,
-        /* `gestor/ccd/series/update/${id_ccd}/`, */
-        {
-          id_ccd,
-          series: newSeries
-        }
+      const { data } = await api.delete(
+        `gestor/ccd/series/delete/${params_ccd_info.row.id_serie_doc}/`
       );
-      dispatch(get_series_service());
+      dispatch(get_series_service(
+        params_ccd_info.id
+      ));
       clean();
-      void Swal.fire({
-        target: element_modal_id,
-        position: 'center',
-        icon: 'success',
-        title: data.detail,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-        timer: 2000
-      });
+      console.log(
+        '🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data',
+        data
+      );
+
+      control_success(data.detail);
       return data;
     } catch (error: any) {
-      void Swal.fire({
-        target: element_modal_id,
-        position: 'center',
-        icon: 'error',
-        title: error.response.data.detail,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-        timer: 2000
-      });
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+//! post action for create series
+export const create_series_service:any = (
+  body: any,
+  clean: () => void,
+) => {
+  return async (
+    dispatch: Dispatch<any>,
+    getState: any
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      const { data } = await api.post(
+        `gestor/ccd/series/create/`,
+        body
+      );
+      dispatch(get_series_service(
+        body.id_ccd
+      ));
+      clean();
+      console.log(
+        '🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data',
+        data
+      );
+
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };

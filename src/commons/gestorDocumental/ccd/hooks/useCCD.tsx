@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 // Components
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
@@ -20,14 +21,17 @@ import {
   get_organigrams_service,
   get_unitys_service,
 } from '../../organigrama/store/thunks/organigramThunks';
-import { get_series_service } from '../store/thunks/seriesThunks';
-import { get_subseries_service } from '../store/thunks/subseriesThunks';
+// import { get_series_service } from '../store/thunks/seriesThunks';
+// import { get_subseries_service } from '../store/thunks/subseriesThunks';
 import {
-  create_assignments_service,
-  get_assignments_service,
+  create_assignments_service, get_assignments_service,
+ // get_assignments_service,
 } from '../store/thunks/assignmentsThunks';
 import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
+import { get_series_service } from '../store/thunks/seriesThunks';
+import { get_subseries_service } from '../store/thunks/subseriesThunks';
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
   const dispatch = useAppDispatch();
@@ -46,22 +50,23 @@ const use_ccd = () => {
   const [title_button_asing, set_title_button_asing] =
     useState<string>('Guardar relación');
   const [create_is_active, set_create_is_active] = useState<boolean>(false);
+  const [create_sub_serie_active, set_create_sub_serie_active] = useState<boolean>(false);
   const [consulta_ccd_is_active, set_consulta_ccd_is_active] =
     useState<boolean>(false);
   const [save_ccd, set_save_ccd] = useState<boolean>(false);
-  const [list_unitys, set_list_unitys] = useState<IList[]>([
+  const [list_unitys, set_list_unitys] = useState<IList[] | any>([
     {
       label: '',
       value: 0,
     },
   ]);
-  const [list_organigrams, set_list_organigrams] = useState<IList[]>([
+  const [list_organigrams, set_list_organigrams] = useState<IList[] | any>([
     {
       label: '',
       value: 0,
     },
   ]);
-  const [list_sries, set_list_sries] = useState<IList[]>([
+  const [list_sries, set_list_sries] = useState<IList[] | any>([
     {
       label: '',
       value: 0,
@@ -83,6 +88,9 @@ const use_ccd = () => {
     unidades_organigrama: { label: '', value: 0 },
     version: '',
     fecha_terminado: '',
+    valor_aumento_serie: '',
+    valor_aumento_subserie: '',
+    ruta_soporte: null,
   };
   // Estado Inicial de Formulario de Crear Asignación
   const initial_state_asig: ICCDAsingForm = {
@@ -114,7 +122,7 @@ const use_ccd = () => {
     formState: { errors },
   } = useForm({ defaultValues: initial_state_asig });
   const data_asing = watch();
-  //  console.log(data_asing, 'data_asing')
+  // console.log(data_asing, 'data_asing')
 
   // useForm Crear CCD
   const {
@@ -126,13 +134,20 @@ const use_ccd = () => {
     formState: { errors: errors_create_ccd },
   } = useForm<ICCDForm>({ defaultValues: initial_state });
   const data_create_ccd = watch_create_ccd();
+  console.log(data_create_ccd, 'data_create_ccd')
 
   //  UseEffect para obtener organigramas
-  useEffect(() => {
+ useEffect(() => {
+    console.log(data_create_ccd, 'data_create_ccd')
     if (ccd_current !== null) {
-      const result_name = organigram.filter(
-        (item) => item.id_organigrama === ccd_current.id_organigrama
-      );
+
+      const result_name = organigram.filter((item) => {
+      // console.log(ccd_current, 'ccd_current')
+      // console.log(organigram, 'organigrama')
+      
+        return item.id_organigrama === ccd_current.id_organigrama
+      })
+      console.log('result_name', result_name)
       const obj: ICCDForm = {
         id_ccd: ccd_current.id_ccd,
         nombre_ccd: ccd_current.nombre,
@@ -140,10 +155,21 @@ const use_ccd = () => {
           label: result_name[0].nombre,
           value: ccd_current.id_organigrama,
         },
-        unidades_organigrama: { label: '', value: 0 },
+        unidades_organigrama: {
+          label: ccd_current.nombre_unidad_organizacional,
+          value: ccd_current.nombre_unidad_organizacional,
+         },
         version: ccd_current.version,
         fecha_terminado: ccd_current.fecha_terminado,
+        valor_aumento_serie: ccd_current.valor_aumento_serie,
+        valor_aumento_subserie: ccd_current.valor_aumento_subserie,
+        ruta_soporte: ccd_current.ruta_soporte,
       };
+      /* console.log(
+        obj,
+        'obj'
+      )
+      */
       reset_create_ccd(obj);
       set_save_ccd(true);
     }
@@ -179,17 +205,20 @@ const use_ccd = () => {
   //  UseEffect para obtener organigramas
   useEffect(() => {
     void dispatch(get_organigrams_service());
-  }, [ccd_current]);
+  }, [
+     ccd_current, 
+  ]);
   //  UseEffect para obtener series
+  //! se retira de momento al mandar un error en la petición durante la primer petición al render de la pantalla
   useEffect(() => {
     void dispatch(get_series_service());
   }, [ccd_current]);
   //  UseEffect para obtener subSeries
-  useEffect(() => {
+ useEffect(() => {
     void dispatch(get_subseries_service());
   }, [ccd_current]);
   //  UseEffect para obtener asignaciones
-  useEffect(() => {
+   useEffect(() => {
     void dispatch(get_assignments_service());
   }, [ccd_current]);
 
@@ -240,11 +269,13 @@ const use_ccd = () => {
     create_asing();
   };
   // submit Crear CCD
-  const on_submit_create_ccd = (data: any): void => {
-    console.log('data', data);
-    console.log('epa la patria', ccd_current);
+  const on_submit_create_ccd = (e: any): void => {
+    e.preventDefault();
+    console.log('hola a todos perros hps desde la vida')
+    console.log(data_create_ccd, 'data_create_ccd')
+    // console.log('epa la patria', ccd_current);
     if (ccd_current !== null) {
-      update_ccd();
+      update_ccd(data_create_ccd);
     } else {
       create_ccd();
     }
@@ -252,22 +283,46 @@ const use_ccd = () => {
 
   // Funcion para crear el CCD
   const create_ccd = (): void => {
-    const new_ccd = {
+    const new_ccd: any = {
       id_organigrama: data_create_ccd.organigrama.value,
       version: data_create_ccd.version,
       nombre: data_create_ccd.nombre_ccd,
+      valor_aumento_serie: data_create_ccd.valor_aumento_serie,
+      valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
+      ruta_soporte: data_create_ccd.ruta_soporte,
     };
-    void dispatch(create_ccds_service(new_ccd, set_save_ccd));
+  
+    // Convertir el objeto new_ccd en un objeto FormData
+    const formData: any = new FormData();
+    for (const key in new_ccd) {
+      if (new_ccd[key] !== null) {
+        formData.append(key, new_ccd[key]);
+      }
+    }
+  
+    console.log('new_ccd', new_ccd);
+    void dispatch(create_ccds_service(formData, set_save_ccd));
   };
-  // Funcion para actualizar el CCD
-  const update_ccd = (): void => {
-    const new_ccd = {
-      id_organigrama: data_create_ccd.organigrama.value,
-      version: data_create_ccd.version,
+
+  const update_ccd = ( data_create_ccd: any ): void => {
+    const new_ccd: any = {
+      ...data_create_ccd,
       nombre: data_create_ccd.nombre_ccd,
+      version: data_create_ccd.version,
+      ruta_soporte: data_create_ccd.ruta_soporte,
     };
-    void dispatch(update_ccds_service(new_ccd));
+  
+    // Convertir el objeto new_ccd en un objeto FormData
+    const formData: any = new FormData();
+    for (const key in new_ccd) {
+      if (new_ccd[key] !== null) {
+        formData.append(key, new_ccd[key]);
+      }
+    }
+  
+    void dispatch(update_ccds_service(formData));
   };
+  
   // console.log(data_asing, 'data_asing');
 
   // Funcion para crear la asignacion
@@ -320,17 +375,20 @@ const use_ccd = () => {
   // Funcio_s para limpiar el formulario de Crear CCD
   const clean_ccd = (): void => {
     reset_create_ccd(initial_state);
+    reset(initial_state_asig);
     set_save_ccd(false);
     dispatch(get_ccd_current(null));
-    console.log(ccd_current, 'ccd_current')
     clean_asing();
   };
   // Funcion para limpiar el formulario de asignar CCD
-  const clean_asing = (): void => {
-    reset(initial_state_asig);
-    set_title_button_asing('Guardar relación');
-    dispatch(get_assignments_ccd_current(null));
-  };
+  //! hasta el momento funciona de manera adecuada
+  const clean_asing = useCallback((): void => {
+  reset(initial_state_asig);
+  set_title_button_asing('Guardar relación');
+  dispatch(get_assignments_ccd_current(null));
+  dispatch(get_series_service('0'));
+  dispatch(get_subseries_service('0'));
+}, [dispatch, reset, set_title_button_asing]);
 
   // Funcion para eliminar Asignaciones
   // const delete_asing = (id: any): void => {
@@ -441,6 +499,9 @@ const use_ccd = () => {
     handle_submit,
     handle_submit_create_ccd,
     clean_ccd,
+
+    create_sub_serie_active,
+    set_create_sub_serie_active,
   };
 };
 

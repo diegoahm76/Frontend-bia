@@ -1,0 +1,235 @@
+
+import { toast, type ToastContent } from 'react-toastify';
+
+import { api } from '../../../../api/axios';
+import { type Dispatch } from 'react';
+import { type AxiosError } from 'axios';
+import { get_unidad_organizacional, set_current_funcionario, set_current_solicitud, set_funcionarios, set_numero_solicitud, set_nurseries, set_persona_solicita } from './indexSolicitud';
+
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+    toast.error(message, {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+    });
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const control_success = (message: ToastContent) =>
+    toast.success(message, {
+        position: 'bottom-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'light'
+    });
+
+
+
+// obtener persona por documento
+export const get_funcionario_document_service = (
+    type: string,
+    document: number | "",
+    id_unidad_para_la_que_solicita: number | null | string,
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`almacen/solicitudes/search-funcionario/?tipo_documento==${type ?? ""}&numero_documento=${document ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? ""}`);
+            if ("data" in data) {
+                if (data.data.length > 0) {
+                    dispatch(set_current_funcionario(data.data))
+                    control_success("Se selecciono la persona ")
+                } else {
+                    control_error("No se encontro la persona")
+                }
+            } else {
+                control_error(data.detail)
+            }
+            return data;
+        } catch (error: any) {
+            console.log('get_person_document_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
+// obtener persona por iddocumento
+export const get_person_id_service = (id: number,): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`personas/get-by-id/${id}/`);
+            console.log(data)
+            if ("data" in data) {
+                dispatch(set_persona_solicita({ id_persona: data.data.id_persona, unidad_organizacional: data.data.nombre_unidad_organizacional_actual, nombre: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
+
+            } else {
+                control_error(data.detail)
+            }
+            return data;
+        } catch (error: any) {
+            console.log('get_person_document_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// obtener funcionario por filtro
+
+export const get_funcionario_service = (
+    type: string | null,
+    document: number | null | string,
+    primer_nombre: string | null,
+    primer_apellido: string | null,
+    id_unidad_para_la_que_solicita: number | null | string,
+
+
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+
+            const { data } = await api.get(
+                `almacen/solicitudes/search-funcionario-filtros/?tipo_documento=${document ?? ""}&primer_nombre=${primer_nombre ?? ""}&primer_apellido=${primer_apellido ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? ""}`
+
+            );
+            console.log(data)
+            dispatch(set_funcionarios(data.data));
+            if (data.data.length > 0) {
+                control_success("Se econtrarón funcionarios")
+            } else {
+                control_error("No se econtrarón funcionarios")
+            }
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+
+// obtener persona por iddocumento
+export const get_funcionario_id_service = (id: number | null,): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`personas/get-by-id/${id ?? ""}/`);
+            if ("data" in data) {
+                // console.log(data)
+
+                dispatch(set_current_funcionario({ id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, nombre_unidad_organizacional_actual: data.data.nombre_unidad_organizacional_actual, nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido) }))
+
+            } else {
+                control_error(data.detail)
+            }
+            return data;
+        } catch (error: any) {
+            console.log('get_fiuncionario_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// obtener numero de solicitud
+export const get_num_solicitud = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('conservacion/solicitudes/get-numero-consecutivo/');
+            console.log(data)
+
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                dispatch(set_numero_solicitud(data.data))
+            }
+            return data;
+        } catch (error: any) {
+            return error as AxiosError;
+        }
+    };
+}
+
+// obtener niveles organizacioneles
+
+export const get_uni_organizacional = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get('transversal/organigrama/unidades/get-list/organigrama-actual/');
+            console.log(data.data, "data")
+            dispatch(get_unidad_organizacional(data.data));
+            return data;
+        } catch (error: any) {
+            return error as AxiosError;
+        }
+    };
+};
+
+// OBTENER SOLICITUD
+export const get_solicitud_service = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`conservacion/solicitudes/get-listar-solicitudes/`);
+            console.log('Solicitudes recuperadas:', data);
+            dispatch(set_current_solicitud(data));
+
+            // dispatch(setID(Number(id)))
+            return data;
+        } catch (error: any) {
+            console.log('get_solicitud_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+
+// OBTENER VIVEROS
+export const get_nurcery = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`conservacion/bajas/get-viveros/`);
+            console.log('Viveros Recuperados:', data);
+            dispatch(set_nurseries(data.data));
+
+            // dispatch(setID(Number(id)))
+            return data;
+        } catch (error: any) {
+            console.log('get_nurcery');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
+// OBTENER VIVEROS
+export const get_municipios = (): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`choices/municipios/`);
+            console.log('Municipios Recuperados:', data);
+            dispatch(set_nurseries(data));
+
+            // dispatch(setID(Number(id)))
+            return data;
+        } catch (error: any) {
+            console.log('get_municipios');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};

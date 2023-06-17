@@ -107,7 +107,7 @@ const on_submit_confirm = (data: IDespacho) => {
                     padding={2}
                     spacing={2}
                 >
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={12} md={3} >
                         <FormButton
                             variant_button="contained"
                             on_click_function={handle_submit(on_submit_save)}

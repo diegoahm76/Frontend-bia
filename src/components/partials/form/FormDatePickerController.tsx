@@ -65,6 +65,7 @@ const FormDatePickerController = ({
                             <FormControl fullWidth>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
+                                        disabled={disabled}
                                         label={label}
                                         value={value}
                                         onChange={onChange}

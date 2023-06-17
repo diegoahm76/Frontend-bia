@@ -120,9 +120,9 @@ const EditarBienDialogForm = ({
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container>
+          <Grid container spacing={2}>
             <Title title="Tipificar bien"></Title>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="nombre_cientifico"
                 control={control_bien}
@@ -151,7 +151,7 @@ const EditarBienDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <TextField
                 margin="dense"
                 fullWidth
@@ -170,7 +170,7 @@ const EditarBienDialogForm = ({
                 ))}
               </TextField>
             </Grid>
-            <Grid item xs={11} md={5} margin={1}>
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="es_semilla_vivero"
                 control={control_bien}
