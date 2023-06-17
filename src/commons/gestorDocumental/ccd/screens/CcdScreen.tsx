@@ -127,7 +127,7 @@ export const CcdScreen: React.FC = () => {
                   render={({ field }) => (
                     <Select
                       {...field}
-                      // disabled={ccd_current != null}
+                      isDisabled={ccd_current != null}
                       value={field.value}
                       options={list_organigrams}
                       placeholder="Seleccionar"
@@ -149,6 +149,7 @@ export const CcdScreen: React.FC = () => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      isDisabled={ccd_current != null}
                       value={field.value}
                       options={list_unitys}
                       placeholder="Seleccionar"
@@ -372,7 +373,9 @@ export const CcdScreen: React.FC = () => {
                 type="submit"
                 color="primary"
                 variant="contained"
-                startIcon={<SyncIcon />}
+                startIcon={
+                  ccd_current != null ? <SyncIcon/> : <SaveIcon />
+                }
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </Button>
@@ -646,7 +649,9 @@ export const CcdScreen: React.FC = () => {
                     variant="contained"
                     startIcon={<SaveIcon />}
                   >
-                    EXPLORE TITS
+                    {
+                      title_button_asing
+                    }
                   </Button>
                 </Grid>
               </Grid>

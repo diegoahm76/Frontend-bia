@@ -67,7 +67,8 @@ export const get_finished_ccd_service = (): any => {
 // Obtener Cuadro de Clasificación Documental
 export const get_classification_ccds_service = (
   name: string,
-  version: string
+  version: string,
+  id_ccd?: any,
 ): any => {
   // console.log('get_classification_ccds_service');
 
@@ -79,6 +80,10 @@ export const get_classification_ccds_service = (
       const { data } = await api.get(
         `gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`
       );
+      console.log(name, version, 'name, version');
+      dispatch(get_ccds(data.data));
+      dispatch(get_ccd_current(id_ccd === undefined ? data.data[0] : data.data.find((ccd: any) => ccd.id_ccd === id_ccd)));
+      get_series_service(id_ccd)(dispatch);
       // console.log('helllooo');
       if (name === '' || version === '') {
         await notification_error(
@@ -86,12 +91,7 @@ export const get_classification_ccds_service = (
         );
       } else if (data.data.length === 0) {
         await notification_error(`No se encontró el CCD ${name} - ${version}`);
-      } else {
-        // console.log(data.data);
-        dispatch(get_ccds(data.data));
-        get_series_service(data.data[0].id_ccd)(dispatch);
       }
-
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -259,7 +259,6 @@ export const create_ccds_service: any = (
 };
 // Update Cuadro de Clasificación Documental
 export const update_ccds_service: any = (
-  formData: any, 
   data_create_ccd: any,
 ) => {
   return async (
@@ -278,12 +277,12 @@ export const update_ccds_service: any = (
         version: data_create_ccd.version,
         ruta_soporte: data_create_ccd.ruta_soporte,
       });
+      console.log(
+        '🚀 ~ file: ccds.ts ~ line 164 ~ return ~ data',
+        data.data
+      )
       console.log(data_create_ccd, 'data_create_ccd')
-      /* dispatch(
-        get_ccd_current(
-          ...data_create_ccd,
-        })
-      ); */
+      dispatch(get_ccd_current(data.data));
       control_success(data.detail);
       // return data;
     } catch (error: any) {
