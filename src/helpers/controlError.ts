@@ -14,7 +14,7 @@ export const control_error = (error: any | unknown): void => {
     auto_close = 4000;
     setTimeout(() => {
       localStorage.clear();
-      location.reload();
+      window.location.reload();
     }, 5000);
   } else {
     message = error.toString();
