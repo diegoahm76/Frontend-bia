@@ -1,3 +1,3 @@
 export * from './DetalleLiquidacion'
-export * from './EditarLiquidacion'
+export * from './GenerarLiquidacion'
 export * from './GridLiquidacion'

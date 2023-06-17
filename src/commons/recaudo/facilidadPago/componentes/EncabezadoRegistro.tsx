@@ -3,9 +3,18 @@ import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { type Deudor } from "../interfaces/interfaces";
+import { useSelector } from 'react-redux';
+
+interface RootState {
+  deudores: {
+    deudores: Deudor;
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EncabezadoRegistro: React.FC = () => {
+  const { deudores } = useSelector((state: RootState) => state.deudores);
 
   return (
     <>
@@ -34,7 +43,7 @@ export const EncabezadoRegistro: React.FC = () => {
                   label="Nombre o Razón Social"
                   size="small"
                   fullWidth
-                  value={'Marcela Cardenas'}
+                  value={''.concat(deudores.nombres, ' ', deudores.apellidos)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -43,7 +52,7 @@ export const EncabezadoRegistro: React.FC = () => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={'138223930'}
+                  value={''.concat(deudores.identificacion)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -52,7 +61,7 @@ export const EncabezadoRegistro: React.FC = () => {
                   label="Correo Electrónico"
                   size="small"
                   fullWidth
-                  value={'marce@gmail.com'}
+                  value={''.concat(deudores.email)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -61,7 +70,7 @@ export const EncabezadoRegistro: React.FC = () => {
                   label="Dirección Notificación"
                   size="small"
                   fullWidth
-                  value={'Cl 56 #220-120'}
+                  value={''.concat(deudores.ubicacion)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
