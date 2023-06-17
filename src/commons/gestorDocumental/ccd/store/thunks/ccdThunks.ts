@@ -3,54 +3,13 @@
 import { type Dispatch } from 'react';
 import { api } from '../../../../../api/axios';
 import { type AxiosError, type AxiosResponse } from 'axios';
-import Swal from 'sweetalert2';
-import { toast, type ToastContent } from 'react-toastify';
 // Reducers
 // Interfaces
 import { get_ccd_current, get_ccds } from '../slices/ccdSlice';
 import { get_series_service } from './seriesThunks';
 // import { get_subseries_service } from './subseriesThunks';
 import { type DataCambioCCDActual } from '../../interfaces/ccd';
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const notification_error = async (
-  message = 'Algo pasó, intente de nuevo',
-  text = ''
-) =>
-  await Swal.mixin({
-    position: 'center',
-    icon: 'error',
-    title: message,
-    text,
-    showConfirmButton: true,
-    confirmButtonText: 'Aceptar'
-  }).fire();
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const control_error = (message: ToastContent) =>
-  toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light'
-  });
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const control_success = (message: ToastContent) =>
-  toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: 'light'
-  });
+import { control_error, control_success, notification_error } from '../../utils/success_errors';
 
 // Obtener los CCDS terminados
 export const get_finished_ccd_service = (): any => {
@@ -81,9 +40,7 @@ export const get_classification_ccds_service = (
         `gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`
       );
       console.log(name, version, 'name, version');
-      dispatch(get_ccds(data.data));
-      dispatch(get_ccd_current(id_ccd === undefined ? data.data[0] : data.data.find((ccd: any) => ccd.id_ccd === id_ccd)));
-      get_series_service(id_ccd)(dispatch);
+     
       // console.log('helllooo');
       if (name === '' || version === '') {
         await notification_error(
@@ -91,6 +48,10 @@ export const get_classification_ccds_service = (
         );
       } else if (data.data.length === 0) {
         await notification_error(`No se encontró el CCD ${name} - ${version}`);
+      }else{
+        dispatch(get_ccds(data.data));
+        dispatch(get_ccd_current(id_ccd === undefined ? data.data[0] : data.data.find((ccd: any) => ccd.id_ccd === id_ccd)));
+        get_series_service(id_ccd)(dispatch);
       }
       return data;
     } catch (error: any) {
@@ -259,6 +220,7 @@ export const create_ccds_service: any = (
 };
 // Update Cuadro de Clasificación Documental
 export const update_ccds_service: any = (
+  update_ccd: any,
   data_create_ccd: any,
 ) => {
   return async (
@@ -341,3 +303,6 @@ export const cambio_ccd_actual: any = (data_cambio: DataCambioCCDActual) => {
     }
   };
 };
+
+
+/* <input aria-invalid="false" aria-describedby=":r9:-helper-text" id=":r9:" type="file" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input" value=""> */

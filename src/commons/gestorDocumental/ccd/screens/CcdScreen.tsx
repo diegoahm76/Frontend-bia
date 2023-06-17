@@ -296,9 +296,9 @@ export const CcdScreen: React.FC = () => {
                       variant="outlined"
                       type="file"
                       disabled={
-                        ccd_current?.fecha_terminado !== null &&
-                        ccd_current?.fecha_terminado !== '' &&
-                        ccd_current?.fecha_terminado !== undefined
+                        ccd_current?.ruta_soporte != null /* ||
+                        ccd_current?.ruta_sopoorte !== '' ||
+                        ccd_current?.ruta_sopoorte !== undefined */
                       }
                       InputLabelProps={{ shrink: true }}
                       // onChange={onChange}
