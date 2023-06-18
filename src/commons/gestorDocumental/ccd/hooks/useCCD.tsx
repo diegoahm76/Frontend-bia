@@ -90,7 +90,7 @@ const use_ccd = () => {
     fecha_terminado: '',
     valor_aumento_serie: '',
     valor_aumento_subserie: '',
-    ruta_soporte: '',
+    ruta_soporte: null,
   };
   // Estado Inicial de Formulario de Crear Asignación
   const initial_state_asig: ICCDAsingForm = {
@@ -275,7 +275,7 @@ const use_ccd = () => {
     console.log(data_create_ccd, 'data_create_ccd')
     // console.log('epa la patria', ccd_current);
     if (ccd_current !== null) {
-      update_ccd();
+      update_ccd(data_create_ccd);
     } else {
       create_ccd();
     }
@@ -304,16 +304,23 @@ const use_ccd = () => {
     void dispatch(create_ccds_service(formData, set_save_ccd));
   };
 
-  const update_ccd = (): void => {
+  const update_ccd = ( data_create_ccd: any ): void => {
     const new_ccd: any = {
       ...data_create_ccd,
       nombre: data_create_ccd.nombre_ccd,
       version: data_create_ccd.version,
       ruta_soporte: data_create_ccd.ruta_soporte,
     };
-
   
-    void dispatch(update_ccds_service(new_ccd, data_create_ccd));
+    // Convertir el objeto new_ccd en un objeto FormData
+    const formData: any = new FormData();
+    for (const key in new_ccd) {
+      if (new_ccd[key] !== null) {
+        formData.append(key, new_ccd[key]);
+      }
+    }
+  
+    void dispatch(update_ccds_service(formData));
   };
   
   // console.log(data_asing, 'data_asing');
@@ -495,8 +502,6 @@ const use_ccd = () => {
 
     create_sub_serie_active,
     set_create_sub_serie_active,
-    // file,
-    // set_file,
   };
 };
 
