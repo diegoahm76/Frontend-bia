@@ -3,34 +3,35 @@
 
 import { Button } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import { useRef } from 'react';
+import type { DownloadButtonProps } from './types/types';
 
-interface DownloadButtonProps {
-  fileUrl: string;
-  fileName: string;
-  ccd_current: any;
-}
-export const DownloadButton = ({ fileUrl, fileName, ccd_current }: DownloadButtonProps) => {
+export const DownloadButton = ({
+  fileUrl,
+  fileName,
+  condition
+}: DownloadButtonProps) => {
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
   const handleDownload = () => {
-    console.log(ccd_current)
-    const link = document.createElement('a');
-    link.href = fileUrl;
-    link.target = '_blank';
-    link.download = fileName;
-    link.click();
+    if (linkRef.current != null) {
+      linkRef.current.click();
+    }
   };
 
   return (
-    <Button
-    variant="contained"
-
-    disabled={ccd_current === null || ccd_current?.ruta_soporte === null || ccd_current?.ruta_soporte === ''}
-    onClick={handleDownload}>
-      <FileDownloadIcon
-       /* sx={{
-          color: ccd_current?.ruta_soporte === null || ccd_current?.ruta_soporte === '' ? 'disabled' : 'primary',
-          backgroundColor: ccd_current?.ruta_soporte === null || ccd_current?.ruta_soporte === '' ? 'red' : 'primary',
-        }} */
+    <>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        href={fileUrl}
+        ref={linkRef}
+        style={{ display: 'none' }}
+        download={fileName}
       />
-    </Button>
+      <Button variant="contained" disabled={condition} onClick={handleDownload}>
+        <FileDownloadIcon />
+      </Button>
+    </>
   );
 };
