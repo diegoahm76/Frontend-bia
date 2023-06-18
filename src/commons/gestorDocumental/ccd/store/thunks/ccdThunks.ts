@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unreachable */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { type Dispatch } from 'react';
@@ -102,20 +105,9 @@ export const to_finished_ccds_service: any = (
     getState: any
   ): Promise</* AxiosResponse | AxiosError */ any > => {
     try {
-
-
-      if(ccd_current.id_ccd === undefined || ccd_current.id_ccd === 0 || ccd_current.id_ccd === null){
-        // Mostrar una alerta antes de continuar
-        throw new Error('La propiedad "id_ccd" de ccd_current es falsa.');
-        alert('La propiedad "id" de ccd_current es falsa.');
-        return;
-      }
-
-
-
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(
-        `gestor/ccd/finish/${id_ccd}`
+        `gestor/ccd/finish/${id_ccd}/`
       );
       //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
       // ? revisar la manera en la que está recibiendo los parametros
@@ -127,7 +119,7 @@ export const to_finished_ccds_service: any = (
       return data;
     } catch (error: any) {
       console.log(error)
-      control_error('No se pudo finalizar el CCD, no hay ccd actual disponible para finalizar');
+      control_error(`Error al finalizar el CCD: ${error.response.data.detail}`);
       // return error as AxiosError;
     }
   };
@@ -227,26 +219,24 @@ export const update_ccds_service: any = (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<any> => {
-
-    // console.log(data_create_ccd, 'ccd_current')
-    // console.log(formData, 'formData')
-    // const { ccd_current } = getState().ccd;
     try {
       const id_ccd: number = data_create_ccd.id_ccd;
-      const { data } = await api.patch(`gestor/ccd/update/${id_ccd}/`, {
+
+      const requestData = {
         ...data_create_ccd,
         nombre: data_create_ccd.nombre_ccd,
         version: data_create_ccd.version,
-        ruta_soporte: data_create_ccd.ruta_soporte,
-      });
-      console.log(
-        '🚀 ~ file: ccds.ts ~ line 164 ~ return ~ data',
-        data.data
-      )
-      console.log(data_create_ccd, 'data_create_ccd')
+      };
+
+      // Verificar si ruta_soporte existe en data_create_ccd antes de incluirla en la solicitud PATCH
+      if (data_create_ccd.ruta_soporte) {
+        requestData.ruta_soporte = data_create_ccd.ruta_soporte;
+      }
+
+      const { data } = await api.patch(`gestor/ccd/update/${id_ccd}/`, requestData);
+
       dispatch(get_ccd_current(data.data));
       control_success(data.detail);
-      // return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
@@ -304,5 +294,3 @@ export const cambio_ccd_actual: any = (data_cambio: DataCambioCCDActual) => {
   };
 };
 
-
-/* <input aria-invalid="false" aria-describedby=":r9:-helper-text" id=":r9:" type="file" class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputSizeSmall css-1n4twyu-MuiInputBase-input-MuiOutlinedInput-input" value=""> */

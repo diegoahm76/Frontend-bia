@@ -90,7 +90,7 @@ const use_ccd = () => {
     fecha_terminado: '',
     valor_aumento_serie: '',
     valor_aumento_subserie: '',
-    ruta_soporte: null,
+    ruta_soporte: '',
   };
   // Estado Inicial de Formulario de Crear Asignación
   const initial_state_asig: ICCDAsingForm = {
@@ -495,6 +495,8 @@ const use_ccd = () => {
 
     create_sub_serie_active,
     set_create_sub_serie_active,
+    // file,
+    // set_file,
   };
 };
 
