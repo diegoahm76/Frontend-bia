@@ -339,7 +339,7 @@ export const CcdScreen: React.FC = () => {
               <Grid item xs={12} sm={3}>
                 <DownloadButton
                   fileName="ruta_soporte"
-                  ccd_current={ccd_current}
+                  condition={ccd_current === null || ccd_current?.ruta_soporte === null || ccd_current?.ruta_soporte === ''}
                   fileUrl={ccd_current?.ruta_soporte}
                 />
               </Grid>
