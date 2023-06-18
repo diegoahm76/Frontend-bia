@@ -39,7 +39,7 @@ import type { IFormValues, IProps } from './types/types';
 import { initial_state } from './utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { notification_error } from '../../store/thunks/ccdThunks';
+import { notification_error } from '../../utils/success_errors';
 const CrearSeriesCcdDialog = ({
   is_modal_active,
   set_is_modal_active,
