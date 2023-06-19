@@ -95,14 +95,11 @@ const CrearSeriesCcdDialog = ({
   };
 
   //! create or edit series, it depends on the title_button and the parameters
-const manage_series = (/* id_serie_doc?: any */): void => {
-     const { nombre, codigo, id_serie_doc } = data;
-console.log(data)
+const manage_series = (): void => {
     const updatedSeries = {
       ...data,
       nombre: data.nombre,
     }
-
 
     const newSeries =
       title_button === 'Agregar' ? {
