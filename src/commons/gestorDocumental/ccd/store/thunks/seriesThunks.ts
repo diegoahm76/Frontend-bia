@@ -55,7 +55,7 @@ export const delete_series_service:any = (
         `gestor/ccd/series/delete/${params_ccd_info.row.id_serie_doc}/`
       );
       dispatch(get_series_service(
-        params_ccd_info.id
+        params_ccd_info.row.id_ccd
       ));
       clean();
       console.log(

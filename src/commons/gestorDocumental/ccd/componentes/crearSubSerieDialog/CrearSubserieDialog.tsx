@@ -64,25 +64,6 @@ const CrearSubSerieCcdDialog = ({
   });
   const data = watch();
   // console.log(data);
-  // useEffect para cargar los datos de la serie seleccionada
- /*  useEffect(() => {
-    console.log(
-      '🚀 ~ file: CrearSubserieDialog.tsx ~ line 95 ~ useEffect ~ serie_ccd_current',
-      serie_ccd_current
-    );
-    if (serie_ccd_current !== null) {
-      reset({
-        codigo: serie_ccd_current.codigo,
-        nombre: serie_ccd_current.nombre,
-        id_subserie_doc: null,
-        id_serie_doc: serie_ccd_current.id_serie_doc
-      });
-      set_title_button('Actualizar');
-    } else {
-      reset(initial_state);
-      set_title_button('Agregar');
-    }
-  }, [serie_ccd_current]); */
 
   // useEffect para cargar los datos de la subSerie seleccionada
   useEffect(() => {
@@ -173,29 +154,13 @@ const CrearSubSerieCcdDialog = ({
     void dispatch(create_subseries_service(new_subseries, () => ({})));
   };
 
-  // Función para eliminar series
-  /* const delete_series = (id_serie_doc: number): void => {
-    const new_series = series_ccd.filter(
-      (serie: any) => serie.id_serie_doc !== id_serie_doc
-    );
-    void dispatch(create_series_service(new_series, () => ({})));
-  }; */
 
-  const handleOnClick = (title: string, params: any) => {
-    const action =
-      title === 'Crear Catalogo de series'
-        ? get_serie_ccd_current(params.data)
-        : get_subseries_ccd_current(params.data);
-
-    dispatch(action);
+  const handleOnClick = (params: any) => {
+    dispatch(get_subseries_ccd_current(params.data));
   };
 
-  const handleDelete = (title: string, params: any) => {
+  const handleDelete = (params: any) => {
     delete_subseries(params.data.id_subserie_doc);
-    /* if (title === 'Crear Catalogo de series') {
-      delete_series(params.data.id_serie_doc);
-    } else {
-    } */
   };
 
   //  Función para enviar los datos del formulario
@@ -232,7 +197,7 @@ const CrearSubSerieCcdDialog = ({
       renderCell: (params: any) => (
         <>
           <IconButton
-            onClick={() => handleOnClick('Crear Catalogo de series', params)}
+            onClick={() => handleOnClick(params)}
           >
             <Avatar
               sx={{
@@ -249,7 +214,7 @@ const CrearSubSerieCcdDialog = ({
             </Avatar>
           </IconButton>
           <IconButton
-            onClick={() => handleDelete('Crear Catalogo de series', params)}
+            onClick={() => handleDelete(params)}
           >
             <Avatar
               sx={{
@@ -286,7 +251,7 @@ const CrearSubSerieCcdDialog = ({
         }}
       >
         <DialogTitle>
-          {title} ff
+          {title}
           <IconButton
             aria-label="close"
             onClick={() => {

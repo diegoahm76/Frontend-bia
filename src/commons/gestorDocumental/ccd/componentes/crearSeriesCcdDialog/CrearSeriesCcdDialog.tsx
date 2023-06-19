@@ -28,18 +28,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import {
   delete_series_service,
   create_series_service
-  // , get_series_service
 } from '../../store/thunks/seriesThunks';
-import // create_subseries_service,
-//, get_subseries_service
-'../../store/thunks/subseriesThunks';
 import { get_serie_ccd_current } from '../../store/slices/seriesSlice';
-// import { get_subseries_ccd_current } from '../../store/slices/subseriesSlice';
 import type { IFormValues, IProps } from './types/types';
 import { initial_state } from './utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { notification_error } from '../../utils/success_errors';
+import use_ccd from '../../hooks/useCCD';
+
 const CrearSeriesCcdDialog = ({
   is_modal_active,
   set_is_modal_active,
@@ -48,9 +45,7 @@ const CrearSeriesCcdDialog = ({
   const { series_ccd, serie_ccd_current } = useAppSelector(
     (state) => state.series
   );
-  /* const { subseries_ccd, subseries_ccd_current } = useAppSelector(
-    (state) => state.subseries
-  ); */
+
   const { ccd_current } = useAppSelector((state: any) => state.ccd);
   const [title_button, set_title_button] = useState('Agregar');
 
@@ -59,10 +54,10 @@ const CrearSeriesCcdDialog = ({
 
   const {
     register,
-    handleSubmit: handle_submit,
+    handleSubmit,
     reset,
     watch,
-    formState: { errors }
+    formState: { errors, isValid, isDirty, touchedFields }
   } = useForm<IFormValues>({
     defaultValues: initial_state
   });
@@ -110,8 +105,7 @@ const CrearSeriesCcdDialog = ({
   useEffect(() => {
     return () => {
       dispatch(get_serie_ccd_current(null));
-      // dispatch(get_subseries_ccd_current(null));
-      clean();
+      // clean();
     };
   }, [is_modal_active]);
 
@@ -122,7 +116,7 @@ const CrearSeriesCcdDialog = ({
   };
 
   //! Crear Catalogso de seriess --
-const create_series = (): void => {
+const manage_series = (): void => {
      const { id_serie_doc, nombre, codigo } = data;
   console.log(id_serie_doc, nombre, codigo);
     /* const updatedSeries = series_ccd.map((item: any) => {
@@ -184,12 +178,6 @@ const create_series = (): void => {
 
 
   const handleOnClick = (params: any) => {
-    // editar serie
-    /* const action =
-      title === 'Crear Catalogo de series'
-        ? get_serie_ccd_current(params.data)
-        : get_subseries_ccd_current(params.data); */
-
     dispatch(get_serie_ccd_current(params.data));
   };
 
@@ -200,7 +188,7 @@ const create_series = (): void => {
     const new_series = series_ccd.filter(
       (serie: any) => serie.id_serie_doc !== params.row.id_serie_doc
     );
-
+      console.log(new_series);
     if (params?.row?.tiene_subseries) {
       set_is_modal_active(false);
       await notification_error(
@@ -210,11 +198,6 @@ const create_series = (): void => {
       void dispatch(delete_series_service(new_series, params, () => ({})));
     }
   };
-
-  // ? se considera innecesario el uso de esta función delntro del código, ya que la lógica puede ser manejada por la funcióm create_series
- /*  const on_submit: SubmitHandler<IFormValues> = () => {
-    create_series();
-  }; */
 
   const columns: GridColDef[] = [
     {
@@ -297,13 +280,10 @@ const create_series = (): void => {
       <Divider />
       <DialogContent sx={{ mb: '0px' }}>
         <form
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={(e) => {
             e.preventDefault();
-
-           // console.log('hollllllllaslkaksjalkjalksdjlkajsdlkajslkdjaslkjdlka');
-           create_series();
-            // console.log(errors);
+           manage_series();
+           console.log('hello from series');
           }}
           autoComplete="off"
         >
@@ -365,16 +345,14 @@ const create_series = (): void => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={series_ccd}
-                /* title === 'Crear Catalogo de series'
-                      ? series_ccd
-                      : subseries_ccd
-                  } */
+                rows={
+                  series_ccd
+                }
                 columns={columns}
                 pageSize={5}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id_ccd}
+                getRowId={(row) => row.id_serie_doc}
               />
             </Grid>
           </Grid>
