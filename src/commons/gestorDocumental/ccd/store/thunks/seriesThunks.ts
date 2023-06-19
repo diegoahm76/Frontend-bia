@@ -21,11 +21,13 @@ export const get_series_service: any = (id_ccd: any) => {
     console.log(id) */
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const response = await api.get(`gestor/ccd/series/get-by-id-ccd/${id_ccd}/`);
+      const response = await api.get(
+        `gestor/ccd/series/get-by-id-ccd/${id_ccd}/`
+      );
       console.log(
         '🚀 ~ file: seriesThunks.ts ~ line 30 ~ return ~ response',
         response.data
-      )
+      );
       dispatch(get_series_ccd(response.data.data));
       // notificationSuccess(data.detail);
       return response.data;
@@ -36,15 +38,13 @@ export const get_series_service: any = (id_ccd: any) => {
   };
 };
 
-
 //! se debe revisar el servicio porque las peticiones http deben ir por separado no dentro de una misma peticion el post, put and delete
 
-
 // Crear, actualizar y/o eliminar series
-export const delete_series_service:any = (
+export const delete_series_service: any = (
   newSeries: any,
   params_ccd_info: any,
-  clean: () => void,
+  clean: () => void
 ) => {
   return async (
     dispatch: Dispatch<any>,
@@ -54,14 +54,9 @@ export const delete_series_service:any = (
       const { data } = await api.delete(
         `gestor/ccd/series/delete/${params_ccd_info.row.id_serie_doc}/`
       );
-      dispatch(get_series_service(
-        params_ccd_info.row.id_ccd
-      ));
+      dispatch(get_series_service(params_ccd_info.row.id_ccd));
       clean();
-      console.log(
-        '🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data',
-        data
-      );
+      console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
 
       control_success(data.detail);
       return data;
@@ -73,27 +68,38 @@ export const delete_series_service:any = (
 };
 
 //! post action for create series
-export const create_series_service:any = (
-  body: any,
-  clean: () => void,
-) => {
+export const create_series_service: any = (body: any, clean: () => void) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
     try {
-      const { data } = await api.post(
-        `gestor/ccd/series/create/`,
-        body
-      );
-      dispatch(get_series_service(
-        body.id_ccd
-      ));
+      const { data } = await api.post(`gestor/ccd/series/create/`, body);
+      dispatch(get_series_service(body.id_ccd));
       clean();
-      console.log(
-        '🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data',
-        data
-      );
+      console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
+
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const update_series_data = (updatedData: any, ccd_current: any, clean: () => void) => {
+  return async (
+    dispatch: Dispatch<any>,
+    getState: any
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      const id_ser_doc = updatedData.id_serie_doc;
+
+      const { data } = await api.put(`gestor/ccd/series/update/${id_ser_doc}/`, updatedData);
+      dispatch(get_series_service(ccd_current?.id_ccd));
+      clean();
+      console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
 
       control_success(data.detail);
       return data;

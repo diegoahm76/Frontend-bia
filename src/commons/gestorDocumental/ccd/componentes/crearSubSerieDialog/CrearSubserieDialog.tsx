@@ -252,6 +252,7 @@ const CrearSubSerieCcdDialog = ({
       >
         <DialogTitle>
           {title}
+
           <IconButton
             aria-label="close"
             onClick={() => {
