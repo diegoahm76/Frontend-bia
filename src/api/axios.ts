@@ -1,7 +1,10 @@
 import axios from "axios";
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const baseURL = "https://back-end-bia-beta.up.railway.app/api/"
+
 export const api = axios.create({
-  baseURL: "https://back-end-bia-beta.up.railway.app/api/",
+  baseURL,
 });
 
 api.interceptors.request.use(
