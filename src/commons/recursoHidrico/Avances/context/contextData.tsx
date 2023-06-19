@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import React, { createContext } from 'react';
-import type { GetActividades, GetAvances, GetPrograma, GetProyectos } from '../Interfaces/interfaces';
+import type { GetActividades, GetAvances, GetPrograma, GetProyectos, InfoAvance } from '../Interfaces/interfaces';
+import { get_data_id } from '../request/request';
+import { control_error } from '../../../../helpers';
 
 interface UserContext {
   crear_programa: any;
@@ -14,6 +17,10 @@ interface UserContext {
   id_proyecto: number | null;
   id_actividad: number | null;
   id_avance: number | null;
+  is_register_avance: boolean;
+  is_editar_avance: boolean;
+  is_select_avance: boolean;
+  info_avance: InfoAvance | undefined;
   filter: any[];
   columns: string[];
   actionIcons: any[];
@@ -25,6 +32,11 @@ interface UserContext {
   set_id_proyecto: (id: number | null) => void;
   set_id_actividad: (id: number | null) => void;
   set_id_avance: (id: number | null) => void;
+  set_is_register_avance: (is_register_avance: boolean) => void;
+  set_is_editar_avance: (is_editar_avance: boolean) => void;
+  set_is_select_avance: (is_select_avance: boolean) => void;
+  fetch_data_avances: () => Promise<void>;
+  set_info_avance: (info_avance: InfoAvance) => void;
 }
 
 export const DataContext = createContext<UserContext>({
@@ -36,6 +48,22 @@ export const DataContext = createContext<UserContext>({
   id_proyecto: null,
   id_actividad: null,
   id_avance: null,
+  is_register_avance: false,
+  is_editar_avance: false,
+  is_select_avance: false,
+  info_avance: {
+    id_avance:           0,
+    nombre_programa:     '',
+    nombre_PORH:         '',
+    nombre:              '',
+    nombre_avance:       '',
+    fecha_reporte:       '',
+    accion:              '',
+    descripcion:         '',
+    fecha_registro:      '',
+    id_proyecto:         0,
+    id_persona_registra: 0,
+  },
   filter: [],
   columns: [],
   actionIcons: [],
@@ -49,6 +77,11 @@ export const DataContext = createContext<UserContext>({
   set_id_proyecto: () => { },
   set_id_actividad: () => { },
   set_id_avance: () => { },
+  fetch_data_avances: async () => { },
+  set_is_register_avance: () => { },
+  set_is_editar_avance: () => { },
+  set_is_select_avance: () => { },
+  set_info_avance: () => { }
 });
 
 export const UserProvider = ({
@@ -68,6 +101,26 @@ export const UserProvider = ({
   const [rows_actividades, set_rows_actividades] = React.useState<GetActividades[]>([]);
   const [rows_avances, set_rows_avances] = React.useState<GetAvances[]>([]);
 
+  const [is_register_avance, set_is_register_avance] = React.useState<boolean>(false);
+  const [is_editar_avance, set_is_editar_avance] = React.useState<boolean>(false);
+  const [is_select_avance, set_is_select_avance] = React.useState<boolean>(false);
+
+
+  const [info_avance, set_info_avance] = React.useState<InfoAvance>();
+
+
+
+  const fetch_data_avances = async (): Promise<void> => {
+    try {
+      set_rows_avances([])
+      if (id_proyecto) {
+        await get_data_id(id_proyecto, set_rows_avances, 'get/avances/por/proyectos');
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+
   const [filter, setFilter] = React.useState<any>([]);
   const [columns, setColumns] = React.useState<string[]>([]);
   const [actionIcons, setActionIcons] = React.useState<any[]>([]);
@@ -76,6 +129,14 @@ export const UserProvider = ({
 
 
   const value = {
+    set_is_select_avance,
+    is_select_avance,
+    info_avance,
+    set_info_avance,
+    is_editar_avance,
+    set_is_editar_avance,
+    is_register_avance,
+    set_is_register_avance,
     set_id_avance,
     id_avance,
     set_id_actividad,
@@ -100,6 +161,7 @@ export const UserProvider = ({
     setColumns,
     actionIcons,
     setActionIcons,
+    fetch_data_avances
   };
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };

@@ -76,7 +76,7 @@ export interface InfoAvance {
     nombre_PORH:         string;
     nombre:              string;
     nombre_avance:       string;
-    fecha_reporte:       string;
+    fecha_reporte:       string | Date;
     accion:              string;
     descripcion:         string;
     fecha_registro:      string;

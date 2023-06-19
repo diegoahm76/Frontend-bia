@@ -1,14 +1,15 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Divider, Grid, Typography } from "@mui/material";
 import { Title } from "../../../../../components/Title"
 import { BusquedaAvanzada } from "../../components/BusquedaAvanzadaPORH/BusquedaAvanzada";
-import type { InfoPorh } from "../../Interfaces/interfaces";
+import type { InfoAvance, InfoPorh } from "../../Interfaces/interfaces";
 import { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context/contextData";
-import { control_error } from "../../../../../helpers";
-import { get_data_id } from "../../request/request";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { LoadingButton } from "@mui/lab";
 import { RegistroAvance } from "../../components/RegistrarAvance/registroAvance";
+import { BusquedaAvances } from "../../components/BusquedaAvances/BusquedaAvances";
+import { EditarAvance } from "../../components/EditarAvance/EditarAvance";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -48,31 +49,40 @@ export const AvanceScreen: React.FC = () => {
         }
     ];
     const {
-        set_rows_avances,
-        rows_avances
+        fetch_data_avances,
+        rows_avances,
+        set_id_proyecto,
+        id_proyecto,
+        is_register_avance,
+        set_is_register_avance,
+        is_select_avance,
+        is_editar_avance,
     } = useContext(DataContext);
 
 
     const [info, set_info] = useState<InfoPorh>();
-    const [is_register, set_is_register] = useState<boolean>(false);
+    const [info_avance, set_info_avance] = useState<InfoAvance>();
+
 
     const on_result = (info_porh: InfoPorh): void => {
         // reset();
+        set_is_register_avance(false);
         set_info(info_porh);
+        set_id_proyecto(info_porh?.id_proyecto)
     };
-    const fetch_data = async (): Promise<void> => {
-        try {
-            if (info?.id_proyecto !== undefined) {
-                await get_data_id(info?.id_proyecto, set_rows_avances, 'get/avances/por/proyectos');
-            }
-        } catch (error) {
-            control_error(error);
-        }
+
+    const on_result_avance = (Info_avance: InfoAvance): void => {
+        // reset();
+        set_info_avance(Info_avance);
+        console.log(info_avance)
     };
 
     useEffect(() => {
-        void fetch_data();
-    }, [info === undefined]);
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        if (info) {
+            void fetch_data_avances();
+        }
+    }, [info]);
     return (
         <Grid
             container
@@ -115,20 +125,29 @@ export const AvanceScreen: React.FC = () => {
                 </>
             )}
             <Grid item spacing={2} justifyContent="end" container>
-                <Grid item>
-                    <LoadingButton
-                        variant="outlined"
-                        onClick={() => {
-                            set_is_register(true);
-                        }}
-                    >
-                        Registrar Avance
-                    </LoadingButton>
-                </Grid>
+                {id_proyecto ? (
+                    <Grid item>
+                        <LoadingButton
+                            variant="outlined"
+                            onClick={() => {
+                                set_is_register_avance(true);
+                            }}
+                        >
+                            Registrar Avance
+                        </LoadingButton>
+                    </Grid>
+                ) : null
+                }
+                <BusquedaAvances
+                    onResult={on_result_avance} />
             </Grid>
-            {is_register && (
+            {is_register_avance && (
                 <RegistroAvance />
             )}
+            {is_select_avance && (
+                <EditarAvance />)}
+            {is_editar_avance && (
+                <EditarAvance />)}
         </Grid>
     );
 };

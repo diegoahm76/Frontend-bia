@@ -1,47 +1,59 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { Box, Button, TextField } from '@mui/material';
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useContext, useState, useEffect } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import "react-datepicker/dist/react-datepicker.css";
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_success } from '../../../requets/Request';
 import { control_error } from '../../../../../helpers';
 import { LoadingButton } from '@mui/lab';
-import { agregar_avance } from '../../request/request';
-import dayjs from 'dayjs';
+import { editar_avance } from '../../request/request';
 import { DataContext } from '../../context/contextData';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RegistroAvance: React.FC = () => {
-
-  const {
-    id_proyecto,
-    fetch_data_avances,
+export const EditarAvance: React.FC = () => {
+  const { id_avance,
+    info_avance,
+    is_select_avance,
+    set_is_select_avance,
+    set_is_editar_avance,
+    is_editar_avance,
   } = useContext(DataContext);
 
   const {
     register,
     reset,
-    handleSubmit: handle_submit,
-    setValue: set_value,
+    handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
-  // fecha
-  const [fecha_reporte, set_fecha_reporte] = useState<Date | null>(new Date());
+  const [fecha_reporte, set_fecha_reporte] = useState<Date | null>(null);
   const [is_saving, set_is_saving] = useState(false);
+  const [archivos, set_archivos] = useState<Array<File | null>>([null]);
+  const [nombres_archivos, set_nombres_archivos] = useState<string[]>(['']);
 
-  const [archivos, set_archivos] = useState<Array<File | null>>([null]); // Cambio aquí
-  const [nombres_archivos, set_nombres_archivos] = useState<string[]>(['']); // Cambio aquí
+  useEffect(() => {
+    if (info_avance) {
+      setValue('accion', info_avance.accion || '');
+      setValue('fecha_reporte', info_avance.fecha_reporte || null);
+      setValue('descripcion', info_avance.descripcion || '');
+      set_fecha_reporte(info_avance.fecha_reporte ? new Date(info_avance.fecha_reporte) : null);
+      // set_archivos(info_avance.evidencias.map(() => null));
+      // set_nombres_archivos(info_avance.evidencias.map((evidencia) => evidencia.nombre_archivo || ''));
+    }
+  }, [info_avance, setValue]);
 
   const handle_fecha_reporte_change = (date: Date | null): void => {
-    set_value('fecha_reporte', date)
-    set_fecha_reporte(date)
+    setValue('fecha_reporte', date);
+    set_fecha_reporte(date);
   };
 
   const agregar_otroarchivo = (): void => {
@@ -65,14 +77,12 @@ export const RegistroAvance: React.FC = () => {
     set_nombres_archivos(updated_nombres_archivos);
   };
 
-  const on_submit: SubmitHandler<FieldValues> = async (data) => {
+  const on_submit = async (data: any): Promise<void> => {
     try {
       set_is_saving(true);
-      const fecha_reporte = dayjs(data.fecha_reporte).format('YYYY-MM-DD');
       const datos_avance = new FormData();
 
       datos_avance.append('accion', data.accion);
-      datos_avance.append('fecha_reporte', fecha_reporte);
       datos_avance.append('descripcion', data.descripcion);
 
       archivos.forEach((archivo, index) => {
@@ -82,65 +92,66 @@ export const RegistroAvance: React.FC = () => {
         }
       });
 
-      await agregar_avance(id_proyecto as number, datos_avance);
+      await editar_avance(id_avance as number, datos_avance);
       set_is_saving(false);
       reset();
-      control_success('Se agregó avance correctamente');
-      void fetch_data_avances();
+      control_success('Se editó avance correctamente');
     } catch (error) {
       set_is_saving(false);
       control_error(error);
     }
   };
 
-  // Validar si todos los campos obligatorios están completos
-  const is_form_valid = nombres_archivos.every(nombre => nombre !== '') && Object.keys(errors).length === 0;
+  const is_form_valid = nombres_archivos.every((nombre) => nombre !== '') && Object.keys(errors).length === 0;
 
   return (
     <>
-      <Box component="form"
+      <Box
+        component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={handle_submit(on_submit)}
+        onSubmit={handleSubmit(on_submit)}
       >
         <Grid container spacing={2} mt={0.1}>
-          <Grid item xs={12}>
-            <Title title=" REGISTRO DE AVANCE" />
-          </Grid>
+          {is_select_avance && (
+            <Grid item xs={12}>
+              <Title title=" INFORMACIÓN DE AVANCE" />
+            </Grid>
+          )}
+          {is_editar_avance && (
+            <Grid item xs={12}>
+              <Title title=" EDICIÓN DE AVANCE" />
+            </Grid>
+          )}
           <Grid item xs={12} sm={6}>
             <TextField
               label="Acción"
               fullWidth
               size="small"
               margin="dense"
-              required
+              disabled={is_select_avance}
+              required={is_editar_avance}
               autoFocus
               {...register('accion', { required: true })}
               error={Boolean(errors.accion)}
-              helperText={
-                (errors.accion?.type === "required") ? "Este campo es obligatorio" : ''
-              }
+              helperText={errors.accion?.type === 'required' ? 'Este campo es obligatorio' : ''}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
               <DatePicker
                 label="Fecha Avance"
                 inputFormat="YYYY/MM/DD"
                 openTo="day"
                 views={['year', 'month', 'day']}
                 value={fecha_reporte}
+                disabled={is_select_avance || is_editar_avance}
                 onChange={handle_fecha_reporte_change}
                 renderInput={(params) => (
                   <TextField
-                    required
                     fullWidth
                     size="small"
+                    disabled={is_select_avance || is_editar_avance}
                     {...params}
-                    {...register('fecha_reporte', { required: true })}
-                    error={Boolean(errors.fecha_reporte)}
-                    helperText={
-                      (errors.fecha_reporte?.type === "required") ? "Este campo es obligatorio" : ''
-                    }
                   />
                 )}
               />
@@ -152,13 +163,12 @@ export const RegistroAvance: React.FC = () => {
               fullWidth
               size="small"
               margin="dense"
-              required
+              disabled={is_select_avance}
+              required={is_editar_avance}
               autoFocus
               {...register('descripcion', { required: true })}
               error={Boolean(errors.descripcion)}
-              helperText={
-                (errors.descripcion?.type === "required") ? "Este campo es obligatorio" : ''
-              }
+              helperText={errors.descripcion?.type === 'required' ? 'Este campo es obligatorio' : ''}
             />
           </Grid>
           {archivos.map((file, index) => (
@@ -176,7 +186,8 @@ export const RegistroAvance: React.FC = () => {
                   <input
                     hidden
                     type="file"
-                    required
+                    disabled={is_select_avance}
+                    required={is_editar_avance}
                     autoFocus
                     style={{ opacity: 0 }}
                     onChange={(e) => { handle_file_select(e, index); }}
@@ -189,7 +200,8 @@ export const RegistroAvance: React.FC = () => {
                   fullWidth
                   size="small"
                   margin="dense"
-                  required
+                  disabled={is_select_avance}
+                  required={is_editar_avance}
                   autoFocus
                   value={nombres_archivos[index]}
                   onChange={(e) => { handle_nombre_archivo_change(e, index); }}
@@ -202,25 +214,43 @@ export const RegistroAvance: React.FC = () => {
           <Grid item>
             <LoadingButton
               variant="outlined"
-              color='primary'
+              color="primary"
               size="large"
               onClick={agregar_otroarchivo}
             >
               Agregar archivo
             </LoadingButton>
           </Grid>
-          <Grid item>
-            <LoadingButton
-              variant="contained"
-              color='success'
-              size="large"
-              type='submit'
-              disabled={!is_form_valid || is_saving} // Cambio aquí
-              loading={is_saving}
-            >
-              Agregar
-            </LoadingButton>
-          </Grid>
+          {is_editar_avance && (
+            <Grid item>
+              <LoadingButton
+                variant="contained"
+                color="success"
+                size="large"
+                type="submit"
+                disabled={!is_form_valid || is_saving}
+                loading={is_saving}
+              >
+                Actualizar
+              </LoadingButton>
+            </Grid>
+          )}
+          {is_select_avance && (
+            <Grid item>
+              <LoadingButton
+                variant="contained"
+                color="primary"
+                size="large"
+                onClick={() => {
+                  set_is_select_avance(false);
+                  set_is_editar_avance(true);
+                }}
+              >
+                Editar Avance
+              </LoadingButton>
+            </Grid>
+          )}
+
         </Grid>
       </Box>
     </>

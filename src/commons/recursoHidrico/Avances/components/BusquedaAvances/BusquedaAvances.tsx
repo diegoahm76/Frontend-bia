@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Dialog, DialogContent, Grid, TextField, Tooltip, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import type { InfoAvance } from '../../Interfaces/interfaces';
 import { useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import type { ResponseServer } from '../../../../../interfaces/globalModels';
 import { control_error } from '../../../../../helpers';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import { DataContext } from '../../context/contextData';
 
 interface PropsBuscador {
     onResult: (data_porh: InfoAvance) => void;
@@ -20,10 +21,18 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
     onResult,
 }: PropsBuscador) => {
 
+    const {
+        set_info_avance,
+        set_is_select_avance,
+        set_is_register_avance,
+        set_is_editar_avance,
+        set_id_avance,
+    } = useContext(DataContext);
+
     const columns: GridColDef[] = [
         {
-            field: 'id_programa',
-            headerName: 'ID PROGRAMA',
+            field: 'id_avance',
+            headerName: 'No AVANCE',
             sortable: true,
             width: 170,
         },
@@ -65,9 +74,13 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
                             startIcon={<ChecklistOutlinedIcon />}
                             onClick={() => {
                                 if (params.row !== undefined) {
-                                    set_info(params.row);
-                                    handle_close();
+                                    set_is_editar_avance(false);
+                                    set_is_register_avance(false);
+                                    set_is_select_avance(true);
+                                    set_id_avance(params.row.id_avance);
+                                    set_info_avance(params.row);
                                     onResult(params.row);
+                                    handle_close();
                                 }
                             }}
                         />
@@ -87,7 +100,6 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
     const [is_search, set_is_search] = useState(false);
     const [open_dialog, set_open_dialog] = useState(false);
     const [rows, set_rows] = useState<InfoAvance[]>([]);
-    const [info, set_info] = useState<InfoAvance>();
 
     const handle_click_open = (): void => {
         set_open_dialog(true);
@@ -132,41 +144,29 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
         set_is_search(false);
     }, []);
 
-
     return (
         <>
-            <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-                <Grid item xs={12} sm={6} md={4}>
-                    <TextField
-                        label="Nombre "
-                        disabled={false}
-                        fullWidth
-                        size="small"
-                        margin="dense"
-                        value={info?.nombre}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        onClick={handle_click_open}
-                    >
-                        Búsqueda avanzada
-                    </Button>
-                </Grid>
+            <Grid item >
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                        handle_click_open();
+                    }}
+                >
+                    Búsqueda Avance
+                </Button>
             </Grid>
             <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
                 <DialogContent>
                     <Title title="Búsqueda avanzada" />
                     <form
                         onSubmit={(e) => {
-                            console.log('submit')
                             void on_submit_advance(e);
                         }}
                     >
                         <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-                            <Grid item xs={12} sm={6} md={3}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <TextField
                                     label="Nombre PORH"
                                     disabled={false}
@@ -176,7 +176,7 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
                                     {...register('nombre_PORH')}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <TextField
                                     label="Nombre proyecto"
                                     disabled={false}
@@ -186,7 +186,7 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
                                     {...register('nombre_proyecto')}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <TextField
                                     label="Nombre Programa"
                                     disabled={false}
@@ -196,7 +196,7 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
                                     {...register('nombre_programa')}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={3}>
+                            <Grid item xs={12} sm={6} md={4}>
                                 <TextField
                                     label="Nombre Avance"
                                     disabled={false}
@@ -206,7 +206,7 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
                                     {...register('nombre_avances')}
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={6} md={2} container justifyContent="end">
+                            <Grid item xs={12} sm={6} md={4} container justifyContent="end">
                                 <LoadingButton
                                     type="submit"
                                     variant="contained"
@@ -230,7 +230,7 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
                                                     columns={columns}
                                                     pageSize={5}
                                                     rowsPerPageOptions={[5]}
-                                                    getRowId={(row) => row.id_programa}
+                                                    getRowId={(row) => row.id_avance}
                                                 />
                                             </>
                                         </Box>
