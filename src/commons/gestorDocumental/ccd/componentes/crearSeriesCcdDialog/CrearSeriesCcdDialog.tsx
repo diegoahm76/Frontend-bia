@@ -113,14 +113,6 @@ const manage_series = (): void => {
     } else {
       void dispatch(update_series_data(updatedSeries, ccd_current, clean));
     }
-
-    //! create series is ok
-    /* return void dispatch(create_series_service({
-      nombre: data.nombre,
-      codigo: data.codigo,
-      id_ccd: ccd_current?.id_ccd
-    }, clean)); */
-    //! close function create series is ok
   };
 
   const handleOnClick = (params: any) => {
