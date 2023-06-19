@@ -36,6 +36,7 @@ interface UserContext {
   set_is_editar_avance: (is_editar_avance: boolean) => void;
   set_is_select_avance: (is_select_avance: boolean) => void;
   fetch_data_avances: () => Promise<void>;
+  fetch_data_actividades: () => Promise<void>;
   set_info_avance: (info_avance: InfoAvance) => void;
 }
 
@@ -78,6 +79,7 @@ export const DataContext = createContext<UserContext>({
   set_id_actividad: () => { },
   set_id_avance: () => { },
   fetch_data_avances: async () => { },
+  fetch_data_actividades: async () => { },
   set_is_register_avance: () => { },
   set_is_editar_avance: () => { },
   set_is_select_avance: () => { },
@@ -120,6 +122,16 @@ export const UserProvider = ({
       control_error(error.response.data.detail);
     }
   };
+  const fetch_data_actividades = async (): Promise<void> => {
+    try {
+      set_rows_actividades([])
+      if (id_proyecto) {
+        await get_data_id(id_proyecto, set_rows_actividades, 'get/actividades/por/proyectos');
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
 
   const [filter, setFilter] = React.useState<any>([]);
   const [columns, setColumns] = React.useState<string[]>([]);
@@ -129,6 +141,7 @@ export const UserProvider = ({
 
 
   const value = {
+    fetch_data_actividades,
     set_is_select_avance,
     is_select_avance,
     info_avance,

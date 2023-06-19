@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Dialog, DialogContent, Grid, TextField, Tooltip, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Title } from '../../../../../components/Title';
 import type { InfoPorh } from '../../Interfaces/interfaces';
 import { useForm } from 'react-hook-form';
@@ -11,6 +11,7 @@ import type { ResponseServer } from '../../../../../interfaces/globalModels';
 import { control_error } from '../../../../../helpers';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { DataContext } from '../../context/contextData';
 
 interface PropsBuscador {
     onResult: (data_porh: InfoPorh) => void;
@@ -20,6 +21,10 @@ interface PropsBuscador {
 export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
     onResult,
 }: PropsBuscador) => {
+
+    const {
+    set_id_proyecto,
+} = useContext(DataContext);
 
     const columns: GridColDef[] = [
         {
@@ -61,6 +66,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
                             onClick={() => {
                                 if (params.row !== undefined) {
                                     set_info(params.row);
+                                    set_id_proyecto(params.row.id_proyecto);
                                     handle_close();
                                     onResult(params.row);
                                 }

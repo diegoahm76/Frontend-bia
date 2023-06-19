@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { Divider, Grid, Typography } from "@mui/material";
+import { Button, Divider, Grid, Tooltip, Typography } from "@mui/material";
 import { Title } from "../../../../../components/Title"
 import { BusquedaAvanzada } from "../../components/BusquedaAvanzadaPORH/BusquedaAvanzada";
 import type { InfoAvance, InfoPorh } from "../../Interfaces/interfaces";
@@ -10,7 +10,8 @@ import { LoadingButton } from "@mui/lab";
 import { RegistroAvance } from "../../components/RegistrarAvance/registroAvance";
 import { BusquedaAvances } from "../../components/BusquedaAvances/BusquedaAvances";
 import { EditarAvance } from "../../components/EditarAvance/EditarAvance";
-
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { DialogActividades } from "../../components/DialogActividades/DialogActividades";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AvanceScreen: React.FC = () => {
@@ -19,9 +20,9 @@ export const AvanceScreen: React.FC = () => {
 
         {
             field: 'id_avance',
-            headerName: 'No Avance',
+            headerName: 'No AVANCE',
             sortable: true,
-            width: 170,
+            width: 80,
         },
         {
             field: 'accion',
@@ -46,7 +47,28 @@ export const AvanceScreen: React.FC = () => {
             headerName: 'EVIDENCIA',
             sortable: true,
             width: 250,
-        }
+        },
+        {
+            field: 'ACCIONES',
+            headerName: 'ACTIVIDADES',
+            sortable: true,
+            width: 120,
+            renderCell: (params) => (
+                <>
+                    <Tooltip title="Ver Actividades">
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            size="small"
+                            startIcon={<RemoveRedEyeIcon />}
+                            onClick={() => {
+                                handle_actividades();
+                            }}
+                        />
+                    </Tooltip>
+                </>
+            ),
+        },
     ];
     const {
         fetch_data_avances,
@@ -62,6 +84,11 @@ export const AvanceScreen: React.FC = () => {
 
     const [info, set_info] = useState<InfoPorh>();
     const [info_avance, set_info_avance] = useState<InfoAvance>();
+    const [is_modal_active, set_is_modal_active] = useState<boolean>(false);
+
+    const handle_actividades = (): void => {
+        set_is_modal_active(!is_modal_active);
+    };
 
 
     const on_result = (info_porh: InfoPorh): void => {
@@ -148,6 +175,10 @@ export const AvanceScreen: React.FC = () => {
                 <EditarAvance />)}
             {is_editar_avance && (
                 <EditarAvance />)}
+            <DialogActividades
+                is_modal_active={is_modal_active}
+                set_is_modal_active={set_is_modal_active}
+            />
         </Grid>
     );
 };
