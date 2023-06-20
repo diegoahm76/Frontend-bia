@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // Components Material UI
 import {
   Grid,
@@ -30,22 +32,40 @@ import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSerie
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 import CrearSubSerieCcdDialog from '../componentes/crearSubSerieDialog/CrearSubserieDialog';
 import { get_ccd_current } from '../store/slices/ccdSlice';
+import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
+import { get_serie_ccd_current } from '../store/slices/seriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const dispatch: any = useAppDispatch();
   const { ccd_current } = useAppSelector((state: any) => state.ccd);
+  const { serie_ccd_current } = useAppSelector((state: any) => state.series);
   const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
   useEffect(() => {
-    set_flag_btn_finish(ccd_current?.fecha_terminado !== null);
+    set_flag_btn_finish(
+      ccd_current?.fecha_terminado !== null &&
+        ccd_current?.fecha_terminado !== '' &&
+        ccd_current?.fecha_terminado !== undefined
+    );
+
+    console.log(
+      '🚀 ~ file: CcdScreen.tsx ~ line 45 ~ useEffect ~ ccd_current?.fecha_terminado',
+      ccd_current?.fecha_terminado
+    );
     /* if (ccd_current?.fecha_terminado != null) {
       set_flag_btn_finish(true);
     } else {
       set_flag_btn_finish(false);
     } */
-  }, [ccd_current]);
+  }, [ccd_current?.fecha_terminado]);
+
+  /* useEffect(() => {
+    if (ccd_current?.id_ccd) {
+      dispatch(to_resume_ccds_service(ccd_current?.id_ccd));
+    }
+  }, [ccd_current?.id_ccd]); */
 
   // Hooks
   const {
@@ -58,7 +78,7 @@ export const CcdScreen: React.FC = () => {
     title_button_asing,
     create_is_active,
     set_create_sub_serie_active,
-    create_subserie_active,
+    create_sub_serie_active,
     consulta_ccd_is_active,
     columns_asignacion,
     control,
@@ -77,9 +97,18 @@ export const CcdScreen: React.FC = () => {
     // register_create_ccd,
     handle_submit,
     handle_submit_create_ccd,
-    clean_ccd
-  } = use_ccd() as any;
 
+    clean_ccd
+    // file,
+    // set_file
+  } = use_ccd() as any;
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleClearFile = (): void => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   return (
     <>
@@ -97,21 +126,15 @@ export const CcdScreen: React.FC = () => {
         <Grid item xs={12}>
           <Title title="Cuadro de clasificación documental" />
           <form
-          style={{
-            marginTop: '20px',
-          }}
-          /* onSubmit={handle_submit(
-            () => {
-              on_submit_create_ccd();
-            }
-          )} */
-            onSubmit={
-              (e:any) => {
-                console.log('hola')
-                on_submit_create_ccd(e);
-              }
-            }
-            
+            style={{
+              marginTop: '20px'
+            }}
+            onSubmit={(e: any) => {
+              // console.log('hola')
+              console.log(e);
+              on_submit_create_ccd(e);
+            }}
+
             // sx={{ mt: '20px' }}
             // eslint-disable-next-line @typescript-eslint/no-misused-promises
             /* onSubmit={handle_submit_create_ccd(on_submit_create_ccd)} */
@@ -125,6 +148,7 @@ export const CcdScreen: React.FC = () => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      isDisabled={ccd_current != null}
                       value={field.value}
                       options={list_organigrams}
                       placeholder="Seleccionar"
@@ -146,6 +170,7 @@ export const CcdScreen: React.FC = () => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      isDisabled={ccd_current != null}
                       value={field.value}
                       options={list_unitys}
                       placeholder="Seleccionar"
@@ -227,9 +252,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
-                      
-                        // disabled={ccd_current?.fecha_terminado !== null}
-                      
+                      disabled={ccd_current != null}
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -260,7 +283,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subserie"
                       variant="outlined"
-                      // disabled={ccd_current?.fecha_terminado !== null}
+                      disabled={ccd_current !== null}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -278,9 +301,9 @@ export const CcdScreen: React.FC = () => {
               {/* fourth new spaces, optional for the support route  */}
               <Grid item xs={12} sm={3}>
                 <Controller
-                  name="ruta_de_soporte_ccd"
+                  name="ruta_soporte"
                   control={control_create_ccd}
-                  defaultValue=""
+                  defaultValue={ccd_current?.ruta_soporte || ''}
                   rules={{ required: false }}
                   render={({
                     field: { onChange, value },
@@ -290,19 +313,45 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
-                      // label="Subir archivo soporte ccs"
+                      // value={value}
                       variant="outlined"
                       type="file"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
+                      inputRef={fileInputRef}
+                      disabled={
+                        ccd_current?.ruta_soporte != null /* ||
+                        ccd_current?.ruta_sopoorte !== '' ||
+                        ccd_current?.ruta_sopoorte !== undefined */
+                      }
+                      InputLabelProps={{ shrink: true }}
+                      // onChange={onChange}
+                      onChange={(e) => {
+                        const files = (e.target as HTMLInputElement).files;
+
+                        if (files && files.length > 0) {
+                          onChange(files[0]);
+                          console.log(files[0]);
+                          // set_file(files[0]);
+                        }
+                      }}
+                      error={!!error}
                       helperText={
-                        error != null
+                        error
                           ? 'Es obligatorio subir un archivo'
                           : 'Seleccione un archivo'
                       }
                     />
                   )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <DownloadButton
+                  fileName="ruta_soporte"
+                  condition={
+                    ccd_current === null ||
+                    ccd_current?.ruta_soporte === null ||
+                    ccd_current?.ruta_soporte === ''
+                  }
+                  fileUrl={ccd_current?.ruta_soporte}
                 />
               </Grid>
 
@@ -325,7 +374,7 @@ export const CcdScreen: React.FC = () => {
                       control_create_ccd._formValues.version
                     )
                   ).then((data: any) => {
-                  /*  if (data.data.length > 0) {
+                    /*  if (data.data.length > 0) {
 
                       set_ccd_current(data.data[0]);
                       set_save_ccd(false);
@@ -334,27 +383,30 @@ export const CcdScreen: React.FC = () => {
                       set_delete_ccd_is_active(true);
                     } */
                     console.log(data);
-                    if (data.data.length > 0 && control_create_ccd._formValues.nombre_ccd !== "" && control_create_ccd._formValues.version !== "") {
-                  dispatch(get_ccd_current(data.data[0]));
-                  set_consulta_ccd_is_active(true);
-                  set_title('Consultar CCD');
-                  // set_ccd_current(data);
-                  // set_save_ccd(false);
-                  // set_create_ccd_is_active(false);
-                  // set_update_ccd_is_active(false);
-                  // set_delete_ccd_is_active(false);
+                    if (
+                      data.data.length > 0 &&
+                      control_create_ccd._formValues.nombre_ccd !== '' &&
+                      control_create_ccd._formValues.version !== ''
+                    ) {
+                      dispatch(get_ccd_current(data.data[0]));
+                      set_consulta_ccd_is_active(true);
+                      set_title('Consultar CCD');
+                      // set_ccd_current(data);
+                      // set_save_ccd(false);
+                      // set_create_ccd_is_active(false);
+                      // set_update_ccd_is_active(false);
+                      // set_delete_ccd_is_active(false);
                     }
                   });
-                  
                 }}
               >
-                BUSCAR
+                BUSCAR CCD
               </Button>
               <Button
                 type="submit"
                 color="primary"
                 variant="contained"
-                startIcon={<SyncIcon />}
+                startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </Button>
@@ -362,8 +414,14 @@ export const CcdScreen: React.FC = () => {
                 color="success"
                 variant="contained"
                 startIcon={<CleanIcon />}
+                onClick={() => {
+                  clean_ccd();
+                  handleClearFile();
+                  // set_file(null);
+                  // clean formulario
+                }}
               >
-                LIMPIAR
+                LIMPIAR CAMPOS
               </Button>
             </Stack>
           </form>
@@ -391,7 +449,47 @@ export const CcdScreen: React.FC = () => {
               autoComplete="off"
             >
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={2}></Grid>
+                <Grid item xs={12} sm={2}>
+                  <Controller
+                    name="series"
+                    control={control}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
+                      <Select
+                        // {...field}
+                        value={value}
+                        onChange={(selectedOption: any) => {
+                          // Actualiza el valor seleccionado en el controlador
+                          // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
+                          if (!selectedOption.value) {
+                            onChange(null);
+                            console.log(selectedOption.value);
+                          } else {
+                            onChange(selectedOption);
+                            dispatch(
+                              get_serie_ccd_current(selectedOption.value)
+                            );
+                          }
+                          //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
+                          console.log('Valor seleccionado:', selectedOption);
+                        }}
+                        options={list_sries}
+                        // isClearable
+                        isSearchable
+                        placeholder="Seleccionar"
+                      />
+                    )}
+                  />
+                  {errors.sries !== null && (
+                    <div className="col-12">
+                      <small className="text-center text-danger">
+                        Este campo es obligatorio
+                      </small>
+                    </div>
+                  )}
+                </Grid>
                 <Grid item xs={12} sm={4}>
                   <ButtonGroup
                     variant="contained"
@@ -402,6 +500,10 @@ export const CcdScreen: React.FC = () => {
                         set_create_is_active(true);
                         set_title('Administrar series');
                       }}
+                      disabled={
+                        ccd_current === null ||
+                        ccd_current?.id_ccd === null
+                      }
                     >
                       CREAR SERIE
                     </Button>
@@ -410,13 +512,27 @@ export const CcdScreen: React.FC = () => {
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  {/* <Controller
+                  <Controller
                     name="subserie"
                     control={control}
-                    render={() => (
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
                       <Select
+                        // {...field}
+                        value={value}
                         options={list_subsries}
                         placeholder="Seleccionar"
+                        onChange={(selectedOption) => {
+                          onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                          // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
+
+                          //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
+                          console.log('Valor seleccionado:', selectedOption);
+                        }}
+                        // isClearable
+                        isSearchable
                       />
                     )}
                   />
@@ -426,7 +542,7 @@ export const CcdScreen: React.FC = () => {
                         Este campo es obligatorio
                       </small>
                     </div>
-                  )} */}
+                  )}
                 </Grid>
                 <Grid item xs={12} sm={4}>
                   <ButtonGroup
@@ -439,6 +555,7 @@ export const CcdScreen: React.FC = () => {
                         // set_create_is_active(true);
                         set_title('Administrar subseries');
                       }}
+                      disabled={serie_ccd_current === null}
                     >
                       CREAR SUBSERIE
                     </Button>
@@ -476,6 +593,7 @@ export const CcdScreen: React.FC = () => {
                     Unidades
                     <samp className="text-danger">*</samp>
                   </label>
+                  {/* este controler debe ser reemplazado por uno que me permite un dinamismo de los datos del ccd */}
                   <Controller
                     name="unidades_asignacion"
                     control={control}
@@ -559,11 +677,21 @@ export const CcdScreen: React.FC = () => {
                 <Grid item xs={12} sm={3}>
                   <Button
                     fullWidth
+                    onClick={() => {
+                      /* void dispatch(
+                        to_assign_ccds_service(
+                          ccd_current,
+                          set_flag_btn_finish,
+                          set_title_button_asing
+                        )
+                      ); */
+                      console.log('guardando la relación de asignaciones');
+                    }}
                     color="primary"
                     variant="contained"
                     startIcon={<SaveIcon />}
                   >
-                    EXPLORE TITS
+                    {title_button_asing}
                   </Button>
                 </Grid>
               </Grid>
@@ -587,21 +715,33 @@ export const CcdScreen: React.FC = () => {
               spacing={2}
               sx={{ mt: '20px' }}
             >
-              <Button
-                color="success"
-                variant="contained"
-                startIcon={<SaveIcon />}
-              >
-                REANUDAR
-              </Button>
-
-              <Button
-                color="success"
-                variant="contained"
-                startIcon={<SaveIcon />}
-              >
-                TERMINAR
-              </Button>
+              {flag_btn_finish ? (
+                <Button
+                  onClick={() => {
+                    void dispatch(
+                      to_resume_ccds_service(set_flag_btn_finish, ccd_current)
+                    );
+                  }}
+                  color="success"
+                  variant="contained"
+                  startIcon={<SaveIcon />}
+                >
+                  REANUDAR
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    void dispatch(
+                      to_finished_ccds_service(set_flag_btn_finish, ccd_current)
+                    );
+                  }}
+                  color="success"
+                  variant="contained"
+                  startIcon={<SaveIcon />}
+                >
+                  TERMINAR
+                </Button>
+              )}
             </Stack>
           </Grid>
         </Grid>
@@ -612,7 +752,7 @@ export const CcdScreen: React.FC = () => {
         title={title}
       />
       <CrearSubSerieCcdDialog
-        is_modal_active={create_subserie_active}
+        is_modal_active={create_sub_serie_active}
         set_is_modal_active={set_create_sub_serie_active}
         title={title}
       />

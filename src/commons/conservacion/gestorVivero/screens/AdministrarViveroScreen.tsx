@@ -2,6 +2,12 @@
 import { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // Componentes de Material UI
+
+import ButtonGroup from '@mui/material/ButtonGroup';
+import 'jspdf-autotable';
+import JsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
+
 import {
   Grid,
   Box,
@@ -70,7 +76,7 @@ const initial_state_current_nursery = {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function AdministrarViveroScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-  const  [action, set_action ] = useState<string>("create");
+  const [action, set_action] = useState<string>("create");
   const { nurseries } = useAppSelector((state) => state.nursery);
   const [add_nursery_is_active, set_add_nursery_is_active] =
     useState<boolean>(false);
@@ -160,7 +166,7 @@ export function AdministrarViveroScreen(): JSX.Element {
       width: 300,
       renderCell: (params) => (
         <>
-        <Tooltip title="Detalle">
+          <Tooltip title="Detalle">
             <IconButton
               onClick={() => {
                 dispatch(current_nursery(params.row));
@@ -236,13 +242,13 @@ export function AdministrarViveroScreen(): JSX.Element {
             </IconButton>
           </Tooltip>
 
-          {params.row.activo === true && params.row.id_viverista_actual?
+          {params.row.activo === true && params.row.id_viverista_actual ?
             <>
               <Tooltip title={params.row.en_funcionamiento ? "Cerrar" : "Abrir"}>
-               
+
                 <IconButton
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                  href= {`#/app/conservacion/gestor_vivero/apertura_cierre/${params.row.id_vivero}/`}
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                  href={`#/app/conservacion/gestor_vivero/apertura_cierre/${params.row.id_vivero}/`}
                 >
                   <Avatar
                     sx={{
@@ -264,37 +270,37 @@ export function AdministrarViveroScreen(): JSX.Element {
 
                   </Avatar>
                 </IconButton>
-                
-              </Tooltip>
-              {((params.row.fecha_ultima_apertura !== null || params.row.fecha_ultima_apertura !== "") && params.row.en_funcionamiento === true ) ?
 
-              <Tooltip title={params.row.vivero_en_cuarentena ? "Finalizar cuarentena" : "Iniciar cuarentena"}>
-                <IconButton
-                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                  href= {`#/app/conservacion/gestor_vivero/cuarentena/${params.row.id_vivero}/`}
-                >
-                  <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
+              </Tooltip>
+              {((params.row.fecha_ultima_apertura !== null || params.row.fecha_ultima_apertura !== "") && params.row.en_funcionamiento === true) ?
+
+                <Tooltip title={params.row.vivero_en_cuarentena ? "Finalizar cuarentena" : "Iniciar cuarentena"}>
+                  <IconButton
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                    href={`#/app/conservacion/gestor_vivero/cuarentena/${params.row.id_vivero}/`}
                   >
-                    {params.row.vivero_en_cuarentena ?
-                      <BusinessIcon
-                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                      /> :
-                      <DomainDisabledIcon
-                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                      />
-                    }
+                    <Avatar
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        background: '#fff',
+                        border: '2px solid',
+                      }}
+                      variant="rounded"
+                    >
+                      {params.row.vivero_en_cuarentena ?
+                        <BusinessIcon
+                          sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                        /> :
+                        <DomainDisabledIcon
+                          sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                        />
+                      }
 
-                  </Avatar>
-                </IconButton>
-              </Tooltip>
-              :null}
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+                : null}
             </>
             : null
           }
@@ -332,6 +338,83 @@ export function AdministrarViveroScreen(): JSX.Element {
     void dispatch(get_nurseries_service());
   }, []);
 
+  const export_to_excel = (): void => {
+    const rows = document.querySelectorAll('.MuiDataGrid-row');
+    const header_cells = document.querySelectorAll('.MuiDataGrid-cell--header');
+    const data: any[][] = [];
+
+    const headers = Array.from(header_cells).map((cell) => cell.textContent);
+
+    rows.forEach((row) => {
+      const row_data: any[] = [];
+      const cells = row.querySelectorAll('.MuiDataGrid-cell');
+
+      cells.forEach((cell) => {
+        row_data.push(cell.textContent);
+      });
+
+      data.push(row_data);
+    });
+
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]); // Combina headers con los subarreglos de data
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
+
+    const file_i = Math.random(); // Reemplaza con la variable que contenga el ID
+    const file_nnn = `productos_${file_i}.xlsx`; // Nombre del archivo con el ID concatenado
+
+    XLSX.writeFile(workbook, file_nnn);
+  };
+
+  const export_pdf = (): void => {
+    const doc = new JsPDF();
+
+    const data: any[][] = [];
+    const headers: any[] = [];
+
+    // Obtener los nombres de las columnas de la cuadrícula
+    columns.forEach((column) => {
+      headers.push(column.headerName);
+    });
+
+    // Obtener los datos de las filas de la cuadrícula
+    nurseries.forEach((nursery) => {
+      const row_data: any[] = [];
+
+      columns.forEach((column) => {
+        const cell_data = nursery[column.field as keyof typeof nursery];
+        row_data.push(cell_data);
+      });
+
+      data.push(row_data);
+    });
+
+    (doc as any).autoTable({
+      head: [headers],
+      body: data,
+    });
+
+    const file_id = Math.random(); // Reemplaza con la variable que contenga el ID
+    const file_name = `products_${file_id}.pdf`; // Nombre del archivo con el ID concatenado
+
+    doc.save(file_name);
+  };
+
+
+
+  const button_style = {
+    color: 'white',
+    backgroundColor: '#335B1E',
+    border: '3px solid black',
+    borderRadius: '50%',
+    width: '40px',
+    height: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: '10px'
+  };
+
   return (
     <>
       <Grid
@@ -360,6 +443,17 @@ export function AdministrarViveroScreen(): JSX.Element {
               Crear vivero
             </Button>
           </Stack>
+
+          <ButtonGroup style={{ margin: 7 }}  >
+            <Button style={button_style} onClick={export_to_excel}>
+              <i className="pi pi-file-excel"></i>
+            </Button>
+
+            <Button style={button_style} onClick={export_pdf}>
+              <i className="pi pi-file-pdf"></i>
+            </Button>
+
+          </ButtonGroup>
           <Grid item>
 
             <Box sx={{ width: '100%' }}>
@@ -378,7 +472,7 @@ export function AdministrarViveroScreen(): JSX.Element {
           <CrearViveroDialogForm
             is_modal_active={add_nursery_is_active}
             set_is_modal_active={set_add_nursery_is_active}
-            action = {action}
+            action={action}
           />
         </Grid>
       </Grid>

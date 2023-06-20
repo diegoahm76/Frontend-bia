@@ -11,6 +11,7 @@ import { FacilidadPagoAutorizadas } from '../screens/FacilidadPagoAutorizadas';
 import { DetalleFacilidadPago } from '../screens/DetalleFacilidadPago';
 import { IncumplimientoFacilidadPago } from '../screens/IncumplimientoFacilidadPago';
 import { ReposicionUsuarioExterno } from '../screens/ReposicionUsuarioExterno';
+import { ReposicionUsuarioInterno } from '../screens/ReposicionUsuarioInterno';
 import { NotificacionesRoutes } from '../notificaciones/routes/NotificacionesRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -29,6 +30,7 @@ export const FacilidadPagoRoutes: React.FC = () => {
       <Route path='seguimiento' element={<DetalleFacilidadPago />} />
       <Route path='incumplimiento' element={<IncumplimientoFacilidadPago />} />
       <Route path='reposicion_externa' element={<ReposicionUsuarioExterno />} />
+      <Route path='reposicion_interna' element={<ReposicionUsuarioInterno />} />
       <Route path='notificaciones/*' element={<NotificacionesRoutes />} />
     </Routes>
   )
