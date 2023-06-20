@@ -102,7 +102,6 @@ export const CcdScreen: React.FC = () => {
     // file,
     // set_file
   } = use_ccd() as any;
-  const [viewSubSerie, setViewSubSerie] = useState<boolean>(true);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClearFile = (): void => {

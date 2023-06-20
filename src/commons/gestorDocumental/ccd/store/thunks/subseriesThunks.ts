@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { type Dispatch } from 'react';
 // import Swal from 'sweetalert2';
 import { api } from '../../../../../api/axios';
@@ -51,13 +52,59 @@ export const create_sub_series_service = (body: any, clean: () => void) => {
   }
 }
 
-export const update_sub_series_service = (...args: any[]): void => {
-  console.log('update_sub_series_service')
-}
+//! update action for series
+export const update_sub_series_service = (
+  updatedData: any,
+  dataForm: any,
+  clean: () => void
+) => {
+  return async (
+    dispatch: Dispatch<any>,
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      const { data } = await api.put(
+        // serie_ccd_current = id_serie_doc
+        `gestor/ccd/subseries/update/${dataForm.id_subserie_doc}/`,
+        updatedData
+      );
+      dispatch(get_subseries_service(dataForm.id_serie_doc));
+      clean();
+      console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
-export const delete_sub_series_service = (...args: any[]): void => {
-  console.log('delete_sub_series_service')
-}
+
+export const delete_sub_series_service: any = (
+  params_ccd_info: any,
+  clean: () => void
+) => {
+  return async (
+    dispatch: Dispatch<any>,
+  ): Promise<any> => {
+    console.log(params_ccd_info)
+    try {
+      const {data} = await api.delete(
+        `gestor/ccd/subseries/delete/${params_ccd_info.row.id_subserie_doc}/`
+      );
+      dispatch(get_subseries_service(params_ccd_info.row.id_serie_doc));
+      clean();
+      console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
+
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 
 /* export const create_subseries_service:any = (
   newSubSeries: ISubSeriesObject[],
