@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-void */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -13,7 +15,6 @@ import {
   DialogTitle,
   Stack,
   Button,
-  Box,
   Divider,
   Grid,
   IconButton,
@@ -23,12 +24,10 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
-import /* create_series_service, */
-// , get_series_service
-'../../store/thunks/seriesThunks';
 import {
-  create_subseries_service
-  //, get_subseries_service
+  create_sub_series_service,
+  delete_sub_series_service,
+  update_sub_series_service
 } from '../../store/thunks/subseriesThunks';
 import { get_serie_ccd_current } from '../../store/slices/seriesSlice';
 import { get_subseries_ccd_current } from '../../store/slices/subseriesSlice';
@@ -41,16 +40,16 @@ const CrearSubSerieCcdDialog = ({
   set_is_modal_active,
   title
 }: IProps) => {
-   /* const { series_ccd , serie_ccd_current } = useAppSelector(
-    (state) => state.series
-  ); */
+  const { series_ccd, serie_ccd_current } = useAppSelector(
+    (state: any) => state.series
+  );
   const { subseries_ccd, subseries_ccd_current } = useAppSelector(
-    (state) => state.subseries
+    (state: any) => state.subseries
   );
   const { ccd_current } = useAppSelector((state: any) => state.ccd);
   const [title_button, set_title_button] = useState('Agregar');
 
-  // // Dispatch instance
+  //! Dispatch instance
   const dispatch: any = useAppDispatch();
 
   const {
@@ -63,10 +62,10 @@ const CrearSubSerieCcdDialog = ({
     defaultValues: initial_state
   });
   const data = watch();
-  // console.log(data);
+  console.log(data);
 
-  // useEffect para cargar los datos de la subSerie seleccionada
-  useEffect(() => {
+  //! useEffect to change the title of the button and set the values of the form
+  /*  useEffect(() => {
     if (subseries_ccd_current !== null) {
       reset({
         codigo: subseries_ccd_current.codigo,
@@ -82,68 +81,73 @@ const CrearSubSerieCcdDialog = ({
     return () => {
       dispatch(get_serie_ccd_current(null));
     };
-  }, [subseries_ccd_current]);
+  }, [subseries_ccd_current]); */
 
-  // useEffect para limpiar el store de la serie & la subserie seleccionada
+  useEffect(() => {
+    const { codigo, nombre, id_subserie_doc, id_serie_doc } =
+      subseries_ccd_current ?? initial_state;
+    reset({
+      codigo,
+      nombre,
+      id_subserie_doc,
+      id_serie_doc,
+    });
+
+    set_title_button(subseries_ccd_current ? 'Actualizar' : 'Agregar');
+
+    return () => {
+      dispatch(get_serie_ccd_current(null));
+    };
+  }, [
+    subseries_ccd_current,
+    dispatch,
+    reset,
+    get_serie_ccd_current,
+    initial_state,
+    set_title_button
+  ]);
+
+  //! useEffect to change the title of the modal and clean subseries data
   useEffect(() => {
     return () => {
-      // dispatch(get_serie_ccd_current(null));
       dispatch(get_subseries_ccd_current(null));
-      clean();
+      reset_form();
     };
-  }, [is_modal_active]);
+  }, [is_modal_active, series_ccd, dispatch]);
 
   // Función para limpiar el formulario
-  const clean = (): void => {
+  const reset_form = (): void => {
     reset(initial_state);
     set_title_button('Agregar');
   };
 
-  // Crear Catalogso de seriess --
-  /*  const create_series = (): void => {
-    alert('hola');
-    console.log('heeeloooo create series')
-    let new_item: any[] = [];
-    if (title_button === 'Agregar') {
-      new_item = [
-        ...series_ccd,
-        {
-          id_serie_doc: data.id_serie_doc,
-          nombre: data.nombre,
-          codigo: data.codigo,
-          id_ccd: ccd_current?.id_ccd,
-        },
-      ];
-    } else {
-      new_item = series_ccd.map((item: any) => {
-        return item.id_serie_doc === data.id_serie_doc
-          ? { ...item, nombre: data.nombre, codigo: Number(data.codigo) }
-          : item;
-      });
-    }
-    void dispatch(create_series_service(new_item, clean));
-  }; */
   // Crear subseries
-  const create_subseries = (): void => {
-    let new_item: any[] = [];
-    if (title_button === 'Agregar') {
-      new_item = [
-        ...subseries_ccd,
-        {
-          id_subserie_doc: data.id_subserie_doc,
-          nombre: data.nombre,
-          codigo: data.codigo,
-          id_ccd: ccd_current?.id_ccd
-        }
-      ];
-    } else {
-      new_item = subseries_ccd.map((item: any) => {
-        return item.id_subserie_doc === data.id_subserie_doc
-          ? { ...item, nombre: data.nombre, codigo: data.codigo }
-          : item;
-      });
-    }
-    void dispatch(create_subseries_service(new_item, clean));
+  const manage_sub_series = (): void => {
+    /* const updatedSeries = {
+      ...data,
+      nombre: data.nombre
+    };
+    const newSeries =
+      title_button === 'Agregar'
+        ? {
+            nombre: data.nombre,
+            codigo: Number(data.codigo),
+            id_ccd: ccd_current?.id_ccd
+          }
+        : updatedSeries;
+    const action =
+      title_button === 'Agregar'
+        ? create_sub_series_service(newSeries, reset_form)
+        : update_sub_series_service(updatedSeries, ccd_current, reset_form);
+    void dispatch(action); */
+    console.log('manage_sub_series', serie_ccd_current);
+    const newSeries = {
+      nombre: data.nombre,
+      codigo: Number(data.codigo),
+      id_serie_doc: serie_ccd_current,
+    };
+    const action = create_sub_series_service(newSeries, reset_form);
+    void dispatch(action);
   };
 
   // Función para eliminar subseries
@@ -151,11 +155,10 @@ const CrearSubSerieCcdDialog = ({
     const new_subseries = subseries_ccd.filter(
       (subseries: any) => subseries.id_subserie_doc !== id_subserie_doc
     );
-    void dispatch(create_subseries_service(new_subseries, () => ({})));
+    void dispatch(delete_sub_series_service(new_subseries, () => ({})));
   };
 
-
-  const handleOnClick = (params: any) => {
+  const handleOnClick_prepareEdit = (params: any) => {
     dispatch(get_subseries_ccd_current(params.data));
   };
 
@@ -163,42 +166,30 @@ const CrearSubSerieCcdDialog = ({
     delete_subseries(params.data.id_subserie_doc);
   };
 
-  //  Función para enviar los datos del formulario
-  const on_submit: SubmitHandler<IFormValues> = (t) => {
-    /* window.alert(JSON.stringify(t));
-    switch (title) {
-      case 'Crear Catalogo de series':
-        create_series();
-        break;
-      case 'Crear catalogo de subseries': */
-    create_subseries();
-    /*  break;
-      default:
-        break;
-    } */
-  };
-
   const columns: GridColDef[] = [
     {
-      headerName: 'Codigo',
+      headerName: 'Código subserie',
       field: 'codigo',
-      minWidth: 150,
-      maxWidth: 200
+      minWidth: 180,
+      maxWidth: 225,
+      flex: 1
     },
     {
-      headerName: 'Nombre',
+      headerName: 'Nombre subserie',
       field: 'nombre',
       minWidth: 150,
-      maxWidth: 200
+      maxWidth: 200,
+      flex: 1
     },
     {
       headerName: 'Acciones',
       field: 'accion',
+      minWidth: 200,
+      maxWidth: 235,
+      flex: 1,
       renderCell: (params: any) => (
         <>
-          <IconButton
-            onClick={() => handleOnClick(params)}
-          >
+          <IconButton onClick={() => handleOnClick_prepareEdit(params)}>
             <Avatar
               sx={{
                 width: 24,
@@ -213,9 +204,7 @@ const CrearSubSerieCcdDialog = ({
               />
             </Avatar>
           </IconButton>
-          <IconButton
-            onClick={() => handleDelete(params)}
-          >
+          <IconButton onClick={() => handleDelete(params)}>
             <Avatar
               sx={{
                 width: 24,
@@ -243,129 +232,116 @@ const CrearSubSerieCcdDialog = ({
         set_is_modal_active(false);
       }}
     >
-      <Box
-        component="form"
-        onSubmit={() => {
-          void handle_submit(on_submit);
-          console.log(errors);
-        }}
-      >
-        <DialogTitle>
-          {title}
+      <DialogTitle>
+        {title}
+        <IconButton
+          aria-label="close"
+          onClick={() => {
+            set_is_modal_active(false);
+          }}
+          sx={{
+            position: 'absolute',
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500]
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <Divider />
+      <DialogContent sx={{ mb: '0px' }}>
+        <form
+          onSubmit={(e: any) => {
+            e.preventDefault();
+            manage_sub_series();
+          }}
+          autoComplete="off"
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                fullWidth
+                {...register('nombre', { required: true })}
+                size="small"
+                label="Nombre"
+                variant="outlined"
+              />
+              {errors.nombre !== null && <p>{errors.nombre?.message}</p>}
+            </Grid>
 
-          <IconButton
-            aria-label="close"
+            <Grid item xs={12} sm={6}>
+              <TextField
+                margin="dense"
+                fullWidth
+                {...register('codigo', { required: true })}
+                size="small"
+                label="Código"
+                variant="outlined"
+              />
+              {errors.codigo !== null && <p>{errors.codigo?.message}</p>}
+
+              <Stack
+                direction="row"
+                justifyContent="flex-end"
+                spacing={2}
+                sx={{ mt: '0' }}
+              >
+                <Button
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                >
+                  {title_button}
+                </Button>
+                <Button
+                  color="success"
+                  variant="contained"
+                  startIcon={<CleanIcon />}
+                  onClick={() => {
+                    reset_form();
+                  }}
+                >
+                  LIMPIAR
+                </Button>
+              </Stack>
+            </Grid>
+
+            <Grid item xs={12}>
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={subseries_ccd}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => row.id_subserie_doc}
+              />
+            </Grid>
+          </Grid>
+        </form>
+      </DialogContent>
+      <Divider />
+      <DialogActions>
+        <Stack
+          direction="row"
+          spacing={2}
+          sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+        >
+          <Button
+            variant="outlined"
             onClick={() => {
               set_is_modal_active(false);
             }}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500]
-            }}
+            startIcon={<CloseIcon />}
           >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <Divider />
-        <DialogContent sx={{ mb: '0px' }}>
-          <Box
-            component="form"
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            onSubmit={() => {
-              void handle_submit(on_submit);
-              console.log(errors);
-            }}
-            autoComplete="off"
-          >
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  margin="dense"
-                  fullWidth
-                  {...register('nombre', { required: true })}
-                  size="small"
-                  label="Nombre"
-                  variant="outlined"
-                />
-                {errors.nombre !== null && <p>{errors.nombre?.message}</p>}
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  margin="dense"
-                  fullWidth
-                  {...register('codigo', { required: true })}
-                  size="small"
-                  label="Código"
-                  variant="outlined"
-                />
-                {errors.codigo !== null && <p>{errors.codigo?.message}</p>}
-
-                <Stack
-                  direction="row"
-                  justifyContent="flex-end"
-                  spacing={2}
-                  sx={{ mt: '0' }}
-                >
-                  <Button
-                    type="submit"
-                    color="primary"
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                  >
-                    {title_button}
-                  </Button>
-                  <Button
-                    color="success"
-                    variant="contained"
-                    startIcon={<CleanIcon />}
-                    onClick={() => {
-                      clean();
-                    }}
-                  >
-                    LIMPIAR
-                  </Button>
-                </Stack>
-              </Grid>
-
-              <Grid item xs={12}>
-                <DataGrid
-                  density="compact"
-                  autoHeight
-                  rows={
-                    /* title === 'Crear Catalogo de series' ? series_ccd :  */ subseries_ccd
-                  }
-                  columns={columns}
-                  pageSize={5}
-                  rowsPerPageOptions={[10]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row) => row.id_ccd}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        </DialogContent>
-        <Divider />
-        <DialogActions>
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-          >
-            <Button
-              variant="outlined"
-              onClick={() => {
-                set_is_modal_active(false);
-              }}
-              startIcon={<CloseIcon />}
-            >
-              CERRAR
-            </Button>
-          </Stack>
-        </DialogActions>
-      </Box>
+            CERRAR
+          </Button>
+        </Stack>
+      </DialogActions>
     </Dialog>
   );
 };

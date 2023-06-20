@@ -33,11 +33,13 @@ import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 import CrearSubSerieCcdDialog from '../componentes/crearSubSerieDialog/CrearSubserieDialog';
 import { get_ccd_current } from '../store/slices/ccdSlice';
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
+import { get_serie_ccd_current } from '../store/slices/seriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
   const dispatch: any = useAppDispatch();
   const { ccd_current } = useAppSelector((state: any) => state.ccd);
+  const {serie_ccd_current} = useAppSelector((state: any) => state.series)
   const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
@@ -57,7 +59,14 @@ export const CcdScreen: React.FC = () => {
     } else {
       set_flag_btn_finish(false);
     } */
-  }, [ccd_current]);
+  }, [ccd_current?.fecha_terminado]);
+
+
+  /* useEffect(() => {
+    if (ccd_current?.id_ccd) {
+      dispatch(to_resume_ccds_service(ccd_current?.id_ccd));
+    }
+  }, [ccd_current?.id_ccd]); */
 
   // Hooks
   const {
@@ -94,7 +103,7 @@ export const CcdScreen: React.FC = () => {
     // file,
     // set_file
   } = use_ccd() as any;
-
+  const [viewSubSerie, setViewSubSerie] = useState<boolean>(true);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClearFile = (): void => {
@@ -452,7 +461,12 @@ export const CcdScreen: React.FC = () => {
                         onChange={(selectedOption: any) => {
                           onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
                           // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
-
+                          if (selectedOption.value != null) {
+                            setViewSubSerie(false);
+                            dispatch(get_serie_ccd_current(selectedOption.value));
+                          }else{
+                            return;
+                          }
                           //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
                           console.log('Valor seleccionado:', selectedOption);
                         }}
@@ -489,31 +503,27 @@ export const CcdScreen: React.FC = () => {
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  {/* <Controller
-                    name="subserie"
-                    control={control}
-                    render={() => (
-                      <Select
-                        options={list_subsries}
-                        placeholder="Seleccionar"
-                      />
-                    )}
-                  /> */}
                   <Controller
                     name="subserie"
                     control={control}
-                    render={({ field }) => (
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
                       <Select
-                        {...field}
+                        // {...field}
+                        value={value}
                         options={list_subsries}
                         placeholder="Seleccionar"
                         onChange={(selectedOption) => {
-                          field.onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                          onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
                           // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
 
                           //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
                           console.log('Valor seleccionado:', selectedOption);
                         }}
+                        isClearable
+                        isSearchable
                       />
                     )}
                   />
@@ -536,6 +546,7 @@ export const CcdScreen: React.FC = () => {
                         // set_create_is_active(true);
                         set_title('Administrar subseries');
                       }}
+                      disabled={serie_ccd_current == null}
                     >
                       CREAR SUBSERIE
                     </Button>

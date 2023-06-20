@@ -31,10 +31,13 @@ import {
 } from '../../store/thunks/seriesThunks';
 import { get_serie_ccd_current } from '../../store/slices/seriesSlice';
 import type { IFormValues, IProps } from './types/types';
-import { initial_state } from './utils/constant';
+import { AvatarStyles, initial_state } from './utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { notification_error } from '../../utils/success_errors';
+import { get_subseries_ccd_current } from '../../store/slices/subseriesSlice';
+import { get_subseries_service } from '../../store/thunks/subseriesThunks';
+import use_ccd from '../../hooks/useCCD';
 
 const CrearSeriesCcdDialog = ({
   is_modal_active,
@@ -60,20 +63,24 @@ const CrearSeriesCcdDialog = ({
   });
   //! const data allow us to watch the values of the form
   const data = watch();
-  /* console.log(
-    '🚀 ~ file: CrearSeriesCcdDialog.tsx ~ line 86 ~ CrearSeriesCcdDialog ~ data crear serie ccd',
-    data
-  ); */
-  // useEffect para cargar los datos de la serie seleccionada
+
+  const { set_list_subsries } = use_ccd();
+
+  //! this use effect is to set the title of the button and the values of the form
   useEffect(() => {
     if (serie_ccd_current !== null) {
       reset({
         codigo: serie_ccd_current.codigo,
         nombre: serie_ccd_current.nombre,
         id_subserie_doc: null,
-        id_serie_doc: serie_ccd_current.id_serie_doc
+        id_serie_doc: serie_ccd_current
       });
       set_title_button('Actualizar');
+      console.log(
+        'serie_ccd_current.id_serie_doc',
+        serie_ccd_current
+      )
+      dispatch(get_subseries_service(serie_ccd_current))
     } else {
       reset(initial_state);
       set_title_button('Agregar');
@@ -84,7 +91,7 @@ const CrearSeriesCcdDialog = ({
   useEffect(() => {
     return () => {
       dispatch(get_serie_ccd_current(null));
-      // clean();
+      clean();
     };
   }, [is_modal_active]);
 
@@ -95,112 +102,81 @@ const CrearSeriesCcdDialog = ({
   };
 
   //! create or edit series, it depends on the title_button and the parameters
-const manage_series = (): void => {
+  const manage_series = (): void => {
     const updatedSeries = {
       ...data,
-      nombre: data.nombre,
-    }
-
+      nombre: data.nombre
+    };
     const newSeries =
-      title_button === 'Agregar' ? {
-        nombre: data.nombre,
-        codigo: Number(data.codigo),
-        id_ccd: ccd_current?.id_ccd,
-      } : updatedSeries;
-
-    if (title_button === 'Agregar') {
-      void dispatch(create_series_service(newSeries, clean));
-    } else {
-      void dispatch(update_series_data(updatedSeries, ccd_current, clean));
-    }
+      title_button === 'Agregar'
+        ? {
+            nombre: data.nombre,
+            codigo: Number(data.codigo),
+            id_ccd: ccd_current?.id_ccd
+          }
+        : updatedSeries;
+    const action =
+      title_button === 'Agregar'
+        ? create_series_service(newSeries, clean)
+        : update_series_data(updatedSeries, ccd_current, clean);
+    void dispatch(action);
   };
 
-  const handleOnClick = (params: any) => {
-
-    console.log(params.row);
-
-    const updatedSeries = series_ccd.map((item: any) => {
-      if (item.id_serie_doc === params.row.id_serie_doc) {
-        return {
-          ...item,
-          nombre: data.nombre,
-          // codigo: Number(data.codigo),
-        };
-      }
-      return item;
-    });
-    // console.log(updatedSeries);
-
+  // * console.log(params.row);
+  const handleOnClick_prepareEdit = (params: any) =>
     dispatch(get_serie_ccd_current(params.row));
-  };
 
   const handleDeleteSeries = async (params: any) => {
-    console.log(params);
-    console.log(series_ccd);
-
-    const new_series = series_ccd.filter(
-      (serie: any) => serie.id_serie_doc !== params.row.id_serie_doc
+    const { row } = params;
+    //! this function allow me to identify the series that i want to delete, however is unnecessary in this case, therefore i comment it
+    /* const newSeries = series_ccd.filter(
+      (serie: any) => serie.id_serie_doc !== row.id_serie_doc
     );
-      console.log(new_series);
-    if (params?.row?.tiene_subseries) {
+    */
+    // * console.log(newSeries);
+
+    if (row?.tiene_subseries) {
       set_is_modal_active(false);
       await notification_error(
         'No se puede eliminar una serie con subseries asociadas, debe eliminarse primero las subseries asociadas'
       );
     } else {
-      void dispatch(delete_series_service(new_series, params, () => ({})));
+      void dispatch(delete_series_service(params, () => ({})));
     }
   };
 
-  const handleOnClose = () => {
-    set_is_modal_active(false);
-    dispatch(get_serie_ccd_current(null));
-  };
-
-
   const columns: GridColDef[] = [
     {
-      headerName: 'Codigo',
+      headerName: 'Código serie',
       field: 'codigo',
-      minWidth: 150,
-      maxWidth: 200
+      minWidth: 180,
+      maxWidth: 225,
+      flex: 1
     },
     {
-      headerName: 'Nombre',
+      headerName: 'Nombre serie',
       field: 'nombre',
-      minWidth: 150,
-      maxWidth: 200
+      minWidth: 180,
+      maxWidth: 225,
+      flex: 1
     },
     {
       headerName: 'Acciones',
       field: 'accion',
+      minWidth: 200,
+      maxWidth: 235,
+      flex: 1,
       renderCell: (params: any) => (
         <>
-          <IconButton onClick={() => handleOnClick(params)}>
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid'
-              }}
-              variant="rounded"
-            >
+          <IconButton onClick={() => handleOnClick_prepareEdit(params)}>
+            <Avatar sx={AvatarStyles} variant="rounded">
               <EditIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
           </IconButton>
           <IconButton onClick={() => void handleDeleteSeries(params)}>
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid'
-              }}
-              variant="rounded"
-            >
+            <Avatar sx={AvatarStyles} variant="rounded">
               <DeleteIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
@@ -213,6 +189,7 @@ const manage_series = (): void => {
 
   return (
     <Dialog
+      id="dialog_series_ccd"
       maxWidth="md"
       open={is_modal_active}
       onClose={() => {
@@ -241,8 +218,8 @@ const manage_series = (): void => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-           manage_series(/* data.id_serie_doc */);
-           console.log('hello from series');
+            manage_series();
+            console.log('hello from series');
           }}
           autoComplete="off"
         >
@@ -268,7 +245,8 @@ const manage_series = (): void => {
                 label="Código"
                 disabled={title_button === 'Actualizar'}
                 style={{
-                  visibility: title_button === 'Actualizar' ? 'hidden' : 'visible'
+                  visibility:
+                    title_button === 'Actualizar' ? 'hidden' : 'visible'
                 }}
                 variant="outlined"
                 value={data.codigo}
@@ -306,9 +284,7 @@ const manage_series = (): void => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={
-                  series_ccd
-                }
+                rows={series_ccd}
                 columns={columns}
                 pageSize={5}
                 rowsPerPageOptions={[10]}
