@@ -556,7 +556,7 @@ export const CcdScreen: React.FC = () => {
                         // set_create_is_active(true);
                         set_title('Administrar subseries');
                       }}
-                      disabled={serie_ccd_current == null && ccd_current === null}
+                      disabled={serie_ccd_current === null}
                     >
                       CREAR SUBSERIE
                     </Button>
