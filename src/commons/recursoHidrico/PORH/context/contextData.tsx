@@ -5,6 +5,7 @@ import React, { createContext } from 'react';
 import type { GetActividades, GetPrograma, GetProyectos } from '../Interfaces/interfaces';
 import { get_data_id } from '../Request/request';
 import { control_error } from '../../../../helpers';
+import type { AxiosError } from 'axios';
 
 interface UserContext {
   crear_programa: any;
@@ -124,8 +125,11 @@ export const UserProvider = ({
       if (id_proyecto) {
         await get_data_id(id_proyecto, set_rows_actividades, 'get/actividades/por/proyectos');
       }
-    } catch (error: any) {
-      control_error(error.response.data.detail);
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
     }
   };
   const fetch_data_proyectos = async (): Promise<void> => {
@@ -134,16 +138,22 @@ export const UserProvider = ({
       if (id_programa) {
         await get_data_id(id_programa, set_rows_proyectos, 'get/proyectos/por/programas');
       }
-    } catch (error: any) {
-      control_error(error.response.data.detail);
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
     }
   };
   const fetch_data_programas = async (): Promise<void> => {
     try {
       set_rows_programas([])
       await get_data_id(1, set_rows_programas, 'get/programas');
-    } catch (error: any) {
-      control_error(error.response.data.detail);
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
     }
   };
 
@@ -151,8 +161,6 @@ export const UserProvider = ({
   const [columns, setColumns] = React.useState<string[]>([]);
   const [actionIcons, setActionIcons] = React.useState<any[]>([]);
   const [crear_programa, set_crear_programa] = React.useState({});
-
-
 
   const value = {
     fetch_data_actividades,
@@ -197,5 +205,71 @@ export const UserProvider = ({
     actionIcons,
     setActionIcons,
   };
+
+  // Validaciones
+  if (is_agregar_programa) {
+    value.is_editar_programa = false;
+    value.is_seleccionar_programa = false;
+    value.is_agregar_proyecto = false;
+    value.is_editar_proyecto = false;
+    value.is_seleccionar_proyecto = false;
+    value.is_agregar_actividad = false;
+    value.is_editar_actividad = false;
+    value.is_seleccionar_actividad = false;
+    set_is_agregar_proyecto(true);
+  } else if (is_editar_programa) {
+    value.is_agregar_programa = false;
+    value.is_seleccionar_programa = false;
+    value.is_agregar_proyecto = false;
+    value.is_editar_proyecto = false;
+    value.is_seleccionar_proyecto = false;
+    value.is_agregar_actividad = false;
+    value.is_editar_actividad = false;
+    value.is_seleccionar_actividad = false;
+  } else if (is_seleccionar_programa) {
+    value.is_agregar_programa = false;
+    value.is_editar_programa = false;
+    value.is_agregar_proyecto = false;
+    value.is_editar_proyecto = false;
+    value.is_seleccionar_proyecto = false;
+    value.is_agregar_actividad = false;
+    value.is_editar_actividad = false;
+  } else if (is_agregar_proyecto) {
+    value.is_agregar_programa = false;
+    value.is_editar_programa = false;
+    value.is_seleccionar_programa = false;
+    value.is_editar_proyecto = false;
+    value.is_seleccionar_proyecto = false;
+    value.is_editar_actividad = false;
+    value.is_seleccionar_actividad = false;
+  } else if (is_seleccionar_proyecto) {
+    value.is_agregar_programa = false;
+    value.is_editar_programa = false;
+    value.is_seleccionar_programa = false;
+    value.is_agregar_proyecto = false;
+    value.is_editar_proyecto = false;
+    value.is_agregar_actividad = false;
+    value.is_editar_actividad = false;
+  } else if (is_agregar_actividad) {
+    value.is_editar_actividad = false;
+    value.is_seleccionar_actividad = false;
+    if (!is_agregar_programa && !is_agregar_proyecto && !is_seleccionar_programa && !is_seleccionar_proyecto) {
+      value.is_agregar_programa = true;
+    }
+  } else if (is_editar_actividad) {
+    value.is_agregar_actividad = false;
+    value.is_seleccionar_actividad = false;
+    if (!is_seleccionar_programa && !is_seleccionar_proyecto) {
+      value.is_seleccionar_programa = true;
+    }
+  } else if (is_seleccionar_actividad) {
+    value.is_agregar_actividad = false;
+    value.is_editar_actividad = false;
+    if (!is_seleccionar_programa && !is_seleccionar_proyecto) {
+      value.is_seleccionar_programa = true;
+    }
+  }
+
+
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };

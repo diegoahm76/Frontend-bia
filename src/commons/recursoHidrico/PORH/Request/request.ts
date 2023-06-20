@@ -14,6 +14,10 @@ export const get_data_id = async (id: number, set_data: any, url: string): Promi
   return data.data;
 };
 
+export const eliminar_id = async (id: number, url: string): Promise<any> => {
+  return await api.delete(`hidrico/programas/${url}/${id}/`);
+};
+
 // post 
 export const post_programa = async (
   form: any,
@@ -41,7 +45,7 @@ export const post_programa = async (
       nombre: form.nombre_programa,
       fecha_inicio: dayjs(form.fecha_inicio).format('YYYY-MM-DD'),
       fecha_fin: dayjs(form.fecha_fin).format('YYYY-MM-DD'),
-      proyectos: nuevos_proyectos,
+      proyectos: form.nombre ? nuevos_proyectos : [],
     }
   );
 
@@ -102,5 +106,6 @@ export const search_avanzada = async ({
   const url = `hidrico/programas/get/avanzada/programas/?nombre_proyecto=${String(nombre_proyecto ?? '')}&nombre_programa=${String(nombre_programa ?? '')}&nombre_PORH=${String(nombre_PORH ?? '')}`;
   return await api.get<ResponseServer<InfoPorh[]>>(url);
 };
+
 
 

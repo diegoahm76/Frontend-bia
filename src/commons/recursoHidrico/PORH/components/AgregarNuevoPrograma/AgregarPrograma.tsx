@@ -74,6 +74,10 @@ export const AgregarPrograma: React.FC<IProps> = ({
     }
   };
 
+  const isNombreProgramaValid = nombrePrograma.trim() !== '';
+  const isFechasValidas = fechaInicial && fechaFin ? fechaInicial < fechaFin : true;
+  const isFechaInicialValida = fechaInicial ? fechaInicial > new Date() : true;
+
   return (
     <>
       <Grid container spacing={2} mt={0.1}>
@@ -91,9 +95,10 @@ export const AgregarPrograma: React.FC<IProps> = ({
             value={nombrePrograma}
             onChange={handleNombreProgramaChange}
             inputProps={{ ...register('nombre_programa', { required: true }) }}
-            error={Boolean(errors.nombre_programa)}
+            error={Boolean(errors.nombre_programa) || !isNombreProgramaValid}
             helperText={
-              (errors.nombre_programa?.type === "required") ? "Este campo es obligatorio" : ''
+              (errors.nombre_programa?.type === "required") ? "Este campo es obligatorio" :
+                !isNombreProgramaValid ? 'El nombre del programa no puede estar vacío' : ''
             }
           />
         </Grid>
@@ -115,9 +120,11 @@ export const AgregarPrograma: React.FC<IProps> = ({
                   {...register('fecha_inicial', {
                     required: true,
                   })}
-                  error={Boolean(errors.fecha_inicial)}
+                  error={Boolean(errors.fecha_inicial) || !isFechaInicialValida || !isFechasValidas}
                   helperText={
-                    (errors.fecha_inicial?.type === "required") ? "Este campo es obligatorio" : ''
+                    (errors.fecha_inicial?.type === "required") ? "Este campo es obligatorio" :
+                      !isFechaInicialValida ? 'La fecha de inicio debe ser posterior a la fecha actual' :
+                        !isFechasValidas ? 'La fecha de inicio debe ser anterior a la fecha de finalización' : ''
                   }
                 />
               )}

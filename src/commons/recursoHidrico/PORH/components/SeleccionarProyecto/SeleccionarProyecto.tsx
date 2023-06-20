@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { Avatar, Divider, IconButton, TextField, Typography } from '@mui/material';
@@ -16,6 +17,10 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import type { GetActividades } from '../../Interfaces/interfaces';
+import Swal from 'sweetalert2';
+import { control_success } from '../../../requets/Request';
+import { eliminar_id } from '../../Request/request';
+import { control_error } from '../../../../../helpers';
 
 interface IProps {
   data: any;
@@ -99,7 +104,7 @@ export const SeleccionarProyecto: React.FC<IProps> = (
             </IconButton>
             <IconButton
               onClick={() => {
-                // confirmar_eliminar_cargo(params.row.id_cargo as number)
+                confirmar_eliminar(params.row.id_actividades as number)
               }}
             >
               <Avatar
@@ -118,7 +123,6 @@ export const SeleccionarProyecto: React.FC<IProps> = (
             </IconButton>
             <IconButton
               onClick={() => {
-                // set_id_programa(params.row.id_programa as number);
                 set_data_actividad(params.row);
                 set_id_actividad(params.row.id_actividades as number);
                 set_is_agregar_actividad(false);
@@ -153,7 +157,6 @@ export const SeleccionarProyecto: React.FC<IProps> = (
 
   ];
 
-
   useEffect(() => {
     void fetch_data_actividades();
   }, [data]);
@@ -184,6 +187,34 @@ export const SeleccionarProyecto: React.FC<IProps> = (
     set_value('vigencia_final', date)
     set_end_date(date)
   };
+  const confirmar_eliminar = (id_actividad: number): void => {
+    void Swal.fire({
+      // title: "Estas seguro?",
+      customClass: {
+        confirmButton: "square-btn",
+        cancelButton: "square-btn",
+      },
+      width: 350,
+      text: "¿Estas seguro?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#0EC32C",
+      cancelButtonColor: "#DE1616",
+      confirmButtonText: "Si, elminar!",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await eliminar_id(id_actividad, 'eliminar/actividad');
+          void fetch_data_actividades()
+          control_success('La actividad se eliminó correctamente')
+        } catch (error: any) {
+          control_error(error.response.data.detail || 'hubo un error al eliminar, intenta de nuevo');
+        }
+      }
+    });
+  };
+
   return (
     <>
       <Grid item xs={12}>

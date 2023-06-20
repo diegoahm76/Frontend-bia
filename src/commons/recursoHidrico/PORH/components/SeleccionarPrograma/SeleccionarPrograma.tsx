@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Grid from '@mui/material/Grid';
@@ -17,12 +18,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataContext } from '../../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { get_data_id } from '../../Request/request';
-import { control_error } from '../../../../../helpers';
 import { EditarProyecto } from '../ActualizarProyecto/EditarProyectos';
 import type { GetProyectos } from '../../Interfaces/interfaces';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import { SeleccionarProyecto } from '../SeleccionarProyecto/SeleccionarProyecto';
+import { eliminar_id } from '../../Request/request';
+import { control_success } from '../../../requets/Request';
+import { control_error } from '../../../../../helpers';
+import Swal from 'sweetalert2';
 
 interface IProps {
   data: any;
@@ -109,16 +112,14 @@ export const SeleccionarPrograma: React.FC<IProps> = (
                     onClick={() => {
                       set_id_proyecto(params.row.id_proyecto as number)
                       set_data_proyectos(params.row)
-                      set_is_agregar_proyecto(false)
                       set_is_editar_proyecto(true)
-                      set_is_seleccionar_proyecto(false)
                     }}
                   />
                 </Avatar>
               </IconButton>
               <IconButton
                 onClick={() => {
-                  // confirmar_eliminar_cargo(params.row.id_cargo as number)
+                  confirmar_eliminar(params.row.id_proyecto as number)
                 }}
               >
                 <Avatar
@@ -139,8 +140,6 @@ export const SeleccionarPrograma: React.FC<IProps> = (
                 onClick={() => {
                   set_id_proyecto(params.row.id_proyecto as number)
                   set_data_proyectos(params.row)
-                  set_is_agregar_proyecto(false)
-                  set_is_editar_proyecto(false)
                   set_is_seleccionar_proyecto(true)
                 }}
               >
@@ -202,6 +201,34 @@ export const SeleccionarPrograma: React.FC<IProps> = (
       set_end_date(new Date(data.fecha_fin))
     }
   }, [data !== undefined]);
+
+  const confirmar_eliminar = (id_proyecto: number): void => {
+    void Swal.fire({
+      // title: "Estas seguro?",
+      customClass: {
+        confirmButton: "square-btn",
+        cancelButton: "square-btn",
+      },
+      width: 350,
+      text: "¿Estas seguro?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#0EC32C",
+      cancelButtonColor: "#DE1616",
+      confirmButtonText: "Si, elminar!",
+      cancelButtonText: "Cancelar",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await eliminar_id(id_proyecto, 'eliminar/proyecto');
+          void fetch_data_proyectos()
+          control_success('El proyecto se eliminó correctamente')
+        } catch (error: any) {
+          control_error(error.response.data.detail || 'hubo un error al eliminar, intenta de nuevo');
+        }
+      }
+    });
+  };
 
   return (
     <>
@@ -293,9 +320,7 @@ export const SeleccionarPrograma: React.FC<IProps> = (
                 <LoadingButton
                   variant="outlined"
                   onClick={() => {
-                    set_is_agregar_proyecto(true)
-                    set_is_editar_proyecto(false)
-                    set_is_seleccionar_proyecto(false)
+                    set_is_agregar_proyecto(true);
                     set_id_proyecto(null)
                   }}
                 >
