@@ -7,7 +7,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
 import { set_bienes, set_bienes_solicitud, set_current_bien } from "../store/slices/indexSolicitud";
 import { useForm } from "react-hook-form";
-import { get_bienes_service, } from "../store/thunks/solicitudViveroThunks";
+// import { get_bienes_service, } from "../store/thunks/solicitudViveroThunks";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
