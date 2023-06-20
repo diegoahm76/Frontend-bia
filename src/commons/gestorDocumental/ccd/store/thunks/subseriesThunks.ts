@@ -63,7 +63,6 @@ export const update_sub_series_service = (
   ): Promise<AxiosResponse | AxiosError> => {
     try {
       const { data } = await api.put(
-        // serie_ccd_current = id_serie_doc
         `gestor/ccd/subseries/update/${dataForm.id_subserie_doc}/`,
         updatedData
       );
