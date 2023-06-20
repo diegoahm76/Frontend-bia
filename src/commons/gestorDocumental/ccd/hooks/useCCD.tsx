@@ -31,6 +31,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
 import { get_series_service } from '../store/thunks/seriesThunks';
 import { get_subseries_service } from '../store/thunks/subseriesThunks';
+import { get_serie_ccd_current } from '../store/slices/seriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
@@ -381,6 +382,7 @@ const use_ccd = () => {
   dispatch(get_assignments_ccd_current(null));
   dispatch(get_series_service('0'));
   dispatch(get_subseries_service('0'));
+  dispatch(get_serie_ccd_current(null));
 }, [dispatch, reset, set_title_button_asing]);
 
   // Funcion para eliminar Asignaciones

@@ -123,48 +123,48 @@ const CrearSubSerieCcdDialog = ({
 
   // Crear subseries
   const manage_sub_series = (): void => {
-    /* const updatedSeries = {
+    const updatedSeries = {
       ...data,
-      nombre: data.nombre
+      nombre: data.nombre,
     };
     const newSeries =
       title_button === 'Agregar'
         ? {
             nombre: data.nombre,
             codigo: Number(data.codigo),
-            id_ccd: ccd_current?.id_ccd
+            id_serie_doc: serie_ccd_current
           }
         : updatedSeries;
     const action =
       title_button === 'Agregar'
         ? create_sub_series_service(newSeries, reset_form)
-        : update_sub_series_service(updatedSeries, ccd_current, reset_form);
-    void dispatch(action); */
-    console.log('manage_sub_series', serie_ccd_current);
+        : update_sub_series_service(updatedSeries, data, reset_form);
+    void dispatch(action);
+
+   /* console.log('manage_sub_series', serie_ccd_current);
     const newSeries = {
       nombre: data.nombre,
       codigo: Number(data.codigo),
       id_serie_doc: serie_ccd_current,
     };
     const action = create_sub_series_service(newSeries, reset_form);
-    void dispatch(action);
+    void dispatch(action); */
   };
 
   // Función para eliminar subseries
-  const delete_subseries = (id_subserie_doc: number | null): void => {
-    const new_subseries = subseries_ccd.filter(
+  const delete_subseries = (params: any): void => {
+    /* const new_subseries = subseries_ccd.filter(
       (subseries: any) => subseries.id_subserie_doc !== id_subserie_doc
-    );
-    void dispatch(delete_sub_series_service(new_subseries, () => ({})));
+    ); */
+    console.log(params);
+    void dispatch(delete_sub_series_service(params, () => ({})));
   };
 
   const handleOnClick_prepareEdit = (params: any) => {
-    dispatch(get_subseries_ccd_current(params.data));
+    console.log(params);
+    dispatch(get_subseries_ccd_current(params.row));
   };
 
-  const handleDelete = (params: any) => {
-    delete_subseries(params.data.id_subserie_doc);
-  };
 
   const columns: GridColDef[] = [
     {
@@ -204,7 +204,7 @@ const CrearSubSerieCcdDialog = ({
               />
             </Avatar>
           </IconButton>
-          <IconButton onClick={() => handleDelete(params)}>
+          <IconButton onClick={() => delete_subseries(params)}>
             <Avatar
               sx={{
                 width: 24,
@@ -267,6 +267,7 @@ const CrearSubSerieCcdDialog = ({
                 size="small"
                 label="Nombre"
                 variant="outlined"
+                value={data.nombre}
               />
               {errors.nombre !== null && <p>{errors.nombre?.message}</p>}
             </Grid>
@@ -279,6 +280,7 @@ const CrearSubSerieCcdDialog = ({
                 size="small"
                 label="Código"
                 variant="outlined"
+                value={data.codigo}
               />
               {errors.codigo !== null && <p>{errors.codigo?.message}</p>}
 
