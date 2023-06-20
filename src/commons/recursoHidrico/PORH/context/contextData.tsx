@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import React, { createContext } from 'react';
 import type { GetActividades, GetPrograma, GetProyectos } from '../Interfaces/interfaces';
+import { get_data_id } from '../Request/request';
+import { control_error } from '../../../../helpers';
 
 interface UserContext {
   crear_programa: any;
@@ -9,7 +12,6 @@ interface UserContext {
   rows_programas: GetPrograma[];
   rows_proyectos: GetProyectos[];
   rows_actividades: GetActividades[];
-  rows_avances: any[];
   is_agregar_actividad: boolean;
   is_editar_actividad: boolean;
   is_seleccionar_actividad: boolean;
@@ -28,7 +30,6 @@ interface UserContext {
   set_rows_programas: (rows: GetPrograma[]) => void;
   set_rows_proyectos: (rows: GetProyectos[]) => void;
   set_rows_actividades: (rows: GetActividades[]) => void;
-  set_rows_avances: (rows: any[]) => void;
   set_is_agregar_actividad: (value: boolean) => void;
   set_is_editar_actividad: (value: boolean) => void;
   set_is_seleccionar_actividad: (value: boolean) => void;
@@ -41,13 +42,15 @@ interface UserContext {
   set_id_programa: (value: number | null) => void;
   set_id_proyecto: (value: number | null) => void;
   set_id_actividad: (value: number | null) => void;
+  fetch_data_programas: () => Promise<void>;
+  fetch_data_proyectos: () => Promise<void>;
+  fetch_data_actividades: () => Promise<void>;
 }
 
 export const DataContext = createContext<UserContext>({
   rows_programas: [],
   rows_proyectos: [],
   rows_actividades: [],
-  rows_avances: [],
   is_agregar_actividad: false,
   is_editar_actividad: false,
   is_seleccionar_actividad: false,
@@ -66,7 +69,6 @@ export const DataContext = createContext<UserContext>({
   set_rows_programas: () => { },
   set_rows_proyectos: () => { },
   set_rows_actividades: () => { },
-  set_rows_avances: () => { },
   crear_programa: {},
   set_crear_programa: () => { },
   set_is_agregar_actividad: () => { },
@@ -81,6 +83,9 @@ export const DataContext = createContext<UserContext>({
   set_id_programa: () => { },
   set_id_proyecto: () => { },
   set_id_actividad: () => { },
+  fetch_data_programas: async () => { },
+  fetch_data_proyectos: async () => { },
+  fetch_data_actividades: async () => { },
 });
 
 export const UserProvider = ({
@@ -113,9 +118,35 @@ export const UserProvider = ({
   const [is_editar_actividad, set_is_editar_actividad] = React.useState(false);
   const [is_seleccionar_actividad, set_is_seleccionar_actividad] = React.useState(false);
 
+  const fetch_data_actividades = async (): Promise<void> => {
+    try {
+      set_rows_actividades([])
+      if (id_proyecto) {
+        await get_data_id(id_proyecto, set_rows_actividades, 'get/actividades/por/proyectos');
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+  const fetch_data_proyectos = async (): Promise<void> => {
+    try {
+      set_rows_proyectos([])
+      if (id_programa) {
+        await get_data_id(id_programa, set_rows_proyectos, 'get/proyectos/por/programas');
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
+  const fetch_data_programas = async (): Promise<void> => {
+    try {
+      set_rows_programas([])
+      await get_data_id(1, set_rows_programas, 'get/programas');
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  };
 
-
-  const [rows_avances, set_rows_avances] = React.useState<any>([]);
   const [filter, setFilter] = React.useState<any>([]);
   const [columns, setColumns] = React.useState<string[]>([]);
   const [actionIcons, setActionIcons] = React.useState<any[]>([]);
@@ -124,6 +155,9 @@ export const UserProvider = ({
 
 
   const value = {
+    fetch_data_actividades,
+    fetch_data_proyectos,
+    fetch_data_programas,
     set_id_actividad,
     id_actividad,
     set_id_proyecto,
@@ -148,8 +182,6 @@ export const UserProvider = ({
     set_is_editar_actividad,
     is_seleccionar_actividad,
     set_is_seleccionar_actividad,
-    set_rows_avances,
-    rows_avances,
     set_crear_programa,
     crear_programa,
     rows_programas,

@@ -30,6 +30,7 @@ interface IProps {
   register: any;
   set_value: any;
   set_data: any;
+  errors: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarPrograma: React.FC<IProps> = (
@@ -37,12 +38,12 @@ export const SeleccionarPrograma: React.FC<IProps> = (
     register,
     set_value,
     watch,
+    errors,
   }:
     IProps) => {
 
   const {
     rows_proyectos,
-    set_rows_proyectos,
     is_agregar_proyecto,
     set_is_agregar_proyecto,
     is_editar_proyecto,
@@ -50,6 +51,7 @@ export const SeleccionarPrograma: React.FC<IProps> = (
     is_seleccionar_proyecto,
     set_is_seleccionar_proyecto,
     set_id_proyecto,
+    fetch_data_proyectos,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -188,17 +190,9 @@ export const SeleccionarPrograma: React.FC<IProps> = (
     set_end_date(date)
   };
 
-  const fetch_data = async (id_programa: number): Promise<void> => {
-    try {
-      await get_data_id(id_programa, set_rows_proyectos, 'get/proyectos/por/programas');
-    } catch (error) {
-      control_error(error);
-    }
-  };
-
   useEffect(() => {
-    void fetch_data(data.id_programa);
-  }, [data.id_programa]);
+    void fetch_data_proyectos();
+  }, [data]);
 
   useEffect(() => {
     if (data !== undefined) {
@@ -319,6 +313,9 @@ export const SeleccionarPrograma: React.FC<IProps> = (
               register={register}
               watch={watch}
               set_value={set_value}
+              errors={errors}
+              fecha_inicial_programa={start_date}
+              fecha_fin_programa={end_date}
             />
           </>
         )}

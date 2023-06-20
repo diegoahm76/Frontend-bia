@@ -14,8 +14,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
-import { get_data_id } from '../../Request/request';
-import { control_error } from '../../../../../helpers';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import type { GetActividades } from '../../Interfaces/interfaces';
 
@@ -26,8 +24,6 @@ interface IProps {
   set_value: any;
   set_id_proyecto: any;
 }
-
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarProyecto: React.FC<IProps> = (
   { data,
@@ -40,7 +36,6 @@ export const SeleccionarProyecto: React.FC<IProps> = (
 
   const {
     rows_actividades,
-    set_rows_actividades,
     is_agregar_actividad,
     set_is_agregar_actividad,
     is_editar_actividad,
@@ -48,6 +43,7 @@ export const SeleccionarProyecto: React.FC<IProps> = (
     is_seleccionar_actividad,
     set_is_seleccionar_actividad,
     set_id_actividad,
+    fetch_data_actividades,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -157,16 +153,9 @@ export const SeleccionarProyecto: React.FC<IProps> = (
 
   ];
 
-  const fetch_data = async (id_proyecto: number): Promise<void> => {
-    try {
-      await get_data_id(id_proyecto, set_rows_actividades, 'get/actividades/por/proyectos');
-    } catch (error) {
-      control_error(error);
-    }
-  };
 
   useEffect(() => {
-    void fetch_data(data.id_proyecto);
+    void fetch_data_actividades();
   }, [data]);
 
   useEffect(() => {
