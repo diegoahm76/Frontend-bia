@@ -469,6 +469,7 @@ const use_ccd = () => {
     list_organigrams,
     list_sries,
     list_subsries,
+    set_list_subsries,
     title,
     title_button_asing,
     create_is_active,
