@@ -73,7 +73,7 @@ const CrearSeriesCcdDialog = ({
         codigo: serie_ccd_current.codigo,
         nombre: serie_ccd_current.nombre,
         id_subserie_doc: null,
-        id_serie_doc: serie_ccd_current
+        id_serie_doc: serie_ccd_current.id_serie_doc
       });
       set_title_button('Actualizar');
       console.log(
