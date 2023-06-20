@@ -186,9 +186,15 @@ export function ListOrganigramas({
           ) : (
             <Tooltip title="Editar">
               <IconButton
-                disabled={params.row.id_persona_cargo !== userinfo.id_persona}
+              //! revisar esto detalladamente con el ing de backend
+                /* disabled={
+                  params.row.id_persona_cargo !== userinfo.id_persona
+                } */
                 onClick={() => {
                   console.log('hi')
+                  console.log(params.row)
+                  console.log(userinfo.id_persona)
+                  console.log(organigram)
                   dispatch(current_organigram(params.row));
                   set_position_tab_organigrama('2');
                 }}
