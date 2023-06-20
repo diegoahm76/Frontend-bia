@@ -102,6 +102,7 @@ const CrearSubSerieCcdDialog = ({
     subseries_ccd_current,
     dispatch,
     reset,
+    // serie_ccd_current,
     get_serie_ccd_current,
     initial_state,
     set_title_button
@@ -140,15 +141,6 @@ const CrearSubSerieCcdDialog = ({
         ? create_sub_series_service(newSeries, reset_form)
         : update_sub_series_service(updatedSeries, data, reset_form);
     void dispatch(action);
-
-   /* console.log('manage_sub_series', serie_ccd_current);
-    const newSeries = {
-      nombre: data.nombre,
-      codigo: Number(data.codigo),
-      id_serie_doc: serie_ccd_current,
-    };
-    const action = create_sub_series_service(newSeries, reset_form);
-    void dispatch(action); */
   };
 
   // Función para eliminar subseries
@@ -278,6 +270,10 @@ const CrearSubSerieCcdDialog = ({
                 fullWidth
                 {...register('codigo', { required: true })}
                 size="small"
+                style={{
+                  visibility:
+                    title_button === 'Actualizar' ? 'hidden' : 'visible'
+                }}
                 label="Código"
                 variant="outlined"
                 value={data.codigo}
