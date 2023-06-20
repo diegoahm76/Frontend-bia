@@ -5,7 +5,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 import { type Dispatch } from 'react';
-import { get_cv_others, get_marks, get_others } from '../slices/indexCvOtrosActivos';
+import { get_cv_others, get_marks, set_others } from '../slices/indexCvOtrosActivos';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -53,7 +53,7 @@ export const get_others_all_service: any = () => {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=OAc`);
             console.log(data)
-            dispatch(get_others(data.Elementos));
+            dispatch(set_others(data.Elementos));
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);

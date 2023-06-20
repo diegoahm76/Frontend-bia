@@ -1,193 +1,47 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { useEffect, useState } from 'react';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import { Grid, Box, DialogTitle, DialogActions, Button, Stack, } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
-
-// import { useNavigate } from 'react-router-dom';
-// Componentes de Material UI
-import { Grid, Box, IconButton, Avatar, Chip, Tooltip, DialogTitle, } from '@mui/material';
-// Icons de Material UI
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-
-
-
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-// Componentes personalizados
-import { Title } from '../../../../../../components/Title';
-// // Hooks
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-// Thunks
-import { get_others_all_service } from '../store/thunks/cvOtrosActivosThunks';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { type IcvOthers as FormValues } from '../interfaces/CvOtrosActivos';
+import { create_cv_others_service } from '../store/thunks/cvOtrosActivosThunks';
+import SaveIcon from '@mui/icons-material/Save';
+import SeleccionarOtros from '../components/BuscarElemento';
+import EspecificacionesOtros from '../components/Especificaciones';
+import EspecificacionesTec from '../components/EspecificacionesTec';
 
-// // Slices
-import { current_others } from '../store/slices/indexCvOtrosActivos';
-import CrearCvOtrosActivosForm from '../components/CrearCvOtrosActivosForm';
-// import { ProgramacionManteniento } from '../../mantenimiento/ProgramacionManteniento';
-
-
-// // // Slices
-// import { current_nursery } from '../store/slice/indexCvComputo';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const dispatch = useAppDispatch();
-    // const  [action] = useState<string>("create");
-    const { others } = useAppSelector((state) => state.cvo);
-    const [action, set_action] = useState<string>("create");
-    const [add_cv_oth_is_active, set_add_cv_oth_is_active] =
-        useState<boolean>(false);
-
-    const columns: GridColDef[] = [
-        { field: 'id_bien', headerName: 'ID', width: 20 },
-        {
-            field: 'nombre',
-            headerName: 'Nombre',
-            width: 200,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-        },
-        {
-            field: 'tiene_hoja_vida',
-            headerName: '¿Hoja de vida?',
-            width: 120,
-            renderCell: (params) => {
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                return params.row.tiene_hoja_vida ? (
-                    <Chip size="small" label="SI" color="success" variant="outlined" />
-                ) : (
-                    <Chip size="small" label="NO" color="error" variant="outlined" />
-
-                );
-            },
-        },
-        {
-            field: 'cod_tipo_activo',
-            headerName: 'Tipo Activo',
-            width: 50,
-        },
-        {
-            field: 'estado',
-            headerName: 'Estado',
-            width: 100,
-
-        },
-
-        {
-            field: 'acciones',
-            headerName: 'Acciones',
-            width: 300,
-            renderCell: (params) => (
-                <>
-                    {params.row.tiene_hoja_vida ?
-                        <Tooltip title="Editar">
-                            <IconButton
-                                onClick={() => {
-                                    dispatch(current_others(params.row));
-                                    set_action("create")
-                                    set_add_cv_oth_is_active(true)
-                                }}
-                            >
-                                <Avatar
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        background: '#fff',
-                                        border: '2px solid',
-                                    }}
-                                    variant="rounded"
-                                >
-                                    <EditIcon
-                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                    />
-
-                                </Avatar>
-                            </IconButton>
-                        </Tooltip> :
-                        <Tooltip title="Crear hoja de vida">
-                            <IconButton
-                                onClick={() => {
-
-                                    set_add_cv_oth_is_active(true);
-                                }}
-                            >
-                                <Avatar
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        background: '#fff',
-                                        border: '2px solid',
-                                    }}
-                                    variant="rounded"
-                                >
-                                    <NoteAddIcon
-                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                    />
-
-                                </Avatar>
-                            </IconButton>
-                        </Tooltip>
-                    }
-                    <Tooltip title="Programar mantenimiento">
-                        <IconButton
-                            onClick={() => {
-
-                            }}
-                        >
-                            <Avatar
-                                sx={{
-                                    width: 24,
-                                    height: 24,
-                                    background: '#fff',
-                                    border: '2px solid',
-                                }}
-                                variant="rounded"
-                            >
-                                <EngineeringIcon
-                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                />
-
-                            </Avatar>
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Asignaciones">
-                        <IconButton
-                            onClick={() => {
-
-                            }}
-                        >
-                            <Avatar
-                                sx={{
-                                    width: 24,
-                                    height: 24,
-                                    background: '#fff',
-                                    border: '2px solid',
-                                }}
-                                variant="rounded"
-                            >
-                                <AssignmentIndIcon
-                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                />
-
-                            </Avatar>
-                        </IconButton>
-                    </Tooltip>
-                </>
-            ),
-        },
-    ];
-
+    const [action] = useState<string>("create");
+    const { current_cv_other, current_other } = useAppSelector((state) => state.cvo);
+    const { control: control_other, handleSubmit: handle_submit, reset: reset_other, getValues: get_values } = useForm<FormValues>();
     useEffect(() => {
-        void dispatch(get_others_all_service());
-    }, []);
+        reset_other(current_cv_other);
+        console.log(current_cv_other)
+    }, [current_other]);
+
+    const on_submit = (data: FormValues): void => {
+        const form_data: any = new FormData();
+        form_data.append('caracteristicas_fisicas', data.caracteristicas_fisicas);
+        form_data.append('doc_identificador_nro', data.doc_identificador_nro);
+        form_data.append('especificaciones_tecnicas', data.especificaciones_tecnicas);
+        form_data.append('observaciones_acionales', data.observaciones_adicionales);
+        form_data.append('id_marca', data.id_marca);
+        form_data.append('id_bien', (data.id_bien ?? "").toString());
+        // form_data.append('ruta_imagen_foto', file === null ? '' : file);
+
+        void dispatch(create_cv_others_service(form_data, navigate));
+
+
+    };
 
     return (
         <>
@@ -203,32 +57,77 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                <Grid item xs={12}>
-                    <DialogTitle>Activos</DialogTitle>
 
-                    <Title title="Activos"></Title>
+                <Box
+                    component="form"
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onSubmit={
+                        action === 'create'
+                            ? handle_submit(on_submit)
+                            : handle_submit(on_submit)
+                    }
+                >
+                    <DialogTitle>
+                        {action === 'create'
+                            ? ''
+                            : action === 'detail'
+                                ? 'Detalle  Hoja de vida'
+                                : 'Editar hoja de '}
+                    </DialogTitle>
 
-                    <Grid item>
-                        <Box sx={{ width: '100%' }}>
-                            <DataGrid
-                                density="compact"
-                                autoHeight
-                                rows={others}
-                                columns={columns}
-                                pageSize={10}
-                                rowsPerPageOptions={[10]}
-                                experimentalFeatures={{ newEditingApi: true }}
-                                getRowId={(row) => row.id_bien}
-                            />
-                        </Box>
-                    </Grid>
-                    <CrearCvOtrosActivosForm
-                        is_modal_active={add_cv_oth_is_active}
-                        set_is_modal_active={set_add_cv_oth_is_active}
-                        action={action}
-                    />
+                    <SeleccionarOtros control_other={control_other}
+                        get_values={get_values} />
 
-                </Grid>
+
+                    <EspecificacionesOtros
+                        control_other={control_other}
+                        get_values={get_values}
+                        title="CARACTERISTICAS FÍSICAS" />
+
+                    <EspecificacionesTec
+                        control_other={control_other}
+                        get_values={get_values}
+                        title="ADICIONAL" />
+
+
+
+                    <DialogActions>
+                        <Stack
+                            direction="row"
+                            spacing={2}
+                            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+                        >
+                            <Button
+                                variant="outlined"
+                                //   onClick={handle_close_cv_com_is_active}
+                                startIcon={<CloseIcon />}
+                            >
+                                CERRAR
+                            </Button>
+                            {action === 'create' ? (
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    startIcon={<SaveIcon />}
+                                >
+                                    GUARDAR
+                                </Button>
+                            ) : action === 'edit' ? (
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    startIcon={<EditIcon />}
+                                >
+                                    EDITAR
+                                </Button>
+                            ) : null}
+                        </Stack>
+                    </DialogActions>
+                </Box>
+
+
+
+
             </Grid>
         </>
     );
