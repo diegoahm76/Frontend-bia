@@ -249,24 +249,14 @@ export function TipificacionBienesScreen(): JSX.Element {
       >
         <Grid item xs={12}>
           <Title title="Tipificación de bienes de vivero"></Title>
-
-
-
-
           <ButtonGroup style={{ margin: 7 }}  >
             <Button style={button_style} onClick={export_to_excel}>
               <i className="pi pi-file-excel"></i>
             </Button>
-
             <Button style={button_style} onClick={export_pdf}>
               <i className="pi pi-file-pdf"></i>
             </Button>
-
           </ButtonGroup>
-
-
-
-
           <Grid item mt={2}>
             <Box sx={{ width: '100%' }}>
               <DataGrid
