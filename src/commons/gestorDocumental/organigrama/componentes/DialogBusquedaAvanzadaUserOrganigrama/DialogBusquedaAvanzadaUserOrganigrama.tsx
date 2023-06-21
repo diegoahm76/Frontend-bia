@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import {
   Tooltip,
-  Box,
   TextField,
   Dialog,
   DialogTitle,
@@ -46,6 +45,7 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
   >([]);
 
   const advanced_user_search_data_form = watch();
+  console.log('advanced_user_search_data_form : ', advanced_user_search_data_form)
 
   const handle_close_busqueda_avanzada_usuario = (): void => {
     set_is_modal_active(false);
@@ -167,6 +167,7 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
                 fullWidth
                 label="Nombre usuario"
                 size="small"
+                name="nombre_usuario"
                 disabled={false}
                 // {...register_search_user('nombre_usuario')}
                 // onChange={handle_change}
