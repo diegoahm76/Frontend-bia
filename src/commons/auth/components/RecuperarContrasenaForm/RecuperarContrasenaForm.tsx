@@ -167,9 +167,19 @@ export const RecuperarContrasena: React.FC = () => {
           <Grid item xs={12} container justifyContent="center">
             <Grid item>
               <Link className="no-decoration" to="/auth/login">
-                <Typography sx={{ textAlign: 'center', mb: '20px' }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    textAlign: 'center',
+                    color: '#ffff',
+                  }}
+               
+                ><Typography sx={{ textAlign: 'center' }}>
                   Iniciar sesión
-                </Typography>
+                </Typography></Button>
+                
+              
               </Link>
             </Grid>
           </Grid>
