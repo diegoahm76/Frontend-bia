@@ -8,7 +8,7 @@ import BuscarModelo from '../../../../../components/partials/getModels/BuscarMod
 import { type IList } from '../../../../../interfaces/globalModels';
 
 interface IProps {
-
+    title: string;
     control_solicitud_despacho: any;
     get_values: any;
 
@@ -18,6 +18,7 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const RechazoSolicitud = ({
+    title,
     control_solicitud_despacho,
     get_values,
 
@@ -84,6 +85,10 @@ const RechazoSolicitud = ({
                     set_models={set_solicitudes}
                     button_submit_label='Solicitudes rechazadas'
                     form_inputs={[
+                        {
+                            datum_type: "title",
+                            title_label: title ?? "hh"
+                        },
 
                         {
                             datum_type: "input_controller",

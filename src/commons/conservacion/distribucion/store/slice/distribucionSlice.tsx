@@ -4,7 +4,10 @@ import {
   type IObjTransferGoods,
   type IObjGoods,
   type IObjTransfer,
-  type IDistribucion
+  type IDistribucion,
+  type IObjBien,
+  type IObjDespacho,
+  type IObjBienDespacho
 } from '../../interfaces/distribucion';
 import { type Persona } from "../../../../../interfaces/globalModels";
 
@@ -89,6 +92,37 @@ export const initial_state_current_good: IObjGoods = {
   cod_tipo_elemento_vivero: null,
   saldo_disponible: null,
 }
+export const initial_state_current_bien: IObjBien = {
+  id_inventario_vivero: null,
+  id_bien: null,
+  cod_etapa_lote: null,
+  codigo_bien: "",
+  nombre: "",
+  cantidad_disponible: null,
+  agno_lote: null,
+  nro_lote: null,
+}
+export const initial_state_current_despacho: IObjDespacho = {
+  id_despacho_viveros: null,
+  nro_despachos_viveros: null,
+  fecha_solicitud_a_viveros: null,
+  nro_solicitud_a_viveros: null,
+  fecha_solicitud_retiro_material: null,
+  fecha_despacho:(new Date().toString()),
+  fecha_registro: null,
+  motivo: null,
+  despacho_anulado: null,
+  justificacion_anulacion: null,
+  fecha_anulacion: null,
+  ruta_archivo_con_recibido: null,
+  id_solicitud_a_viveros: null,
+  id_vivero: null,
+  id_persona_despacha: null,
+  id_persona_solicita: null,
+  id_unidad_para_la_que_solicita: null,
+  id_funcionario_responsable_unidad: null,
+  id_persona_anula: null,
+}
 
 const initial_state: IDistribucion = {
   nurseries: [],
@@ -101,6 +135,12 @@ const initial_state: IDistribucion = {
   transfer_goods: [],
   persons: [],
   transfer_person: initial_state_person,
+  despachos:[],
+  current_despacho: initial_state_current_despacho,
+  bienes: [],
+  current_bien: initial_state_current_bien,
+  bienes_despacho: [],
+  nro_despacho: null,
 }
 
 
@@ -122,6 +162,10 @@ export const distribucion_slice = createSlice({
       state.transfer_goods = action.payload;
     },
 
+    set_current_transfer: (state: IDistribucion, action: PayloadAction<IObjTransfer>) => {
+      state.current_transfer = action.payload;
+    },
+
     set_goods: (state: IDistribucion, action: PayloadAction<IObjGoods[]>) => {
       state.goods = action.payload;
     },
@@ -134,15 +178,34 @@ export const distribucion_slice = createSlice({
       state.transfers_nurseries = action.payload;
     },
 
-    set_current_transfer: (state: IDistribucion, action: PayloadAction<IObjTransfer>) => {
-      state.current_transfer = action.payload;
-    },
     set_persons: (state: IDistribucion, action: PayloadAction<Persona[]>) => {
       state.persons = action.payload;
     },
 
     set_transfer_person: (state: IDistribucion, action: PayloadAction<Persona>) => {
       state.transfer_person = action.payload;
+    },
+
+    set_bienes: (state: IDistribucion, action: PayloadAction<IObjBien[]>) => {
+      state.bienes = action.payload;
+    },
+
+    set_current_bien: (state: IDistribucion, action: PayloadAction<IObjBien>) => {
+      state.current_bien = action.payload;
+    },
+
+    set_bienes_despacho: (state: IDistribucion, action: PayloadAction<IObjBienDespacho[]>) => {
+      state.bienes_despacho = action.payload;
+    },
+    set_despachos: (state: IDistribucion, action: PayloadAction<IObjDespacho[]>) => {
+      state.despachos = action.payload;
+    },
+
+    set_current_despacho: (state: IDistribucion, action: PayloadAction<IObjDespacho>) => {
+      state.current_despacho = action.payload;
+    },
+    set_nro_despacho: (state: IDistribucion, action: PayloadAction<number | null>) => {
+      state.nro_despacho = action.payload;
     },
   },
 });
@@ -155,5 +218,12 @@ export const {
   set_destination_nursery, 
   set_nurseries,
   set_transfer_goods, 
-  set_transfers_nurseries, 
-  set_current_transfer } = distribucion_slice.actions;
+  set_transfers_nurseries,
+  set_bienes,
+  set_current_bien ,
+  set_current_transfer,
+  set_bienes_despacho,
+  set_despachos, 
+  set_current_despacho, 
+  set_nro_despacho
+} = distribucion_slice.actions;

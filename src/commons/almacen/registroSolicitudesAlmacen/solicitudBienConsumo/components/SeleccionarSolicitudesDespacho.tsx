@@ -9,11 +9,13 @@ import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSol
 
 
 interface IProps {
+    title: string;
     control_solicitud_despacho: any;
     get_values: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudDespacho = ({
+    title,
     control_solicitud_despacho,
     get_values
 }: IProps) => {
@@ -102,6 +104,12 @@ const SeleccionarSolicitudDespacho = ({
                     set_models={set_solicitudes}
                     button_submit_label='Buscar solicitud'
                     form_inputs={[
+                        {
+                            datum_type: "title",
+                            title_label: title ?? "hh"
+
+
+                        },
 
                         {
                             datum_type: "input_controller",
@@ -121,7 +129,7 @@ const SeleccionarSolicitudDespacho = ({
                         {
                             datum_type: "input_controller",
                             xs: 5,
-                            md: 3,
+                            md: 5,
                             control_form: control_solicitud_despacho,
                             control_name: "fecha_solicitud",
                             default_value: "",
@@ -134,7 +142,20 @@ const SeleccionarSolicitudDespacho = ({
                         {
                             datum_type: "input_controller",
                             xs: 5,
-                            md: 3,
+                            md: 5,
+                            control_form: control_solicitud_despacho,
+                            control_name: "fecha_aprobacion_responsable",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Fecha de aprobación de la solicitud",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 5,
+                            md: 6,
                             control_form: control_solicitud_despacho,
                             control_name: "persona_solicita",
                             default_value: "",
@@ -148,7 +169,7 @@ const SeleccionarSolicitudDespacho = ({
                         {
                             datum_type: "input_controller",
                             xs: 5,
-                            md: 3,
+                            md: 6,
                             control_form: control_solicitud_despacho,
                             control_name: "nombre_unidad_organizacional",
                             default_value: "",
@@ -158,18 +179,7 @@ const SeleccionarSolicitudDespacho = ({
                             disabled: true,
                             helper_text: ""
                         },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_solicitud_despacho,
-                            control_name: "id_funcionario_responsable_unidad",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Funcionario responsable",
-                            disabled: true,
-                            helper_text: "",
-                        },
+
                         {
                             datum_type: "input_controller",
                             xs: 12,

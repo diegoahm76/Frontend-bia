@@ -112,7 +112,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-            <h1>Programación mantenimiento otros activos</h1>
+            {/* <h1>Programación mantenimiento otros activos</h1> */}
                 <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
                     <Title title="Búsqueda de artículo" />
@@ -226,8 +226,8 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                             )}
                         </Stack>
                     </Box>
-                </Grid> </Grid>
-                <Grid item xs={6}>
+                </Grid>
+                   <Grid item xs={6}>
                     <Box
                         component="form"
                         sx={{ mt: '20px', mb: '20px' }}
@@ -287,6 +287,8 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                         </Stack>
                     </Box>
                 </Grid>
+                </Grid>
+             
             </Grid>
         </>
     )

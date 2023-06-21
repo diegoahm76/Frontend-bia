@@ -1,209 +1,69 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import EngineeringIcon from '@mui/icons-material/Engineering';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import EditIcon from '@mui/icons-material/Edit';
-
-// import { useNavigate } from 'react-router-dom';
-// Componentes de Material UI
-import {
-  Grid,
-  Box,
-
-  IconButton,
-  Avatar,
-  Chip,
-  Tooltip,
-  DialogTitle,
-
-} from '@mui/material';
-// Icons de Material UI
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-
-// import LockIcon from '@mui/icons-material/Lock';
-// import BlockIcon from '@mui/icons-material/Block';
-// import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
-// import BusinessIcon from '@mui/icons-material/Business';
-// import DomainDisabledIcon from '@mui/icons-material/DomainDisabled';
-// import DeleteIcon from '@mui/icons-material/Delete';
-
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-// Componentes personalizados
-import { Title } from '../../../../../../components/Title';
-// // Hooks
+import { Grid } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-// Thunks
-import { get_vehicles_all_service } from '../store/thunks/cvVehiclesThunks';
-// import CrearCvComputoForm from '../components/CrearCvComputoForm';
-// // Slices
-import { current_vehicle } from '../store/slices/indexCvVehiculo';
-import CrearCvVehiculoForm from '../components/CrearCvVehiculoForm';
-// import CrearCvVehiculoForm from '../components/CrearCvVehiculoForm';
-// import { ProgramacionManteniento } from '../../mantenimiento/ProgramacionManteniento';
+import { type IcvVehicles as FormValues } from '../interfaces/CvVehiculo';
+import { useForm } from 'react-hook-form';
+import SeleccionarVehiculo from '../components/BuscarElemento';
+import { useNavigate } from 'react-router-dom';
+import { create_cv_vehicles_service } from '../store/thunks/cvVehiclesThunks';
+import SaveIcon from '@mui/icons-material/Save';
+import EspecificacionesVehicle from '../components/Caracteristicas';
+import FormButton from '../../../../../../components/partials/form/FormButton';
 
-
-//  import CrearViveroDialogForm from '../../../../../conservacion/gestorVivero/componentes/CrearViveroDialogForm';
-// import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
-// // // Slices
-// import { current_nursery } from '../store/slice/indexCvComputo';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaVehiculoScreen(): JSX.Element {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { vehicles } = useAppSelector((state) => state.cve);
-  const [action, set_action] = useState<string>("create");
-  const [add_cv_veh_is_active, set_add_cv_veh_is_active] =
-    useState<boolean>(false);
-
-  const columns: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
-    {
-      field: 'nombre',
-      headerName: 'Nombre',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'tiene_hoja_vida',
-      headerName: '¿Hoja de vida?',
-      width: 120,
-      renderCell: (params) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.tiene_hoja_vida ? (
-          <Chip size="small" label="SI" color="success" variant="outlined" />
-        ) : (
-          <Chip size="small" label="NO" color="error" variant="outlined" />
-
-        );
-      },
-    },
-    {
-      field: 'cod_tipo_activo',
-      headerName: 'Tipo Activo',
-      width: 50,
-    },
-    {
-      field: 'estado',
-      headerName: 'Estado',
-      width: 100,
-
-    },
-
-    {
-      field: 'acciones',
-      headerName: 'Acciones',
-      width: 300,
-      renderCell: (params) => (
-        <>
-          {params.row.tiene_hoja_vida ?
-            <Tooltip title="Editar">
-              <IconButton
-                onClick={() => {
-                  dispatch(current_vehicle(params.row));
-                  set_action("create")
-                  set_add_cv_veh_is_active(true)
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <EditIcon
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                  />
-
-                </Avatar>
-              </IconButton>
-            </Tooltip> :
-            <Tooltip title="Crear hoja de vida">
-              <IconButton
-                onClick={() => {
-
-                  set_add_cv_veh_is_active(true);
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <NoteAddIcon
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                  />
-
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-          }
-          <Tooltip title="Programar mantenimiento">
-            <IconButton
-              onClick={() => {
-
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <EngineeringIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-
-              </Avatar>
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Asignaciones">
-            <IconButton
-              onClick={() => {
-
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <AssignmentIndIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-
-              </Avatar>
-            </IconButton>
-          </Tooltip>
-        </>
-      ),
-    },
-  ];
-
+  const { current_cv_vehicle, current_vehicle } = useAppSelector((state) => state.cve);
+  const [action] = useState<string>("crear hoja de vida");
+  const { control: control_vehicle, handleSubmit: handle_submit, reset: reset_vehicle, getValues: get_values } = useForm<FormValues>();
   useEffect(() => {
-    void dispatch(get_vehicles_all_service());
-  }, []);
+    reset_vehicle(current_cv_vehicle);
+    console.log(current_cv_vehicle)
+  }, [current_vehicle]);
+
+
+  const on_submit = (data: FormValues): void => {
+    const form_data: any = new FormData();
+    form_data.append('cod_tipo_vehiculo', data.cod_tipo_vehiculo);
+    form_data.append('tiene_platon', data.tiene_platon.toString());
+    form_data.append('capacidad_pasajeros', data.capacidad_pasajeros.toString());
+    form_data.append('color', data.color);
+    form_data.append('es_arrendado', data.es_arrendado.toString());
+    form_data.append('linea', data.linea);
+    form_data.append('tipo_combustible', data.tipo_combustible.toString());
+    form_data.append('es_arrendado', data.es_arrendado.toString());
+    form_data.append('ultimo_kilometraje', data.ultimo_kilometraje.toString());
+    form_data.append('fecha_adquisicion', data.fecha_adquisicion.toString());
+    form_data.append('numero_motor', data.numero_motor);
+    form_data.append('numero_chasis', data.numero_chasis);
+    form_data.append('ultimo_kilometraje', data.ultimo_kilometraje.toString());
+    form_data.append('cilindraje', data.cilindraje.toString());
+    form_data.append('transmision', data.transmision);
+    form_data.append('dimension_llantas', data.dimension_llantas.toString());
+    form_data.append('capacidad_extintor', data.capacidad_extintor.toString());
+    form_data.append('tarjeta_operacion', data.tarjeta_operacion);
+    form_data.append(
+      'observaciones_adicionales',
+      data.observaciones_adicionales
+    );
+    form_data.append('es_agendable', data.es_agendable.toString());
+    form_data.append('fecha_circulacion', data.fecha_circulacion.toString());
+    form_data.append('id_articulo', data.id_articulo.toString());
+    form_data.append(
+      'doc_identificador_nro',
+      data.doc_identificador_nro.toString()
+    );
+    form_data.append('codigo_bien', data.codigo_bien);
+    form_data.append('tipo_vehiculo', data.tipo_vehiculo);
+    form_data.append('id_marca', data.id_marca.toString());
+    // form_data.append('ruta_imagen_foto', file === null ? '' : file);
+    void dispatch(create_cv_vehicles_service(form_data, navigate));
+
+  };
 
   return (
     <>
@@ -219,32 +79,41 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <DialogTitle>Activos</DialogTitle>
 
-          <Title title="Vehiculos"></Title>
 
-          <Grid item>
-            <Box sx={{ width: '100%' }}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={vehicles}
-                columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id_bien}
-              />
-            </Box>
+
+        <SeleccionarVehiculo control_vehicle={control_vehicle} get_values={get_values} />
+        <EspecificacionesVehicle
+          control_vehicle={control_vehicle} get_values={get_values} title={'Especif'} />
+
+        <Grid
+          container
+          direction="row"
+          padding={2}
+          spacing={2}
+        >
+
+          <Grid item xs={12} md={3}>
+
+            <FormButton
+              variant_button="contained"
+              on_click_function={handle_submit(on_submit)}
+              icon_class={<SaveIcon />}
+              label={action}
+              type_button="button"
+            />
           </Grid>
-          <CrearCvVehiculoForm
-            is_modal_active={add_cv_veh_is_active}
-            set_is_modal_active={set_add_cv_veh_is_active}
-            action={action}
-          />
+
+
 
         </Grid>
+
+
+
+
+
+
+
       </Grid>
     </>
   );

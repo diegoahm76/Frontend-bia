@@ -141,14 +141,14 @@ export const edit_organigrams_service: any = (
 export const to_finalize_organigram_service:any = (id: string, set_position_tab_organigrama:  Dispatch<SetStateAction<string>>) => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const response = await api.put(`transversal/organigrama/finalizar/${id}/`);
-            console.log(response.data);
+            const { data } = await api.put(`transversal/organigrama/finalizar/${id}/`);
+            console.log(data);
             dispatch(get_organigrams_service());
             void Swal.fire({
-                position: "center", icon: "info", title: "Atención", text: response.data.detail,
+                position: "center", icon: "info", title: "Atención", text: data.detail,
             });
             set_position_tab_organigrama('1');
-            return response.data;
+            return data;
         } catch (error: any) {
             console.log("to_finalize_organigram_service");
             control_error(error.response.data.detail);
