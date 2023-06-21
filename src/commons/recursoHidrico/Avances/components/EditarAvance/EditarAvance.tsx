@@ -144,7 +144,6 @@ export const EditarAvance: React.FC = () => {
         JSON.stringify(nombre_actualizar),
       ] as any);
 
-      // console.log(typeof(nombre_actualizar.id_evidencia_avance), 'id evidencia')
 
       console.log(JSON.stringify(nombre_actualizar), 'nombre actualizado')
 
