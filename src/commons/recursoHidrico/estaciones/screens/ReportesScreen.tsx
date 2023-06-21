@@ -1067,7 +1067,7 @@ export const ReportesScreen: React.FC = () => {
         boxShadow: '0px 3px 6px #042F4A26',
       }}>
       <Grid item xs={12} spacing={2} >
-        <Title title="REPORTES DE LAS ESTACIONES" />
+        <Title title="Reportes de las estaciones" />
         <Box mb={2} style={{ marginTop: '20px' }}>
           <Controller
             name="reporte"
