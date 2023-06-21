@@ -8,8 +8,7 @@ export interface IProps {
 }
 
 export interface FormValues {
-  primer_nombre: string;
-  primer_apellido: string;
+  nombre_usuario: string;
 }
 
 export type keys_object = 'primer_nombre' | 'primer_apellido';
