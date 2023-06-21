@@ -64,6 +64,7 @@ export const DataContext = createContext<UserContext>({
     fecha_registro:      '',
     id_proyecto:         0,
     id_persona_registra: 0,
+    evidencias         : [],
   },
   filter: [],
   columns: [],

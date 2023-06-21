@@ -101,6 +101,7 @@ export const RegistroAvance: React.FC = () => {
       <Box component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
+        style={{ width: '100%', height: '100vh' }} // Añadido estilo para ocupar toda la pantalla
       >
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
