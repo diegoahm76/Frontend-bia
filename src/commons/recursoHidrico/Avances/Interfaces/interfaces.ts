@@ -37,6 +37,15 @@ export interface GetActividades {
     fecha_registro: string;
     id_proyecto: number;
 }
+export interface GetAvances {
+    id_avance:           number;
+    fecha_reporte:       string;
+    accion:              string;
+    descripcion:         string;
+    fecha_registro:      string;
+    id_proyecto:         number;
+    id_persona_registra: number;
+}
 export interface InfoPorh {
     id_proyecto: number;
     nombre_programa: string;
@@ -54,4 +63,23 @@ export interface BusquedaAvanzada {
     nombre_proyecto?: string;
     nombre_programa?: string;
     nombre_PORH?: string;
+}
+export interface BusquedaAvance {
+    nombre_proyecto?: string;
+    nombre_programa?: string;
+    nombre_PORH?: string;
+    nombre_avances?: string;
+}
+export interface InfoAvance {
+    id_avance:           number;
+    nombre_programa:     string;
+    nombre_PORH:         string;
+    nombre:              string;
+    nombre_avance:       string;
+    fecha_reporte:       string;
+    accion:              string;
+    descripcion:         string;
+    fecha_registro:      string;
+    id_proyecto:         number;
+    id_persona_registra: number;
 }

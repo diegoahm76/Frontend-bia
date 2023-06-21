@@ -31,6 +31,7 @@ import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
 import { get_series_service } from '../store/thunks/seriesThunks';
 import { get_subseries_service } from '../store/thunks/subseriesThunks';
+import { get_serie_ccd_current } from '../store/slices/seriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
@@ -142,8 +143,8 @@ const use_ccd = () => {
     if (ccd_current !== null) {
 
       const result_name = organigram.filter((item) => {
-      console.log(ccd_current, 'ccd_current')
-      console.log(organigram, 'organigrama')
+      // console.log(ccd_current, 'ccd_current')
+      // console.log(organigram, 'organigrama')
       
         return item.id_organigrama === ccd_current.id_organigrama
       })
@@ -303,20 +304,6 @@ const use_ccd = () => {
     console.log('new_ccd', new_ccd);
     void dispatch(create_ccds_service(formData, set_save_ccd));
   };
-  
-  
-  //! ..... revisar la forma en la que se sube la ruta del archivo
-  // Funcion para actualizar el CCD
-/*   const update_ccd = (): void => {
-    const new_ccd = {
-      id_organigrama: data_create_ccd.organigrama.value,
-      version: data_create_ccd.version,
-      nombre: data_create_ccd.nombre_ccd,
-      valor_aumento_serie: data_create_ccd.valor_aumento_serie,
-      valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
-    };
-    void dispatch(update_ccds_service(new_ccd));
-  }; */
 
   const update_ccd = ( data_create_ccd: any ): void => {
     const new_ccd: any = {
@@ -334,7 +321,7 @@ const use_ccd = () => {
       }
     }
   
-    void dispatch(update_ccds_service(formData, data_create_ccd));
+    void dispatch(update_ccds_service(formData));
   };
   
   // console.log(data_asing, 'data_asing');
@@ -402,6 +389,7 @@ const use_ccd = () => {
   dispatch(get_assignments_ccd_current(null));
   dispatch(get_series_service('0'));
   dispatch(get_subseries_service('0'));
+  dispatch(get_serie_ccd_current(null));
 }, [dispatch, reset, set_title_button_asing]);
 
   // Funcion para eliminar Asignaciones
@@ -490,6 +478,7 @@ const use_ccd = () => {
     list_organigrams,
     list_sries,
     list_subsries,
+    set_list_subsries,
     title,
     title_button_asing,
     create_is_active,
