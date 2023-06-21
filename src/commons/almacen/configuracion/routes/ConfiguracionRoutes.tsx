@@ -30,7 +30,7 @@ export const ConfiguracionRoutes: React.FC = () => {
         element={<CrearMedidaForm />}
       />
         <Route
-        path="crear_marca_procentajes"
+        path="crear_marca_porcentajes"
         element={<CrearPorcentajeForm />}
       />
 

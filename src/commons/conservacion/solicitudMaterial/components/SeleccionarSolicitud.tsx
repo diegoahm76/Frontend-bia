@@ -3,17 +3,19 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
 
-import { get_solicitud_service } from '../slices/solicitudViveroThunks';
-import { set_current_solicitud, set_solicitudes } from '../slices/indexSolicitud';
+import { get_solicitud_aprobacion } from '../store/thunks/solicitudViveroThunks';
+import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSolicitud';
 
 
 
 interface IProps {
+    title?: string;
     control_solicitud: any;
     get_values: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitud = ({
+    title,
     control_solicitud,
     get_values
 }: IProps) => {
@@ -53,10 +55,8 @@ const SeleccionarSolicitud = ({
     ];
 
     const get_solicitudes_filtro: any = (async () => {
-        void dispatch(get_solicitud_service())
+        void dispatch(get_solicitud_aprobacion())
     })
-
-
 
     return (
         <>
@@ -69,7 +69,7 @@ const SeleccionarSolicitud = ({
             >
                 <BuscarModelo
                     set_current_model={set_current_solicitud}
-                    row_id={"id_vivero_solicitud"}
+                    row_id={"id_solicitud_vivero"}
                     columns_model={columns_solicitudes}
                     models={solicitudes}
                     get_filters_models={get_solicitudes_filtro}
@@ -78,11 +78,16 @@ const SeleccionarSolicitud = ({
                     form_inputs={[
 
                         {
+                            datum_type: "title",
+                            title_label: title ?? "hh"
+
+                        },
+                        {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_solicitud,
-                            control_name: "nro_solicitud_por_tipo",
+                            control_name: "nro_solicitud",
                             default_value: "",
                             rules: {},
                             label: "Numero solicitud",
@@ -110,7 +115,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 2,
                             control_form: control_solicitud,
                             control_name: "nro_info_tecnico",
                             default_value: "",
@@ -129,9 +134,23 @@ const SeleccionarSolicitud = ({
                             control_name: "fecha_solicitud",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Fecha de ingreso",
+                            label: "Fecha solicitud",
                             type: "text",
                             disabled: true,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "date_picker_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_solicitud,
+                            control_name: "fecha_retiro_material",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Fecha de retiro material",
+                            disabled: true,
+                            min_date: (new Date().toString()),
+                            format: "YYYY-MM-DD",
                             helper_text: ""
                         },
                         {
@@ -139,7 +158,7 @@ const SeleccionarSolicitud = ({
                             xs: 12,
                             md: 12,
                             control_form: control_solicitud,
-                            control_name: "observacion",
+                            control_name: "observaciones",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
                             label: "Observacion de solicitud",
@@ -167,7 +186,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "select_controller",
                             xs: 12,
-                            md: 3,
+                            md: 4,
                             control_form: control_solicitud,
                             control_name: "id_unidad_para_la_que_solicita",
                             default_value: "",
@@ -184,7 +203,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 4,
                             control_form: control_solicitud,
                             control_name: "persona_solicita",
                             default_value: "",
@@ -197,7 +216,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 4,
                             control_form: control_solicitud,
                             control_name: "nombre_unidad_organizacional",
                             default_value: "",
