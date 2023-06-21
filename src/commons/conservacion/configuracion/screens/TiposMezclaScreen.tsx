@@ -33,8 +33,8 @@ import AddMixtureDialogForm from '../componentes/AddMixtureDialogForm';
 import { current_mixture } from '../store/slice/configuracionSlice';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
-import { dowlade_Xls } from '../../../../documentos-descargar/XLS_descargar';
-import { dowlade_Pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 const initial_state_current_mixture ={
   id_mezcla: null,
   unidad_medida: "",
@@ -225,8 +225,8 @@ export function TiposMezclaScreen(): JSX.Element {
 
 
 
-  const handle_clickxls = (): void => { dowlade_Xls({ nurseries: mixtures, columns: columns }); };
-  const handle_clickpdf = (): void => { dowlade_Pdf({ nurseries: mixtures, columns: columns }); };
+  const handle_clickxls = (): void => { download_xls({ nurseries: mixtures, columns: columns }); };
+  const handle_clickpdf = (): void => { download_pdf({ nurseries: mixtures, columns: columns }); };
 
 
   return (

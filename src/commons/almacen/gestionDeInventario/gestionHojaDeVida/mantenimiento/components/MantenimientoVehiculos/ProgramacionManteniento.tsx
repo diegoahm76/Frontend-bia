@@ -102,7 +102,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
 
     return (
         <>
-            <h1>Programación mantenimiento vehículos</h1>
+            {/* <h1>Programación mantenimiento vehículos</h1> */}
             <Grid
                 container
                 sx={{

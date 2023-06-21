@@ -2,17 +2,10 @@ export interface Icv {
   computers: IComputers[];
   current_computer: IComputers;
   current_cv_computer: ICvcomputers;
+  cv_computer: ICvcomputers[];
   marcas: IMarca[];
 }
 
-export interface IcvMaintenance {
-  estado: string;
-  fecha: Date | string;
-  id_programacion_mantenimiento: number;
-  responsable: string;
-  tipo_descripcion: string;
-  tipo: string;
-}
 export interface IMarca {
   id_marca: number;
   nombre: string;
@@ -21,7 +14,7 @@ export interface IMarca {
 }
 
 export interface IComputers {
-  id_bien: number;
+  id_bien: number | null;
   codigo_bien: string | null;
   nro_elemento_bien: number | null;
   nombre: string;
@@ -69,11 +62,11 @@ export interface ICvcomputers {
   suite_ofimatica: string;
   tipo_almacenamiento: string;
   tipo_de_equipo: string;
-  codigo_bien: string;
+  codigo_bien: string | null;
   doc_identificador_nro: string;
   estado: string;
   id_articulo: number | null;
   marca: string;
   nombre: string;
-  id_marca: number;
+  id_marca?: number | null;
 }

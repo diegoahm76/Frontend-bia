@@ -1,7 +1,7 @@
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
-export const dowlade_Xls = ({ nurseries: nurseries, columns: columns }: any): void => {
+export const download_xls = ({ nurseries: nurseries, columns: columns }: any): void => {
   
     const rows = document.querySelectorAll('.MuiDataGrid-row');
     const header_cells = document.querySelectorAll('.MuiDataGrid-cell--header');

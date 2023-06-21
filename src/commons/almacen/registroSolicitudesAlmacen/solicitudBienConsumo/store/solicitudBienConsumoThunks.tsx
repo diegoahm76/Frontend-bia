@@ -523,7 +523,6 @@ export const aprobacion_solicitud_pendiente: any = (
             );
             console.log(data)
             dispatch(get_solicitud_service(id));
-            control_success('Se aprobo la solicitud');
 
             return data;
         } catch (error: any) {

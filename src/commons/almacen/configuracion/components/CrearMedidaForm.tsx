@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {  activate_deactivate_medida_service, delete_medida_service,  get_medida_service } from '../store/thunks/MarcaMedidaPorcentajeThunks';
 import { medida_seleccionada } from '../store/slice/MarcaMedidaPorcentajeSlice';
 import CrearMedidaModal from './modales/CrearMedidaModal';
+import { Title } from '../../../../components';
 
 
 
@@ -171,6 +172,7 @@ const columns: GridColDef[] = [
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+        <Title title="Unidad de medida  "></Title>
         <Grid item xs={12}>
         
           <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
