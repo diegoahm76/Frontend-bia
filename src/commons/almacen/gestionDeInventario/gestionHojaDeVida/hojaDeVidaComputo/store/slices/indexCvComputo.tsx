@@ -4,7 +4,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { type Icv, type IMarca, type IComputers, type ICvcomputers, } from "../../interfaces/CvComputo";
 
 const initial_state_current_computer = {
-  id_bien: 0,
+  id_bien: null,
   codigo_bien: null,
   nro_elemento_bien: null,
   nombre: "",
@@ -67,6 +67,7 @@ const initial_state: Icv = {
   current_computer: initial_state_current_computer,
   current_cv_computer: initial_state_current_cv_computer,
   marcas: [],
+  cv_computer: []
 
 };
 
@@ -74,41 +75,38 @@ export const cv_computo_slice = createSlice({
   name: "cv",
   initialState: initial_state,
   reducers: {
-    get_computers: (
+    set_computers: (
       state: Icv,
       action: PayloadAction<IComputers[]>
     ) => {
       state.computers = action.payload;
     },
-    current_computer: (
+    set_current_computer: (
       state: Icv,
       action: PayloadAction<IComputers>
     ) => {
       state.current_computer = action.payload;
     },
-    get_cv_computer: (
+    set_cv_computer: (
+      state: Icv,
+      action: PayloadAction<ICvcomputers[]>
+    ) => {
+      state.cv_computer = action.payload;
+    },
+    set_current_cv_computer: (
       state: Icv,
       action: PayloadAction<ICvcomputers>
     ) => {
       state.current_cv_computer = action.payload;
     },
-
-
     get_marks: (
       state: Icv,
       action: PayloadAction<IMarca[]>
     ) => {
       state.marcas = action.payload;
     },
-    // get_cv_maintenance: (
-    //     state: Icv, 
-    //     action: PayloadAction<IcvMaintenance[]>
-    //     ) => {
-    //     state.cv_maintenance = action.payload;
-    // },
-
   }
 })
 
-export const { current_computer, get_cv_computer, get_marks, get_computers } = cv_computo_slice.actions;
+export const { set_current_computer, set_cv_computer, get_marks, set_computers, set_current_cv_computer } = cv_computo_slice.actions;
 

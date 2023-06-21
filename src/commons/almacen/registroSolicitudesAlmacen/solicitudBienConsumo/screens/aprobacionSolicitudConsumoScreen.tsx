@@ -13,6 +13,7 @@ import { set_current_solicitud, set_persona_solicita } from '../store/slices/ind
 import SeleccionarSolicitudAprobada from '../components/componentesAprobacion/SeleccionarSolicitudAprobacion';
 import SeleccionarBienAprobado from '../components/componentesAprobacion/SeleccionarBienAprobado';
 import FuncionarioAprobacion from '../components/componentesAprobacion/SeleccionarPersonaAprobada';
+import Aprobacion from '../components/componentesAprobacion/Aprobacion';
 
 
 
@@ -20,7 +21,7 @@ import FuncionarioAprobacion from '../components/componentesAprobacion/Seleccion
 const AprobacionSolicitudConsumoScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud_aprobacion, handleSubmit: handle_submit, reset: reset_solicitud_aprobacion, getValues: get_values } = useForm<IObjSolicitud>();
-    const [action] = useState<string>("Guardar");
+    const [action] = useState<string>("Aprobar");
     const { nro_solicitud, current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state) => state.solic_consumo);
 
     const dispatch = useAppDispatch();
@@ -95,6 +96,7 @@ const AprobacionSolicitudConsumoScreen = () => {
                     get_values_solicitud={get_values} />
 
                 <SeleccionarBienAprobado />
+                <Aprobacion control_solicitud_aprobacion={control_solicitud_aprobacion} get_values={get_values} />
 
 
             </Grid>

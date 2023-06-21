@@ -224,54 +224,8 @@ const SeleccionarSolicitudAprobada = ({
                             helper_text: ""
                         },
 
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_solicitud_aprobacion,
-                            control_name: "estado_aprobacion_responsable",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Estado de aprobación",
-                            disabled: false,
-                            helper_text: "debe seleccionar campo",
-                            select_options: [{ label: "Aprobado", value: "A" }, { label: "Rechazado", value: "R" }],
-                            option_label: "label",
-                            option_key: "value",
 
-                        },
 
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 12,
-                            control_form: control_solicitud_aprobacion,
-                            control_name: "justificacion_rechazo_responsable",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Justificación del rechazo",
-                            type: "text",
-                            multiline_text: true,
-                            rows_text: 4,
-                            disabled: false,
-                            helper_text: "",
-
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 8,
-                            control_form: control_solicitud_aprobacion,
-                            control_name: "fecha_aprobacion_responsable",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Fecha de aprobación",
-                            type: "text",
-                            multiline_text: true,
-                            disabled: true,
-                            helper_text: "",
-
-                        },
 
                         // {
                         //     datum_type: "input_controller",
