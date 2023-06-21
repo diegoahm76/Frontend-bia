@@ -1,7 +1,8 @@
+
 import 'jspdf-autotable';
 import JsPDF from 'jspdf';
 
-export const Dowlade_Pdf = ({ nurseries, columns }: any): void => {
+export const  dowlade_Pdf = ({ nurseries, columns }: any): void => {
     const doc = new JsPDF();
 
     const data: any[][] = [];

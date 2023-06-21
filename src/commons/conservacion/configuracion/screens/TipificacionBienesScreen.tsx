@@ -28,8 +28,8 @@ import { current_bien } from '../store/slice/configuracionSlice';
 
 import ButtonGroup from '@mui/material/ButtonGroup';
 
-import { Dowlade_Xls } from '../../../../documentos-descargar/XLS_descargar';
-import { Dowlade_Pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { dowlade_Xls } from '../../../../documentos-descargar/XLS_descargar';
+import { dowlade_Pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 
 const button_style = {
@@ -170,8 +170,8 @@ export function TipificacionBienesScreen(): JSX.Element {
   }, []);
 
 
-  const handle_clickxls = (): void => { Dowlade_Xls({ nurseries: bienes, columns: columns }); };
-  const handle_clickpdf = (): void => { Dowlade_Pdf({ nurseries: bienes, columns: columns }); };
+  const handle_clickxls = (): void => { dowlade_Xls({ nurseries: bienes, columns: columns }); };
+  const handle_clickpdf = (): void => { dowlade_Pdf({ nurseries: bienes, columns: columns }); };
 
 
   return (

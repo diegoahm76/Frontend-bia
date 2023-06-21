@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react';
 // import { useNavigate } from 'react-router-dom';
 // Componentes de Material UI
-import { Dowlade_Pdf } from '../../../../documentos-descargar/PDF_descargar';
-import { Dowlade_Xls} from '../../../../documentos-descargar/XLS_descargar';
+import { dowlade_Pdf } from '../../../../documentos-descargar/PDF_descargar';
+import { dowlade_Xls} from '../../../../documentos-descargar/XLS_descargar';
 import ButtonGroup from '@mui/material/ButtonGroup';
 // import 'jspdf-autotable';
 // import JsPDF from 'jspdf';
@@ -341,8 +341,8 @@ export function AdministrarViveroScreen(): JSX.Element {
 
 
 
-  const handle_clickxls = (): void => { Dowlade_Xls({ nurseries: nurseries, columns: columns }); };
-  const handle_clickpdf = (): void => { Dowlade_Pdf({ nurseries: nurseries, columns: columns }); };
+  const handle_clickxls = (): void => { dowlade_Xls({ nurseries: nurseries, columns: columns }); };
+  const handle_clickpdf = (): void => { dowlade_Pdf({ nurseries: nurseries, columns: columns }); };
 
   const button_style = {
     color: 'white',
