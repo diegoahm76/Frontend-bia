@@ -30,6 +30,7 @@ import { get_tipo_documento } from '../../../../../request';
 import { control_error } from '../../../../../helpers';
 import { type IList } from '../../../../../interfaces/globalModels';
 import { type UserDelegacionOrganigrama } from '../../interfaces/organigrama';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
 import {
   delegar_organigrama_persona,
@@ -344,6 +345,17 @@ const DialogDelegarOrganigrama = ({
             spacing={2}
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
+            <Button
+              type="button"
+              color="success"
+              variant="contained"
+              onClick={() => {
+                void handle_submit_delegacion_organigrama();
+              }}
+              startIcon={<CleanIcon />}
+            >
+              LIMPIAR FORMULARIO
+            </Button>
             <Button
               variant="outlined"
               onClick={handle_close_delegar_organigrama}
