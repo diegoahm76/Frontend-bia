@@ -69,7 +69,7 @@ const FormDatePickerController = ({
                                         label={label}
                                         value={value}
                                         onChange={onChange}
-                                        inputFormat={format ?? "DD/MM/YYYY"}
+                                        inputFormat={format ?? "YYYY/MM/DD"}
                                         minDate={((min_date ?? "") === "") ? null : min}
                                         maxDate={((max_date ?? "") === "") ? null : max}
                                         renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (

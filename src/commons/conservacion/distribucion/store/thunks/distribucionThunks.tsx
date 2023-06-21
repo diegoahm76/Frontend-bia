@@ -15,7 +15,9 @@ import {
   set_transfers_nurseries, 
   set_current_transfer, 
   set_transfer_person,
-  set_current_good, 
+  set_current_good,
+  set_nro_despacho,
+  set_bienes_despacho, 
 } from '../slice/distribucionSlice';
 import { api } from '../../../../../api/axios';
 
@@ -208,7 +210,23 @@ export const get_person_id_service = (
   };
 };
 
+// obtener numero de solicitud
+export const get_num_despacho = (): any => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.get('conservacion/despachos/get-ultimo-nro-despacho-viveros/');
+          console.log(data)
 
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+          if (data.success) {
+              dispatch(set_nro_despacho(data.detail))
+          }
+          return data;
+      } catch (error: any) {
+          return error as AxiosError;
+      }
+  };
+}
 
 
 // crear traslado
@@ -284,27 +302,26 @@ export const annul_transfer_service = (
   };
 };
 
-// // borrar siembra
-// export const delete_siembra_service = (
-//   id: number
-// ): any => {
-//   return async (dispatch: Dispatch<any>) => {
-//     try {
-//       const { data } = await api.delete(`conservacion/camas-siembras/siembra/delete/${id}/`);
-//       console.log(data)
-//       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-//       if (data.success) {
-//         control_success(data.detail)   
-//         dispatch(set_current_planting(initial_state_planting))   
-//         dispatch(set_planting_goods([]))   
-//       } else {
-//         control_error(data.detail)
-//       }
-//       return data;
-//     } catch (error: any) {
-//       console.log('add_siembra_service');
-//       control_error(error.response.data.detail);
-//       return error as AxiosError;
-//     }
-//   };
-// };
+// Obtener bienes por numero de despacho
+
+export const get_bienes_despacho = (
+  id_solicitud_viveros: number | null,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.get(`conservacion/despachos/get-items-despacho/${id_solicitud_viveros ?? ""}/`);
+          dispatch(set_bienes_despacho(data.data));
+          console.log(data)
+          if (data.data.length > 0) {
+              // control_success("Se encontrarón bienes")
+          } else {
+              // control_error("No se encontrarón bienes")
+          }
+          return data;
+      } catch (error: any) {
+          // console.log('get_planting_goods_service');
+          control_error(error.response.data.detail);
+          return error as AxiosError;
+      }
+  };
+};

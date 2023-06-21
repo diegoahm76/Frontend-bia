@@ -124,6 +124,7 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
                             helperText="Ingresar Código"
                             size="small"
                             required
+                            disabled
                             value={codigo_bien}
                             onBlur={busqueda_articulo}
                             fullWidth
@@ -136,6 +137,7 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
                             size="small"
                             value={nombre}
                             fullWidth
+                            disabled
                             InputProps={{
                                 readOnly: true,
                             }}

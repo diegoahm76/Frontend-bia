@@ -6,7 +6,7 @@ import { api } from '../../../../../api/axios';
 import { type AxiosError, type AxiosResponse } from 'axios';
 // Reducers
 import { get_subseries_ccd } from '../slices/subseriesSlice';
-import { control_error, control_success } from '../../../../../helpers';
+import { control_error, control_success } from '../utils/success_errors';
 // Interfaces
 // import { type ISubSeriesObject } from '../../interfaces/ccd';
 

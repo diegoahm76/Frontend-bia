@@ -10,12 +10,14 @@ export interface ISolicitudConsumo {
   unidad_organizacional: UnidadOrganizacional[];
   nro_solicitud: number | null;
   nurseries: IObjNursery[];
+  current_nursery: IObjNursery;
 }
 
 export interface IObjPersonaSolicita {
   id_persona?: number | null;
   nombre?: string;
   unidad_organizacional?: string | null;
+  id_unidad_organizacional_actual?: number | null;
 }
 
 export interface UnidadOrganizacional {
@@ -86,6 +88,10 @@ export interface IObjSolicitudVivero {
   id_unidad_org_del_responsable?: number | null;
   id_persona_cierre_no_dispo_viveros?: number | null;
   id_persona_coord_viveros?: number | null;
+  nombre_unidad_organizacional?: string | null;
+  persona_solicita?: string | null;
+  persona_responsable?: string | null;
+  nombre_unidad_organizacional_destino?: string | null;
 }
 
 export interface IObjBienesSolicitud {
@@ -94,7 +100,7 @@ export interface IObjBienesSolicitud {
   nro_posicion?: number | null;
   id_bien?: number | null;
   cod_tipo_elemento_vivero?: string | null;
-  codigo_bien?: number | null;
+  codigo_bien?: string | null;
   nombre_bien?: string | null;
   cantidad?: number | null;
   observaciones?: string | null;
@@ -132,6 +138,7 @@ export interface IObjBienConsumo {
   id_porcentaje_iva?: number | null;
   id_unidad_medida_vida_util?: number | null;
   id_bien_padre?: number | null;
+  tipo_bien?: string | null;
 }
 
 export interface IObjNursery {
