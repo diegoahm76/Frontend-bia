@@ -94,7 +94,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
 
     return (
         <>
-            <h1>Registro mantenimiento de computadores</h1>
+            {/* <h1>Registro mantenimiento de computadores</h1> */}
             <Grid
                 container
                 sx={{
@@ -155,8 +155,7 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
                     <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info}
                         detalles={set_detalle} accion_guardar={accion_guardar} fecha_dias={fecha_dias}/>
                 </Grid>
-            </Grid>
-            <Grid container>
+                   <Grid container>
                 <Grid item md={12} xs={12}>
                     <Box
                         component="form"
@@ -200,6 +199,8 @@ export const RegistroMantenimientoComComponent: React.FC = () => {
                     </Box>
                 </Grid>
             </Grid>
+            </Grid>
+         
         </>
     )
 }

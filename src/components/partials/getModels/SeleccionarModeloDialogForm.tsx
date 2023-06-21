@@ -41,8 +41,6 @@ interface IProps {
     button_add_selection_hidden?: boolean | null;
 
 }
-
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarModeloDialogForm = ({
     is_modal_active,
@@ -114,37 +112,37 @@ const SeleccionarModeloDialogForm = ({
             />
         } else if (form_input.datum_type === "title") {
             return <Title title={form_input.title_label}></Title>
-        } else if (form_input.datum_type === "input_file_controller"){
+        } else if (form_input.datum_type === "input_file_controller") {
             return <FormInputFileController
-            xs={form_input.xs}
-            md={form_input.md}
-            control_form={form_input.control_form}
-            control_name={form_input.control_name}
-            default_value={form_input.default_value}
-            rules={form_input.rules}
-            label={form_input.label}
-            disabled={form_input.disabled}
-            helper_text={form_input.helper_text}
-            set_value={form_input.set_value ?? null}
-            hidden_text={form_input.hidden_text ?? null}
-            file_name={form_input.file_name ?? null}
-        />; 
-        } else if (form_input.datum_type === "date_picker_controller"){
+                xs={form_input.xs}
+                md={form_input.md}
+                control_form={form_input.control_form}
+                control_name={form_input.control_name}
+                default_value={form_input.default_value}
+                rules={form_input.rules}
+                label={form_input.label}
+                disabled={form_input.disabled}
+                helper_text={form_input.helper_text}
+                set_value={form_input.set_value ?? null}
+                hidden_text={form_input.hidden_text ?? null}
+                file_name={form_input.file_name ?? null}
+            />;
+        } else if (form_input.datum_type === "date_picker_controller") {
             return <FormDatePickerController
-            xs={form_input.xs}
-            md={form_input.md}
-            control_form={form_input.control_form}
-            control_name={form_input.control_name}
-            default_value={form_input.default_value}
-            rules={form_input.rules}
-            label={form_input.label}
-            disabled={form_input.disabled}
-            helper_text={form_input.helper_text}
-            hidden_text={form_input.hidden_text ?? null}
-            min_date={form_input.min_date ?? ""}
-            max_date={form_input.max_date ?? ""}
-            format={form_input.max_date ?? null}
-        />; 
+                xs={form_input.xs}
+                md={form_input.md}
+                control_form={form_input.control_form}
+                control_name={form_input.control_name}
+                default_value={form_input.default_value}
+                rules={form_input.rules}
+                label={form_input.label}
+                disabled={form_input.disabled}
+                helper_text={form_input.helper_text}
+                hidden_text={form_input.hidden_text ?? null}
+                min_date={form_input.min_date ?? ""}
+                max_date={form_input.max_date ?? ""}
+                format={form_input.max_date ?? null}
+            />;
         }
     }
 
@@ -174,42 +172,30 @@ const SeleccionarModeloDialogForm = ({
         justifyContent: 'center',
         marginRight: '10px'
     };
-
-
     const export_to_excel = (): void => {
         const rows = document.querySelectorAll('.MuiDataGrid-row');
         const header_cells = document.querySelectorAll('.MuiDataGrid-cell--header');
         const data: any[][] = [];
-
         const headers = Array.from(header_cells).map((cell) => cell.textContent);
-
         rows.forEach((row) => {
             const row_data: any[] = [];
             const cells = row.querySelectorAll('.MuiDataGrid-cell');
-
             cells.forEach((cell) => {
                 row_data.push(cell.textContent);
             });
-
             data.push(row_data);
         });
-
         const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
-
         const file_id = Math.random(); // Reemplaza con la variable que contenga el ID
         const file_name = `Resultados de la busqueda_${file_id}.xlsx`; // Nombre del archivo con el ID concatenado
-
         XLSX.writeFile(workbook, file_name);
     };
-
     const export_pdf = (): void => {
         const doc = new JsPDF();
-
         const data: any[][] = [];
         const headers: any[] = [];
-
         // Obtener los nombres de las columnas de la cuadrícula
         columns_model.forEach((column) => {
             headers.push(column.headerName);
@@ -218,7 +204,6 @@ const SeleccionarModeloDialogForm = ({
         // Obtener los datos de las filas de la cuadrícula
         models.forEach((row) => {
             const row_data: any[] = [];
-
             columns_model.forEach((column) => {
                 const cell_data = row[column.field as keyof typeof row];
                 row_data.push(cell_data);
@@ -226,19 +211,14 @@ const SeleccionarModeloDialogForm = ({
 
             data.push(row_data);
         });
-
         (doc as any).autoTable({
             head: [headers],
             body: data,
         });
-
         const file_id = Math.random(); // Reemplaza con la variable que contenga el ID
         const file_name = `Resultados de la busqueda_${file_id}.pdf`; // Nombre del archivo con el ID concatenado
-
         doc.save(file_name);
     };
-
-
     return (
         <Dialog
             fullWidth
@@ -246,45 +226,33 @@ const SeleccionarModeloDialogForm = ({
             open={is_modal_active}
             onClose={handle_close_select_model}
         >
-           
-            <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
-         
+            <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
             <Divider />
-
-
-
-
-            
-
-
             <DialogContent sx={{ mb: '0px' }}>
                 {form_filters.length > 0 &&
-                <Grid container spacing={2} direction="row">
-                    {form_filters.map((option, index) => (
-                        <TypeDatum key={index} form_input={option} />
-                    ))}
-                    <Grid
-                        item
-                        xs={12}
-                        md={2}
-                    >
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={get_filters_models}
-                            icon_class={<SearchIcon />}
-                            label="BUSCAR"
-                            type_button="button"
-                        />
+                    <Grid container spacing={2} direction="row">
+                        {form_filters.map((option, index) => (
+                            <TypeDatum key={index} form_input={option} />
+                        ))}
+                        <Grid
+                            item
+                            xs={12}
+                            md={2}
+                        >
+                            <FormButton
+                                variant_button="contained"
+                                on_click_function={get_filters_models}
+                                icon_class={<SearchIcon />}
+                                label="BUSCAR"
+                                type_button="button"
+                            />
+                        </Grid>
                     </Grid>
-                </Grid>
                 }
                 {models.length > 0 &&
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '100%' }}>
                             <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
-
-
-
                             <ButtonGroup style={{ margin: 7 }}  >
                                 <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={export_to_excel}>
                                     <i className="pi pi-file-excel"></i>
@@ -295,10 +263,6 @@ const SeleccionarModeloDialogForm = ({
                                 </Button>
 
                             </ButtonGroup>
-
-
-
-
                             <DataGrid
                                 onSelectionModelChange={handle_selection_change}
                                 density="compact"
@@ -329,7 +293,7 @@ const SeleccionarModeloDialogForm = ({
                     >
                         CANCELAR
                     </Button>
-                    {!(button_add_selection_hidden ?? false)  && 
+                    {!(button_add_selection_hidden ?? false) &&
                         <Button
                             variant="contained"
                             onClick={select_model}

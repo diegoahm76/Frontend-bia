@@ -469,9 +469,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-      <h1>Entrada de bienes de Almacen</h1>
+      {/* <h1>Entrada de bienes de Almacen</h1> */}
         <Grid item md={12} xs={12}>
-          <Title title="Entrada" />
+          <Title title="Entrada de bienes de Almacen" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={4}>
