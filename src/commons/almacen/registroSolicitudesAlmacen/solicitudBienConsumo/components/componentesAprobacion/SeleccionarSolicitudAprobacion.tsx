@@ -2,10 +2,10 @@ import { Grid, } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-import { get_solicitud_service, get_solicitudes_id_persona_service } from '../../store/solicitudBienConsumoThunks';
+import { get_solicitud_documento_service, get_solicitud_service, } from '../../store/solicitudBienConsumoThunks';
 import { set_current_solicitud, set_solicitudes } from '../../store/slices/indexSolicitudBienesConsumo';
-import type { AuthSlice } from '../../../../../auth/interfaces';
-import { useSelector } from 'react-redux';
+// import type { AuthSlice } from '../../../../../auth/interfaces';
+// import { useSelector } from 'react-redux';
 
 
 interface IProps {
@@ -20,7 +20,7 @@ const SeleccionarSolicitudAprobada = ({
     get_values
 }: IProps) => {
 
-    const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+    // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
     const { unidad_organizacional, solicitudes } = useAppSelector((state) => state.solic_consumo);
 
@@ -43,12 +43,17 @@ const SeleccionarSolicitudAprobada = ({
 
         },
         {
-            field: 'nro_solicitud_por_tipo',
-            headerName: 'Solicitud elaborada por:',
+            field: 'persona_solicita',
+            headerName: 'Observación',
             width: 400,
-
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
 
         },
+
         {
             field: 'observacion',
             headerName: 'Observación',
@@ -64,7 +69,8 @@ const SeleccionarSolicitudAprobada = ({
     ];
 
     const get_solicitudes_filtro: any = (async () => {
-        void dispatch(get_solicitudes_id_persona_service(userinfo.id_persona))
+        console.log("ggggg")
+        void dispatch(get_solicitud_documento_service())
     })
 
     const search_solicitud: any = (async () => {

@@ -114,7 +114,7 @@ const SeleccionarComputer = () => {
                             control_name: "codigo_bien",
                             default_value: "",
                             rules: {},
-                            label: "ID",
+                            label: "Código bien",
                             type: "number",
                             disabled: false,
                             helper_text: "",

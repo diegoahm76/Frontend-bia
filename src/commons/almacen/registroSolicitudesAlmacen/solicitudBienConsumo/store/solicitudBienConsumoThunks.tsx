@@ -9,7 +9,7 @@ import { api } from '../../../../../api/axios';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
 // import { log } from 'console';
-import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero, set_current_solicitud_vivero, set_solicitudes_vivero } from './slices/indexSolicitudBienesConsumo';
+import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero, set_current_solicitud_vivero, set_solicitudes_vivero, set_current_bien_vivero, set_bienes_vivero } from './slices/indexSolicitudBienesConsumo';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -206,7 +206,7 @@ export const get_bienes_vivero_consumo = (id: string | null, nombre: string | nu
             const { data } = await api.get(`almacen/solicitudes/filtro-bienes-solicitable-vivero/?codigo_bien=${id ?? ""}&nombre_cientifico=${nombre_cientifico ?? ""}&nombre=${nombre ?? ""}&cod_tipo_elemento_vivero=${cod_tipo_elemento_vivero ?? ""}`);
             console.log(data)
             if ('detail' in data) {
-                dispatch(set_bienes(data.detail));
+                dispatch(set_bienes_vivero(data.detail));
 
                 if (data.detail.length > 0) {
                     control_success("Se encontrarón bienes")
@@ -224,6 +224,7 @@ export const get_bienes_vivero_consumo = (id: string | null, nombre: string | nu
         }
     };
 };
+
 
 // obtener bienes de consumo 
 
@@ -263,7 +264,7 @@ export const get_bienes_consumo_vivero_codigo_bien = (codigo: string | null): an
             const { data } = await api.get(`almacen/solicitudes/get-bien-solicitable-vivero/?codigo_bien=${codigo ?? ""}`);
             console.log(data)
             if ('detail' in data) {
-                dispatch(set_current_bien(data.detail[0]))
+                dispatch(set_current_bien_vivero(data.detail[0]))
                 if (data.detail.length > 0) {
                     control_success("Se encontró bien")
                 } else {
@@ -326,14 +327,13 @@ export const get_solicitud_service_vivero = (id: number | string): any => {
 
 // OBTENER SOLICITUD POR TIPO Y DOCUMENTO 
 export const get_solicitud_documento_service = (
-    type: string,
-    document: number | "",
+
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`almacen/solicitudes/get-solicitudes-pendientes-por-aprobar/${type ?? ""}/${document ?? ""}/`);
+            const { data } = await api.get(`almacen/solicitudes/get-solicitudes-pendientes-por-aprobar/`);
             console.log('Solicitudes recuperadas:', data);
-            dispatch(set_solicitudes(data.data));
+            dispatch(set_solicitudes(data.detail));
 
             return data;
         } catch (error: any) {

@@ -1,5 +1,5 @@
 
-import { Grid, } from '@mui/material';
+import { Chip, Grid, } from '@mui/material';
 
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
@@ -43,7 +43,7 @@ const SeleccionarSolicitud = ({
 
         },
         {
-            field: 'persona_solicita',
+            field: 'observacion',
             headerName: 'Observación',
             width: 350,
             renderCell: (params) => (
@@ -51,6 +51,19 @@ const SeleccionarSolicitud = ({
                     {params.value}
                 </div>
             ),
+
+        },
+        {
+            field: 'solicitud_anulada_solicitante',
+            headerName: 'Estado de la solicitud',
+            width: 350,
+            renderCell: (params) => {
+                return params.row.solicitud_anulada_solicitante === false ? (
+                    <Chip size="small" label="Anulada" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="Abierta" color="error" variant="outlined" />
+                );
+            },
 
         },
 

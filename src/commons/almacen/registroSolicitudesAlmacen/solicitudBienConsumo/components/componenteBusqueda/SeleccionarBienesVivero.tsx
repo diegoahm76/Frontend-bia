@@ -1,11 +1,11 @@
 import { Grid, } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../../../hooks";
-import { type IObjBienConsumo, type IObjBienesSolicitud } from "../../interfaces/solicitudBienConsumo";
+import { type IObjBienViveroConsumo, type IObjBienesSolicitud } from "../../interfaces/solicitudBienConsumo";
 import { useEffect, useState, } from "react";
 import { type GridColDef } from "@mui/x-data-grid";
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
-import { set_bienes, set_bienes_solicitud, set_current_bien } from "../../store/slices/indexSolicitudBienesConsumo";
+import { set_bienes_solicitud, set_bienes_vivero, set_current_bien_vivero } from "../../store/slices/indexSolicitudBienesConsumo";
 import { useForm } from "react-hook-form";
 import { control_error, get_bienes_vivero_consumo, get_bienes_consumo_vivero_codigo_bien } from "../../store/solicitudBienConsumoThunks";
 
@@ -18,9 +18,9 @@ const SeleccionarBienConsumoVivero = () => {
 
 
     // const [action, set_action] = useState<string>("agregar");
-    const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjBienConsumo>();
+    const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjBienViveroConsumo>();
     const { control: control_bien_solicitud_vivero, handleSubmit: handle_submit_item_solicitud } = useForm<IObjBienesSolicitud>();
-    const { unidades_medida, bienes, bienes_solicitud, current_bien, current_solicitud_vivero } = useAppSelector((state) => state.solic_consumo);
+    const { unidades_medida, bienes_vivero, bienes_solicitud, current_bien_vivero, current_solicitud_vivero } = useAppSelector((state) => state.solic_consumo);
     const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesSolicitud[]>([]);
     const [action, set_action] = useState<string>("crear");
 
@@ -36,9 +36,9 @@ const SeleccionarBienConsumoVivero = () => {
     }, [aux_bienes_solicitud]);
 
     useEffect(() => {
-        console.log(current_bien)
-        reset_bien(current_bien)
-    }, [current_bien]);
+        console.log(current_bien_vivero)
+        reset_bien(current_bien_vivero)
+    }, [current_bien_vivero]);
 
 
     const columns_bienes: GridColDef[] = [
@@ -178,15 +178,15 @@ const SeleccionarBienConsumoVivero = () => {
     ];
 
     const on_submit_item_solicitud = (data: IObjBienesSolicitud): void => {
-        if (current_bien.id_bien !== null) {
-            if (get_values_bien("codigo_bien") === current_bien.codigo_bien) {
-                const bien: IObjBienesSolicitud | undefined = aux_bienes_solicitud.find((p) => p.id_bien === current_bien.id_bien)
+        if (current_bien_vivero.id_bien !== null) {
+            if (get_values_bien("codigo_bien") === current_bien_vivero.codigo_bien) {
+                const bien: IObjBienesSolicitud | undefined = aux_bienes_solicitud.find((p) => p.id_bien === current_bien_vivero.id_bien)
 
                 const new_bien: IObjBienesSolicitud = {
                     id_item_solicitud_consumible: null,
-                    codigo_bien: current_bien.codigo_bien ?? "",
-                    nombre_bien: current_bien.nombre ?? "",
-                    id_bien: current_bien.id_bien ?? null,
+                    codigo_bien: current_bien_vivero.codigo_bien ?? "",
+                    nombre_bien: current_bien_vivero.nombre ?? "",
+                    id_bien: current_bien_vivero.id_bien ?? null,
                     cantidad: data.cantidad,
                     observaciones: data.observaciones,
                     id_unidad_medida: data.id_unidad_medida,
@@ -200,7 +200,7 @@ const SeleccionarBienConsumoVivero = () => {
                     if (action === "editar") {
                         const aux_items: IObjBienesSolicitud[] = []
                         aux_bienes_solicitud.forEach((option) => {
-                            if (option.id_bien === current_bien.id_bien) {
+                            if (option.id_bien === current_bien_vivero.id_bien) {
                                 aux_items.push(new_bien)
                             } else {
                                 aux_items.push(option)
@@ -250,12 +250,12 @@ const SeleccionarBienConsumoVivero = () => {
                 borderRadius={2}
             >
                 <BuscarModelo
-                    set_current_model={set_current_bien}
+                    set_current_model={set_current_bien_vivero}
                     row_id={"id_bien"}
                     columns_model={columns_bienes}
-                    models={bienes}
+                    models={bienes_vivero}
                     get_filters_models={get_bienes_filtro}
-                    set_models={set_bienes}
+                    set_models={set_bienes_vivero}
                     button_submit_label='Buscar bien'
                     form_inputs={[
                         {
