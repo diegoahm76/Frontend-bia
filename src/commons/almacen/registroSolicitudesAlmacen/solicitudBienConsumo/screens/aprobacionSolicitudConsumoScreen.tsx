@@ -81,6 +81,7 @@ const AprobacionSolicitudConsumoScreen = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
+                mt: '23px',
                 boxShadow: '0px 3px 6px #042F4A26',
 
             }}  >

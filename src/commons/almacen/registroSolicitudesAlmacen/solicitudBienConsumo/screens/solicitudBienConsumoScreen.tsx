@@ -115,6 +115,7 @@ const SolicitudConsumoScreen = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
+                mt: '23px',
                 boxShadow: '0px 3px 6px #042F4A26',
 
             }}
@@ -143,7 +144,7 @@ const SolicitudConsumoScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={3} >
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}

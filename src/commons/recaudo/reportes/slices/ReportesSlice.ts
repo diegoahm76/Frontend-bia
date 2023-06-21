@@ -58,6 +58,13 @@ export const get_filtro_cartera_edades = createAsyncThunk('reportes_recaudo/filt
   return data.data
 })
 
+// Ver Reporte General Cartera por Fecha de Corte
+export const get_cartera_fecha = createAsyncThunk('reportes_recaudo/cartera_fecha', async (fecha: string| Date | null) => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const { data } = await api.get(`recaudo/reportes/reporte-general-cartera/${fecha}/`)
+  return data.data
+})
+
 export const reportes_recaudo_slice = createSlice({
   name: 'reportes_recaudo',
   initialState: initial_state,
@@ -86,6 +93,9 @@ export const reportes_recaudo_slice = createSlice({
       state.reportes_recaudo = action.payload;
     });
     builder.addCase(get_filtro_cartera_edades.fulfilled, (state, action) => {
+      state.reportes_recaudo = action.payload;
+    });
+    builder.addCase(get_cartera_fecha.fulfilled, (state, action) => {
       state.reportes_recaudo = action.payload;
     });
   },

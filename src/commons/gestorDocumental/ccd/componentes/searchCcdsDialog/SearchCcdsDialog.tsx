@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import {
   Avatar,
@@ -19,6 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import { get_ccd_current } from '../../store/slices/ccdSlice';
 import type { IProps } from './types/types';
+import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -104,10 +106,18 @@ const SearchCcdModal = ({
           <IconButton
             onClick={() => {
               console.log(
-                'params.data',
+                'params para ver ccd en el icono del ojito',
                 params,
               );
-              dispatch(get_ccd_current(params));
+              void dispatch(
+                get_classification_ccds_service(
+                  params.row.nombre,
+                  params.row.version,
+                  params.row.id_ccd,
+                )
+              )
+              console.log('params para ver ccd en el icono del ojito', params);
+              // dispatch(get_ccd_current(params.row.id_ccd));
               set_is_modal_active(false);
             }}
           >

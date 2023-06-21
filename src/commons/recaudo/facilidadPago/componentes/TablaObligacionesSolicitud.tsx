@@ -46,7 +46,7 @@ export const TablaObligacionesSolicitud: React.FC = () => {
       ),
     },
     {
-      field: 'nroResolucion',
+      field: 'numero_resolucion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (
