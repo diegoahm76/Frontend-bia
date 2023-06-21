@@ -225,7 +225,9 @@ export function TiposMezclaScreen(): JSX.Element {
 
 
 
+  // eslint-disable-next-line object-shorthand
   const handle_clickxls = (): void => { download_xls({ nurseries: mixtures, columns: columns }); };
+  // eslint-disable-next-line object-shorthand
   const handle_clickpdf = (): void => { download_pdf({ nurseries: mixtures, columns: columns }); };
 
 

@@ -344,7 +344,9 @@ export function AdministrarViveroScreen(): JSX.Element {
 
 
 
+  // eslint-disable-next-line object-shorthand
   const handle_clickxls = (): void => { download_xls({ nurseries: nurseries, columns: columns }); };
+  // eslint-disable-next-line object-shorthand
   const handle_clickpdf = (): void => { download_pdf({ nurseries: nurseries, columns: columns }); };
 
   const button_style = {
@@ -390,7 +392,7 @@ export function AdministrarViveroScreen(): JSX.Element {
               />
               <IconButton
                 onClick={() => {
-                  const filterednurseries = nurseries.filter((nursery) =>
+                  const filterednurseries = nurseries.filter((nursery: { nombre: string; }) =>
                     nursery.nombre.toLowerCase().includes(searchtext.toLowerCase())
                   );
                   setfilterednurseries(filterednurseries);
