@@ -410,7 +410,8 @@ export function AdministrarViveroScreen(): JSX.Element {
 
   const button_style = {
     color: 'white',
-   
+    backgroundColor: '#335B1E',
+    border: '3px solid black',
     borderRadius: '50%',
     width: '40px',
     height: '40px',
@@ -476,17 +477,12 @@ export function AdministrarViveroScreen(): JSX.Element {
               </Button>
             </Grid>
 
-          <ButtonGroup style={{ margin: 7 }}  >
-            <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={export_to_excel}>
-              <i className="pi pi-file-excel"></i>
-            </Button>
-
-            <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={export_pdf}>
-              <i className="pi pi-file-pdf"></i>
-            </Button>
-
-          </ButtonGroup>
-          <Grid item>
+          </Grid>
+          <Grid container justifyContent="flex-end" item xs={12}>
+            <ButtonGroup style={{ margin: 7 }}>
+              <Button style={button_style} onClick={export_to_excel}>
+                <i className="pi pi-file-excel"></i>
+              </Button>
 
               <Button style={button_style} onClick={export_pdf}>
                 <i className="pi pi-file-pdf"></i>
