@@ -291,7 +291,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={3} md={2}>
               <TextField
-                {...register('letras_via_principal', { required: true })}
+                {...register('letras_via_principal')}
                 error={errors.letras_via_principal?.type === 'required'}
                 helperText={
                   errors.letras_via_principal?.type === 'required'
@@ -314,7 +314,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={3} md={2}>
               <TextField
-                {...register('prefijo_bis', { required: true })}
+                {...register('prefijo_bis')}
                 error={errors.prefijo_bis?.type === 'required'}
                 helperText={
                   errors.prefijo_bis?.type === 'required'
@@ -329,7 +329,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={2} md={2}>
               <TextField
-                {...register('cuadrante', { required: true })}
+                {...register('cuadrante')}
                 error={errors.cuadrante?.type === 'required'}
                 helperText={
                   errors.cuadrante?.type === 'required'
@@ -392,7 +392,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={4} md={2}>
               <TextField
-                {...register('letras_via_secundaria', { required: true })}
+                {...register('letras_via_secundaria')}
                 error={errors.letras_via_secundaria?.type === 'required'}
                 helperText={
                   errors.letras_via_secundaria?.type === 'required'
@@ -415,7 +415,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={4} md={2}>
               <TextField
-                {...register('sufijo_bis', { required: true })}
+                {...register('sufijo_bis')}
                 error={errors.sufijo_bis?.type === 'required'}
                 helperText={
                   errors.sufijo_bis?.type === 'required'
@@ -430,7 +430,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={4} md={2}>
               <TextField
-                {...register('letra_sufijo', { required: true })}
+                {...register('letra_sufijo')}
                 error={errors.letra_sufijo?.type === 'required'}
                 helperText={
                   errors.letra_sufijo?.type === 'required'

@@ -27,9 +27,9 @@ import EditarBienDialogForm from '../componentes/EditarBienDialogForm';
 import { current_bien } from '../store/slice/configuracionSlice';
 
 import ButtonGroup from '@mui/material/ButtonGroup';
-import 'jspdf-autotable';
-import JsPDF from 'jspdf';
-import * as XLSX from 'xlsx';
+
+import { Dowlade_Xls } from '../../../../documentos-descargar/XLS_descargar';
+import { Dowlade_Pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 
 const button_style = {
@@ -170,67 +170,9 @@ export function TipificacionBienesScreen(): JSX.Element {
   }, []);
 
 
-  const export_to_excel = (): void => {
-    const rows = document.querySelectorAll('.MuiDataGrid-row');
-    const header_cells = document.querySelectorAll('.MuiDataGrid-cell--header');
-    const data: any[][] = [];
+  const handle_clickxls = (): void => { Dowlade_Xls({ nurseries: bienes, columns: columns }); };
+  const handle_clickpdf = (): void => { Dowlade_Pdf({ nurseries: bienes, columns: columns }); };
 
-    const headers = Array.from(header_cells).map((cell) => cell.textContent);
-
-    rows.forEach((row) => {
-      const row_data: any[] = [];
-      const cells = row.querySelectorAll('.MuiDataGrid-cell');
-
-      cells.forEach((cell) => {
-        row_data.push(cell.textContent);
-      });
-
-      data.push(row_data);
-    });
-
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
-
-    const file_id = Math.random(); // Reemplaza con la variable que contenga el ID
-    const file_name = `Tipificación_de_bienes_de_vivero__${file_id}.xlsx`; // Nombre del archivo con el ID concatenado
-
-    XLSX.writeFile(workbook, file_name);
-  };
-
-  const export_pdf = (): void => {
-    const doc = new JsPDF();
-
-    const data: any[][] = [];
-    const headers: any[] = [];
-
-    // Obtener los nombres de las columnas de la cuadrícula
-    columns.forEach((column) => {
-      headers.push(column.headerName);
-    });
-
-    // Obtener los datos de las filas de la cuadrícula
-    bienes.forEach((row) => {
-      const row_data: any[] = [];
-
-      columns.forEach((column) => {
-        const cell_data = row[column.field as keyof typeof row];
-        row_data.push(cell_data);
-      });
-
-      data.push(row_data);
-    });
-
-    (doc as any).autoTable({
-      head: [headers],
-      body: data,
-    });
-
-    const file_id = Math.random(); // Reemplaza con la variable que contenga el ID
-    const file_name = `Tipificación_de_bienes_de_vivero_${file_id}.pdf`; // Nombre del archivo con el ID concatenado
-
-    doc.save(file_name);
-  };
 
   return (
     <>
@@ -248,22 +190,16 @@ export function TipificacionBienesScreen(): JSX.Element {
         <Grid item xs={12}>
           <Title title="Tipificación de bienes de vivero"></Title>
 
-
-
-
           <ButtonGroup style={{ margin: 7 }}  >
-            <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={export_to_excel}>
+            <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={handle_clickxls}>
               <i className="pi pi-file-excel"></i>
             </Button>
 
-            <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={export_pdf}>
+            <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={handle_clickpdf}>
               <i className="pi pi-file-pdf"></i>
             </Button>
 
           </ButtonGroup>
-
-
-
 
           <Grid item mt={2}>
             <Box sx={{ width: '100%' }}>
