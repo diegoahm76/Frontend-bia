@@ -7,7 +7,6 @@ import { ProcesoLiquidacionScreen } from '../screens/ProcesoLiquidacionScreen';
 import { EstadosProcesoScreen } from '../screens/EstadosProcesoScreen';
 import { FlujoProcesosScreen } from '../screens/FlujoProcesosScreen';
 import { GestionCarteraScreen } from '../screens/GestionCarteraScreen';
-import { LiquidacionScreen } from '../screens/LiquidacionScreen';
 // import { LiquidacionScreen } from '../screens/LiquidacionScreen';
 import { FacilidadPagoRoutes } from '../facilidadPago/routes/FacilidadPagoRoutes';
 import { ReportesRoutes } from '../reportes/routes/ReportesRoutes';
@@ -23,7 +22,6 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="estados_proceso/*" element={<EstadosProcesoScreen />} />
       <Route path="flujo_proceso/*" element={<FlujoProcesosScreen />} />
       <Route path="gestion_cartera/*" element={<GestionCarteraScreen />} />
-      <Route path="liquidacion/*" element={<LiquidacionScreen />} />
       <Route path="/*" element={<Page404 />} />
       <Route path="facilidades_pago/*" element={<FacilidadPagoRoutes />} />
       <Route path="reportes/*" element={<ReportesRoutes />} />
