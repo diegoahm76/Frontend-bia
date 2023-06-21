@@ -1,14 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
-import { Box, Button, TextField } from '@mui/material';
+import { Box, Button, TextField, Tooltip, Typography } from '@mui/material';
 import { Fragment, useContext, useState, useEffect } from 'react';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import "react-datepicker/dist/react-datepicker.css";
-import esLocale from 'dayjs/locale/es';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useForm } from 'react-hook-form';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { control_success } from '../../../requets/Request';
@@ -16,9 +12,13 @@ import { control_error } from '../../../../../helpers';
 import { LoadingButton } from '@mui/lab';
 import { editar_avance } from '../../request/request';
 import { DataContext } from '../../context/contextData';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import type { Evidencia } from '../../Interfaces/interfaces';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarAvance: React.FC = () => {
+
   const { id_avance,
     info_avance,
     is_select_avance,
@@ -26,6 +26,50 @@ export const EditarAvance: React.FC = () => {
     set_is_editar_avance,
     is_editar_avance,
   } = useContext(DataContext);
+
+  let columns: GridColDef[] = [
+    {
+      field: 'id_evidencia_avance',
+      headerName: 'No EVIDENCIA',
+      sortable: true,
+      width: 150,
+    },
+    {
+      field: 'nombre_archivo',
+      headerName: 'NOMBRE ARCHIVO',
+      sortable: true,
+      width: 250,
+    },
+  ];
+
+  if (is_editar_avance) {
+    columns = [
+      ...columns,
+      {
+        field: 'ACCIONES',
+        headerName: 'ACCIONES',
+        sortable: true,
+        width: 120,
+        renderCell: (params) => (
+          <>
+            <Tooltip title="Editar Actividades">
+              <Button
+                variant="outlined"
+                color="primary"
+                size="small"
+                startIcon={<EditIcon />}
+                onClick={() => {
+                  set_is_evidencia(true);
+                  set_info_evidencia(params.row);
+                  setValue('nombre_archivo_nuevo', params.row.nombre_archivo);
+                }}
+              />
+            </Tooltip>
+          </>
+        ),
+      },
+    ];
+  }
 
   const {
     register,
@@ -35,26 +79,23 @@ export const EditarAvance: React.FC = () => {
     formState: { errors },
   } = useForm();
 
-  const [fecha_reporte, set_fecha_reporte] = useState<Date | null>(null);
   const [is_saving, set_is_saving] = useState(false);
+  const [is_evidencia, set_is_evidencia] = useState(false);
   const [archivos, set_archivos] = useState<Array<File | null>>([null]);
   const [nombres_archivos, set_nombres_archivos] = useState<string[]>(['']);
+  const [rows_evidencia, set_rows_evidencia] = useState<Evidencia[]>([]);
+  const [info_evidencia, set_info_evidencia] = useState<Evidencia>();
+
 
   useEffect(() => {
     if (info_avance) {
-      setValue('accion', info_avance.accion || '');
-      setValue('fecha_reporte', info_avance.fecha_reporte || null);
-      setValue('descripcion', info_avance.descripcion || '');
-      set_fecha_reporte(info_avance.fecha_reporte ? new Date(info_avance.fecha_reporte) : null);
-      // set_archivos(info_avance.evidencias.map(() => null));
-      // set_nombres_archivos(info_avance.evidencias.map((evidencia) => evidencia.nombre_archivo || ''));
+      setValue('accion', info_avance.accion);
+      console.log(info_avance.descripcion, 'descripcion')
+      setValue('descripcion', info_avance.descripcion);
+      set_rows_evidencia(info_avance.evidencias);
+
     }
   }, [info_avance, setValue]);
-
-  const handle_fecha_reporte_change = (date: Date | null): void => {
-    setValue('fecha_reporte', date);
-    set_fecha_reporte(date);
-  };
 
   const agregar_otroarchivo = (): void => {
     set_archivos([...archivos, null]);
@@ -92,6 +133,20 @@ export const EditarAvance: React.FC = () => {
         }
       });
 
+      const nombre_actualizar = [
+        {
+          id_evidencia_avance: info_evidencia?.id_evidencia_avance,
+          nombre_archivo: data.nombre_archivo_nuevo,
+        }
+      ]
+
+      datos_avance.append('nombre_actualizar', [
+        JSON.stringify(nombre_actualizar),
+      ] as any);
+
+
+      console.log(JSON.stringify(nombre_actualizar), 'nombre actualizado')
+
       await editar_avance(id_avance as number, datos_avance);
       set_is_saving(false);
       reset();
@@ -110,6 +165,7 @@ export const EditarAvance: React.FC = () => {
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(on_submit)}
+        style={{ width: '100%', height: '100vh' }} // Añadido estilo para ocupar toda la pantalla
       >
         <Grid container spacing={2} mt={0.1}>
           {is_select_avance && (
@@ -135,27 +191,6 @@ export const EditarAvance: React.FC = () => {
               error={Boolean(errors.accion)}
               helperText={errors.accion?.type === 'required' ? 'Este campo es obligatorio' : ''}
             />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
-              <DatePicker
-                label="Fecha Avance"
-                inputFormat="YYYY/MM/DD"
-                openTo="day"
-                views={['year', 'month', 'day']}
-                value={fecha_reporte}
-                disabled={is_select_avance || is_editar_avance}
-                onChange={handle_fecha_reporte_change}
-                renderInput={(params) => (
-                  <TextField
-                    fullWidth
-                    size="small"
-                    disabled={is_select_avance || is_editar_avance}
-                    {...params}
-                  />
-                )}
-              />
-            </LocalizationProvider>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -209,6 +244,37 @@ export const EditarAvance: React.FC = () => {
               </Grid>
             </Fragment>
           ))}
+          {rows_evidencia.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Evidencias
+                </Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <DataGrid
+                  autoHeight
+                  rows={rows_evidencia}
+                  columns={columns}
+                  getRowId={(row) => row.id_evidencia_avance}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                />
+              </Grid>
+              {is_evidencia && (
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Nombre Archivo"
+                    fullWidth
+                    size="small"
+                    margin="dense"
+                    autoFocus
+                    {...register('nombre_archivo_nuevo', { required: true })}
+                  />
+                </Grid>
+              )}
+            </>
+          )}
         </Grid>
         <Grid item spacing={2} justifyContent="end" container>
           <Grid item>

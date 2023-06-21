@@ -64,7 +64,6 @@ const CrearSeriesCcdDialog = ({
   //! const data allow us to watch the values of the form
   const data = watch();
 
-  const { set_list_subsries } = use_ccd();
 
   //! this use effect is to set the title of the button and the values of the form
   useEffect(() => {

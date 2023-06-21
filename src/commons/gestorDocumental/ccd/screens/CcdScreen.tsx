@@ -30,6 +30,7 @@ import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSerie
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 import CrearSubSerieCcdDialog from '../componentes/crearSubSerieDialog/CrearSubserieDialog';
 import { get_ccd_current } from '../store/slices/ccdSlice';
+import { get_serie_ccd_current } from '../store/slices/seriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
