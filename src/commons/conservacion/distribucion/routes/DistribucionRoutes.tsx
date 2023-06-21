@@ -1,6 +1,6 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { TrasladoScreen  } from '../screens/TrasladoScreen';
-import { DespachoScreen  } from '../screens/DespachoScreen';
+import DespachoScreen from '../screens/DespachoScreen';
 import { CierreSolicitudScreen } from '../screens/CierreSolicitudScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

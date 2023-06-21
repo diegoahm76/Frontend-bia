@@ -21,7 +21,7 @@ export const ConservacionRoutes: React.FC = () => {
       <Route path="produccion/*" element={<ProduccionRoutes />} />
       <Route path="reportes/*" element={<ReporteRoutes />} />
       <Route
-        path="solicitud-material/*"
+        path="solicitud_material/*"
         element={<SolicitudMaterialRoutes />}
       />
       <Route path="/*" element={<Page404 />} />

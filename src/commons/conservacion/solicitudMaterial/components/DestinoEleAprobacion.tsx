@@ -15,14 +15,14 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
 
 interface IProps {
     title?: string;
-    control_solicitud: any;
+    control_solicitud_aprobada: any;
     get_values: any
 
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const DestinoSolicitud = ({
+const DestinoAprobacion = ({
     title,
-    control_solicitud,
+    control_solicitud_aprobada,
     get_values
 }: IProps) => {
 
@@ -120,12 +120,12 @@ const DestinoSolicitud = ({
                             datum_type: "select_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "con_municipio_destino",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { },
                             label: "Municipio",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "debe seleccionar campo",
                             select_options: municipalities,
                             option_label: "label",
@@ -138,26 +138,26 @@ const DestinoSolicitud = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 3,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "nombre_predio_destino",
                             default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            rules: { },
                             label: "Nombre del predio",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: ""
                         },
                         {
                             datum_type: "input_controller",
                             xs: 12,
                             md: 6,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "direccion_destino",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: {},
                             label: "Dirección del predio:",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: ""
                         },
                     ]}
@@ -167,7 +167,7 @@ const DestinoSolicitud = ({
                             datum_type: "input_controller",
                             xs: 12,
                             md: 2,
-                            control_form: control_solicitud,
+                            control_form: control_solicitud_aprobada,
                             control_name: "id_solicitud_consumibles",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
@@ -184,7 +184,10 @@ const DestinoSolicitud = ({
 }
 
 
+
+
+
 // eslint-disable-next-line no-restricted-syntax
-export default DestinoSolicitud;
+export default DestinoAprobacion;
 
 

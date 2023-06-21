@@ -6,7 +6,7 @@ import FormSelectController from "../form/FormSelectController";
 import FormButton from "../form/FormButton";
 import { Title } from '../../Title';
 import SearchIcon from '@mui/icons-material/Search';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SeleccionarModeloDialogForm from "./SeleccionarModeloDialogForm";
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
@@ -41,8 +41,9 @@ interface IProps {
     button_add_selection_hidden?: boolean | null;
     md_button?: number | null;
     button_icon_class?: any;
-    show_search_button?: boolean | null
-
+    show_search_button?: boolean | null,
+    show_button_table?: boolean | null,
+    modal_active_init?: boolean | null,
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -71,7 +72,9 @@ const BuscarModelo = ({
     button_add_selection_hidden,
     md_button,
     button_icon_class,
-    show_search_button
+    show_search_button,
+    show_button_table,
+    modal_active_init
 }: IProps) => {
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -161,6 +164,11 @@ const BuscarModelo = ({
             />;
         }
     }
+    useEffect(() => {
+        if(modal_active_init !== null && modal_active_init !== undefined){
+            set_select_model_is_active(modal_active_init);
+        }
+      }, [])
 
     const handle_open_select_model = (): void => {
         set_select_model_is_active(true);
@@ -182,22 +190,21 @@ const BuscarModelo = ({
                         <TypeDatum key={index} form_input={option} />
                     ))}
                     {(show_search_button ?? true) &&
-                    <Grid
-                        item
-                        xs={12}
-                        md={3}
-                        
-                    >
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={handle_open_select_model}
-                            icon_class={<SearchIcon />}
-                            label={button_submit_label ?? "BUSCAR"}
-                            type_button="button"
-                            disabled={button_submit_disabled ?? false}
-                        />
-                        
-                    </Grid>
+                        <Grid
+                            item
+                            xs={12}
+                            md={3}
+                        >
+                            <FormButton
+                                variant_button="contained"
+                                on_click_function={handle_open_select_model}
+                                icon_class={<SearchIcon />}
+                                label={button_submit_label ?? "BUSCAR"}
+                                type_button="button"
+                                disabled={button_submit_disabled ?? false}
+                            />
+
+                        </Grid>
                     }
                 </>
             }
@@ -212,6 +219,7 @@ const BuscarModelo = ({
                     borderTop={1}
                     borderColor="lightgray"
                 >
+
                     {(show_inputs ?? true) &&
                         <>
                             {form_inputs_list?.map((option, index) => (
@@ -223,16 +231,20 @@ const BuscarModelo = ({
                                 xs={12}
                                 md={3}
                             >
-                                <FormButton
-                                    variant_button="contained"
-                                    on_click_function={add_item_list}
-                                    icon_class={<PlaylistAddCheckIcon />}
-                                    label={add_list_button_label ?? "AGREGAR"}
-                                    type_button="button"
-                                />
+                                {(show_button_table ?? true) &&
+                                    <FormButton
+                                        variant_button="contained"
+                                        on_click_function={add_item_list}
+                                        icon_class={<PlaylistAddCheckIcon />}
+                                        label={add_list_button_label ?? "AGREGAR"}
+                                        type_button="button"
+                                    />
+                                }
                             </Grid>
                         </>
                     }
+
+
 
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '80%' }}>
