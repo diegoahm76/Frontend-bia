@@ -113,9 +113,11 @@ const SearchCcdModal = ({
                 get_classification_ccds_service(
                   params.row.nombre,
                   params.row.version,
+                  params.row.id_ccd,
                 )
               )
-              // dispatch(get_ccd_current(params));
+              console.log('params para ver ccd en el icono del ojito', params);
+              // dispatch(get_ccd_current(params.row.id_ccd));
               set_is_modal_active(false);
             }}
           >

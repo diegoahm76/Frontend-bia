@@ -2,6 +2,8 @@
 import dayjs from "dayjs";
 import { api } from "../../../../api/axios";
 import type { ResponseServer } from "../../../../interfaces/globalModels";
+import type{ AxiosResponse } from "axios";
+import type{ BusquedaAvanzada, InfoPorh } from "../Interfaces/interfaces";
 
 
 export const get_data_id = async (id: number, set_data: any, url: string): Promise<any[]> => {
@@ -100,6 +102,14 @@ export const editar_activdad = async (
     }
   );
   return response.data;
+};
+export const search_avanzada = async ({
+  nombre_proyecto,
+  nombre_programa,
+  nombre_PORH,
+}: BusquedaAvanzada): Promise<AxiosResponse<ResponseServer<InfoPorh[]>>> => {
+  const url = `hidrico/programas/get/avanzada/programas/?nombre_proyecto=${String(nombre_proyecto ?? '')}&nombre_programa=${String(nombre_programa ?? '')}&nombre_PORH=${String(nombre_PORH ?? '')}`;
+  return await api.get<ResponseServer<InfoPorh[]>>(url);
 };
 
 
