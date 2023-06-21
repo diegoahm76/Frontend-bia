@@ -35,6 +35,7 @@ import { AvatarStyles, initial_state } from './utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { notification_error } from '../../store/thunks/ccdThunks';
+import { get_subseries_service } from '../../store/thunks/subseriesThunks';
 const CrearSeriesCcdDialog = ({
   is_modal_active,
   set_is_modal_active,
@@ -60,7 +61,6 @@ const CrearSeriesCcdDialog = ({
   //! const data allow us to watch the values of the form
   const data = watch();
 
-  const { set_list_subsries } = use_ccd();
 
   //! this use effect is to set the title of the button and the values of the form
   useEffect(() => {
