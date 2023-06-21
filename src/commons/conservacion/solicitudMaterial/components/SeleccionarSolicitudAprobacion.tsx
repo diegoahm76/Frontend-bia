@@ -10,18 +10,23 @@ import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSol
 interface IProps {
     title?: string;
     control_solicitud_aprobada: any;
-    get_values: any
+    get_values: any;
+    function_search?: any;
+    despacho?: boolean | null;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudAprobada = ({
     title,
     control_solicitud_aprobada,
-    get_values
+    get_values,
+    function_search,
+    despacho
 }: IProps) => {
 
     // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
     const { unidad_organizacional, solicitudes, nurseries } = useAppSelector((state: { solicitud_vivero: any; }) => state.solicitud_vivero);
+
 
     const columns_solicitudes: GridColDef[] = [
         { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
@@ -68,6 +73,8 @@ const SeleccionarSolicitudAprobada = ({
 
     ];
 
+    
+
 
     return (
         <>
@@ -83,9 +90,9 @@ const SeleccionarSolicitudAprobada = ({
                     row_id={"id_solicitud_vivero"}
                     columns_model={columns_solicitudes}
                     models={solicitudes}
-                    get_filters_models={null}
+                    get_filters_models={function_search}
                     set_models={set_solicitudes}
-                    button_submit_label={'Seleccionar solicitud'}
+                    button_submit_label={(despacho??false) ?'Buscar solicitud':'Seleccionar solicitud'}
                     form_inputs={[
 
                         {
@@ -215,7 +222,7 @@ const SeleccionarSolicitudAprobada = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 6,
                             control_form: control_solicitud_aprobada,
                             control_name: "persona_solicita",
                             default_value: "",
@@ -225,25 +232,24 @@ const SeleccionarSolicitudAprobada = ({
                             disabled: true,
                             helper_text: ""
                         },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_solicitud_aprobada,
-                            control_name: "nombre_unidad_organizacional",
-                            default_value: "",
-                            rules: { },
-                            label: "Unidad a la que pertenece:",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
 
                     ]}
-                    title_table_modal= "Solicitudes pendientes por aprobar"
-                    modal_active_init= {true}
+                    title_table_modal= {(despacho??false) ? "Solicitudes por despachar":"Solicitudes pendientes por aprobar"}
+                    modal_active_init= {!(despacho??false)}
                     modal_select_model_title='Listado de solicitudes'
-                    modal_form_filters={[]}
+                    modal_form_filters={(despacho??false)? [{
+                        datum_type: "input_controller",
+                        xs: 12,
+                        md: 2,
+                        control_form: control_solicitud_aprobada,
+                        control_name: "nro_solicitud",
+                        default_value: "",
+                        rules: {},
+                        label: "Numero solicitud",
+                        type: "number",
+                        disabled: false,
+                        helper_text: "",
+                    }]: []}
                 />
             </Grid>
         </>

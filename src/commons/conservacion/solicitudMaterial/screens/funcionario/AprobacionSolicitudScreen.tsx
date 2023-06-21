@@ -28,6 +28,8 @@ const AprobacionSolicitudScreen = () => {
 
   const dispatch = useAppDispatch();
 
+
+
   useEffect(() => {
     void dispatch(get_uni_organizacional());
     void dispatch(get_nurcery())
@@ -81,25 +83,11 @@ const AprobacionSolicitudScreen = () => {
     }
 
   }, [current_funcionario]);
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  // const on_submit = (data: IObjSolicitudVivero): void => {
-  //   console.log(data)
-  //   const form_data: any = new FormData();
-  //   const fecha = new Date(data.fecha_solicitud ?? "").toISOString()
-  //   const fecha_retiro = new Date(data.fecha_retiro_material ?? "").toISOString()
 
-  //   const data_edit = {
-  //     ...data, fecha_solicitud: fecha.slice(0, 10) + " " + fecha.slice(11, 19), fecha_retiro_material: fecha_retiro.slice(0, 10)
-  //   }
-  //   const aux_items: IObjBienesSolicitud[] = []
-  //   bienes_solicitud.forEach((element: IObjBienesSolicitud, index: number) => {
-  //     aux_items.push({ ...element, nro_posicion: index })
-  //   });
-  //   form_data.append('data_solicitud', JSON.stringify({ ...data_edit }));
-  //   form_data.append('ruta_arcruta_archivo_tecnico', data.ruta_archivo_info_tecnico);
-  //   form_data.append('data_items_solicitados', JSON.stringify(aux_items));
-  //   void dispatch(crear_solicitud(form_data));
-  // }
+  const get_solicitudes_filtro: any = (async () => {
+        void dispatch(get_solicitud_aprobacion())
+
+    })
 
   const on_submit_aprobacion = (data: IObjSolicitudVivero): void => {
     console.log("aprobacion...")
@@ -139,7 +127,8 @@ const AprobacionSolicitudScreen = () => {
       <SeleccionarSolicitudAprobada
         title={"APROBACIÓN DE SOLICITUDES"}
         control_solicitud_aprobada={control_solicitud_aprobada}
-        get_values={get_values} />
+        get_values={get_values}
+        function_search= {get_solicitudes_filtro} />
 
       <PersonaResponsableAprobacion
         title={"Funcionario responsable"}
@@ -154,6 +143,7 @@ const AprobacionSolicitudScreen = () => {
       <SeleccionBienAprobacion />
 
       <Aprobacion
+        cordinador={false}
         control_solicitud_aprobada={control_solicitud_aprobada}
         get_values={get_values} />
 

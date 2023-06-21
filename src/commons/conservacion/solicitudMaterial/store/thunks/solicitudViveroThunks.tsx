@@ -4,7 +4,7 @@ import { toast, type ToastContent } from 'react-toastify';
 import { api } from '../../../../../api/axios';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
-import { get_unidad_organizacional, set_bienes, set_bienes_solicitud, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud, set_nurseries, set_persona_solicita, set_solicitudes } from '../slices/indexSolicitud';
+import { get_unidad_organizacional, set_bienes, set_bienes_solicitud, set_current_bien, set_current_funcionario, set_current_solicitud, set_funcionarios, set_numero_solicitud, set_nurseries, set_persona_solicita, set_solicitudes } from '../slices/indexSolicitud';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -320,6 +320,30 @@ export const get_solicitud_aprobacion_coordinador = (): any => {
     };
 };
 
+// OBTENER SOLICITUD POR despachar
+
+export const get_solicitudes_despacho = (
+    id_vivero: number,
+    solicitud: number|string,
+    fecha: string,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(fecha, solicitud, id_vivero)
+            const { data } = await api.get(`conservacion/despachos/get-solicitudes-por-nro-despacho-y-id-vivero/?id_vivero=${id_vivero}&nro_solicitud=${solicitud}&fecha_aprobado=${fecha}`);
+            console.log('Solicitudes recuperadas:', data);
+            dispatch(set_solicitudes(data.data));
+
+            // dispatch(setID(Number(id)))
+            return data;
+        } catch (error: any) {
+            console.log('get_solicitud_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
 
 // OBTENER VIVEROS
 export const get_nurcery = (): any => {
@@ -395,7 +419,6 @@ export const get_bienes_service = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=MV`)
             const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=${tipo_bien ?? ""}&codigo_bien=${codigo_bien ?? ""}&nombre=${nombre_bien ?? ""}`);
             dispatch(set_bienes(data.data));
             console.log(data)
@@ -436,7 +459,29 @@ export const get_bienes_solicitud = (
         }
     };
 };
+// Obtener solicitud by id
 
+export const get_solicitud_id_service = (
+    id_solicitud_viveros: number | null,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            const { data } = await api.get(`conservacion/funcionario/get-solicitud/${id_solicitud_viveros ?? ""}/`);
+            dispatch(set_current_solicitud(data.data_maestro));
+            console.log(data)
+            if (data.data.length > 0) {
+                // control_success("Se encontrarón bienes")
+            } else {
+                // control_error("No se encontrarón bienes")
+            }
+            return data;
+        } catch (error: any) {
+            // console.log('get_planting_goods_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
 // anular solicitud
 export const annul_solicitud_service = (
     id: number,
@@ -499,7 +544,7 @@ export const aprobacion_solicitud_coordinador: any = (
                 solicitud
             );
             console.log(data)
-            dispatch(get_solicitud_service());
+            dispatch(get_solicitud_aprobacion_coordinador());
             control_success('Se aprobo la solicitud');
 
             return data;

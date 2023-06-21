@@ -64,9 +64,7 @@ const CrearViveroDialogForm = ({
     reset: reset_nursery,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     getValues,
-    formState: { errors },
   } = useForm<FormValues>();
-  console.log('Errors:', errors);
 
   const handle_close_add_nursery = (): void => {
     set_is_modal_active(false);
