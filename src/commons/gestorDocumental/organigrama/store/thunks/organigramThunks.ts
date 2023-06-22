@@ -272,7 +272,7 @@ export const update_unitys_service: any = (
   };
 };
 
-// Trae info de usuario para delegarle un organigrama posteriormente
+//! Trae info de usuario para delegarle un organigrama posteriormente
 export const get_nuevo_user_organigrama: any = (
   tipo_documento: string,
   numero_documento: number
@@ -290,6 +290,7 @@ export const get_nuevo_user_organigrama: any = (
   };
 };
 
+//! Trae info de usuario para delegarle un organigrama posteriormente
 export const get_busqueda_avanzada_user_organigrama: any = (
   primer_nombre: string,
   primer_apellido: string
@@ -299,7 +300,6 @@ export const get_busqueda_avanzada_user_organigrama: any = (
       const { data } = await api.get(
         `transversal/organigrama/get-nuevo-user-organigrama-filters/?primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}`
       );
-      /* `users/get-user-by-nombre-de-usuario/?nombre_de_usuario=${nombre_usuario}` */
       console.log(data);
       return data;
     } catch (error: any) {
@@ -309,6 +309,7 @@ export const get_busqueda_avanzada_user_organigrama: any = (
   };
 };
 
+//! Delega un organigrama ya seleccionado
 export const delegar_organigrama_persona: any = (
   id_persona: number,
   organigrama: string
