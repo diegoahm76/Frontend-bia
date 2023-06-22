@@ -344,8 +344,8 @@ export function AdministrarViveroScreen(): JSX.Element {
 
 
 
-  const handle_clickxls = (): void => { download_xls({ nurseries: nurseries, columns: columns }); };
-  const handle_clickpdf = (): void => { download_pdf({ nurseries: nurseries, columns: columns }); };
+  const handle_clickxls = (): void => { download_xls({ nurseries: nurseries, columns }); };
+  const handle_clickpdf = (): void => { download_pdf({ nurseries: nurseries, columns}); };
 
   const button_style = {
     color: 'white',
