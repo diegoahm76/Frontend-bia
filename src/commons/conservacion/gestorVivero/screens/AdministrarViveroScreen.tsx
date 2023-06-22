@@ -484,10 +484,10 @@ export function AdministrarViveroScreen(): JSX.Element {
             {/* <Divider /> */}
             <Grid item xs={2}>
               <ButtonGroup style={{ margin: 7 }}>
-                <Button style={button_style} onClick={export_to_excel}>
+                <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={export_to_excel}>
                   <i className="pi pi-file-excel"></i>
                 </Button>
-                <Button style={button_style} onClick={export_pdf}>
+                <Button  style={{ ...button_style, backgroundColor: 'red' }} onClick={export_pdf}>
                   <i className="pi pi-file-pdf"></i>
                 </Button>
               </ButtonGroup>
