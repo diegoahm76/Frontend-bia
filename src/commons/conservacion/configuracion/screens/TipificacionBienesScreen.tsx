@@ -170,7 +170,9 @@ export function TipificacionBienesScreen(): JSX.Element {
   }, []);
 
 
+  // eslint-disable-next-line object-shorthand
   const handle_clickxls = (): void => { download_xls({ nurseries: bienes, columns: columns }); };
+  // eslint-disable-next-line object-shorthand
   const handle_clickpdf = (): void => { download_pdf({ nurseries: bienes, columns: columns }); };
 
 
