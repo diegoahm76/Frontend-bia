@@ -49,12 +49,18 @@ export const RegistroAvance: React.FC = () => {
     set_nombres_archivos([...nombres_archivos, '']);
   };
 
-  const handle_file_select = (e: React.ChangeEvent<HTMLInputElement>, index: number): void => {
+  const handle_file_select = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ): void => {
     const file = e.target.files?.[0];
     const updated_archivos = [...archivos];
     if (file != null) {
       updated_archivos[index] = file;
       set_archivos(updated_archivos);
+      const updated_nombres_archivos = [...nombres_archivos];
+      updated_nombres_archivos[index] = file.name; // Guardar el nombre del archivo
+      set_nombres_archivos(updated_nombres_archivos);
     }
   };
 
@@ -77,8 +83,8 @@ export const RegistroAvance: React.FC = () => {
 
       archivos.forEach((archivo, index) => {
         if (archivo != null) {
-          datos_avance.append(`evidencia_${index}`, archivo);
-          datos_avance.append(`nombre_archivo_${index}`, nombres_archivos[index]);
+          datos_avance.append(`evidencia`, archivo);
+          datos_avance.append(`nombre_archivo`, nombres_archivos[index]);
         }
       });
 
@@ -93,6 +99,12 @@ export const RegistroAvance: React.FC = () => {
     }
   };
 
+  const reset_form = ():void => {
+    reset();
+    set_nombres_archivos(['']);
+    set_archivos([null]);
+  };
+
   // Validar si todos los campos obligatorios están completos
   const is_form_valid = nombres_archivos.every(nombre => nombre !== '') && Object.keys(errors).length === 0;
 
@@ -101,7 +113,7 @@ export const RegistroAvance: React.FC = () => {
       <Box component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit)}
-        style={{ width: '100%', height: '100vh' }} // Añadido estilo para ocupar toda la pantalla
+        style={{ width: '100%' }} // Añadido estilo para ocupar toda la pantalla
       >
         <Grid container spacing={2} mt={0.1}>
           <Grid item xs={12}>
@@ -208,6 +220,15 @@ export const RegistroAvance: React.FC = () => {
               onClick={agregar_otroarchivo}
             >
               Agregar archivo
+            </LoadingButton>
+          </Grid>
+          <Grid item>
+            <LoadingButton
+              variant="outlined"
+              color="error"
+              onClick={reset_form} // Use the modified reset function
+            >
+              Limpiar
             </LoadingButton>
           </Grid>
           <Grid item>

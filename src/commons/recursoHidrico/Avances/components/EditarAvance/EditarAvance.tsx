@@ -27,9 +27,9 @@ export const EditarAvance: React.FC = () => {
     id_avance,
     info_avance,
     is_select_avance,
-    set_is_select_avance,
-    set_is_editar_avance,
+    set_mode,
     is_editar_avance,
+    set_info_avance,
   } = useContext(DataContext);
 
   let columns: GridColDef[] = [
@@ -121,6 +121,9 @@ export const EditarAvance: React.FC = () => {
     if (file != null) {
       updated_archivos[index] = file;
       set_archivos(updated_archivos);
+      const updated_nombres_archivos = [...nombres_archivos];
+      updated_nombres_archivos[index] = file.name; // Guardar el nombre del archivo
+      set_nombres_archivos(updated_nombres_archivos);
     }
   };
 
@@ -141,37 +144,60 @@ export const EditarAvance: React.FC = () => {
 
       archivos.forEach((archivo, index) => {
         if (archivo != null) {
-          datos_avance.append(`evidencia_${index}`, archivo);
+          datos_avance.append(`evidencia`, archivo);
           datos_avance.append(
-            `nombre_archivo_${index}`,
+            `nombre_archivo`,
             nombres_archivos[index]
           );
         }
       });
 
-      if (data.nombre_actualizar) {
+      if (!data.nombre_archivo_nuevo) {
+        datos_avance.append('nombre_actualizar', JSON.stringify([]) as any);
+      } else {
         const nombre_actualizar = [
           {
             id_evidencia_avance: info_evidencia?.id_evidencia_avance,
-            nombre_archivo: data.nombre_actualizar,
+            nombre_archivo: data.nombre_archivo_nuevo,
           },
         ];
-        datos_avance.append('nombre_actualizar', [
-          JSON.stringify(nombre_actualizar),
-        ] as any);
-      } else {
-        datos_avance.append('nombre_actualizar', JSON.stringify([]) as any);
+        datos_avance.append('nombre_actualizar', JSON.stringify(nombre_actualizar) as any);
       }
 
       await editar_avance(id_avance as number, datos_avance);
       set_is_saving(false);
       // reset();
       control_success('Se editó avance correctamente');
+
+      // Actualizar la información del avance después de la edición
+      const updatedInfoAvance: any = { ...info_avance }; // Copiar el objeto existente
+
+      if (updatedInfoAvance) {
+        updatedInfoAvance.accion = data.accion;
+        updatedInfoAvance.descripcion = data.descripcion;
+
+        if (info_evidencia) {
+          updatedInfoAvance.evidencias = [
+            {
+              id_evidencia_avance: info_evidencia.id_evidencia_avance,
+              nombre_archivo: data.nombre_archivo_nuevo,
+            },
+            ...updatedInfoAvance.evidencias.filter(
+              (evidencia: any) =>
+                evidencia.id_evidencia_avance !== info_evidencia.id_evidencia_avance
+            ),
+          ];
+        }
+
+        set_info_avance(updatedInfoAvance);
+      }
+
     } catch (error) {
       set_is_saving(false);
       control_error(error);
     }
   };
+
 
   const is_form_valid = Object.keys(errors).length === 0;
 
@@ -181,7 +207,7 @@ export const EditarAvance: React.FC = () => {
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(on_submit)}
-        style={{ width: '100%', height: '100vh' }} // Añadido estilo para ocupar toda la pantalla
+        style={{ width: '100%' }} // Añadido estilo para ocupar toda la pantalla
       >
         <Grid container spacing={2} mt={0.1}>
           {is_select_avance && (
@@ -360,8 +386,7 @@ export const EditarAvance: React.FC = () => {
                 color="primary"
                 size="large"
                 onClick={() => {
-                  set_is_select_avance(false);
-                  set_is_editar_avance(true);
+                  set_mode('editar_avance');
                 }}
               >
                 Editar Avance

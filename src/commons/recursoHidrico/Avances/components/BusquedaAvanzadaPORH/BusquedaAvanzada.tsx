@@ -23,8 +23,9 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
 }: PropsBuscador) => {
 
     const {
-    set_id_proyecto,
-} = useContext(DataContext);
+        set_id_proyecto,
+        set_mode,
+    } = useContext(DataContext);
 
     const columns: GridColDef[] = [
         {
@@ -67,6 +68,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
                                 if (params.row !== undefined) {
                                     set_info(params.row);
                                     set_id_proyecto(params.row.id_proyecto);
+                                    set_mode('select_proyecto');
                                     handle_close();
                                     onResult(params.row);
                                 }
@@ -137,10 +139,11 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
         const matching_row = rows.find((row) => row.nombre === value);
         if (matching_row != null) {
             set_info(matching_row);
+            set_mode('select_proyecto');
             onResult(matching_row);
         } else {
             set_info(undefined);
-            onResult(get_empty_info_porh());    
+            onResult(get_empty_info_porh());
         }
     };
     useEffect(() => {
@@ -189,7 +192,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
                         size="small"
                         margin="dense"
                         value={info?.nombre}
-                        onChange={handle_input_change}
+                        onInput={handle_input_change}
                     />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
