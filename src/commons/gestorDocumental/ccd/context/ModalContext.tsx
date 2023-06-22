@@ -3,12 +3,19 @@
 import { createContext, useState, useCallback } from 'react';
 import { type ModalContextState } from '../interfaces/ModalInterfaces/Modal.types';
 
-const ModalContext = createContext<ModalContextState | undefined>(undefined);
+const ModalContext = createContext<ModalContextState | any>(undefined);
 
 const ModalProvider: React.FC<any> = ({ children }: any) => {
+  const [modalSeriesAndSubseries, setModalSeriesAndSubseries] = useState(false)
+
   const [modal1, setModal1] = useState(false);
   const [modal2, setModal2] = useState(false);
   const [modal3, setModal3] = useState(false);
+  
+
+
+  const openModalModalSeriesAndSubseries = useCallback(() => setModalSeriesAndSubseries(true), []);
+  const closeModalModalSeriesAndSubseries = useCallback(() => setModalSeriesAndSubseries(false), []);
 
   const openModal1 = useCallback(() => setModal1(true), []);
   const closeModal1 = useCallback(() => setModal1(false), []);
@@ -20,6 +27,9 @@ const ModalProvider: React.FC<any> = ({ children }: any) => {
   return (
     <ModalContext.Provider
       value={{
+        modalSeriesAndSubseries,
+        openModalModalSeriesAndSubseries,
+        closeModalModalSeriesAndSubseries,
         modal1,
         modal2,
         modal3,
