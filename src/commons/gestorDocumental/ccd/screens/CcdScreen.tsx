@@ -46,10 +46,19 @@ export const CcdScreen: React.FC = () => {
 
   const dispatch: any = useAppDispatch();
   const { ccd_current } = useAppSelector((state: any) => state.ccd);
-  const { serie_ccd_current } = useAppSelector((state: any) => state.series);
-  const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
+  const { series_ccd, serie_ccd_current } = useAppSelector(
+    (state: any) => state.series
+  );
+  const { subseries_ccd, subserie_ccd_current } = useAppSelector(
+    (state: any) => state.subseries
+  );
+  const { seriesAndSubseries } = useAppSelector(
+    (state: any) => state.slice_series_and_subseries
+  );
+  // ? const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
+  console.log(series_ccd);
   useEffect(() => {
     set_flag_btn_finish(
       ccd_current?.fecha_terminado !== null &&
@@ -74,6 +83,18 @@ export const CcdScreen: React.FC = () => {
     }
   }, [ccd_current?.id_ccd]); */
 
+  /* useEffect(() => {
+    if (ccd_current?.id_ccd) {
+      dispatch(to_resume_ccds_service(ccd_current?.id_ccd));
+    }
+  }, [ccd_current?.id_ccd]); */
+
+  useEffect(() => {
+    if (ccd_current?.id_ccd) {
+      dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
+    }
+  }, [ccd_current?.id_ccd]);
+
   // Hooks
   const {
     // States
@@ -81,6 +102,7 @@ export const CcdScreen: React.FC = () => {
     list_organigrams,
     list_sries,
     list_subsries,
+    list_sries_asignacion,
     title,
     title_button_asing,
     create_is_active,
@@ -88,6 +110,7 @@ export const CcdScreen: React.FC = () => {
     create_sub_serie_active,
     consulta_ccd_is_active,
     columns_asignacion,
+    //! control series y subseries para catalogo de unidad organizacional
     control,
     control_create_ccd,
     errors,
@@ -147,9 +170,14 @@ export const CcdScreen: React.FC = () => {
             /* onSubmit={handle_submit_create_ccd(on_submit_create_ccd)} */
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3}
+                sx={{
+                  zIndex: 9999,
+                }}
+              >
                 <Controller
                   name="organigrama"
+                  
                   rules={{ required: true }}
                   control={control_create_ccd}
                   render={({ field }) => (
@@ -170,7 +198,11 @@ export const CcdScreen: React.FC = () => {
                   </div>
                 )}
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3}
+                 sx={{
+                  zIndex: 9999,
+                }}
+              >
                 <Controller
                   name="unidades_organigrama"
                   control={control_create_ccd}
@@ -259,7 +291,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
-                      disabled={ccd_current != null}
+                      disabled={series_ccd.length > 0}
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -290,7 +322,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subserie"
                       variant="outlined"
-                      disabled={ccd_current !== null}
+                      disabled={subseries_ccd.length > 0}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -501,7 +533,7 @@ export const CcdScreen: React.FC = () => {
                         ccd_current === null || ccd_current?.id_ccd === null
                       }
                     >
-                      CREAR SERIE
+                      ADMINISTRAR SERIES
                     </Button>
                     {/*                    <Button disabled>CLONAR</Button>
                     <Button disabled>PREVISUALIZAR</Button> */}
@@ -554,7 +586,7 @@ export const CcdScreen: React.FC = () => {
                       }}
                       disabled={serie_ccd_current === null}
                     >
-                      CREAR SUBSERIE
+                      ADMINISTRAR SUBSERIES
                     </Button>
                     {/* <Button disabled>CLONAR</Button>
                     <Button disabled>PREVISUALIZAR</Button> */}
@@ -596,7 +628,7 @@ export const CcdScreen: React.FC = () => {
                         marginRight: '7px'
                       }}
                     />{' '}
-                    SERIES Y SUBSERIES
+                    VER CATÁLOGO
                   </Button>
                   {/*                    <Button disabled>CLONAR</Button>
                     <Button disabled>PREVISUALIZAR</Button> */}
@@ -619,15 +651,15 @@ export const CcdScreen: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Asignaciones" />
+            <Title title="Administrar catálogo de series y subseries por Unidad Organizacional" />
             <Box
               component="form"
               sx={{ mt: '20px', mb: '20px' }}
               noValidate
               autoComplete="off"
             >
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={3}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={4}>
                   <label className="text-terciary">
                     {' '}
                     Unidades
@@ -657,13 +689,13 @@ export const CcdScreen: React.FC = () => {
                     </div>
                   )}
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <label className="text-terciary">
-                    Series
+                    Catalogo de series y subseries
                     <samp className="text-danger">*</samp>
                   </label>
                   <Controller
-                    name="sries_asignacion"
+                    name="catalogo_asignacion"
                     control={control}
                     rules={{
                       required: true
@@ -672,7 +704,7 @@ export const CcdScreen: React.FC = () => {
                       <Select
                         {...field}
                         value={field.value}
-                        options={list_sries}
+                        options={list_sries_asignacion}
                         placeholder="Seleccionar"
                       />
                     )}
@@ -685,9 +717,9 @@ export const CcdScreen: React.FC = () => {
                     </div>
                   )}
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                {/* <Grid item xs={12} sm={4}>
                   <label className="text-terciary">
-                    Subseries
+                    Catalogo de series y subseries
                     <samp className="text-danger">*</samp>
                   </label>
                   <Controller
@@ -713,8 +745,15 @@ export const CcdScreen: React.FC = () => {
                       </small>
                     </div>
                   )}
-                </Grid>
-                <Grid item xs={12} sm={3}>
+                </Grid> */}
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  sx={{
+                    marginTop: '25px'
+                  }}
+                >
                   <Button
                     fullWidth
                     onClick={() => {
@@ -725,6 +764,13 @@ export const CcdScreen: React.FC = () => {
                           set_title_button_asing
                         )
                       ); */
+
+                      console.log(
+                        'guardando la relación de asignaciones',
+                        control._formValues.unidades_asignacion,
+                        control._formValues.catalogo_asignacion
+                      );
+
                       console.log('guardando la relación de asignaciones');
                     }}
                     color="primary"

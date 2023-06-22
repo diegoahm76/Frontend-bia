@@ -21,11 +21,11 @@ const ModalContext = createContext<ModalContextState | any>({
 const ModalProvider: React.FC<any> = ({ children }: any) => {
   const [modalSeriesAndSubseries, setModalSeriesAndSubseries] = useState(false)
 
+  // const [modalBusquedaCCD, setModalBusquedaCCD] = useState(false);
+
   const [modal1, setModal1] = useState(false);
   const [modal2, setModal2] = useState(false);
   const [modal3, setModal3] = useState(false);
-  
-
 
   const openModalModalSeriesAndSubseries = useCallback(() => setModalSeriesAndSubseries(true), []);
   const closeModalModalSeriesAndSubseries = useCallback(() => setModalSeriesAndSubseries(false), []);
