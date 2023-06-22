@@ -1,4 +1,5 @@
 import { type Persona } from '../../../../interfaces/globalModels';
+import {type IObjBienesSolicitud as IObjBienSolicitudAux} from '../../solicitudMaterial/interfaces/solicitudVivero';
 
 export interface IDistribucion {
   nurseries: IObjNursery[];
@@ -18,6 +19,21 @@ export interface IDistribucion {
   current_bien: IObjBien;
   bienes_despacho: IObjBienDespacho[];
   nro_despacho:number | null;
+  bien_selected: IObjBienesSolicitud;
+  bienes_solicitud_aux: IObjBienSolicitudAux[];
+
+
+}
+export interface IObjBienesSolicitud {
+  id_item_solicitud_viveros?: number | null;
+  id_solicitud_viveros?: number | null;
+  nro_posicion?: number | null;
+  id_bien?: number | null;
+  cod_tipo_elemento_vivero?: string | null;
+  codigo_bien?: string | null;
+  nombre_bien?: string | null;
+  cantidad?: number | null;
+  observaciones?: string | null;
 }
 
 export interface IObjBienDespacho {
@@ -30,6 +46,10 @@ export interface IObjBienDespacho {
   cantidad_despachada?: number | null;
   observacion_del_despacho?: string | null;
   nro_posicion_en_despacho?: number | null;
+  nombre_bien?: string | null;
+  codigo_bien?: string | null;
+  unidad_medida?: string | null;
+  cod_tipo_elemento_vivero?: string | null;
 }
 
 export interface IObjBien {

@@ -627,10 +627,10 @@ export const get_bienes_service = (
       const { data } = await api.get(`conservacion/bajas/busqueda-avanzada-bienes-bajas/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${tipo_elemento ?? ""}`);
       console.log(data)
       dispatch(set_insumos(data.data));
-      if (data.success === true) {
-        control_success(data.detail)      
+      if (data.data.length >0) {
+        control_success("Se encontrarón bienes")      
       } else {
-        control_error(data.detail)
+        control_error("No se encontrarón bienes")
       }
       return data;
     } catch (error: any) {

@@ -469,11 +469,7 @@ export const get_solicitud_id_service = (
             const { data } = await api.get(`conservacion/funcionario/get-solicitud/${id_solicitud_viveros ?? ""}/`);
             dispatch(set_current_solicitud(data.data_maestro));
             console.log(data)
-            if (data.data.length > 0) {
-                // control_success("Se encontrarón bienes")
-            } else {
-                // control_error("No se encontrarón bienes")
-            }
+            
             return data;
         } catch (error: any) {
             // console.log('get_planting_goods_service');
