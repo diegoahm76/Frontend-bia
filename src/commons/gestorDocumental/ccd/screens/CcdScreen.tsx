@@ -38,6 +38,7 @@ import { gridStyles } from './utils/constants';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalContext } from '../context/ModalContext';
 import { CatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/CatalogoSeriesYSubseries';
+import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -578,9 +579,13 @@ export const CcdScreen: React.FC = () => {
                 >
                   <Button
                     color="warning"
+                    variant="outlined"
+                    disabled={ccd_current === null}
                     onClick={() => {
                       console.log('ver catalogo de series y subseries');
                       openModalModalSeriesAndSubseries();
+                      dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
+                      // getCatalogoSeriesYSubseries();
                     }}
                   >
                     <VisibilityIcon

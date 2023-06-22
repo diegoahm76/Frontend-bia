@@ -23,16 +23,30 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ModalContext } from '../../context/ModalContext';
 import { columns } from './../../../../seguridad/screens/AuditoriaScreen/utils/colums';
 import { AvatarStyles } from '../crearSeriesCcdDialog/utils/constant';
-import  EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { getCatalogoSeriesYSubseries } from './services/CatalogoSeriesYSubseries.service';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 /* eslint-disable @typescript-eslint/naming-convention */
 export const CatalogoSeriesYSubseries = () => {
+  const { seriesAndSubseries } = useAppSelector(
+    (state) => state.slice_series_and_subseries
+  );
+
+  const { ccd_current } = useAppSelector((state: any) => state.ccd);
+
+  const dispatch: any = useAppDispatch();
   const { closeModalModalSeriesAndSubseries, modalSeriesAndSubseries } =
     useContext(ModalContext);
 
   const [series_ccd, set_series_ccd] = useState<any[]>([]);
   // const [columns, set_columns] = useState<any[]>([]);
 
+ /*  useEffect(() => {
+    console.log('useEffect, getCatalogoSeriesYSubseries');
+    console.log(ccd_current);
+    dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
+  }, [dispatch]); */
 
   const columns: GridColDef[] = [
     {
@@ -103,26 +117,24 @@ export const CatalogoSeriesYSubseries = () => {
       <DialogTitle>
         CATÁLOGO DE SERIES Y SUBSERIES
         <IconButton
-        onClick={() => {
-          closeModalModalSeriesAndSubseries();
-        }}
+          onClick={() => {
+            closeModalModalSeriesAndSubseries();
+          }}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Grid item xs={12} 
-        sx={{ width: 600 }}
-        >
+        <Grid item xs={12} sx={{ width: 600 }}>
           <DataGrid
             density="compact"
             autoHeight
-            rows={series_ccd}
+            rows={seriesAndSubseries}
             columns={columns}
             pageSize={5}
             rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
-            getRowId={(row) => row.id_serie_doc}
+            getRowId={(row) => row.id_catalogo_serie}
           />
         </Grid>
       </DialogContent>

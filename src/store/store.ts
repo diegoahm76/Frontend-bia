@@ -34,6 +34,7 @@ import { calidad_personas_slice } from "../commons/recaudo/facilidadPago/slices/
 import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
 import { solicitud_vivero_slice } from "../commons/conservacion/solicitudMaterial/slices/indexSolicitud";
 import { reportes_recaudo_slice } from "../commons/recaudo/reportes/slices/ReportesSlice";
+import { seriesAndSubseriesSlice } from "../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice";
 
 const persist_config = {
   key: "macarenia_app",
@@ -71,7 +72,8 @@ const app_reducers = combineReducers({
   calidad_personas: calidad_personas_slice.reducer,
   solicitud_facilidad: solicitud_facilidad_slice.reducer,
   solicitud_vivero: solicitud_vivero_slice.reducer,
-  reportes_recaudo: reportes_recaudo_slice.reducer
+  reportes_recaudo: reportes_recaudo_slice.reducer,
+  slice_series_and_subseries: seriesAndSubseriesSlice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);
