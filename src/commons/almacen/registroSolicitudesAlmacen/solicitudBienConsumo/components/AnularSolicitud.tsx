@@ -118,8 +118,8 @@ const AnularSolicitudModal = ({
                                 fieldState: { error },
                             }) => (
                                 <TextField
+                                    fullWidth
                                     margin="dense"
-                                    rows={4}
                                     size="small"
                                     label="Anulación elaborada por:"
                                     variant="outlined"
