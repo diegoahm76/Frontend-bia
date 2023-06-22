@@ -221,6 +221,9 @@ const SeleccionarModeloDialogForm = ({
         const file_name = `Resultados de la busqueda_${file_id}.pdf`; // Nombre del archivo con el ID concatenado
         doc.save(file_name);
     };
+
+
+    
     return (
         <Dialog
             fullWidth
@@ -228,11 +231,21 @@ const SeleccionarModeloDialogForm = ({
             open={is_modal_active}
             onClose={handle_close_select_model}
         >
-            <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
+           
             <Divider />
             <DialogContent sx={{ mb: '0px' }}>
                 {form_filters.length > 0 &&
-                    <Grid container spacing={2} direction="row">
+                    <Grid container   sx={{
+                        position: 'relative',
+                        background: '#FAFAFA',
+                        borderRadius: '15px',
+                        p: '20px',
+                        mb: '20px',
+                        boxShadow: '0px 3px 6px #042F4A26',
+                        marginTop: '10px',
+                        marginLeft: '-6px',
+                       }} spacing={2} direction="row">
+                        <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
                         {form_filters.map((option, index) => (
                             <TypeDatum key={index} form_input={option} />
                         ))}
@@ -252,7 +265,15 @@ const SeleccionarModeloDialogForm = ({
                     </Grid>
                 }
                 {models.length > 0 &&
-                    <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
+                    <Grid container    sx={{
+                        position: 'relative',
+                        background: '#FAFAFA',
+                        borderRadius: '15px',
+                        p: '20px',
+                        mb: '20px',
+                        boxShadow: '0px 3px 6px #042F4A26',
+                        marginLeft: '-6px',
+                      }} spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '100%' }}>
                             <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
                             <ButtonGroup style={{ margin: 7 }}  >

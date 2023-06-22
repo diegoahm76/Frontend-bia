@@ -9,8 +9,10 @@ import {
   Avatar,
   Chip,
   Tooltip,
-  Stack,
+  // Stack,3
   Button,
+  TextField,
+  Divider,
 
 } from '@mui/material';
 // Icons de Material UI
@@ -22,6 +24,7 @@ import DoneOutlineIcon from '@mui/icons-material/DoneOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import SearchIcon from '@mui/icons-material/Search';
 // Componentes personalizados
 import { Title } from '../../../../components/Title';
 // // Hooks
@@ -36,7 +39,7 @@ import 'jspdf-autotable';
 import JsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 
-const initial_state_current_mixture ={
+const initial_state_current_mixture = {
   id_mezcla: null,
   unidad_medida: "",
   nombre: "",
@@ -49,10 +52,12 @@ const initial_state_current_mixture ={
 export function TiposMezclaScreen(): JSX.Element {
   // const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const  [action, set_action ] = useState<string>("create");
+  const [action, set_action] = useState<string>("create");
   const { mixtures } = useAppSelector((state) => state.configuracion);
   const [add_mixture_is_active, set_add_mixture_is_active] =
     useState<boolean>(false);
+  const [searchtext, setsearchtext] = useState('');
+  const [filterednurseries, setfilterednurseries] = useState<any[]>(mixtures);
 
   const columns: GridColDef[] = [
     { field: 'id_mezcla', headerName: 'ID', width: 20 },
@@ -73,29 +78,26 @@ export function TiposMezclaScreen(): JSX.Element {
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value=== null ? "Sin definir": params.value}
+          {params.value === null ? "Sin definir" : params.value}
         </div>
       ),
-     
+
     },
-    
     {
       field: 'item_activo',
       headerName: '¿Activo?',
       width: 100,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return (params.row.item_activo)?
-      
+        return (params.row.item_activo) ?
           (
-          <Chip size="small" label="ACTIVO" color="success" variant="outlined" />
-        ) 
-        :
-         (
-          <Chip size="small" label="INACTIVO" color="error" variant="outlined" />
+            <Chip size="small" label="ACTIVO" color="success" variant="outlined" />
+          )
+          :
+          (
+            <Chip size="small" label="INACTIVO" color="error" variant="outlined" />
+          )
 
-        )
-        
       },
     },
     {
@@ -104,7 +106,7 @@ export function TiposMezclaScreen(): JSX.Element {
       width: 200,
       renderCell: (params) => (
         <>
-        <Tooltip title="Detalle">
+          <Tooltip title="Detalle">
             <IconButton
               onClick={() => {
                 dispatch(current_mixture(params.row));
@@ -128,30 +130,30 @@ export function TiposMezclaScreen(): JSX.Element {
               </Avatar>
             </IconButton>
           </Tooltip>
-          {params.row.item_ya_usado?null:
-          <Tooltip title="Editar">
-            <IconButton
-              onClick={() => {
-                dispatch(current_mixture(params.row));
-                set_action("edit")
-                set_add_mixture_is_active(true)
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
+          {params.row.item_ya_usado ? null :
+            <Tooltip title="Editar">
+              <IconButton
+                onClick={() => {
+                  dispatch(current_mixture(params.row));
+                  set_action("edit")
+                  set_add_mixture_is_active(true)
                 }}
-                variant="rounded"
               >
-                <EditIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
-          </Tooltip>
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <EditIcon
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           }
           <Tooltip title={params.row.item_activo ? "Desactivar" : "Activar"}>
             <IconButton
@@ -180,8 +182,8 @@ export function TiposMezclaScreen(): JSX.Element {
               </Avatar>
             </IconButton>
           </Tooltip>
-          {params.row.item_ya_usado?null:
-          <Tooltip title="Eliminar">
+          {params.row.item_ya_usado ? null :
+            <Tooltip title="Eliminar">
               <IconButton
                 onClick={() => {
                   dispatch(delete_mixture_service(params.row.id_mezcla));
@@ -203,15 +205,22 @@ export function TiposMezclaScreen(): JSX.Element {
                 </Avatar>
               </IconButton>
             </Tooltip>
-            }
+          }
         </>
       ),
     },
   ];
 
+  // useEffect(() => {
+  //   void dispatch(get_mixtures_service());
+  // }, []);
   useEffect(() => {
-    void dispatch(get_mixtures_service());
-  }, []);
+    void dispatch(get_mixtures_service()).then((response: any) => {
+      console.log(response);
+      setfilterednurseries(response.data);
+    }
+    );
+  }, [dispatch]);
 
   const button_style = {
     color: 'white',
@@ -287,8 +296,6 @@ export function TiposMezclaScreen(): JSX.Element {
 
     doc.save(file_name);
   };
-
-
   return (
     <>
       <Grid
@@ -303,47 +310,73 @@ export function TiposMezclaScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12}>
-        
-          <Title title="Tipos de mezcla"></Title> 
+          <Grid container spacing={2}>
+            <Grid item xs={12} spacing={2}>
+              <Title title="Tipos de mezcla"></Title>
+            </Grid>
 
+            <Grid item xs={12} spacing={2} style={{ display: 'flex', justifyContent: 'end' }}>
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={() => {
+                  dispatch(current_mixture(initial_state_current_mixture));
+                  set_action("create")
+                  set_add_mixture_is_active(true);
+                }}
+              >
+                Crear mezcla
+              </Button>
+              <Divider 
+              // style={{ marginTop: '10px' }}
+               />
+            </Grid>
+            <Divider style={{ width: '98%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
 
+            <Grid item xs={10}>
+              
+              <TextField
+                label="Buscar"
+                value={searchtext}
+                onChange={(e) => {
+                  setsearchtext(e.target.value)
+                }}
+                variant="outlined"
+                size="small"
+                style={{ marginBottom: '10px' }}
+              />
+              <Button
+                variant="contained"
+                style={{ marginLeft: '4px', top: '2px' }}
+                onClick={() => {
+                  const filterednurseries = mixtures.filter((mixtures) =>
+                    mixtures.nombre.toLowerCase().includes(searchtext.toLowerCase())
+                  );
+                  setfilterednurseries(filterednurseries);
+                }}
 
-
-
-
-
-
-          <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
-            <Button
-              variant="outlined"
-              startIcon={<AddIcon />}
-              onClick={() => {
-                dispatch(current_mixture(initial_state_current_mixture));
-                set_action("create")
-                set_add_mixture_is_active(true);
-              }}
-            >
-              Crear mezcla
-            </Button>
-          </Stack>
-
-          <ButtonGroup style={{ margin: 7 }}  >
-            <Button style={button_style} onClick={export_to_excel}>
-              <i className="pi pi-file-excel"></i>
-            </Button>
-
-            <Button style={button_style} onClick={export_pdf}>
-              <i className="pi pi-file-pdf"></i>
-            </Button>
-
-          </ButtonGroup>
-
-          <Grid item mt={2}>
+              >
+                <SearchIcon />
+              </Button>
+            </Grid>
+            <Grid item xs={2}>
+              <ButtonGroup style={{ margin: 7 }}  >
+                <Button style={button_style} onClick={export_to_excel}>
+                  <i className="pi pi-file-excel"></i>
+                </Button>
+                <Button style={button_style} onClick={export_pdf}>
+                  <i className="pi pi-file-pdf"></i>
+                </Button>
+              </ButtonGroup>
+            </Grid>
+          </Grid>
+          <Divider />
+          <Grid item sx={{ marginTop: '20px', }}>
             <Box sx={{ width: '100%' }}>
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={mixtures}
+                rows={filterednurseries}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
@@ -355,12 +388,11 @@ export function TiposMezclaScreen(): JSX.Element {
           <AddMixtureDialogForm
             is_modal_active={add_mixture_is_active}
             set_is_modal_active={set_add_mixture_is_active}
-            action = {action}
+            action={action}
           />
-        </Grid> 
+        </Grid>
       </Grid>
     </>
   );
 }
 
-  

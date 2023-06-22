@@ -6,18 +6,20 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  // DialogTitle,
   Stack,
   Button,
   Box,
   Divider,
   MenuItem,
   Grid,
+
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 import {
   add_nursery_service,
@@ -183,16 +185,25 @@ const CrearViveroDialogForm = ({
             : handle_submit(on_submit_edit)
         }
       >
-        <DialogTitle>
+        {/* <DialogTitle>
           {action === 'create'
             ? 'Crear vivero'
             : action === 'detail'
             ? 'Detalle vivero'
             : 'Editar vivero'}
-        </DialogTitle>
+        </DialogTitle> */}
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container spacing={2}>
+          <Grid container    sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+          marginLeft: '-6px',
+          marginTop: '-6px',
+        }} spacing={2}>
             <Title title="Informacion pricipal"></Title>
             <Grid item xs={11} md={5} margin={0}>
               <Controller
@@ -317,9 +328,8 @@ const CrearViveroDialogForm = ({
                       error != null
                         ? error.type === 'required'
                           ? 'El area es requerida'
-                          : `El valor del area debe ser mayor al area de propagacion (${
-                              getValues('area_propagacion_mt2') ?? ''
-                            })`
+                          : `El valor del area debe ser mayor al area de propagacion (${getValues('area_propagacion_mt2') ?? ''
+                          })`
                         : 'Ingrese area'
                     }
                   />
@@ -364,7 +374,7 @@ const CrearViveroDialogForm = ({
               />
             </Grid>
             <Title title="Detalles vivero"></Title>
-            
+
             <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="area_propagacion_mt2"
@@ -390,9 +400,8 @@ const CrearViveroDialogForm = ({
                       error != null
                         ? error.type === 'required'
                           ? 'El area de propagacion es requerida'
-                          : `El valor del area debe ser menor al area (${
-                              getValues('area_mt2') ?? ''
-                            })`
+                          : `El valor del area debe ser menor al area (${getValues('area_mt2') ?? ''
+                          })`
                         : 'Ingrese area'
                     }
                   />
@@ -540,7 +549,7 @@ const CrearViveroDialogForm = ({
             </Grid>
             {action === 'create' ? (
               <Grid item xs={11} md={5} margin={0}>
-                <TextField
+                {/* <TextField
                   margin="dense"
                   fullWidth
                   size="small"
@@ -548,7 +557,22 @@ const CrearViveroDialogForm = ({
                   variant="outlined"
                   type="file"
                   onChange={on_change_file}
-                />
+                /> */}
+                <Button
+                  variant="outlined"
+                  startIcon={<CloudUploadIcon />}
+                  component="label"
+                  fullWidth
+                  size="small"
+                  style={{ height: '40px' }}
+                >
+                  {file !== undefined && file !== null ? file.name : 'Cargar Archivo'}
+                  <input
+                    type="file"
+                    style={{ display: 'none' }}
+                    onChange={on_change_file}
+                  />
+                </Button>
               </Grid>
             ) : null}
           </Grid>
