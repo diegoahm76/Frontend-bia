@@ -13,11 +13,13 @@ import { useSelector } from 'react-redux';
 
 
 interface IProps {
+    title: string;
     control_solicitud: any;
     get_values: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitud = ({
+    title,
     control_solicitud,
     get_values
 }: IProps) => {
@@ -59,9 +61,9 @@ const SeleccionarSolicitud = ({
             width: 350,
             renderCell: (params) => {
                 return params.row.solicitud_anulada_solicitante === false ? (
-                    <Chip size="small" label="Anulada" color="success" variant="outlined" />
+                    <Chip size="small" label="Abierta" color="success" variant="outlined" />
                 ) : (
-                    <Chip size="small" label="Abierta" color="error" variant="outlined" />
+                    <Chip size="small" label="Anulada" color="error" variant="outlined" />
                 );
             },
 
@@ -99,6 +101,12 @@ const SeleccionarSolicitud = ({
                     set_models={set_solicitudes}
                     button_submit_label='Buscar solicitud'
                     form_inputs={[
+                        {
+                            datum_type: "title",
+                            title_label: title ?? "hh"
+
+                        },
+
                         {
                             datum_type: "input_controller",
                             xs: 5,

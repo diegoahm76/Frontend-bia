@@ -283,7 +283,29 @@ export const get_bienes_consumo_vivero_codigo_bien = (codigo: string | null): an
         }
     };
 };
+// Obtener bienes por numero de solicitud
 
+export const get_bienes_solicitud = (
+    id_solicitud_consumibles: number | null,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(`almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ""}`)
+            const { data } = await api.get(`almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ""}/`);
+            dispatch(set_bienes_solicitud(data.detail.info_items));
+            console.log(data)
+            if (data.data.length > 0) {
+                // control_success("Se encontrarón bienes")
+            } else {
+                // control_error("No se encontrarón bienes")
+            }
+            return data;
+        } catch (error: any) {
+            // control_error(error.response.detail.info_items);
+            return error as AxiosError;
+        }
+    };
+};
 
 
 
@@ -304,6 +326,7 @@ export const get_solicitud_service = (id: number | string): any => {
         }
     };
 };
+
 
 // OBTENER SOLICITUD POR ID de solicitud por id 
 export const get_solicitud_service_vivero = (id: number | string): any => {
@@ -523,11 +546,15 @@ export const aprobacion_solicitud_pendiente: any = (
             );
             console.log(data)
             dispatch(get_solicitud_service(id));
-
+            if (data.success === true) {
+                control_success("Se aprobó la solicitud")
+            } else {
+                control_error("La solicitud ya fue aprobada")
+            }
             return data;
         } catch (error: any) {
             console.log('aprobar solicitud');
-            control_error(error.response.data.detail);
+            control_error(error.response.data);
             return error as AxiosError;
         }
     };
@@ -597,7 +624,7 @@ export const get_solicitudes_pendientes_despacho = (): any => {
             console.log(data, "data")
             if ('data' in data) {
                 if (data.length > 0) {
-                    control_success("Se encontrarón solicitudes")
+                    control_success("Se encontrarón solicitudes aprobadas por despachar")
                 } else {
                     control_error("No se encontrarón solicitudes")
                 }

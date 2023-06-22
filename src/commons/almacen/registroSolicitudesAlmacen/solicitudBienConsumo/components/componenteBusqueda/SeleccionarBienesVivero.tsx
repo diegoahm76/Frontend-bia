@@ -7,7 +7,7 @@ import BuscarModelo from "../../../../../../components/partials/getModels/Buscar
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
 import { set_bienes_solicitud, set_bienes_vivero, set_current_bien_vivero } from "../../store/slices/indexSolicitudBienesConsumo";
 import { useForm } from "react-hook-form";
-import { control_error, get_bienes_vivero_consumo, get_bienes_consumo_vivero_codigo_bien } from "../../store/solicitudBienConsumoThunks";
+import { control_error, get_bienes_consumo_vivero_codigo_bien, get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
 
 
 
@@ -222,16 +222,25 @@ const SeleccionarBienConsumoVivero = () => {
     };
 
 
+    // const get_bienes_filtro: any = (async () => {
+    //     console.log("buscar tatata...")
+    //     const codigo_bien = get_values_bien("codigo_bien")
+    //     const nombre = get_values_bien("nombre")
+    //     const nombre_cientifico = get_values_bien("nombre_cientifico")
+    //     const cod_tipo_elemento_vivero = get_values_bien("cod_tipo_elemento_vivero")
+
+    //     if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined && nombre_cientifico !== null && nombre_cientifico !== undefined && cod_tipo_elemento_vivero !== null && cod_tipo_elemento_vivero !== undefined) {
+
+    //         void dispatch(get_bienes_vivero_consumo(codigo_bien, nombre, nombre_cientifico, cod_tipo_elemento_vivero))
+    //     }
+    // })
     const get_bienes_filtro: any = (async () => {
-        console.log("buscar tatata...")
+        console.log("buscar...")
         const codigo_bien = get_values_bien("codigo_bien")
         const nombre = get_values_bien("nombre")
-        const nombre_cientifico = get_values_bien("nombre_cientifico")
-        const cod_tipo_elemento_vivero = get_values_bien("cod_tipo_elemento_vivero")
+        if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined) {
 
-        if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined && nombre_cientifico !== null && nombre_cientifico !== undefined && cod_tipo_elemento_vivero !== null && cod_tipo_elemento_vivero !== undefined) {
-
-            void dispatch(get_bienes_vivero_consumo(codigo_bien, nombre, nombre_cientifico, cod_tipo_elemento_vivero))
+            void dispatch(get_bienes_consumo(codigo_bien, nombre))
         }
     })
 

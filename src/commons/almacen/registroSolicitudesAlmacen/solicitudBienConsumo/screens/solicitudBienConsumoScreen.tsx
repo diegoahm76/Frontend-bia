@@ -11,11 +11,9 @@ import type { AuthSlice } from '../../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, get_funcionario_id_service, anular_solicitud_service, } from '../store/solicitudBienConsumoThunks';
-import { Title } from '../../../../../components/Title';
+import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, get_funcionario_id_service, anular_solicitud_service, get_bienes_solicitud, } from '../store/solicitudBienConsumoThunks';
 
-
-import { set_bienes_solicitud, set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
+import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import AnularSolicitudModal from '../components/AnularSolicitud';
 
@@ -55,7 +53,7 @@ const SolicitudConsumoScreen = () => {
 
         }
         if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
-            void dispatch(set_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
+            void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
             if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
                 void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad))
                 console.log("ok")
@@ -120,11 +118,12 @@ const SolicitudConsumoScreen = () => {
 
             }}
         >
-            <Title title="Solicitud de consumo "></Title>
+
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitud
                     control_solicitud={control_solicitud}
                     get_values={get_values}
+                    title={"Solicitudes de consumo"}
 
                 />
                 {current_solicitud.solicitud_anulada_solicitante !== true &&

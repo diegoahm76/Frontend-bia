@@ -34,7 +34,7 @@ const SeleccionarSolicitudAprobada = ({
         {
             field: 'fecha_solicitud',
             headerName: 'Fecha de solicitud',
-            width: 400,
+            width: 300,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -44,8 +44,8 @@ const SeleccionarSolicitudAprobada = ({
         },
         {
             field: 'persona_solicita',
-            headerName: 'Observación',
-            width: 400,
+            headerName: 'Solicitud elaborada por:',
+            width: 300,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -53,6 +53,18 @@ const SeleccionarSolicitudAprobada = ({
             ),
 
         },
+        {
+            field: 'persona_responsable',
+            headerName: 'Nombre del responsable',
+            width: 300,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+
+        },
+
 
         {
             field: 'observacion',
@@ -104,24 +116,11 @@ const SeleccionarSolicitudAprobada = ({
                             title_label: title ?? "hh"
 
                         },
+
                         {
                             datum_type: "input_controller",
-                            xs: 5,
-                            md: 2,
-                            control_form: control_solicitud_aprobacion,
-                            control_name: "id_solicitud_consumibles",
-                            default_value: "",
-                            rules: {},
-                            label: "ID",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                            on_blur_function: search_solicitud
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 5,
-                            md: 2,
+                            xs: 6,
+                            md: 6,
                             control_form: control_solicitud_aprobacion,
                             control_name: "nro_solicitud_por_tipo",
                             default_value: "",
@@ -134,8 +133,8 @@ const SeleccionarSolicitudAprobada = ({
                         },
                         {
                             datum_type: "input_controller",
-                            xs: 12,
-                            md: 8,
+                            xs: 6,
+                            md: 6,
                             control_form: control_solicitud_aprobacion,
                             control_name: "fecha_solicitud",
                             default_value: "",
@@ -145,46 +144,7 @@ const SeleccionarSolicitudAprobada = ({
                             disabled: true,
                             helper_text: ""
                         },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 6,
-                            control_form: control_solicitud_aprobacion,
-                            control_name: "persona_solicita",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Solicitud elaborada por:",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 6,
-                            control_form: control_solicitud_aprobacion,
-                            control_name: "id_unidad_para_la_que_solicita",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Unidad para la cual se realiza la solicitud",
-                            disabled: true,
-                            helper_text: "",
-                            select_options: unidad_organizacional,
-                            option_label: "nombre",
-                            option_key: "id_unidad_organizacional"
-                        },
-                        // {
-                        //     datum_type: "input_controller",
-                        //     xs: 12,
-                        //     md: 3,
-                        //     control_form: control_solicitud_aprobacion,
-                        //     control_name: "id_funcionario_responsable_unidad",
-                        //     default_value: "",
-                        //     rules: { required_rule: { rule: true, message: "requerido" } },
-                        //     label: "Funcionario responsable",
-                        //     disabled: true,
-                        //     helper_text: "",
-                        // },
+
                         {
                             datum_type: "input_controller",
                             xs: 12,
@@ -215,37 +175,35 @@ const SeleccionarSolicitudAprobada = ({
                             disabled: true,
                             helper_text: ""
                         },
-
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 6,
                             control_form: control_solicitud_aprobacion,
-                            control_name: "nombre_unidad_organizacional",
+                            control_name: "persona_solicita",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Unidad a la que pertenece:",
+                            label: "Solicitud elaborada por:",
                             type: "text",
                             disabled: true,
                             helper_text: ""
                         },
 
-
-
-
-                        // {
-                        //     datum_type: "input_controller",
-                        //     xs: 12,
-                        //     md: 3,
-                        //     control_form: control_solicitud_aprobacion,
-                        //     control_name: "persona_solicita",
-                        //     default_value: "",
-                        //     rules: { required_rule: { rule: false, message: "requerido" } },
-                        //     label: "Solicitud aprobada por:",
-                        //     type: "text",
-                        //     disabled: true,
-                        //     helper_text: ""
-                        // },
+                        {
+                            datum_type: "select_controller",
+                            xs: 12,
+                            md: 6,
+                            control_form: control_solicitud_aprobacion,
+                            control_name: "id_unidad_para_la_que_solicita",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            label: "Unidad para la cual se realiza la solicitud",
+                            disabled: true,
+                            helper_text: "",
+                            select_options: unidad_organizacional,
+                            option_label: "nombre",
+                            option_key: "id_unidad_organizacional"
+                        },
 
 
                     ]}
