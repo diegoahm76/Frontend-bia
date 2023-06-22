@@ -98,7 +98,7 @@ export const add_organigrams_service:any = (organigrama: any, set_position_tab_o
         try {
             console.log(organigrama);   
             const { data } = await api.post("transversal/organigrama/create/", organigrama);
-            
+            console.log(data);
             dispatch(get_organigrams_service());
             dispatch(current_organigram(data.detail));
             control_success("El organigrama se agrego correctamente");
@@ -142,6 +142,7 @@ export const to_finalize_organigram_service:any = (id: string, set_position_tab_
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.put(`transversal/organigrama/finalizar/${id}/`);
+            console.log(data);
             dispatch(get_organigrams_service());
             void Swal.fire({
                 position: "center", icon: "info", title: "Atención", text: data.detail,
@@ -161,6 +162,7 @@ export const to_resume_organigram_service:any = (id: string) => {
   return async (dispatch: Dispatch<any>) => {
       try {
           const { data } = await api.put(`transversal/organigrama/reanudar-organigrama/${id}/`);
+          console.log(data);
           dispatch(get_organigrams_service());
           void Swal.fire({
               position: "center", icon: "info", title: "Atención", text: data.detail,
@@ -268,12 +270,13 @@ export const get_nuevo_user_organigrama: any = (tipo_documento:  string, numero_
   };
 };
 
-export const get_busqueda_avanzada_user_organigrama:any = (primer_nombre:  string, primer_apellido: string) => { 
+export const get_busqueda_avanzada_user_organigrama:any = (nombre_usuario: string) => { 
   return async() => {
     try {
       const { data } = await api.get(
-        `transversal/organigrama/get-nuevo-user-organigrama-filters/?primer_nombre=${primer_nombre}&primer_apellido=${primer_apellido}`
+        `users/get-user-by-nombre-de-usuario/?nombre_de_usuario=${nombre_usuario}`
       );
+      console.log(data)
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -285,13 +288,12 @@ export const get_busqueda_avanzada_user_organigrama:any = (primer_nombre:  strin
 export const delegar_organigrama_persona:any = (id_persona: number, organigrama: string) => {
   return async (dispatch: Dispatch<any>) => {
       try {
-          const { data } = await api.post(`transversal/organigrama/delegate-organigrama-persona/?id_persona=${id_persona}&id_organigrama=${organigrama}`);          
+          const { data } = await api.post(`transversal/organigrama/delegate-organigrama-persona/?id_persona=${id_persona}&id_organigrama=${organigrama}`);
           control_success("Delegacion de organigrama exitosa");
           return data;
       } catch (error: any) {
           console.log("delegate_organigram_user");
           control_error(error.response.data.detail);
-         
           return error as AxiosError;
       }
   };

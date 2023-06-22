@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type React from 'react';
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
@@ -30,6 +32,7 @@ import { get_tipo_documento } from '../../../../../request';
 import { control_error } from '../../../../../helpers';
 import { type IList } from '../../../../../interfaces/globalModels';
 import { type UserDelegacionOrganigrama } from '../../interfaces/organigrama';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
 import {
   delegar_organigrama_persona,
@@ -119,8 +122,15 @@ const DialogDelegarOrganigrama = ({
     set_value_form(e.target.name, e.target.value);
   };
 
+  const cleaningForm = () => {
+    reset_search_for_delegation();
+    set_data_user_por_asignar(undefined);
+    set_tipo_documento('');
+  }
+
   useEffect(() => {
     set_value_form('tipo_documento', tipo_documento);
+    set_value_form('numero_documento', '');
   }, [tipo_documento]);
 
   useEffect(() => {
@@ -286,6 +296,7 @@ const DialogDelegarOrganigrama = ({
                       label="Número de documento *"
                       type="number"
                       size="small"
+                      name='numero_documento'
                       value={data_user_por_asignar?.numero_documento}
                       disabled={false}
                       inputProps={{
@@ -302,9 +313,9 @@ const DialogDelegarOrganigrama = ({
                           ? 'Este campo es obligatorio'
                           : ''
                       }
-                      {...register_search_for_delegation('numero_documento', {
+                      /* {...register_search_for_delegation('numero_documento', {
                         required: true,
-                      })}
+                      })} */
                       onChange={handle_change}
                     />
                   )}
@@ -344,6 +355,19 @@ const DialogDelegarOrganigrama = ({
             spacing={2}
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
+            <Button
+              type="button"
+              color="success"
+              variant="contained"
+              onClick={() => {
+                // void handle_submit_delegacion_organigrama();
+                console.log('limpiando formulario de datos de asignación de usuario')
+                cleaningForm()
+              }}
+              startIcon={<CleanIcon />}
+            >
+              LIMPIAR FORMULARIO
+            </Button>
             <Button
               variant="outlined"
               onClick={handle_close_delegar_organigrama}

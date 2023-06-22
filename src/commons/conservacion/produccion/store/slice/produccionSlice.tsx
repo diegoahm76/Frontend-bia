@@ -10,7 +10,8 @@ import {
   type IObjPreparacionBienes,
   type IObjItemMortalidad,
   type IObjSiembraMV,
-  type IObjMortalidad
+  type IObjMortalidad,
+  type IObjIncidencia
 } from '../../interfaces/produccion';
 import { type Persona } from "../../../../../interfaces/globalModels";
 
@@ -122,6 +123,7 @@ const initial_state_person: Persona = {
   tiene_usuario: true,
 }
 
+
 export const initial_state_current_material_vegetal: IObjSiembraMV = {
   id_inventario_vivero: null,
   id_bien: null,
@@ -135,7 +137,19 @@ export const initial_state_current_material_vegetal: IObjSiembraMV = {
   unidad_medida: null,
   registros_cuarentena: null,
 }
-
+export const initial_state_current_incidencia: IObjIncidencia = {
+  id_incidencia: null,
+  agno_lote: null,
+  nro_lote: null,
+	cod_etapa_lote: null,
+  id_vivero: null,
+  fecha_incidencia: (new Date().toString()),
+	cod_tipo_incidencia: null,
+  altura_lote_en_cms: null,
+  nombre_incidencia: null,
+  descripcion: null,
+  consec_cuaren_lote_etapa: null
+}
 
 export const initial_state_current_mortalidad: IObjMortalidad = {
   id_baja: null,
@@ -169,7 +183,8 @@ const initial_state: IProduccion = {
   items_mortalidad: [],
   nro_mortalidad: null,
   persona_anula: initial_state_person,
-
+  incidencias: [],
+  current_incidencia: initial_state_current_incidencia
 }
 
 export const produccion_slice = createSlice({
@@ -245,7 +260,12 @@ export const produccion_slice = createSlice({
     set_persona_anula: (state: IProduccion,action:PayloadAction <Persona>)=> {
       state.persona_anula = action.payload;
     },
-
+    set_incidencias: (state: IProduccion,action:PayloadAction <IObjIncidencia[]>)=> {
+      state.incidencias = action.payload;
+    },  
+    set_current_incidencia: (state: IProduccion,action:PayloadAction <IObjIncidencia>)=> {
+      state.current_incidencia = action.payload;
+    },
 
   },
 });
@@ -271,5 +291,7 @@ export const {
   set_siembras_material_vegetal,
   set_current_siembra_material_vegetal,
   set_nro_mortalidad,
-  set_persona_anula
+  set_persona_anula,
+  set_incidencias,
+  set_current_incidencia
  } = produccion_slice.actions;

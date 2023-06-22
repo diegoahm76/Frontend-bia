@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import {
   Tooltip,
-  Box,
   TextField,
   Dialog,
   DialogTitle,
@@ -14,7 +13,7 @@ import {
   Grid,
   Divider,
   Button,
-  Avatar,
+  Avatar
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import type { GridColDef } from '@mui/x-data-grid';
@@ -23,22 +22,29 @@ import SearchIcon from '@mui/icons-material/Search';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { get_busqueda_avanzada_user_organigrama } from '../../store/thunks/organigramThunks';
 import { type UserDelegacionOrganigrama } from '../../interfaces/organigrama';
-import type { FormValues, IProps, keys_object } from './types/types';
+import type { FormValues, IProps } from './types/types';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DialogBusquedaAvanzadaUserOrganigrama = ({
   is_modal_active,
   set_is_modal_active,
-  search_result,
+  search_result
 }: IProps) => {
   const dispatch = useDispatch();
   const {
-    handleSubmit: handle_submit_search_user,
-    setValue: set_value_search_user,
-    register: register_search_user,
-  } = useForm<FormValues>();
+    // handleSubmit: handle_submit_search_user,
+    // setValue: set_value_search_user,
+    // register: register_search_user,
+    watch
+  } = useForm<FormValues>({
+    defaultValues: {
+      nombre_usuario: ''
+    }
+  });
   const [data_search_result, set_data_search_result] = useState<
     UserDelegacionOrganigrama[]
   >([]);
+
+  const advanced_user_search_data_form = watch();
 
   const handle_close_busqueda_avanzada_usuario = (): void => {
     set_is_modal_active(false);
@@ -49,13 +55,13 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
       field: 'tipo_documento',
       headerName: 'Tipo de documento',
       width: 200,
-      editable: true,
+      editable: true
     },
     {
       field: 'numero_documento',
       headerName: 'Número documento',
       width: 200,
-      editable: true,
+      editable: true
     },
     { field: 'nombre_completo', headerName: 'Nombre completo', width: 350 },
     {
@@ -77,7 +83,7 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
                 width: 24,
                 height: 24,
                 background: '#fff',
-                border: '2px solid',
+                border: '2px solid'
               }}
               variant="rounded"
             >
@@ -87,22 +93,29 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
             </Avatar>
           </IconButton>
         </Tooltip>
-      ),
-    },
+      )
+    }
   ];
 
-  const on_submit = handle_submit_search_user(async (data: FormValues) => {
-    const response = await dispatch(
-      get_busqueda_avanzada_user_organigrama(
-        data.primer_nombre,
-        data.primer_apellido
-      )
-    );
-    set_data_search_result(response.data);
-  });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const on_submit = async (): Promise<any> => {
+    try {
+      const response = await dispatch(
+        get_busqueda_avanzada_user_organigrama(
+          advanced_user_search_data_form.nombre_usuario
+        )
+      );
+      console.log(response.data)
+      set_data_search_result(response.data);
+    } catch (error) {
+      // Handle the error here
+      console.error('An error occurred:', error);
+      // Optionally, you can set a default value for set_data_search_result or handle the error in another way
+    }
+  };
 
   // Establece los valores del formulario
-  const set_value_form = (name: string, value: string): void => {
+  /*  const set_value_form = (name: string, value: string): void => {
     console.log(`${name} : `, value);
     set_value_search_user(name as keys_object, value);
   };
@@ -110,7 +123,7 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
   // Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
     set_value_form(e.target.name, e.target.value);
-  };
+  }; */
 
   return (
     <Dialog
@@ -130,7 +143,7 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
             position: 'absolute',
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500],
+            color: (theme) => theme.palette.grey[500]
           }}
         >
           <CloseIcon />
@@ -138,32 +151,25 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
       </DialogTitle>
       <Divider />
       <DialogContent sx={{ mb: '0px' }}>
-        <Box
-          component="form"
-          onSubmit={(e) => {
-            void on_submit(e);
+        <form
+          onSubmit={()=> {
+            console.log('submit')
           }}
-          sx={{ p: 2, border: '1px dashed grey' }}
+          style = {{
+            padding: '2',
+            border: '1px dashed grey'
+          }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6} md={3}>
               <TextField
                 fullWidth
-                label="Primer nombre"
+                label="Nombre usuario"
                 size="small"
                 disabled={false}
-                {...register_search_user('primer_nombre')}
-                onChange={handle_change}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <TextField
-                fullWidth
-                label="Primer apellido"
-                size="small"
-                disabled={false}
-                {...register_search_user('primer_apellido')}
-                onChange={handle_change}
+                // {...register_search_user('nombre_usuario')}
+                // onChange={handle_change}
+                value={advanced_user_search_data_form.nombre_usuario}
               />
             </Grid>
             <Grid item xs={12} sm={6} md={2}>
@@ -179,7 +185,7 @@ const DialogBusquedaAvanzadaUserOrganigrama = ({
               </Stack>
             </Grid>
           </Grid>
-        </Box>
+        </form>
 
         <DataGrid
           density="compact"

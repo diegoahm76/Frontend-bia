@@ -30,11 +30,13 @@ import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSerie
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 import CrearSubSerieCcdDialog from '../componentes/crearSubSerieDialog/CrearSubserieDialog';
 import { get_ccd_current } from '../store/slices/ccdSlice';
+import { get_serie_ccd_current } from '../store/slices/seriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const { ccd_current } = useAppSelector((state: any) => state.ccd);
+  const { serie_ccd_current } = useAppSelector((state: any) => state.series);
   const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
@@ -54,7 +56,13 @@ export const CcdScreen: React.FC = () => {
     } else {
       set_flag_btn_finish(false);
     } */
-  }, [ccd_current]);
+  }, [ccd_current?.fecha_terminado]);
+
+  /* useEffect(() => {
+    if (ccd_current?.id_ccd) {
+      dispatch(to_resume_ccds_service(ccd_current?.id_ccd));
+    }
+  }, [ccd_current?.id_ccd]); */
 
   // Hooks
   const {
@@ -127,6 +135,7 @@ export const CcdScreen: React.FC = () => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      isDisabled={ccd_current != null}
                       value={field.value}
                       options={list_organigrams}
                       placeholder="Seleccionar"
@@ -148,6 +157,7 @@ export const CcdScreen: React.FC = () => {
                   render={({ field }) => (
                     <Select
                       {...field}
+                      isDisabled={ccd_current != null}
                       value={field.value}
                       options={list_unitys}
                       placeholder="Seleccionar"
@@ -371,7 +381,9 @@ export const CcdScreen: React.FC = () => {
                 type="submit"
                 color="primary"
                 variant="contained"
-                startIcon={<SyncIcon />}
+                startIcon={
+                  ccd_current != null ? <SyncIcon/> : <SaveIcon />
+                }
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </Button>
@@ -424,14 +436,22 @@ export const CcdScreen: React.FC = () => {
                         // {...field}
                         value={value}
                         onChange={(selectedOption: any) => {
-                          onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                          // Actualiza el valor seleccionado en el controlador
                           // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
-
+                          if (!selectedOption.value) {
+                            onChange(null);
+                            console.log(selectedOption.value);
+                          } else {
+                            onChange(selectedOption);
+                            dispatch(
+                              serie_ccd_current(selectedOption.value)
+                            );
+                          }
                           //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
                           console.log('Valor seleccionado:', selectedOption);
                         }}
                         options={list_sries}
-                        isClearable
+                        // isClearable
                         isSearchable
                         placeholder="Seleccionar"
                       />
@@ -455,6 +475,10 @@ export const CcdScreen: React.FC = () => {
                         set_create_is_active(true);
                         set_title('Administrar series');
                       }}
+                      disabled={
+                        ccd_current === null ||
+                        ccd_current?.id_ccd === null
+                      }
                     >
                       CREAR SERIE
                     </Button>
@@ -463,31 +487,27 @@ export const CcdScreen: React.FC = () => {
                   </ButtonGroup>
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  {/* <Controller
-                    name="subserie"
-                    control={control}
-                    render={() => (
-                      <Select
-                        options={list_subsries}
-                        placeholder="Seleccionar"
-                      />
-                    )}
-                  /> */}
                   <Controller
                     name="subserie"
                     control={control}
-                    render={({ field }) => (
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
                       <Select
-                        {...field}
+                        // {...field}
+                        value={value}
                         options={list_subsries}
                         placeholder="Seleccionar"
                         onChange={(selectedOption) => {
-                          field.onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                          onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
                           // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
 
                           //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
                           console.log('Valor seleccionado:', selectedOption);
                         }}
+                        // isClearable
+                        isSearchable
                       />
                     )}
                   />
@@ -510,6 +530,7 @@ export const CcdScreen: React.FC = () => {
                         // set_create_is_active(true);
                         set_title('Administrar subseries');
                       }}
+                      disabled={serie_ccd_current === null}
                     >
                       CREAR SUBSERIE
                     </Button>
@@ -645,7 +666,9 @@ export const CcdScreen: React.FC = () => {
                     variant="contained"
                     startIcon={<SaveIcon />}
                   >
-                    EXPLORE TITS
+                    {
+                      title_button_asing
+                    }
                   </Button>
                 </Grid>
               </Grid>

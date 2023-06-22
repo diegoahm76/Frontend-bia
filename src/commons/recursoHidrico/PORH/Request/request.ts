@@ -2,6 +2,8 @@
 import dayjs from "dayjs";
 import { api } from "../../../../api/axios";
 import type { ResponseServer } from "../../../../interfaces/globalModels";
+import type { AxiosResponse } from "axios";
+import type { BusquedaAvanzada, InfoPorh } from "../Interfaces/interfaces";
 
 
 export const get_data_id = async (id: number, set_data: any, url: string): Promise<any[]> => {
@@ -12,46 +14,41 @@ export const get_data_id = async (id: number, set_data: any, url: string): Promi
   return data.data;
 };
 
+export const eliminar_id = async (id: number, url: string): Promise<any> => {
+  return await api.delete(`hidrico/programas/${url}/${id}/`);
+};
+
 // post 
 export const post_programa = async (
   form: any,
   set_data: any,
   programas: any,
   proyectos: any,
-  actividades: any,
+  actividades: any[]
 ): Promise<any> => {
+  const proyecto = {
+    id_proyecto: form.id_proyecto,
+    nombre: form.nombre,
+    vigencia_inicial: dayjs(form.vigencia_inicial).format('YYYY-MM-DD'),
+    vigencia_final: dayjs(form.vigencia_final).format('YYYY-MM-DD'),
+    inversion: form.inversion,
+    actividades: form.descripcion ? [{ nombre: form.descripcion }] : [],
+  };
+
+  const nuevos_proyectos = [...proyectos, proyecto];
+
   const response = await api.post(
-    `hidrico/programas/programa/recurso/hidrico/create/`,
+    'hidrico/programas/programa/recurso/hidrico/create/',
     {
       ...form,
       id_programa: form.id_programa,
       nombre: form.nombre_programa,
-      fecha_inicio: dayjs(form.fecha_inicio,).format('YYYY-MM-DD'),
-      fecha_fin: dayjs(form.fecha_fin,).format('YYYY-MM-DD'),
-      proyectos:
-
-        !form.nombre ? [] :
-          [
-            ...proyectos,
-            {
-              id_proyecto: form.id_proyecto,
-              nombre: form.nombre,
-              vigencia_inicial: dayjs(form.vigencia_inicial,).format('YYYY-MM-DD'),
-              vigencia_final: dayjs(form.vigencia_final,).format('YYYY-MM-DD'),
-              inversion: form.inversion,
-              actividades:
-
-                !form.descripcion ? [] :
-                  [
-                    ...actividades,
-                    {
-                      nombre: form.descripcion,
-                    }
-                  ]
-            }
-          ],
+      fecha_inicio: dayjs(form.fecha_inicio).format('YYYY-MM-DD'),
+      fecha_fin: dayjs(form.fecha_fin).format('YYYY-MM-DD'),
+      proyectos: form.nombre ? nuevos_proyectos : [],
     }
   );
+
   // set_data([...programas, response.data]);
   return response.data;
 };
@@ -101,5 +98,14 @@ export const editar_activdad = async (
   );
   return response.data;
 };
+export const search_avanzada = async ({
+  nombre_proyecto,
+  nombre_programa,
+  nombre_PORH,
+}: BusquedaAvanzada): Promise<AxiosResponse<ResponseServer<InfoPorh[]>>> => {
+  const url = `hidrico/programas/get/avanzada/programas/?nombre_proyecto=${String(nombre_proyecto ?? '')}&nombre_programa=${String(nombre_programa ?? '')}&nombre_PORH=${String(nombre_PORH ?? '')}`;
+  return await api.get<ResponseServer<InfoPorh[]>>(url);
+};
+
 
 

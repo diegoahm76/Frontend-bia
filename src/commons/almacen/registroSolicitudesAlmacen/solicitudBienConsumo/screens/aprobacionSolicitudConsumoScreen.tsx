@@ -3,15 +3,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Grid } from '@mui/material';
 import FormButton from "../../../../../components/partials/form/FormButton";
 import { type IObjSolicitud } from "../interfaces/solicitudBienConsumo";
-import SaveIcon from '@mui/icons-material/Save';
+import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import type { AuthSlice } from '../../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, aprobacion_solicitud_pendiente, } from '../store/solicitudBienConsumoThunks';
-import { Title } from '../../../../../components/Title';
 import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
-import SeleccionarSolicitudAprobada from '../components/SeleccionarSolicitudAprobacion';
+import SeleccionarSolicitudAprobada from '../components/componentesAprobacion/SeleccionarSolicitudAprobacion';
+import SeleccionarBienAprobado from '../components/componentesAprobacion/SeleccionarBienAprobado';
+import FuncionarioAprobacion from '../components/componentesAprobacion/SeleccionarPersonaAprobada';
+import Aprobacion from '../components/componentesAprobacion/Aprobacion';
 
 
 
@@ -19,7 +21,7 @@ import SeleccionarSolicitudAprobada from '../components/SeleccionarSolicitudApro
 const AprobacionSolicitudConsumoScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud_aprobacion, handleSubmit: handle_submit, reset: reset_solicitud_aprobacion, getValues: get_values } = useForm<IObjSolicitud>();
-    const [action] = useState<string>("Aprobar solicitud de consumo");
+    const [action] = useState<string>("Aprobar");
     const { nro_solicitud, current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state) => state.solic_consumo);
 
     const dispatch = useAppDispatch();
@@ -81,16 +83,22 @@ const AprobacionSolicitudConsumoScreen = () => {
                 mb: '20px',
                 mt: '23px',
                 boxShadow: '0px 3px 6px #042F4A26',
-            }}
-        >
-            <Title title="Aprobación de solicitudes de consumo "></Title>
-            {/* <Grid item xs={12} marginY={2}>
 
+            }}  >
 
-            </Grid> */}
-            <Grid item xs={12} marginY={0}> 
-                <SeleccionarSolicitudAprobada control_solicitud_aprobacion={control_solicitud_aprobacion} get_values={get_values}
+            <Grid item xs={12} marginY={2}>
+
+                <SeleccionarSolicitudAprobada
+                    title={"Aprobación de solicitudes"} control_solicitud_aprobacion={control_solicitud_aprobacion} get_values={get_values}
                 />
+                <FuncionarioAprobacion
+                    title={"Persona responsable"}
+                    get_values_solicitud={get_values} />
+
+                <SeleccionarBienAprobado />
+                <Aprobacion control_solicitud_aprobacion={control_solicitud_aprobacion} get_values={get_values} />
+
+
             </Grid>
             <Grid
                 container
@@ -102,9 +110,9 @@ const AprobacionSolicitudConsumoScreen = () => {
                 <Grid item xs={12} md={4}>
 
                     <FormButton
-                        variant_button="outlined"
+                        variant_button="contained"
                         on_click_function={handle_submit(on_submit_aprobacion)}
-                        icon_class={<SaveIcon />}
+                        icon_class={<LibraryAddCheckIcon />}
                         label={action}
                         type_button="button"
                     />

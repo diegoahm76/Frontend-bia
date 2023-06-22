@@ -22,12 +22,12 @@
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function SolicitudesPendientesCScreen(): JSX.Element {
+export function SolicitudesPendientesScreen(): JSX.Element {
  
 
     return (
       <>
-      <h1>solicitud pendiente coordinador</h1>
+      <h1>solicitud pendiente funcionario</h1>
       </>
     );
   }

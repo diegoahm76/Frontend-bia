@@ -1,33 +1,35 @@
-import { Grid, MenuItem, TextField, } from '@mui/material';
-
-
-
+import { Grid } from '@mui/material';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React, { useEffect, useState } from 'react';
 import { type IList } from '../../../../interfaces/globalModels';
 import { api } from '../../../../api/axios';
-import { Controller } from 'react-hook-form';
-import { Title } from '../../../../components/Title';
+import { type GridColDef } from '@mui/x-data-grid';
+import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
+import { get_solicitud_service } from '../store/thunks/solicitudViveroThunks';
+import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSolicitud';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 
 
 
 interface IProps {
-
+    title?: string;
     control_solicitud: any;
     get_values: any
+
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DestinoSolicitud = ({
-
+    title,
     control_solicitud,
     get_values
 }: IProps) => {
 
-    // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
-    // const {  solicitudes} = useAppSelector((state: { solicitud_vivero: any; }) => state.solicitud_vivero);
+
+    const { solicitudes } = useAppSelector((state: { solicitud_vivero: any; }) => state.solicitud_vivero);
+
     const [municipalities, set_municipalities] = useState<IList[]>([]);
     const text_choise_adapter: any = (dataArray: string[]) => {
         const data_new_format: IList[] = dataArray.map((dataOld) => ({
@@ -57,9 +59,37 @@ const DestinoSolicitud = ({
     }, []);
 
 
+    const dispatch = useAppDispatch();
 
+    const columns_solicitudes: GridColDef[] = [
+        { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
+        {
+            field: 'fecha_solicitud',
+            headerName: 'Fecha de solicitud',
+            width: 400,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
 
+        },
+        {
+            field: 'persona_solicita',
+            headerName: 'Observación',
+            width: 350,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
 
+        },
+
+    ];
+    const get_solicitudes_filtro: any = (async () => {
+        void dispatch(get_solicitud_service())
+    })
 
 
 
@@ -67,113 +97,92 @@ const DestinoSolicitud = ({
         <>
             <Grid
                 container
-                sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px',
-                    mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                }}
+                direction="row"
+                padding={2}
+                borderRadius={2}
+
             >
-                <Title title="Destino de los elementos"></Title>
-                <Grid item xs={8} md={3} margin={2}>
-                    <Controller
-                        name="con_municipio_destino"
-                        control={control_solicitud}
-                        rules={{ required: true }}
-                        render={({
-                            field: { onChange, value },
-                            fieldState: { error },
-                        }) => (
-                            <TextField
-                                margin="dense"
-                                fullWidth
-                                select
-                                size="small"
-                                label="Municipio"
-                                variant="outlined"
-                                value={value}
-                                onChange={onChange}
-                                error={!(error == null)}
-                                helperText={
-                                    error != null
-                                        ? 'Es obligatorio seleccionar metodo valoración'
-                                        : 'seleccione el municipio'
-                                }
-                            >
-                                {municipalities.map((option: IList) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={8} md={3} margin={2}>
-                    <Controller
-                        name="nombre_predio_destino"
-                        control={control_solicitud}
-                        rules={{ required: true }}
-                        render={({
-                            field: { onChange, value },
-                            fieldState: { error },
-                        }) => (
-                            <TextField
-                                margin="dense"
-                                fullWidth
-                                size="small"
-                                label="Nombre del predio"
-                                variant="outlined"
-                                value={value}
-                                onChange={onChange}
-                                error={!(error == null)}
-                                helperText={
-                                    error != null
-                                        ? 'Es obligatorio seleccionar metodo valoración'
-                                        : ''
-                                }
-                            >
+                <BuscarModelo
+                    set_current_model={set_current_solicitud}
+                    row_id={"id_vivero_solicitud"}
+                    columns_model={columns_solicitudes}
+                    models={solicitudes}
+                    get_filters_models={get_solicitudes_filtro}
+                    set_models={set_solicitudes}
+                    show_search_button={false}
+                    form_inputs={[
+                        {
+                            datum_type: "title",
+                            title_label: title ?? "hh"
+                        },
 
-                            </TextField>
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={8} md={3} margin={2}>
-                    <Controller
-                        name="direccion_destino"
-                        control={control_solicitud}
-                        rules={{ required: true }}
-                        render={({
-                            field: { onChange, value },
-                            fieldState: { error },
-                        }) => (
-                            <TextField
-                                margin="dense"
-                                fullWidth
-                                size="small"
-                                label="Dirección del predio"
-                                variant="outlined"
-                                value={value}
-                                onChange={onChange}
-                                error={!(error == null)}
-                                helperText={
-                                    error != null
-                                        ? 'Es obligatorio seleccionar metodo valoración'
-                                        : ''
-                                }
-                            >
+                        {
+                            datum_type: "select_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_solicitud,
+                            control_name: "con_municipio_destino",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            label: "Municipio",
+                            disabled: false,
+                            helper_text: "debe seleccionar campo",
+                            select_options: municipalities,
+                            option_label: "label",
+                            option_key: "value",
 
-                            </TextField>
-                        )}
-                    />
-                </Grid>
 
+                        },
+
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_solicitud,
+                            control_name: "nombre_predio_destino",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Nombre del predio",
+                            type: "text",
+                            disabled: false,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 6,
+                            control_form: control_solicitud,
+                            control_name: "direccion_destino",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            label: "Dirección del predio:",
+                            type: "text",
+                            disabled: false,
+                            helper_text: ""
+                        },
+                    ]}
+                    modal_select_model_title='Buscar solicitud'
+                    modal_form_filters={[
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_solicitud,
+                            control_name: "id_solicitud_consumibles",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Número de solicitud",
+                            type: "number",
+                            disabled: false,
+                            helper_text: "",
+                        }
+                    ]}
+                />
             </Grid>
         </>
     );
 }
+
 
 // eslint-disable-next-line no-restricted-syntax
 export default DestinoSolicitud;

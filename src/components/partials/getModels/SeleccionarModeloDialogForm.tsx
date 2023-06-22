@@ -164,8 +164,6 @@ const SeleccionarModeloDialogForm = ({
     };
     const button_style = {
         color: 'white',
-        backgroundColor: '#335B1E',
-        border: '3px solid black',
         borderRadius: '50%',
         width: '40px',
         height: '40px',
@@ -277,11 +275,11 @@ const SeleccionarModeloDialogForm = ({
                         <Box sx={{ width: '100%' }}>
                             <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
                             <ButtonGroup style={{ margin: 7 }}  >
-                                <Button style={button_style} onClick={export_to_excel}>
+                                <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={export_to_excel}>
                                     <i className="pi pi-file-excel"></i>
                                 </Button>
 
-                                <Button style={button_style} onClick={export_pdf}>
+                                <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={export_pdf}>
                                     <i className="pi pi-file-pdf"></i>
                                 </Button>
 

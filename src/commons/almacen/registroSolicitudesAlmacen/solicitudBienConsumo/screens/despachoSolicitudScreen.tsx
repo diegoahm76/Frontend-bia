@@ -12,10 +12,10 @@ import SaveIcon from '@mui/icons-material/Save';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service } from '../store/solicitudBienConsumoThunks';
-import { Title } from '../../../../../components/Title';
 import SeleccionarSolicitudDespacho from '../components/SeleccionarSolicitudesDespacho';
 import RechazoSolicitud from '../components/RechazarSolicitud';
 import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
+import FuncionarioRechazo from '../components/PersonaRechazoSolicitud';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -90,11 +90,23 @@ const DespachoBienesConsumoScreen = () => {
                 boxShadow: '0px 3px 6px #042F4A26',
             }}
         >
-            <Title title="Listado de solicitudes aprobadas por despachar " />
+
 
             <Grid item xs={12} marginY={2}>
-                <SeleccionarSolicitudDespacho control_solicitud_despacho={control_solicitud_despacho} get_values={get_values} />
-                {show_rechazo_solicitud && <RechazoSolicitud control_solicitud_despacho={control_solicitud_despacho} get_values={get_values} />}
+                <SeleccionarSolicitudDespacho
+                    title={"Solicitudes Aprobadas"}
+                    control_solicitud_despacho={control_solicitud_despacho}
+                    get_values={get_values} />
+
+                <FuncionarioRechazo title={"Persona responsable"}
+                    get_values_solicitud={get_values} />
+
+
+                {show_rechazo_solicitud &&
+
+                    <RechazoSolicitud
+                        title={"Rechazo de solicitud"}
+                        control_solicitud_despacho={control_solicitud_despacho} get_values={get_values} />}
             </Grid>
 
             <Grid container direction="row" padding={2} spacing={2}>
@@ -120,19 +132,25 @@ const DespachoBienesConsumoScreen = () => {
 
             {!show_buttons && (
                 <>
-                    <Grid item xs={8} md={3} justifyContent="flex-end">
-                        <Button variant="contained"
+                    <Grid item xs={6} md={2}>
+                        <FormButton
+                            variant_button="contained"
+                            on_click_function={handle_submit(on_submit_despacho)}
+                            icon_class={<SaveIcon />}
+                            label="Guardar"
+                            type_button="button" />
+                    </Grid>
 
-                            color="success"
-                            // onClick={handle_submit(on_submit_despacho)} 
-                            startIcon={<SaveIcon />}>
-                            GUARDAR
-                        </Button>
-                        <Button variant="outlined"
-                            color="success"
-                            startIcon={<CloseIcon />} style={{ marginLeft: '1rem' }}>
-                            CERRAR
-                        </Button>
+                    <Grid item xs={6} md={2}>
+                        <FormButton
+                            variant_button="contained"
+                            on_click_function={handle_submit(on_submit_despacho)}
+                            icon_class={<CloseIcon />}
+                            label="Cerrar"
+                            type_button="button" />
+
+
+
                     </Grid>
                 </>
 
