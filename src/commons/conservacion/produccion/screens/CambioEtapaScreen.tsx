@@ -15,7 +15,6 @@ import PersonaCambia from "../componentes/PersonaCambia";
 import { add_stage_change_service, annul_stage_change_service, edit_stage_change_service } from "../store/thunks/produccionThunks";
 import AnularEliminar from "../../componentes/AnularEliminar";
 import Block from '@mui/icons-material/Block';
-import { AnyAaaaRecord } from "dns";
 
 
 
@@ -84,12 +83,7 @@ export function CambioEtapaScreen(): JSX.Element {
       form_data.append('observaciones', data.observaciones);
       form_data.append('id_persona_cambia',  Number(data.id_persona_cambia));
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
-      const json_object: any = {};
-
-      for (let [key, value] of form_data.entries()) {
-        json_object[key] = value;
-      }
-      console.log(json_object)
+      
       void dispatch(add_stage_change_service(form_data));
     }
   };

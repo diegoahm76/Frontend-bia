@@ -313,7 +313,7 @@ const SeleccionarBienDespacho = () => {
                             id_bien: current_bien.id_bien,
                             agno_lote: current_bien.agno_lote ?? null,
                             nro_lote: current_bien.nro_lote ?? null,
-                            cod_etapa_lote: "D",
+                            cod_etapa_lote: (bien_selected.cod_tipo_elemento_vivero === "MV")?"D":null,
                             cantidad_despachada: Number(data.cantidad_despachada),
                             cantidad_solicitada: Number(bien_selected.cantidad),
                             nombre_bien: current_bien.nombre,

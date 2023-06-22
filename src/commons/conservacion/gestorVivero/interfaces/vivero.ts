@@ -39,6 +39,7 @@ export interface IObjDistribucion {
   unidad_medida?: string | null;
   codigo_bien?: string | null;
   nombre_bien?: string | null;
+ 
 }
 
 export interface IObjItem {
@@ -58,6 +59,7 @@ export interface IObjItem {
   cantidad_restante?: number | null;
   cod_tipo_elemento_vivero?: string | null;
   es_semilla_vivero?: boolean | null;
+  
 }
 
 export interface IDespacho {

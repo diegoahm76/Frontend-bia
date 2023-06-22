@@ -247,6 +247,7 @@ export const get_items_despacho_service = (id: string|number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`conservacion/despachos/items-despacho/get-by-id/${id??""}/`);
+      console.log(data)
       if (data.data.length > 0) {
           dispatch(get_items_despacho(data.data));
       } else {
