@@ -1,11 +1,17 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
-import { Avatar, Divider, IconButton, TextField, Typography } from '@mui/material';
+import {
+  Avatar,
+  Divider,
+  IconButton,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 // import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -30,29 +36,24 @@ interface IProps {
   set_id_proyecto: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SeleccionarProyecto: React.FC<IProps> = (
-  { data,
-    register,
-    set_value,
-    set_id_proyecto,
-    watch
-  }:
-    IProps) => {
-
+export const SeleccionarProyecto: React.FC<IProps> = ({
+  data,
+  register,
+  set_value,
+  set_id_proyecto,
+  watch,
+}: IProps) => {
   const {
     rows_actividades,
     is_agregar_actividad,
-    set_is_agregar_actividad,
     is_editar_actividad,
-    set_is_editar_actividad,
     is_seleccionar_actividad,
-    set_is_seleccionar_actividad,
     set_id_actividad,
     fetch_data_actividades,
+    set_mode,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
-
     {
       field: 'id_actividades',
       headerName: 'No ACTIVIDAD',
@@ -83,9 +84,7 @@ export const SeleccionarProyecto: React.FC<IProps> = (
                 // set_id_programa(params.row.id_programa as number);
                 set_data_actividad(params.row);
                 set_id_actividad(params.row.id_actividades as number);
-                set_is_agregar_actividad(false);
-                set_is_editar_actividad(true);
-                set_is_seleccionar_actividad(false);
+                set_mode('editar_actividad');
               }}
             >
               <Avatar
@@ -104,7 +103,7 @@ export const SeleccionarProyecto: React.FC<IProps> = (
             </IconButton>
             <IconButton
               onClick={() => {
-                confirmar_eliminar(params.row.id_actividades as number)
+                confirmar_eliminar(params.row.id_actividades as number);
               }}
             >
               <Avatar
@@ -125,9 +124,7 @@ export const SeleccionarProyecto: React.FC<IProps> = (
               onClick={() => {
                 set_data_actividad(params.row);
                 set_id_actividad(params.row.id_actividades as number);
-                set_is_agregar_actividad(false);
-                set_is_editar_actividad(false);
-                set_is_seleccionar_actividad(true);
+                set_mode('select_actividad');
               }}
             >
               <Avatar
@@ -148,13 +145,10 @@ export const SeleccionarProyecto: React.FC<IProps> = (
                 />
               </Avatar>
             </IconButton>
-
           </>
         );
       },
     },
-
-
   ];
 
   useEffect(() => {
@@ -163,11 +157,11 @@ export const SeleccionarProyecto: React.FC<IProps> = (
 
   useEffect(() => {
     if (data !== undefined) {
-      set_start_date(new Date(data.vigencia_inicial))
-      set_value('vigencia_final', data.vigencia_final)
-      set_value('vigencia_inicial', data.vigencia_inicial)
-      set_end_date(new Date(data.vigencia_final))
-      set_value('descripcion', data_actividad?.nombre)
+      set_start_date(new Date(data.vigencia_inicial));
+      set_value('vigencia_final', data.vigencia_final);
+      set_value('vigencia_inicial', data.vigencia_inicial);
+      set_end_date(new Date(data.vigencia_final));
+      set_value('descripcion', data_actividad?.nombre);
     }
   }, [data !== undefined]);
 
@@ -179,37 +173,40 @@ export const SeleccionarProyecto: React.FC<IProps> = (
   const [end_date, set_end_date] = useState<Date | null>(new Date());
 
   const handle_start_date_change = (date: Date | null): void => {
-    set_value('vigencia_inicial', date)
-    set_start_date(date)
+    set_value('vigencia_inicial', date);
+    set_start_date(date);
   };
 
   const handle_end_date_change = (date: Date | null): void => {
-    set_value('vigencia_final', date)
-    set_end_date(date)
+    set_value('vigencia_final', date);
+    set_end_date(date);
   };
   const confirmar_eliminar = (id_actividad: number): void => {
     void Swal.fire({
       // title: "Estas seguro?",
       customClass: {
-        confirmButton: "square-btn",
-        cancelButton: "square-btn",
+        confirmButton: 'square-btn',
+        cancelButton: 'square-btn',
       },
       width: 350,
-      text: "¿Estas seguro?",
-      icon: "warning",
+      text: '¿Estas seguro?',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#0EC32C",
-      cancelButtonColor: "#DE1616",
-      confirmButtonText: "Si, elminar!",
-      cancelButtonText: "Cancelar",
+      confirmButtonColor: '#0EC32C',
+      cancelButtonColor: '#DE1616',
+      confirmButtonText: 'Si, elminar!',
+      cancelButtonText: 'Cancelar',
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await eliminar_id(id_actividad, 'eliminar/actividad');
-          void fetch_data_actividades()
-          control_success('La actividad se eliminó correctamente')
+          void fetch_data_actividades();
+          control_success('La actividad se eliminó correctamente');
         } catch (error: any) {
-          control_error(error.response.data.detail || 'hubo un error al eliminar, intenta de nuevo');
+          control_error(
+            error.response.data.detail ||
+              'hubo un error al eliminar, intenta de nuevo'
+          );
         }
       }
     });
@@ -229,7 +226,7 @@ export const SeleccionarProyecto: React.FC<IProps> = (
           required
           defaultValue={data.nombre}
           autoFocus
-          {...register("nombre", { required: true })}
+          {...register('nombre', { required: true })}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -247,7 +244,7 @@ export const SeleccionarProyecto: React.FC<IProps> = (
                 fullWidth
                 size="small"
                 {...params}
-                {...register("vigencia_inicial", { required: true })}
+                {...register('vigencia_inicial', { required: true })}
               />
             )}
           />
@@ -268,7 +265,7 @@ export const SeleccionarProyecto: React.FC<IProps> = (
                 fullWidth
                 size="small"
                 {...params}
-                {...register("vigencia_final", { required: true })}
+                {...register('vigencia_final', { required: true })}
               />
             )}
           />
@@ -284,12 +281,11 @@ export const SeleccionarProyecto: React.FC<IProps> = (
           autoFocus
           defaultValue={data.inversion}
           type="text"
-          {...register("inversion", { required: true })}
+          {...register('inversion', { required: true })}
         />
       </Grid>
       {rows_actividades.length > 0 && (
         <>
-
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
               Actividades
@@ -317,9 +313,7 @@ export const SeleccionarProyecto: React.FC<IProps> = (
               <LoadingButton
                 variant="outlined"
                 onClick={() => {
-                  set_is_agregar_actividad(true);
-                  set_is_editar_actividad(false);
-                  set_is_seleccionar_actividad(false);
+                  set_mode('register_actividad');
                 }}
               >
                 Agregar Nueva Actividad
@@ -328,7 +322,9 @@ export const SeleccionarProyecto: React.FC<IProps> = (
           </Grid>
         </>
       )}
-      {is_agregar_actividad || is_seleccionar_actividad || is_editar_actividad ? (
+      {is_agregar_actividad ||
+      is_seleccionar_actividad ||
+      is_editar_actividad ? (
         <>
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
@@ -347,12 +343,11 @@ export const SeleccionarProyecto: React.FC<IProps> = (
               required
               autoFocus
               multiline
-              {...register("descripcion", { required: true })}
+              {...register('descripcion', { required: true })}
             />
           </Grid>
         </>
       ) : null}
-
     </>
   );
 };

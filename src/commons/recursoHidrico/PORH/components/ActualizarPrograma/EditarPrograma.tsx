@@ -3,7 +3,7 @@ import { Title } from '../../../../../components/Title';
 import { TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -32,7 +32,8 @@ export const EditarPrograma: React.FC<IProps> = ({
   const [end_date, set_end_date] = useState<Date | null>(new Date());
 
   const start_date_valid = start_date !== null && start_date < new Date();
-  const end_date_valid = end_date !== null && start_date !== null && end_date > start_date;
+  const end_date_valid =
+    end_date !== null && start_date !== null && end_date > start_date;
 
   const handle_start_date_change = (date: Date | null): void => {
     set_value('fecha_inicial', date);
@@ -56,7 +57,18 @@ export const EditarPrograma: React.FC<IProps> = ({
 
   return (
     <>
-      <Grid container spacing={2} mt={0.1}>
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          p: '0px',
+          m: '0 0 0 0',
+          mb: '0px',
+        }}
+      >
+        {' '}
         <Grid item xs={12}>
           <Title title=" EDICIÓN INFORMACIÓN DE PROGRAMA" />
         </Grid>
@@ -73,7 +85,9 @@ export const EditarPrograma: React.FC<IProps> = ({
             {...register('nombre_programa', { required: true })}
             error={Boolean(errors.nombre_programa)}
             helperText={
-              errors.nombre_programa?.type === 'required' ? 'Este campo es obligatorio' : ''
+              errors.nombre_programa?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : ''
             }
           />
         </Grid>
@@ -86,7 +100,9 @@ export const EditarPrograma: React.FC<IProps> = ({
               views={['year', 'month', 'day']}
               value={start_date}
               onChange={handle_start_date_change}
-              shouldDisableDate={(date) => !start_date_valid && date >= new Date()}
+              shouldDisableDate={(date) =>
+                !start_date_valid && date >= new Date()
+              }
               renderInput={(params) => (
                 <TextField
                   required
@@ -101,8 +117,8 @@ export const EditarPrograma: React.FC<IProps> = ({
                     errors.fecha_inicial?.type === 'required'
                       ? 'Este campo es obligatorio'
                       : !start_date_valid
-                        ? 'La fecha de inicio es posterior o igual a la fecha de finalización'
-                        : ''
+                      ? 'La fecha de inicio es posterior o igual a la fecha de finalización'
+                      : ''
                   }
                 />
               )}
@@ -133,8 +149,8 @@ export const EditarPrograma: React.FC<IProps> = ({
                     errors.fecha_fin?.type === 'required'
                       ? 'Este campo es obligatorio'
                       : !end_date_valid
-                        ? 'La fecha de finalización es anterior o igual a la fecha de inicio'
-                        : ''
+                      ? 'La fecha de finalización es anterior o igual a la fecha de inicio'
+                      : ''
                   }
                 />
               )}

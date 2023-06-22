@@ -145,10 +145,7 @@ export const EditarAvance: React.FC = () => {
       archivos.forEach((archivo, index) => {
         if (archivo != null) {
           datos_avance.append(`evidencia`, archivo);
-          datos_avance.append(
-            `nombre_archivo`,
-            nombres_archivos[index]
-          );
+          datos_avance.append(`nombre_archivo`, nombres_archivos[index]);
         }
       });
 
@@ -161,7 +158,10 @@ export const EditarAvance: React.FC = () => {
             nombre_archivo: data.nombre_archivo_nuevo,
           },
         ];
-        datos_avance.append('nombre_actualizar', JSON.stringify(nombre_actualizar) as any);
+        datos_avance.append(
+          'nombre_actualizar',
+          JSON.stringify(nombre_actualizar) as any
+        );
       }
 
       await editar_avance(id_avance as number, datos_avance);
@@ -184,20 +184,19 @@ export const EditarAvance: React.FC = () => {
             },
             ...updatedInfoAvance.evidencias.filter(
               (evidencia: any) =>
-                evidencia.id_evidencia_avance !== info_evidencia.id_evidencia_avance
+                evidencia.id_evidencia_avance !==
+                info_evidencia.id_evidencia_avance
             ),
           ];
         }
 
         set_info_avance(updatedInfoAvance);
       }
-
     } catch (error) {
       set_is_saving(false);
       control_error(error);
     }
   };
-
 
   const is_form_valid = Object.keys(errors).length === 0;
 
@@ -209,7 +208,18 @@ export const EditarAvance: React.FC = () => {
         onSubmit={handleSubmit(on_submit)}
         style={{ width: '100%' }} // Añadido estilo para ocupar toda la pantalla
       >
-        <Grid container spacing={2} mt={0.1}>
+        <Grid
+          container
+          spacing={2}
+          m={2}
+          p={2}
+          sx={{
+            p: '0px',
+            m: '0 0 0 0',
+            mb: '0px',
+          }}
+        >
+          {' '}
           {is_select_avance && (
             <Grid item xs={12}>
               <Title title=" INFORMACIÓN DE AVANCE" />
@@ -278,48 +288,49 @@ export const EditarAvance: React.FC = () => {
               />
             </LocalizationProvider>
           </Grid>
-          {is_editar_avance && archivos.map((file, index) => (
-            <Fragment key={index}>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  component="label"
-                  startIcon={<CloudUploadIcon />}
-                >
-                  {nombres_archivos[index] !== ''
-                    ? nombres_archivos[index]
-                    : 'Seleccione archivo'}
-                  <input
-                    hidden
-                    type="file"
+          {is_editar_avance &&
+            archivos.map((file, index) => (
+              <Fragment key={index}>
+                <Grid item xs={12} sm={6}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    component="label"
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    {nombres_archivos[index] !== ''
+                      ? nombres_archivos[index]
+                      : 'Seleccione archivo'}
+                    <input
+                      hidden
+                      type="file"
+                      disabled={is_select_avance}
+                      required={false}
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      onChange={(e) => {
+                        handle_file_select(e, index);
+                      }}
+                    />
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Nombre Archivo"
+                    fullWidth
+                    size="small"
+                    margin="dense"
                     disabled={is_select_avance}
                     required={false}
                     autoFocus
-                    style={{ opacity: 0 }}
+                    value={nombres_archivos[index]}
                     onChange={(e) => {
-                      handle_file_select(e, index);
+                      handle_nombre_archivo_change(e, index);
                     }}
                   />
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Nombre Archivo"
-                  fullWidth
-                  size="small"
-                  margin="dense"
-                  disabled={is_select_avance}
-                  required={false}
-                  autoFocus
-                  value={nombres_archivos[index]}
-                  onChange={(e) => {
-                    handle_nombre_archivo_change(e, index);
-                  }}
-                />
-              </Grid>
-            </Fragment>
-          ))}
+                </Grid>
+              </Fragment>
+            ))}
           {rows_evidencia.length > 0 && (
             <>
               <Grid item xs={12}>

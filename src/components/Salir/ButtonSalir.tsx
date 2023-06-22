@@ -8,7 +8,6 @@ export const ButtonSalir: React.FC = () => {
 
   const navigate = useNavigate();
 
-
   const confirmar_eliminar = (): void => {
     void Swal.fire({
       customClass: {
