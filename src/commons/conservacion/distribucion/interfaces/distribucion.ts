@@ -91,6 +91,7 @@ export interface IObjDespacho {
   id_persona_anula: number | null;
   persona_anula?: string | null;
   persona_crea?: string | null;
+  id_solicitud_viveros ?: string | null;
 
 }
 

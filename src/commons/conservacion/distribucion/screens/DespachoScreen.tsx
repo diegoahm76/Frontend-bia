@@ -163,7 +163,7 @@ const DespachoScreen = () => {
           items_despacho: aux_items
         }
         console.log(aux)
-        form_data.append('info_despacho', JSON.stringify({ ...data_edit, id_solicitud_a_viveros: current_solicitud.id_solicitud_vivero }));
+        form_data.append('info_despacho', JSON.stringify({ ...data_edit, id_solicitud_a_viveros: current_solicitud.id_solicitud_vivero, id_solicitud_viveros: current_solicitud.id_solicitud_vivero  }));
         form_data.append('ruta_archivo_con_recibido', data.ruta_archivo_con_recibido);
         form_data.append('items_despacho', JSON.stringify(aux_items));
         void dispatch(crear_despacho(form_data));
