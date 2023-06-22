@@ -411,7 +411,7 @@ export function AdministrarViveroScreen(): JSX.Element {
   const button_style = {
     color: 'white',
     backgroundColor: '#335B1E',
-    border: '3px solid black',
+    // border: '3px solid black',
     borderRadius: '50%',
     width: '40px',
     height: '40px',
