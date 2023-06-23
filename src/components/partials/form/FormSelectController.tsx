@@ -16,6 +16,7 @@ interface IRules {
 interface IProps {
     xs: number;
     md: number;
+    margin?: number;
     control_form: any;
     control_name: string;
     default_value: string | number | null;
@@ -45,7 +46,8 @@ const FormSelectController = ({
     option_label,
     option_key,
     multiple,
-    hidden_text
+    hidden_text,
+    margin
 }: IProps) => {
     const id_select = String(uuid())
 
@@ -54,7 +56,7 @@ const FormSelectController = ({
         <>
             {(!(hidden_text ?? false)) &&
 
-                <Grid item xs={xs} md={md}>
+                <Grid item xs={xs} md={md} margin={margin??0}>
                     <Controller
                         name={control_name}
                         control={control_form}
@@ -75,15 +77,17 @@ const FormSelectController = ({
                                     label={label ?? ""}
                                     variant="outlined"
                                     disabled={disabled}
-                                    value={value}
+                                    value={value===null ? (multiple ?? false)?[]:"": value}
                                     onChange={onChange}
                                     error={!(error == null)}
 
 
                                 >
-                                    {/* <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem> */}
+                                    {!(multiple ?? false)&&
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
+                                    }
                                     {select_options.map((option: any) => (
                                         <MenuItem key={option[option_key]} value={option[option_key]}>
                                             {option[option_label]}

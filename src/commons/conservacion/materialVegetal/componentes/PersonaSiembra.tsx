@@ -98,12 +98,12 @@ const PersonaSiembra = ({
                 const { data: document_type_no_format } = await api.get(
                     'choices/tipo-documento/'
                 );
+                
 
                 const document_type_format: IList[] = text_choise_adapter(
                     document_type_no_format
                 );
                 set_document_type(document_type_format);
-
             } catch (err) {
                 console.log(err);
             }

@@ -121,6 +121,7 @@ export interface IObjPlanting {
   id_persona_siembra: string | number | null;
   observaciones: string | null;
   ruta_archivo_soporte: string | null;
+  nombre_bien_sembrado?: string | null;
 }
 
 export interface IObjGoods {

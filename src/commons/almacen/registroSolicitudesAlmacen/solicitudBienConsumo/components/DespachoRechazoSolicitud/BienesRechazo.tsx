@@ -7,16 +7,16 @@ import BuscarModelo from "../../../../../../components/partials/getModels/Buscar
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
 import { set_bienes, set_bienes_solicitud, set_current_bien } from "../../store/slices/indexSolicitudBienesConsumo";
 import { useForm } from "react-hook-form";
-import { control_error, get_bienes_vivero_consumo, } from "../../store/solicitudBienConsumoThunks";
+import { get_bienes_consumo, control_error } from "../../store/solicitudBienConsumoThunks";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarBienAprobacionVivero = () => {
+const BienRechazado = () => {
 
 
     // const [action, set_action] = useState<string>("agregar");
     const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjBienConsumo>();
     const { handleSubmit: handle_submit_item_solicitud } = useForm<IObjBienesSolicitud>();
-    const { bienes, bienes_solicitud, current_bien, current_solicitud_vivero } = useAppSelector((state) => state.solic_consumo);
+    const { bienes, bienes_solicitud, current_bien, current_solicitud } = useAppSelector((state) => state.solic_consumo);
     const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesSolicitud[]>([]);
     const [action, set_action] = useState<string>("crear");
 
@@ -186,7 +186,7 @@ const SeleccionarBienAprobacionVivero = () => {
                     cantidad: data.cantidad,
                     observaciones: data.observaciones,
                     id_unidad_medida: data.id_unidad_medida,
-                    id_solicitud_consumibles: current_solicitud_vivero.id_solicitud_consumibles ?? null
+                    id_solicitud_consumibles: current_solicitud.id_solicitud_consumibles ?? null
                 }
 
                 if (bien === undefined) {
@@ -222,19 +222,16 @@ const SeleccionarBienAprobacionVivero = () => {
         console.log("buscar...")
         const codigo_bien = get_values_bien("codigo_bien")
         const nombre = get_values_bien("nombre")
-        const nombre_cientifico = get_values_bien("nombre_cientifico")
-        const cod_tipo_elemento_vivero = get_values_bien("cod_tipo_elemento_vivero")
+        if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined) {
 
-        if (codigo_bien !== null && codigo_bien !== undefined && nombre_cientifico !== null && nombre_cientifico !== undefined && nombre !== null && nombre !== undefined && cod_tipo_elemento_vivero !== null && cod_tipo_elemento_vivero !== undefined) {
-
-            void dispatch(get_bienes_vivero_consumo(codigo_bien, nombre_cientifico, nombre, cod_tipo_elemento_vivero))
+            void dispatch(get_bienes_consumo(codigo_bien, nombre))
         }
     })
 
     // const search_bien: any = (async () => {
     //     const codigo_bien = get_values_bien("codigo_bien")
     //     if (codigo_bien !== null && codigo_bien !== undefined) {
-    //         void dispatch(get_bienes_consumo_vivero_codigo_bien(codigo_bien))
+    //         void dispatch(get_bienes_consumo_codigo_bien(codigo_bien))
     //     }
     // })
     return (
@@ -301,4 +298,4 @@ const SeleccionarBienAprobacionVivero = () => {
 
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarBienAprobacionVivero;
+export default BienRechazado;
