@@ -39,7 +39,7 @@ export const download_pdf = ({ nurseries, columns }: any): void => {
 
     // Imprimir los encabezados y datos en cada línea
     for (let i = 0; i < max_data_length; i++) {
-        const line_data = data.map((column_data: any[]) => column_data[i] || '');
+        const line_data = data.map((column_data: any[]) => (Boolean(column_data[i])) || '');
         const line_text = line_data.join(' - '); // Concatenar los datos separados por '-'
         const text_x = 10; // Posición horizontal del texto
         const text_y = start_y + (i * 10); // Posición vertical del texto
