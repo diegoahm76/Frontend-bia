@@ -142,6 +142,7 @@ export const edit_organigrams_service: any = (
 };
 
 // Finalizar Organigrama
+
 export const to_finalize_organigram_service: any = (
   id: string,
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>
@@ -167,6 +168,7 @@ export const to_finalize_organigram_service: any = (
       return error as AxiosError;
     }
   };
+
 };
 
 // Reanudar organigrama

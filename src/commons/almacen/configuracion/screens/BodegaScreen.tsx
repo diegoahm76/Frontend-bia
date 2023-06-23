@@ -75,6 +75,7 @@ export function BodegaScreen(): JSX.Element {
           control_bodega={control_aux_bodega}
           reset_bodega={reset_aux_bodega}
         />
+
         < PersonaResponsable
           title={"Persona responsable de la bodega"}
           set_persona={set_responsable} />
@@ -85,6 +86,9 @@ export function BodegaScreen(): JSX.Element {
           padding={2}
           spacing={2}
         >
+
+
+          
           <Grid item xs={12} md={2}>
             {bodega_seleccionada.id_bodega !== null && bodega_seleccionada.id_bodega !== undefined ?
               <FormButton

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { AgregarPrograma } from '../../components/AgregarNuevoPrograma/AgregarPrograma';
@@ -10,13 +11,23 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
 import { BusquedaPorh } from '../../components/Buscador/Buscador';
-import { editar_activdad, editar_programa, editar_proyecto, get_data_id, post_programa } from '../../Request/request';
+import {
+  editar_activdad,
+  editar_programa,
+  editar_proyecto,
+  eliminar_id,
+  post_programa,
+} from '../../Request/request';
 import { EditarPrograma } from '../../components/ActualizarPrograma/EditarPrograma';
 import { useForm } from 'react-hook-form';
 import { control_error } from '../../../../../helpers';
 import { control_success } from '../../../requets/Request';
 import type { GetPrograma } from '../../Interfaces/interfaces';
 import { SeleccionarPrograma } from '../../components/SeleccionarPrograma/SeleccionarPrograma';
+import Swal from 'sweetalert2';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
+import { BusquedaAvanzada } from '../../components/BusquedaAvanzadaPORH/BusquedaAvanzada';
+import { ConsultaPorh } from '../../components/ConsultaPorh/ConsultaPorh';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PorhMainScreen: React.FC = () => {
@@ -37,11 +48,8 @@ export const PorhMainScreen: React.FC = () => {
     rows_proyectos,
     rows_actividades,
     is_agregar_programa,
-    set_is_agregar_programa,
     is_editar_programa,
-    set_is_editar_programa,
     is_seleccionar_programa,
-    set_is_seleccionar_programa,
     is_agregar_actividad,
     is_agregar_proyecto,
     is_editar_actividad,
@@ -50,10 +58,15 @@ export const PorhMainScreen: React.FC = () => {
     id_proyecto,
     set_id_programa,
     id_programa,
+    fetch_data_actividades,
+    fetch_data_proyectos,
+    fetch_data_programas,
+    is_general,
+    is_consulta,
+    set_mode,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
-
     {
       field: 'id_programa',
       headerName: 'No PROGRAMA',
@@ -92,9 +105,7 @@ export const PorhMainScreen: React.FC = () => {
                   onClick={() => {
                     set_id_programa(params.row.id_programa as number);
                     set_data(params.row);
-                    set_is_agregar_programa(false);
-                    set_is_editar_programa(true);
-                    set_is_seleccionar_programa(false);
+                    set_mode('editar_programa');
                   }}
                 >
                   <Avatar
@@ -117,7 +128,7 @@ export const PorhMainScreen: React.FC = () => {
                 </IconButton>
                 <IconButton
                   onClick={() => {
-                    // confirmar_eliminar_cargo(params.row.id_cargo as number)
+                    confirmar_eliminar(params.row.id_programa as number);
                   }}
                 >
                   <Avatar
@@ -144,9 +155,7 @@ export const PorhMainScreen: React.FC = () => {
               onClick={() => {
                 set_id_programa(params.row.id_programa as number);
                 set_data(params.row);
-                set_is_agregar_programa(false);
-                set_is_editar_programa(false);
-                set_is_seleccionar_programa(true);
+                set_mode('select_programa');
               }}
             >
               <Avatar
@@ -167,9 +176,7 @@ export const PorhMainScreen: React.FC = () => {
                 />
               </Avatar>
             </IconButton>
-
           </>
-
         );
       },
     },
@@ -177,74 +184,120 @@ export const PorhMainScreen: React.FC = () => {
 
   const [data, set_data] = useState<GetPrograma>();
 
-  const fetch_data = async (): Promise<void> => {
-    try {
-      await get_data_id(1, set_rows_programas, 'get/programas');
-    } catch (error) {
-      control_error(error);
-    }
-  };
-
   useEffect(() => {
-    void fetch_data();
+    void fetch_data_programas();
   }, []);
 
   const on_submit = handleSubmit(async (form) => {
     try {
-      form.id_programa = id_programa
-      form.id_proyecto = id_proyecto
-      await post_programa(form, set_rows_programas, rows_programas, rows_proyectos, rows_actividades);
+      form.id_programa = id_programa;
+      form.id_proyecto = id_proyecto;
+      await post_programa(
+        form,
+        set_rows_programas,
+        rows_programas,
+        rows_proyectos,
+        rows_actividades
+      );
       reset();
-      control_success('Se creó correctamente')
-      await fetch_data();
-    } catch (err) {
-      control_error(err);
+      control_success('Se creó correctamente');
+      await fetch_data_programas();
+      await fetch_data_proyectos();
+      await fetch_data_actividades();
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail || 'hubo un error al crear, intenta de nuevo'
+      );
     }
   });
 
   const on_submit_editar = handleSubmit(async (form) => {
     try {
       await editar_programa(id_programa as number, form);
-      // reset();
-      control_success('Se editó correctamente')
-    } catch (err) {
-      control_error(err);
+      control_success('Se editó correctamente');
+      await fetch_data_programas();
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail ||
+          'hubo un error al editar, intenta de nuevo'
+      );
     }
   });
   const on_submit_editar_proyecto = handleSubmit(async (form) => {
     try {
       await editar_proyecto(id_proyecto as number, form);
-      // reset();
-      control_success('Se editó correctamente')
-    } catch (err) {
-      control_error(err);
+      control_success('Se editó el proyecto correctamente');
+      await fetch_data_proyectos();
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail ||
+          'hubo un error al editar, intenta de nuevo'
+      );
     }
   });
   const on_submit_editar_actividad = handleSubmit(async (form) => {
     try {
       await editar_activdad(id_actividad as number, form);
-      // reset();
-      control_success('Se editó correctamente')
-    } catch (err) {
-      control_error(err);
+      control_success('Se editó la actividad correctamente');
+      await fetch_data_actividades();
+    } catch (error: any) {
+      control_error(
+        error.response.data.detail ||
+          'hubo un error al editar, intenta de nuevo'
+      );
     }
   });
+
+  const confirmar_eliminar = (id_programa: number): void => {
+    void Swal.fire({
+      // title: "Estas seguro?",
+      customClass: {
+        confirmButton: 'square-btn',
+        cancelButton: 'square-btn',
+      },
+      width: 350,
+      text: '¿Estas seguro?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#0EC32C',
+      cancelButtonColor: '#DE1616',
+      confirmButtonText: 'Si, elminar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await eliminar_id(id_programa, 'eliminar/programa');
+          void fetch_data_programas();
+          control_success('El programa se eliminó correctamente');
+        } catch (error: any) {
+          control_error(
+            error.response.data.detail ||
+              'hubo un error al eliminar, intenta de nuevo'
+          );
+        }
+      }
+    });
+  };
 
   return (
     <>
       <form
         onSubmit={(form) => {
-          if (is_agregar_programa || is_agregar_actividad || is_agregar_proyecto) {
-            void on_submit(form)
+          if (
+            is_agregar_programa ||
+            is_agregar_actividad ||
+            is_agregar_proyecto
+          ) {
+            void on_submit(form);
           }
           if (is_editar_programa) {
-            void on_submit_editar(form)
+            void on_submit_editar(form);
           }
           if (is_editar_actividad) {
-            void on_submit_editar_actividad(form)
+            void on_submit_editar_actividad(form);
           }
           if (is_editar_proyecto) {
-            void on_submit_editar_proyecto(form)
+            void on_submit_editar_proyecto(form);
           }
         }}
       >
@@ -267,118 +320,106 @@ export const PorhMainScreen: React.FC = () => {
             <Title title="CONTENIDO PROGRAMÁTICO PLAN DE ORDENAMIENTO DE RECURSO HÍDRICO" />
           </Grid>
           <BusquedaPorh />
-          {rows_programas.length > 0 && (
+          {is_general && (
             <>
+              {rows_programas.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      Programas
+                    </Typography>
+                    <Divider />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <DataGrid
+                      autoHeight
+                      rows={rows_programas}
+                      columns={columns}
+                      getRowId={(row) => row.id_programa}
+                      pageSize={5}
+                      rowsPerPageOptions={[5]}
+                    />
+                  </Grid>
+                </>
+              )}
+              <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                  <LoadingButton
+                    variant="outlined"
+                    onClick={() => {
+                      set_id_programa(null);
+                      set_mode('register_programa');
+                    }}
+                  >
+                    Agregar programa
+                  </LoadingButton>
+                </Grid>
+              </Grid>
+              {is_agregar_programa && (
+                <>
+                  <AgregarPrograma
+                    register={register}
+                    watch={watch}
+                    set_value={set_value}
+                    errors={errors}
+                  />
+                </>
+              )}
+              {is_editar_programa && (
+                <>
+                  <EditarPrograma
+                    data={data}
+                    register={register}
+                    watch={watch}
+                    set_value={set_value}
+                    set_data={set_data}
+                    errors={errors}
+                  />
+                </>
+              )}
+              {is_seleccionar_programa && (
+                <>
+                  <SeleccionarPrograma
+                    data={data}
+                    register={register}
+                    watch={watch}
+                    set_value={set_value}
+                    set_data={set_data}
+                    errors={errors}
+                  />
+                </>
+              )}
               <Grid item xs={12}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  Programas
-                </Typography>
                 <Divider />
               </Grid>
-              <Grid item xs={12}>
+            </>
+          )}
+          {is_consulta && (
+            <>
+              <ConsultaPorh />{' '}
+            </>
+          )}
 
-                <DataGrid
-                  autoHeight
-                  rows={rows_programas}
-                  columns={columns}
-                  getRowId={(row) => row.id_programa}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                />
-              </Grid>
-            </>
-          )}
           <Grid item spacing={2} justifyContent="end" container>
+            <BusquedaAvanzada />
             <Grid item>
-              <LoadingButton
-                variant="outlined"
-                onClick={() => {
-                  set_id_programa(null)
-                  set_is_agregar_programa(true)
-                  set_is_editar_programa(false)
-                  set_is_seleccionar_programa(false)
-                }}
-              >
-                Agregar programa
-              </LoadingButton>
+              <ButtonSalir />
             </Grid>
-          </Grid>
-          {is_agregar_programa && (
-            <>
-              <AgregarPrograma
-                register={register}
-                watch={watch}
-                set_value={set_value}
-              />
-            </>
-          )}
-          {is_editar_programa && (
-            <>
-              <EditarPrograma
-                data={data}
-                register={register}
-                watch={watch}
-                set_value={set_value}
-                set_data={set_data}
-              />
-            </>
-          )}
-          {is_seleccionar_programa && (
-            <>
-              <SeleccionarPrograma
-                data={data}
-                register={register}
-                watch={watch}
-                set_value={set_value}
-                set_data={set_data}
-              />
-            </>
-          )}
-          <Grid item xs={12}>
-            <Divider />
-          </Grid>
-          <Grid item spacing={2} justifyContent="end" container>
-            <Grid item>
-              <LoadingButton
-                variant="outlined"
-                color='primary'
-              >
-                Buscar
-              </LoadingButton>
-            </Grid>
-            <Grid item>
-              <LoadingButton
-                variant="outlined"
-                color='warning'
-              // type='submit'
-              >
-                Salir
-              </LoadingButton>
-            </Grid>
-            {!is_editar_programa || !is_editar_actividad || !is_editar_proyecto ? (
+            {is_general && (
               <Grid item>
                 <LoadingButton
                   variant="contained"
-                  color='success'
-                  type='submit'
+                  color="success"
+                  type="submit"
+                  disabled={Object.keys(errors).length > 0}
                 >
                   Finalizar
-                </LoadingButton>
-              </Grid>
-            ) : (
-              <Grid item>
-                <LoadingButton
-                  variant="contained"
-                  color='success'
-                  type='submit'
-                >
-                  Actualizar
                 </LoadingButton>
               </Grid>
             )}
           </Grid>
         </Grid>
-      </form >
+      </form>
     </>
   );
 };

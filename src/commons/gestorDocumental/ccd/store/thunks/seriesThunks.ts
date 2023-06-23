@@ -7,11 +7,16 @@ import { api } from '../../../../../api/axios';
 import { type AxiosError, type AxiosResponse } from 'axios';
 // Reducers
 import { get_series_ccd } from '../slices/seriesSlice';
+
 import {
   control_error,
   control_success
   // notification_error
 } from '../../utils/success_errors';
+
+// Interfaces
+// import { type ISeriesObject } from '../../interfaces/ccd';
+
 
 // ! get action for series
 export const get_series_service: any = (id_ccd: string) => {

@@ -50,6 +50,7 @@ const initial_state: Icv = {
     current_other: initial_state_current_other,
     current_cv_other: initial_state_current_cv_other,
     marcas: [],
+    cv_other: []
 
 };
 
@@ -57,13 +58,13 @@ export const cv_others_slice = createSlice({
     name: "cvo",
     initialState: initial_state,
     reducers: {
-        get_others: (
+        set_others: (
             state: Icv,
             action: PayloadAction<IOthers[]>
         ) => {
             state.others = action.payload;
         },
-        current_others: (
+        set_current_others: (
             state: Icv,
             action: PayloadAction<IOthers>
         ) => {
@@ -71,12 +72,16 @@ export const cv_others_slice = createSlice({
         },
         get_cv_others: (
             state: Icv,
+            action: PayloadAction<IcvOthers[]>
+        ) => {
+            state.cv_other = action.payload;
+        },
+        current_cv_others: (
+            state: Icv,
             action: PayloadAction<IcvOthers>
         ) => {
             state.current_cv_other = action.payload;
         },
-
-
         get_marks: (
             state: Icv,
             action: PayloadAction<IMarca[]>
@@ -93,5 +98,5 @@ export const cv_others_slice = createSlice({
     }
 })
 
-export const { current_others, get_cv_others, get_marks, get_others } = cv_others_slice.actions;
+export const { current_cv_others, get_cv_others, get_marks, set_others, set_current_others } = cv_others_slice.actions;
 

@@ -1,12 +1,19 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
-import { Avatar, Divider, IconButton, TextField, Typography } from '@mui/material';
+import {
+  Avatar,
+  Divider,
+  IconButton,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { AgregarProyectos } from '../AgregarProyectos/AgregarProyectos';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 import { LoadingButton } from '@mui/lab';
 // import dayjs from 'dayjs';
@@ -17,12 +24,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataContext } from '../../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { get_data_id } from '../../Request/request';
-import { control_error } from '../../../../../helpers';
 import { EditarProyecto } from '../ActualizarProyecto/EditarProyectos';
 import type { GetProyectos } from '../../Interfaces/interfaces';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import { SeleccionarProyecto } from '../SeleccionarProyecto/SeleccionarProyecto';
+import { eliminar_id } from '../../Request/request';
+import { control_success } from '../../../requets/Request';
+import { control_error } from '../../../../../helpers';
+import Swal from 'sweetalert2';
 
 interface IProps {
   data: any;
@@ -30,26 +39,25 @@ interface IProps {
   register: any;
   set_value: any;
   set_data: any;
+  errors: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SeleccionarPrograma: React.FC<IProps> = (
-  { data,
-    register,
-    set_value,
-    watch,
-  }:
-    IProps) => {
-
+export const SeleccionarPrograma: React.FC<IProps> = ({
+  data,
+  register,
+  set_value,
+  watch,
+  errors,
+}: IProps) => {
   const {
     rows_proyectos,
-    set_rows_proyectos,
     is_agregar_proyecto,
     set_is_agregar_proyecto,
     is_editar_proyecto,
-    set_is_editar_proyecto,
     is_seleccionar_proyecto,
-    set_is_seleccionar_proyecto,
+    set_mode,
     set_id_proyecto,
+    fetch_data_proyectos,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -103,20 +111,22 @@ export const SeleccionarPrograma: React.FC<IProps> = (
                   variant="rounded"
                 >
                   <EditIcon
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
                     onClick={() => {
-                      set_id_proyecto(params.row.id_proyecto as number)
-                      set_data_proyectos(params.row)
-                      set_is_agregar_proyecto(false)
-                      set_is_editar_proyecto(true)
-                      set_is_seleccionar_proyecto(false)
+                      set_id_proyecto(params.row.id_proyecto as number);
+                      set_data_proyectos(params.row);
+                      set_mode('editar_proyecto');
                     }}
                   />
                 </Avatar>
               </IconButton>
               <IconButton
                 onClick={() => {
-                  // confirmar_eliminar_cargo(params.row.id_cargo as number)
+                  confirmar_eliminar(params.row.id_proyecto as number);
                 }}
               >
                 <Avatar
@@ -129,17 +139,19 @@ export const SeleccionarPrograma: React.FC<IProps> = (
                   variant="rounded"
                 >
                   <DeleteIcon
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
                   />
                 </Avatar>
               </IconButton>
               <IconButton
                 onClick={() => {
-                  set_id_proyecto(params.row.id_proyecto as number)
-                  set_data_proyectos(params.row)
-                  set_is_agregar_proyecto(false)
-                  set_is_editar_proyecto(false)
-                  set_is_seleccionar_proyecto(true)
+                  set_id_proyecto(params.row.id_proyecto as number);
+                  set_data_proyectos(params.row);
+                  set_mode('select_proyecto');
                 }}
               >
                 <Avatar
@@ -160,7 +172,6 @@ export const SeleccionarPrograma: React.FC<IProps> = (
                   />
                 </Avatar>
               </IconButton>
-
             </>
           );
         } else {
@@ -168,8 +179,6 @@ export const SeleccionarPrograma: React.FC<IProps> = (
         }
       },
     },
-
-
   ];
 
   // fechas
@@ -179,39 +188,73 @@ export const SeleccionarPrograma: React.FC<IProps> = (
   const [data_proyectos, set_data_proyectos] = useState<GetProyectos>();
 
   const handle_start_date_change = (date: Date | null): void => {
-    set_value('fecha_inicial', date)
-    set_start_date(date)
+    set_value('fecha_inicial', date);
+    set_start_date(date);
   };
 
   const handle_end_date_change = (date: Date | null): void => {
-    set_value('fecha_fin', date)
-    set_end_date(date)
-  };
-
-  const fetch_data = async (id_programa: number): Promise<void> => {
-    try {
-      await get_data_id(id_programa, set_rows_proyectos, 'get/proyectos/por/programas');
-    } catch (error) {
-      control_error(error);
-    }
+    set_value('fecha_fin', date);
+    set_end_date(date);
   };
 
   useEffect(() => {
-    void fetch_data(data.id_programa);
-  }, [data.id_programa]);
+    void fetch_data_proyectos();
+  }, [data]);
 
   useEffect(() => {
     if (data !== undefined) {
-      set_start_date(new Date(data.fecha_inicio))
-      set_value('fecha_fin', data.fecha_fin)
-      set_value('fecha_inicio', data.fecha_inicio)
-      set_end_date(new Date(data.fecha_fin))
+      set_start_date(new Date(data.fecha_inicio));
+      set_value('fecha_fin', data.fecha_fin);
+      set_value('fecha_inicio', data.fecha_inicio);
+      set_end_date(new Date(data.fecha_fin));
     }
   }, [data !== undefined]);
 
+  const confirmar_eliminar = (id_proyecto: number): void => {
+    void Swal.fire({
+      // title: "Estas seguro?",
+      customClass: {
+        confirmButton: 'square-btn',
+        cancelButton: 'square-btn',
+      },
+      width: 350,
+      text: '¿Estas seguro?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#0EC32C',
+      cancelButtonColor: '#DE1616',
+      confirmButtonText: 'Si, elminar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await eliminar_id(id_proyecto, 'eliminar/proyecto');
+          void fetch_data_proyectos();
+          control_success('El proyecto se eliminó correctamente');
+        } catch (error: any) {
+          control_error(
+            error.response.data.detail ||
+              'hubo un error al eliminar, intenta de nuevo'
+          );
+        }
+      }
+    });
+  };
+
   return (
     <>
-      <Grid container spacing={2} mt={0.1}>
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          p: '0px',
+          m: '0 0 0 0',
+          mb: '0px',
+        }}
+      >
+        {' '}
         <Grid item xs={12}>
           <Title title="INFORMACIÓN DE PROGRAMA" />
         </Grid>
@@ -299,10 +342,8 @@ export const SeleccionarPrograma: React.FC<IProps> = (
                 <LoadingButton
                   variant="outlined"
                   onClick={() => {
-                    set_is_agregar_proyecto(true)
-                    set_is_editar_proyecto(false)
-                    set_is_seleccionar_proyecto(false)
-                    set_id_proyecto(null)
+                    set_id_proyecto(null);
+                    set_mode('register_proyecto');
                   }}
                 >
                   Agregar Nuevo Proyecto
@@ -311,7 +352,7 @@ export const SeleccionarPrograma: React.FC<IProps> = (
             </Grid>
           </>
         )}
-      </Grid >
+      </Grid>
       <Grid container spacing={2} mt={0.1}>
         {is_agregar_proyecto && (
           <>
@@ -319,6 +360,9 @@ export const SeleccionarPrograma: React.FC<IProps> = (
               register={register}
               watch={watch}
               set_value={set_value}
+              errors={errors}
+              fecha_inicial_programa={start_date}
+              fecha_fin_programa={end_date}
             />
           </>
         )}
@@ -344,7 +388,6 @@ export const SeleccionarPrograma: React.FC<IProps> = (
             />
           </>
         )}
-
       </Grid>
     </>
   );

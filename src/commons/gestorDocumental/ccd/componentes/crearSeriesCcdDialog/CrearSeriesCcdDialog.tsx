@@ -36,7 +36,7 @@ import type { IFormValues, IProps } from './types/types';
 import { AvatarStyles, initial_state } from './utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { notification_error } from '../../utils/success_errors';
+import { notification_error } from '../crearSeriesCcdDialog/utils/success_errors';
 import { get_subseries_ccd_current } from '../../store/slices/subseriesSlice';
 import { get_subseries_service } from '../../store/thunks/subseriesThunks';
 import use_ccd from '../../hooks/useCCD';
@@ -66,7 +66,6 @@ const CrearSeriesCcdDialog = ({
   //! const data allow us to watch the values of the form
   const data = watch();
 
-  const { set_list_subsries } = use_ccd();
 
   //! this use effect is to set the title of the button and the values of the form
   useEffect(() => {

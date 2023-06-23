@@ -2,6 +2,7 @@ export interface Icv {
   vehicles: IVehicles[];
   current_vehicle: IVehicles;
   current_cv_vehicle: IcvVehicles;
+  cv_vehicle: IcvVehicles[];
   marcas: IMarca[];
 }
 
@@ -78,8 +79,6 @@ export interface IcvMaintenance {
   tipo_descripcion: string;
   tipo: string;
 }
-
-
 
 export interface IMarca {
   id_marca: number;

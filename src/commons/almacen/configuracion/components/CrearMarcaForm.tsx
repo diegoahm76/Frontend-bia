@@ -12,6 +12,7 @@ import CrearMarcaModal from './modales/CrearMarcaModal';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { activate_deactivate_marca_service, delete_marca_service, get_marca_service } from '../store/thunks/MarcaMedidaPorcentajeThunks';
 import { marca_seleccionada } from '../store/slice/MarcaMedidaPorcentajeSlice';
+import { Title } from '../../../../components/Title';
 
 const initial_state_marca_seleccionada = {
  
@@ -161,6 +162,7 @@ const columns: GridColDef[] = [
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+        <Title title="Marca  "></Title>
         <Grid item xs={12}>
         
           <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>

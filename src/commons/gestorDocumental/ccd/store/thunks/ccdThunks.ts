@@ -1,18 +1,56 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-unreachable */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { type Dispatch } from 'react';
 import { api } from '../../../../../api/axios';
 import { type AxiosError, type AxiosResponse } from 'axios';
+import Swal from 'sweetalert2';
+import { toast, type ToastContent } from 'react-toastify';
 // Reducers
 // Interfaces
 import { get_ccd_current, get_ccds } from '../slices/ccdSlice';
 import { get_series_service } from './seriesThunks';
 // import { get_subseries_service } from './subseriesThunks';
 import { type DataCambioCCDActual } from '../../interfaces/ccd';
-import { control_error, control_success, notification_error } from '../../utils/success_errors';
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const notification_error = async (
+  message = 'Algo pasó, intente de nuevo',
+  text = ''
+) =>
+  await Swal.mixin({
+    position: 'center',
+    icon: 'error',
+    title: message,
+    text,
+    showConfirmButton: true,
+    confirmButtonText: 'Aceptar'
+  }).fire();
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const control_error = (message: ToastContent) =>
+  toast.error(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light'
+  });
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const control_success = (message: ToastContent) =>
+  toast.success(message, {
+    position: 'bottom-right',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: 'light'
+  });
 
 // Obtener los CCDS terminados
 export const get_finished_ccd_service = (): any => {
@@ -43,7 +81,9 @@ export const get_classification_ccds_service = (
         `gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`
       );
       console.log(name, version, 'name, version');
-     
+      dispatch(get_ccds(data.data));
+      dispatch(get_ccd_current(id_ccd === undefined ? data.data[0] : data.data.find((ccd: any) => ccd.id_ccd === id_ccd)));
+      get_series_service(id_ccd)(dispatch);
       // console.log('helllooo');
       if (name === '' || version === '') {
         await notification_error(
@@ -51,10 +91,6 @@ export const get_classification_ccds_service = (
         );
       } else if (data.data.length === 0) {
         await notification_error(`No se encontró el CCD ${name} - ${version}`);
-      }else{
-        dispatch(get_ccds(data.data));
-        dispatch(get_ccd_current(id_ccd === undefined ? data.data[0] : data.data.find((ccd: any) => ccd.id_ccd === id_ccd)));
-        get_series_service(id_ccd)(dispatch);
       }
       return data;
     } catch (error: any) {
@@ -105,9 +141,20 @@ export const to_finished_ccds_service: any = (
     getState: any
   ): Promise</* AxiosResponse | AxiosError */ any > => {
     try {
+
+
+      if(ccd_current.id_ccd === undefined || ccd_current.id_ccd === 0 || ccd_current.id_ccd === null){
+        // Mostrar una alerta antes de continuar
+        throw new Error('La propiedad "id_ccd" de ccd_current es falsa.');
+        alert('La propiedad "id" de ccd_current es falsa.');
+        return;
+      }
+
+
+
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(
-        `gestor/ccd/finish/${id_ccd}/`
+        `gestor/ccd/finish/${id_ccd}`
       );
       //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
       // ? revisar la manera en la que está recibiendo los parametros
@@ -119,7 +166,7 @@ export const to_finished_ccds_service: any = (
       return data;
     } catch (error: any) {
       console.log(error)
-      control_error(`Error al finalizar el CCD: ${error.response.data.detail}`);
+      control_error('No se pudo finalizar el CCD, no hay ccd actual disponible para finalizar');
       // return error as AxiosError;
     }
   };
@@ -212,31 +259,32 @@ export const create_ccds_service: any = (
 };
 // Update Cuadro de Clasificación Documental
 export const update_ccds_service: any = (
-  update_ccd: any,
   data_create_ccd: any,
 ) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<any> => {
+
+    // console.log(data_create_ccd, 'ccd_current')
+    // console.log(formData, 'formData')
+    // const { ccd_current } = getState().ccd;
     try {
       const id_ccd: number = data_create_ccd.id_ccd;
-
-      const requestData = {
+      const { data } = await api.patch(`gestor/ccd/update/${id_ccd}/`, {
         ...data_create_ccd,
         nombre: data_create_ccd.nombre_ccd,
         version: data_create_ccd.version,
-      };
-
-      // Verificar si ruta_soporte existe en data_create_ccd antes de incluirla en la solicitud PATCH
-      if (data_create_ccd.ruta_soporte) {
-        requestData.ruta_soporte = data_create_ccd.ruta_soporte;
-      }
-
-      const { data } = await api.patch(`gestor/ccd/update/${id_ccd}/`, requestData);
-
+        ruta_soporte: data_create_ccd.ruta_soporte,
+      });
+      console.log(
+        '🚀 ~ file: ccds.ts ~ line 164 ~ return ~ data',
+        data.data
+      )
+      console.log(data_create_ccd, 'data_create_ccd')
       dispatch(get_ccd_current(data.data));
       control_success(data.detail);
+      // return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
@@ -293,4 +341,3 @@ export const cambio_ccd_actual: any = (data_cambio: DataCambioCCDActual) => {
     }
   };
 };
-

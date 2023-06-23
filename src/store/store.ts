@@ -74,6 +74,7 @@ const app_reducers = combineReducers({
   solicitud_vivero: solicitud_vivero_slice.reducer,
   reportes_recaudo: reportes_recaudo_slice.reducer,
   slice_series_and_subseries: seriesAndSubseriesSlice.reducer
+
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

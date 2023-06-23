@@ -205,7 +205,7 @@ const SeleccionarBienPreparacion = () => {
                 {  
                     const new_bien: IObjPreparacionBienes = {
                         id_item_preparacion_mezcla: current_bien.id_bien,
-                        cantidad_usada: data.cantidad_usada,
+                        cantidad_usada: Number(data.cantidad_usada),
                         nombre_bien: current_bien.nombre_bien,
                         codigo_bien: current_bien.codigo_bien,
                         observaciones: data.observaciones,
