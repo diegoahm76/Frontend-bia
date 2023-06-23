@@ -21,11 +21,10 @@ import AddIcon from '@mui/icons-material/Add';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
 import { ModalContext } from '../../context/ModalContext';
-import { columns } from './../../../../seguridad/screens/AuditoriaScreen/utils/colums';
 import { AvatarStyles } from '../crearSeriesCcdDialog/utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { getCatalogoSeriesYSubseries } from './services/CatalogoSeriesYSubseries.service';
+import { delete_independiente_serie_service, getCatalogoSeriesYSubseries } from './services/CatalogoSeriesYSubseries.service';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 /* eslint-disable @typescript-eslint/naming-convention */
 export const CatalogoSeriesYSubseries = () => {
@@ -39,10 +38,12 @@ export const CatalogoSeriesYSubseries = () => {
   const { closeModalModalSeriesAndSubseries, modalSeriesAndSubseries } =
     useContext(ModalContext);
 
-  const [series_ccd, set_series_ccd] = useState<any[]>([]);
-  // const [columns, set_columns] = useState<any[]>([]);
+    const delete_independente_series = (id_serie_doc: number) => {
+      console.log('delete_independente_series', id_serie_doc);
+      void dispatch(delete_independiente_serie_service(id_serie_doc));
+    };
 
- /*  useEffect(() => {
+  /*  useEffect(() => {
     console.log('useEffect, getCatalogoSeriesYSubseries');
     console.log(ccd_current);
     dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
@@ -59,8 +60,8 @@ export const CatalogoSeriesYSubseries = () => {
     {
       headerName: 'Código serie',
       field: 'codigo_serie',
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 120,
+      maxWidth: 150,
       flex: 1
     },
     {
@@ -73,8 +74,8 @@ export const CatalogoSeriesYSubseries = () => {
     {
       headerName: 'Código subserie',
       field: 'codigo_subserie',
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 120,
+      maxWidth: 150,
       flex: 1
     },
     {
@@ -83,59 +84,30 @@ export const CatalogoSeriesYSubseries = () => {
       minWidth: 200,
       maxWidth: 235,
       flex: 1,
-      renderCell: (params: any) => (
-        <>
-          <IconButton onClick={() => {
-            console.log('params', params);
-          }}>
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <EditIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-          {/* <IconButton onClick={() => {
-            console.log('params', params);
-          }}>
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <DeleteIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton> */}
-        </>
-      )
-    }
-  ];
-  /*    {
-        headerName: 'Acciones',
-        field: 'accion',
-        minWidth: 200,
-        maxWidth: 235,
-        flex: 1,
-        renderCell: (params: any) => (
+      renderCell: (params: any) => {
+        return params.row.codigo_subserie === null ? (
           <>
-            <IconButton onClick={() => {
-              console.log('params', params);
-            }}>
-              <Avatar sx={AvatarStyles} variant="rounded">
-                <EditIcon
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                />
-              </Avatar>
-            </IconButton>
-            <IconButton onClick={() => {
-              console.log('params', params);
-            }}>
+            <IconButton
+              onClick={() => {
+                console.log('params', params);
+                delete_independente_series(params.row.id_serie_doc);
+              }}
+            >
               <Avatar sx={AvatarStyles} variant="rounded">
                 <DeleteIcon
+
+                  titleAccess="Eliminar serie independiente"
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
               </Avatar>
             </IconButton>
           </>
-        )
-      } */
+        ) : (
+          <></>
+        );
+      }
+    }
+  ];
 
   return (
     <Dialog
@@ -154,13 +126,13 @@ export const CatalogoSeriesYSubseries = () => {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Grid item xs={12} sx={{ width: 700 }}>
+        <Grid item xs={12} sx={{ width: 670 }}>
           <DataGrid
             density="compact"
             autoHeight
             rows={seriesAndSubseries}
             columns={columns}
-            pageSize={10}
+            pageSize={5}
             rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) => row.id_catalogo_serie}
