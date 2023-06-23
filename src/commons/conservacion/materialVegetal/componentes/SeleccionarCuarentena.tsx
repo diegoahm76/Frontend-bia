@@ -319,7 +319,7 @@ useEffect(() => {
             {
               datum_type: "input_controller",
               xs: 12,
-              md: 12,
+              md: 9,
               control_form: control_cuarentena,
               control_name: "descrip_corta_diferenciable",
               default_value: "",

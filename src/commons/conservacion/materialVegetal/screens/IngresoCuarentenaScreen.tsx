@@ -195,6 +195,11 @@ useEffect(() => {
       const data_edit = {
         ...data, fecha_cuarentena: fecha.slice(0, 10) + " " + fecha.slice(11, 19), cantidad_cuarentena: Number(data.cantidad_cuarentena)
       }
+      const aux = {
+        data_ingreso_cuarentena: { ...data_edit },
+        ruta_archivo_soporte: data.ruta_archivo_soporte
+      }
+      console.log(aux)
       form_data.append('data_ingreso_cuarentena', JSON.stringify({ ...data_edit }));
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
       void dispatch(add_plant_quarantine_service(form_data));
@@ -208,6 +213,7 @@ useEffect(() => {
       fecha_anulacion: data.fecha_anulacion,
       id_persona_anula: data.id_persona_anula,
     }
+    console.log(data_annul)
     if (current_plant_quarantine.id_cuarentena_mat_vegetal !== null && current_plant_quarantine.id_cuarentena_mat_vegetal !== undefined) {
       void dispatch(annul_plant_quarantine_service(current_plant_quarantine.id_cuarentena_mat_vegetal, data_annul));
     }

@@ -15,6 +15,7 @@ interface IRules {
 interface IProps {
     xs: number;
     md: number;
+    margin?: number;
     control_form: any;
     control_name: string;
     default_value: string | number | null;
@@ -46,7 +47,8 @@ const FormInputController = ({
     rows_text,
     on_blur_function,
     set_value,
-    hidden_text
+    hidden_text,
+    margin
 }: IProps) => {
     
 
@@ -56,7 +58,7 @@ const FormInputController = ({
     return (
         <>
         {(!(hidden_text ?? false)) &&
-            <Grid item xs={xs} md={md}>
+            <Grid item xs={xs} md={md} margin={margin ?? 0}>
                 {type!== "file" ?
                 <Controller
                     name={control_name}
@@ -75,7 +77,7 @@ const FormInputController = ({
                             variant="outlined"
                             type={type}
                             disabled={disabled}
-                            value={value}
+                            value={value===null ? "": value}
                             multiline={multiline_text ?? false}
                             rows={rows_text ?? 1}
                             onChange={onChange}
