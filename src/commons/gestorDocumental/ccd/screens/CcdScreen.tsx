@@ -491,14 +491,16 @@ export const CcdScreen: React.FC = () => {
                         onChange={(selectedOption: any) => {
                           // Actualiza el valor seleccionado en el controlador
                           // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
-                          if (!selectedOption.value) {
-                            onChange(null);
+                          onChange(selectedOption);
+                          dispatch(get_serie_ccd_current(selectedOption.value));
+                          /* if (!selectedOption.value) {
+                            // onChange(null);
                             console.log(selectedOption.value);
                           } else {
                             onChange(selectedOption);
-
                             dispatch(get_serie_ccd_current(selectedOption.value));
-                          }
+
+                          } */
                           //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
                           console.log('Valor seleccionado:', selectedOption);
                         }}

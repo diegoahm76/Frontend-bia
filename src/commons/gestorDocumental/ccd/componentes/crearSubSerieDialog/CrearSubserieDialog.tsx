@@ -47,7 +47,7 @@ const CrearSubSerieCcdDialog = ({
     (state: any) => state.subseries
   );
   const { ccd_current } = useAppSelector((state: any) => state.ccd);
-  const [title_button, set_title_button] = useState('Agregar');
+  const [title_button, set_title_button] = useState('Guardar');
 
   //! Dispatch instance
   const dispatch: any = useAppDispatch();
@@ -64,6 +64,22 @@ const CrearSubSerieCcdDialog = ({
   const data = watch();
   console.log(data);
 
+  /* const columns = [
+    { field: 'id', headerName: 'ID', width: 100 },
+    { 
+      field: 'name', 
+      headerName: 'Nombre', 
+      width: 200, 
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    { field: 'age', headerName: 'Edad', width: 150 },
+  ]; */
+  
+
   //! useEffect to change the title of the button and set the values of the form
   /*  useEffect(() => {
     if (subseries_ccd_current !== null) {
@@ -76,7 +92,7 @@ const CrearSubSerieCcdDialog = ({
       set_title_button('Actualizar');
     } else {
       reset(initial_state);
-      set_title_button('Agregar');
+      set_title_button('Guardar');
     }
     return () => {
       dispatch(get_serie_ccd_current(null));
@@ -93,7 +109,7 @@ const CrearSubSerieCcdDialog = ({
       id_serie_doc,
     });
 
-    set_title_button(subseries_ccd_current ? 'Actualizar' : 'Agregar');
+    set_title_button(subseries_ccd_current ? 'Actualizar' : 'Guardar');
 
     return () => {
       dispatch(get_serie_ccd_current(null));
@@ -119,7 +135,7 @@ const CrearSubSerieCcdDialog = ({
   // Función para limpiar el formulario
   const reset_form = (): void => {
     reset(initial_state);
-    set_title_button('Agregar');
+    set_title_button('Guardar');
   };
 
   // Crear subseries
@@ -129,7 +145,7 @@ const CrearSubSerieCcdDialog = ({
       nombre: data.nombre,
     };
     const newSeries =
-      title_button === 'Agregar'
+      title_button === 'Guardar'
         ? {
             nombre: data.nombre,
             codigo: Number(data.codigo),
@@ -137,7 +153,7 @@ const CrearSubSerieCcdDialog = ({
           }
         : updatedSeries;
     const action =
-      title_button === 'Agregar'
+      title_button === 'Guardar'
         ? create_sub_series_service(newSeries, reset_form)
         : update_sub_series_service(updatedSeries, data, reset_form);
     void dispatch(action);

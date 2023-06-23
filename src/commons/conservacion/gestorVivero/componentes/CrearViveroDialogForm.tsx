@@ -432,7 +432,7 @@ const CrearViveroDialogForm = ({
                         ? error.type === 'required'
                           ? 'El area de propagacion es requerida'
                           : `El valor del área de propagación debe ser menor al área total (${
-                              get_values('area_mt2') ?? ''
+                              getValues('area_mt2') ?? ''
                             })`
                         : 'Ingrese area'
                     }
