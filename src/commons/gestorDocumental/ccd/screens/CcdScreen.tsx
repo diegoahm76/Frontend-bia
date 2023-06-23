@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -47,10 +46,10 @@ import { ModalContext } from '../context/ModalContext';
 import { CatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/CatalogoSeriesYSubseries';
 import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
-
   const { openModalModalSeriesAndSubseries } = useContext(ModalContext);
 
   const dispatch: any = useAppDispatch();
@@ -384,6 +383,18 @@ export const CcdScreen: React.FC = () => {
                 />
               </Grid>
 
+              <Grid item xs={12} sm={3}>
+                <DownloadButton
+                  fileName="ruta_soporte"
+                  condition={
+                    ccd_current === null ||
+                    ccd_current?.ruta_soporte === null ||
+                    ccd_current?.ruta_soporte === ''
+                  }
+                  fileUrl={ccd_current?.ruta_soporte}
+                />
+              </Grid>
+
               {/* end new spaces */}
             </Grid>
             <Stack
@@ -435,9 +446,7 @@ export const CcdScreen: React.FC = () => {
                 type="submit"
                 color="primary"
                 variant="contained"
-                startIcon={
-                  ccd_current != null ? <SyncIcon/> : <SaveIcon />
-                }
+                startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </Button>
@@ -487,9 +496,7 @@ export const CcdScreen: React.FC = () => {
                             console.log(selectedOption.value);
                           } else {
                             onChange(selectedOption);
-                            dispatch(
-                              serie_ccd_current(selectedOption.value)
-                            );
+                            dispatch(serie_ccd_current(selectedOption.value));
                           }
                           //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
                           console.log('Valor seleccionado:', selectedOption);
@@ -560,7 +567,7 @@ export const CcdScreen: React.FC = () => {
                         Campo obligatorio
                       </small>
                     </div>
-                  )} 
+                  )}
                 </Grid>
 
                 <Grid item xs={12} sm={4}>
@@ -767,9 +774,7 @@ export const CcdScreen: React.FC = () => {
                     variant="contained"
                     startIcon={<SaveIcon />}
                   >
-                    {
-                      title_button_asing
-                    }
+                    {title_button_asing}
                   </Button>
                 </Grid>
               </Grid>
