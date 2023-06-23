@@ -39,6 +39,7 @@ export interface IObjDistribucion {
   unidad_medida?: string | null;
   codigo_bien?: string | null;
   nombre_bien?: string | null;
+ 
 }
 
 export interface IObjItem {
@@ -58,6 +59,7 @@ export interface IObjItem {
   cantidad_restante?: number | null;
   cod_tipo_elemento_vivero?: string | null;
   es_semilla_vivero?: boolean | null;
+  
 }
 
 export interface IDespacho {
@@ -176,13 +178,17 @@ export interface IObjBienBaja {
   consec_cuaren_por_lote_etapa?: number | null;
   nombre_bien?: string | null;
   codigo_bien?: string | null;
+  cod_tipo_elemento_vivero?: string | null;
   tipo_bien?: string | null;
+
 }
 export interface IObjBien {
   id_bien: number | null;
   codigo_bien: string | null;
   nombre: string | null;
-  tipo_bien: string | null;
+  cod_tipo_elemento_vivero?: string | null;
   saldo_disponible: number | null;
   unidad_medida: string | null;
+  tipo_bien?: string | null;
+
 }

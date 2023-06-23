@@ -63,7 +63,7 @@ const initial_state_current_nursery = {
 const initial_state_person: Persona = {
   id_persona: null,
   tipo_persona: "",
-  tipo_documento: "",
+  tipo_documento: null,
   numero_documento: "",
   primer_nombre: "",
   segundo_nombre: "",

@@ -245,7 +245,7 @@ export function AdministrarViveroScreen(): JSX.Element {
             </IconButton>
           </Tooltip>
 
-          {params.row.activo === true && params.row.id_viverista_actual ?
+          {(params.row.activo === true && params.row.id_viverista_actual) ?
             <>
               <Tooltip title={params.row.en_funcionamiento ? "Cerrar" : "Abrir"}>
 
