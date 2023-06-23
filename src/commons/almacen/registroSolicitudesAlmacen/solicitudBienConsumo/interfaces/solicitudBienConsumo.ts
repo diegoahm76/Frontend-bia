@@ -6,6 +6,8 @@ export interface ISolicitudConsumo {
   bienes_solicitud: IObjBienesSolicitud[]; // solicit;ud bienes por crear
   bienes: IObjBienConsumo[];
   current_bien: IObjBienConsumo;
+  bienes_vivero: IObjBienViveroConsumo[];
+  current_bien_vivero: IObjBienViveroConsumo;
   persona_solicita: IObjPersonaSolicita;
   funcionarios: IObjFuncionario[];
   current_funcionario: IObjFuncionario;
@@ -56,6 +58,41 @@ export interface UnidadesMedida {
 }
 
 export interface IObjBienConsumo {
+  id_bien?: number | null;
+  marca?: string | null;
+  nombre_padre?: string | null;
+  unidad_medida?: string | null;
+  unidad_medida_vida_util?: string | null;
+  porcentaje_iva?: number | null;
+  codigo_bien?: string | null;
+  nro_elemento_bien?: number | null;
+  nombre?: string | null;
+  cod_tipo_bien?: string | null;
+  cod_tipo_activo?: string | null;
+  nivel_jerarquico?: number | null;
+  nombre_cientifico?: string | null;
+  descripcion?: string | null;
+  doc_identificador_nro?: number | null;
+  cod_metodo_valoracion?: string | null;
+  cod_tipo_depreciacion?: string | null;
+  cantidad_vida_util?: number | null;
+  valor_residual?: number | null;
+  stock_minimo?: number | null;
+  stock_maximo?: number | null;
+  solicitable_vivero?: boolean | null;
+  es_semilla_vivero?: boolean | null;
+  cod_tipo_elemento_vivero?: string | null;
+  tiene_hoja_vida?: boolean | null;
+  maneja_hoja_vida?: boolean | null;
+  visible_solicitudes?: boolean | null;
+  id_marca?: number | null;
+  id_unidad_medida?: number | null;
+  id_porcentaje_iva?: number | null;
+  id_unidad_medida_vida_util?: number | null;
+  id_bien_padre?: number | null;
+}
+
+export interface IObjBienViveroConsumo {
   id_bien?: number | null;
   marca?: string | null;
   nombre_padre?: string | null;

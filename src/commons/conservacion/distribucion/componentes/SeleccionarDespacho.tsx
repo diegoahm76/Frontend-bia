@@ -158,6 +158,10 @@ const SeleccionarDespacho = ({
                     button_submit_label='Buscar despachos'
                     form_inputs={[
                         {
+                            datum_type: "title",
+                            title_label: "Informacion del despacho"
+                        },
+                        {
                         datum_type: "select_controller",
                         xs: 12,
                         md: 5,

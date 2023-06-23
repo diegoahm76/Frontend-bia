@@ -124,8 +124,7 @@ const SolicitudConsumoScreen = () => {
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitud
                     control_solicitud={control_solicitud}
-                    get_values={get_values}
-
+                    get_values={get_values} title={''}
                 />
                 {current_solicitud.solicitud_anulada_solicitante !== true &&
                     <>

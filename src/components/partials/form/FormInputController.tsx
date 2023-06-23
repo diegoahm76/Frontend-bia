@@ -75,7 +75,7 @@ const FormInputController = ({
                             variant="outlined"
                             type={type}
                             disabled={disabled}
-                            value={value}
+                            value={value===null ? "": value}
                             multiline={multiline_text ?? false}
                             rows={rows_text ?? 1}
                             onChange={onChange}

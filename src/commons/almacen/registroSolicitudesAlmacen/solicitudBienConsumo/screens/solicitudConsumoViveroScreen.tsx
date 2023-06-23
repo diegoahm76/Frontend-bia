@@ -9,7 +9,6 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_num_solicitud_vivero, get_uni_organizacional, get_medida_service, anular_solicitud_service, crear_solicitud_bien_consumo_vivero, get_person_id_service, get_funcionario_id_service } from '../store/solicitudBienConsumoThunks';
-import { Title } from '../../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
 
 
@@ -18,6 +17,7 @@ import AnularSolicitudModal from '../components/AnularSolicitudVivero';
 import SeleccionarSolicitudVivero from '../components/componenteBusqueda/SeleccionarSolicitudVivero';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
+import { Title } from '../../../../../components/Title';
 // import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
 
 
@@ -127,6 +127,7 @@ const SolicitudConsumoViveroScreen = () => {
                 <SeleccionarSolicitudVivero
                     control_solicitud_vivero={control_solicitud_vivero}
                     get_values={get_values}
+                    title={"Solicitudes a vivero"}
 
                 />
 
