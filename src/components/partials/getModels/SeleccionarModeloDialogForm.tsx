@@ -189,9 +189,9 @@ const SeleccionarModeloDialogForm = ({
                 margin: 4
             }}>
            
-            <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
+            {/* <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
         
-            <Divider />
+            <Divider /> */}
 
 
 
