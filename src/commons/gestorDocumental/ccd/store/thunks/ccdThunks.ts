@@ -68,7 +68,7 @@ export const get_finished_ccd_service = (): any => {
 export const get_classification_ccds_service = (
   name: string,
   version: string,
-  id_ccd?: any,
+  id_ccd?: any
 ): any => {
   // console.log('get_classification_ccds_service');
 
@@ -80,10 +80,8 @@ export const get_classification_ccds_service = (
       const { data } = await api.get(
         `gestor/ccd/get-busqueda/?nombre=${name}&version=${version}`
       );
-      console.log(name, version, 'name, version');
-      dispatch(get_ccds(data.data));
-      dispatch(get_ccd_current(id_ccd === undefined ? data.data[0] : data.data.find((ccd: any) => ccd.id_ccd === id_ccd)));
-      get_series_service(id_ccd)(dispatch);
+      // console.log(name, version, 'name, version');
+
       // console.log('helllooo');
       if (name === '' || version === '') {
         await notification_error(
@@ -91,6 +89,16 @@ export const get_classification_ccds_service = (
         );
       } else if (data.data.length === 0) {
         await notification_error(`No se encontró el CCD ${name} - ${version}`);
+      } else {
+        dispatch(get_ccds(data.data));
+        dispatch(
+          get_ccd_current(
+            id_ccd === undefined
+              ? data.data[0]
+              : data.data.find((ccd: any) => ccd.id_ccd === id_ccd)
+          )
+        );
+        get_series_service(id_ccd)(dispatch);
       }
       return data;
     } catch (error: any) {
@@ -100,27 +108,23 @@ export const get_classification_ccds_service = (
   };
 };
 
-
 // Reanudar Cuadro de Clasificación Documental
 export const to_resume_ccds_service: any = (
   set_flag_btn_finish: (arg0: boolean) => void,
-  ccd_current:  any,
+  ccd_current: any,
 ) => {
-  return async (
-    dispatch: Dispatch<any>,
-    getState: any
-  ): Promise<any> => {
+  return async (dispatch: Dispatch<any>, getState: any): Promise<any> => {
     // const { ccd_current } = getState().CCD;
-    console.log(ccd_current, 'ccd_current')
+    console.log(ccd_current, 'ccd_current');
     try {
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(`gestor/ccd/resume/${id_ccd}/`);
       console.log(data, 'data');
-     /* dispatch(
+      dispatch(
         get_classification_ccds_service(ccd_current.nombre, ccd_current.version)
       );
+      control_success(data.detail);
       set_flag_btn_finish(false);
-      control_success(data.detail); */
       // return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -129,33 +133,30 @@ export const to_resume_ccds_service: any = (
   };
 };
 
-
-
 //! Finalizar Cuadro de Clasificación Documental
 export const to_finished_ccds_service: any = (
   set_flag_btn_finish: (arg0: boolean) => void,
-  ccd_current: any,
+  ccd_current: any
 ) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
-  ): Promise</* AxiosResponse | AxiosError */ any > => {
+  ): Promise</* AxiosResponse | AxiosError */ any> => {
     try {
-
-
-      if(ccd_current.id_ccd === undefined || ccd_current.id_ccd === 0 || ccd_current.id_ccd === null){
+      if (
+        ccd_current.id_ccd === undefined ||
+        ccd_current.id_ccd === 0 ||
+        ccd_current.id_ccd === null
+      ) {
         // Mostrar una alerta antes de continuar
         throw new Error('La propiedad "id_ccd" de ccd_current es falsa.');
         alert('La propiedad "id" de ccd_current es falsa.');
         return;
       }
 
-
-
       const id_ccd: number = ccd_current.id_ccd;
-      const { data } = await api.put(
-        `gestor/ccd/finish/${id_ccd}`
-      );
+      console.log(id_ccd, 'id_ccd');
+      const { data } = await api.put(`gestor/ccd/finish/${id_ccd}/`);
       //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
       // ? revisar la manera en la que está recibiendo los parametros
       dispatch(
@@ -165,14 +166,14 @@ export const to_finished_ccds_service: any = (
       set_flag_btn_finish(true);
       return data;
     } catch (error: any) {
-      console.log(error)
-      control_error('No se pudo finalizar el CCD, no hay ccd actual disponible para finalizar');
+      console.log(error);
+      control_error(
+        error.response.data.detail
+      );
       // return error as AxiosError;
     }
   };
 };
-
-
 
 /*
 
@@ -231,11 +232,6 @@ export const to_finished_ccds_service: any = (
 
 */
 
-
-
-
-
-
 // Crear Cuadro de Clasificación Documental (CCD)
 export const create_ccds_service: any = (
   ccd: any,
@@ -259,30 +255,24 @@ export const create_ccds_service: any = (
 };
 // Update Cuadro de Clasificación Documental
 export const update_ccds_service: any = (
-  data_create_ccd: any,
+  formData: any,
+  data_create_ccd: any
 ) => {
-  return async (
-    dispatch: Dispatch<any>,
-    getState: any
-  ): Promise<any> => {
-
+  return async (dispatch: Dispatch<any>, getState: any): Promise<any> => {
     // console.log(data_create_ccd, 'ccd_current')
     // console.log(formData, 'formData')
     // const { ccd_current } = getState().ccd;
     try {
       const id_ccd: number = data_create_ccd.id_ccd;
-      const { data } = await api.patch(`gestor/ccd/update/${id_ccd}/`, {
-        ...data_create_ccd,
-        nombre: data_create_ccd.nombre_ccd,
-        version: data_create_ccd.version,
-        ruta_soporte: data_create_ccd.ruta_soporte,
-      });
-      console.log(
-        '🚀 ~ file: ccds.ts ~ line 164 ~ return ~ data',
-        data.data
-      )
-      console.log(data_create_ccd, 'data_create_ccd')
-      dispatch(get_ccd_current(data.data));
+      const { data } = await api.patch(
+        `gestor/ccd/update/${id_ccd}/`,
+        formData
+      );
+      console.log('🚀 ~ file: ccds.ts ~ line 164 ~ return ~ data', data);
+      // console.log(data_create_ccd, 'data_create_ccd')
+      dispatch(
+        get_ccd_current(data.data)
+      );
       control_success(data.detail);
       // return data;
     } catch (error: any) {
