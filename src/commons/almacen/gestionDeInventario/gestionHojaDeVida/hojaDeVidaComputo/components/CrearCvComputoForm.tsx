@@ -92,7 +92,7 @@ const CrearCvComputoForm = ({
       data.observaciones_adicionales
     );
     form_data.append('otras_aplicaciones', data.otras_aplicaciones);
-    form_data.append('id_marca', data.id_marca?.toString());
+    form_data.append('id_marca', data.id_marca);
     form_data.append('id_articulo', (data.id_articulo ?? "").toString());
     // form_data.append('ruta_imagen_foto', file === null ? '' : file);
 

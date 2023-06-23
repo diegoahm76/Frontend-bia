@@ -53,6 +53,7 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                             label="Marca"
                             size="small"
                             required
+                            disabled
                             fullWidth
                             value={marca}
                             InputProps={{
@@ -65,6 +66,7 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                             label={tipo_columna}
                             size="small"
                             required
+                            disabled
                             fullWidth
                             value={codigo_bien}
                             InputProps={{
@@ -77,6 +79,7 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                             label="Modelo"
                             size="small"
                             required
+                            disabled
                             fullWidth
                             value={descripcion}
                             InputProps={{
@@ -89,6 +92,7 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                             label="Kilometraje"
                             size="small"
                             required
+                            disabled
                             fullWidth
                             value={porcentaje_iva}
                             InputProps={{

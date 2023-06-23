@@ -17,7 +17,7 @@ export const search_avance = async ({
     nombre_PORH,
     nombre_avances,
 }: BusquedaAvance): Promise<AxiosResponse<ResponseServer<InfoAvance[]>>> => {
-    const url = `hidrico/programas/get/avanzada/programas/?nombre_proyecto=${String(nombre_proyecto ?? '')}&nombre_programa=${String(nombre_programa ?? '')}&nombre_PORH=${String(nombre_PORH ?? '')}&nombre_avances=${String(nombre_avances ?? '')}`;
+    const url = `hidrico/programas/get/avanzada/avances/?nombre_proyecto=${String(nombre_proyecto ?? '')}&nombre_programa=${String(nombre_programa ?? '')}&nombre_PORH=${String(nombre_PORH ?? '')}&nombre_avances=${String(nombre_avances ?? '')}`;
     return await api.get<ResponseServer<InfoAvance[]>>(url);
 };
 
@@ -38,4 +38,32 @@ export const agregar_avance = async (
         datos
     );
     return response.data;
+};
+
+export const editar_avance = async (
+    id_avance: number,
+    datos: FormData
+): Promise<any> => {
+    const response = await api.put(
+        `hidrico/programas/actualizar/evidencia/avance/proyecto/${id_avance}/`,
+        datos
+    );
+    return response.data;
+};
+
+
+export const get_empty_info_porh = (): InfoPorh => {
+    return {
+        id_proyecto: 0,
+        nombre_programa: '',
+        nombre_PORH: null,
+        fecha_inicio: null,
+        fecha_fin: null,
+        nombre: '',
+        vigencia_inicial: '',
+        vigencia_final: '',
+        inversion: 0,
+        fecha_registro: '',
+        id_programa: 0,
+    };
 };

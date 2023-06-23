@@ -7,11 +7,12 @@ import { api } from '../../../../../api/axios';
 import { type AxiosError, type AxiosResponse } from 'axios';
 // Reducers
 import { get_series_ccd } from '../slices/seriesSlice';
-import {
-  control_error,
-  control_success,
-  // notification_error
-} from '../../utils/success_errors';
+import { control_error, control_success } from '../utils/success_errors';
+
+
+// Interfaces
+// import { type ISeriesObject } from '../../interfaces/ccd';
+
 
 // ! get action for series
 export const get_series_service: any = (id_ccd: string) => {
@@ -36,7 +37,7 @@ export const get_series_service: any = (id_ccd: string) => {
 //! post action for create series
 export const create_series_service: any = (body: any, clean: () => void) => {
   return async (
-    dispatch: Dispatch<any>,
+    dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
       const { data } = await api.post(`gestor/ccd/series/create/`, body);
@@ -58,7 +59,7 @@ export const delete_series_service: any = (
   clean: () => void
 ) => {
   return async (
-    dispatch: Dispatch<any>,
+    dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
       const response = await api.delete(
@@ -66,7 +67,10 @@ export const delete_series_service: any = (
       );
       dispatch(get_series_service(params_ccd_info.row.id_ccd));
       clean();
-      console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', response.data);
+      console.log(
+        '🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data',
+        response.data
+      );
 
       control_success(response.data.detail);
       return response.data;
@@ -84,7 +88,7 @@ export const update_series_data = (
   clean: () => void
 ) => {
   return async (
-    dispatch: Dispatch<any>,
+    dispatch: Dispatch<any>
   ): Promise<AxiosResponse | AxiosError> => {
     try {
       const id_ser_doc = updatedData.id_serie_doc;
@@ -95,6 +99,33 @@ export const update_series_data = (
       dispatch(get_series_service(ccd_current?.id_ccd));
       clean();
       console.log('🚀 ~ file: seriesThunks.ts ~ line 78 ~ return ~ data', data);
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+export const create_indepent_series_service: any = (
+  body: any,
+  // clean: () => void
+) => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      console.log(body)
+      const { data } = await api.post(
+        `gestor/ccd/catalogo/serie-subserie/create/`,
+        {
+          id_serie_doc: body,
+        }
+      );
+      // dispatch(get_series_service(body.id_ccd));
+      // clean();
+      console.log('🚀 ~', data);
       control_success(data.detail);
       return data;
     } catch (error: any) {
