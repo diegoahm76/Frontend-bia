@@ -340,7 +340,8 @@ const use_ccd = () => {
     void dispatch(create_ccds_service(formData, set_save_ccd));
   };
 
-  const update_ccd = (data_create_ccd: any): void => {
+  const 
+  update_ccd = (data_create_ccd: any): void => {
     const updatedCCD: any = {
       id_organigrama: data_create_ccd.organigrama.value,
       version: data_create_ccd.version,
@@ -355,8 +356,7 @@ const use_ccd = () => {
 
     // Convertir el objeto new_ccd en un objeto FormData
     const formData: any = new FormData();
-
-    // formData.append('id_organigrama', String(updatedCCD.id_organigrama));
+    formData.append('id_organigrama', String(updatedCCD.id_organigrama));
     formData.append('version', String(updatedCCD.version));
     if (updatedCCD.nombre !== null || updatedCCD.nombre !== undefined) {
       formData.append('nombre', updatedCCD.nombre);
@@ -384,7 +384,7 @@ const use_ccd = () => {
 
     console.log('udpated ccd', updatedCCD);
     // void dispatch(create_ccds_service(formData, set_save_ccd));
-
+    // clean_after_update();
     void dispatch(update_ccds_service(formData, data_create_ccd));
   };
 
@@ -450,11 +450,11 @@ const use_ccd = () => {
   };
 
   const clean_after_update = (): void => {
-    /* reset_create_ccd(initial_state);
+    reset_create_ccd(initial_state);
     reset(initial_state_asig);
     set_save_ccd(false);
     dispatch(get_ccd_current(null));
-    clean_asing(); */
+    clean_asing();
     set_list_sries_asignacion([]);
     set_list_subsries([]);
     set_list_sries([]);
@@ -576,6 +576,7 @@ const use_ccd = () => {
     set_title,
     set_create_is_active,
     set_consulta_ccd_is_active,
+    clean_after_update,
     // Functions
     get_row_class,
     on_submit_create_ccd,
@@ -589,7 +590,6 @@ const use_ccd = () => {
     set_create_sub_serie_active
     // file,
     // set_file,
-    clean_after_update,
   };
 };
 

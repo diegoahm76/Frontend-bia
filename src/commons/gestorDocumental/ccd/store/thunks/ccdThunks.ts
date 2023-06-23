@@ -271,10 +271,7 @@ export const update_ccds_service: any = (
       console.log('🚀 ~ file: ccds.ts ~ line 164 ~ return ~ data', data);
       // console.log(data_create_ccd, 'data_create_ccd')
       dispatch(
-        get_ccd_current({
-          id_organigrama: data_create_ccd.id_organigrama,
-          ...data.data
-        })
+        get_ccd_current(data.data)
       );
       control_success(data.detail);
       // return data;
