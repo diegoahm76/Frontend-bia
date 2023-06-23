@@ -130,7 +130,6 @@ const SolicitudConsumoScreen = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
-                mt: '23px',
                 boxShadow: '0px 3px 6px #042F4A26',
 
             }}
@@ -160,7 +159,17 @@ const SolicitudConsumoScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={12} md={4} >
+                <Grid item xs={6} md={3}>
+
+                    <FormButton
+                        variant_button="outlined"
+                        on_click_function={reset_solicitud}
+                        icon_class={<CleaningServicesIcon />}
+                        label={"Limpiar"}
+                        type_button="button"
+                    />
+                </Grid>
+                <Grid item xs={6} md={3}>
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}
@@ -171,15 +180,7 @@ const SolicitudConsumoScreen = () => {
                 </Grid>
 
 
-                    <FormButton
-                        variant_button="outlined"
-                        on_click_function={reset_solicitud}
-                        icon_class={<CloseIcon />}
-                        label={"Cancelar"}
-                        type_button="button"
-                    />
-                </Grid>
-                <Grid item xs={12} md={5}>
+                <Grid item xs={6} md={3}>
 
                     <Button
                         variant="outlined"
@@ -215,5 +216,4 @@ const SolicitudConsumoScreen = () => {
 
 // eslint-disable-next-line no-restricted-syntax
 export default SolicitudConsumoScreen;
-
 

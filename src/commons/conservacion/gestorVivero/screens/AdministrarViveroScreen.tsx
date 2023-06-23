@@ -44,7 +44,7 @@ import { activate_deactivate_nursery_service, delete_nursery_service, get_nurser
 import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
 // // Slices
 import { current_nursery } from '../store/slice/viveroSlice';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+
 const initial_state_current_nursery = {
   id_vivero: null,
   nombre: '',

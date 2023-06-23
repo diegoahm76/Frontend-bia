@@ -15,7 +15,7 @@ const SeleccionarLevantamientoCuarentena = ({
   control_levantamiento
 }: IProps) => {
 
-  const { current_lifting, plant_quarantine_lifting, nurseries, current_plant_quarantine } = useAppSelector((state) => state.material_vegetal);
+  const { current_lifting, plant_quarantine_lifting, current_plant_quarantine } = useAppSelector((state) => state.material_vegetal);
  
   const columns_levantamiento: GridColDef[] = [
     {
