@@ -535,7 +535,6 @@ const use_ccd = () => {
     clean_ccd,
 
     create_sub_serie_active,
-
     set_create_sub_serie_active
     // file,
     // set_file,
