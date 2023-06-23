@@ -11,12 +11,14 @@ import { ConfiguracionesBasicasRoutes } from '../screens/ConfiguracionesBasicas/
 import { SucursalEntidad } from '../components/SucursalEntidad/SucursalEntidad';
 // import  from '../components/SucursalEntidad/SucursalEntidad';
 
+import { ConfiguracionEntidad } from '../components/ConfiguracionEntidad/screens/configuracionEntidad';
 const routes = [
   { path: '/auditoria', element: <AuditoriaScreen /> },
   { path: '/roles', element: <RolesScreen /> },
   { path: '/administracion_usuarios', element: <AdministracionPersonasScreen /> },
   { path: '/delegacion_superusuario', element: <DelegacionSuperuserScreen /> },
   { path: '/sucursal_entidad', element: <SucursalEntidad /> },
+  { path: '/configuracionentidad', element: <ConfiguracionEntidad /> },
 
 ];
 export const SeguridadRoutes: React.FC = () => {
