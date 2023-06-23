@@ -222,11 +222,10 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
           fullWidth
           size="small"
           margin="dense"
-          required
           defaultValue={data.nombre}
           autoFocus
           disabled
-          {...register('nombre', { required: true })}
+          {...register('nombre')}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -241,12 +240,11 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
             onChange={handle_start_date_change}
             renderInput={(params) => (
               <TextField
-                required
                 fullWidth
                 disabled
                 size="small"
                 {...params}
-                {...register('vigencia_inicial', { required: true })}
+                {...register('vigencia_inicial')}
               />
             )}
           />
@@ -264,12 +262,11 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
             onChange={handle_end_date_change}
             renderInput={(params) => (
               <TextField
-                required
                 fullWidth
                 disabled
                 size="small"
                 {...params}
-                {...register('vigencia_final', { required: true })}
+                {...register('vigencia_final')}
               />
             )}
           />
@@ -281,12 +278,11 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
           fullWidth
           size="small"
           margin="dense"
-          required
           autoFocus
           defaultValue={data.inversion}
           type="text"
           disabled
-          {...register('inversion', { required: true })}
+          {...register('inversion')}
         />
       </Grid>
       {rows_actividades.length > 0 && (

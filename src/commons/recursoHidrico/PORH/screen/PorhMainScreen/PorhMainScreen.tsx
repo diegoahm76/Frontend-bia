@@ -2,7 +2,7 @@
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { AgregarPrograma } from '../../components/AgregarNuevoPrograma/AgregarPrograma';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { Avatar, Divider, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -173,12 +173,16 @@ export const PorhMainScreen: React.FC = () => {
     },
   ];
 
+  const [is_saving, set_is_saving] = useState(false);
+
   useEffect(() => {
     void fetch_data_programas();
   }, []);
 
   const on_submit = handle_submit(async (form: any) => {
     try {
+      
+      set_is_saving(true);
       form.id_programa = id_programa;
       form.id_proyecto = id_proyecto;
       await post_programa(
@@ -190,10 +194,12 @@ export const PorhMainScreen: React.FC = () => {
       );
       reset();
       control_success('Se creó correctamente');
+      set_is_saving(false);
       await fetch_data_programas();
       await fetch_data_proyectos();
       await fetch_data_actividades();
     } catch (error: any) {
+      set_is_saving(false);
       control_error(
         error.response.data.detail || 'hubo un error al crear, intenta de nuevo'
       );
@@ -202,10 +208,13 @@ export const PorhMainScreen: React.FC = () => {
 
   const on_submit_editar = handle_submit(async (form: any) => {
     try {
+      set_is_saving(true);
       await editar_programa(id_programa as number, form);
       control_success('Se editó correctamente');
+      set_is_saving(false);
       await fetch_data_programas();
     } catch (error: any) {
+      set_is_saving(false);
       control_error(
         error.response.data.detail ||
           'hubo un error al editar, intenta de nuevo'
@@ -214,10 +223,13 @@ export const PorhMainScreen: React.FC = () => {
   });
   const on_submit_editar_proyecto = handle_submit(async (form: any) => {
     try {
+      set_is_saving(true);
       await editar_proyecto(id_proyecto as number, form);
       control_success('Se editó el proyecto correctamente');
+      set_is_saving(false);
       await fetch_data_proyectos();
     } catch (error: any) {
+      set_is_saving(false);
       control_error(
         error.response.data.detail ||
           'hubo un error al editar, intenta de nuevo'
@@ -228,8 +240,10 @@ export const PorhMainScreen: React.FC = () => {
     try {
       await editar_activdad(id_actividad as number, form);
       control_success('Se editó la actividad correctamente');
+      set_is_saving(false);
       await fetch_data_actividades();
     } catch (error: any) {
+      set_is_saving(false);
       control_error(
         error.response.data.detail ||
           'hubo un error al editar, intenta de nuevo'
@@ -272,6 +286,7 @@ export const PorhMainScreen: React.FC = () => {
     <>
       <form
         onSubmit={(form) => {
+          console.log(errors, 'errors');
           if (
             is_agregar_programa ||
             is_agregar_actividad ||
@@ -351,12 +366,12 @@ export const PorhMainScreen: React.FC = () => {
               )}
               {is_editar_programa && (
                 <>
-                  <EditarPrograma/>
+                  <EditarPrograma />
                 </>
               )}
               {is_seleccionar_programa && (
                 <>
-                  <SeleccionarPrograma/>
+                  <SeleccionarPrograma />
                 </>
               )}
               <Grid item xs={12}>
@@ -381,7 +396,8 @@ export const PorhMainScreen: React.FC = () => {
                   variant="contained"
                   color="success"
                   type="submit"
-                  disabled={Object.keys(errors).length > 0}
+                  disabled={is_saving || Object.keys(errors).length > 0}
+                  loading={is_saving}
                 >
                   Finalizar
                 </LoadingButton>
