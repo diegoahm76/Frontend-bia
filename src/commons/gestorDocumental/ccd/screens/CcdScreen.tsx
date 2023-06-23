@@ -1,7 +1,15 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
+
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 // Components Material UI
 import {
   Grid,
@@ -9,7 +17,8 @@ import {
   TextField,
   Stack,
   ButtonGroup,
-  Button
+  Button,
+  makeStyles
 } from '@mui/material';
 import Select from 'react-select';
 import { DataGrid } from '@mui/x-data-grid';
@@ -30,15 +39,35 @@ import CrearSeriesCcdDialog from '../componentes/crearSeriesCcdDialog/CrearSerie
 import SearchCcdsDialog from '../componentes/searchCcdsDialog/SearchCcdsDialog';
 import CrearSubSerieCcdDialog from '../componentes/crearSubSerieDialog/CrearSubserieDialog';
 import { get_ccd_current } from '../store/slices/ccdSlice';
+import { get_serie_ccd_current } from '../store/slices/seriesSlice';
+import { gridStyles } from './utils/constants';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ModalContext } from '../context/ModalContext';
+import { CatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/CatalogoSeriesYSubseries';
+import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const { openModalModalSeriesAndSubseries } = useContext(ModalContext);
+
+  const dispatch: any = useAppDispatch();
+
   const { ccd_current } = useAppSelector((state: any) => state.ccd);
-  const { serie_ccd_current } = useAppSelector((state: any) => state.series);
-  const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
+  const { series_ccd, serie_ccd_current } = useAppSelector(
+    (state: any) => state.series
+  );
+  const { subseries_ccd, subserie_ccd_current } = useAppSelector(
+    (state: any) => state.subseries
+  );
+  const { seriesAndSubseries } = useAppSelector(
+    (state: any) => state.slice_series_and_subseries
+  );
+  // ? const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
+  console.log(series_ccd);
   useEffect(() => {
     set_flag_btn_finish(
       ccd_current?.fecha_terminado !== null &&
@@ -63,6 +92,18 @@ export const CcdScreen: React.FC = () => {
     }
   }, [ccd_current?.id_ccd]); */
 
+  /* useEffect(() => {
+    if (ccd_current?.id_ccd) {
+      dispatch(to_resume_ccds_service(ccd_current?.id_ccd));
+    }
+  }, [ccd_current?.id_ccd]); */
+
+  useEffect(() => {
+    if (ccd_current?.id_ccd) {
+      dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
+    }
+  }, [ccd_current?.id_ccd]);
+
   // Hooks
   const {
     // States
@@ -70,13 +111,15 @@ export const CcdScreen: React.FC = () => {
     list_organigrams,
     list_sries,
     list_subsries,
+    list_sries_asignacion,
     title,
     title_button_asing,
     create_is_active,
     set_create_sub_serie_active,
-    create_subserie_active,
+    create_sub_serie_active,
     consulta_ccd_is_active,
     columns_asignacion,
+    //! control series y subseries para catalogo de unidad organizacional
     control,
     control_create_ccd,
     errors,
@@ -126,7 +169,14 @@ export const CcdScreen: React.FC = () => {
             /* onSubmit={handle_submit_create_ccd(on_submit_create_ccd)} */
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  zIndex: 2
+                }}
+              >
                 <Controller
                   name="organigrama"
                   rules={{ required: true }}
@@ -149,7 +199,14 @@ export const CcdScreen: React.FC = () => {
                   </div>
                 )}
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  zIndex: 2
+                }}
+              >
                 <Controller
                   name="unidades_organigrama"
                   control={control_create_ccd}
@@ -238,7 +295,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
-                      disabled={ccd_current != null}
+                      disabled={series_ccd.length > 0}
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -269,7 +326,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subserie"
                       variant="outlined"
-                      disabled={ccd_current !== null}
+                      disabled={subseries_ccd.length > 0}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -299,7 +356,6 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
-                      // value={value}
                       variant="outlined"
                       type="file"
                       disabled={
@@ -308,10 +364,8 @@ export const CcdScreen: React.FC = () => {
                         ccd_current?.fecha_terminado !== undefined
                       }
                       InputLabelProps={{ shrink: true }}
-                      // onChange={onChange}
                       onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
-
                         if (files && files.length > 0) {
                           onChange(files[0]);
                           console.log(files[0]);
@@ -326,6 +380,18 @@ export const CcdScreen: React.FC = () => {
                       }
                     />
                   )}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={3}>
+                <DownloadButton
+                  fileName="ruta_soporte"
+                  condition={
+                    ccd_current === null ||
+                    ccd_current?.ruta_soporte === null ||
+                    ccd_current?.ruta_soporte === ''
+                  }
+                  fileUrl={ccd_current?.ruta_soporte}
                 />
               </Grid>
 
@@ -380,9 +446,7 @@ export const CcdScreen: React.FC = () => {
                 type="submit"
                 color="primary"
                 variant="contained"
-                startIcon={
-                  ccd_current != null ? <SyncIcon/> : <SaveIcon />
-                }
+                startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
               </Button>
@@ -403,19 +467,9 @@ export const CcdScreen: React.FC = () => {
       </Grid>
       {/* {save_ccd && ( */}
       <>
-        <Grid
-          container
-          sx={{
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26'
-          }}
-        >
+        <Grid container sx={gridStyles}>
           <Grid item xs={12}>
-            <Title title="Administrar registro de series y subseries" />
+            <Title title="Administrar catálogo de series y subseries" />
             <Box
               component="form"
               sx={{ mt: '20px' }}
@@ -442,9 +496,8 @@ export const CcdScreen: React.FC = () => {
                             console.log(selectedOption.value);
                           } else {
                             onChange(selectedOption);
-                            dispatch(
-                              serie_ccd_current(selectedOption.value)
-                            );
+
+                            dispatch(get_serie_ccd_current(selectedOption.value));
                           }
                           //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
                           console.log('Valor seleccionado:', selectedOption);
@@ -459,7 +512,7 @@ export const CcdScreen: React.FC = () => {
                   {errors.sries !== null && (
                     <div className="col-12">
                       <small className="text-center text-danger">
-                        Este campo es obligatorio
+                        Campo obligatorio
                       </small>
                     </div>
                   )}
@@ -475,11 +528,10 @@ export const CcdScreen: React.FC = () => {
                         set_title('Administrar series');
                       }}
                       disabled={
-                        ccd_current === null ||
-                        ccd_current?.id_ccd === null
+                        ccd_current === null || ccd_current?.id_ccd === null
                       }
                     >
-                      CREAR SERIE
+                      ADMINISTRAR SERIES
                     </Button>
                     {/*                    <Button disabled>CLONAR</Button>
                     <Button disabled>PREVISUALIZAR</Button> */}
@@ -513,11 +565,12 @@ export const CcdScreen: React.FC = () => {
                   {errors.subserie !== null && (
                     <div className="col-12">
                       <small className="text-center text-danger">
-                        Este campo es obligatorio
+                        Campo obligatorio
                       </small>
                     </div>
-                  )} 
+                  )}
                 </Grid>
+
                 <Grid item xs={12} sm={4}>
                   <ButtonGroup
                     variant="contained"
@@ -527,20 +580,64 @@ export const CcdScreen: React.FC = () => {
                       onClick={() => {
                         set_create_sub_serie_active(true);
                         // set_create_is_active(true);
+                        console.log(create_sub_serie_active);
                         set_title('Administrar subseries');
                       }}
                       disabled={serie_ccd_current === null}
                     >
-                      CREAR SUBSERIE
+                      ADMINISTRAR SUBSERIES
                     </Button>
                     {/* <Button disabled>CLONAR</Button>
                     <Button disabled>PREVISUALIZAR</Button> */}
                   </ButtonGroup>
                 </Grid>
               </Grid>
+              {/**/}
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                justifyContent="center"
+                alignItems="center"
+                sx={{
+                  mt: '20px',
+                  display: 'flex'
+                }}
+              >
+                <ButtonGroup
+                  variant="contained"
+                  aria-label=" primary button group"
+                >
+                  <Button
+                    color="warning"
+                    variant="outlined"
+                    disabled={ccd_current === null}
+                    onClick={() => {
+                      console.log('ver catalogo de series y subseries');
+                      openModalModalSeriesAndSubseries();
+                      dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
+                      // getCatalogoSeriesYSubseries();
+                    }}
+                  >
+                    <VisibilityIcon
+                      sx={{
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
+                        marginRight: '7px'
+                      }}
+                    />{' '}
+                    VER CATÁLOGO
+                  </Button>
+                  {/*                    <Button disabled>CLONAR</Button>
+                    <Button disabled>PREVISUALIZAR</Button> */}
+                </ButtonGroup>
+              </Grid>
+              {/* */}
             </Box>
           </Grid>
         </Grid>
+
         <Grid
           container
           sx={{
@@ -553,15 +650,15 @@ export const CcdScreen: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Asignaciones" />
+            <Title title="Administrar catálogo de series y subseries por Unidad Organizacional" />
             <Box
               component="form"
               sx={{ mt: '20px', mb: '20px' }}
               noValidate
               autoComplete="off"
             >
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={3}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={4}>
                   <label className="text-terciary">
                     {' '}
                     Unidades
@@ -591,13 +688,13 @@ export const CcdScreen: React.FC = () => {
                     </div>
                   )}
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={4}>
                   <label className="text-terciary">
-                    Series
+                    Catalogo de series y subseries
                     <samp className="text-danger">*</samp>
                   </label>
                   <Controller
-                    name="sries_asignacion"
+                    name="catalogo_asignacion"
                     control={control}
                     rules={{
                       required: true
@@ -606,7 +703,7 @@ export const CcdScreen: React.FC = () => {
                       <Select
                         {...field}
                         value={field.value}
-                        options={list_sries}
+                        options={list_sries_asignacion}
                         placeholder="Seleccionar"
                       />
                     )}
@@ -619,9 +716,9 @@ export const CcdScreen: React.FC = () => {
                     </div>
                   )}
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                {/* <Grid item xs={12} sm={4}>
                   <label className="text-terciary">
-                    Subseries
+                    Catalogo de series y subseries
                     <samp className="text-danger">*</samp>
                   </label>
                   <Controller
@@ -647,8 +744,15 @@ export const CcdScreen: React.FC = () => {
                       </small>
                     </div>
                   )}
-                </Grid>
-                <Grid item xs={12} sm={3}>
+                </Grid> */}
+                <Grid
+                  item
+                  xs={12}
+                  sm={4}
+                  sx={{
+                    marginTop: '25px'
+                  }}
+                >
                   <Button
                     fullWidth
                     onClick={() => {
@@ -659,15 +763,20 @@ export const CcdScreen: React.FC = () => {
                           set_title_button_asing
                         )
                       ); */
+
+                      console.log(
+                        'guardando la relación de asignaciones',
+                        control._formValues.unidades_asignacion,
+                        control._formValues.catalogo_asignacion
+                      );
+
                       console.log('guardando la relación de asignaciones');
                     }}
                     color="primary"
                     variant="contained"
                     startIcon={<SaveIcon />}
                   >
-                    {
-                      title_button_asing
-                    }
+                    {title_button_asing}
                   </Button>
                 </Grid>
               </Grid>
@@ -728,10 +837,13 @@ export const CcdScreen: React.FC = () => {
         title={title}
       />
       <CrearSubSerieCcdDialog
-        is_modal_active={create_subserie_active}
+        is_modal_active={create_sub_serie_active}
         set_is_modal_active={set_create_sub_serie_active}
         title={title}
       />
+      {/* dialogo catalogo de series y subseries */}
+      <CatalogoSeriesYSubseries />
+
       {consulta_ccd_is_active && (
         <SearchCcdsDialog
           is_modal_active={consulta_ccd_is_active}

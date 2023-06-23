@@ -3,30 +3,26 @@
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { AgregarProyectos } from '../AgregarProyectos/AgregarProyectos';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 import { LoadingButton } from '@mui/lab';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import AddIcon from '@mui/icons-material/Add';
 import { control_error } from '../../../../../helpers';
+import { DataContext } from '../../context/contextData';
 
-interface IProps {
-  register: any,
-  watch: any
-  set_value: any,
-  errors: any,
-}
-
-export const AgregarPrograma: React.FC<IProps> = ({
-  register,
-  watch,
-  set_value,
-  errors,
-}: IProps) => {
+export const AgregarPrograma: React.FC = () => {
+  const {
+    register,
+    // reset,
+    // watch,
+    setValue: set_value,
+    errors,
+  } = useContext(DataContext);
 
   const [is_agregar, set_is_agregar] = useState(false);
   const [nombrePrograma, setNombrePrograma] = useState(''); // Estado del campo "Nombre del programa"
@@ -34,7 +30,9 @@ export const AgregarPrograma: React.FC<IProps> = ({
   const [fechaFin, setFechaFin] = useState<Date | null>(null); // Estado de la fecha final
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handleNombreProgramaChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNombreProgramaChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { value } = event.target;
     setNombrePrograma(value);
     set_value('nombre_programa', value); // Actualizar el valor en el objeto de registro
@@ -50,7 +48,8 @@ export const AgregarPrograma: React.FC<IProps> = ({
     setFechaFin(date);
   };
 
-  const isCamposObligatoriosCompletos = nombrePrograma && fechaInicial && fechaFin;
+  const isCamposObligatoriosCompletos =
+    nombrePrograma && fechaInicial && fechaFin;
 
   const handleAgregarProyectoClick = (): void => {
     if (isCamposObligatoriosCompletos) {
@@ -62,11 +61,15 @@ export const AgregarPrograma: React.FC<IProps> = ({
       }
       if (fechaInicial && fechaFin) {
         if (fechaInicial >= fechaFin) {
-          control_error('La fecha de inicio debe ser anterior a la fecha de finalización');
+          control_error(
+            'La fecha de inicio debe ser anterior a la fecha de finalización'
+          );
           return;
         }
         if (fechaInicial <= currentDate) {
-          control_error('La fecha de inicio debe ser posterior a la fecha actual');
+          control_error(
+            'La fecha de inicio debe ser posterior a la fecha actual'
+          );
           return;
         }
       }
@@ -75,12 +78,24 @@ export const AgregarPrograma: React.FC<IProps> = ({
   };
 
   const isNombreProgramaValid = nombrePrograma.trim() !== '';
-  const isFechasValidas = fechaInicial && fechaFin ? fechaInicial < fechaFin : true;
+  const isFechasValidas =
+    fechaInicial && fechaFin ? fechaInicial < fechaFin : true;
   const isFechaInicialValida = fechaInicial ? fechaInicial > new Date() : true;
 
   return (
     <>
-      <Grid container spacing={2} mt={0.1}>
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          p: '0px',
+          m: '0 0 0 0',
+          mb: '0px',
+        }}
+      >
+        {' '}
         <Grid item xs={12}>
           <Title title="INFORMACIÓN DE PROGRAMA" />
         </Grid>
@@ -97,8 +112,11 @@ export const AgregarPrograma: React.FC<IProps> = ({
             inputProps={{ ...register('nombre_programa', { required: true }) }}
             error={Boolean(errors.nombre_programa) || !isNombreProgramaValid}
             helperText={
-              (errors.nombre_programa?.type === "required") ? "Este campo es obligatorio" :
-                !isNombreProgramaValid ? 'El nombre del programa no puede estar vacío' : ''
+              errors.nombre_programa?.type === 'required'
+                ? 'Este campo es obligatorio'
+                : !isNombreProgramaValid
+                ? 'El nombre del programa no puede estar vacío'
+                : ''
             }
           />
         </Grid>
@@ -120,11 +138,19 @@ export const AgregarPrograma: React.FC<IProps> = ({
                   {...register('fecha_inicial', {
                     required: true,
                   })}
-                  error={Boolean(errors.fecha_inicial) || !isFechaInicialValida || !isFechasValidas}
+                  error={
+                    Boolean(errors.fecha_inicial) ||
+                    !isFechaInicialValida ||
+                    !isFechasValidas
+                  }
                   helperText={
-                    (errors.fecha_inicial?.type === "required") ? "Este campo es obligatorio" :
-                      !isFechaInicialValida ? 'La fecha de inicio debe ser posterior a la fecha actual' :
-                        !isFechasValidas ? 'La fecha de inicio debe ser anterior a la fecha de finalización' : ''
+                    errors.fecha_inicial?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : !isFechaInicialValida
+                      ? 'La fecha de inicio debe ser posterior a la fecha actual'
+                      : !isFechasValidas
+                      ? 'La fecha de inicio debe ser anterior a la fecha de finalización'
+                      : ''
                   }
                 />
               )}
@@ -151,7 +177,9 @@ export const AgregarPrograma: React.FC<IProps> = ({
                   })}
                   error={Boolean(errors.fecha_fin)}
                   helperText={
-                    (errors.fecha_fin?.type === "required") ? "Este campo es obligatorio" : ''
+                    errors.fecha_fin?.type === 'required'
+                      ? 'Este campo es obligatorio'
+                      : ''
                   }
                 />
               )}
@@ -175,10 +203,6 @@ export const AgregarPrograma: React.FC<IProps> = ({
         {is_agregar && (
           <>
             <AgregarProyectos
-              register={register}
-              watch={watch}
-              set_value={set_value}
-              errors={errors}
               fecha_inicial_programa={fechaInicial}
               fecha_fin_programa={fechaFin}
             />
