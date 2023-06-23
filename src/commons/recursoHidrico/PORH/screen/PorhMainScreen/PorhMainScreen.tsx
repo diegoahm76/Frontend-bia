@@ -2,7 +2,7 @@
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { AgregarPrograma } from '../../components/AgregarNuevoPrograma/AgregarPrograma';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { Avatar, Divider, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -19,10 +19,8 @@ import {
   post_programa,
 } from '../../Request/request';
 import { EditarPrograma } from '../../components/ActualizarPrograma/EditarPrograma';
-import { useForm } from 'react-hook-form';
 import { control_error } from '../../../../../helpers';
 import { control_success } from '../../../requets/Request';
-import type { GetPrograma } from '../../Interfaces/interfaces';
 import { SeleccionarPrograma } from '../../components/SeleccionarPrograma/SeleccionarPrograma';
 import Swal from 'sweetalert2';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
@@ -32,17 +30,9 @@ import { ConsultaPorh } from '../../components/ConsultaPorh/ConsultaPorh';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PorhMainScreen: React.FC = () => {
   const {
-    register,
     reset,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    handleSubmit,
-    watch,
-    setValue: set_value,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    formState: { errors },
-  } = useForm();
-
-  const {
+    handleSubmit: handle_submit,
+    errors,
     rows_programas,
     set_rows_programas,
     rows_proyectos,
@@ -64,6 +54,7 @@ export const PorhMainScreen: React.FC = () => {
     is_general,
     is_consulta,
     set_mode,
+    set_data_programa,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -104,7 +95,7 @@ export const PorhMainScreen: React.FC = () => {
                 <IconButton
                   onClick={() => {
                     set_id_programa(params.row.id_programa as number);
-                    set_data(params.row);
+                    set_data_programa(params.row);
                     set_mode('editar_programa');
                   }}
                 >
@@ -154,7 +145,7 @@ export const PorhMainScreen: React.FC = () => {
             <IconButton
               onClick={() => {
                 set_id_programa(params.row.id_programa as number);
-                set_data(params.row);
+                set_data_programa(params.row);
                 set_mode('select_programa');
               }}
             >
@@ -182,13 +173,11 @@ export const PorhMainScreen: React.FC = () => {
     },
   ];
 
-  const [data, set_data] = useState<GetPrograma>();
-
   useEffect(() => {
     void fetch_data_programas();
   }, []);
 
-  const on_submit = handleSubmit(async (form) => {
+  const on_submit = handle_submit(async (form: any) => {
     try {
       form.id_programa = id_programa;
       form.id_proyecto = id_proyecto;
@@ -211,7 +200,7 @@ export const PorhMainScreen: React.FC = () => {
     }
   });
 
-  const on_submit_editar = handleSubmit(async (form) => {
+  const on_submit_editar = handle_submit(async (form: any) => {
     try {
       await editar_programa(id_programa as number, form);
       control_success('Se editó correctamente');
@@ -223,7 +212,7 @@ export const PorhMainScreen: React.FC = () => {
       );
     }
   });
-  const on_submit_editar_proyecto = handleSubmit(async (form) => {
+  const on_submit_editar_proyecto = handle_submit(async (form: any) => {
     try {
       await editar_proyecto(id_proyecto as number, form);
       control_success('Se editó el proyecto correctamente');
@@ -235,7 +224,7 @@ export const PorhMainScreen: React.FC = () => {
       );
     }
   });
-  const on_submit_editar_actividad = handleSubmit(async (form) => {
+  const on_submit_editar_actividad = handle_submit(async (form: any) => {
     try {
       await editar_activdad(id_actividad as number, form);
       control_success('Se editó la actividad correctamente');
@@ -357,36 +346,17 @@ export const PorhMainScreen: React.FC = () => {
               </Grid>
               {is_agregar_programa && (
                 <>
-                  <AgregarPrograma
-                    register={register}
-                    watch={watch}
-                    set_value={set_value}
-                    errors={errors}
-                  />
+                  <AgregarPrograma />
                 </>
               )}
               {is_editar_programa && (
                 <>
-                  <EditarPrograma
-                    data={data}
-                    register={register}
-                    watch={watch}
-                    set_value={set_value}
-                    set_data={set_data}
-                    errors={errors}
-                  />
+                  <EditarPrograma/>
                 </>
               )}
               {is_seleccionar_programa && (
                 <>
-                  <SeleccionarPrograma
-                    data={data}
-                    register={register}
-                    watch={watch}
-                    set_value={set_value}
-                    set_data={set_data}
-                    errors={errors}
-                  />
+                  <SeleccionarPrograma/>
                 </>
               )}
               <Grid item xs={12}>
