@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type UnidadOrganizacional, type ISolicitudConsumo, type UnidadesMedida, type IObjSolicitud, type IObjBienConsumo, type IObjFuncionario, type IObjBienesSolicitud, type IObjPersonaSolicita, type IObjSolicitudVivero, type IObjBienViveroConsumo, } from "../../interfaces/solicitudBienConsumo"
+import { type UnidadOrganizacional, type ISolicitudConsumo, type UnidadesMedida, type IObjSolicitud, type IObjBienConsumo, type IObjFuncionario, type IObjBienesSolicitud, type IObjPersonaSolicita, type IObjSolicitudVivero, type IObjBienViveroConsumo, type IObjBienesViveroSolicitud, } from "../../interfaces/solicitudBienConsumo"
 
 
 const initial_state_current_solicitud: IObjSolicitud = {
@@ -85,6 +85,7 @@ const initial_state: ISolicitudConsumo | any = {
     current_solicitud_vivero: initial_state_current_solicitud_vivero,
     solicitudes_vivero: [],
     bienes_solicitud: [],
+    bienes_solicitud_vivero: [],
     bienes: [],
     bienes_vivero: [],
     current_bien_vivero: initial_state_current_bien_vivero,
@@ -141,6 +142,12 @@ export const solicitud_consumo_slice = createSlice({
             state.bienes_solicitud = action.payload;
         },
 
+        set_bienes_vivero_solicitud: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjBienesViveroSolicitud[]>
+        ) => {
+            state.bienes_solicitud_vivero = action.payload;
+        },
         set_bienes: (
             state: ISolicitudConsumo,
             action: PayloadAction<IObjBienConsumo[]>

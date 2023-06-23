@@ -11,11 +11,11 @@ import type { AuthSlice } from '../../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, get_funcionario_id_service, anular_solicitud_service, get_bienes_solicitud, } from '../store/solicitudBienConsumoThunks';
+import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, editar_solicitud, get_funcionario_id_service, anular_solicitud_service, get_bienes_solicitud, } from '../store/solicitudBienConsumoThunks';
 
 import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
-import AnularSolicitudModal from '../components/AnularSolicitud';
+import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
 
 
 
@@ -24,7 +24,7 @@ const SolicitudConsumoScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values } = useForm<IObjSolicitud>();
     const { nro_solicitud, current_solicitud, persona_solicita, bienes_solicitud, current_funcionario } = useAppSelector((state) => state.solic_consumo);
-    const [action] = useState<string>("Crear solicitud de consumo");
+    const [action, set_action] = useState<string>("Crear");
     const [anular, set_anular] = useState<string>("Anular");
     const [anular_solicitud, set_anular_solicitud] =
         useState<boolean>(false);
@@ -53,6 +53,7 @@ const SolicitudConsumoScreen = () => {
 
         }
         if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
+            set_action("editar")
             void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
             if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
                 void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad))
@@ -77,16 +78,31 @@ const SolicitudConsumoScreen = () => {
     }, [current_funcionario]);
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const on_submit = (data: IObjSolicitud) => {
+        if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
+            set_action("editar")
 
-        const data_aux = {
-            info_solicitud: { ...data, fecha_anulacion_solicitante: null },
-            items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
-                ...item,
-                nro_posicion: index,
-            })),
+
+            const data_aux = {
+                info_solicitud: { ...data, fecha_anulacion_solicitante: null },
+                items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
+                    ...item,
+                    nro_posicion: index,
+                })),
+            }
+            void dispatch(editar_solicitud(current_solicitud.id_solicitud_consumibles, data_aux))
+        } else {
+            set_action("crear")
+            const data_aux = {
+                info_solicitud: { ...data, fecha_anulacion_solicitante: null },
+                items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
+                    ...item,
+                    nro_posicion: index,
+                })),
+            }
+            void dispatch(crear_solicitud_bien_consumo(data_aux));
         }
 
-        void dispatch(crear_solicitud_bien_consumo(data_aux));
+
     };
     const on_submit_anular = (data: IObjSolicitud): void => {
 
@@ -191,3 +207,5 @@ const SolicitudConsumoScreen = () => {
 
 // eslint-disable-next-line no-restricted-syntax
 export default SolicitudConsumoScreen;
+
+

@@ -2,17 +2,17 @@ import { useEffect, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 import { Grid } from '@mui/material';
-import BuscarModelo from "../../../../../components/partials/getModels/BuscarModelo";
+import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
-import { type AuthSlice } from '../../../../auth/interfaces';
+import { type AuthSlice } from '../../../../../auth/interfaces';
 
-import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks/hooks';
 
-import { type IObjFuncionario } from '../interfaces/solicitudBienConsumo';
-import { get_funcionario_document_service, get_funcionario_service, get_person_id_service } from '../store/solicitudBienConsumoThunks';
-import { set_current_funcionario, set_funcionarios } from '../store/slices/indexSolicitudBienesConsumo';
-import { api } from '../../../../../api/axios';
+import { type IObjFuncionario } from '../../interfaces/solicitudBienConsumo';
+import { get_funcionario_document_service, get_funcionario_service, get_person_id_service } from '../../store/solicitudBienConsumoThunks';
+import { set_current_funcionario, set_funcionarios } from '../../store/slices/indexSolicitudBienesConsumo';
+import { api } from '../../../../../../api/axios';
 
 interface IProps {
     title?: string;
