@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-assertion */
 /* eslint-disable no-void */
@@ -35,7 +36,8 @@ import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
 import { get_series_service } from '../store/thunks/seriesThunks';
 import { get_subseries_service } from '../store/thunks/subseriesThunks';
-import { get_serie_ccd_current } from '../store/slices/seriesSlice';
+// import { get_serie_ccd_current } from '../store/slices/seriesSlice';
+// import { get_subseries_ccd_current } from '../store/slices/subseriesSlice';
 // import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -111,7 +113,6 @@ const use_ccd = () => {
     valor_aumento_serie: '',
     valor_aumento_subserie: '',
     ruta_soporte: ''
-
   };
   // Estado Inicial de Formulario de Crear Asignación
   const initial_state_asig: ICCDAsingForm = {
@@ -161,6 +162,7 @@ const use_ccd = () => {
   //  UseEffect para obtener organigramas
   useEffect(() => {
     console.log(data_create_ccd, 'data_create_ccd');
+    console.log(ccd_current, 'ccd_current');
     if (ccd_current !== null) {
       const result_name = organigram.filter((item) => {
         // console.log(ccd_current, 'ccd_current')
@@ -170,10 +172,11 @@ const use_ccd = () => {
       });
       console.log('result_name', result_name);
       const obj: ICCDForm = {
-        id_ccd: ccd_current.id_ccd,
-        nombre_ccd: ccd_current.nombre,
+        id_ccd: ccd_current.id_ccd ? ccd_current.id_ccd : 0,
+        nombre_ccd: ccd_current.nombre ? ccd_current.nombre : '',
         organigrama: {
-          label: result_name[0].nombre,
+          label:
+            result_name && result_name.length > 0 ? result_name[0].nombre : '',
           value: ccd_current.id_organigrama
         },
         unidades_organigrama: {
@@ -295,8 +298,7 @@ const use_ccd = () => {
         value: item.id_serie_doc
       }))
     );
-  }
-  , [seriesAndSubseries]);
+  }, [seriesAndSubseries]);
 
   // submit Asignar CCD
   const on_submit = (): void => {
@@ -338,17 +340,52 @@ const use_ccd = () => {
     void dispatch(create_ccds_service(formData, set_save_ccd));
   };
 
-  const update_ccd = ( data_create_ccd: any ): void => {
-    const new_ccd: any = {
-      ...data_create_ccd,
-      nombre: data_create_ccd.nombre_ccd,
+  const 
+  update_ccd = (data_create_ccd: any): void => {
+    const updatedCCD: any = {
+      id_organigrama: data_create_ccd.organigrama.value,
       version: data_create_ccd.version,
+      nombre: data_create_ccd.nombre_ccd ? data_create_ccd.nombre_ccd : null,
+      valor_aumento_serie: data_create_ccd.valor_aumento_serie,
+      valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
       ruta_soporte: data_create_ccd.ruta_soporte
+        ? data_create_ccd.ruta_soporte
+        : null
     };
+    // console.log(data_create_ccd.ruta_soporte, 'data_create_ccd.ruta_soporte')
 
+    // Convertir el objeto new_ccd en un objeto FormData
+    const formData: any = new FormData();
+    formData.append('id_organigrama', String(updatedCCD.id_organigrama));
+    formData.append('version', String(updatedCCD.version));
+    if (updatedCCD.nombre !== null || updatedCCD.nombre !== undefined) {
+      formData.append('nombre', updatedCCD.nombre);
+    }
+    formData.append(
+      'valor_aumento_serie',
+      String(updatedCCD.valor_aumento_serie)
+    );
+    formData.append(
+      'valor_aumento_subserie',
+      String(updatedCCD.valor_aumento_subserie)
+    );
+    // formData.append('ruta_soporte', updatedCCD.ruta_soporte);
+    if (!updatedCCD.ruta_soporte) {
+      formData.append('ruta_soporte', updatedCCD.ruta_soporte);
+    }
 
-    void dispatch(update_ccds_service(new_ccd, data_create_ccd));
+    /*  for (const key in updatedCCD) {
+      if (updatedCCD[key] !== null) {
+        formData.append(key, updatedCCD[key]);
+      }
+    } */
 
+    console.log(formData, 'formData');
+
+    console.log('udpated ccd', updatedCCD);
+    // void dispatch(create_ccds_service(formData, set_save_ccd));
+    // clean_after_update();
+    void dispatch(update_ccds_service(formData, data_create_ccd));
   };
 
   // console.log(data_asing, 'data_asing');
@@ -400,7 +437,7 @@ const use_ccd = () => {
     void dispatch(create_assignments_service(new_item, clean_asing));
   };
 
-  // Funcio_s para limpiar el formulario de Crear CCD
+  // ? Funciones para limpiar el formulario de Crear CCD
   const clean_ccd = (): void => {
     reset_create_ccd(initial_state);
     reset(initial_state_asig);
@@ -409,16 +446,30 @@ const use_ccd = () => {
     clean_asing();
     set_list_sries_asignacion([]);
     set_list_subsries([]);
+    set_list_sries([]);
   };
+
+  const clean_after_update = (): void => {
+    reset_create_ccd(initial_state);
+    reset(initial_state_asig);
+    set_save_ccd(false);
+    dispatch(get_ccd_current(null));
+    clean_asing();
+    set_list_sries_asignacion([]);
+    set_list_subsries([]);
+    set_list_sries([]);
+  };
+
   // Funcion para limpiar el formulario de asignar CCD
   //! hasta el momento funciona de manera adecuada
   const clean_asing = useCallback((): void => {
     reset(initial_state_asig);
     set_title_button_asing('Guardar relación');
     dispatch(get_assignments_ccd_current(null));
-    dispatch(get_series_service('0'));
-    dispatch(get_subseries_service('0'));
-    dispatch(get_serie_ccd_current(null));
+    // dispatch(get_series_service('0'));
+    // dispatch(get_subseries_service('0'));
+    // dispatch(get_serie_ccd_current(null));
+    // dispatch(get_subseries_ccd_current(null));
   }, [dispatch, reset, set_title_button_asing]);
 
   // Funcion para eliminar Asignaciones
@@ -525,6 +576,7 @@ const use_ccd = () => {
     set_title,
     set_create_is_active,
     set_consulta_ccd_is_active,
+    clean_after_update,
     // Functions
     get_row_class,
     on_submit_create_ccd,
@@ -538,7 +590,6 @@ const use_ccd = () => {
     set_create_sub_serie_active
     // file,
     // set_file,
-
   };
 };
 
