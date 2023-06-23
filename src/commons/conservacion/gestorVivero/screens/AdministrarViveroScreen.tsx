@@ -396,8 +396,6 @@ export function AdministrarViveroScreen(): JSX.Element {
   </Button>
 </Grid>
   <Divider style={{ width: '98%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
-
-
             <Grid item xs={10}>
               <TextField
                 label="Buscar"
@@ -455,47 +453,7 @@ export function AdministrarViveroScreen(): JSX.Element {
               set_is_modal_active={set_add_nursery_is_active}
               action={action}
             />
-          </Grid>
-
-            <ButtonGroup style={{ margin: 7 }}  >
-              {/* Boton de Excel */}
-              <Button
-                style={{ ...button_style, backgroundColor: '#335B1E' }}
-                onClick={handle_clickxls}
-              >
-                <i className="pi pi-file-excel"></i>
-              </Button>
-              {/* Boton de pdf */}
-              <Button style={{ ...button_style, backgroundColor: 'red' }}
-
-                onClick={handle_clickpdf}
-              >
-                <i className="pi pi-file-pdf"></i>
-              </Button>
-
-            </ButtonGroup>
-          
-            <Divider />
-            <Grid item sx={{ marginTop: '20px', }}>
-              <Box sx={{ width: '100%' }}>
-                <DataGrid
-                  density="compact"
-                  autoHeight
-                  rows={filterednurseries}
-                  columns={columns}
-                  pageSize={10}
-                  rowsPerPageOptions={[10]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row) => row.id_vivero}
-                />
-              </Box>
-              <CrearViveroDialogForm
-                is_modal_active={add_nursery_is_active}
-                set_is_modal_active={set_add_nursery_is_active}
-                action={action}
-              />
-            </Grid>
-
+          </Grid>           
           </Grid>
         </Grid>
       
