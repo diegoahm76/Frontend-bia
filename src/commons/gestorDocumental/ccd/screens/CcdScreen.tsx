@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
@@ -11,7 +12,8 @@ import {
   TextField,
   Stack,
   ButtonGroup,
-  Button
+  Button,
+  makeStyles
 } from '@mui/material';
 import Select from 'react-select';
 import { DataGrid } from '@mui/x-data-grid';
@@ -39,6 +41,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalContext } from '../context/ModalContext';
 import { CatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/CatalogoSeriesYSubseries';
 import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -170,14 +173,16 @@ export const CcdScreen: React.FC = () => {
             /* onSubmit={handle_submit_create_ccd(on_submit_create_ccd)} */
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}
+              <Grid
+                item
+                xs={12}
+                sm={3}
                 sx={{
-                  zIndex: 9999,
+                  zIndex: 2
                 }}
               >
                 <Controller
                   name="organigrama"
-                  
                   rules={{ required: true }}
                   control={control_create_ccd}
                   render={({ field }) => (
@@ -198,9 +203,12 @@ export const CcdScreen: React.FC = () => {
                   </div>
                 )}
               </Grid>
-              <Grid item xs={12} sm={3}
-                 sx={{
-                  zIndex: 9999,
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  zIndex: 2
                 }}
               >
                 <Controller
@@ -352,7 +360,6 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
-                      // value={value}
                       variant="outlined"
                       type="file"
                       inputRef={fileInputRef}
@@ -362,14 +369,11 @@ export const CcdScreen: React.FC = () => {
                         ccd_current?.ruta_sopoorte !== undefined */
                       }
                       InputLabelProps={{ shrink: true }}
-                      // onChange={onChange}
                       onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
-
                         if (files && files.length > 0) {
                           onChange(files[0]);
                           console.log(files[0]);
-                          // set_file(files[0]);
                         }
                       }}
                       error={!!error}

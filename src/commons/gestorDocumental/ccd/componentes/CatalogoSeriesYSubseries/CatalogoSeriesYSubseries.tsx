@@ -76,6 +76,35 @@ export const CatalogoSeriesYSubseries = () => {
       minWidth: 150,
       maxWidth: 200,
       flex: 1
+    },
+    {
+      headerName: 'Acciones',
+      field: 'accion',
+      minWidth: 200,
+      maxWidth: 235,
+      flex: 1,
+      renderCell: (params: any) => (
+        <>
+          <IconButton onClick={() => {
+            console.log('params', params);
+          }}>
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <EditIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+          {/* <IconButton onClick={() => {
+            console.log('params', params);
+          }}>
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <DeleteIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton> */}
+        </>
+      )
     }
   ];
   /*    {
@@ -125,13 +154,13 @@ export const CatalogoSeriesYSubseries = () => {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Grid item xs={12} sx={{ width: 600 }}>
+        <Grid item xs={12} sx={{ width: 700 }}>
           <DataGrid
             density="compact"
             autoHeight
             rows={seriesAndSubseries}
             columns={columns}
-            pageSize={5}
+            pageSize={10}
             rowsPerPageOptions={[10]}
             experimentalFeatures={{ newEditingApi: true }}
             getRowId={(row) => row.id_catalogo_serie}

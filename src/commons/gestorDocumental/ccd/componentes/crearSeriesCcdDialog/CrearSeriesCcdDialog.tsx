@@ -22,12 +22,14 @@ import {
   Avatar
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import SaveIcon from '@mui/icons-material/Save';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   delete_series_service,
   create_series_service,
-  update_series_data
+  update_series_data,
+  create_indepent_series_service
 } from '../../store/thunks/seriesThunks';
 import { get_serie_ccd_current } from '../../store/slices/seriesSlice';
 import type { IFormValues, IProps } from './types/types';
@@ -49,7 +51,7 @@ const CrearSeriesCcdDialog = ({
   );
 
   const { ccd_current } = useAppSelector((state: any) => state.ccd);
-  const [title_button, set_title_button] = useState('Agregar');
+  const [title_button, set_title_button] = useState('Guardar');
 
   //! I create a new variable called dispatch of type any
   const dispatch: any = useAppDispatch();
@@ -76,14 +78,11 @@ const CrearSeriesCcdDialog = ({
         id_serie_doc: serie_ccd_current.id_serie_doc
       });
       set_title_button('Actualizar');
-      console.log(
-        'serie_ccd_current.id_serie_doc',
-        serie_ccd_current
-      )
-      dispatch(get_subseries_service(serie_ccd_current))
+      console.log('serie_ccd_current.id_serie_doc', serie_ccd_current);
+      dispatch(get_subseries_service(serie_ccd_current));
     } else {
       reset(initial_state);
-      set_title_button('Agregar');
+      set_title_button('Guardar');
     }
   }, [serie_ccd_current]);
 
@@ -98,7 +97,7 @@ const CrearSeriesCcdDialog = ({
   //! function to clean the form
   const clean = (): void => {
     reset(initial_state);
-    set_title_button('Agregar');
+    set_title_button('Guardar');
   };
 
   //! create or edit series, it depends on the title_button and the parameters
@@ -108,7 +107,7 @@ const CrearSeriesCcdDialog = ({
       nombre: data.nombre
     };
     const newSeries =
-      title_button === 'Agregar'
+      title_button === 'Guardar'
         ? {
             nombre: data.nombre,
             codigo: Number(data.codigo),
@@ -116,7 +115,7 @@ const CrearSeriesCcdDialog = ({
           }
         : updatedSeries;
     const action =
-      title_button === 'Agregar'
+      title_button === 'Guardar'
         ? create_series_service(newSeries, clean)
         : update_series_data(updatedSeries, ccd_current, clean);
     void dispatch(action);
@@ -133,8 +132,6 @@ const CrearSeriesCcdDialog = ({
       (serie: any) => serie.id_serie_doc !== row.id_serie_doc
     );
     */
-    // * console.log(newSeries);
-
     if (row?.tiene_subseries) {
       set_is_modal_active(false);
       await notification_error(
@@ -143,6 +140,11 @@ const CrearSeriesCcdDialog = ({
     } else {
       void dispatch(delete_series_service(params, () => ({})));
     }
+  };
+
+  const handleAddIndependentSeries = (params: any) => {
+    // ? console.log(params.row);
+    void dispatch(create_indepent_series_service(params.row.id_serie_doc));
   };
 
   const columns: GridColDef[] = [
@@ -171,6 +173,7 @@ const CrearSeriesCcdDialog = ({
           <IconButton onClick={() => handleOnClick_prepareEdit(params)}>
             <Avatar sx={AvatarStyles} variant="rounded">
               <EditIcon
+                titleAccess="Editar serie"
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -178,6 +181,15 @@ const CrearSeriesCcdDialog = ({
           <IconButton onClick={() => void handleDeleteSeries(params)}>
             <Avatar sx={AvatarStyles} variant="rounded">
               <DeleteIcon
+                titleAccess="Eliminar serie"
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+          <IconButton onClick={() => void handleAddIndependentSeries(params)}>
+            <Avatar sx={AvatarStyles} variant="rounded">
+              <AddIcon
+                titleAccess="Agregar serie independiente"
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
               />
             </Avatar>
@@ -263,7 +275,7 @@ const CrearSeriesCcdDialog = ({
                   type="submit"
                   color="primary"
                   variant="contained"
-                  startIcon={<AddIcon />}
+                  startIcon={<SaveIcon />}
                 >
                   {title_button}
                 </Button>
