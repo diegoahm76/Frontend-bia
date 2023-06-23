@@ -116,7 +116,7 @@ export const CcdScreen: React.FC = () => {
     title_button_asing,
     create_is_active,
     set_create_sub_serie_active,
-    create_subserie_active,
+    create_sub_serie_active,
     consulta_ccd_is_active,
     columns_asignacion,
     //! control series y subseries para catalogo de unidad organizacional
@@ -580,6 +580,7 @@ export const CcdScreen: React.FC = () => {
                       onClick={() => {
                         set_create_sub_serie_active(true);
                         // set_create_is_active(true);
+                        console.log(create_sub_serie_active);
                         set_title('Administrar subseries');
                       }}
                       disabled={serie_ccd_current === null}
@@ -836,7 +837,7 @@ export const CcdScreen: React.FC = () => {
         title={title}
       />
       <CrearSubSerieCcdDialog
-        is_modal_active={create_subserie_active}
+        is_modal_active={create_sub_serie_active}
         set_is_modal_active={set_create_sub_serie_active}
         title={title}
       />
