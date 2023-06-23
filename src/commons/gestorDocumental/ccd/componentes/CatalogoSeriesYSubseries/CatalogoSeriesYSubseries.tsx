@@ -40,10 +40,10 @@ export const CatalogoSeriesYSubseries = () => {
 
     const delete_independente_series = (id_serie_doc: number) => {
       console.log('delete_independente_series', id_serie_doc);
-      void dispatch(delete_independiente_serie_service(id_serie_doc));
+      void dispatch(delete_independiente_serie_service(id_serie_doc, ccd_current));
     };
 
-  /*  useEffect(() => {
+  /* useEffect(() => {
     console.log('useEffect, getCatalogoSeriesYSubseries');
     console.log(ccd_current);
     dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
@@ -90,7 +90,7 @@ export const CatalogoSeriesYSubseries = () => {
             <IconButton
               onClick={() => {
                 console.log('params', params);
-                delete_independente_series(params.row.id_serie_doc);
+                delete_independente_series(params.row.id_catalogo_serie);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
