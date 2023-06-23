@@ -226,7 +226,7 @@ const SeleccionarBajasHerramientas = ({
                     helper_text: ""
                 },
                   ]}
-                  modal_select_model_title='Buscar preparación'
+                  modal_select_model_title='Buscar baja de herramientas, insumos y semillas'
                   modal_form_filters={[
                     {
                       datum_type: "input_controller",
@@ -236,7 +236,7 @@ const SeleccionarBajasHerramientas = ({
                       control_name: "nro_baja_por_tipo",
                       default_value: "",
                       rules: { required_rule: { rule: true, message: "Numero de baja requerido" } },
-                      label: "Nuero baja",
+                      label: "Numero baja",
                       type: "number",
                       disabled: false,
                       helper_text: "",

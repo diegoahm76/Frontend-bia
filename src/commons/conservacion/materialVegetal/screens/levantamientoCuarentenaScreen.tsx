@@ -224,7 +224,7 @@ useEffect(() => {
             spacing={2}
           >
             {plant_quarantine_lifting.length > 0 && 
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={4}>
                 <BuscarModelo
                   set_current_model={null}
                   row_id={"id_item_levanta_cuarentena"}
@@ -243,7 +243,7 @@ useEffect(() => {
               </Grid>
             }
             {plant_quarantine_mortalities.length > 0 && 
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={4}>
                 <BuscarModelo
                   set_current_model={null}
                   row_id={"id_item_baja_viveros"}

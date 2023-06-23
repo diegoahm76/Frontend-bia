@@ -63,6 +63,16 @@ const SeleccionarDespacho = ({
       },
     },
     {
+      field: 'fecha_confirmacion_distribucion',
+      headerName: 'Fecha distribución',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value===null?"-":new Date(params.value).toDateString()}
+        </div>
+      ),
+    },
+    {
       field: 'observacion_distribucion',
       headerName: 'Observación',
       width: 350,
