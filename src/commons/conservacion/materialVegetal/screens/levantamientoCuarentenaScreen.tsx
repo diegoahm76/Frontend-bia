@@ -173,6 +173,13 @@ useEffect(() => {
       form_data.append('fecha_levantamiento', fecha.slice(0, 10) + " " + fecha.slice(11, 19));
       form_data.append('cantidad_a_levantar', Number(data.cantidad_a_levantar));
       form_data.append('observaciones', data.observaciones);
+      const aux ={
+        id_cuarentena_mat_vegetal: current_plant_quarantine.id_cuarentena_mat_vegetal,
+        fecha_levantamiento: fecha.slice(0, 10) + " " + fecha.slice(11, 19),
+        cantidad_a_levantar: Number(data.cantidad_a_levantar),
+        observaciones: data.observaciones
+      }
+      console.log(aux)
       void dispatch(add_lifting_quarantine_service(form_data));
     }
   };

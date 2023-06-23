@@ -13,7 +13,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 
 import { set_current_solicitud_vivero, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
-import AnularSolicitudModal from '../components/AnularSolicitudVivero';
+import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitudVivero';
 import SeleccionarSolicitudVivero from '../components/componenteBusqueda/SeleccionarSolicitudVivero';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';

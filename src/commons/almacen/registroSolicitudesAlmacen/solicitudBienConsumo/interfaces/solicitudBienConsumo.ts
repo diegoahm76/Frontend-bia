@@ -4,6 +4,7 @@ export interface ISolicitudConsumo {
   current_solicitud_vivero: IObjSolicitudVivero;
   solicitudes_vivero: IObjSolicitudVivero[];
   bienes_solicitud: IObjBienesSolicitud[]; // solicit;ud bienes por crear
+  bienes_solicitud_vivero: IObjBienesViveroSolicitud[];
   bienes: IObjBienConsumo[];
   current_bien: IObjBienConsumo;
   bienes_vivero: IObjBienViveroConsumo[];
@@ -24,6 +25,17 @@ export interface IObjPersonaSolicita {
 }
 
 export interface IObjBienesSolicitud {
+  id_item_solicitud_consumible: number | null;
+  codigo_bien: string;
+  nombre_bien: string;
+  id_bien: number | null;
+  cantidad: string | null;
+  observaciones: string;
+  nro_posicion?: string;
+  id_unidad_medida?: null;
+  id_solicitud_consumibles: number | null;
+}
+export interface IObjBienesViveroSolicitud {
   id_item_solicitud_consumible: number | null;
   codigo_bien: string;
   nombre_bien: string;
@@ -212,8 +224,4 @@ export interface IObjSolicitudVivero {
   id_persona_almacen_rechaza?: number | null;
   persona_solicita?: string | null;
   nombre_unidad_organizacional?: string | null;
-}
-
-export interface IObjDespacho {
-  fecha_despacho: string;
 }

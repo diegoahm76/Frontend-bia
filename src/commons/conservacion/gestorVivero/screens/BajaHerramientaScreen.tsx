@@ -76,6 +76,11 @@ export function BajaHerramientaScreen(): JSX.Element {
       bienes_bajas.forEach((element: IObjBienBaja, index: number) => {
         aux_items.push({...element, nro_posicion: index})
       });
+      const aux = {
+        info_baja: { ...data },
+        items_baja: aux_items
+      }
+      console.log(aux)
       form_data.append('info_baja', JSON.stringify({ ...data }));
       form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
       form_data.append('items_baja', JSON.stringify(aux_items));

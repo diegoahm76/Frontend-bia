@@ -11,11 +11,13 @@ import { useForm } from 'react-hook-form';
 import SaveIcon from '@mui/icons-material/Save';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service } from '../store/solicitudBienConsumoThunks';
-import SeleccionarSolicitudDespacho from '../components/SeleccionarSolicitudesDespacho';
-import RechazoSolicitud from '../components/RechazarSolicitud';
+import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service, get_bienes_solicitud } from '../store/solicitudBienConsumoThunks';
+import SeleccionarSolicitudDespacho from '../components/DespachoRechazoSolicitud/SeleccionarSolicitudesDespacho';
+import RechazoSolicitud from '../components/DespachoRechazoSolicitud/RechazarSolicitud';
 import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
-import FuncionarioRechazo from '../components/PersonaRechazoSolicitud';
+import FuncionarioRechazo from '../components/DespachoRechazoSolicitud/PersonaRechazoSolicitud';
+import BienRechazado from '../components/DespachoRechazoSolicitud/BienesRechazo';
+import { useNavigate } from 'react-router-dom';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -23,8 +25,8 @@ const DespachoBienesConsumoScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud_despacho, handleSubmit: handle_submit, reset: reset_solicitud_aprobacion, getValues: get_values } = useForm<IObjSolicitud>();
     const [action] = useState<string>("Despachar");
-
-    const { nro_solicitud, current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
+    const navigate = useNavigate();
+    const { current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
     const [show_rechazo_solicitud, set_show_rechazo_solicitud] = useState(false);
     const [show_buttons, set_show_buttons] = useState(true);
 
@@ -36,9 +38,9 @@ const DespachoBienesConsumoScreen = () => {
         dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }));
     }, []);
 
-    useEffect(() => {
-        dispatch(set_current_solicitud({ ...current_solicitud, nro_solicitud_por_tipo: nro_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, id_funcionario_responsable_unidad: persona_solicita.id_persona }));
-    }, [nro_solicitud]);
+    // useEffect(() => {
+    //     dispatch(set_current_solicitud({ ...current_solicitud, nro_solicitud_por_tipo: nro_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, id_funcionario_responsable_unidad: persona_solicita.id_persona }));
+    // }, [nro_solicitud]);
 
     useEffect(() => {
         reset_solicitud_aprobacion(current_solicitud);
@@ -49,10 +51,15 @@ const DespachoBienesConsumoScreen = () => {
                 void dispatch(get_person_id_service(current_solicitud.id_persona_solicita));
             }
         }
-        if (current_solicitud.id_solicitud_consumibles !== null) {
-            if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
-                void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad));
-                console.log("ok");
+        if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
+            void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
+
+
+            if (current_solicitud.id_solicitud_consumibles !== null) {
+                if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
+                    void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad));
+                    console.log("ok");
+                }
             }
         }
     }, [current_solicitud]);
@@ -94,12 +101,13 @@ const DespachoBienesConsumoScreen = () => {
 
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitudDespacho
-                    title={"Solicitudes Aprobadas"}
+                    title={"INFORMACIÓN DE LA SOLICITUD"}
                     control_solicitud_despacho={control_solicitud_despacho}
                     get_values={get_values} />
 
                 <FuncionarioRechazo title={"Persona responsable"}
                     get_values_solicitud={get_values} />
+                <BienRechazado />
 
 
                 {show_rechazo_solicitud &&
@@ -115,7 +123,7 @@ const DespachoBienesConsumoScreen = () => {
                         <Grid item xs={8} md={3}>
                             <FormButton
                                 variant_button="contained"
-                                on_click_function={handle_submit(on_submit_despacho)}
+                                on_click_function={() => { navigate("/app/almacen/solicitud_consumo") }}
                                 icon_class={<SendIcon />}
                                 label={action}
                                 type_button="submit"
@@ -144,7 +152,7 @@ const DespachoBienesConsumoScreen = () => {
                     <Grid item xs={6} md={2}>
                         <FormButton
                             variant_button="contained"
-                            on_click_function={handle_submit(on_submit_despacho)}
+                            on_click_function={reset_solicitud_aprobacion}
                             icon_class={<CloseIcon />}
                             label="Cerrar"
                             type_button="button" />
@@ -152,6 +160,7 @@ const DespachoBienesConsumoScreen = () => {
 
 
                     </Grid>
+
                 </>
 
             )}

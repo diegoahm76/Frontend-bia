@@ -5,7 +5,7 @@ import {  useAppDispatch, useAppSelector } from '../../../../hooks';
 import { set_genera_bajas, set_current_genera_baja} from '../store/slice/viveroSlice';
 import { type IObjNursery } from "../interfaces/vivero";
 import { get_bajas_nro_service, get_bajas_service, get_nurseries_baja_service } from '../store/thunks/gestorViveroThunks';
-import { Grid } from '@mui/material';
+import { Chip, Grid } from '@mui/material';
 
 
 interface IProps {
@@ -56,6 +56,20 @@ const SeleccionarBajasHerramientas = ({
               {new Date(params.value).toDateString()}
             </div>
           ),
+        },
+        {
+          field: 'baja_anulado',
+          headerName: 'Estado de baja',
+          width: 200,
+          renderCell: (params) => {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            return params.row.baja_anulado ? (
+              <Chip size="small" label="ANULADO" color="error" variant="outlined" />
+            ) : (
+              <Chip size="small" label="NO ANULADO" color="success" variant="outlined" />
+    
+            );
+          },
         },
       {
           field: 'motivo',
