@@ -52,4 +52,3 @@ export const control_info = (message: ToastContent): any =>
     progress: undefined,
     theme: 'light'
   });
-

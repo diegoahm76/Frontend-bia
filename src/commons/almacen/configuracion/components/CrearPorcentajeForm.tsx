@@ -12,6 +12,7 @@ import { activate_deactivate_porcentaje_service, delete_porcentaje_service, get_
 import CrearPorcentajeModal from './modales/CrearPorcentajeModal';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { porcentaje_seleccionado } from '../store/slice/MarcaMedidaPorcentajeSlice';
+import { Title } from '../../../../components';
 
 
 const initial_state_porcentaje_seleccionado = {
@@ -169,6 +170,7 @@ const columns: GridColDef[] = [
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+        <Title title="Porcentaje de IVA "></Title>
         <Grid item xs={12}>
         
           <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>

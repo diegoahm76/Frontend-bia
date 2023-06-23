@@ -1,15 +1,18 @@
-import { Divider, Grid, Typography } from "@mui/material";
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import { Button, Divider, Grid, Tooltip, Typography } from "@mui/material";
 import { Title } from "../../../../../components/Title"
 import { BusquedaAvanzada } from "../../components/BusquedaAvanzadaPORH/BusquedaAvanzada";
-import type { InfoPorh } from "../../Interfaces/interfaces";
+import type { InfoAvance, InfoPorh } from "../../Interfaces/interfaces";
 import { useContext, useEffect, useState } from "react";
 import { DataContext } from "../../context/contextData";
-import { control_error } from "../../../../../helpers";
-import { get_data_id } from "../../request/request";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { LoadingButton } from "@mui/lab";
 import { RegistroAvance } from "../../components/RegistrarAvance/registroAvance";
-
+import { BusquedaAvances } from "../../components/BusquedaAvances/BusquedaAvances";
+import { EditarAvance } from "../../components/EditarAvance/EditarAvance";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { DialogActividades } from "../../components/DialogActividades/DialogActividades";
+import { ButtonSalir } from "../../../../../components/Salir/ButtonSalir";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AvanceScreen: React.FC = () => {
@@ -18,9 +21,9 @@ export const AvanceScreen: React.FC = () => {
 
         {
             field: 'id_avance',
-            headerName: 'No Avance',
+            headerName: 'No AVANCE',
             sortable: true,
-            width: 170,
+            width: 80,
         },
         {
             field: 'accion',
@@ -45,34 +48,69 @@ export const AvanceScreen: React.FC = () => {
             headerName: 'EVIDENCIA',
             sortable: true,
             width: 250,
-        }
+        },
+        {
+            field: 'ACCIONES',
+            headerName: 'ACTIVIDADES',
+            sortable: true,
+            width: 120,
+            renderCell: (params) => (
+                <>
+                    <Tooltip title="Ver Actividades">
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            size="small"
+                            startIcon={<RemoveRedEyeIcon />}
+                            onClick={() => {
+                                handle_actividades();
+                            }}
+                        />
+                    </Tooltip>
+                </>
+            ),
+        },
     ];
     const {
-        set_rows_avances,
-        rows_avances
+        fetch_data_avances,
+        rows_avances,
+        set_id_proyecto,
+        id_proyecto,
+        is_register_avance,
+        set_mode,
+        is_select_avance,
+        is_editar_avance,
+        is_select_proyecto,
     } = useContext(DataContext);
 
 
     const [info, set_info] = useState<InfoPorh>();
-    const [is_register, set_is_register] = useState<boolean>(false);
+    const [info_avance, set_info_avance] = useState<InfoAvance>();
+    const [is_modal_active, set_is_modal_active] = useState<boolean>(false);
+
+    const handle_actividades = (): void => {
+        set_is_modal_active(!is_modal_active);
+    };
+
 
     const on_result = (info_porh: InfoPorh): void => {
         // reset();
         set_info(info_porh);
+        set_id_proyecto(info_porh?.id_proyecto)
     };
-    const fetch_data = async (): Promise<void> => {
-        try {
-            if (info?.id_proyecto !== undefined) {
-                await get_data_id(info?.id_proyecto, set_rows_avances, 'get/avances/por/proyectos');
-            }
-        } catch (error) {
-            control_error(error);
-        }
+
+    const on_result_avance = (Info_avance: InfoAvance): void => {
+        // reset();
+        set_info_avance(Info_avance);
+        console.log(info_avance)
     };
 
     useEffect(() => {
-        void fetch_data();
-    }, [info === undefined]);
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        if (info) {
+            void fetch_data_avances();
+        }
+    }, [info]);
     return (
         <Grid
             container
@@ -93,7 +131,7 @@ export const AvanceScreen: React.FC = () => {
                 <Title title="AVANCES POR PROYECTO" />
             </Grid>
             <BusquedaAvanzada onResult={on_result} />
-            {rows_avances.length > 0 && (
+            {is_select_proyecto && rows_avances.length > 0 && (
                 <>
                     <Grid item xs={12}>
                         <Typography variant="subtitle1" fontWeight="bold">
@@ -115,20 +153,39 @@ export const AvanceScreen: React.FC = () => {
                 </>
             )}
             <Grid item spacing={2} justifyContent="end" container>
-                <Grid item>
-                    <LoadingButton
-                        variant="outlined"
-                        onClick={() => {
-                            set_is_register(true);
-                        }}
-                    >
-                        Registrar Avance
-                    </LoadingButton>
-                </Grid>
+                {is_select_proyecto && id_proyecto ? (
+                    <Grid item>
+                        <LoadingButton
+                            variant="outlined"
+                            onClick={() => {
+                                set_mode('register_avance');
+                            }}
+                        >
+                            Registrar Avance
+                        </LoadingButton>
+
+                    </Grid>
+                ) : null
+                }
             </Grid>
-            {is_register && (
+            {is_register_avance && (
                 <RegistroAvance />
             )}
+            {is_select_avance && (
+                <EditarAvance />)}
+            {is_editar_avance && (
+                <EditarAvance />)}
+            <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                    <ButtonSalir />
+                </Grid>
+                <BusquedaAvances
+                    onResult={on_result_avance} />
+            </Grid>
+            <DialogActividades
+                is_modal_active={is_modal_active}
+                set_is_modal_active={set_is_modal_active}
+            />
         </Grid>
     );
 };

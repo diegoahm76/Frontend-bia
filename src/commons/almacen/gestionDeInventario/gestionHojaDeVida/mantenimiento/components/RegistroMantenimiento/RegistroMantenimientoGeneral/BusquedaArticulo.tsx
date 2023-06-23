@@ -85,6 +85,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                             label="Código"
                             size="small"
                             required
+                            disabled
                             value={id_bien}
                             fullWidth
                             error={mensaje_error_codigo !== ""}
@@ -97,6 +98,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                             size="small"
                             value={nombre}
                             fullWidth
+                            disabled
                             InputProps={{
                                 readOnly: true,
                             }}

@@ -146,7 +146,7 @@ const SolicitudConsumoViveroScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={4}>
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}
@@ -166,7 +166,7 @@ const SolicitudConsumoViveroScreen = () => {
                         type_button="button"
                     />
                 </Grid>
-                <Grid item xs={12} md={10}>
+                <Grid item xs={12} md={5}>
 
                     <Button
                         variant="outlined"

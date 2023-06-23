@@ -41,8 +41,6 @@ interface IProps {
     button_add_selection_hidden?: boolean | null;
 
 }
-
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarModeloDialogForm = ({
     is_modal_active,
@@ -166,8 +164,6 @@ const SeleccionarModeloDialogForm = ({
     };
     const button_style = {
         color: 'white',
-        backgroundColor: '#335B1E',
-        border: '3px solid black',
         borderRadius: '50%',
         width: '40px',
         height: '40px',
@@ -176,42 +172,30 @@ const SeleccionarModeloDialogForm = ({
         justifyContent: 'center',
         marginRight: '10px'
     };
-
-
     const export_to_excel = (): void => {
         const rows = document.querySelectorAll('.MuiDataGrid-row');
         const header_cells = document.querySelectorAll('.MuiDataGrid-cell--header');
         const data: any[][] = [];
-
         const headers = Array.from(header_cells).map((cell) => cell.textContent);
-
         rows.forEach((row) => {
             const row_data: any[] = [];
             const cells = row.querySelectorAll('.MuiDataGrid-cell');
-
             cells.forEach((cell) => {
                 row_data.push(cell.textContent);
             });
-
             data.push(row_data);
         });
-
         const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
-
         const file_id = Math.random(); // Reemplaza con la variable que contenga el ID
         const file_name = `Resultados de la busqueda_${file_id}.xlsx`; // Nombre del archivo con el ID concatenado
-
         XLSX.writeFile(workbook, file_name);
     };
-
     const export_pdf = (): void => {
         const doc = new JsPDF();
-
         const data: any[][] = [];
         const headers: any[] = [];
-
         // Obtener los nombres de las columnas de la cuadrícula
         columns_model.forEach((column) => {
             headers.push(column.headerName);
@@ -220,7 +204,6 @@ const SeleccionarModeloDialogForm = ({
         // Obtener los datos de las filas de la cuadrícula
         models.forEach((row) => {
             const row_data: any[] = [];
-
             columns_model.forEach((column) => {
                 const cell_data = row[column.field as keyof typeof row];
                 row_data.push(cell_data);
@@ -228,19 +211,14 @@ const SeleccionarModeloDialogForm = ({
 
             data.push(row_data);
         });
-
         (doc as any).autoTable({
             head: [headers],
             body: data,
         });
-
         const file_id = Math.random(); // Reemplaza con la variable que contenga el ID
         const file_name = `Resultados de la busqueda_${file_id}.pdf`; // Nombre del archivo con el ID concatenado
-
         doc.save(file_name);
     };
-
-
     return (
         <Dialog
             fullWidth
@@ -248,17 +226,8 @@ const SeleccionarModeloDialogForm = ({
             open={is_modal_active}
             onClose={handle_close_select_model}
         >
-           
-            <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
-         
+            <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
             <Divider />
-
-
-
-
-            
-
-
             <DialogContent sx={{ mb: '0px' }}>
                 {form_filters.length > 0 &&
                     <Grid container spacing={2} direction="row">
@@ -284,23 +253,16 @@ const SeleccionarModeloDialogForm = ({
                     <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '100%' }}>
                             <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
-
-
-
                             <ButtonGroup style={{ margin: 7 }}  >
-                                <Button style={button_style} onClick={export_to_excel}>
+                                <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={export_to_excel}>
                                     <i className="pi pi-file-excel"></i>
                                 </Button>
 
-                                <Button style={button_style} onClick={export_pdf}>
+                                <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={export_pdf}>
                                     <i className="pi pi-file-pdf"></i>
                                 </Button>
 
                             </ButtonGroup>
-
-
-
-
                             <DataGrid
                                 onSelectionModelChange={handle_selection_change}
                                 density="compact"

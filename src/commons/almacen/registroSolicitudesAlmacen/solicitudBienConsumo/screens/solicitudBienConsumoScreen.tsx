@@ -160,7 +160,7 @@ const SolicitudConsumoScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={12} md={3} >
+                <Grid item xs={12} md={4} >
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}
@@ -171,7 +171,15 @@ const SolicitudConsumoScreen = () => {
                 </Grid>
 
 
-                <Grid item xs={6} md={3}>
+                    <FormButton
+                        variant_button="outlined"
+                        on_click_function={reset_solicitud}
+                        icon_class={<CloseIcon />}
+                        label={"Cancelar"}
+                        type_button="button"
+                    />
+                </Grid>
+                <Grid item xs={12} md={5}>
 
                     <Button
                         variant="outlined"

@@ -4,20 +4,6 @@ import { useEffect, useState } from 'react';
 import { Grid, Box, DialogTitle, DialogActions, Button, Stack, } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
-
-// import { useNavigate } from 'react-router-dom';
-// Componentes de Material UI
-import { Grid, Box, IconButton, Avatar, Chip, Tooltip,  } from '@mui/material';
-// Icons de Material UI
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-
-
-
-
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-// Componentes personalizados
-import { Title } from '../../../../../../components/Title';
-// // Hooks
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -71,8 +57,23 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
             >
-                <Grid item xs={12}>
-                    {/* <DialogTitle>Activos</DialogTitle> */}
+
+                <Box
+                    component="form"
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onSubmit={
+                        action === 'create'
+                            ? handle_submit(on_submit)
+                            : handle_submit(on_submit)
+                    }
+                >
+                    <DialogTitle>
+                        {action === 'create'
+                            ? ''
+                            : action === 'detail'
+                                ? 'Detalle  Hoja de vida'
+                                : 'Editar hoja de '}
+                    </DialogTitle>
 
                     <SeleccionarOtros control_other={control_other}
                         get_values={get_values} />
