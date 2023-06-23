@@ -7,9 +7,12 @@ import {
   type IDistribucion,
   type IObjBien,
   type IObjDespacho,
-  type IObjBienDespacho
+  type IObjBienDespacho,
+  type IObjBienesSolicitud
 } from '../../interfaces/distribucion';
 import { type Persona } from "../../../../../interfaces/globalModels";
+import {type IObjBienesSolicitud as IObjBienSolicitudAux} from '../../../solicitudMaterial/interfaces/solicitudVivero';
+
 
 
 
@@ -111,7 +114,7 @@ export const initial_state_current_despacho: IObjDespacho = {
   fecha_despacho:(new Date().toString()),
   fecha_registro: null,
   motivo: null,
-  despacho_anulado: null,
+  despacho_anulado: false,
   justificacion_anulacion: null,
   fecha_anulacion: null,
   ruta_archivo_con_recibido: null,
@@ -122,6 +125,17 @@ export const initial_state_current_despacho: IObjDespacho = {
   id_unidad_para_la_que_solicita: null,
   id_funcionario_responsable_unidad: null,
   id_persona_anula: null,
+}
+export const initial_state_bien_selected: IObjBienesSolicitud = {
+  id_item_solicitud_viveros: null,
+  id_solicitud_viveros: null,
+  nro_posicion: null,
+  id_bien: null,
+  cod_tipo_elemento_vivero: null,
+  codigo_bien: null,
+  nombre_bien: null,
+  cantidad: null,
+  observaciones: null,
 }
 
 const initial_state: IDistribucion = {
@@ -141,6 +155,8 @@ const initial_state: IDistribucion = {
   current_bien: initial_state_current_bien,
   bienes_despacho: [],
   nro_despacho: null,
+  bien_selected: initial_state_bien_selected,
+  bienes_solicitud_aux: [],
 }
 
 
@@ -207,6 +223,14 @@ export const distribucion_slice = createSlice({
     set_nro_despacho: (state: IDistribucion, action: PayloadAction<number | null>) => {
       state.nro_despacho = action.payload;
     },
+    
+    set_bien_selected: (state: IDistribucion, action: PayloadAction<IObjBienesSolicitud>) => {
+      state.bien_selected = action.payload;
+    },
+    
+    set_bienes_solicitud_aux: (state: IDistribucion, action: PayloadAction<IObjBienSolicitudAux[]>) => {
+      state.bienes_solicitud_aux = action.payload;
+    },
   },
 });
 export const { 
@@ -225,5 +249,7 @@ export const {
   set_bienes_despacho,
   set_despachos, 
   set_current_despacho, 
-  set_nro_despacho
+  set_nro_despacho,
+  set_bien_selected,
+  set_bienes_solicitud_aux
 } = distribucion_slice.actions;

@@ -22,12 +22,20 @@ import EditIcon from '@mui/icons-material/Edit';
 import {
   add_nursery_service,
   edit_nursery_service,
+  get_viverista_id_service,
 } from '../store/thunks/gestorViveroThunks';
+import {
+  set_current_nursery
+} from '../store/slice/viveroSlice';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IObjNursery as FormValues } from '../interfaces/vivero';
 import { api } from '../../../../api/axios';
 import type { IList } from '../../../../interfaces/globalModels';
+import { get_ciudades } from "../../../../request/getRequest";
+import { control_error } from '../../solicitudMaterial/store/thunks/solicitudViveroThunks';
+import FormInputFileController from '../../../../components/partials/form/FormInputFileController';
+import ViveristaActual from './ViveristaActual';
 
 interface IProps {
   action: string;
@@ -54,6 +62,7 @@ const CrearViveroDialogForm = ({
   const [nursery_types, set_nursery_types] = useState(initial_options);
   const [source_resources, set_source_resources] = useState(initial_options);
   const [file, set_file] = useState<any>(null);
+  const [file_name, set_file_name] = useState<string>("");
 
   const { current_nursery } = useAppSelector((state) => state.nursery);
 
@@ -62,19 +71,47 @@ const CrearViveroDialogForm = ({
     control: control_vivero,
     handleSubmit: handle_submit,
     reset: reset_nursery,
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    getValues,
-    formState: { errors },
+    getValues: get_values,
   } = useForm<FormValues>();
-  console.log('Errors:', errors);
 
   const handle_close_add_nursery = (): void => {
     set_is_modal_active(false);
   };
   useEffect(() => {
     reset_nursery(current_nursery);
-    console.log(current_nursery);
+    if (current_nursery.id_vivero !== null) {
+      if (current_nursery.ruta_archivo_creacion !== null) {
+        set_file_name(String(current_nursery.ruta_archivo_creacion))
+        if(current_nursery.id_viverista_actual !== null){
+          void dispatch(get_viverista_id_service(Number(current_nursery.id_vivero ?? 0))) 
+        }
+      }
+    }
   }, [current_nursery]);
+
+
+  useEffect(() => {
+    if (file !== null) {
+      if ('name' in file) {
+        console.log(file.name)
+        set_file_name(file.name)
+        dispatch(set_current_nursery({ 
+          ...current_nursery, 
+          nombre: get_values("nombre"),
+          cod_municipio: get_values("cod_municipio"),
+          direccion: get_values("direccion"),
+          area_mt2: get_values("area_mt2"),
+          area_propagacion_mt2: get_values("area_propagacion_mt2"),
+          tiene_area_produccion: get_values("tiene_area_produccion"),
+          tiene_areas_pep_sustrato: get_values("tiene_areas_pep_sustrato"),
+          tiene_area_embolsado: get_values("tiene_area_embolsado"),
+          cod_tipo_vivero: get_values("cod_tipo_vivero"),
+          cod_origen_recursos_vivero: get_values("cod_origen_recursos_vivero"),
+          ruta_archivo_creacion: file
+        }))
+      }
+    }
+  }, [file]);
 
   const on_submit = (data: FormValues): void => {
     console.log(file);
@@ -117,6 +154,16 @@ const CrearViveroDialogForm = ({
     handle_close_add_nursery();
   };
 
+  const get_numicipalities = async (): Promise<void> => {
+    try {
+      const {
+        data: { data: municipios }
+      } = await get_ciudades("50");
+      set_municipalities(municipios);
+    } catch (err) {
+      control_error("error encontrando municipios");
+    } 
+  };
   const text_choise_adapter: any = (dataArray: string[]) => {
     const data_new_format: IList[] = dataArray.map((dataOld) => ({
       label: dataOld[1],
@@ -128,18 +175,14 @@ const CrearViveroDialogForm = ({
   useEffect(() => {
     const get_selects_options: any = async () => {
       try {
-        const { data: municipalities_no_format } = await api.get(
-          'choices/municipios/'
-        );
+        
         const { data: nursery_types_no_format } = await api.get(
           'conservacion/choices/tipo-vivero/'
         );
         const { data: source_resources_no_format } = await api.get(
           'conservacion/choices/origen-recursos-vivero/'
         );
-        const municipalities_format: IList[] = text_choise_adapter(
-          municipalities_no_format
-        );
+       
         const nursery_types_format = text_choise_adapter(
           nursery_types_no_format
         );
@@ -156,7 +199,7 @@ const CrearViveroDialogForm = ({
         //         meta.push({ label, value } as IList);
         //     }
         // });
-        set_municipalities(municipalities_format);
+        void get_numicipalities();
       } catch (err) {
         console.log(err);
       }
@@ -164,9 +207,7 @@ const CrearViveroDialogForm = ({
     void get_selects_options();
   }, []);
 
-  const on_change_file: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_file(e.target.files != null ? e.target.files[0] : '');
-  };
+
 
   return (
     <Dialog
@@ -192,9 +233,9 @@ const CrearViveroDialogForm = ({
         </DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container spacing={2}>
-            <Title title="Informacion pricipal"></Title>
-            <Grid item xs={11} md={5} margin={0}>
+          <Grid container>
+            <Title title="INFORMACION PRINCIPAL"></Title>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="nombre"
                 control={control_vivero}
@@ -223,7 +264,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="cod_municipio"
                 control={control_vivero}
@@ -260,7 +301,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="direccion"
                 control={control_vivero}
@@ -289,14 +330,14 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="area_mt2"
                 control={control_vivero}
                 defaultValue={0}
                 rules={{
                   required: true,
-                  min: getValues('area_propagacion_mt2') ?? '',
+                  min: get_values('area_propagacion_mt2') ?? '',
                 }}
                 render={({
                   field: { onChange, value },
@@ -318,7 +359,7 @@ const CrearViveroDialogForm = ({
                         ? error.type === 'required'
                           ? 'El area es requerida'
                           : `El valor del area debe ser mayor al area de propagacion (${
-                              getValues('area_propagacion_mt2') ?? ''
+                              get_values('area_propagacion_mt2') ?? ''
                             })`
                         : 'Ingrese area'
                     }
@@ -326,7 +367,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="cod_tipo_vivero"
                 control={control_vivero}
@@ -363,14 +404,13 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Title title="Detalles vivero"></Title>
-            
-            <Grid item xs={11} md={5} margin={0}>
+            <Title title="DETALLES VIVERO"></Title>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="area_propagacion_mt2"
                 control={control_vivero}
                 defaultValue={0}
-                rules={{ required: true, max: getValues('area_mt2') ?? '' }}
+                rules={{ required: true, max: get_values('area_mt2') ?? '' }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -390,8 +430,8 @@ const CrearViveroDialogForm = ({
                       error != null
                         ? error.type === 'required'
                           ? 'El area de propagacion es requerida'
-                          : `El valor del area debe ser menor al area (${
-                              getValues('area_mt2') ?? ''
+                          : `El valor del área de propagación debe ser menor al área total (${
+                              get_values('area_mt2') ?? ''
                             })`
                         : 'Ingrese area'
                     }
@@ -399,7 +439,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="tiene_area_produccion"
                 control={control_vivero}
@@ -433,7 +473,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="tiene_areas_pep_sustrato"
                 control={control_vivero}
@@ -467,7 +507,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="tiene_area_embolsado"
                 control={control_vivero}
@@ -501,7 +541,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="cod_origen_recursos_vivero"
                 control={control_vivero}
@@ -538,19 +578,25 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            {action === 'create' ? (
-              <Grid item xs={11} md={5} margin={0}>
-                <TextField
-                  margin="dense"
-                  fullWidth
-                  size="small"
-                  // label="archivo"
-                  variant="outlined"
-                  type="file"
-                  onChange={on_change_file}
-                />
-              </Grid>
-            ) : null}
+            
+                <FormInputFileController
+                xs={11}
+                md={5}
+                margin={1}
+                control_form={control_vivero}
+                control_name="ruta_archivo_creacion"
+                default_value=""
+                rules={{required_rule: {rule: true, message: "Archivo requerido"}}}
+                label="Archivo de soporte"
+                disabled={false}
+                helper_text=""
+                set_value={set_file}
+                hidden_text={action !== 'create'}
+                file_name={file_name}
+            />
+            {current_nursery.id_viverista_actual !== null &&
+              <ViveristaActual/>
+            }
           </Grid>
         </DialogContent>
         <Divider />

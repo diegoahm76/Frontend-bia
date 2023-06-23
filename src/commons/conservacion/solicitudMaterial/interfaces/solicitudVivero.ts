@@ -103,6 +103,8 @@ export interface IObjBienesSolicitud {
   codigo_bien?: string | null;
   nombre_bien?: string | null;
   cantidad?: number | null;
+  cantidad_faltante?: number | null;
+  cantidad_despachada?: number | null;
   observaciones?: string | null;
 }
 export interface IObjBienConsumo {

@@ -9,14 +9,14 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks/hooks';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
 interface IProps {
-
+    cordinador: boolean|null;
     control_solicitud_aprobada: any;
     get_values: any
 
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const Aprobacion = ({
-
+    cordinador,
     control_solicitud_aprobada,
     get_values
 }: IProps) => {
@@ -29,7 +29,7 @@ const Aprobacion = ({
     const dispatch = useAppDispatch();
 
     const columns_solicitudes: GridColDef[] = [
-        { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
+        { field: 'id_solicitud_vivero', headerName: 'ID', width: 20 },
         {
             field: 'fecha_solicitud',
             headerName: 'Fecha de solicitud',
@@ -43,7 +43,7 @@ const Aprobacion = ({
         },
         {
             field: 'persona_solicita',
-            headerName: 'Observación',
+            headerName: 'Persona solicita',
             width: 350,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -84,7 +84,7 @@ const Aprobacion = ({
                             xs: 12,
                             md: 12,
                             control_form: control_solicitud_aprobada,
-                            control_name: "estado_aprobacion_responsable",
+                            control_name: cordinador===true ?"estado_aprobacion_coord_viveros":"estado_aprobacion_responsable",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
                             label: "Estado de aprobación",
@@ -102,7 +102,7 @@ const Aprobacion = ({
                             xs: 12,
                             md: 12,
                             control_form: control_solicitud_aprobada,
-                            control_name: "justificacion_aprobacion_responsable",
+                            control_name: cordinador===true?"justificacion_aprobacion_coord_viveros":"justificacion_aprobacion_responsable",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Justificación",
