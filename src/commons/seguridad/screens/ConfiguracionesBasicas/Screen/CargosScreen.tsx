@@ -180,7 +180,7 @@ export const CargoScreen: React.FC = () => {
             >
 
                 <Grid item xs={12}>
-                    <Title title="CONFIGURACIONES BÁSICAS CARGOS" />
+                    <Title title="CONFIGURACIONES CARGOS" />
                 </Grid>
                 <Grid item xs={12}>
                     <Button

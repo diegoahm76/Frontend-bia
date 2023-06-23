@@ -1,13 +1,12 @@
 import { LoadingButton } from '@mui/lab';
 import { Grid, TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
-
-// interface IProps {
-//   set_porh: any;
-// }
+import { useContext, useEffect, useState } from 'react';
+import { DataContext } from '../../context/contextData';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaPorh: React.FC = () => {
+
+  const { set_is_general, set_is_consulta, } = useContext(DataContext);
   const [is_search, set_is_search] = useState(false);
 
   useEffect(() => {
@@ -30,7 +29,11 @@ export const BusquedaPorh: React.FC = () => {
       </Grid>
       <Grid item xs={12} sm={6} md={2} container justifyContent="end">
         <LoadingButton
-          type="submit"
+          // type="submit"
+          onClick={() => {
+            set_is_general(true);
+            set_is_consulta(false);
+          }}
           variant="contained"
           color="primary"
           loading={is_search}

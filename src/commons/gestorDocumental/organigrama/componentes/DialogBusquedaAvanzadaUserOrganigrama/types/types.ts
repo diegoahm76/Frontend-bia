@@ -1,5 +1,5 @@
-import type { Dispatch, SetStateAction } from "react";
-import type { UserDelegacionOrganigrama } from "../../../interfaces/organigrama";
+import type { Dispatch, SetStateAction } from 'react';
+import type { UserDelegacionOrganigrama } from '../../../interfaces/organigrama';
 
 export interface IProps {
   is_modal_active: boolean;
@@ -8,7 +8,8 @@ export interface IProps {
 }
 
 export interface FormValues {
-  nombre_usuario: string;
+  primer_nombre?: string;
+  primer_apellido?: string;
 }
 
 export type keys_object = 'primer_nombre' | 'primer_apellido';
