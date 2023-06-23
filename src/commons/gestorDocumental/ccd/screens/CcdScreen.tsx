@@ -496,7 +496,8 @@ export const CcdScreen: React.FC = () => {
                             console.log(selectedOption.value);
                           } else {
                             onChange(selectedOption);
-                            dispatch(serie_ccd_current(selectedOption.value));
+
+                            dispatch(get_serie_ccd_current(selectedOption.value));
                           }
                           //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
                           console.log('Valor seleccionado:', selectedOption);
