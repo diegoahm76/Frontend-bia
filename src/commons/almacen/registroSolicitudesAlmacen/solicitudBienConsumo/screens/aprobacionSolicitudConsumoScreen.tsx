@@ -4,12 +4,12 @@ import { Grid } from '@mui/material';
 import FormButton from "../../../../../components/partials/form/FormButton";
 import { type IObjSolicitud } from "../interfaces/solicitudBienConsumo";
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
-import type { AuthSlice } from '../../../../../commons/auth/interfaces';
+// import type { AuthSlice } from '../../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, aprobacion_solicitud_pendiente, } from '../store/solicitudBienConsumoThunks';
-import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
+import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, aprobacion_solicitud_pendiente, get_bienes_solicitud, get_solicitud_documento_service, } from '../store/solicitudBienConsumoThunks';
+import { set_current_solicitud, } from '../store/slices/indexSolicitudBienesConsumo';
 import SeleccionarSolicitudAprobada from '../components/componentesAprobacion/SeleccionarSolicitudAprobacion';
 import SeleccionarBienAprobado from '../components/componentesAprobacion/SeleccionarBienAprobado';
 import FuncionarioAprobacion from '../components/componentesAprobacion/SeleccionarPersonaAprobada';
@@ -19,21 +19,22 @@ import Aprobacion from '../components/componentesAprobacion/Aprobacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const AprobacionSolicitudConsumoScreen = () => {
-    const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+    //  const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud_aprobacion, handleSubmit: handle_submit, reset: reset_solicitud_aprobacion, getValues: get_values } = useForm<IObjSolicitud>();
-    const [action] = useState<string>("Aprobar");
-    const { nro_solicitud, current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state) => state.solic_consumo);
+    const [action] = useState<string>("Guardar");
+    const { current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
 
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         void dispatch(get_uni_organizacional());
-        dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }))
+        void dispatch(get_solicitud_documento_service())
+        // dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }))
     }, [])
 
-    useEffect(() => {
-        dispatch(set_current_solicitud({ ...current_solicitud, nro_solicitud_por_tipo: nro_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, id_funcionario_responsable_unidad: persona_solicita.id_persona }))
-    }, [nro_solicitud]);
+    // useEffect(() => {
+    //     dispatch(set_current_solicitud({ ...current_solicitud, nro_solicitud_por_tipo: nro_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, id_funcionario_responsable_unidad: persona_solicita.id_persona }))
+    // }, [nro_solicitud]);
 
     useEffect(() => {
         // console.log(current_solicitud)
@@ -45,17 +46,31 @@ const AprobacionSolicitudConsumoScreen = () => {
                 void dispatch(get_person_id_service(current_solicitud.id_persona_solicita))
 
         }
-        if (current_solicitud.id_solicitud_consumibles !== null) {
+        if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
+            void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
+
+
             if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
-                void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad))
-                console.log("ok")
+                void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad ?? 0))
             }
         }
 
     }, [current_solicitud]);
+
     useEffect(() => {
-        dispatch(set_current_solicitud({ ...current_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional }))
+        dispatch(set_current_solicitud({ ...current_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, id_unidad_org_del_responsable: persona_solicita.id_unidad_organizacional_actual }))
     }, [persona_solicita]);
+
+
+    useEffect(() => {
+        const observacion = get_values("observacion")
+        const motivo = get_values("motivo")
+        const id_unidad_para_la_que_solicita = get_values("id_unidad_para_la_que_solicita")
+        if (current_funcionario.id_persona !== current_solicitud.id_funcionario_responsable_unidad) {
+            dispatch(set_current_solicitud({ ...current_solicitud, id_funcionario_responsable_unidad: current_funcionario.id_persona, observacion, motivo, id_unidad_para_la_que_solicita }))
+        }
+
+    }, [current_funcionario]);
 
     const on_submit_aprobacion = (data: IObjSolicitud): void => {
 

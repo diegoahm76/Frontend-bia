@@ -52,7 +52,7 @@ const RechazoSolicitud = ({
 
         },
         {
-            field: 'persona_solicita',
+            field: 'observacion',
             headerName: 'Observación',
             width: 350,
             renderCell: (params) => (
@@ -65,7 +65,7 @@ const RechazoSolicitud = ({
 
     ];
 
-    // eslint-disable-next-line @typescript-eslint/no-redeclare
+
 
 
     return (

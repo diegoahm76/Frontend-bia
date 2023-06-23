@@ -46,7 +46,7 @@ export const get_nurseries_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio');
-      
+      console.log(data)
       dispatch(get_nurseries(data.data));
       return data;
     } catch (error: any) {
