@@ -1,4 +1,4 @@
-import { Avatar, Grid, IconButton, Tooltip, } from "@mui/material";
+import { Grid, } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../../../hooks";
 import { type IObjBienConsumo, type IObjBienesSolicitud } from "../../interfaces/solicitudBienConsumo";
 import { useEffect, useState, } from "react";
@@ -7,22 +7,16 @@ import BuscarModelo from "../../../../../../components/partials/getModels/Buscar
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
 import { set_bienes, set_bienes_solicitud, set_current_bien } from "../../store/slices/indexSolicitudBienesConsumo";
 import { useForm } from "react-hook-form";
-import { get_bienes_consumo, get_bienes_consumo_codigo_bien, control_error } from "../../store/solicitudBienConsumoThunks";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-
-
-
-
+import { get_bienes_consumo, control_error } from "../../store/solicitudBienConsumoThunks";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarBienConsumo = () => {
+const BienRechazado = () => {
 
 
     // const [action, set_action] = useState<string>("agregar");
-    const { control: control_bien, reset: reset_bien, getValues: get_values_bien, reset: reset_bien_solicitud } = useForm<IObjBienConsumo>();
-    const { control: control_bien_solicitud, handleSubmit: handle_submit_item_solicitud, } = useForm<IObjBienesSolicitud>();
-    const { unidades_medida, bienes, bienes_solicitud, current_bien, current_solicitud } = useAppSelector((state) => state.solic_consumo);
+    const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjBienConsumo>();
+    const { handleSubmit: handle_submit_item_solicitud } = useForm<IObjBienesSolicitud>();
+    const { bienes, bienes_solicitud, current_bien, current_solicitud } = useAppSelector((state) => state.solic_consumo);
     const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesSolicitud[]>([]);
     const [action, set_action] = useState<string>("crear");
 
@@ -127,53 +121,53 @@ const SeleccionarBienConsumo = () => {
             renderCell: (params) => (
                 <>
 
-                    <Tooltip title="Editar">
-                        <IconButton
-                            onClick={() => {
-                                edit_bien_solicitud(params.row)
+                    {/* <Tooltip title="Editar">
+                            <IconButton
+                                onClick={() => {
+                                    edit_bien_siembra(params.row)
 
-                            }}
-                        >
-                            <Avatar
-                                sx={{
-                                    width: 24,
-                                    height: 24,
-                                    background: '#fff',
-                                    border: '2px solid',
                                 }}
-                                variant="rounded"
                             >
-                                <EditIcon
-                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                />
+                                <Avatar
+                                    sx={{
+                                        width: 24,
+                                        height: 24,
+                                        background: '#fff',
+                                        border: '2px solid',
+                                    }}
+                                    variant="rounded"
+                                >
+                                    <EditIcon
+                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                    />
 
-                            </Avatar>
-                        </IconButton>
-                    </Tooltip>
+                                </Avatar>
+                            </IconButton>
+                        </Tooltip> */}
 
-                    {<Tooltip title="Borrar">
-                        <IconButton
-                            onClick={() => {
-                                delete_bien_solicitud(params.row)
-                            }}
-                        >
-                            <Avatar
-                                sx={{
-                                    width: 24,
-                                    height: 24,
-                                    background: '#fff',
-                                    border: '2px solid',
+                    {/* <Tooltip title="Borrar">
+                            <IconButton
+                                onClick={() => {
+                                    delete_bien_siembra(params.row)
                                 }}
-                                variant="rounded"
                             >
-                                <DeleteIcon
-                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                />
+                                <Avatar
+                                    sx={{
+                                        width: 24,
+                                        height: 24,
+                                        background: '#fff',
+                                        border: '2px solid',
+                                    }}
+                                    variant="rounded"
+                                >
+                                    <DeleteIcon
+                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                    />
 
-                            </Avatar>
-                        </IconButton>
-                    </Tooltip>
-                    }
+                                </Avatar>
+                            </IconButton>
+                        </Tooltip>
+                     */}
                 </>
             ),
         },
@@ -234,44 +228,12 @@ const SeleccionarBienConsumo = () => {
         }
     })
 
-    const search_bien: any = (async () => {
-        const codigo_bien = get_values_bien("codigo_bien")
-        if (codigo_bien !== null && codigo_bien !== undefined) {
-            void dispatch(get_bienes_consumo_codigo_bien(codigo_bien))
-        }
-    })
-    const edit_bien_solicitud = (item: IObjBienesSolicitud): void => {
-        set_action("editar")
-        const item_bien = aux_bienes_solicitud.find((p) => p.id_bien === item.id_bien)
-        reset_bien_solicitud(item_bien)
-        const aux_items: IObjBienesSolicitud[] = []
-        aux_bienes_solicitud.forEach((option) => {
-            if (option.id_bien !== item.id_bien) {
-                aux_items.push(option)
-            }
-        })
-
-        set_aux_bienes_solicitud(aux_items)
-    };
-    const delete_bien_solicitud = (item: IObjBienesSolicitud): void => {
-        const bien: IObjBienConsumo | undefined = bienes.find((p: IObjBienConsumo) => p.id_bien === item.id_bien)
-        console.log("bien", bien)
-        if (bien !== undefined) {
-            console.log(bien)
-            dispatch(set_current_bien(bien))
-        }
-        const aux_items: IObjBienesSolicitud[] = []
-        aux_bienes_solicitud.forEach((option) => {
-            if (option.id_bien !== item.id_bien) {
-                aux_items.push(option)
-            }
-        })
-        set_aux_bienes_solicitud(aux_items)
-
-    };
-
-
-
+    // const search_bien: any = (async () => {
+    //     const codigo_bien = get_values_bien("codigo_bien")
+    //     if (codigo_bien !== null && codigo_bien !== undefined) {
+    //         void dispatch(get_bienes_consumo_codigo_bien(codigo_bien))
+    //     }
+    // })
     return (
         <>
             <Grid
@@ -287,89 +249,13 @@ const SeleccionarBienConsumo = () => {
                     models={bienes}
                     get_filters_models={get_bienes_filtro}
                     set_models={set_bienes}
-                    button_submit_label='Buscar bien'
-                    form_inputs={[
-                        {
-                            datum_type: "title",
-                            title_label: "Seleccione bien"
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "codigo_bien",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "Código bien requerido" } },
-                            label: "Código bien",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                            on_blur_function: search_bien
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien,
-                            control_name: "nombre",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
-                            label: "Nombre",
-                            type: "text",
-                            disabled: false,
-                            helper_text: "",
-                        },
-                    ]}
-                    form_inputs_list={[
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien_solicitud,
-                            control_name: "cantidad",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "Ingrese cantidad" } },
-                            label: "Cantidad",
-                            type: "number",
-                            disabled: false,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_bien_solicitud,
-                            control_name: "id_unidad_medida",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Unidad ",
-                            disabled: false,
-                            helper_text: "debe seleccionar campo",
-                            select_options: unidades_medida,
-                            option_label: "nombre",
-                            option_key: "id_unidad_medida"
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 5,
-                            control_form: control_bien_solicitud,
-                            control_name: "observaciones",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "Observación requerido" } },
-                            label: "Observación",
-                            type: "text",
-                            multiline_text: true,
-                            rows_text: 4,
-                            disabled: false,
-                            helper_text: ""
-                        },
-                    ]}
+                    show_search_button={false}
+                    form_inputs_list={[]}
+                    show_button_table={false}
                     title_list='Bienes consumidos'
                     list={aux_bienes_solicitud}
                     add_item_list={handle_submit_item_solicitud(on_submit_item_solicitud)}
-                    add_list_button_label={null}
+                    add_list_button_label={""}
                     columns_list={columns_bienes_solicitud}
                     row_list_id={"id_bien"}
                     modal_select_model_title='Buscar bien'
@@ -400,8 +286,7 @@ const SeleccionarBienConsumo = () => {
                             disabled: false,
                             helper_text: ""
                         },
-                    ]}
-                />
+                    ]} form_inputs={[]} />
 
 
             </Grid>
@@ -413,4 +298,4 @@ const SeleccionarBienConsumo = () => {
 
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarBienConsumo;
+export default BienRechazado;

@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid } from '@mui/material';
-import { useAppSelector } from '../../../../../hooks';
-import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSolicitudBienesConsumo';
+import { useAppSelector } from '../../../../../../hooks';
+import { set_current_solicitud, set_solicitudes } from '../../store/slices/indexSolicitudBienesConsumo';
 import { type GridColDef } from '@mui/x-data-grid';
-import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
-import { type IList } from '../../../../../interfaces/globalModels';
+import BuscarModelo from '../../../../../../components/partials/getModels/BuscarModelo';
+import { type IList } from '../../../../../../interfaces/globalModels';
 
 interface IProps {
     title: string;
@@ -83,7 +83,7 @@ const RechazoSolicitud = ({
                     columns_model={columns_solicitudes}
                     models={solicitudes}
                     set_models={set_solicitudes}
-                    button_submit_label='Solicitudes rechazadas'
+                    show_search_button={false}
                     form_inputs={[
                         {
                             datum_type: "title",
@@ -93,7 +93,7 @@ const RechazoSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 8,
+                            md: 12,
                             control_form: control_solicitud_despacho,
                             control_name: "fecha_rechazo_almacen",
                             default_value: "",
