@@ -54,7 +54,7 @@ const SeleccionarSolicitudDespacho = ({
 
         },
         {
-            field: 'nro_solicitud_por_tipo',
+            field: 'persona_solicita',
             headerName: 'Solicitud elaborada por:',
             width: 400,
 

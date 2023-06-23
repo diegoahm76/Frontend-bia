@@ -8,11 +8,12 @@ import type { AuthSlice } from '../../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, aprobacion_solicitud_pendiente_vivero, } from '../store/solicitudBienConsumoThunks';
+import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, aprobacion_solicitud_pendiente_vivero, get_bienes_solicitud, } from '../store/solicitudBienConsumoThunks';
 import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
 import SeleccionarSolicitudAprobadaVivero from '../components/componentesAprobacion/SeleccionarSolicitudAprobacionVivero';
 import SeleccionarBienAprobacionVivero from '../components/componentesAprobacion/SeleccionBIenAprobadoVivero';
 import PersonaResponsableVivero from '../components/componentesAprobacion/SeleccionarPersonaAprobadoVivero';
+import Aprobacion from '../components/componentesAprobacion/Aprobacion';
 
 
 
@@ -44,7 +45,9 @@ const AprobacionSolicitudViveroScreen = () => {
                 void dispatch(get_person_id_service(current_solicitud.id_persona_solicita))
 
         }
-        if (current_solicitud.id_solicitud_consumibles !== null) {
+        if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
+            void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
+
             if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
                 void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad))
                 console.log("ok")
@@ -52,6 +55,7 @@ const AprobacionSolicitudViveroScreen = () => {
         }
 
     }, [current_solicitud]);
+
     useEffect(() => {
         dispatch(set_current_solicitud({ ...current_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional }))
     }, [persona_solicita]);
@@ -92,6 +96,7 @@ const AprobacionSolicitudViveroScreen = () => {
                 <PersonaResponsableVivero get_values_solicitud={get_values} />
 
                 <SeleccionarBienAprobacionVivero />
+                <Aprobacion control_solicitud_aprobacion={control_solicitud_aprobacion_vivero} get_values={get_values} />
 
 
             </Grid>

@@ -225,9 +225,9 @@ const SeleccionarBienAprobacionVivero = () => {
         const nombre_cientifico = get_values_bien("nombre_cientifico")
         const cod_tipo_elemento_vivero = get_values_bien("cod_tipo_elemento_vivero")
 
-        if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined && nombre_cientifico !== null && nombre_cientifico !== undefined && cod_tipo_elemento_vivero !== null && cod_tipo_elemento_vivero !== undefined) {
+        if (codigo_bien !== null && codigo_bien !== undefined && nombre_cientifico !== null && nombre_cientifico !== undefined && nombre !== null && nombre !== undefined && cod_tipo_elemento_vivero !== null && cod_tipo_elemento_vivero !== undefined) {
 
-            void dispatch(get_bienes_vivero_consumo(codigo_bien, nombre, nombre_cientifico, cod_tipo_elemento_vivero))
+            void dispatch(get_bienes_vivero_consumo(codigo_bien, nombre_cientifico, nombre, cod_tipo_elemento_vivero))
         }
     })
 

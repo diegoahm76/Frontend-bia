@@ -46,7 +46,7 @@ export const get_nurseries_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get('conservacion/viveros/get-by-nombre-municipio');
-      
+      console.log(data)
       dispatch(get_nurseries(data.data));
       return data;
     } catch (error: any) {
@@ -247,6 +247,7 @@ export const get_items_despacho_service = (id: string|number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`conservacion/despachos/items-despacho/get-by-id/${id??""}/`);
+      console.log(data)
       if (data.data.length > 0) {
           dispatch(get_items_despacho(data.data));
       } else {
@@ -627,10 +628,10 @@ export const get_bienes_service = (
       const { data } = await api.get(`conservacion/bajas/busqueda-avanzada-bienes-bajas/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${tipo_elemento ?? ""}`);
       console.log(data)
       dispatch(set_insumos(data.data));
-      if (data.success === true) {
-        control_success(data.detail)      
+      if (data.data.length >0) {
+        control_success("Se encontrarón bienes")      
       } else {
-        control_error(data.detail)
+        control_error("No se encontrarón bienes")
       }
       return data;
     } catch (error: any) {

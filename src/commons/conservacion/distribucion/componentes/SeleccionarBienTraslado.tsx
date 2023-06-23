@@ -581,7 +581,7 @@ const SeleccionarBienSiembra = () => {
                             label: "Tipo de bien",
                             disabled: false,
                             helper_text: "",
-                            select_options: [{label: "Semillas", value: "Semillas"}, {label: "Insumos", value: "Insumos"}, {label: "Plantas", value: "Plantas"}, {label: "Herramientas", value: "Herramientas"}],
+                            select_options: [{label: "Semillas", value: "MV"}, {label: "Insumos", value: "IN"}, {label: "Plantas", value: "MV"}, {label: "Herramientas", value: "HE"}],
                             option_label: "label",
                             option_key: "value",
                         },

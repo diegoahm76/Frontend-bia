@@ -419,7 +419,6 @@ export const get_bienes_service = (
 ): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            console.log(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=MV`)
             const { data } = await api.get(`conservacion/solicitudes/get-bien-by-codigo/${id_vivero ?? ""}/?cod_tipo_elemento_vivero=${tipo_bien ?? ""}&codigo_bien=${codigo_bien ?? ""}&nombre=${nombre_bien ?? ""}`);
             dispatch(set_bienes(data.data));
             console.log(data)
@@ -470,11 +469,7 @@ export const get_solicitud_id_service = (
             const { data } = await api.get(`conservacion/funcionario/get-solicitud/${id_solicitud_viveros ?? ""}/`);
             dispatch(set_current_solicitud(data.data_maestro));
             console.log(data)
-            if (data.data.length > 0) {
-                // control_success("Se encontrarón bienes")
-            } else {
-                // control_error("No se encontrarón bienes")
-            }
+            
             return data;
         } catch (error: any) {
             // console.log('get_planting_goods_service');
@@ -545,7 +540,7 @@ export const aprobacion_solicitud_coordinador: any = (
                 solicitud
             );
             console.log(data)
-            dispatch(get_solicitud_service());
+            dispatch(get_solicitud_aprobacion_coordinador());
             control_success('Se aprobo la solicitud');
 
             return data;

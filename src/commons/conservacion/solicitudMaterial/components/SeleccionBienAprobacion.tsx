@@ -7,8 +7,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
 import { set_bienes, set_bienes_solicitud, set_current_bien } from "../store/slices/indexSolicitud";
 import { useForm } from "react-hook-form";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { get_bienes_service, } from "../store/thunks/solicitudViveroThunks";
+// import { get_bienes_service, } from "../store/thunks/solicitudViveroThunks";
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -281,10 +280,9 @@ const SeleccionBienAprobacion = () => {
                     show_search_button={false}
                     form_inputs_list={[
 
-
                     ]}
                     show_button_table={false}
-                    title_list='Bienes consumidos'
+                    title_list='Bienes solicitados'
                     list={aux_bienes_solicitud}
                     add_item_list={handle_submit_item_solicitud(on_submit_item_solicitud)}
                     add_list_button_label={""}

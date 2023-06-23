@@ -262,7 +262,7 @@ const SeleccionarBienSiembra = () => {
                 {  
                     const bien_semilla: IObjPlantingGoods | undefined = aux_planting_goods.find((p) => p.tipo_bien === "Semillas" )
                     const new_bien: IObjPlantingGoods = {
-                        id_consumo_siembra: null,
+                        id_consumo_siembra: data.id_consumo_siembra ?? null,
                         id_siembra: current_planting.id_siembra,
                         id_bien_consumido: current_good.id_bien,
                         cantidad: Number(data.cantidad),

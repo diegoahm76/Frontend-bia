@@ -75,15 +75,17 @@ const FormSelectController = ({
                                     label={label ?? ""}
                                     variant="outlined"
                                     disabled={disabled}
-                                    value={value}
+                                    value={value===null ? (multiple ?? false)?[]:"": value}
                                     onChange={onChange}
                                     error={!(error == null)}
 
 
                                 >
-                                    {/* <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem> */}
+                                    {!(multiple ?? false)&&
+                                        <MenuItem value="">
+                                            <em>None</em>
+                                        </MenuItem>
+                                    }
                                     {select_options.map((option: any) => (
                                         <MenuItem key={option[option_key]} value={option[option_key]}>
                                             {option[option_label]}
