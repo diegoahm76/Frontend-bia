@@ -3,7 +3,7 @@
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { AgregarProyectos } from '../AgregarProyectos/AgregarProyectos';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -13,20 +13,17 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import AddIcon from '@mui/icons-material/Add';
 import { control_error } from '../../../../../helpers';
+import { DataContext } from '../../context/contextData';
 
-interface IProps {
-  register: any;
-  watch: any;
-  set_value: any;
-  errors: any;
-}
+export const AgregarPrograma: React.FC = () => {
+  const {
+    register,
+    // reset,
+    // watch,
+    setValue: set_value,
+    errors,
+  } = useContext(DataContext);
 
-export const AgregarPrograma: React.FC<IProps> = ({
-  register,
-  watch,
-  set_value,
-  errors,
-}: IProps) => {
   const [is_agregar, set_is_agregar] = useState(false);
   const [nombrePrograma, setNombrePrograma] = useState(''); // Estado del campo "Nombre del programa"
   const [fechaInicial, setFechaInicial] = useState<Date | null>(null); // Estado de la fecha inicial
@@ -206,10 +203,6 @@ export const AgregarPrograma: React.FC<IProps> = ({
         {is_agregar && (
           <>
             <AgregarProyectos
-              register={register}
-              watch={watch}
-              set_value={set_value}
-              errors={errors}
               fecha_inicial_programa={fechaInicial}
               fecha_fin_programa={fechaFin}
             />

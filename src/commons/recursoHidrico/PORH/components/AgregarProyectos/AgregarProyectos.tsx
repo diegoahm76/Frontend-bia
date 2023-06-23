@@ -2,32 +2,33 @@
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { TextField, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DataContext } from '../../context/contextData';
 
 interface IProps {
-  register: any;
-  watch: any;
-  set_value: any;
-  errors: any;
   fecha_inicial_programa: Date | null; // Fecha de inicio del programa
   fecha_fin_programa: Date | null; // Fecha de finalización del programa
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarProyectos: React.FC<IProps> = ({
-  register,
-  watch,
-  set_value,
-  errors,
   fecha_inicial_programa,
   fecha_fin_programa,
 }: IProps) => {
+  
+  const {
+    register,
+    watch,
+    setValue: set_value,
+    errors,
+  } = useContext(DataContext);
+
   const [is_agregar, set_is_agregar] = useState(false);
 
   const [start_date, set_start_date] = useState<Date | null>(new Date());
@@ -45,7 +46,8 @@ export const AgregarProyectos: React.FC<IProps> = ({
 
   const is_fecha_inicio_valid =
     start_date && fecha_inicial_programa && start_date > fecha_inicial_programa;
-  const is_fecha_fin_valid = end_date && fecha_fin_programa && end_date < fecha_fin_programa;
+  const is_fecha_fin_valid =
+    end_date && fecha_fin_programa && end_date < fecha_fin_programa;
 
   const inversion_value: number = watch('inversion');
   const is_form_valid =
@@ -56,7 +58,7 @@ export const AgregarProyectos: React.FC<IProps> = ({
     watch('nombre') &&
     start_date &&
     end_date &&
-    inversion_value
+    inversion_value;
 
   return (
     <>
@@ -73,7 +75,9 @@ export const AgregarProyectos: React.FC<IProps> = ({
           {...register('nombre', { required: true })}
           error={Boolean(errors.nombre)}
           helperText={
-            errors.nombre?.type === 'required' ? 'Este campo es obligatorio' : ''
+            errors.nombre?.type === 'required'
+              ? 'Este campo es obligatorio'
+              : ''
           }
         />
       </Grid>
@@ -93,13 +97,15 @@ export const AgregarProyectos: React.FC<IProps> = ({
                 size="small"
                 {...params}
                 {...register('vigencia_inicial', { required: true })}
-                error={Boolean(errors.vigencia_inicial) || !is_fecha_inicio_valid}
+                error={
+                  Boolean(errors.vigencia_inicial) || !is_fecha_inicio_valid
+                }
                 helperText={
                   errors.vigencia_inicial?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : !is_fecha_inicio_valid
-                      ? 'La fecha de inicio del proyecto debe ser posterior a la fecha de inicio del programa'
-                      : ''
+                    ? 'La fecha de inicio del proyecto debe ser posterior a la fecha de inicio del programa'
+                    : ''
                 }
               />
             )}
@@ -127,8 +133,8 @@ export const AgregarProyectos: React.FC<IProps> = ({
                   errors.vigencia_final?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : !is_fecha_fin_valid
-                      ? 'La fecha de finalización del proyecto debe ser anterior a la fecha de finalización del programa'
-                      : ''
+                    ? 'La fecha de finalización del proyecto debe ser anterior a la fecha de finalización del programa'
+                    : ''
                 }
               />
             )}
@@ -150,8 +156,8 @@ export const AgregarProyectos: React.FC<IProps> = ({
             errors.inversion?.type === 'required'
               ? 'Este campo es obligatorio'
               : errors.inversion?.type === 'min'
-                ? 'El valor no puede ser negativo'
-                : ''
+              ? 'El valor no puede ser negativo'
+              : ''
           }
         />
       </Grid>
@@ -186,7 +192,11 @@ export const AgregarProyectos: React.FC<IProps> = ({
               multiline
               {...register('descripcion', { required: true })}
               error={Boolean(errors.descripcion)}
-              helperText={errors.descripcion?.type === 'required' ? 'Este campo es obligatorio' : ''}
+              helperText={
+                errors.descripcion?.type === 'required'
+                  ? 'Este campo es obligatorio'
+                  : ''
+              }
             />
           </Grid>
         </>
@@ -194,4 +204,3 @@ export const AgregarProyectos: React.FC<IProps> = ({
     </>
   );
 };
-

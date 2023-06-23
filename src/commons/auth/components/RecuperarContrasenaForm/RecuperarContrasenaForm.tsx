@@ -24,9 +24,10 @@ import { control_success } from '../../../recursoHidrico/requets/Request';
 import { recover_password } from '../../request/authRequest';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Email, Sms, Close, Send } from '@mui/icons-material';
+import { auth_url } from '../../api/auth';
 
 const redirect_url =
-  'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena';
+`${auth_url}/auth/cambiar_contrasena`;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecuperarContrasena: React.FC = () => {

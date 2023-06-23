@@ -11,7 +11,16 @@ import type {
 import { get_data_id } from '../Request/request';
 import { control_error } from '../../../../helpers';
 import type { AxiosError } from 'axios';
+import {
+  type FieldErrors,
+  type FieldValues,
+  type UseFormReset,
+  type UseFormSetValue,
+  useForm,
+} from 'react-hook-form';
 interface UserContext {
+  data_actividad: GetActividades | undefined;
+  data_programa: GetPrograma | undefined;
   info_programa: InfoPorh | undefined;
   crear_programa: any;
   set_crear_programa: any;
@@ -58,9 +67,30 @@ interface UserContext {
   fetch_data_programas: () => Promise<void>;
   fetch_data_proyectos: () => Promise<void>;
   fetch_data_actividades: () => Promise<void>;
+  set_data_programa: (value: GetPrograma) => void;
+  set_data_actividad: (value: GetActividades) => void;
+  register: any;
+  handleSubmit: any;
+  setValue: UseFormSetValue<FieldValues>;
+  errors: FieldErrors<FieldValues>;
+  watch: any;
+  getValues: any;
+  reset: UseFormReset<FieldValues>;
 }
 
 export const DataContext = createContext<UserContext>({
+  data_actividad: {
+    id_actividades: 0,
+    nombre: '',
+    fecha_registro: '',
+    id_proyecto: 0,
+  },
+  data_programa: {
+    id_programa: 0,
+    nombre: '',
+    fecha_inicio: '',
+    fecha_fin: '',
+  },
   info_programa: {
     id_proyecto: 0,
     nombre_programa: '',
@@ -119,6 +149,15 @@ export const DataContext = createContext<UserContext>({
   fetch_data_programas: async () => {},
   fetch_data_proyectos: async () => {},
   fetch_data_actividades: async () => {},
+  set_data_programa: () => {},
+  set_data_actividad: () => {},
+  register: () => {},
+  handleSubmit: () => {},
+  setValue: () => {},
+  errors: {},
+  watch: () => {},
+  getValues: () => {},
+  reset: () => {},
 });
 
 export const UserProvider = ({
@@ -126,6 +165,16 @@ export const UserProvider = ({
 }: {
   children: React.ReactNode;
 }): any => {
+  const {
+    register,
+    reset,
+    handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useForm();
+
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
   const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
   const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
@@ -140,6 +189,9 @@ export const UserProvider = ({
   const [rows_actividades, set_rows_actividades] = React.useState<
     GetActividades[]
   >([]);
+
+  const [data_programa, set_data_programa] = React.useState<GetPrograma>();
+  const [data_actividad, set_data_actividad] = React.useState<GetActividades>();
 
   const [info_programa, set_info_programa] = React.useState<InfoPorh>();
 
@@ -295,6 +347,10 @@ export const UserProvider = ({
   const [crear_programa, set_crear_programa] = React.useState({});
 
   const value = {
+    data_actividad,
+    set_data_actividad,
+    data_programa,
+    set_data_programa,
     is_consulta,
     set_is_consulta,
     is_general,
@@ -344,6 +400,13 @@ export const UserProvider = ({
     setColumns,
     actionIcons,
     setActionIcons,
+    register,
+    reset,
+    handleSubmit,
+    watch,
+    setValue,
+    getValues,
+    errors,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

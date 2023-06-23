@@ -22,27 +22,17 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
 import ChecklistIcon from '@mui/icons-material/Checklist';
-import type { GetActividades } from '../../Interfaces/interfaces';
 import Swal from 'sweetalert2';
 import { control_success } from '../../../requets/Request';
 import { eliminar_id } from '../../Request/request';
 import { control_error } from '../../../../../helpers';
+import dayjs, { type Dayjs } from 'dayjs';
 
 interface IProps {
   data: any;
-  watch: any;
-  register: any;
-  set_value: any;
-  set_id_proyecto: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SeleccionarProyecto: React.FC<IProps> = ({
-  data,
-  register,
-  set_value,
-  set_id_proyecto,
-  watch,
-}: IProps) => {
+export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
   const {
     rows_actividades,
     is_agregar_actividad,
@@ -51,6 +41,11 @@ export const SeleccionarProyecto: React.FC<IProps> = ({
     set_id_actividad,
     fetch_data_actividades,
     set_mode,
+    register,
+    watch,
+    setValue: set_value,
+    data_actividad,
+    set_data_actividad,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -155,31 +150,35 @@ export const SeleccionarProyecto: React.FC<IProps> = ({
     void fetch_data_actividades();
   }, [data]);
 
-  useEffect(() => {
-    if (data !== undefined) {
-      set_start_date(new Date(data.vigencia_inicial));
-      set_value('vigencia_final', data.vigencia_final);
-      set_value('vigencia_inicial', data.vigencia_inicial);
-      set_end_date(new Date(data.vigencia_final));
-      set_value('descripcion', data_actividad?.nombre);
-    }
-  }, [data !== undefined]);
-
   const descripcion = watch('descripcion');
 
-  // fechas
-  const [data_actividad, set_data_actividad] = useState<GetActividades>();
-  const [start_date, set_start_date] = useState<Date | null>(new Date());
-  const [end_date, set_end_date] = useState<Date | null>(new Date());
+  useEffect(() => {
+    if (data) {
+      set_start_date(dayjs(data.vigencia_inicial));
+      set_value('vigencia_final', data.vigencia_final);
+      set_value('vigencia_inicial', data.vigencia_inicial);
+      set_end_date(dayjs(data.vigencia_final));
+    }
+  }, [data]);
 
-  const handle_start_date_change = (date: Date | null): void => {
+  useEffect(() => {
+    if (data_actividad) {
+      set_value('descripcion', data_actividad?.nombre);
+    }
+  }, [data_actividad]);
+
+  // fechas
+  const [start_date, set_start_date] = useState<Dayjs | null>(null);
+  const [end_date, set_end_date] = useState<Dayjs | null>(null);
+
+  const handle_start_date_change = (date: Dayjs | null): void => {
     set_value('vigencia_inicial', date);
-    set_start_date(date);
+    set_start_date(dayjs(date));
   };
 
-  const handle_end_date_change = (date: Date | null): void => {
+  const handle_end_date_change = (date: Dayjs | null): void => {
     set_value('vigencia_final', date);
-    set_end_date(date);
+    set_end_date(dayjs(date));
   };
   const confirmar_eliminar = (id_actividad: number): void => {
     void Swal.fire({
@@ -226,6 +225,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({
           required
           defaultValue={data.nombre}
           autoFocus
+          disabled
           {...register('nombre', { required: true })}
         />
       </Grid>
@@ -237,11 +237,13 @@ export const SeleccionarProyecto: React.FC<IProps> = ({
             openTo="day"
             views={['year', 'month', 'day']}
             value={start_date}
+            disabled
             onChange={handle_start_date_change}
             renderInput={(params) => (
               <TextField
                 required
                 fullWidth
+                disabled
                 size="small"
                 {...params}
                 {...register('vigencia_inicial', { required: true })}
@@ -258,11 +260,13 @@ export const SeleccionarProyecto: React.FC<IProps> = ({
             openTo="day"
             views={['year', 'month', 'day']}
             value={end_date}
+            disabled
             onChange={handle_end_date_change}
             renderInput={(params) => (
               <TextField
                 required
                 fullWidth
+                disabled
                 size="small"
                 {...params}
                 {...register('vigencia_final', { required: true })}
@@ -281,6 +285,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({
           autoFocus
           defaultValue={data.inversion}
           type="text"
+          disabled
           {...register('inversion', { required: true })}
         />
       </Grid>
