@@ -19,11 +19,12 @@ import {
   useForm,
 } from 'react-hook-form';
 interface UserContext {
+  is_nombre_programa_valid: boolean;
+  is_fechas_validas: boolean;
+  is_fecha_inicial_valida: boolean;
   data_actividad: GetActividades | undefined;
   data_programa: GetPrograma | undefined;
   info_programa: InfoPorh | undefined;
-  crear_programa: any;
-  set_crear_programa: any;
   rows_programas: GetPrograma[];
   rows_proyectos: GetProyectos[];
   rows_actividades: GetActividades[];
@@ -42,9 +43,6 @@ interface UserContext {
   id_programa: number | null;
   id_proyecto: number | null;
   id_actividad: number | null;
-  filter: any[];
-  columns: string[];
-  actionIcons: any[];
   set_info_programa: (value: InfoPorh) => void;
   set_rows_programas: (rows: GetPrograma[]) => void;
   set_rows_proyectos: (rows: GetProyectos[]) => void;
@@ -59,6 +57,9 @@ interface UserContext {
   set_is_agregar_proyecto: (value: boolean) => void;
   set_is_editar_proyecto: (value: boolean) => void;
   set_is_seleccionar_proyecto: (value: boolean) => void;
+  set_is_nombre_programa_valid: (value: boolean) => void;
+  set_is_fechas_validas: (value: boolean) => void;
+  set_is_fecha_inicial_valida: (value: boolean) => void;
   set_is_consulta: (value: boolean) => void;
   set_mode: (value: string) => void;
   set_id_programa: (value: number | null) => void;
@@ -76,9 +77,13 @@ interface UserContext {
   watch: any;
   getValues: any;
   reset: UseFormReset<FieldValues>;
+  setError: any;
 }
 
 export const DataContext = createContext<UserContext>({
+  is_nombre_programa_valid: false,
+  is_fechas_validas: false,
+  is_fecha_inicial_valida: false,
   data_actividad: {
     id_actividades: 0,
     nombre: '',
@@ -122,14 +127,9 @@ export const DataContext = createContext<UserContext>({
   id_programa: null,
   id_proyecto: null,
   id_actividad: null,
-  filter: [],
-  columns: [],
-  actionIcons: [],
   set_rows_programas: () => {},
   set_rows_proyectos: () => {},
   set_rows_actividades: () => {},
-  crear_programa: {},
-  set_crear_programa: () => {},
   set_is_agregar_actividad: () => {},
   set_is_editar_actividad: () => {},
   set_is_seleccionar_actividad: () => {},
@@ -141,6 +141,9 @@ export const DataContext = createContext<UserContext>({
   set_is_seleccionar_proyecto: () => {},
   set_is_general: () => {},
   set_is_consulta: () => {},
+  set_is_nombre_programa_valid: () => {},
+  set_is_fechas_validas: () => {},
+  set_is_fecha_inicial_valida: () => {},
   set_mode: () => {},
   set_id_programa: () => {},
   set_id_proyecto: () => {},
@@ -158,6 +161,7 @@ export const DataContext = createContext<UserContext>({
   watch: () => {},
   getValues: () => {},
   reset: () => {},
+  setError: () => {},
 });
 
 export const UserProvider = ({
@@ -173,6 +177,7 @@ export const UserProvider = ({
     setValue,
     getValues,
     formState: { errors },
+    setError,
   } = useForm();
 
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
@@ -341,12 +346,19 @@ export const UserProvider = ({
     }
   };
 
-  const [filter, setFilter] = React.useState<any>([]);
-  const [columns, setColumns] = React.useState<string[]>([]);
-  const [actionIcons, setActionIcons] = React.useState<any[]>([]);
-  const [crear_programa, set_crear_programa] = React.useState({});
+  // validaciones 
+  const [is_nombre_programa_valid, set_is_nombre_programa_valid] =
+    React.useState(false);
+  const [is_fechas_validas, set_is_fechas_validas] = React.useState(false);
+  const [is_fecha_inicial_valida, set_is_fecha_inicial_valida] = React.useState(false);
 
   const value = {
+    is_nombre_programa_valid,
+    set_is_nombre_programa_valid,
+    is_fechas_validas,
+    set_is_fechas_validas,
+    is_fecha_inicial_valida,
+    set_is_fecha_inicial_valida,
     data_actividad,
     set_data_actividad,
     data_programa,
@@ -386,26 +398,19 @@ export const UserProvider = ({
     set_is_editar_actividad,
     is_seleccionar_actividad,
     set_is_seleccionar_actividad,
-    set_crear_programa,
-    crear_programa,
     rows_programas,
     set_rows_programas,
     rows_proyectos,
     set_rows_proyectos,
     rows_actividades,
     set_rows_actividades,
-    filter,
-    setFilter,
-    columns,
-    setColumns,
-    actionIcons,
-    setActionIcons,
     register,
     reset,
     handleSubmit,
     watch,
     setValue,
     getValues,
+    setError,
     errors,
   };
 
