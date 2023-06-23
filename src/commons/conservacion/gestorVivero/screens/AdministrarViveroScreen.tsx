@@ -245,39 +245,37 @@ export function AdministrarViveroScreen(): JSX.Element {
             </IconButton>
           </Tooltip>
 
-          {(params.row.activo === true && params.row.id_viverista_actual) ?
+          {params.row.activo === true && params.row.id_viverista_actual ?
             <>
-              {params.row.vivero_en_cuarentena === false &&
-                <Tooltip title={params.row.en_funcionamiento ? "Cerrar" : "Abrir"}>
-                
-                  <IconButton
-                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                    href= {`#/app/conservacion/gestor_vivero/apertura_cierre/${params.row.id_vivero}/`}
-                  >
-                    <Avatar
-                      sx={{
-                        width: 24,
-                        height: 24,
-                        background: '#fff',
-                        border: '2px solid',
-                      }}
-                      variant="rounded"
-                    >
-                      {params.row.en_funcionamiento ?
-                        <LockIcon
-                          sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                        /> :
-                        <LockOpenIcon
-                          sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                        />
-                      }
+              <Tooltip title={params.row.en_funcionamiento ? "Cerrar" : "Abrir"}>
 
-                    </Avatar>
-                  </IconButton>
-                  
-                </Tooltip>
-              }
-              {((params.row.fecha_ultima_apertura !== null || params.row.fecha_ultima_apertura !== "")) ?
+                <IconButton
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                  href={`#/app/conservacion/gestor_vivero/apertura_cierre/${params.row.id_vivero}/`}
+                >
+                  <Avatar
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
+                    }}
+                    variant="rounded"
+                  >
+                    {params.row.en_funcionamiento ?
+                      <LockIcon
+                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                      /> :
+                      <LockOpenIcon
+                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                      />
+                    }
+
+                  </Avatar>
+                </IconButton>
+
+              </Tooltip>
+              {((params.row.fecha_ultima_apertura !== null || params.row.fecha_ultima_apertura !== "") && params.row.en_funcionamiento === true) ?
 
                 <Tooltip title={params.row.vivero_en_cuarentena ? "Finalizar cuarentena" : "Iniciar cuarentena"}>
                   <IconButton

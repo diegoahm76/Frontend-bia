@@ -205,7 +205,7 @@ const SeleccionarBajasBienes = () => {
                 if ((data.cantidad_baja??0) <= (current_insumo.saldo_disponible ?? 0))
                 {  
                     const new_bien: IObjBienBaja = {
-                        id_item_baja_viveros: null,
+                        id_item_baja_viveros: data.id_item_baja_viveros ?? null,
                         id_baja: current_genera_baja.id_baja ?? null,
                         id_bien: current_insumo.id_bien,
                         cantidad_baja: Number(data.cantidad_baja),
@@ -407,7 +407,7 @@ return (
                         label: "Tipo de bien",
                         disabled: false,
                         helper_text: "debe seleccionar campo",
-                        select_options: [{ label: "Insumo", value: "IN" }, { label: "Herramienta", value: "HE" }, { label: "Semilla", value: "SE" }],
+                        select_options: [{ label: "Insumo", value: "IN" }, { label: "Herramienta", value: "HE" }, { label: "Semilla", value: "MV" }],
                         option_label: "label",
                         option_key: "value",
                     },

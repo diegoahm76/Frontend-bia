@@ -85,6 +85,37 @@ export const crear_solicitud_bien_consumo: any = (
         try {
             console.log(solicitud)
             const { data } = await api.put('almacen/solicitudes/crear-solicitud-bienes-de-consumo/', solicitud);
+
+            console.log(data)
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            if (data.success) {
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+            // control_success(' se agrego correctamente');
+            return data;
+        } catch (error: any) {
+            console.log(error);
+            control_error(error.response.data.detail);
+
+            return error as AxiosError;
+
+        };
+    }
+}
+
+// EDITAR SOLICITUD
+export const editar_solicitud: any = (
+    id: number,
+    solicitud: any,
+    // bienes: any
+) => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(solicitud)
+            const { data } = await api.put(`almacen/solicitudes/crear-solicitud-bienes-de-consumo/${id}/`, solicitud);
+            // await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, bienes);
             //  dispatch(get_solicitud_consumo_id());
             console.log(data)
             // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
@@ -104,6 +135,11 @@ export const crear_solicitud_bien_consumo: any = (
         };
     }
 }
+
+
+
+
+
 
 // crear SOLICITUD PARA VIVERO
 export const crear_solicitud_bien_consumo_vivero: any = (
