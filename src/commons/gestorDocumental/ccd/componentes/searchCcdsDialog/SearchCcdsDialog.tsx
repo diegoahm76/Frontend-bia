@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import {
@@ -68,23 +69,26 @@ const SearchCcdModal = ({
     {
       headerName: 'Nombre',
       field: 'nombre',
-      minWidth: 200,
+      minWidth: 170,
+      maxWidth: 200,
     },
     {
       headerName: 'Versión',
       field: 'version',
-      minWidth: 150,
+      minWidth: 170,
+      maxWidth: 200,
     },
     {
       headerName: 'Estado',
       field: 'estado',
-      minWidth: 100,
+      minWidth: 170,
+      maxWidth: 250,
       renderCell: (params: { row: { fecha_terminado: null } }) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.fecha_terminado !== null ? (
           <Chip
             size="small"
-            label="Terminado"
+            label={`Terminado ${params.row.fecha_terminado}`}
             color="success"
             variant="outlined"
           />
@@ -93,6 +97,30 @@ const SearchCcdModal = ({
             size="small"
             label="En Proceso"
             color="error"
+            variant="outlined"
+          />
+        );
+      },
+    },
+    {
+      headerName: 'Actual',
+      field: 'is_actual',
+      minWidth: 50,
+      maxWidth: 60,
+      renderCell: (params: { row: { actual: null } }) => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        return params.row.actual !== false ? (
+          <Chip
+            size="small"
+            label="Si"
+            color="info"
+            variant="outlined"
+          />
+        ) : (
+          <Chip
+            size="small"
+            label="No"
+            color="warning"
             variant="outlined"
           />
         );
