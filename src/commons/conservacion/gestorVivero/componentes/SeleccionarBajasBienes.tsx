@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { get_bienes_service, control_error } from '../store/thunks/gestorViveroThunks';
+import { get_bienes_service, control_error, get_good_code_baja_service } from '../store/thunks/gestorViveroThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarBajasBienes = () => {
@@ -47,6 +47,16 @@ const SeleccionarBajasBienes = () => {
             ),
         },
         {
+            field: 'cod_tipo_elemento_vivero',
+            headerName: 'Tipo de bien',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value === "IN"? "Insumo": params.value === "MV"? "Semilla": "Herramienta"}
+                </div>
+            ),
+        },
+        {
             field: 'saldo_disponible',
             headerName: 'Saldo disponible',
             width: 200,
@@ -80,7 +90,16 @@ const SeleccionarBajasBienes = () => {
                 </div>
             ),
         },
-        
+        {
+            field: 'cod_tipo_elemento_vivero',
+            headerName: 'Tipo de bien',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value === "IN"? "Insumo": params.value === "MV"? "Semilla": "Herramienta"}
+                </div>
+            ),
+        },
         {
             field: 'cantidad_baja',
             headerName: 'Cantidad',
@@ -165,10 +184,19 @@ const SeleccionarBajasBienes = () => {
         if (id_vivero !== null && id_vivero !== undefined) {
             const codigo_bien = get_values_bien("codigo_bien") ?? ""
             const nombre = get_values_bien("nombre")??""
-            const tipo_bien = get_values_bien("tipo_bien")??""
+            const tipo_bien = get_values_bien("cod_tipo_elemento_vivero")??""
             void dispatch(get_bienes_service(id_vivero, tipo_bien, codigo_bien, nombre));
         }
     })
+
+    const search_bien: any = (async () => {  
+        const id_vivero = current_nursery.id_vivero
+        if (id_vivero !== null && id_vivero !== undefined) {
+            const codigo = get_values_bien("codigo_bien") ?? ""
+            void dispatch(get_good_code_baja_service(id_vivero, codigo));
+            
+        }  
+      })
 
     useEffect(() => {
         // const id_vivero = current_nursery.id_vivero
@@ -212,7 +240,9 @@ const SeleccionarBajasBienes = () => {
                         nombre_bien: current_insumo.nombre,
                         codigo_bien: current_insumo.codigo_bien,
                         observaciones: data.observaciones,
-                        tipo_bien: current_insumo.tipo_bien
+                        tipo_bien: current_insumo.tipo_bien,
+                        cod_tipo_elemento_vivero: current_insumo.cod_tipo_elemento_vivero
+
                     }
                     if (bien === undefined) {
                             set_aux_insumos([...aux_insumos, new_bien])
@@ -315,6 +345,7 @@ return (
                         type: "text",
                         disabled: false,
                         helper_text: "",
+                        on_blur_function: search_bien
                     },
                     {
                         datum_type: "input_controller",
@@ -401,7 +432,7 @@ return (
                         xs: 12,
                         md: 2,
                         control_form: control_bien,
-                        control_name: "tipo_bien",
+                        control_name: "cod_tipo_elemento_vivero",
                         default_value: "",
                         rules: { required_rule: { rule: true, message: "Seleccione tipo de bien" } },
                         label: "Tipo de bien",

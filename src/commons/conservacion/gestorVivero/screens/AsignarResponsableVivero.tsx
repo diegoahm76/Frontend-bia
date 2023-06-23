@@ -10,8 +10,9 @@ import { useForm } from "react-hook-form";
 import FormInputController from "../../../../components/partials/form/FormInputController";
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
-import { asignar_viverista_service, get_viverista_id_service, get_viveros_viverista_service, remover_viverista_service } from "../store/thunks/gestorViveroThunks";
+import { asignar_viverista_service, get_nursery_service, get_viverista_id_service, get_viveros_viverista_service, remover_viverista_service } from "../store/thunks/gestorViveroThunks";
 import { initial_state_current_viverista_nuevo, set_current_nuevo_viverista, set_current_nursery } from "../store/slice/viveroSlice";
+import { useParams } from 'react-router-dom';
 
 interface Iasignar {
   accion_realizar: string | null;
@@ -26,6 +27,7 @@ const initial_state_asignar: Iasignar = {
 export function AsignarResponsableViveroScreen(): JSX.Element {
 
   const dispatch= useAppDispatch()
+  const { id } = useParams();
 
   const { control: control_asignar, handleSubmit:handle_submit, reset:reset_asignar, getValues: get_values, watch } = useForm<Iasignar>();
 
@@ -37,6 +39,11 @@ export function AsignarResponsableViveroScreen(): JSX.Element {
   useEffect(() => {
     reset_asignar(initial_state_asignar)
     void dispatch(get_viveros_viverista_service())
+    if(id !== null && id !== undefined ){
+      void dispatch(get_nursery_service(id))
+    } else(
+      set_nursery(current_nursery)
+    )
   }, []);
 
   useEffect(() => {
@@ -61,6 +68,7 @@ export function AsignarResponsableViveroScreen(): JSX.Element {
   useEffect(() => {
     if (current_nursery.id_vivero !== null) { 
         void dispatch(get_viverista_id_service(Number(current_nursery.id_vivero ?? 0))) 
+        set_nursery(current_nursery)
     }
     dispatch(set_current_nuevo_viverista(initial_state_current_viverista_nuevo))
 }, [current_nursery]);

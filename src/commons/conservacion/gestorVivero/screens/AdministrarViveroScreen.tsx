@@ -34,7 +34,7 @@ import { activate_deactivate_nursery_service, delete_nursery_service, get_nurser
 import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
 // // Slices
 import { current_nursery } from '../store/slice/viveroSlice';
-
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 const initial_state_current_nursery = {
   id_vivero: null,
   nombre: '',
@@ -231,11 +231,32 @@ export function AdministrarViveroScreen(): JSX.Element {
                     sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                   />
                 }
-
               </Avatar>
             </IconButton>
           </Tooltip>
-
+          {params.row.activo === true &&
+            <Tooltip title="Administrar viverista">
+              <IconButton
+                    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                href= {`#/app/conservacion/gestor_vivero/viverista/${params.row.id_vivero}/`}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                    <PersonSearchIcon // icon desactivar
+                      sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                    /> 
+                    
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          }
           {(params.row.activo === true && params.row.id_viverista_actual) ?
             <>
               {params.row.vivero_en_cuarentena === false &&
