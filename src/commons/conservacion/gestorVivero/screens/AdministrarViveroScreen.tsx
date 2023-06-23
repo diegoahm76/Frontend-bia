@@ -351,6 +351,8 @@ export function AdministrarViveroScreen(): JSX.Element {
 
   const button_style = {
     color: 'white',
+    backgroundColor: '#335B1E',
+    // border: '3px solid black',
     borderRadius: '50%',
     width: '40px',
     height: '40px',
@@ -375,10 +377,27 @@ export function AdministrarViveroScreen(): JSX.Element {
         }} spacing={2}
       >
         <Grid item xs={12}  >
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{marginTop:"-30px"}}>
             <Grid item xs={12} spacing={2}>
               <Title title="Viveros"></Title>
             </Grid>
+            <Grid item xs={12} spacing={2} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+  <Button
+    variant="outlined"
+    startIcon={<AddIcon />}
+    onClick={() => {
+      dispatch(current_nursery(initial_state_current_nursery));
+      set_action("create");
+      set_add_nursery_is_active(true);
+    }}
+    // style={{ width: '170px', height: '40px', marginLeft: '10px' }}
+  >
+    Crear vivero
+  </Button>
+</Grid>
+  <Divider style={{ width: '98%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
+
+
             <Grid item xs={10}>
               <TextField
                 label="Buscar"
@@ -390,7 +409,9 @@ export function AdministrarViveroScreen(): JSX.Element {
                 size="small"
                 style={{ marginBottom: '10px' }}
               />
-              <IconButton
+              <Button
+                variant="contained"
+                style={{ marginLeft: '4px', top: '2px' }}
                 onClick={() => {
                   const filterednurseries = nurseries.filter((nursery: { nombre: string; }) =>
                     nursery.nombre.toLowerCase().includes(searchtext.toLowerCase())
@@ -399,22 +420,42 @@ export function AdministrarViveroScreen(): JSX.Element {
                 }}
               >
                 <SearchIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={3} sm={2} md={2} lg={2} xl={2} spacing={2} sx={{ textAlign: 'center' }}>
-              <Button
-                variant="outlined"
-                startIcon={<AddIcon />}
-                onClick={() => {
-                  dispatch(current_nursery(initial_state_current_nursery));
-                  set_action("create")
-                  set_add_nursery_is_active(true);
-                }}
-              // style={{ width: '170px', height: '40px', marginLeft: '10px'  }}
-              >
-                Crear vivero
               </Button>
             </Grid>
+            {/* <Divider /> */}
+            <Grid item xs={2}>
+              <ButtonGroup style={{ margin: 7 }}>
+                <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={handle_clickxls}>
+                  <i className="pi pi-file-excel"></i>
+                </Button>
+                <Button  style={{ ...button_style, backgroundColor: 'red' }} onClick={handle_clickpdf}>
+                  <i className="pi pi-file-pdf"></i>
+                </Button>
+              </ButtonGroup>
+            </Grid>
+          </Grid>
+
+          <Divider />
+
+          <Grid item sx={{ marginTop: '20px', }}>
+            <Box sx={{ width: '100%' }}>
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={filterednurseries}
+                columns={columns}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                experimentalFeatures={{ newEditingApi: true }}
+                getRowId={(row) => row.id_vivero}
+              />
+            </Box>
+            <CrearViveroDialogForm
+              is_modal_active={add_nursery_is_active}
+              set_is_modal_active={set_add_nursery_is_active}
+              action={action}
+            />
+          </Grid>
 
             <ButtonGroup style={{ margin: 7 }}  >
               {/* Boton de Excel */}
@@ -457,7 +498,7 @@ export function AdministrarViveroScreen(): JSX.Element {
 
           </Grid>
         </Grid>
-      </Grid>
+      
       </>
       );
 }
