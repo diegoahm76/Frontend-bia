@@ -4,6 +4,7 @@ import { Button, Grid } from '@mui/material';
 import SeleccionarSolicitud from '../components/componenteBusqueda/SeleccionarSolicitud';
 import FormButton from "../../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
+import CloseIcon from '@mui/icons-material/Close';
 import SeleccionarBienConsumo from "../components/componenteBusqueda/SeleccionarBienConsumo";
 import { type IObjSolicitud } from "../interfaces/solicitudBienConsumo";
 import type { AuthSlice } from '../../../../../commons/auth/interfaces';
@@ -15,6 +16,7 @@ import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_pers
 import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
+import { Title } from '../../../../../components/Title';
 
 
 
