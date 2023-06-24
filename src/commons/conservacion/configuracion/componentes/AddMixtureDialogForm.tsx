@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Stack,
   Button,
   Box,
@@ -22,6 +21,7 @@ import { add_mixture_service, edit_mixture_service, get_medida_service } from '.
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IObjMixture as FormValues } from '../interfaces/configuracion';
+import { Title } from '../../../../components';
 interface IProps {
   action: string,
   is_modal_active: boolean;
@@ -100,29 +100,7 @@ const EditarBienDialogForm = ({
             height: '70px',
             marginLeft: '20px', 
           }} item xs={11.5}  margin={1} >
-          {/* <Grid item xs={12} md={12} margin={1}> */}
-            <Box
-              className={`border px-4 text-white fs-5 p-1`}
-              sx={{
-                display: 'grid',
-                background:
-                  'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-                width: '98%',
-                height: '40px',
-                color: '#fff',
-                borderRadius: '10px',
-                pl: '20px',
-                fontSize: '17px',
-                fontWeight: '900',
-                alignContent: 'center',
-                marginTop: '20px',
-                marginLeft: '6px',
-              }}
-            >
-              <DialogTitle>{action === "create" ? "Crear mezcla" : action === "detail" ? "Detalle mezcla" : "Editar mezcla"}</DialogTitle>
-
-            </Box>
-          {/* </Grid> */}
+             <Title title={action === "create" ? "Crear mezcla" : action === "detail" ? "Detalle mezcla" : "Editar mezcla"} ></Title>
         </Grid>
 
         <Divider />

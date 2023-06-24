@@ -254,7 +254,6 @@ const SeleccionarLoteSiembra = () => {
                             type: "number",
                             disabled: false,
                             helper_text: "",
-                            on_blur_function: search_bien,
                         },
                         {
                             datum_type: "input_controller",

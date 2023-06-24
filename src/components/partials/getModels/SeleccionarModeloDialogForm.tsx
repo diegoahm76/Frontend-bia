@@ -21,6 +21,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch } from '../../../hooks';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
+import { v4 as uuid } from 'uuid';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
@@ -174,128 +175,131 @@ const SeleccionarModeloDialogForm = ({
     const handle_clickxls = (): void => { download_xls({ nurseries: models, columns: columns_model }); };
     const handle_clickpdf = (): void => { download_pdf({ nurseries: models, columns: columns_model }); };
 
-    return (  
+    return (
         <Dialog
             fullWidth
             maxWidth="xl"
             open={is_modal_active}
             onClose={handle_close_select_model}>
 
-          <Box sx={{
-               
+            <Box sx={{
+
                 backgroundColor: 'white',
                 borderColor: "#dddddd",
-               
+
                 margin: 4
             }}>
-           
-            {/* <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
+
+                {/* <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
         
             <Divider /> */}
 
 
 
 
-    
 
 
-            <DialogContent sx={{ mb: '0px' }}>
-                {form_filters.length > 0 &&
-                    <Grid container   sx={{
-                        position: 'relative',
-                        background: '#FAFAFA',
-                        borderRadius: '15px',
-                        p: '20px',
-                        mb: '20px',
-                        boxShadow: '0px 3px 6px #042F4A26',
-                        marginTop: '10px',
-                        marginLeft: '-6px',
-                    }} spacing={2} direction="row">
-                        <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
-                        {form_filters.map((option, index) => (
-                            <TypeDatum key={index} form_input={option} />
-                        ))}
-                        <Grid
-                            item
-                            xs={12}
-                            md={2}
-                        >
-                            <FormButton
-                                variant_button="contained"
-                                on_click_function={get_filters_models}
-                                icon_class={<SearchIcon />}
-                                label="BUSCAR"
-                                type_button="button"
-                            />
+
+                <DialogContent sx={{ mb: '0px' }}>
+                    {form_filters.length > 0 &&
+                        <Grid container sx={{
+                            position: 'relative',
+                            background: '#FAFAFA',
+                            borderRadius: '15px',
+                            p: '20px',
+                            mb: '20px',
+                            boxShadow: '0px 3px 6px #042F4A26',
+                            marginTop: '10px',
+                            marginLeft: '-6px',
+                        }} spacing={2} direction="row">
+                            <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
+                            {form_filters.map((option, index) => (
+                                <TypeDatum key={index} form_input={option} />
+                            ))}
+                            <Grid
+                                item
+                                xs={12}
+                                md={2}
+                            >
+                                <FormButton
+                                    variant_button="contained"
+                                    on_click_function={get_filters_models}
+                                    icon_class={<SearchIcon />}
+                                    label="BUSCAR"
+                                    type_button="button"
+                                />
+                            </Grid>
                         </Grid>
-                    </Grid>
-                }
-                {models.length > 0 &&
-                    <Grid container    sx={{
-                        position: 'relative',
-                        background: '#FAFAFA',
-                        borderRadius: '15px',
-                        p: '20px',
-                        mb: '20px',
-                        boxShadow: '0px 3px 6px #042F4A26',
-                        marginLeft: '-6px',
-                    }} spacing={2} justifyContent="center" direction="row" marginTop={2}>
-                        <Box sx={{ width: '100%' }}>
-                            <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
-                            <ButtonGroup style={{ margin: 7 }}  >
-                                    <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={handle_clickxls}>
-                                    <i className="pi pi-file-excel"></i>
-                                </Button>
-
-                                    <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={handle_clickpdf}>
-                                    <i className="pi pi-file-pdf"></i>
-                                </Button>
-
-                            </ButtonGroup>
-                            <DataGrid
-                                onSelectionModelChange={handle_selection_change}
-                                density="compact"
-                                autoHeight
-                                rows={models}
-                                columns={columns_model}
-                                pageSize={10}
-                                rowsPerPageOptions={[10]}
-                                experimentalFeatures={{ newEditingApi: true }}
-                                getRowId={(row) => row[row_id]}
-                                selectionModel={selected_row}
-                            />
-                        </Box>
-                    </Grid>
-                }
-            </DialogContent>
-            <Divider />
-            <DialogActions>
-                <Stack
-                    direction="row"
-                    spacing={2}
-                    sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-                >
-                    <Button
-                        variant="outlined"
-                        onClick={handle_close_select_model}
-                        startIcon={<CloseIcon />}
-                    >
-                        CANCELAR
-                    </Button>
-                    {!(button_add_selection_hidden ?? false) &&
-                        <Button
-                            variant="contained"
-                            onClick={select_model}
-                            startIcon={<PlaylistAddCheckIcon />}
-                        >
-                            Agregar seleccion
-                        </Button>
                     }
-                </Stack>
-            </DialogActions>
-             </Box> 
+                    {models.length > 0 &&
+                        <Grid container sx={{
+                            position: 'relative',
+                            background: '#FAFAFA',
+                            borderRadius: '15px',
+                            p: '20px',
+                            mb: '20px',
+                            boxShadow: '0px 3px 6px #042F4A26',
+                            marginLeft: '-6px',
+                        }} spacing={2} justifyContent="center" direction="row" marginTop={2}>
+                            <Box sx={{ width: '100%' }}>
+                                <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
+                                <Grid container  justifyContent="flex-end" sx={{marginTop:"6px"}}>
+                                    <ButtonGroup style={{ margin: 7 }}  >
+                                        <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={handle_clickxls}>
+                                            <i className="pi pi-file-excel"></i>
+                                        </Button>
+
+                                        <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={handle_clickpdf}>
+                                            <i className="pi pi-file-pdf"></i>
+                                        </Button>
+
+                                    </ButtonGroup>
+                                </Grid>
+
+                                <DataGrid
+                                    onSelectionModelChange={handle_selection_change}
+                                    density="compact"
+                                    autoHeight
+                                    rows={models}
+                                    columns={columns_model}
+                                    pageSize={10}
+                                    rowsPerPageOptions={[10]}
+                                    experimentalFeatures={{ newEditingApi: true }}
+                                    getRowId={(row) => row[row_id ?? uuid()] === null ? uuid() : row[row_id ?? uuid()]}
+                                    selectionModel={selected_row}
+                                />
+                            </Box>
+                        </Grid>
+                    }
+                </DialogContent>
+                <Divider />
+                <DialogActions>
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                        sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+                    >
+                        <Button
+                            variant="outlined"
+                            onClick={handle_close_select_model}
+                            startIcon={<CloseIcon />}
+                        >
+                            CANCELAR
+                        </Button>
+                        {!(button_add_selection_hidden ?? false) &&
+                            <Button
+                                variant="contained"
+                                onClick={select_model}
+                                startIcon={<PlaylistAddCheckIcon />}
+                            >
+                                Agregar seleccion
+                            </Button>
+                        }
+                    </Stack>
+                </DialogActions>
+            </Box>
         </Dialog>
-   );
+    );
 };
 
 // eslint-disable-next-line no-restricted-syntax

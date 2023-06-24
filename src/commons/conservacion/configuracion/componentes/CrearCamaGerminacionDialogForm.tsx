@@ -5,8 +5,6 @@ import {
   TextField,
   Dialog,
   DialogActions,
-  // DialogContent,
-  DialogTitle,
   Stack,
   Button,
   Box,
@@ -23,6 +21,7 @@ import { useAppSelector } from '../../../../hooks';
 import { type IObjGerminationBed as FormValues, type IObjGerminationBed } from '../interfaces/configuracion';
 
 import { initial_state_current_germination_bed } from '../store/slice/configuracionSlice';
+import { Title } from '../../../../components';
 
 interface IProps {
   action: string,
@@ -108,26 +107,8 @@ const CrearCamaGerminacionDialogForm = ({
           marginLeft: '10px',
           marginTop: '10px',
         }}>
-          <Grid item xs={12} md={12} margin={1}>
-            <Box
-              className={`border px-4 text-white fs-5 p-1`}
-              sx={{
-                display: 'grid',
-                background:
-                  'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-                width: '100%',
-                height: '40px',
-                color: '#fff',
-                borderRadius: '10px',
-                pl: '20px',
-                fontSize: '17px',
-                fontWeight: '900',
-                alignContent: 'center',
-                marginTop: '-20px',
-              }}
-            >
-              <DialogTitle>{action === "create" ? "Crear cama de germinación" : action === "detail" ? "Detalle Cama de germinación" : "Editar cama de germinación"}</DialogTitle>
-            </Box>
+          <Grid item xs={12} md={12} margin={1} sx={{marginTop:"-20px"}}>
+            <Title title={action === "create" ? "Crear cama de germinación" : action === "detail" ? "Detalle Cama de germinación" : "Editar cama de germinación"}  ></Title>
           </Grid>
         </Grid>
         <Divider />
@@ -142,7 +123,7 @@ const CrearCamaGerminacionDialogForm = ({
             boxShadow: '0px 3px 6px #042F4A26',
             width: '380px',
             height: '200px',
-            marginLeft: '10px', 
+            marginLeft: '10px',
 
           }}>
           <Grid item xs={12} margin={1}>
