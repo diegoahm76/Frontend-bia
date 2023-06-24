@@ -100,19 +100,12 @@ export const PorhMainScreen: React.FC = () => {
                   }}
                 >
                   <Avatar
-                    sx={{
-                      width: 24,
-                      height: 24,
-                      background: '#fff',
-                      border: '2px solid',
-                    }}
-                    variant="rounded"
+                    sx={{ width: 24, height: 24, background: '#fff', border: '2px solid',}}variant="rounded"
                   >
                     <EditIcon
+                    titleAccess="Editar Programa"
                       sx={{
-                        color: 'primary.main',
-                        width: '18px',
-                        height: '18px',
+                        color: 'primary.main', width: '18px', height: '18px',
                       }}
                     />
                   </Avatar>
@@ -132,6 +125,7 @@ export const PorhMainScreen: React.FC = () => {
                     variant="rounded"
                   >
                     <DeleteIcon
+                      titleAccess="Eliminar Programa"
                       sx={{
                         color: 'primary.main',
                         width: '18px',
@@ -159,6 +153,7 @@ export const PorhMainScreen: React.FC = () => {
                 variant="rounded"
               >
                 <ChecklistIcon
+                  titleAccess="Seleccionar Programa"
                   sx={{
                     color: 'primary.main',
                     width: '18px',

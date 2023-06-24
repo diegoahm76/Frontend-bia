@@ -43,7 +43,7 @@ export const DesbloqueodeUsuario: React.FC = () => {
     email: '',
     fecha_nacimiento: '',
     redirect_url:
-      `${auth_url}auth/cambiar_contrasena?desbloquear=true`,
+      `${auth_url}/auth/cambiar_contrasena?desbloquear=true`,
   });
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
   const [tipo_documento, set_tipo_documento] = useState('');
