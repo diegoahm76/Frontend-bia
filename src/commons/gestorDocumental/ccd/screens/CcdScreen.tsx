@@ -690,7 +690,7 @@ export const CcdScreen: React.FC = () => {
                     </div>
                   )}
                 </Grid>
-                <Grid item xs={12} sm={4}>
+                {/* <Grid item xs={12} sm={4}>
                   <label className="text-terciary">
                     Catalogo de series y subseries
                     <samp className="text-danger">*</samp>
@@ -717,10 +717,11 @@ export const CcdScreen: React.FC = () => {
                       </small>
                     </div>
                   )}
-                </Grid>
-                {/* <Grid item xs={12} sm={4}>
+                </Grid> */}
+                {/* INICIAR EVENTO */}
+                 <Grid item xs={12} sm={4}>
                   <label className="text-terciary">
-                    Catalogo de series y subseries
+                    Catálogo de series y subseries
                     <samp className="text-danger">*</samp>
                   </label>
                   <Controller
@@ -734,7 +735,16 @@ export const CcdScreen: React.FC = () => {
                         {...field}
                         value={field.value}
                         isMulti
-                        options={list_subsries}
+                        // isClearable
+                        // requiredisSearchable
+                        onChange={(selectedOption) => {
+                          onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                          // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
+
+                          //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
+                          console.log('Valor seleccionado:', selectedOption);
+                        }}
+                        options={list_sries_asignacion}
                         placeholder="Seleccionar"
                       />
                     )}
@@ -746,7 +756,8 @@ export const CcdScreen: React.FC = () => {
                       </small>
                     </div>
                   )}
-                </Grid> */}
+                </Grid>
+                {/* FINALIZAR EVENTO */}
                 <Grid
                   item
                   xs={12}
