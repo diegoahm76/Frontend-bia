@@ -22,6 +22,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch } from '../../../hooks';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
+import { v4 as uuid } from 'uuid';
 
 interface IProps {
     set_models: any;
@@ -205,7 +206,7 @@ const SeleccionarModeloDialogForm = ({
                                 pageSize={10}
                                 rowsPerPageOptions={[10]}
                                 experimentalFeatures={{ newEditingApi: true }}
-                                getRowId={(row) => row[row_id]}
+                                getRowId={(row) => row[row_id ?? uuid()] === null ? uuid() : row[row_id ?? uuid()]}
                                 selectionModel={selected_row}
                             />
                         </Box>

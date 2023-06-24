@@ -257,7 +257,7 @@ const BuscarModelo = ({
                                 pageSize={10}
                                 rowsPerPageOptions={[10]}
                                 experimentalFeatures={{ newEditingApi: true }}
-                                getRowId={(row) => row[row_list_id ?? ""] === null ? uuid() : row[row_list_id ?? ""]}
+                                getRowId={(row) => row[row_list_id ?? uuid()] === null ? uuid() : row[row_list_id ?? uuid()]}
                             />
                         </Box>
                     </Grid>
