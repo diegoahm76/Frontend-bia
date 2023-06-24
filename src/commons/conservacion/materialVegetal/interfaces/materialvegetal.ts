@@ -129,6 +129,7 @@ export interface IObjGoods {
   cantidad_entrante: number | null;
   id_vivero: number | null;
   id_bien: number | null;
+  id_mezcla?: number | null;
   codigo_bien: string | null;
   nombre_bien: string | null;
   tipo_bien: string | null;

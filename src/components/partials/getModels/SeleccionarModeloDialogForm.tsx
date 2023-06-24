@@ -21,6 +21,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch } from '../../../hooks';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
+import { v4 as uuid } from 'uuid';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
@@ -264,7 +265,7 @@ const SeleccionarModeloDialogForm = ({
                                     pageSize={10}
                                     rowsPerPageOptions={[10]}
                                     experimentalFeatures={{ newEditingApi: true }}
-                                    getRowId={(row) => row[row_id]}
+                                    getRowId={(row) => row[row_id ?? uuid()] === null ? uuid() : row[row_id ?? uuid()]}
                                     selectionModel={selected_row}
                                 />
                             </Box>
