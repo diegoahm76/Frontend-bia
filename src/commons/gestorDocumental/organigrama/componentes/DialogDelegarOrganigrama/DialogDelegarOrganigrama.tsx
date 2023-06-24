@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import type React from 'react';
@@ -85,7 +86,7 @@ const DialogDelegarOrganigrama = ({
   };
 
   const handle_submit_delegacion_organigrama = async (): Promise<void> => {
-    if (data_user_por_asignar?.id_persona !== null) {
+    if (data_user_por_asignar?.id_persona !== null && data_user_por_asignar?.id_persona !== undefined) {
       await dispatch(
         delegar_organigrama_persona(
           data_user_por_asignar?.id_persona,

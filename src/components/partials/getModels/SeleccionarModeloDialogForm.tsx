@@ -22,10 +22,8 @@ import { useAppDispatch } from '../../../hooks';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import 'jspdf-autotable';
-import JsPDF from 'jspdf';
-import * as XLSX from 'xlsx';
-
+import { download_xls } from '../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
 interface IProps {
     set_models: any;
     form_filters: any[];
@@ -172,65 +170,48 @@ const SeleccionarModeloDialogForm = ({
         justifyContent: 'center',
         marginRight: '10px'
     };
-    const export_to_excel = (): void => {
-        const rows = document.querySelectorAll('.MuiDataGrid-row');
-        const header_cells = document.querySelectorAll('.MuiDataGrid-cell--header');
-        const data: any[][] = [];
-        const headers = Array.from(header_cells).map((cell) => cell.textContent);
-        rows.forEach((row) => {
-            const row_data: any[] = [];
-            const cells = row.querySelectorAll('.MuiDataGrid-cell');
-            cells.forEach((cell) => {
-                row_data.push(cell.textContent);
-            });
-            data.push(row_data);
-        });
-        const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet 1');
-        const file_id = Math.random(); // Reemplaza con la variable que contenga el ID
-        const file_name = `Resultados de la busqueda_${file_id}.xlsx`; // Nombre del archivo con el ID concatenado
-        XLSX.writeFile(workbook, file_name);
-    };
-    const export_pdf = (): void => {
-        const doc = new JsPDF();
-        const data: any[][] = [];
-        const headers: any[] = [];
-        // Obtener los nombres de las columnas de la cuadrícula
-        columns_model.forEach((column) => {
-            headers.push(column.headerName);
-        });
 
-        // Obtener los datos de las filas de la cuadrícula
-        models.forEach((row) => {
-            const row_data: any[] = [];
-            columns_model.forEach((column) => {
-                const cell_data = row[column.field as keyof typeof row];
-                row_data.push(cell_data);
-            });
+    const handle_clickxls = (): void => { download_xls({ nurseries: models, columns: columns_model }); };
+    const handle_clickpdf = (): void => { download_pdf({ nurseries: models, columns: columns_model }); };
 
-            data.push(row_data);
-        });
-        (doc as any).autoTable({
-            head: [headers],
-            body: data,
-        });
-        const file_id = Math.random(); // Reemplaza con la variable que contenga el ID
-        const file_name = `Resultados de la busqueda_${file_id}.pdf`; // Nombre del archivo con el ID concatenado
-        doc.save(file_name);
-    };
-    return (
+    return (  
         <Dialog
             fullWidth
             maxWidth="xl"
             open={is_modal_active}
-            onClose={handle_close_select_model}
-        >
-            <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
-            <Divider />
+            onClose={handle_close_select_model}>
+
+          <Box sx={{
+               
+                backgroundColor: 'white',
+                borderColor: "#dddddd",
+               
+                margin: 4
+            }}>
+           
+            {/* <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
+        
+            <Divider /> */}
+
+
+
+
+    
+
+
             <DialogContent sx={{ mb: '0px' }}>
                 {form_filters.length > 0 &&
-                    <Grid container spacing={2} direction="row">
+                    <Grid container   sx={{
+                        position: 'relative',
+                        background: '#FAFAFA',
+                        borderRadius: '15px',
+                        p: '20px',
+                        mb: '20px',
+                        boxShadow: '0px 3px 6px #042F4A26',
+                        marginTop: '10px',
+                        marginLeft: '-6px',
+                    }} spacing={2} direction="row">
+                        <Title title={modal_title ?? 'Resultados de la busqueda'} ></Title>
                         {form_filters.map((option, index) => (
                             <TypeDatum key={index} form_input={option} />
                         ))}
@@ -250,15 +231,23 @@ const SeleccionarModeloDialogForm = ({
                     </Grid>
                 }
                 {models.length > 0 &&
-                    <Grid container spacing={2} justifyContent="center" direction="row" marginTop={2}>
+                    <Grid container    sx={{
+                        position: 'relative',
+                        background: '#FAFAFA',
+                        borderRadius: '15px',
+                        p: '20px',
+                        mb: '20px',
+                        boxShadow: '0px 3px 6px #042F4A26',
+                        marginLeft: '-6px',
+                    }} spacing={2} justifyContent="center" direction="row" marginTop={2}>
                         <Box sx={{ width: '100%' }}>
                             <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
                             <ButtonGroup style={{ margin: 7 }}  >
-                                <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={export_to_excel}>
+                                    <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={handle_clickxls}>
                                     <i className="pi pi-file-excel"></i>
                                 </Button>
 
-                                <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={export_pdf}>
+                                    <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={handle_clickpdf}>
                                     <i className="pi pi-file-pdf"></i>
                                 </Button>
 
@@ -304,8 +293,9 @@ const SeleccionarModeloDialogForm = ({
                     }
                 </Stack>
             </DialogActions>
+             </Box> 
         </Dialog>
-    );
+   );
 };
 
 // eslint-disable-next-line no-restricted-syntax

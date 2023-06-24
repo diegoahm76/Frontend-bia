@@ -12,6 +12,7 @@ import { BusquedaAvances } from "../../components/BusquedaAvances/BusquedaAvance
 import { EditarAvance } from "../../components/EditarAvance/EditarAvance";
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import { DialogActividades } from "../../components/DialogActividades/DialogActividades";
+import { ButtonSalir } from "../../../../../components/Salir/ButtonSalir";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AvanceScreen: React.FC = () => {
@@ -76,9 +77,10 @@ export const AvanceScreen: React.FC = () => {
         set_id_proyecto,
         id_proyecto,
         is_register_avance,
-        set_is_register_avance,
+        set_mode,
         is_select_avance,
         is_editar_avance,
+        is_select_proyecto,
     } = useContext(DataContext);
 
 
@@ -93,7 +95,6 @@ export const AvanceScreen: React.FC = () => {
 
     const on_result = (info_porh: InfoPorh): void => {
         // reset();
-        set_is_register_avance(false);
         set_info(info_porh);
         set_id_proyecto(info_porh?.id_proyecto)
     };
@@ -130,7 +131,7 @@ export const AvanceScreen: React.FC = () => {
                 <Title title="AVANCES POR PROYECTO" />
             </Grid>
             <BusquedaAvanzada onResult={on_result} />
-            {rows_avances.length > 0 && (
+            {is_select_proyecto && rows_avances.length > 0 && (
                 <>
                     <Grid item xs={12}>
                         <Typography variant="subtitle1" fontWeight="bold">
@@ -152,21 +153,20 @@ export const AvanceScreen: React.FC = () => {
                 </>
             )}
             <Grid item spacing={2} justifyContent="end" container>
-                {id_proyecto ? (
+                {is_select_proyecto && id_proyecto ? (
                     <Grid item>
                         <LoadingButton
                             variant="outlined"
                             onClick={() => {
-                                set_is_register_avance(true);
+                                set_mode('register_avance');
                             }}
                         >
                             Registrar Avance
                         </LoadingButton>
+
                     </Grid>
                 ) : null
                 }
-                <BusquedaAvances
-                    onResult={on_result_avance} />
             </Grid>
             {is_register_avance && (
                 <RegistroAvance />
@@ -175,6 +175,13 @@ export const AvanceScreen: React.FC = () => {
                 <EditarAvance />)}
             {is_editar_avance && (
                 <EditarAvance />)}
+            <Grid item spacing={2} justifyContent="end" container>
+                <Grid item>
+                    <ButtonSalir />
+                </Grid>
+                <BusquedaAvances
+                    onResult={on_result_avance} />
+            </Grid>
             <DialogActividades
                 is_modal_active={is_modal_active}
                 set_is_modal_active={set_is_modal_active}

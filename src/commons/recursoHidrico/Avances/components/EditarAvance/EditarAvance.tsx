@@ -15,16 +15,21 @@ import { DataContext } from '../../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import type { Evidencia } from '../../Interfaces/interfaces';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import esLocale from 'dayjs/locale/es';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarAvance: React.FC = () => {
-
-  const { id_avance,
+  const {
+    id_avance,
     info_avance,
     is_select_avance,
-    set_is_select_avance,
-    set_is_editar_avance,
+    set_mode,
     is_editar_avance,
+    set_info_avance,
   } = useContext(DataContext);
 
   let columns: GridColDef[] = [
@@ -85,15 +90,16 @@ export const EditarAvance: React.FC = () => {
   const [nombres_archivos, set_nombres_archivos] = useState<string[]>(['']);
   const [rows_evidencia, set_rows_evidencia] = useState<Evidencia[]>([]);
   const [info_evidencia, set_info_evidencia] = useState<Evidencia>();
-
+  const [fecha_reporte, set_fecha_reporte] = useState<Date | null>(null);
 
   useEffect(() => {
     if (info_avance) {
       setValue('accion', info_avance.accion);
-      console.log(info_avance.descripcion, 'descripcion')
+      console.log(info_avance.descripcion, 'descripcion');
       setValue('descripcion', info_avance.descripcion);
       set_rows_evidencia(info_avance.evidencias);
-
+      set_fecha_reporte(info_avance.fecha_reporte as any);
+      setValue('fecha_reporte', info_avance.fecha_reporte);
     }
   }, [info_avance, setValue]);
 
@@ -101,13 +107,23 @@ export const EditarAvance: React.FC = () => {
     set_archivos([...archivos, null]);
     set_nombres_archivos([...nombres_archivos, '']);
   };
+  const handle_fecha_reporte_change = (date: Date | null): void => {
+    setValue('fecha_reporte', date);
+    set_fecha_reporte(date);
+  };
 
-  const handle_file_select = (e: React.ChangeEvent<HTMLInputElement>, index: number): void => {
+  const handle_file_select = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ): void => {
     const file = e.target.files?.[0];
     const updated_archivos = [...archivos];
     if (file != null) {
       updated_archivos[index] = file;
       set_archivos(updated_archivos);
+      const updated_nombres_archivos = [...nombres_archivos];
+      updated_nombres_archivos[index] = file.name; // Guardar el nombre del archivo
+      set_nombres_archivos(updated_nombres_archivos);
     }
   };
 
@@ -128,36 +144,61 @@ export const EditarAvance: React.FC = () => {
 
       archivos.forEach((archivo, index) => {
         if (archivo != null) {
-          datos_avance.append(`evidencia_${index}`, archivo);
-          datos_avance.append(`nombre_archivo_${index}`, nombres_archivos[index]);
+          datos_avance.append(`evidencia`, archivo);
+          datos_avance.append(`nombre_archivo`, nombres_archivos[index]);
         }
       });
 
-      const nombre_actualizar = [
-        {
-          id_evidencia_avance: info_evidencia?.id_evidencia_avance,
-          nombre_archivo: data.nombre_archivo_nuevo,
-        }
-      ]
-
-      datos_avance.append('nombre_actualizar', [
-        JSON.stringify(nombre_actualizar),
-      ] as any);
-
-
-      console.log(JSON.stringify(nombre_actualizar), 'nombre actualizado')
+      if (!data.nombre_archivo_nuevo) {
+        datos_avance.append('nombre_actualizar', JSON.stringify([]) as any);
+      } else {
+        const nombre_actualizar = [
+          {
+            id_evidencia_avance: info_evidencia?.id_evidencia_avance,
+            nombre_archivo: data.nombre_archivo_nuevo,
+          },
+        ];
+        datos_avance.append(
+          'nombre_actualizar',
+          JSON.stringify(nombre_actualizar) as any
+        );
+      }
 
       await editar_avance(id_avance as number, datos_avance);
       set_is_saving(false);
-      reset();
+      // reset();
       control_success('Se editó avance correctamente');
+
+      // Actualizar la información del avance después de la edición
+      const updatedInfoAvance: any = { ...info_avance }; // Copiar el objeto existente
+
+      if (updatedInfoAvance) {
+        updatedInfoAvance.accion = data.accion;
+        updatedInfoAvance.descripcion = data.descripcion;
+
+        if (info_evidencia) {
+          updatedInfoAvance.evidencias = [
+            {
+              id_evidencia_avance: info_evidencia.id_evidencia_avance,
+              nombre_archivo: data.nombre_archivo_nuevo,
+            },
+            ...updatedInfoAvance.evidencias.filter(
+              (evidencia: any) =>
+                evidencia.id_evidencia_avance !==
+                info_evidencia.id_evidencia_avance
+            ),
+          ];
+        }
+
+        set_info_avance(updatedInfoAvance);
+      }
     } catch (error) {
       set_is_saving(false);
       control_error(error);
     }
   };
 
-  const is_form_valid = nombres_archivos.every((nombre) => nombre !== '') && Object.keys(errors).length === 0;
+  const is_form_valid = Object.keys(errors).length === 0;
 
   return (
     <>
@@ -165,9 +206,20 @@ export const EditarAvance: React.FC = () => {
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(on_submit)}
-        style={{ width: '100%', height: '100vh' }} // Añadido estilo para ocupar toda la pantalla
+        style={{ width: '100%' }} // Añadido estilo para ocupar toda la pantalla
       >
-        <Grid container spacing={2} mt={0.1}>
+        <Grid
+          container
+          spacing={2}
+          m={2}
+          p={2}
+          sx={{
+            p: '0px',
+            m: '0 0 0 0',
+            mb: '0px',
+          }}
+        >
+          {' '}
           {is_select_avance && (
             <Grid item xs={12}>
               <Title title=" INFORMACIÓN DE AVANCE" />
@@ -189,7 +241,11 @@ export const EditarAvance: React.FC = () => {
               autoFocus
               {...register('accion', { required: true })}
               error={Boolean(errors.accion)}
-              helperText={errors.accion?.type === 'required' ? 'Este campo es obligatorio' : ''}
+              helperText={
+                errors.accion?.type === 'required'
+                  ? 'Este campo es obligatorio'
+                  : ''
+              }
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -203,47 +259,78 @@ export const EditarAvance: React.FC = () => {
               autoFocus
               {...register('descripcion', { required: true })}
               error={Boolean(errors.descripcion)}
-              helperText={errors.descripcion?.type === 'required' ? 'Este campo es obligatorio' : ''}
+              helperText={
+                errors.descripcion?.type === 'required'
+                  ? 'Este campo es obligatorio'
+                  : ''
+              }
             />
           </Grid>
-          {archivos.map((file, index) => (
-            <Fragment key={index}>
-              <Grid item xs={12} sm={6}>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  component="label"
-                  startIcon={<CloudUploadIcon />}
-                >
-                  {nombres_archivos[index] !== ''
-                    ? nombres_archivos[index]
-                    : 'Seleccione archivo soporte'}
-                  <input
-                    hidden
-                    type="file"
-                    disabled={is_select_avance}
-                    required={is_editar_avance}
-                    autoFocus
-                    style={{ opacity: 0 }}
-                    onChange={(e) => { handle_file_select(e, index); }}
+          <Grid item xs={12} sm={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+              <DatePicker
+                label="Fecha Avance"
+                inputFormat="YYYY/MM/DD"
+                openTo="day"
+                views={['year', 'month', 'day']}
+                value={fecha_reporte}
+                disabled={is_select_avance || is_editar_avance}
+                onChange={handle_fecha_reporte_change}
+                renderInput={(params) => (
+                  <TextField
+                    fullWidth
+                    size="small"
+                    disabled={is_select_avance || is_editar_avance}
+                    {...params}
+                    {...register('fecha_reporte')}
                   />
-                </Button>
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  label="Nombre Archivo"
-                  fullWidth
-                  size="small"
-                  margin="dense"
-                  disabled={is_select_avance}
-                  required={is_editar_avance}
-                  autoFocus
-                  value={nombres_archivos[index]}
-                  onChange={(e) => { handle_nombre_archivo_change(e, index); }}
-                />
-              </Grid>
-            </Fragment>
-          ))}
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+          {is_editar_avance &&
+            archivos.map((file, index) => (
+              <Fragment key={index}>
+                <Grid item xs={12} sm={6}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    component="label"
+                    startIcon={<CloudUploadIcon />}
+                  >
+                    {nombres_archivos[index] !== ''
+                      ? nombres_archivos[index]
+                      : 'Seleccione archivo'}
+                    <input
+                      hidden
+                      type="file"
+                      disabled={is_select_avance}
+                      required={false}
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      onChange={(e) => {
+                        handle_file_select(e, index);
+                      }}
+                    />
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Nombre Archivo"
+                    fullWidth
+                    size="small"
+                    margin="dense"
+                    disabled={is_select_avance}
+                    required={false}
+                    autoFocus
+                    value={nombres_archivos[index]}
+                    onChange={(e) => {
+                      handle_nombre_archivo_change(e, index);
+                    }}
+                  />
+                </Grid>
+              </Fragment>
+            ))}
           {rows_evidencia.length > 0 && (
             <>
               <Grid item xs={12}>
@@ -277,16 +364,18 @@ export const EditarAvance: React.FC = () => {
           )}
         </Grid>
         <Grid item spacing={2} justifyContent="end" container>
-          <Grid item>
-            <LoadingButton
-              variant="outlined"
-              color="primary"
-              size="large"
-              onClick={agregar_otroarchivo}
-            >
-              Agregar archivo
-            </LoadingButton>
-          </Grid>
+          {is_editar_avance && (
+            <Grid item>
+              <LoadingButton
+                variant="outlined"
+                color="primary"
+                size="large"
+                onClick={agregar_otroarchivo}
+              >
+                Agregar archivo
+              </LoadingButton>
+            </Grid>
+          )}
           {is_editar_avance && (
             <Grid item>
               <LoadingButton
@@ -308,15 +397,13 @@ export const EditarAvance: React.FC = () => {
                 color="primary"
                 size="large"
                 onClick={() => {
-                  set_is_select_avance(false);
-                  set_is_editar_avance(true);
+                  set_mode('editar_avance');
                 }}
               >
                 Editar Avance
               </LoadingButton>
             </Grid>
           )}
-
         </Grid>
       </Box>
     </>

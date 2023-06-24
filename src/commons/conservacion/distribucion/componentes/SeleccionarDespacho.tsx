@@ -7,6 +7,7 @@ import { set_current_despacho, set_despachos } from '../store/slice/distribucion
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../api/axios';
+import { get_despachos_service } from '../store/thunks/distribucionThunks';
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import EditIcon from '@mui/icons-material/Edit';
 
@@ -135,7 +136,7 @@ const SeleccionarDespacho = ({
             const nro = get_values("nro_despacho");
             const fecha_desde = get_values("fecha_desde");
             const fecha_hasta = get_values("fecha_hasta");
-            // void dispatch(get_despachos_service(origin_nursery.id_vivero, nro, fecha_desde, fecha_hasta));
+            void dispatch(get_despachos_service(origin_nursery.id_vivero, nro, fecha_desde, fecha_hasta));
         }
       })   
     
@@ -157,6 +158,10 @@ const SeleccionarDespacho = ({
                     set_models={set_despachos}
                     button_submit_label='Buscar despachos'
                     form_inputs={[
+                        {
+                            datum_type: "title",
+                            title_label: "Informacion del despacho"
+                        },
                         {
                         datum_type: "select_controller",
                         xs: 12,

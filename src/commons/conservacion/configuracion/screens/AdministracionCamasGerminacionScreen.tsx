@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Grid, Stack, Tooltip, IconButton, Avatar } from "@mui/material";
+import { Box, Button, Grid, Stack, Tooltip, IconButton, Avatar, Divider } from "@mui/material";
 import { Title } from "../../../../components";
 import { get_germination_beds_service, update_germination_beds_service } from '../store/thunks/configuracionThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
@@ -211,7 +211,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
       >
         <Grid item xs={12}>
           <Title title="Camas de germinacion viveros"></Title>
-          <Grid item xs={11} md={12} margin={2} >
+          <Grid item xs={11} md={12} margin={2}  style={{ marginLeft: '1px' }} >
             <AutocompleteVivero
               id={id}
               set_value={set_nursery}
@@ -219,6 +219,8 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
             />
 
           </Grid>
+          <Divider style={{ width: '100%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
+
           {nursery !== null ? nursery?.id_vivero !== null ? 
             <>
               <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
@@ -235,7 +237,8 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                 </Button>
               </Stack>
               <Grid item>
-                
+              <Divider style={{ width: '100%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
+
                 <Box sx={{ width: '100%' }}>
                 
                   <DataGrid

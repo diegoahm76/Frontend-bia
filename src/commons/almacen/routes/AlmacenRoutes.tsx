@@ -62,7 +62,7 @@ export const AlmacenRoutes: React.FC = () => {
         element={<AprobacionSolicitudConsumoScreen />}
       />
       <Route
-        path="aprobacion_solicitud_vivero/*"
+        path="aprobacion_solicitud_consumo_vivero/*"
         element={<AprobacionSolicitudViveroScreen />}
       />
       <Route
