@@ -24,11 +24,7 @@ export const BibliotecaScreen: React.FC = () => {
       width: 300,
       renderCell: (params) => (
         <>
-          <IconButton
-            onClick={() => {
-              set_id_seccion(params.row.id_seccion);
-            }}
-          >
+          <IconButton onClick={() => {}}>
             <Avatar
               sx={{
                 width: 24,
@@ -82,46 +78,47 @@ export const BibliotecaScreen: React.FC = () => {
   }, []);
 
   return (
-    <Grid
-      container
-      spacing={2}
-      m={2}
-      p={2}
-      sx={{
-        position: 'relative',
-        background: '#FAFAFA',
-        borderRadius: '15px',
-        p: '20px',
-        m: '10px 0 20px 0',
-        mb: '20px',
-        boxShadow: '0px 3px 6px #042F4A26',
-      }}
-    >
-      <Grid item xs={12}>
-        <Title title="REGISTRO DE SECCIONES Y SUBSECCIONES" />
+    <>
+      <Grid
+        container
+        spacing={2}
+        m={2}
+        p={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
+        <Grid item xs={12}>
+          <Title title="REGISTRO DE SECCIONES Y SUBSECCIONES" />
+        </Grid>
+        {rows_seccion.length > 0 && (
+          <>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                Listado de secciones existentes
+              </Typography>
+              <Divider />
+            </Grid>
+            <Grid item xs={12}>
+              <DataGrid
+                autoHeight
+                rows={rows_seccion}
+                columns={columns}
+                getRowId={(row) => row.id_seccion}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+              />
+            </Grid>
+          </>
+        )}
       </Grid>
-      {rows_seccion.length > 0 && (
-        <>
-          <Grid item xs={12}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              Listado de secciones existentes
-            </Typography>
-            <Divider />
-          </Grid>
-
-          <Grid item xs={12}>
-            <DataGrid
-              autoHeight
-              rows={rows_seccion}
-              columns={columns}
-              getRowId={(row) => row.id_seccion}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-            />
-          </Grid>
-        </>
-      )}
       {<AgregarSeccionSubSeccion />}
-    </Grid>
+    </>
   );
 };

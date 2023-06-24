@@ -14,3 +14,28 @@ export const get_data_subseccion_por_seccion = async (id_seccion: number): Promi
     );
     return data.data;
 };
+export const post_seccion_subscción = async (
+    form: any,
+): Promise<any> => {
+    const response = await api.post(
+        'hidrico/bibliotecas/secciones/create/',
+        {
+            ...form,
+            id_seccion: form.id_seccion,
+            nombre: form.nombre_seccion,
+            descripcion: form.descripcion_seccion,
+            fecha_creacion: form.fecha_creacion,
+            subsecciones: [
+                {
+                    nombre: form.nombre_subseccion,
+                    descripcion: form.descripcion_subseccion,
+                    fecha_creacion: form.fecha_creacion_subseccion,
+                }
+            ]
+
+        }
+    );
+
+    return response.data;
+};
+
