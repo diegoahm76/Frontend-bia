@@ -262,7 +262,8 @@ const SeleccionarBienSiembra = () => {
             const codigo_bien = get_values_bien("codigo_bien") ?? ""
             const nombre = get_values_bien("nombre")??""
             const tipo_bien = get_values_bien("cod_tipo_elemento_vivero")??""
-            void dispatch(get_goods_service(id_vivero, codigo_bien, nombre, tipo_bien));
+            const semilla = tipo_bien === "SE" 
+            void dispatch(get_goods_service(id_vivero, codigo_bien, nombre, tipo_bien, semilla));
         }
     })
 
@@ -581,7 +582,7 @@ const SeleccionarBienSiembra = () => {
                             label: "Tipo de bien",
                             disabled: false,
                             helper_text: "",
-                            select_options: [{label: "Semillas", value: "MV"}, {label: "Insumos", value: "IN"}, {label: "Plantas", value: "MV"}, {label: "Herramientas", value: "HE"}],
+                            select_options: [{label: "Semillas", value: "SE"}, {label: "Insumos", value: "IN"}, {label: "Plantas", value: "MV"}, {label: "Herramientas", value: "HE"}],
                             option_label: "label",
                             option_key: "value",
                         },

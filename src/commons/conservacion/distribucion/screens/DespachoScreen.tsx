@@ -151,19 +151,31 @@ const DespachoScreen = () => {
         const fecha = new Date(data.fecha_despacho ?? "").toISOString()
   
         const data_edit = {
-          ...data, fecha_despacho: fecha.slice(0, 10) + " " + fecha.slice(11, 19), 
+          ...data,
+          fecha_despacho: fecha.slice(0, 10) + " " + fecha.slice(11, 19), 
+          id_solicitud_a_viveros: current_solicitud.id_solicitud_vivero,
+          fecha_solicitud_a_viveros: current_solicitud.fecha_solicitud,
+          nro_solicitud_a_viveros: current_solicitud.nro_solicitud,
+          fecha_solicitud_retiro_material: current_solicitud.fecha_retiro_material,
+          // ruta_archivo_con_recibido: current_solicitud.ruta_archivo_info_tecnico,
+          id_unidad_para_la_que_solicita: current_solicitud.id_unidad_para_la_que_solicita,
+          id_funcionario_responsable_unidad: current_solicitud.id_funcionario_responsable_und_destino,
+          id_solicitud_viveros: current_solicitud.id_solicitud_vivero,
+          id_persona_solicita: current_solicitud.id_persona_solicita
         }
         const aux_items: IObjBienDespacho[] = []
         bienes_despacho.forEach((element: IObjBienDespacho, index: number) => {
           aux_items.push({ ...element, nro_posicion_en_despacho: index })
         });
         const aux = {
-          info_despacho: { ...data_edit, id_solicitud_a_viveros: current_solicitud.id_solicitud_vivero },
+          info_despacho: { 
+            ...data_edit
+          },
           ruta_archivo_con_recibido: data.ruta_archivo_con_recibido,
           items_despacho: aux_items
         }
         console.log(aux)
-        form_data.append('info_despacho', JSON.stringify({ ...data_edit, id_solicitud_a_viveros: current_solicitud.id_solicitud_vivero, id_solicitud_viveros: current_solicitud.id_solicitud_vivero  }));
+        form_data.append('info_despacho', JSON.stringify({ ...data_edit }));
         form_data.append('ruta_archivo_con_recibido', data.ruta_archivo_con_recibido);
         form_data.append('items_despacho', JSON.stringify(aux_items));
         void dispatch(crear_despacho(form_data));
@@ -196,6 +208,7 @@ const DespachoScreen = () => {
         p: '20px',
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
+        marginTop: '20px',
 
       }}
     >

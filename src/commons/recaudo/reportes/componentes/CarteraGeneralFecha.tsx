@@ -109,7 +109,7 @@ export const CarteraGeneralFecha: React.FC = () => {
   }, [visible_rows])
 
   useEffect(() => {
-    const arr_labels = []
+    const arr_labels:any = []
     for(let i=0; i<visible_rows.length; i++){
       arr_labels.push(`${visible_rows[i].codigo_contable} ${visible_rows[i].concepto_deuda}`)
     }

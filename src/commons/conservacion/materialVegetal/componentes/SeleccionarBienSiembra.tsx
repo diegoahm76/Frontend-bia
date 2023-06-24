@@ -5,7 +5,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IObjGoods, type IObjPlantingGoods } from "../interfaces/materialvegetal";
 import { set_planting_goods, set_current_good } from '../store/slice/materialvegetalSlice';
-import { control_error, get_goods_service } from '../store/thunks/materialvegetalThunks';
+import { control_error, get_good_code_siembra_service, get_goods_service } from '../store/thunks/materialvegetalThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -226,6 +226,14 @@ const SeleccionarBienSiembra = () => {
         }
     })
 
+    const search_bien: any = (async () => {  
+        const id_vivero = current_nursery.id_vivero
+        if (id_vivero !== null && id_vivero !== undefined) {
+            const codigo = get_values_bien("codigo_bien") ?? ""
+            void dispatch(get_good_code_siembra_service(id_vivero, codigo));
+        }  
+      })
+
     useEffect(() => {
         // const id_vivero = current_nursery.id_vivero
         // if (id_vivero !== null && id_vivero !== undefined) {
@@ -375,6 +383,8 @@ const SeleccionarBienSiembra = () => {
                             type: "number",
                             disabled: false,
                             helper_text: "",
+                            hidden_text: current_good.tipo_bien === "MZ",
+                            on_blur_function: search_bien
                         },
                         {
                             datum_type: "input_controller",
@@ -466,7 +476,7 @@ const SeleccionarBienSiembra = () => {
                             label: "Tipo de bien",
                             disabled: false,
                             helper_text: "",
-                            select_options: [{label: "Semillas", value: "Semillas"}, {label: "Insumos", value: "Insumos"}, {label: "Mezclas", value: "Mezclas"}],
+                            select_options: [{label: "Semillas", value: "MV"}, {label: "Insumos", value: "IN"}, {label: "Mezclas", value: "MZ"}],
                             option_label: "label",
                             option_key: "value",
                         },
@@ -480,7 +490,7 @@ const SeleccionarBienSiembra = () => {
                             rules: {},
                             label: "Codigo bien",
                             type: "number",
-                            disabled: (get_values_bien("tipo_bien") === "Mezclas"),
+                            disabled: (get_values_bien("tipo_bien") === "MZ"),
                             helper_text: "",
                         },
                         {

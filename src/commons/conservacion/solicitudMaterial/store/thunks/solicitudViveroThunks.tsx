@@ -8,7 +8,7 @@ import { get_unidad_organizacional, set_bienes, set_bienes_solicitud, set_curren
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+export const control_error = (message: ToastContent  = 'Algo pasó, intente de nuevo') =>
     toast.error(message, {
         position: 'bottom-right',
         autoClose: 3000,

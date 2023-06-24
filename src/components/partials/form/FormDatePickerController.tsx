@@ -18,6 +18,7 @@ interface IRules {
 interface IProps {
     xs: number;
     md: number;
+    margin?: number;
     control_form: any;
     control_name: string;
     default_value: string | number | null;
@@ -45,14 +46,15 @@ const FormDatePickerController = ({
     hidden_text,
     min_date,
     max_date,
-    format
+    format,
+    margin
 }: IProps) => {
     const min = new Date(min_date ?? "");
     const max = new Date(max_date ?? "");
     return (
         <>
             {(!(hidden_text ?? false)) &&
-                <Grid item xs={xs} md={md}>
+                <Grid item xs={xs} md={md} margin={margin??0}>
                     <Controller
                         name={control_name}
                         control={control_form}

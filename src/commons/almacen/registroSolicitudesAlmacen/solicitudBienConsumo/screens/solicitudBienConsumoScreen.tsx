@@ -3,8 +3,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Button, Grid } from '@mui/material';
 import SeleccionarSolicitud from '../components/componenteBusqueda/SeleccionarSolicitud';
 import FormButton from "../../../../../components/partials/form/FormButton";
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
 import SeleccionarBienConsumo from "../components/componenteBusqueda/SeleccionarBienConsumo";
 import { type IObjSolicitud } from "../interfaces/solicitudBienConsumo";
 import type { AuthSlice } from '../../../../../commons/auth/interfaces';
@@ -16,7 +16,6 @@ import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_pers
 import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
-import { Title } from '../../../../../components/Title';
 
 
 
@@ -131,16 +130,17 @@ const SolicitudConsumoScreen = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
-                mt: '23px',
                 boxShadow: '0px 3px 6px #042F4A26',
 
             }}
         >
-            <Title title="Solicitud de consumo "></Title>
+
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitud
                     control_solicitud={control_solicitud}
-                    get_values={get_values} title={''}
+                    get_values={get_values}
+                    title={"Solicitudes de consumo"}
+
                 />
                 {current_solicitud.solicitud_anulada_solicitante !== true &&
                     <>
@@ -159,7 +159,17 @@ const SolicitudConsumoScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={12} md={4} >
+                <Grid item xs={6} md={3}>
+
+                    <FormButton
+                        variant_button="outlined"
+                        on_click_function={reset_solicitud}
+                        icon_class={<CleaningServicesIcon />}
+                        label={"Limpiar"}
+                        type_button="button"
+                    />
+                </Grid>
+                <Grid item xs={6} md={3}>
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}
@@ -169,17 +179,8 @@ const SolicitudConsumoScreen = () => {
                     />
                 </Grid>
 
-                <Grid item xs={6} md={2}>
 
-                    <FormButton
-                        variant_button="outlined"
-                        on_click_function={reset_solicitud}
-                        icon_class={<CloseIcon />}
-                        label={"Cancelar"}
-                        type_button="button"
-                    />
-                </Grid>
-                <Grid item xs={12} md={5}>
+                <Grid item xs={6} md={3}>
 
                     <Button
                         variant="outlined"
@@ -192,6 +193,7 @@ const SolicitudConsumoScreen = () => {
                     >
                         ANULACIÓN DE SOLICITUDES DE CONSUMO
                     </Button>
+
 
                 </Grid>
                 <AnularSolicitudModal
@@ -214,5 +216,4 @@ const SolicitudConsumoScreen = () => {
 
 // eslint-disable-next-line no-restricted-syntax
 export default SolicitudConsumoScreen;
-
 

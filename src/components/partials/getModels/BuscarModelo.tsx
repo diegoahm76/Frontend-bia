@@ -193,7 +193,7 @@ const BuscarModelo = ({
                         <Grid
                             item
                             xs={12}
-                            md={3}
+                            md={md_button ?? 3}
                         >
                             <FormButton
                                 variant_button="contained"
