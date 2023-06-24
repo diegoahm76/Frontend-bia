@@ -111,51 +111,38 @@ const EditarBienDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit(on_submit_edit)}
       >
-        <Grid  container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }} item xs={11.5}  margin={1}>
-          <Box
-            className={`border px-4 text-white fs-5 p-1`}
-            sx={{
-              display: 'grid',
-              background:
-                'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-              width: '98%',
-              height: '40px',
-              color: '#fff',
-              borderRadius: '10px',
-              pl: '20px',
-              fontSize: '17px',
-              fontWeight: '900',
-              alignContent: 'center',
-              marginTop: '10px',
-            }}
-          ><DialogTitle>
-              {action === 'create'
-                ? 'Crear vivero'
-                : action === 'detail'
-                  ? 'Detalle Vivero'
-                  : 'Editar vivero'}
-            </DialogTitle>
-          </Box>
+        <Grid container
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }} item xs={11.5} margin={1}>
+
+          <Title title={action === 'create'
+            ? 'Crear vivero'
+            : action === 'detail'
+              ? 'Detalle Vivero'
+              : 'Editar vivero'}  ></Title>
+
+          <DialogTitle>
+
+          </DialogTitle>
+
         </Grid>
 
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container spacing={2}  sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '0px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}>
+          <Grid container spacing={2} sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            mb: '0px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}>
             <Title title="Tipificar bien"></Title>
             <Grid item xs={12} md={5} margin={0}>
               <Controller

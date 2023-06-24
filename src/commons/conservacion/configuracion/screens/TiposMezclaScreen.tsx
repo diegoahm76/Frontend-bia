@@ -258,25 +258,7 @@ export function TiposMezclaScreen(): JSX.Element {
             <Grid item xs={12} spacing={2}>
               <Title title="Tipos de mezcla"></Title>
             </Grid>
-
-            <Grid item xs={12} spacing={2} style={{ display: 'flex', justifyContent: 'end' }}>
-              <Button
-                variant="outlined"
-                startIcon={<AddIcon />}
-                onClick={() => {
-                  dispatch(current_mixture(initial_state_current_mixture));
-                  set_action("create")
-                  set_add_mixture_is_active(true);
-                }}
-              >
-                Crear mezcla
-              </Button>
-              <Divider 
-              // style={{ marginTop: '10px' }}
-               />
-            </Grid>
-            <Divider style={{ width: '98%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
-
+ 
             <Grid item xs={12} spacing={2} style={{ display: 'flex', justifyContent: 'end' }}>
               <Button
                 variant="outlined"

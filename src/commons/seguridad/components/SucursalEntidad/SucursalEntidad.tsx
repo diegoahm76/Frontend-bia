@@ -8,8 +8,22 @@ import FormControl from '@mui/material/FormControl';
 import { Title } from '../../../../components';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { DataGrid } from '@mui/x-data-grid';
 
+const columns = [
+    { field: 'id', headerName: 'Nro Sucursal', width: 150 },
+    { field: 'descripcion', headerName: 'Descripción de la Sucursal', width: 200 },
+    { field: 'principal', headerName: 'Principal', width: 120 },
+    { field: 'direccion', headerName: 'Dirección', width: 250 },
+    { field: 'accion', headerName: 'Acción', width: 120 },
+];
 
+const rows = [
+    { id: 1, descripcion: 'Sucursal 1', principal: 'Sí', direccion: 'Calle 1, Ciudad', accion: 'Editar' },
+    { id: 2, descripcion: 'Sucursal 2', principal: 'No', direccion: 'Calle 2, Ciudad', accion: 'Editar' },
+    { id: 3, descripcion: 'Sucursal 3', principal: 'No', direccion: 'Calle 3, Ciudad', accion: 'Editar' },
+    // Agrega más filas según sea necesario
+];
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -237,9 +251,18 @@ export const SucursalEntidad: React.FC = () => {
 
                         />
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={4} >
+                        <TextField variant="outlined"
+                            label="Telf. contacto"
+                            style={{ marginBottom: '10px' }}
+                            fullWidth
+                            size="small"
+                          
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
                         <FormControl required size="small" fullWidth>
-                            <InputLabel>Municipio</InputLabel>
+                            <InputLabel>Principal</InputLabel>
                             <Select
                                 label="Municipio"
                             >
@@ -247,6 +270,22 @@ export const SucursalEntidad: React.FC = () => {
                                 <MenuItem value="no">No</MenuItem>
                             </Select>
                         </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                        <FormControl required size="small" fullWidth>
+                            <InputLabel>Activo</InputLabel>
+                            <Select
+                                label="Municipio"
+                            >
+                                <MenuItem value="si">Sí</MenuItem>
+                                <MenuItem value="no">No</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                        <div style={{ height: 300, width: '100%' }}>
+                            <DataGrid rows={rows} columns={columns} />
+                        </div>
                     </Grid>
 
 
