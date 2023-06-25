@@ -226,10 +226,10 @@ const SeleccionarBienConsumoVivero = () => {
 
     const get_bienes_filtro: any = (async () => {
         console.log("buscar...")
-        const codigo_bien = get_values_bien("codigo_bien")
-        const nombre = get_values_bien("nombre")
-        const nombre_cientifico = get_values_bien("nombre_cientifico")
-        const cod_tipo_elemento_vivero = get_values_bien("cod_tipo_elemento_vivero")
+        const codigo_bien = get_values_bien("codigo_bien") ?? ""
+        const nombre = get_values_bien("nombre") ?? ""
+        const nombre_cientifico = get_values_bien("nombre_cientifico") ?? ""
+        const cod_tipo_elemento_vivero = get_values_bien("cod_tipo_elemento_vivero") ?? ""
         if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined && nombre_cientifico !== null && nombre_cientifico !== undefined && cod_tipo_elemento_vivero !== null && cod_tipo_elemento_vivero !== undefined) {
 
             void dispatch(get_bienes_vivero_consumo(codigo_bien, nombre, nombre_cientifico, cod_tipo_elemento_vivero))
@@ -399,6 +399,21 @@ const SeleccionarBienConsumoVivero = () => {
                             type: "text",
                             disabled: false,
                             helper_text: ""
+                        },
+                        {
+                            datum_type: "select_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "cod_tipo_elemento_vivero",
+                            default_value: "",
+                            rules: {},
+                            label: "Tipo de bien",
+                            disabled: false,
+                            helper_text: "",
+                            select_options: [{ label: "Insumos", value: "IN" }, { label: "Material Vegetal", value: "MV" }, { label: "Herramientas", value: "HE" }],
+                            option_label: "label",
+                            option_key: "value",
                         },
                     ]}
                 />

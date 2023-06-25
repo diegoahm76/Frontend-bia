@@ -10,9 +10,10 @@ import { GestionInventarioRoutes } from "../gestionDeInventario/gestionHojaDeVid
 import SolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudBienConsumoScreen";
 import { AdministracionVehiculosRoutes } from "../administracionDeVehiculos/routes/AdministracionVehiculosRoutes";
 import AprobacionSolicitudConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudConsumoScreen";
-import DespachoBienesConsumoScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/despachoSolicitudScreen";
+import DespachoBienesConsumoScreen from "../registroSolicitudesAlmacen/despacho/screens/despachoSolicitudScreen";
 import SolicitudConsumoViveroScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudConsumoViveroScreen";
 import AprobacionSolicitudViveroScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudViveroScreen";
+
 
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
@@ -68,6 +69,7 @@ export const AlmacenRoutes: React.FC = () => {
         path="despacho_solicitud_aprobada/*"
         element={<DespachoBienesConsumoScreen />}
       />
+
 
       <Route path="/*" element={<Page404 />} />
     </Routes>

@@ -4,19 +4,19 @@ import { Button, Grid } from '@mui/material';
 import FormButton from "../../../../../components/partials/form/FormButton";
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
-import { type IObjSolicitud } from "../interfaces/solicitudBienConsumo";
+import { type IObjSolicitud } from "../../solicitudBienConsumo/interfaces/solicitudBienConsumo";
 import { type AuthSlice } from '../../../../auth/interfaces';
 import { useForm } from 'react-hook-form';
 
 import SaveIcon from '@mui/icons-material/Save';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service, get_bienes_solicitud } from '../store/solicitudBienConsumoThunks';
-import SeleccionarSolicitudDespacho from '../components/DespachoRechazoSolicitud/SeleccionarSolicitudesDespacho';
-import RechazoSolicitud from '../components/DespachoRechazoSolicitud/RechazarSolicitud';
-import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
-import FuncionarioRechazo from '../components/DespachoRechazoSolicitud/PersonaRechazoSolicitud';
-import BienRechazado from '../components/DespachoRechazoSolicitud/BienesRechazo';
+import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service, get_bienes_solicitud } from '../../solicitudBienConsumo/store/solicitudBienConsumoThunks';
+import SeleccionarSolicitudDespacho from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/SeleccionarSolicitudesDespacho';
+import RechazoSolicitud from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/RechazarSolicitud';
+import { set_current_solicitud, set_persona_solicita } from '../../solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
+import FuncionarioRechazo from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/PersonaRechazoSolicitud';
+import BienRechazado from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/BienesRechazo';
 import { useNavigate } from 'react-router-dom';
 
 
