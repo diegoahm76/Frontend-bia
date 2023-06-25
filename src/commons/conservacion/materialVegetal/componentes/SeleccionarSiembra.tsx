@@ -47,6 +47,16 @@ const SeleccionarSiembra = ({
       ),
     },
     {
+      field: 'nombre_bien_sembrado',
+      headerName: 'Planta',
+      width: 350,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
       field: 'fecha_siembra',
       headerName: 'Fecha de siembra',
       width: 200,
@@ -119,6 +129,7 @@ const SeleccionarSiembra = ({
     void dispatch(get_plantings_service());
     console.log(get_siembras)
   })
+  
 
   return (
     <>
@@ -252,6 +263,7 @@ const SeleccionarSiembra = ({
               helper_text: ""
             },
           ]}
+          title_table_modal= 'Siembras encontradas'
           modal_select_model_title='Seleccionar siembra'
           modal_form_filters={[]}
         />

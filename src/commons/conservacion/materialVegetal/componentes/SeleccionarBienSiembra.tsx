@@ -5,7 +5,7 @@ import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo
 import { type GridColDef } from '@mui/x-data-grid';
 import { type IObjGoods, type IObjPlantingGoods } from "../interfaces/materialvegetal";
 import { set_planting_goods, set_current_good } from '../store/slice/materialvegetalSlice';
-import { control_error, get_goods_service } from '../store/thunks/materialvegetalThunks';
+import { control_error, get_good_code_siembra_service, get_goods_service } from '../store/thunks/materialvegetalThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { useEffect, useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -226,6 +226,14 @@ const SeleccionarBienSiembra = () => {
         }
     })
 
+    const search_bien: any = (async () => {  
+        const id_vivero = current_nursery.id_vivero
+        if (id_vivero !== null && id_vivero !== undefined) {
+            const codigo = get_values_bien("codigo_bien") ?? ""
+            void dispatch(get_good_code_siembra_service(id_vivero, codigo));
+        }  
+      })
+
     useEffect(() => {
         // const id_vivero = current_nursery.id_vivero
         // if (id_vivero !== null && id_vivero !== undefined) {
@@ -235,6 +243,7 @@ const SeleccionarBienSiembra = () => {
     }, [current_nursery]);
 
     useEffect(() => {
+        console.log(planting_goods)
         set_aux_planting_goods(planting_goods)
     }, [planting_goods]);
 
@@ -248,9 +257,9 @@ const SeleccionarBienSiembra = () => {
     }, [current_good]);
     
     const on_submit_siembra = (data: IObjPlantingGoods): void => {   
-        if(current_good.id_bien !== null){
+        if(current_good.tipo_bien === "Mezcla"? current_good.id_mezcla !== null : current_good.id_bien !== null){
             if(get_values_bien("codigo_bien") === current_good.codigo_bien){
-                const bien: IObjPlantingGoods | undefined = aux_planting_goods.find((p) => p.id_bien_consumido === current_good.id_bien )
+                const bien: IObjPlantingGoods | undefined = aux_planting_goods.find((p) => current_good.tipo_bien === "Mezcla"? p.id_mezcla_consumida === current_good.id_mezcla: p.id_bien_consumido === current_good.id_bien )
                 let asignada = 0
                 aux_planting_goods.forEach((option) => {
                     if (option.id_bien_consumido !== bien?.id_bien_consumido ) {
@@ -267,7 +276,7 @@ const SeleccionarBienSiembra = () => {
                         id_bien_consumido: current_good.id_bien,
                         cantidad: Number(data.cantidad),
                         observaciones: data.observaciones,
-                        id_mezcla_consumida: null,
+                        id_mezcla_consumida: current_good.id_mezcla ?? null,
                         tipo_bien: current_good.tipo_bien,
                         codigo_bien: current_good.codigo_bien,
                         nombre_bien: current_good.nombre_bien,
@@ -311,7 +320,7 @@ const SeleccionarBienSiembra = () => {
 
     const edit_bien_siembra = (item: IObjPlantingGoods): void => {
         set_action("editar")
-        const item_bien = aux_planting_goods.find((p) => p.id_bien_consumido === item.id_bien_consumido)
+        const item_bien = aux_planting_goods.find((p) =>item.tipo_bien === "Mezcla" ? p.id_mezcla_consumida === item.id_mezcla_consumida: p.id_bien_consumido === item.id_bien_consumido )
         reset_siembra(item_bien)
         const aux_items: IObjPlantingGoods[] = []
         aux_planting_goods.forEach((option) => {
@@ -327,7 +336,7 @@ const SeleccionarBienSiembra = () => {
     };
 
     const delete_bien_siembra = (item: IObjPlantingGoods): void => {
-        const bien: IObjGoods | undefined =goods.find((p: IObjGoods) => p.id_bien === item.id_bien_consumido)
+        const bien: IObjGoods | undefined =goods.find((p: IObjGoods) => item.tipo_bien === "Mezcla" ? p.id_mezcla === item.id_mezcla_consumida: p.id_bien === item.id_bien_consumido)
         console.log("bien",bien)
         if(bien !== undefined){
             console.log(bien)
@@ -375,6 +384,8 @@ const SeleccionarBienSiembra = () => {
                             type: "number",
                             disabled: false,
                             helper_text: "",
+                            hidden_text: current_good.tipo_bien === "Mezcla",
+                            on_blur_function: search_bien
                         },
                         {
                             datum_type: "input_controller",
@@ -466,7 +477,7 @@ const SeleccionarBienSiembra = () => {
                             label: "Tipo de bien",
                             disabled: false,
                             helper_text: "",
-                            select_options: [{label: "Semillas", value: "Semillas"}, {label: "Insumos", value: "Insumos"}, {label: "Mezclas", value: "Mezclas"}],
+                            select_options: [{label: "Semillas", value: "MV"}, {label: "Insumos", value: "IN"}, {label: "Mezclas", value: "MZ"}],
                             option_label: "label",
                             option_key: "value",
                         },
@@ -480,7 +491,7 @@ const SeleccionarBienSiembra = () => {
                             rules: {},
                             label: "Codigo bien",
                             type: "number",
-                            disabled: (get_values_bien("tipo_bien") === "Mezclas"),
+                            disabled: (get_values_bien("tipo_bien") === "MZ"),
                             helper_text: "",
                         },
                         {

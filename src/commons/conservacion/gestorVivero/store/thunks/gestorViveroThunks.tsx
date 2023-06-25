@@ -9,7 +9,7 @@ import {
 } from 'axios';
 // Slices
 import {
-  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine, initial_state_current_nursery, initial_state_current_viverista_actual, set_bienes_bajas, set_current_genera_baja, set_current_insumo, set_current_nuevo_viverista, set_current_viverista, set_genera_bajas, set_insumos, set_nuevos_viveristas, set_persona,
+  current_nursery, get_items_despacho, get_items_distribuidos, get_nurseries, get_nurseries_closing, get_nurseries_quarantine, initial_state_current_nursery, initial_state_current_viverista_actual, set_bienes_bajas, set_current_genera_baja, set_current_insumo, set_current_nuevo_viverista, set_current_nursery, set_current_viverista, set_genera_bajas, set_insumos, set_nuevos_viveristas, set_persona,
   // current_nursery
 } from '../slice/viveroSlice';
 import { api } from '../../../../../api/axios';
@@ -149,7 +149,7 @@ export const get_nursery_service: any = (id: string | number)  => {
     try {
       if(id !== undefined)
       {const { data } = await api.get(`conservacion/viveros/get-by-id/${id}/`);
-      dispatch(current_nursery(data));
+      dispatch(set_current_nursery(data));
       return data;}
     } catch (error: any) {
       console.log('get_nursery_service');
@@ -709,5 +709,31 @@ export const get_person_id_service = (
     }
   };
 };
+
+// Obtener bien actual
+export const get_good_code_baja_service = (
+  id_vivero: string | number,
+  code: string | number,
+  ): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/bajas/get-bienes-bajas/${code}/${id_vivero}/`);
+      
+      console.log(data)
+        if ('data' in data){
+          dispatch(set_current_insumo(data.data));
+          control_success("Se selecciono el bien")
+        } else{
+          control_error("no sé encontrarion bienes")
+        }
+    
+      return data;
+    } catch (error: any) {
+      console.log('get_good_code_baja_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+}
 
 

@@ -90,12 +90,13 @@ export const get_goods_service = (
   id_vivero: string | number,
   codigo_bien: string | null,
   nombre: string | null,
-  cod_elemento: string |null
+  cod_elemento: string |null,
+  semilla: boolean
   ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(`conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${cod_elemento??""}`)
-      const { data } = await api.get(`conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${cod_elemento??""}`);
+      const { data } = await api.get(`conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${((cod_elemento??"")==="SE")?"MV":cod_elemento??""}&es_semilla_vivero=${((cod_elemento??"")==="")?"":(semilla??false)?"true":"false"}`);
       dispatch(set_goods(data.data));
       console.log(data)
       if (data.data.length > 0) {

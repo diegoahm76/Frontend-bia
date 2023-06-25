@@ -50,6 +50,7 @@ export interface IObjBienDespacho {
   codigo_bien?: string | null;
   unidad_medida?: string | null;
   cod_tipo_elemento_vivero?: string | null;
+  id_unidad_medida_solicitada?: number | null;
 }
 
 export interface IObjBien {

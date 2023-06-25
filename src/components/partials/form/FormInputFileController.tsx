@@ -16,6 +16,7 @@ interface IRules {
 interface IProps {
     xs: number;
     md: number;
+    margin?: number;
     control_form: any;
     control_name: string;
     default_value: string | number | null;
@@ -41,7 +42,8 @@ const FormInputFileController = ({
     default_value,
     file_name,
     set_value,
-    hidden_text
+    hidden_text,
+    margin
 }: IProps) => {
 
     const handle_file_input_change = (e: any): void => {
@@ -50,7 +52,7 @@ const FormInputFileController = ({
     return (
         <>
             {(!(hidden_text ?? false)) &&
-            <Grid item xs={xs} md={md}>
+            <Grid item xs={xs} md={md} margin={margin ?? 0}>
                 <Controller
                     name={control_name}
                     control={control_form}
