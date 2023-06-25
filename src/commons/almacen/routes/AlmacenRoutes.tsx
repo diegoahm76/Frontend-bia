@@ -13,6 +13,7 @@ import AprobacionSolicitudConsumoScreen from "../registroSolicitudesAlmacen/soli
 import DespachoBienesConsumoScreen from "../registroSolicitudesAlmacen/despacho/screens/despachoSolicitudScreen";
 import SolicitudConsumoViveroScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/solicitudConsumoViveroScreen";
 import AprobacionSolicitudViveroScreen from "../registroSolicitudesAlmacen/solicitudBienConsumo/screens/aprobacionSolicitudViveroScreen";
+import RechazoSolicitudScreen from "../registroSolicitudesAlmacen/despacho/screens/rechazoSolicitudScreen";
 
 
 
@@ -68,6 +69,10 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="despacho_solicitud_aprobada/*"
         element={<DespachoBienesConsumoScreen />}
+      />
+      <Route
+        path="rechazo_solicitudes/*"
+        element={<RechazoSolicitudScreen />}
       />
 
 
