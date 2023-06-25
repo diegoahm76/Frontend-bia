@@ -23,6 +23,7 @@ import { useAppDispatch } from '../../../hooks';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
 import { v4 as uuid } from 'uuid';
+import ImageUploader from '../form/ImageUploader';
 
 interface IProps {
     set_models: any;
@@ -142,6 +143,15 @@ const SeleccionarModeloDialogForm = ({
                 min_date={form_input.min_date ?? ""}
                 max_date={form_input.max_date ?? ""}
                 format={form_input.max_date ?? null}
+            />;
+        } else if(form_input.datum_type === "image_uploader"){
+            return <ImageUploader
+                xs={form_input.xs}
+                md={form_input.md}
+                margin={form_input.margin}
+                selected_image={form_input.selected_imagen}
+                width_image={form_input.width_image}
+                height_image={form_input.height_image}
             />;
         }
     }
