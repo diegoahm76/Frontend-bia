@@ -130,6 +130,8 @@ export interface UserCreate {
   success: boolean;
 }
 export interface AdminUserHook {
+  clean_user_info: () => void;
+  set_numero_documento: Dispatch<SetStateAction<string>>;
   errors_admin_users: FieldErrors<DataAadminUser>;
   action_admin_users: string;
   user_info: Users;
@@ -149,9 +151,9 @@ export interface AdminUserHook {
   tipo_persona_opt: IList[];
   tipo_usuario_opt: IList[];
   tipo_usuario: string;
-  activo: string;
+  activo: boolean;
   activo_opt: IList[];
-  bloqueado: string;
+  bloqueado: boolean;
   bloqueado_opt: IList[];
   roles: IList2[];
   roles_opt: IList2[];

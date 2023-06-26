@@ -365,7 +365,7 @@ export const AdminUsers: React.FC = () => {
                       onChange={on_change}
                       label="Activo"
                       name="activo"
-                      value={activo}
+                      value={String(activo)}
                       options={activo_opt}
                       disabled={tipo_usuario === 'E' && true}
                       required={true}
@@ -412,7 +412,7 @@ export const AdminUsers: React.FC = () => {
                       onChange={on_change}
                       label="Bloqueado"
                       name="bloqueado"
-                      value={bloqueado}
+                      value={String(bloqueado)}
                       options={bloqueado_opt}
                       disabled={false}
                       required={true}

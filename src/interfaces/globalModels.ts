@@ -42,7 +42,7 @@ export interface TipoPersona {
 
 export interface IList {
   label: string | number;
-  value: number | string;
+  value: boolean;
 }
 export interface Departamentos {
   cod_departamento: string;

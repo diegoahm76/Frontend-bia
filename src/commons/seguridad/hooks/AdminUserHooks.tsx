@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,16 +50,16 @@ const control_error2 = (
   });
 
 const activo_opt: IList[] = [
-  { value: 'false', label: 'No' },
-  { value: 'true', label: 'Si' },
+  { value: false, label: 'No' },
+  { value: true, label: 'Si' },
 ];
 
 const bloqueado_opt: IList[] = [
-  { value: 'false', label: 'No' },
-  { value: 'true', label: 'Si' },
+  { value: false, label: 'No' },
+  { value: true, label: 'Si' },
 ];
 
-export const initial_state_data_register: DataAadminUser = {
+export const initial_state_data_register: any = {
   tipo_persona: '',
   tipo_documento: '',
   numero_documento: '',
@@ -105,8 +106,8 @@ export const use_admin_users = (): AdminUserHook => {
   // const [roles, set_roles] = useState<IList2[]>([...rol_fixed]);
   const [roles, set_roles] = useState<IList2[]>([]);
   const [tipo_usuario, set_tipo_usuario] = useState('');
-  const [activo, set_activo] = useState('');
-  const [bloqueado, set_bloqueado] = useState('');
+  const [activo, set_activo] = useState<boolean>(false);
+  const [bloqueado, set_bloqueado] = useState<boolean>(false);
   const [tipo_usuario_opt, set_tipo_usuario_opt] = useState<IList[]>([]);
   const [data_register, set_data_register] = useState<DataAadminUser>(
     initial_state_data_register
@@ -146,6 +147,12 @@ export const use_admin_users = (): AdminUserHook => {
     watch: watch_admin_user,
     reset: reset_admin_user,
   } = useForm<DataAadminUser>();
+
+
+  const clean_user_info = (): void => {
+    // dispatch(set_user_info({}));
+    set_data_register(initial_state_data_register);
+  };
 
   const get_selects_options = async (): Promise<void> => {
     set_loading(true);
@@ -271,7 +278,7 @@ export const use_admin_users = (): AdminUserHook => {
       case 'activo':
         console.log('valor actual', valor_actual_user_is_active);
         console.log('selected actual', e.target.value);
-        set_activo(e.target.value);
+        set_activo(Boolean(e.target.value));
         if (
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `${valor_actual_user_is_active}` !== e.target.value
@@ -283,7 +290,7 @@ export const use_admin_users = (): AdminUserHook => {
         // set_valor_actual_user_is_active(e.target.value !== 'false');
         break;
       case 'bloqueado':
-        set_bloqueado(e.target.value);
+        set_bloqueado(Boolean(e.target.value));
         if (
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `${valor_actual_user_is_blocked}` !== e.target.value
@@ -350,10 +357,12 @@ export const use_admin_users = (): AdminUserHook => {
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      set_activo(`${data_register.activo}`);
+      const activoo = Boolean(data_register.activo);
+      set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      set_bloqueado(`${data_register.bloqueado}`);
+      const bloqueadoo = Boolean(data_register.bloqueado);
+      set_bloqueado(bloqueadoo);
       set_valor_actual_user_is_blocked(data_register.bloqueado);
 
       if (data_person_search.tipo_persona === 'N') {
@@ -428,10 +437,12 @@ export const use_admin_users = (): AdminUserHook => {
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      set_activo(`${data_register.activo}`);
+      const activoo = Boolean(data_register.activo);
+      set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      set_bloqueado(`${data_register.bloqueado}`);
+      const bloqueadoo = Boolean(data_register.bloqueado);
+      set_bloqueado(bloqueadoo);
       set_valor_actual_user_is_blocked(data_register.bloqueado);
       set_data_register({
         ...data_register,
@@ -536,7 +547,7 @@ export const use_admin_users = (): AdminUserHook => {
   useEffect(() => {
     if (tipo_persona === 'N') {
       set_tipo_documento_opt(
-        tipo_documento_opt_all.filter((e) => e.value !== 'NT')
+        tipo_documento_opt_all.filter((e) => String(e.value) !== 'NT')
       );
     } else {
       set_tipo_documento_opt(tipo_documento_opt_all);
@@ -569,6 +580,7 @@ export const use_admin_users = (): AdminUserHook => {
   }, [watch_admin_user('tipo_usuario')]);
 
   return {
+    clean_user_info,
     errors_admin_users,
     action_admin_users,
     user_info,
@@ -597,6 +609,7 @@ export const use_admin_users = (): AdminUserHook => {
     tipo_persona_opt,
     // rol_fixed,
     set_historial_cambios_estado_is_active,
+    set_numero_documento,
     set_users_x_person_is_active,
     on_submit,
     on_change,
