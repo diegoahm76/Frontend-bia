@@ -8,6 +8,7 @@ import FormButton from "./FormButton";
 import { Title } from '../../Title';
 import FormInputFileController from './FormInputFileController';
 import FormDatePickerController from './FormDatePickerController';
+import ImageUploader from './ImageUploader';
 
 
 interface IProps {
@@ -110,6 +111,15 @@ const PrimaryForm = ({
                 min_date={form_input.min_date ?? ""}
                 max_date={form_input.max_date ?? ""}
                 format={form_input.max_date ?? null}
+            />;
+        } else if(form_input.datum_type === "image_uploader"){
+            return <ImageUploader
+                xs={form_input.xs}
+                md={form_input.md}
+                margin={form_input.margin}
+                selected_image={form_input.selected_imagen}
+                width_image={form_input.width_image}
+                height_image={form_input.height_image}
             />;
         }
     }

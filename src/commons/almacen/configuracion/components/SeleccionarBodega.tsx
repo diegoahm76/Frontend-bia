@@ -60,7 +60,7 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
   }, [bodega_seleccionada]);
 
   const columns_solicitudes: GridColDef[] = [
-    { field: 'id_bodega', headerName: 'ID', width: 20 },
+    { field: 'id_bodega', headerName: 'ID', width: 40 },
     {
       field: 'nombre',
       headerName: 'Nombre',
