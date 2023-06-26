@@ -120,9 +120,9 @@ export const to_resume_ccds_service: any = (
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(`gestor/ccd/resume/${id_ccd}/`);
       console.log(data, 'data');
-      dispatch(
+      /* dispatch(
         get_classification_ccds_service(ccd_current.nombre, ccd_current.version)
-      );
+      ); */
       control_success(data.detail);
       set_flag_btn_finish(false);
       // return data;
@@ -159,9 +159,9 @@ export const to_finished_ccds_service: any = (
       const { data } = await api.put(`gestor/ccd/finish/${id_ccd}/`);
       //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
       // ? revisar la manera en la que está recibiendo los parametros
-      dispatch(
+      /* dispatch(
         get_classification_ccds_service(ccd_current.nombre, ccd_current.version)
-      );
+      ); */
       control_success(data.detail);
       set_flag_btn_finish(true);
       return data;
@@ -235,7 +235,8 @@ export const to_finished_ccds_service: any = (
 // Crear Cuadro de Clasificación Documental (CCD)
 export const create_ccds_service: any = (
   ccd: any,
-  set_save_ccd: (arg0: boolean) => void
+  set_save_ccd: (arg0: boolean) => void,
+  closeModalBusquedaCreacionCCD: any,
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -245,6 +246,7 @@ export const create_ccds_service: any = (
       control_success(data.detail);
       console.log(data.detail, 'success');
       set_save_ccd(true);
+      closeModalBusquedaCreacionCCD();
       return data;
     } catch (error: any) {
       console.log(error.response.data, 'error');
@@ -256,7 +258,8 @@ export const create_ccds_service: any = (
 // Update Cuadro de Clasificación Documental
 export const update_ccds_service: any = (
   formData: any,
-  data_create_ccd: any
+  data_create_ccd: any,
+  closeModalBusquedaCreacionCCD: any,
 ) => {
   return async (dispatch: Dispatch<any>, getState: any): Promise<any> => {
     // console.log(data_create_ccd, 'ccd_current')
@@ -274,6 +277,7 @@ export const update_ccds_service: any = (
         get_ccd_current(data.data)
       );
       control_success(data.detail);
+      closeModalBusquedaCreacionCCD();
       // return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
