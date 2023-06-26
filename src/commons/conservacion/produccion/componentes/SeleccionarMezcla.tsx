@@ -253,7 +253,7 @@ const SeleccionarMezcla = ({
                             disabled: false,
                             helper_text: "Seleccione Mezcla",
                             select_options: mezclas,
-                            option_label: "Id mezcla",
+                            option_label: "nombre",
                             option_key: "id_mezcla",
                         },
                         {

@@ -135,7 +135,7 @@ const Especificaciones = ({
                             xs: 12,
                             md: 3,
                             control_form: control_computo,
-                            control_name: "serie",
+                            control_name: "doc_identificador_nro",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Serie",
@@ -157,7 +157,7 @@ const Especificaciones = ({
                             helper_text: "debe seleccionar campo",
                             select_options: [{ label: "Óptimo", value: "O" }, { label: "Defectuoso", value: "D" }, { label: "Averiado", value: "A" }],
                             option_label: "label",
-                            option_key: "value",
+                            option_key: "label",
 
                         },
                         {

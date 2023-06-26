@@ -19,6 +19,7 @@ export const Title: React.FC<Props> = ({ title }: Props) => {
         fontSize: '17px',
         fontWeight: '900',
         alignContent: 'center',
+        marginTop: '10px',
       }}
     >
       <Typography>{title}</Typography>

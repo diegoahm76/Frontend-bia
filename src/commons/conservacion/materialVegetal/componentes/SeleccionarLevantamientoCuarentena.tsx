@@ -15,12 +15,11 @@ const SeleccionarLevantamientoCuarentena = ({
   control_levantamiento
 }: IProps) => {
 
-  const { current_lifting, plant_quarantine_lifting, nurseries, current_plant_quarantine } = useAppSelector((state) => state.material_vegetal);
+  const { current_lifting, plant_quarantine_lifting, current_plant_quarantine } = useAppSelector((state) => state.material_vegetal);
  
   const columns_levantamiento: GridColDef[] = [
-    { field: 'id_cuarentena_mat_vegetal', headerName: 'ID', width: 20 },
     {
-      field: 'consec_cueren_por_lote_etapa',
+      field: 'consec_levan_por_cuaren',
       headerName: 'Consecutivo',
       width: 200,
       renderCell: (params) => (
@@ -30,37 +29,7 @@ const SeleccionarLevantamientoCuarentena = ({
       ),
     },
     {
-      field: 'agno_lote',
-      headerName: 'Año lote',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'id_vivero',
-      headerName: 'Vivero',
-      width: 350,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {(nurseries.find((p) => p.id_vivero === params.value))?.nombre ?? ""}
-        </div>
-      ),
-    },
-    {
-      field: 'cantidad_cuarentena',
-      headerName: 'Cantidad cuarentena',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'cantidad_levantada',
+      field: 'cantidad_a_levantar',
       headerName: 'Cantidad levantada',
       width: 200,
       renderCell: (params) => (
@@ -70,18 +39,8 @@ const SeleccionarLevantamientoCuarentena = ({
       ),
     },
     {
-      field: 'cantidad_bajas',
-      headerName: 'Cantidad bajas',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'fecha_cuarentena',
-      headerName: 'Fecha de cuarentena',
+      field: 'fecha_levantamiento',
+      headerName: 'Fecha de levantamiento',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -89,27 +48,14 @@ const SeleccionarLevantamientoCuarentena = ({
         </div>
       ),
     },
-    {
-      field: 'cuarentena_abierta',
-      headerName: 'Estado de cuarentena',
-      width: 200,
-      renderCell: (params) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.cuarentena_abierta ? (
-          <Chip size="small" label="ABIERTA" color="success" variant="outlined" />
-        ) : (
-          <Chip size="small" label="CERRADA" color="error" variant="outlined" />
 
-        );
-      },
-    },
     {
-      field: 'cuarentena_anulada',
+      field: 'levantamiento_anulado',
       headerName: '¿Anulada?',
       width: 200,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.cuarentena_anulada ? (
+        return params.row.levantamiento_anulado ? (
           <Chip size="small" label="SI" color="error" variant="outlined" />
         ) : (
           <Chip size="small" label="NO" color="success" variant="outlined" />
@@ -118,8 +64,8 @@ const SeleccionarLevantamientoCuarentena = ({
       },
     },
     {
-      field: 'descrip_corta_diferenciable',
-      headerName: 'Descripción',
+      field: 'observaciones',
+      headerName: 'Observación',
       width: 350,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -139,6 +85,7 @@ const SeleccionarLevantamientoCuarentena = ({
         borderRadius={2}
       >
         <BuscarModelo
+          md_button = {5}
           set_current_model={set_current_lifting}
           row_id={"id_item_levanta_cuarentena"}
           columns_model={columns_levantamiento}
@@ -243,7 +190,7 @@ const SeleccionarLevantamientoCuarentena = ({
             {
               datum_type: "input_controller",
               xs: 12,
-              md: 9,
+              md: 12,
               control_form: control_levantamiento,
               control_name: "observaciones",
               default_value: "",
@@ -259,7 +206,7 @@ const SeleccionarLevantamientoCuarentena = ({
             {
               datum_type: "input_controller",
               xs: 12,
-              md: 12,
+              md: 7,
               control_form: control_levantamiento,
               control_name: "realizado_por",
               default_value: "",

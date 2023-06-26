@@ -55,6 +55,7 @@ export function DespachoViveroScreen(): JSX.Element {
   const on_submit_save = (data: IDespacho) => {
     const id_despacho = current_despacho.id_despacho_entrante
         if (id_despacho !== null && id_despacho !== undefined) {
+          console.log(items_distribuidos)
             void dispatch(save_items_distribuidos_service(id_despacho, data.observacion_distribucion ?? "", items_distribuidos));
         }
   };
