@@ -188,7 +188,7 @@ export function ListOrganigramas({
               <IconButton
               //! revisar esto detalladamente con el ing de backend
                 disabled={
-                  params.row.id_persona_cargo === userinfo.id_persona
+                  params.row.id_persona_cargo !== userinfo.id_persona
                 }
                 onClick={() => {
                   console.log('hi')
