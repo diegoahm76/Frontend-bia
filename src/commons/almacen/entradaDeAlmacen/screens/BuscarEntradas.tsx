@@ -10,7 +10,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // import dayjs from 'dayjs';
 import { useAppDispatch } from '../../../../hooks';
-import { obtener_entradas } from '../thunks/Entradas';
+import { obtener_entrada_items, obtener_entradas } from '../thunks/Entradas';
 import { Title } from '../../../../components/Title';
 import dayjs from 'dayjs';
 
@@ -77,8 +77,10 @@ const BuscarEntradasComponent = (props: IProps) => {
 
   const selected_entrada_grid: any = () => {
     if (selected_entrada !== null) {
-      props.set_articulo(selected_entrada);
-      props.set_is_modal_active(false);
+      dispatch(obtener_entrada_items(selected_entrada.id_entrada_almacen)).then((response: any) =>{
+        props.set_articulo(response.data);
+        props.set_is_modal_active(false);
+      })
     }
   };
 

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -22,6 +23,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import { get_ccd_current } from '../../store/slices/ccdSlice';
 import type { IProps } from './types/types';
 import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
+import { ModalContext } from '../../context/ModalContext';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -29,8 +31,13 @@ const SearchCcdModal = ({
   set_is_modal_active,
   title,
 }: IProps) => {
-  const { ccds } = useAppSelector((state) => state.ccd);
+
   const dispatch = useAppDispatch();
+  const {
+    closeModalBusquedaCreacionCCD
+  } = useContext(ModalContext);
+
+  const { ccds } = useAppSelector((state) => state.ccd);
 
   const [world_search, set_world_search] = useState<string>('');
   const [filter_ccds, set_filter_ccds] = useState<any>([]);
@@ -187,6 +194,7 @@ const SearchCcdModal = ({
             aria-label="close"
             onClick={() => {
               set_is_modal_active(false);
+              closeModalBusquedaCreacionCCD()
             }}
             sx={{
               position: 'absolute',
@@ -233,6 +241,7 @@ const SearchCcdModal = ({
               variant="outlined"
               onClick={() => {
                 set_is_modal_active(false);
+                closeModalBusquedaCreacionCCD();
               }}
               startIcon={<CloseIcon />}
             >
