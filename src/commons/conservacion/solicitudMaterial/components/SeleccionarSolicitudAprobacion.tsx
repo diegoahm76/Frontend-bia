@@ -222,25 +222,12 @@ const SeleccionarSolicitudAprobada = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 6,
                             control_form: control_solicitud_aprobada,
                             control_name: "persona_solicita",
                             default_value: "",
                             rules: { },
                             label: "Solicitud elaborada por:",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_solicitud_aprobada,
-                            control_name: "nombre_unidad_organizacional",
-                            default_value: "",
-                            rules: { },
-                            label: "Unidad a la que pertenece:",
                             type: "text",
                             disabled: true,
                             helper_text: ""
@@ -260,7 +247,7 @@ const SeleccionarSolicitudAprobada = ({
                         rules: {},
                         label: "Numero solicitud",
                         type: "number",
-                        disabled: true,
+                        disabled: false,
                         helper_text: "",
                     }]: []}
                 />

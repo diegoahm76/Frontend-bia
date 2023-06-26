@@ -18,6 +18,7 @@ import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from './DialogHistorialCambiosEstadoUser';
 import { use_admin_users } from '../hooks/AdminUserHooks';
+import { useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsers: React.FC = () => {
@@ -50,8 +51,13 @@ export const AdminUsers: React.FC = () => {
     handle_image_select,
     register_admin_user,
     set_historial_cambios_estado_is_active,
+    clean_user_info,
   } = use_admin_users();
 
+  useEffect(() => {
+    clean_user_info();
+  }, []);
+  
   return (
     <>
       {data_disponible && (

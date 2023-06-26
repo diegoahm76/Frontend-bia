@@ -1,59 +1,56 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { TextField } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import type { GetPrograma } from '../../Interfaces/interfaces';
-
-interface IProps {
-  data: any;
-  watch: any;
-  register: any;
-  set_value: any;
-  set_data: (data: GetPrograma) => void;
-  errors: any;
-}
+import { DataContext } from '../../context/contextData';
+import dayjs, { type Dayjs } from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarPrograma: React.FC<IProps> = ({
-  data,
-  register,
-  set_value,
-  watch,
-  set_data,
-  errors,
-}: IProps) => {
-  const nombre = watch('nombre_programa');
-  const [start_date, set_start_date] = useState<Date | null>(new Date());
-  const [end_date, set_end_date] = useState<Date | null>(new Date());
+export const EditarPrograma: React.FC = () => {
+  const {
+    register,
+    // reset,
+    watch,
+    setValue: set_value,
+    errors,
+    data_programa,
+  } = useContext(DataContext);
 
-  const start_date_valid = start_date !== null && start_date < new Date();
+  const nombre = watch('nombre_programa');
+  const [start_date, set_start_date] = useState<Dayjs | null>(null);
+  const [end_date, set_end_date] = useState<Dayjs | null>(null);
+
+  const start_date_valid = start_date !== null && start_date < dayjs();
   const end_date_valid =
     end_date !== null && start_date !== null && end_date > start_date;
 
-  const handle_start_date_change = (date: Date | null): void => {
-    set_value('fecha_inicial', date);
-    set_start_date(date);
+  const handle_start_date_change = (date: Dayjs | null): void => {
+    set_value('fecha_inicio', dayjs(date));
+    set_start_date(dayjs(date));
   };
 
-  const handle_end_date_change = (date: Date | null): void => {
-    set_value('fecha_fin', date);
-    set_end_date(date);
+  const handle_end_date_change = (date: Dayjs | null): void => {
+    set_value('fecha_fin', dayjs(date));
+    set_end_date(dayjs(date));
   };
 
   useEffect(() => {
-    if (data !== undefined) {
-      set_start_date(new Date(data.fecha_inicio));
-      set_value('fecha_fin', data.fecha_fin);
-      set_value('fecha_inicio', data.fecha_inicio);
-      set_end_date(new Date(data.fecha_fin));
-      set_value('nombre_programa', data.nombre);
+    if (data_programa) {
+      console.log(data_programa, 'data_programa')
+      set_start_date(dayjs(data_programa.fecha_inicio));
+      set_value('fecha_fin', data_programa.fecha_fin);
+      set_value('fecha_inicio', data_programa.fecha_inicio);
+      set_end_date(dayjs(data_programa.fecha_fin));
+      set_value('nombre_programa', data_programa.nombre);
+      set_value('nombre', data_programa.nombre);
     }
-  }, [data !== undefined]);
+  }, [data_programa]);
 
   return (
     <>
@@ -100,21 +97,19 @@ export const EditarPrograma: React.FC<IProps> = ({
               views={['year', 'month', 'day']}
               value={start_date}
               onChange={handle_start_date_change}
-              shouldDisableDate={(date) =>
-                !start_date_valid && date >= new Date()
-              }
+              shouldDisableDate={(date) => !start_date_valid && date >= dayjs()}
               renderInput={(params) => (
                 <TextField
                   required
                   fullWidth
                   size="small"
                   {...params}
-                  {...register('fecha_inicial', {
+                  {...register('fecha_inicio', {
                     required: true,
                   })}
-                  error={Boolean(errors.fecha_inicial) || !start_date_valid}
+                  error={Boolean(errors.fecha_inicio) || !start_date_valid}
                   helperText={
-                    errors.fecha_inicial?.type === 'required'
+                    errors.fecha_inicio?.type === 'required'
                       ? 'Este campo es obligatorio'
                       : !start_date_valid
                       ? 'La fecha de inicio es posterior o igual a la fecha de finalización'

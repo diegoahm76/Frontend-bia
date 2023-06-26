@@ -75,6 +75,19 @@ export const obtener_entradas: any = () => {
   };
 };
 
+// Obtiene enrtada por id con items
+export const obtener_entrada_items: any = (id_entrada: number) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`almacen/bienes/entradas/get-list/?id_entrada=${id_entrada}`);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtiene datos de persona por id
 export const obtener_persona: any = (id_persona: number) => {
   return async () => {

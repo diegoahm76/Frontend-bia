@@ -17,7 +17,10 @@ import {
   set_transfer_person,
   set_current_good,
   set_nro_despacho,
-  set_bienes_despacho, 
+  set_bienes_despacho,
+  set_bienes,
+  set_current_bien,
+  set_despachos, 
 } from '../slice/distribucionSlice';
 import { api } from '../../../../../api/axios';
 
@@ -87,12 +90,13 @@ export const get_goods_service = (
   id_vivero: string | number,
   codigo_bien: string | null,
   nombre: string | null,
-  cod_elemento: string |null
+  cod_elemento: string |null,
+  semilla: boolean
   ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(`conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${cod_elemento??""}`)
-      const { data } = await api.get(`conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${cod_elemento??""}`);
+      const { data } = await api.get(`conservacion/traslados/filter-inventario-viveros/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${((cod_elemento??"")==="SE")?"MV":cod_elemento??""}&es_semilla_vivero=${((cod_elemento??"")==="")?"":(semilla??false)?"true":"false"}`);
       dispatch(set_goods(data.data));
       console.log(data)
       if (data.data.length > 0) {
@@ -323,5 +327,193 @@ export const get_bienes_despacho = (
           control_error(error.response.data.detail);
           return error as AxiosError;
       }
+  };
+};
+
+// obtener lotes pór codigo de material vegetal
+export const get_bien_code_service = (
+  id_vivero: number | string,
+  code: string,
+  name: string,
+  tipo: string,
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(code, tipo)
+      const { data } = await api.get(
+        (tipo === "MV")?
+        `conservacion/despachos/get-planta/?id_vivero=${id_vivero}&codigo_bien=${code??""}&nombre=${name??""}&agno_lote&nro_lote`
+        :
+        `conservacion/despachos/get-insumo/${id_vivero}/${code??""}/`
+        );
+      console.log(data)
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      if(tipo === "MV"){
+        if (data.data.length > 0) {
+          if (data.data.length === 1){
+            dispatch(set_current_bien(data.data[0]));
+            control_success("Se selecciono el lote")
+          }else{
+            dispatch(set_bienes(data.data));
+            control_success("Se encontraron lotes")
+          }
+        } else {
+          control_error("No se encontró el lote")
+        }
+      } else {
+        dispatch(set_current_bien(data.data));
+        if(data.success === true){
+          control_success("Se selecciono el bien")
+        }else{
+          control_error("No se encontró el bien")
+        }
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bien_code_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// obtener lotes filtro
+export const get_bienes_service = (
+  id_vivero: string | number,
+  code: string | null,
+  name:string | null,
+  agno: string | number | null,
+  nro: string | number | null,
+
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/despachos/get-planta/?id_vivero=${id_vivero}&codigo_bien=${code??""}&nombre=${name ?? ""}&agno_lote=${agno ?? ""}&nro_lote=${nro ?? ""}`);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      console.log(data)
+      if (data.success === true) {
+        dispatch(set_bienes(data.data))
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bienes_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// CREAR SOLICITUD
+export const crear_despacho: any = (
+  despacho: any,
+) => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          console.log(despacho)
+          const { data } = await api.put('conservacion/despachos/registrar-despacho-viveros/', despacho);
+          //  dispatch(get_solicitud_consumo_id());
+          console.log(data)
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+          if (data.success) {
+              control_success(data.detail)
+          } else {
+              control_error(data.detail)
+          }
+          // control_success(' se agrego correctamente');
+          return data;
+      } catch (error: any) {
+          console.log(error);
+          control_error(error.response.data.detail);
+
+          return error as AxiosError;
+
+      };
+  }
+}
+// EDITAR despacho
+export const editar_despacho: any = (
+  id: number,
+  despacho: any,
+  // bienes: any
+) => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          console.log(despacho)
+          const { data } = await api.put('conservacion/despachos/update-despacho-viveros/', despacho);
+          // await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, bienes);
+          //  dispatch(get_solicitud_consumo_id());
+          console.log(data)
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+          if (data.success) {
+              control_success(data.detail)
+          } else {
+              control_error(data.detail)
+          }
+          // control_success(' se agrego correctamente');
+          return data;
+      } catch (error: any) {
+          console.log(error);
+          control_error(error.response.data.detail);
+
+          return error as AxiosError;
+
+      };
+  }
+}
+
+// anular despacho
+export const annul_despacho_service = (
+  id: number,
+  despacho: any
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.put(`conservacion/despachos/anular-despacho-viveros/${id}/`, despacho);
+          console.log(data)
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+          if (data.success) {
+              control_success(data.detail)
+
+          } else {
+              control_error(data.detail)
+          }
+          return data;
+      } catch (error: any) {
+          console.log('annul_despacho_service');
+          control_error(error.response.data.detail);
+          return error as AxiosError;
+      }
+  };
+};
+
+// obtener despachos
+export const get_despachos_service = (
+  id_vivero: string | number,
+  nro: string | number | null,
+  fecha_desde:string | null,
+  fecha_hasta:string | null,
+
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/despachos/get-despachos/?fecha_desde=2023-02-01&fecha_hasta=2024-01-15&id_vivero=${id_vivero??""}&nro_despachos_viveros=${nro??""}`);
+      // const { data } = await api.get(`conservacion/despachos/get-despachos/?fecha_desde=${fecha_desde}&fecha_hasta=${fecha_hasta}&id_vivero=${id_vivero}&nro_despachos_viveros=${nro}`);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+      console.log(data)
+      if (data.success === true) {
+        dispatch(set_despachos(data.data))
+        control_success(data.detail)      
+      } else {
+        control_error(data.detail)
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bienes_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
   };
 };

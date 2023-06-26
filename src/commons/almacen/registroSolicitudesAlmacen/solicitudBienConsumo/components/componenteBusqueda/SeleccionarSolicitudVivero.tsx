@@ -12,11 +12,13 @@ import { useSelector } from 'react-redux';
 
 
 interface IProps {
+    title: string;
     control_solicitud_vivero: any;
     get_values: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudVivero = ({
+    title,
     control_solicitud_vivero,
     get_values
 }: IProps) => {
@@ -85,6 +87,11 @@ const SeleccionarSolicitudVivero = ({
                     set_models={set_solicitudes_vivero}
                     button_submit_label='Buscar solicitud'
                     form_inputs={[
+                        {
+                            datum_type: "title",
+                            title_label: title ?? "hh"
+
+                        },
                         {
                             datum_type: "input_controller",
                             xs: 5,

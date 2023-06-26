@@ -130,8 +130,6 @@ export interface UserCreate {
   success: boolean;
 }
 export interface AdminUserHook {
-  clean_user_info: () => void;
-  set_numero_documento: Dispatch<SetStateAction<string>>;
   errors_admin_users: FieldErrors<DataAadminUser>;
   action_admin_users: string;
   user_info: Users;
@@ -179,7 +177,9 @@ export interface AdminUserHook {
   set_tipo_persona: Dispatch<SetStateAction<string>>;
   set_data_disponible: Dispatch<SetStateAction<boolean>>;
   set_loading_inputs: Dispatch<SetStateAction<boolean>>;
+  set_numero_documento: Dispatch<SetStateAction<string>>;
   reset_admin_user: UseFormReset<DataAadminUser>;
+  clean_user_info: () => void;
 }
 
 export interface EstadoCivil {

@@ -215,19 +215,19 @@ export const UsuariosScreen: React.FC = () => {
           <Grid
             item
             className={`border px-4 text-white fs-5 p-1`}
-            sx={{
-              display: 'grid',
-              background:
-                'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-              width: '100%',
-              height: '40px',
+            // sx={{
+            //   display: 'grid',
+            //   background:
+            //     'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
+            //   width: '100%',
+            //   height: '40px',
 
-              borderRadius: '10px',
-              pl: '20px',
-              fontSize: '17px',
-              fontWeight: 'bold',
-              alignContent: 'center',
-            }}
+            //   borderRadius: '10px',
+            //   pl: '20px',
+            //   fontSize: '17px',
+            //   fontWeight: 'bold',
+            //   alignContent: 'center',
+            // }}
           >
             <Title title="Partes interesadas"></Title>
           </Grid>
@@ -294,23 +294,24 @@ export const UsuariosScreen: React.FC = () => {
                 item
 
                 className={`border px-4 text-white fs-5 p-1`}
-                sx={{
-                  display: 'grid',
-                  background:
-                    'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
-                  width: '100%',
-                  height: '40px',
+                // sx={{
+                //   display: 'grid',
+                //   background:
+                //     'transparent linear-gradient(269deg, #1492E6 0%, #062F48 34%, #365916 100%) 0% 0% no-repeat padding-box',
+                //   width: '100%',
+                //   height: '40px',
 
-                  borderRadius: '10px',
-                  pl: '20px',
-                  fontSize: '17px',
-                  fontWeight: 'bold',
-                  alignContent: 'center',
-                }} spacing={2}
+                //   borderRadius: '10px',
+                //   pl: '20px',
+                //   fontSize: '17px',
+                //   fontWeight: 'bold',
+                //   alignContent: 'center',
+                // }}
+                 spacing={2}
               >
                 <Title title="Información general"></Title>
               </Grid>
-              <Grid item>
+              <Grid item spacing={2} sx={{marginTop:"10px", }}>
                 <Box>
                   <DataGrid
                     density="compact"

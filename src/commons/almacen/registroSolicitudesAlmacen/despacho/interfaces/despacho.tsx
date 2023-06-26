@@ -25,6 +25,17 @@ export interface IObjDespacho {
     id_bodega_general?: number | null;
     id_persona_anula?: number | null;
 }
+export interface IObjItemsDespacho {
+    id_item_despacho_consumo: number | null;
+    id_bien_despachado: number | null;
+    id_bien_solicitado: number | null;
+    id_bodega: number | null;
+    cantidad_solicitada: number | null;
+    id_unidad_medida_solicitada: number | null;
+    cantidad_despachada: number | null;
+    observacion: string | null;
+    numero_posicion_despacho: number | null;
+}
 
 export interface IObjBienConsumo {
     id_bien?: number | null;

@@ -16,6 +16,7 @@ interface IRules {
 interface IProps {
     xs: number;
     md: number;
+    margin?: number;
     control_form: any;
     control_name: string;
     default_value: string | number | null;
@@ -41,7 +42,8 @@ const FormInputFileController = ({
     default_value,
     file_name,
     set_value,
-    hidden_text
+    hidden_text,
+    margin
 }: IProps) => {
 
     const handle_file_input_change = (e: any): void => {
@@ -50,7 +52,7 @@ const FormInputFileController = ({
     return (
         <>
             {(!(hidden_text ?? false)) &&
-                <Grid item xs={xs} md={md}>
+                <Grid item xs={xs} md={md} margin={margin ?? 0}>
                     <Controller
                         name={control_name}
                         control={control_form}
@@ -61,30 +63,47 @@ const FormInputFileController = ({
                             fieldState: { error },
                         }) => (
                             <FormControl fullWidth>
+                                {/* original //////////////// */}
+                                {/* <Button 
+                            fullWidth
+                            size="small"
+                            variant="outlined" 
+                            startIcon={<CloudUploadIcon />}
+                            >
+                                {file_name !== "" ? file_name : label}
+                            <Input
+                                type="file"
+                                disabled={disabled}
+                                style={{ opacity: 0, width: 100 }}
+                                onChange={handle_file_input_change}
+                                error={!(error == null)}
+                            />
+                            </Button> */}
+
                                 <Button
                                     fullWidth
                                     size="small"
                                     variant="outlined"
                                     startIcon={<CloudUploadIcon />}
-                                    sx={{ position: 'relative', height: '40px', }}
+                                    style={{height:"40px"}}
                                 >
                                     {file_name !== "" ? file_name : label}
                                     <Input
                                         type="file"
                                         disabled={disabled}
                                         style={{
+                                            opacity: 0,
                                             position: 'absolute',
                                             top: 0,
                                             left: 0,
-                                            opacity: 0,
                                             width: '100%',
                                             height: '100%',
+                                            cursor: 'pointer',
                                         }}
                                         onChange={handle_file_input_change}
                                         error={!(error == null)}
                                     />
                                 </Button>
-
                                 <FormHelperText
                                     error={!(error == null)}>
                                     {(error != null)

@@ -306,7 +306,7 @@ const SeleccionarLoteSiembra = () => {
                 if ((data.cantidad_baja??0) <= (current_siembra_material_vegetal.saldo_disponible_registro ?? 0))
                 {  
                     const new_bien: IObjItemMortalidad = {
-                        id_item_baja_viveros: null,
+                        id_item_baja_viveros: data.id_item_baja_viveros ?? null,
                         id_baja: current_mortalidad.id_baja,
                         agno_lote: current_siembra_material_vegetal.agno_lote,
                         nro_lote: current_siembra_material_vegetal.nro_lote,

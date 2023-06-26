@@ -23,6 +23,7 @@ import { crear_persona_juridica_and_user } from '../request/authRequest';
 import type { DataRegisterPersonaJ, keys_object } from '../interfaces';
 import type { AxiosError } from 'axios';
 import type { SelectChangeEvent } from '@mui/material';
+import { auth_url } from '../api/auth';
 
 interface RegisterPersonHook {
   error_email: boolean;
@@ -230,8 +231,8 @@ export const use_register_persona_j = ({
     set_is_saving(true);
     console.log('first');
     try {
-      values.redirect_url =
-        'https://macareniafrontendevelopv2.netlify.app/#/auth/activacion_cuenta';
+      values.redirect_url = 
+        `${auth_url}/auth/activacion_cuenta`;
       values.telefono_celular = `57${values.telefono_celular as string}`;
       const { data } = await crear_persona_juridica_and_user(
         values as DataRegisterPersonaJ

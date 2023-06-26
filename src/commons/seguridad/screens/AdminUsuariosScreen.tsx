@@ -106,13 +106,13 @@ export const AdminUsuariosScreen: React.FC = () => {
     tipo_persona_opt,
     tipo_persona,
     numero_documento,
-    set_numero_documento,
     set_users_x_person_is_active,
     set_data_register,
     set_tipo_documento,
     set_tipo_persona,
     set_data_disponible,
     set_loading_inputs,
+    set_numero_documento,
     reset_admin_user,
     clean_user_info
   } = use_admin_users();
@@ -233,7 +233,6 @@ export const AdminUsuariosScreen: React.FC = () => {
   const on_submit_search_ini_persona = async (
     data_search_ini: any
   ): Promise<void> => {
-    console.log(data_search_ini.numero_documento);
     const { data: data_person_search } =
       await get_person_user_or_users_by_document(
         data_search_ini.tipo_documento,
