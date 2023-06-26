@@ -298,7 +298,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
-                      disabled={series_ccd.length > 0}
+                      disabled={series_ccd.length > 0 /* && ccd_current == null */}
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -722,9 +722,8 @@ export const CcdScreen: React.FC = () => {
                           // isClearable
                           // requiredisSearchable
                           onChange={(selectedOption) => {
-                            // console.log(control.getValues('catalogo_asignacion'))
 
-                            const parts = selectedOption.map((item) => {
+                            const spliceSelectedOptions = selectedOption.map((item) => {
                               const partes = item?.label?.split('-');
 
                               console.log(partes);
@@ -739,21 +738,7 @@ export const CcdScreen: React.FC = () => {
                               };
                             });
 
-                            /* const codigoSerie = parts?.[0];
-                          const nombreSerie = parts?.[1];
-                          const nombreSubserie = parts?.[2];
-                          const codigoSubserie = parts?.[3]; 
-
-                          console.log('Código de la serie:', codigoSerie);
-                          console.log('Nombre de la serie:', nombreSerie);
-                          console.log('Nombre de la subserie:', nombreSubserie);
-                          console.log('Código de la subserie:', codigoSubserie); */
-                            onChange(parts);
-                            // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
-                            /* const optionsSelected: any[] = [];
-                          optionsSelected.push(selectedOption);
-                         
-                          console.log('Valor seleccionado:', selectedOption); */
+                            onChange(spliceSelectedOptions);
                           }}
                           options={list_sries_asignacion}
                           placeholder="Seleccionar"

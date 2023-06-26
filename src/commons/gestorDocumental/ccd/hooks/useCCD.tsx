@@ -40,13 +40,16 @@ import { Avatar, IconButton } from '@mui/material';
 // import { get_serie_ccd_current } from '../store/slices/seriesSlice';
 // import { get_subseries_ccd_current } from '../store/slices/subseriesSlice';
 // import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
-import  DeleteIcon  from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { AvatarStyles } from '../componentes/crearSeriesCcdDialog/utils/constant';
 import { ModalContext } from '../context/ModalContext';
+import { get_serie_ccd_current } from '../store/slices/seriesSlice';
+import { get_subseries_ccd_current } from '../store/slices/subseriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
-  const {closeModalBusquedaCreacionCCD} = useContext(ModalContext);
+  const { openModalBusquedaCreacionCCD, closeModalBusquedaCreacionCCD } =
+    useContext(ModalContext);
 
   const dispatch = useAppDispatch();
   // Extracción estado global
@@ -102,7 +105,7 @@ const use_ccd = () => {
   >([
     {
       label: '',
-      value: 0,
+      value: 0
     }
   ]);
 
@@ -343,7 +346,9 @@ const use_ccd = () => {
     }
 
     console.log('new_ccd', new_ccd);
-    void dispatch(create_ccds_service(formData, set_save_ccd, closeModalBusquedaCreacionCCD));
+    void dispatch(
+      create_ccds_service(formData, set_save_ccd, openModalBusquedaCreacionCCD)
+    );
   };
 
   const update_ccd = (data_create_ccd: any): void => {
@@ -390,7 +395,12 @@ const use_ccd = () => {
     console.log('udpated ccd', updatedCCD);
     // void dispatch(create_ccds_service(formData, set_save_ccd));
     // clean_after_update();
-    void dispatch(update_ccds_service(formData, data_create_ccd, closeModalBusquedaCreacionCCD));
+    void dispatch(
+      update_ccds_service(
+        formData,
+        data_create_ccd /* closeModalBusquedaCreacionCCD */
+      )
+    );
   };
 
   // console.log(data_asing, 'data_asing');
@@ -472,10 +482,10 @@ const use_ccd = () => {
     reset(initial_state_asig);
     set_title_button_asing('Guardar relación');
     dispatch(get_assignments_ccd_current(null));
-    // dispatch(get_series_service('0'));
-    // dispatch(get_subseries_service('0'));
-    // dispatch(get_serie_ccd_current(null));
-    // dispatch(get_subseries_ccd_current(null));
+    dispatch(get_series_service('0'));
+    dispatch(get_subseries_service('0'));
+    dispatch(get_serie_ccd_current(null));
+    dispatch(get_subseries_ccd_current(null));
   }, [dispatch, reset, set_title_button_asing]);
 
   // Funcion para eliminar Asignaciones
@@ -531,7 +541,7 @@ const use_ccd = () => {
       renderCell: (params: any) => {
         return (
           <>
-           {/*  <button
+            {/*  <button
               className="btn text-capitalize "
               type="button"
               title="Editar"
@@ -541,16 +551,18 @@ const use_ccd = () => {
             >
               <i className="fa-regular fa-pen-to-square fs-4"></i>
             </button> */}
-            <IconButton onClick={() => {
-              console.log('elimaniando relación')
-            }}>
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <DeleteIcon
-                titleAccess="Eliminar relación"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
+            <IconButton
+              onClick={() => {
+                console.log('elimaniando relación');
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <DeleteIcon
+                  titleAccess="Eliminar relación"
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
           </>
         );
       }
