@@ -726,7 +726,11 @@ export const CcdScreen: React.FC = () => {
                             const spliceSelectedOptions = selectedOption.map((item) => {
                               const partes = item?.label?.split('-');
 
-                              console.log(partes);
+                              const newObject = {
+                                label: item.label,
+                                value: item.value,
+                                nombreSerie: partes?.[1],
+                              }
 
                               return {
                                 label: item.label,
