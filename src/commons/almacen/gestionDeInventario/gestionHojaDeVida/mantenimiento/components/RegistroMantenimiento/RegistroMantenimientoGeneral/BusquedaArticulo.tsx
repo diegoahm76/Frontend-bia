@@ -80,29 +80,31 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                 autoComplete="off"
             >
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={5}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             label="Código"
                             size="small"
                             required
+                            disabled
                             value={id_bien}
                             fullWidth
                             error={mensaje_error_codigo !== ""}
                         />
                         {(mensaje_error_codigo !== "") && (<FormHelperText error id="tipo-error">{mensaje_error_codigo}</FormHelperText>)}
                     </Grid>
-                    <Grid item xs={12} sm={5}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             label="Nombre"
                             size="small"
                             value={nombre}
                             fullWidth
+                            disabled
                             InputProps={{
                                 readOnly: true,
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={2}>
+                    <Grid item xs={12} sm={4}>
                         <Stack
                             direction="row"
                             justifyContent="flex-end"

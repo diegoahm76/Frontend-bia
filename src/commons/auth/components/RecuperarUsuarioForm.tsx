@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Grid, TextField, Typography, Alert, IconButton } from '@mui/material';
+import { Grid, TextField, Typography, Button, Alert, IconButton } from '@mui/material';
 import type { AxiosError } from 'axios';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
-import { Close } from '@mui/icons-material';
+import { Close} from '@mui/icons-material';
 import { recover_user } from '../request/authRequest';
 import { get_tipo_documento } from '../../../request';
 import type { IList } from '../../../interfaces/globalModels';
@@ -160,9 +160,18 @@ export const RecuperarUsuarioForm: React.FC = () => {
           <Grid item xs={12} container justifyContent="center">
             <Grid item>
               <Link className="no-decoration" to="/auth/login">
-                <Typography sx={{ textAlign: 'center', mb: '20px' }}>
-                  Iniciar sesión
-                </Typography>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{
+                    textAlign: 'center',
+                    color: '#ffff',
+                  }}
+
+                ><Typography sx={{ textAlign: 'center' }}>
+                    Iniciar sesión
+                  </Typography></Button>
+
               </Link>
             </Grid>
           </Grid>

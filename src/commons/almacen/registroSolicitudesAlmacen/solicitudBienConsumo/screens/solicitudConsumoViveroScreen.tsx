@@ -17,6 +17,7 @@ import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularS
 import SeleccionarSolicitudVivero from '../components/componenteBusqueda/SeleccionarSolicitudVivero';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
+import { Title } from '../../../../../components/Title';
 // import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
 
 
@@ -116,11 +117,12 @@ const SolicitudConsumoViveroScreen = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
+                top:"30px",
                 boxShadow: '0px 3px 6px #042F4A26',
 
             }}
         >
-
+            <Title title="Solicitud de consumo para vivero"></Title>
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitudVivero
                     control_solicitud_vivero={control_solicitud_vivero}
@@ -145,7 +147,7 @@ const SolicitudConsumoViveroScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={12} md={3}>
+                <Grid item xs={12} md={4}>
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}
@@ -165,7 +167,7 @@ const SolicitudConsumoViveroScreen = () => {
                         type_button="button"
                     />
                 </Grid>
-                <Grid item xs={12} md={10}>
+                <Grid item xs={12} md={5}>
 
                     <Button
                         variant="outlined"

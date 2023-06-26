@@ -55,7 +55,7 @@ export interface IObjNursery {
 export interface IObjMixture {
   id_mezcla: number | null;
   unidad_medida: string | null;
-  nombre: string | null;
+  nombre: string ;
   item_activo: boolean;
   item_ya_usado: boolean;
   id_unidad_medida: number | null;

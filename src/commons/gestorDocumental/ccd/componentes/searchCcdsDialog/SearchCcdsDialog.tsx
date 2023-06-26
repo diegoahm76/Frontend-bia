@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState } from 'react';
 import {
   Avatar,
@@ -19,6 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import { get_ccd_current } from '../../store/slices/ccdSlice';
 import type { IProps } from './types/types';
+import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -66,23 +69,26 @@ const SearchCcdModal = ({
     {
       headerName: 'Nombre',
       field: 'nombre',
-      minWidth: 200,
+      minWidth: 170,
+      maxWidth: 200,
     },
     {
       headerName: 'Versión',
       field: 'version',
-      minWidth: 150,
+      minWidth: 170,
+      maxWidth: 200,
     },
     {
       headerName: 'Estado',
       field: 'estado',
-      minWidth: 100,
+      minWidth: 170,
+      maxWidth: 250,
       renderCell: (params: { row: { fecha_terminado: null } }) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.fecha_terminado !== null ? (
           <Chip
             size="small"
-            label="Terminado"
+            label={`Terminado ${params.row.fecha_terminado}`}
             color="success"
             variant="outlined"
           />
@@ -97,6 +103,30 @@ const SearchCcdModal = ({
       },
     },
     {
+      headerName: 'Actual',
+      field: 'is_actual',
+      minWidth: 50,
+      maxWidth: 60,
+      renderCell: (params: { row: { actual: null } }) => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        return params.row.actual !== false ? (
+          <Chip
+            size="small"
+            label="Si"
+            color="info"
+            variant="outlined"
+          />
+        ) : (
+          <Chip
+            size="small"
+            label="No"
+            color="warning"
+            variant="outlined"
+          />
+        );
+      },
+    },
+    {
       headerName: 'Acciones',
       field: 'accion',
       renderCell: (params: any) => (
@@ -104,10 +134,18 @@ const SearchCcdModal = ({
           <IconButton
             onClick={() => {
               console.log(
-                'params.data',
+                'params para ver ccd en el icono del ojito',
                 params,
               );
-              dispatch(get_ccd_current(params));
+              void dispatch(
+                get_classification_ccds_service(
+                  params.row.nombre,
+                  params.row.version,
+                  params.row.id_ccd,
+                )
+              )
+              console.log('params para ver ccd en el icono del ojito', params);
+              // dispatch(get_ccd_current(params.row.id_ccd));
               set_is_modal_active(false);
             }}
           >

@@ -13,40 +13,29 @@ import dayjs from 'dayjs';
 import ReactApexChart from 'react-apexcharts';
 import JsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { get_cartera_general } from '../requests/requests';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
+import { useDispatch, useSelector } from 'react-redux';
+import { get_cartera_fecha } from '../slices/ReportesSlice';
+import { type CarteraFecha } from '../interfaces/interfaces';
+
+interface RootState {
+  reportes_recaudo: {
+    reportes_recaudo: CarteraFecha[];
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CarteraGeneralFecha: React.FC = () => {
+  const [visible_rows, set_visible_rows] = useState(Array<CarteraFecha>);
   const [total, set_total] = useState(0);
   const [date, set_date] = useState<Date | null>(new Date());
   const [arr_label, set_arr_label] = useState(Array<string>);
   const [arr_data, set_arr_data] = useState(Array<number>);
   const [values, set_values] = useState([]);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
   const options = { labels: arr_label };
   const series = arr_data;
-
-  const visible_rows = [
-    {
-      codigo_contable: 1,
-      concepto_deuda: 'Tasa Retributiva',
-      valor_sancion: '30300000.05',
-    },
-    {
-      codigo_contable: 2,
-      concepto_deuda: 'Tasa Uso de Agua',
-      valor_sancion: '12000000.10',
-    },
-    {
-      codigo_contable: 3,
-      concepto_deuda: 'Intereses Multas y Sanciones',
-      valor_sancion: '75000000.00',
-    },
-    {
-      codigo_contable: 4,
-      concepto_deuda: 'Transferencia de Sector Eléctrico',
-      valor_sancion: '13400000.00',
-    },
-  ];
 
   const handle_change_date = (date: Date | null) => {
     set_date(date);
@@ -100,6 +89,10 @@ export const CarteraGeneralFecha: React.FC = () => {
   }
 
   useEffect(() => {
+    set_visible_rows(reportes_recaudo)
+  }, [reportes_recaudo])
+
+  useEffect(() => {
     if(visible_rows.length !== 0) {
       let total = 0
       for(let i=0; i< visible_rows.length; i++){
@@ -116,12 +109,12 @@ export const CarteraGeneralFecha: React.FC = () => {
   }, [visible_rows])
 
   useEffect(() => {
-    const arr_labels = []
+    const arr_labels:any = []
     for(let i=0; i<visible_rows.length; i++){
       arr_labels.push(`${visible_rows[i].codigo_contable} ${visible_rows[i].concepto_deuda}`)
     }
     set_arr_label(arr_labels)
-  }, [])
+  }, [visible_rows])
 
   useEffect(() => {
     const arr_series = []
@@ -129,7 +122,7 @@ export const CarteraGeneralFecha: React.FC = () => {
       arr_series.push(parseFloat(visible_rows[i].valor_sancion))
     }
     set_arr_data(arr_series)
-  }, [])
+  }, [visible_rows])
 
   const columns: GridColDef[] = [
     {
@@ -217,7 +210,7 @@ export const CarteraGeneralFecha: React.FC = () => {
                 startIcon={<SearchOutlined />}
                 onClick={() => {
                   const fecha_seleccionada =  dayjs(date).format('YYYY-MM-DD')
-                  void get_cartera_general(fecha_seleccionada)
+                  void dispatch(get_cartera_fecha(fecha_seleccionada))
                 }}
               >
                 Consultar
@@ -246,77 +239,81 @@ export const CarteraGeneralFecha: React.FC = () => {
               </Button>
             </Stack>
           </Stack>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            sx={{ mb: '20px', mt: '40px' }}
-          >
-            <Box sx={{ width: '55%' }}>
-              <Grid
-                container
-                sx={{
-                  position: 'relative',
-                  background: '#FAFAFA',
-                  borderRadius: '15px',
-                  p: '20px',
-                  mb: '20px',
-                  boxShadow: '0px 3px 6px #042F4A26',
-                }}
+          {
+            visible_rows.length !== 0 ? (
+              <Stack
+                direction='column'
+                justifyContent='center'
+                sx={{ mb: '20px', mt: '40px' }}
               >
-                <Grid item xs={12}>
-                  <Grid item>
-                    <Box sx={{ width: '100%' }}>
-                      <DataGrid
-                        autoHeight
-                        disableSelectionOnClick
-                        rows={visible_rows}
-                        columns={columns}
-                        pageSize={10}
-                        rowsPerPageOptions={[10]}
-                        experimentalFeatures={{ newEditingApi: true }}
-                        getRowId={(row) => faker.database.mongodbObjectId()}
-                      />
-                    </Box>
-                  </Grid>
-                  <Stack
-                    direction="row"
-                    display='flex'
-                    justifyContent='flex-end'
+                <Box sx={{ width: '100%' }}>
+                  <Grid
+                    container
+                    sx={{
+                      position: 'relative',
+                      background: '#FAFAFA',
+                      borderRadius: '15px',
+                      p: '20px',
+                      mb: '20px',
+                      boxShadow: '0px 3px 6px #042F4A26',
+                    }}
                   >
-                    <Grid item xs={12} sm={2.5} mt='30px'>
-                      <TextField
-                        label={<strong>Total General</strong>}
-                        size="small"
-                        fullWidth
-                        value={total.toFixed(2)}
-                      />
+                    <Grid item xs={12}>
+                      <Grid item>
+                        <Box sx={{ width: '100%' }}>
+                          <DataGrid
+                            autoHeight
+                            disableSelectionOnClick
+                            rows={visible_rows}
+                            columns={columns}
+                            pageSize={10}
+                            rowsPerPageOptions={[10]}
+                            experimentalFeatures={{ newEditingApi: true }}
+                            getRowId={(row) => faker.database.mongodbObjectId()}
+                          />
+                        </Box>
+                      </Grid>
+                      <Stack
+                        direction="row"
+                        display='flex'
+                        justifyContent='flex-end'
+                      >
+                        <Grid item xs={12} sm={2.5} mt='30px'>
+                          <TextField
+                            label={<strong>Total General</strong>}
+                            size="small"
+                            fullWidth
+                            value={total.toFixed(2)}
+                          />
+                        </Grid>
+                      </Stack>
                     </Grid>
-                  </Stack>
-                </Grid>
-              </Grid>
-            </Box>
-            <Box sx={{ width: '43%' }}>
-              <Grid
-                container
-                sx={{
-                  position: 'relative',
-                  background: '#FAFAFA',
-                  borderRadius: '15px',
-                  p: '20px',
-                  mb: '20px',
-                  boxShadow: '0px 3px 6px #042F4A26',
-                }}
-              >
-                <Grid item xs={12}>
-                  <Grid item>
-                    <Box sx={{ width: '100%' }}>
-                      <ReactApexChart options={options} series={series} type='pie' width={470} />
-                    </Box>
                   </Grid>
-                </Grid>
-              </Grid>
-            </Box>
-          </Stack>
+                </Box>
+                <Box sx={{ width: '100%' }}>
+                  <Grid
+                    container
+                    sx={{
+                      position: 'relative',
+                      background: '#FAFAFA',
+                      borderRadius: '15px',
+                      p: '20px',
+                      mb: '20px',
+                      boxShadow: '0px 3px 6px #042F4A26',
+                    }}
+                  >
+                    <Grid item xs={12}>
+                      <Grid item>
+                        <Box sx={{ width: '100%' }}>
+                          <ReactApexChart options={options} series={series} type='pie' width={800} />
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Stack>
+            ) : null
+          }
         </Box>
       </Grid>
     </Grid>
