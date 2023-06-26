@@ -94,24 +94,35 @@ export const AdminUsuariosScreen: React.FC = () => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
-    numero_documento,
     set_users_x_person_is_active,
     set_data_register,
     set_tipo_documento,
     set_tipo_persona,
     set_data_disponible,
     set_loading_inputs,
+    set_numero_documento,
     reset_admin_user,
+    clean_user_info,
   } = use_admin_users();
-  // const numero_documento = watch('numero_documento');
 
-  // Consultamos si el usuario existe
-  // useEffect(() => {
-  //   if (numero_documento !== undefined && numero_documento !== '') {
-  //     set_numero_documento(numero_documento);
-  //     set_value_ini('numero_documento', numero_documento);
-  //   }
-  // }, [numero_documento]);
+  useEffect(() => {
+    clean_user_info();
+  }, []);
+
+  //  Consultamos si el usuario existe
+  useEffect(() => {
+    if (numero_documento !== undefined && numero_documento !== '') {
+      set_numero_documento(numero_documento);
+      set_value_ini('numero_documento', numero_documento);
+    }
+  }, [numero_documento]);
+
+  useEffect(() => {
+    if (watch('numero_documento') !== undefined) {
+      set_numero_documento(watch('numero_documento'));
+    }
+  }, [watch('numero_documento')]);
+
   useEffect(() => {
     set_tipo_persona(data_user_search.tipo_persona);
   }, [data_user_search]);
@@ -193,7 +204,6 @@ export const AdminUsuariosScreen: React.FC = () => {
   const on_submit_search_ini_persona = async (
     data_search_ini: any
   ): Promise<void> => {
-    console.log(data_search_ini.numero_documento);
     const { data: data_person_search } =
       await get_person_user_or_users_by_document(
         data_search_ini.tipo_documento,
@@ -288,25 +298,25 @@ export const AdminUsuariosScreen: React.FC = () => {
                 {loading ? (
                   <Skeleton variant="rectangular" width="100%" height={45} />
                 ) : (
-                  <TextField
-                    fullWidth
-                    label="Número de documento *"
-                    type="number"
-                    size="small"
-                    value={numero_documento}
-                    disabled={tipo_persona === '' ?? true}
-                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                    error={errors.numero_documento?.type === 'required'}
-                    helperText={
-                      errors.numero_documento?.type === 'required'
-                        ? 'Este campo es obligatorio'
-                        : ''
-                    }
-                    {...register_search_ini('numero_documento', {
-                      required: true,
-                    })}
-                    onChange={handle_change}
-                  />
+                    <TextField
+                      fullWidth
+                      label="Número de documento *"
+                      type="number"
+                      size="small"
+                      value={data_register.numero_documento}
+                      disabled={data_register.tipo_persona === '' || data_register.tipo_persona === 'J'}
+                      inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                      error={errors.numero_documento?.type === 'required'}
+                      helperText={
+                        errors.numero_documento?.type === 'required'
+                          ? 'Este campo es obligatorio'
+                          : ''
+                      }
+                      {...register_search_ini('numero_documento', {
+                        required: true,
+                      })}
+                      onChange={handle_change}
+                    />
                 )}
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
