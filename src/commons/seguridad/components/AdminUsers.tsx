@@ -368,7 +368,7 @@ export const AdminUsers: React.FC = () => {
                       value={String(activo)}
                       options={activo_opt}
                       disabled={tipo_usuario === 'E' && true}
-                      required={true}
+                      // required={true}
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />
@@ -415,7 +415,7 @@ export const AdminUsers: React.FC = () => {
                       value={String(bloqueado)}
                       options={bloqueado_opt}
                       disabled={false}
-                      required={true}
+                      // required={true}
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />

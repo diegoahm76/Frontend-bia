@@ -50,13 +50,13 @@ const control_error2 = (
   });
 
 const activo_opt: IList[] = [
-  { value: false, label: 'No' },
-  { value: true, label: 'Si' },
+  { value: 'false', label: 'No' },
+  { value: 'true', label: 'Si' },
 ];
 
 const bloqueado_opt: IList[] = [
-  { value: false, label: 'No' },
-  { value: true, label: 'Si' },
+  { value: 'false', label: 'No' },
+  { value: 'true', label: 'Si' },
 ];
 
 export const initial_state_data_register: any = {
@@ -106,8 +106,8 @@ export const use_admin_users = (): AdminUserHook => {
   // const [roles, set_roles] = useState<IList2[]>([...rol_fixed]);
   const [roles, set_roles] = useState<IList2[]>([]);
   const [tipo_usuario, set_tipo_usuario] = useState('');
-  const [activo, set_activo] = useState<boolean>(false);
-  const [bloqueado, set_bloqueado] = useState<boolean>(false);
+  const [activo, set_activo] = useState<any>('');
+  const [bloqueado, set_bloqueado] = useState<any>('');
   const [tipo_usuario_opt, set_tipo_usuario_opt] = useState<IList[]>([]);
   const [data_register, set_data_register] = useState<DataAadminUser>(
     initial_state_data_register
@@ -278,7 +278,7 @@ export const use_admin_users = (): AdminUserHook => {
       case 'activo':
         console.log('valor actual', valor_actual_user_is_active);
         console.log('selected actual', e.target.value);
-        set_activo(Boolean(e.target.value));
+        set_activo(e.target.value);
         if (
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `${valor_actual_user_is_active}` !== e.target.value
@@ -290,7 +290,7 @@ export const use_admin_users = (): AdminUserHook => {
         // set_valor_actual_user_is_active(e.target.value !== 'false');
         break;
       case 'bloqueado':
-        set_bloqueado(Boolean(e.target.value));
+        set_bloqueado(e.target.value);
         if (
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           `${valor_actual_user_is_blocked}` !== e.target.value
@@ -357,11 +357,11 @@ export const use_admin_users = (): AdminUserHook => {
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const activoo = Boolean(data_register.activo);
+      const activoo = data_register.activo
       set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const bloqueadoo = Boolean(data_register.bloqueado);
+      const bloqueadoo = data_register.bloqueado
       set_bloqueado(bloqueadoo);
       set_valor_actual_user_is_blocked(data_register.bloqueado);
 
@@ -437,11 +437,11 @@ export const use_admin_users = (): AdminUserHook => {
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const activoo = Boolean(data_register.activo);
+      const activoo = data_register.activo
       set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const bloqueadoo = Boolean(data_register.bloqueado);
+      const bloqueadoo = data_register.bloqueado
       set_bloqueado(bloqueadoo);
       set_valor_actual_user_is_blocked(data_register.bloqueado);
       set_data_register({

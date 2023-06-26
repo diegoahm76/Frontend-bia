@@ -129,19 +129,19 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_value_form('segundo_apellido', '');
     set_value_form('segundo_nombre', '');
     set_value_form('nombre_de_usuario', '');
-    set_value_form('imagen_usuario', '')
+    set_value_form('imagen_usuario', '');
     set_value_form('tipo_usuario', '');
     set_value_form('activo', '');
     set_value_form('activo_fecha_ultimo_cambio', '');
     set_value_form('activo_justificacion_cambio', '');
-    // set_value_form('bloqueado', false);
+    set_value_form('bloqueado', '');
     set_value_form('bloqueado_fecha_ultimo_cambio', '');
     set_value_form('bloqueado_justificacion_cambio', '');
     set_value_form('fecha_creacion', '');
     set_value_form('fecha_activación_inicial', '');
     set_value_form('creado_desde_portal', '');
     set_value_form('persona_que_creo', '');
-  }, [data_user_search]);
+  }, []);
 
   // Consultamos si el usuario existe
   useEffect(() => {
