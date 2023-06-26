@@ -149,9 +149,9 @@ export interface AdminUserHook {
   tipo_persona_opt: IList[];
   tipo_usuario_opt: IList[];
   tipo_usuario: string;
-  activo: string;
+  activo: boolean;
   activo_opt: IList[];
-  bloqueado: string;
+  bloqueado: boolean;
   bloqueado_opt: IList[];
   roles: IList2[];
   roles_opt: IList2[];

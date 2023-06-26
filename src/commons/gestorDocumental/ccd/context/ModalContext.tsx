@@ -8,14 +8,14 @@ const ModalContext = createContext<ModalContextState | any>({
   openModalModalSeriesAndSubseries: () => {},
   closeModalModalSeriesAndSubseries: () => {},
   busquedaCreacionCCDModal: false,
-  modal2: false,
-  modal3: false,
+  // modal2: false,
+  // modal3: false,
   openModalBusquedaCreacionCCD: () => {},
   closeModalBusquedaCreacionCCD: () => {},
-  openModal2: () => {},
-  closeModal2: () => {},
-  openModal3: () => {},
-  closeModal3: () => {},
+  // openModal2: () => {},
+  // closeModal2: () => {},
+  // openModal3: () => {},
+  // closeModal3: () => {},
 });
 
 const ModalProvider: React.FC<any> = ({ children }: any) => {
@@ -24,18 +24,18 @@ const ModalProvider: React.FC<any> = ({ children }: any) => {
   // const [modalBusquedaCCD, setModalBusquedaCCD] = useState(false);
 
   const [busquedaCreacionCCDModal, setBusquedaCreacionCCDModal] = useState(false);
-  const [modal2, setModal2] = useState(false);
-  const [modal3, setModal3] = useState(false);
+  // const [modal2, setModal2] = useState(false);
+  // const [modal3, setModal3] = useState(false);
 
   const openModalModalSeriesAndSubseries = useCallback(() => setModalSeriesAndSubseries(true), []);
   const closeModalModalSeriesAndSubseries = useCallback(() => setModalSeriesAndSubseries(false), []);
 
   const openModalBusquedaCreacionCCD = useCallback(() => setBusquedaCreacionCCDModal(true), []);
   const closeModalBusquedaCreacionCCD = useCallback(() => setBusquedaCreacionCCDModal(false), []);
-  const openModal2 = useCallback(() => setModal2(true), []);
-  const closeModal2 = useCallback(() => setModal2(false), []);
-  const openModal3 = useCallback(() => setModal3(true), []);
-  const closeModal3 = useCallback(() => setModal3(false), []);
+  // const openModal2 = useCallback(() => setModal2(true), []);
+  // const closeModal2 = useCallback(() => setModal2(false), []);
+  // const openModal3 = useCallback(() => setModal3(true), []);
+  // const closeModal3 = useCallback(() => setModal3(false), []);
 
   return (
     <ModalContext.Provider
@@ -44,14 +44,14 @@ const ModalProvider: React.FC<any> = ({ children }: any) => {
         openModalModalSeriesAndSubseries,
         closeModalModalSeriesAndSubseries,
         busquedaCreacionCCDModal,
-        modal2,
-        modal3,
+        // modal2,
+        // modal3,
         openModalBusquedaCreacionCCD,
         closeModalBusquedaCreacionCCD,
-        openModal2,
-        closeModal2,
-        openModal3,
-        closeModal3,
+        // openModal2,
+        // closeModal2,
+        // openModal3,
+        // closeModal3,
       }}
     >
       {children}
