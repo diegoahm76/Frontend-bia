@@ -1,11 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import { Divider, Grid, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  Divider,
+  Grid,
+  TextField,
+  Typography,
+  Stack,
+} from '@mui/material';
 import { DataContext } from '../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
-import { useForm } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import { control_success } from '../../requets/Request';
 import { control_error } from '../../../../helpers';
@@ -13,13 +20,6 @@ import { post_seccion_subscción } from '../request/request';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarSeccionSubSeccion: React.FC = () => {
-  const {
-    register,
-    handleSubmit: handle_submit,
-    reset,
-    setValue: set_value,
-    formState: { errors },
-  } = useForm();
 
   const columns: GridColDef[] = [
     { field: 'id_subseccion', headerName: 'No SUBSECCIÓN', width: 120 },
@@ -79,10 +79,19 @@ export const AgregarSeccionSubSeccion: React.FC = () => {
   ];
 
   const {
+    register,
+    handleSubmit: handle_submit,
+    reset,
+    setValue: set_value,
+    errors,
     rows_subseccion,
     fetch_data_subseccion_por_seccion,
     fetch_data_seccion,
+    set_id_seccion,
     id_seccion,
+    set_id_subseccion,
+    id_subseccion,
+    info_seccion,
   } = useContext(DataContext);
 
   const [is_saving, set_is_saving] = useState(false);
@@ -103,7 +112,7 @@ export const AgregarSeccionSubSeccion: React.FC = () => {
   const on_submit = handle_submit(async (form: any) => {
     try {
       set_is_saving(true);
-      form.id_seccion = null;
+      form.id_seccion = id_seccion;
       await post_seccion_subscción(form);
       control_success('Sección creada exitosamente');
       reset();
@@ -136,9 +145,14 @@ export const AgregarSeccionSubSeccion: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        {' '}
         <Grid item xs={12}>
-          <Title title="SECCIÓN" />
+          <Title title="ADMINISTRACION SECCIONES BIBLIOTECA" />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" fontWeight="bold">
+            Sección
+          </Typography>
+          <Divider />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -180,7 +194,13 @@ export const AgregarSeccionSubSeccion: React.FC = () => {
         {rows_subseccion.length > 0 && (
           <>
             <Grid item xs={12}>
-              <Title title="SUBSECCIONES" />
+              <Title title="SUBSECCIÓN" />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                Listado de Subsecciones existentes
+              </Typography>
+              <Divider />
             </Grid>
             <Grid item xs={12}>
               <DataGrid
@@ -194,6 +214,22 @@ export const AgregarSeccionSubSeccion: React.FC = () => {
             </Grid>
           </>
         )}
+        <Stack
+          justifyContent="flex-end"
+          sx={{ m: '20px 20px 20px 20px' }}
+          direction="row"
+          spacing={2}
+        >
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => {
+              set_id_seccion(null);
+            }}
+          >
+            Registrar nueva subsección
+          </Button>
+        </Stack>
         <Grid item xs={12}>
           <Typography variant="subtitle1" fontWeight="bold">
             Información subsección

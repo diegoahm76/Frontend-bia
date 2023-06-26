@@ -15,7 +15,7 @@ export interface SubSeccionPorSeccion {
     descripcion:      string;
     fechaCreacion:    string;
     id_persona:       number;
-    nombre_comercial: null;
+    nombre_comercial: null | string;
     nombre_completo:  string;
 }
 export interface SubseccionId {
