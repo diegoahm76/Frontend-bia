@@ -50,6 +50,7 @@ export interface IComputers {
 }
 
 export interface ICvcomputers {
+  id_hoja_de_vida: number | null;
   antivirus: string;
   capacidad_almacenamiento: string;
   color: string;
@@ -57,7 +58,7 @@ export interface ICvcomputers {
   observaciones_adicionales: string;
   otras_aplicaciones: string;
   procesador: string;
-  ruta_imagen_foto: string;
+  ruta_imagen_foto: string | any;
   sistema_operativo: string;
   suite_ofimatica: string;
   tipo_almacenamiento: string;

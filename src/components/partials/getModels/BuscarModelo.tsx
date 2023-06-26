@@ -14,6 +14,7 @@ import { Box, Divider } from '@mui/material';
 import { v4 as uuid } from 'uuid';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
+import ImageUploader from '../form/ImageUploader';
 
 
 interface IProps {
@@ -162,6 +163,15 @@ const BuscarModelo = ({
                 max_date={form_input.max_date ?? ""}
                 format={form_input.max_date ?? null}
             />;
+        } else if(form_input.datum_type === "image_uploader"){
+            return <ImageUploader
+                xs={form_input.xs}
+                md={form_input.md}
+                margin={form_input.margin}
+                selected_image={form_input.selected_image}
+                width_image={form_input.width_image}
+                height_image={form_input.height_image}
+            />;
         }
     }
     useEffect(() => {
@@ -257,7 +267,7 @@ const BuscarModelo = ({
                                 pageSize={10}
                                 rowsPerPageOptions={[10]}
                                 experimentalFeatures={{ newEditingApi: true }}
-                                getRowId={(row) => row[row_list_id ?? ""] === null ? uuid() : row[row_list_id ?? ""]}
+                                getRowId={(row) => row[row_list_id ?? uuid()] === null ? uuid() : row[row_list_id ?? uuid()]}
                             />
                         </Box>
                     </Grid>

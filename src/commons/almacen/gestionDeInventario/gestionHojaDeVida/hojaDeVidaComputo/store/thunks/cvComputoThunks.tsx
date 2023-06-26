@@ -136,24 +136,11 @@ export const create_cv_computers_service: any = (
     };
 };
 // Actualizar Hoja de Vida PC
-export const update_cv_computers_service = (id: string, file: any) => {
+export const update_cv_computers_service: any = (id: string| number, hoja_vida: any) => {
     return async (dispatch: Dispatch<any>) => {
-        const formdata = new FormData()
-        formdata.append('sistema_operativo', id);
-        formdata.append('suite_ofimatica', id);
-        formdata.append('antivirus', id);
-        formdata.append('color', id);
-        formdata.append('tipo_de_equipo', id);
-        formdata.append('tipo_almacenamiento', id);
-        formdata.append('capacidad_almacenamiento', id);
-        formdata.append('procesador', id);
-        formdata.append('memoria_ram', id);
-        formdata.append('observaciones_adicionales', id);
-        formdata.append('otras_aplicaciones', id);
-        formdata.append('id_articulo', id);
-        formdata.append('ruta_imagen_foto', file);
+     
         try {
-            const { data } = await api.put(`almacen/hoja-de-vida/computadores/update/${id}/`, formdata);
+            const { data } = await api.put(`almacen/hoja-de-vida/computadores/update/${id}/`, hoja_vida);
             // dispatch(get_cv_computer_id(id));
             control_success('La hoja de vida se actualizó correctamente');
             return data;
@@ -164,7 +151,7 @@ export const update_cv_computers_service = (id: string, file: any) => {
     };
 };
 // Eliminar Hoja de Vida PC
-export const delete_cv_computers_service = (id: string) => {
+export const delete_cv_computers_service: any = (id: string) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.delete(`almacen/hoja-de-vida/computadores/delete/${id}/`);

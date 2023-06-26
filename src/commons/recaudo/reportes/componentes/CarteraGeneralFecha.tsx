@@ -42,7 +42,7 @@ export const CarteraGeneralFecha: React.FC = () => {
   };
 
   const handle_export_excel = async (): Promise<void> => {
-    const fecha_seleccionada =  dayjs(date).format('YYYY-MM-DD');
+    const fecha_seleccionada = dayjs(date).format('YYYY-MM-DD');
     try {
       const xlsx = await import('xlsx');
       const worksheet = xlsx.utils.json_to_sheet(visible_rows);
@@ -75,15 +75,15 @@ export const CarteraGeneralFecha: React.FC = () => {
   };
 
   const handle_export_pdf = () => {
-    const fecha_seleccionada =  dayjs(date).format('YYYY-MM-DD');
-    const report = new JsPDF('l','pt','letter');
+    const fecha_seleccionada = dayjs(date).format('YYYY-MM-DD');
+    const report = new JsPDF('l', 'pt', 'letter');
     report.text(`Reporte General de Cartera Fecha de Corte ${fecha_seleccionada}`, 40, 30);
     // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
     autoTable(report, {
       theme: 'grid',
       head: [['Código Contable', 'Concepto Deuda', 'Total']],
       body: values,
-      foot:[['Total General', '', `${total.toFixed(2)}`]],
+      foot: [['Total General', '', `${total.toFixed(2)}`]],
     })
     report.save(`Reporte General de Cartera Fecha de Corte ${fecha_seleccionada}.pdf`);
   }
@@ -93,9 +93,9 @@ export const CarteraGeneralFecha: React.FC = () => {
   }, [reportes_recaudo])
 
   useEffect(() => {
-    if(visible_rows.length !== 0) {
+    if (visible_rows.length !== 0) {
       let total = 0
-      for(let i=0; i< visible_rows.length; i++){
+      for (let i = 0; i < visible_rows.length; i++) {
         total = total + parseFloat(visible_rows[i].valor_sancion)
         set_total(total)
       }
@@ -103,14 +103,15 @@ export const CarteraGeneralFecha: React.FC = () => {
   }, [visible_rows])
 
   useEffect(() => {
-    if(visible_rows.length !== 0){
+    if (visible_rows.length !== 0) {
       set_values(visible_rows.map((obj) => Object.values(obj)) as any)
     }
   }, [visible_rows])
 
   useEffect(() => {
-    const arr_labels = []
-    for(let i=0; i<visible_rows.length; i++){
+    const arr_labels: any = []
+    for (let i = 0; i < visible_rows.length; i++) {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       arr_labels.push(`${visible_rows[i].codigo_contable} ${visible_rows[i].concepto_deuda}`)
     }
     set_arr_label(arr_labels)
@@ -118,7 +119,7 @@ export const CarteraGeneralFecha: React.FC = () => {
 
   useEffect(() => {
     const arr_series = []
-    for(let i=0; i<visible_rows.length; i++){
+    for (let i = 0; i < visible_rows.length; i++) {
       arr_series.push(parseFloat(visible_rows[i].valor_sancion))
     }
     set_arr_data(arr_series)
@@ -192,7 +193,7 @@ export const CarteraGeneralFecha: React.FC = () => {
                     label="Fecha Corte"
                     inputFormat="YYYY/MM/DD"
                     openTo="day"
-                    views={[ 'day', 'month', 'year' ]}
+                    views={['day', 'month', 'year']}
                     value={date}
                     onChange={handle_change_date}
                     renderInput={(params) => (
@@ -209,7 +210,7 @@ export const CarteraGeneralFecha: React.FC = () => {
                 variant='contained'
                 startIcon={<SearchOutlined />}
                 onClick={() => {
-                  const fecha_seleccionada =  dayjs(date).format('YYYY-MM-DD')
+                  const fecha_seleccionada = dayjs(date).format('YYYY-MM-DD')
                   void dispatch(get_cartera_fecha(fecha_seleccionada))
                 }}
               >

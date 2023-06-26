@@ -594,8 +594,12 @@ export const get_lifting_quarantines_service = (
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data)
       if (data.success === true) {
-        dispatch(set_plant_quarantines(data.data))
-        control_success(data.detail)      
+        if(data.data.length > 0){
+          dispatch(set_plant_quarantines(data.data))
+          control_success(data.detail)
+         }     else{
+        control_error("No sé encontrarón cuarentenas")
+         }
       } else {
         control_error(data.detail)
       }

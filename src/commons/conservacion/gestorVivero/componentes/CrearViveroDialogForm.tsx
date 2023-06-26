@@ -6,13 +6,14 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  // DialogTitle,
   Stack,
   Button,
   Box,
   Divider,
   MenuItem,
   Grid,
+
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
@@ -224,16 +225,25 @@ const CrearViveroDialogForm = ({
             : handle_submit(on_submit_edit)
         }
       >
-        <DialogTitle>
+        {/* <DialogTitle>
           {action === 'create'
             ? 'Crear vivero'
             : action === 'detail'
             ? 'Detalle vivero'
             : 'Editar vivero'}
-        </DialogTitle>
+        </DialogTitle> */}
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container spacing={2}>
+        <Grid container    sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+          marginLeft: '-6px',
+          marginTop: '-6px',
+        }} spacing={2}>
             <Title title="Informacion pricipal"></Title>
             <Grid item xs={11} md={5} margin={0}>
               <Controller
@@ -264,7 +274,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="cod_municipio"
                 control={control_vivero}
@@ -301,7 +311,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="direccion"
                 control={control_vivero}
@@ -330,7 +340,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="area_mt2"
                 control={control_vivero}
@@ -367,7 +377,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="cod_tipo_vivero"
                 control={control_vivero}
@@ -405,7 +415,7 @@ const CrearViveroDialogForm = ({
               />
             </Grid>
             <Title title="Detalles vivero"></Title>
-            
+
             <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="area_propagacion_mt2"
@@ -432,7 +442,7 @@ const CrearViveroDialogForm = ({
                         ? error.type === 'required'
                           ? 'El area de propagacion es requerida'
                           : `El valor del área de propagación debe ser menor al área total (${
-                              getValues('area_mt2') ?? ''
+                              get_values('area_mt2') ?? ''
                             })`
                         : 'Ingrese area'
                     }
@@ -440,7 +450,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="tiene_area_produccion"
                 control={control_vivero}
@@ -474,7 +484,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="tiene_areas_pep_sustrato"
                 control={control_vivero}
@@ -508,7 +518,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="tiene_area_embolsado"
                 control={control_vivero}
@@ -542,7 +552,7 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Grid item xs={11} md={5} margin={0}>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="cod_origen_recursos_vivero"
                 control={control_vivero}
