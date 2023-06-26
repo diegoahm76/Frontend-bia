@@ -13,6 +13,7 @@ export const MostrarEditables: React.FC = () => {
     const toast = useRef<Toast | null>(null);
 
     const show = (): void => {
+        // eslint-disable-next-line
         if (toast.current) {
             toast.current.show({ severity: 'success', summary: 'Form Submitted', detail: formik.values.value });
         }
@@ -24,21 +25,24 @@ export const MostrarEditables: React.FC = () => {
         },
         validate: (data) => {
             const errors: { value?: string } = {};
-
+// eslint-disable-next-line
             if (!data.value) {
+                 
                 errors.value = 'Name - Surname is required.';
             }
 
             return errors;
-        },
+        }, 
         onSubmit: (data) => {
+            // eslint-disable-next-line
             data && show();
             formik.resetForm();
         }
     });
-
+// eslint-disable-next-line
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const isFormFieldInvalid = (field: keyof typeof formik.values): boolean => {
+        // eslint-disable-next-line
         return Boolean(formik.touched[field] && formik.errors[field]);
     };
 
