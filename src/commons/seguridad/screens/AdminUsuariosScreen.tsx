@@ -101,17 +101,29 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_tipo_persona,
     set_data_disponible,
     set_loading_inputs,
+    set_numero_documento,
     reset_admin_user,
+    clean_user_info,
   } = use_admin_users();
-  // const numero_documento = watch('numero_documento');
 
-  // Consultamos si el usuario existe
-  // useEffect(() => {
-  //   if (numero_documento !== undefined && numero_documento !== '') {
-  //     set_numero_documento(numero_documento);
-  //     set_value_ini('numero_documento', numero_documento);
-  //   }
-  // }, [numero_documento]);
+  useEffect(() => {
+    clean_user_info();
+  }, []);
+
+  //  Consultamos si el usuario existe
+  useEffect(() => {
+    if (numero_documento !== undefined && numero_documento !== '') {
+      set_numero_documento(numero_documento);
+      set_value_ini('numero_documento', numero_documento);
+    }
+  }, [numero_documento]);
+
+  useEffect(() => {
+    if (watch('numero_documento') !== undefined) {
+      set_numero_documento(watch('numero_documento'));
+    }
+  }, [watch('numero_documento')]);
+
   useEffect(() => {
     set_tipo_persona(data_user_search.tipo_persona);
   }, [data_user_search]);
@@ -193,7 +205,6 @@ export const AdminUsuariosScreen: React.FC = () => {
   const on_submit_search_ini_persona = async (
     data_search_ini: any
   ): Promise<void> => {
-    console.log(data_search_ini.numero_documento);
     const { data: data_person_search } =
       await get_person_user_or_users_by_document(
         data_search_ini.tipo_documento,
