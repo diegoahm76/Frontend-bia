@@ -4,7 +4,10 @@ export function CierreSolicitudScreen(): JSX.Element {
  
 
     return (
-<></>
+        <>  
+          
+        
+        </>
     );
   }
   

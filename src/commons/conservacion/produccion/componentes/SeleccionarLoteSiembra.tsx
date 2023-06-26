@@ -317,7 +317,7 @@ const SeleccionarLoteSiembra = () => {
                         codigo_bien: current_siembra_material_vegetal.codigo_bien,
                         observaciones: data.observaciones,
                         unidad_medida: current_siembra_material_vegetal.unidad_medida,
-                        consec_cuaren_por_lote_etapa: null
+                        consec_cuaren_por_lote_etapa: data.consec_cuaren_por_lote_etapa ?? null
                     }
                     if (bien === undefined) {
                             set_aux_insumos([...aux_insumos, new_bien])

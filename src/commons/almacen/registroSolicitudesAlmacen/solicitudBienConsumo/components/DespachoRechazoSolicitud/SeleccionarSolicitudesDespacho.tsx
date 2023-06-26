@@ -178,8 +178,8 @@ const SeleccionarSolicitudDespacho = ({
                         },
                         {
                             datum_type: "input_controller",
-                            xs: 5,
-                            md: 6,
+                            xs: 12,
+                            md: 9,
                             control_form: control_solicitud_despacho,
                             control_name: "persona_solicita",
                             default_value: "",
@@ -189,25 +189,6 @@ const SeleccionarSolicitudDespacho = ({
                             disabled: true,
                             helper_text: ""
                         },
-
-                        {
-                            datum_type: "input_controller",
-                            xs: 5,
-                            md: 6,
-                            control_form: control_solicitud_despacho,
-                            control_name: "nombre_unidad_organizacional",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Unidad a la que pertenece:",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-
-
-
-
-
 
                     ]}
                     modal_select_model_title='Buscar solicitud'
