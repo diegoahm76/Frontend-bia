@@ -94,7 +94,6 @@ export const AdminUsuariosScreen: React.FC = () => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
-    numero_documento,
     set_users_x_person_is_active,
     set_data_register,
     set_tipo_documento,
@@ -288,25 +287,25 @@ export const AdminUsuariosScreen: React.FC = () => {
                 {loading ? (
                   <Skeleton variant="rectangular" width="100%" height={45} />
                 ) : (
-                  <TextField
-                    fullWidth
-                    label="Número de documento *"
-                    type="number"
-                    size="small"
-                    value={numero_documento}
-                    disabled={tipo_persona === '' ?? true}
-                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
-                    error={errors.numero_documento?.type === 'required'}
-                    helperText={
-                      errors.numero_documento?.type === 'required'
-                        ? 'Este campo es obligatorio'
-                        : ''
-                    }
-                    {...register_search_ini('numero_documento', {
-                      required: true,
-                    })}
-                    onChange={handle_change}
-                  />
+                    <TextField
+                      fullWidth
+                      label="Número de documento *"
+                      type="number"
+                      size="small"
+                      value={data_register.numero_documento}
+                      disabled={data_register.tipo_persona === '' || data_register.tipo_persona === 'J'}
+                      inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                      error={errors.numero_documento?.type === 'required'}
+                      helperText={
+                        errors.numero_documento?.type === 'required'
+                          ? 'Este campo es obligatorio'
+                          : ''
+                      }
+                      {...register_search_ini('numero_documento', {
+                        required: true,
+                      })}
+                      onChange={handle_change}
+                    />
                 )}
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
