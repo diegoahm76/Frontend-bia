@@ -39,21 +39,30 @@ const control_success = (message: ToastContent) =>
   });
 
 // Obtiene ccd tabla intermedia
-export const get_assignments_service: any = (ccd_current: any, nombreUnidadActual?: any) => {
+export const get_assignments_service: any = (
+  ccd_current: any,
+  nombreUnidadActual?: any
+) => {
   return async (
-    dispatch: Dispatch<any>,
+    dispatch: Dispatch<any>
     // getState: any
   ): Promise<AxiosResponse | AxiosError> => {
     try {
       const id_ccd: number = ccd_current.id_ccd;
-      const { data } = await api.get(`gestor/ccd/catalogo/unidad/get-by-id-ccd/${id_ccd}/`);
+      const { data } = await api.get(
+        `gestor/ccd/catalogo/unidad/get-by-id-ccd/${id_ccd}/`
+      );
       const new_data = data.data.map((item: any, index: number) => {
-        return { ...item, id: index + 1, nombreUnidad: nombreUnidadActual.label ? nombreUnidadActual.label : '' };
+        return {
+          ...item,
+          id: index + 1,
+          nombreUnidad: nombreUnidadActual.label ? nombreUnidadActual.label : ''
+        };
       });
       console.log(
         '🚀 ~ file: assignmentsThunks.ts ~ line 59 ~ return ~ new_data',
         new_data
-      )
+      );
       dispatch(get_assignments_ccd(new_data));
       control_success(data.detail);
       return data;
@@ -67,28 +76,32 @@ export const get_assignments_service: any = (ccd_current: any, nombreUnidadActua
 // Asignar series y subseries a unidades organizacionales
 //! this service allow to create a new relation or delete a relation
 export const create_or_delete_assignments_service: any = (
-  ccd_current: any,
   new_item: any,
-  clean: () => void,
+  ccd_current: any
+  // clean: () => void,
 ) => {
   return async (
-    dispatch: Dispatch<any>,
+    dispatch: Dispatch<any>
     // getState: any
   ): Promise<AxiosResponse | AxiosError> => {
     try {
+      
       const id_ccd: number = ccd_current.id_ccd;
+
+      console.log(new_item);
       const { data } = await api.put(
         `gestor/ccd/catalogo/unidad/update/${id_ccd}/`,
         new_item
       );
       dispatch(get_assignments_service(ccd_current));
       control_success(data.detail);
-      clean();
+      //  clean();
       return data;
     } catch (error: any) {
+      console.log(error)
       control_error(error.response.data.detail);
-      // dispatch(get_assignments_service());
-      clean();
+      dispatch(get_assignments_service(ccd_current));
+      //  clean();
       return error as AxiosError;
     }
   };
