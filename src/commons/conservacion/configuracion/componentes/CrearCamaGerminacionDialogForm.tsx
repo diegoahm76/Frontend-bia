@@ -96,7 +96,7 @@ const CrearCamaGerminacionDialogForm = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={action==="create"? handle_submit(on_submit):handle_submit(on_submit)}
       >
-        <DialogTitle>{action==="create"? "Crear cama de germinación": action==="detail"? "Detalle Cama de germinación": "Editar cama de germinación" }</DialogTitle>
+        <DialogTitle>{action==="create"? "Crear cama de germinación": action==="detail"? "Detalle de la cama de germinación": "Editar la cama de germinación" }</DialogTitle>
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
@@ -123,7 +123,7 @@ const CrearCamaGerminacionDialogForm = ({
                     helperText={
                       error != null
                         ? 'Es obligatorio ingresar un nombre'
-                        : 'Ingrese nombre'
+                        : 'Ingrese el nombre'
                     }
                   />
                 )}

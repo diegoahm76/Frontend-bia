@@ -143,7 +143,7 @@ const EditarBienDialogForm = ({
                     helperText={
                       error != null
                         ? 'Es obligatorio seleccionar unidad de medida'
-                        : 'seleccione unidad de media'
+                        : 'Seleccione unidad de media'
                     }
                   >
                     {unidad_medida.map((option) => (

@@ -43,7 +43,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
     },
     {
       field: 'observacion',
-      headerName: 'Observacion',
+      headerName: 'Observación',
       width: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -210,7 +210,7 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Camas de germinacion viveros"></Title>
+          <Title title="Camas de germinación viveros"></Title>
           <Grid item xs={11} md={12} margin={2} >
             <AutocompleteVivero
               id={id}
