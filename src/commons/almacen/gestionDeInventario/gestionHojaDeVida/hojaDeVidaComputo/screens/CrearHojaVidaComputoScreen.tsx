@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import SaveIcon from '@mui/icons-material/Save';
-import { Grid, Box, Stack, Button, DialogTitle, DialogActions, } from '@mui/material';
+import { Grid} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import { create_cv_computers_service, get_marca_service, } from '../store/thunks/cvComputoThunks';
+import { create_cv_computers_service, delete_cv_computers_service, get_marca_service, update_cv_computers_service, } from '../store/thunks/cvComputoThunks';
 import { useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { type ICvcomputers as FormValues } from '../interfaces/CvComputo';
@@ -13,10 +13,11 @@ import SeleccionarComputer from '../components/BuscarElementos';
 import Especificaciones from '../components/EspecificacionesFisc';
 import EspecificacionesTec from '../components/EspecificacionesTec';
 import Caracteristicas from '../components/Caracteristicas';
+import FormButton from '../../../../../../components/partials/form/FormButton';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaComputoScreen(): JSX.Element {
-  const [action,] = useState<string>("create");
+  const [action, set_action] = useState<string>("crear");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
@@ -29,6 +30,12 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
   useEffect(() => {
     void dispatch(get_marca_service());
   }, []);
+
+  useEffect(() => {
+    if(current_cv_computer.id_hoja_de_vida !== null){
+      set_action("editar")
+    }
+  }, [current_cv_computer]);
 
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -52,11 +59,21 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
     form_data.append('otras_aplicaciones', data.otras_aplicaciones);
     form_data.append('id_marca', data.id_marca ?? null);
     form_data.append('id_articulo', (data.id_articulo ?? "").toString());
-    // form_data.append('ruta_imagen_foto', file === null ? '' : file);
+    form_data.append('ruta_imagen_foto',data.ruta_imagen_foto);
+    if(data.id_hoja_de_vida === null){
+      void dispatch(create_cv_computers_service(form_data, navigate));
+    } else {
+      void dispatch(update_cv_computers_service(data.id_hoja_de_vida, form_data));
 
-    void dispatch(create_cv_computers_service(form_data, navigate));
+    }
 
 
+  };
+  const delete_hoja_vida = (): void => {
+    
+    if (current_cv_computer.id_hoja_de_vida !== null && current_cv_computer.id_hoja_de_vida !== undefined) {
+      void dispatch(delete_cv_computers_service(current_cv_computer.id_hoja_de_vida));
+    } 
   };
 
   useEffect(() => {
@@ -79,28 +96,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-
-
-
-        <Box
-          component="form"
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={
-            action === 'create'
-              ? handle_submit(on_submit)
-              : handle_submit(on_submit)
-          }
-        >
-          <DialogTitle>
-            {action === 'create'
-              ? ''
-              : action === 'detail'
-                ? 'Detalle  Hoja de vida'
-                : 'Editar hoja de '}
-          </DialogTitle>
-
           <SeleccionarComputer />
-
 
           <Especificaciones
             control_computo={control_cv_computo}
@@ -109,47 +105,40 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           <EspecificacionesTec
             control_computo={control_cv_computo}
             get_values={get_values}
-            title="ESPECIFICACIONES TËCNICAS" />
+            title="ESPECIFICACIONES TECNICAS" />
           <Caracteristicas
             control_computo={control_cv_computo}
             get_values={get_values}
             title="CARACTERISTÍCAS" />
 
 
-
-          <DialogActions>
-            <Stack
-              direction="row"
-              spacing={2}
-              sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-            >
-              <Button
-                variant="outlined"
-                //   onClick={handle_close_cv_com_is_active}
-                startIcon={<CloseIcon />}
-              >
-                CERRAR
-              </Button>
-              {action === 'create' ? (
-                <Button
-                  type="submit"
-                  variant="contained"
-                  startIcon={<SaveIcon />}
-                >
-                  GUARDAR
-                </Button>
-              ) : action === 'edit' ? (
-                <Button
-                  type="submit"
-                  variant="contained"
-                  startIcon={<EditIcon />}
-                >
-                  EDITAR
-                </Button>
-              ) : null}
-            </Stack>
-          </DialogActions>
-        </Box>
+        <Grid
+          container
+          direction="row"
+          padding={2}
+          spacing={2}
+        >
+          <Grid item xs={12} md={3}>
+            <FormButton
+              variant_button="contained"
+              on_click_function={handle_submit(on_submit)}
+              icon_class={action === "create"?<SaveIcon />:<EditIcon/>}
+              label={action}
+              type_button="button"
+            />
+          </Grid>
+          
+          <Grid item xs={12} md={3}>
+            <FormButton
+              variant_button="outlined"
+              on_click_function={delete_hoja_vida}
+              icon_class={<CloseIcon />}
+              label={"Eliminar"}
+              type_button="button"
+            />
+          </Grid>
+        </Grid>
+        
 
 
 

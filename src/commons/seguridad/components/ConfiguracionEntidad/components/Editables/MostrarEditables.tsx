@@ -1,111 +1,93 @@
-import {
-    //  Box,
-      Grid } from "@mui/material";
-// import { InputText } from "primereact/inputtext";
-// import { useForm } from "react-hook-form";
-// import { Button } from "primereact/button";
+import { useRef } from "react";
+import { useFormik } from 'formik';
+import { InputText } from "primereact/inputtext";
+import { Button } from 'primereact/button';
+import { Toast } from 'primereact/toast';
+import { classNames } from 'primereact/utils';
+
+import { Box, Grid } from "@mui/material";
+import { Title } from "../../../../../../components/Title";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MostrarEditables: React.FC = () => {
-    // const { control, handleSubmit, reset } = useForm();
+    const toast = useRef<Toast | null>(null);
 
-    // const onSubmit1 = (data: any) => {
-    //     console.log("Formulario 1:", data);
-    //     reset();
-    // };
+    const show = (): void => {
+        // eslint-disable-next-line
+        if (toast.current) {
+            toast.current.show({ severity: 'success', summary: 'Form Submitted', detail: formik.values.value });
+        }
+    };
 
-    // const onSubmit2 = (data: any) => {
-    //     console.log("Formulario 2:", data);
-    //     reset();
-    // };
+    const formik = useFormik({
+        initialValues: {
+            value: ''
+        },
+        validate: (data) => {
+            const errors: { value?: string } = {};
+// eslint-disable-next-line
+            if (!data.value) {
+                 
+                errors.value = 'Name - Surname is required.';
+            }
 
-    // const onSubmit3 = (data: any) => {
-    //     console.log("Formulario 3:", data);
-    //     reset();
-    // };
+            return errors;
+        }, 
+        onSubmit: (data) => {
+            // eslint-disable-next-line
+            data && show();
+            formik.resetForm();
+        }
+    });
+// eslint-disable-next-line
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const isFormFieldInvalid = (field: keyof typeof formik.values): boolean => {
+        // eslint-disable-next-line
+        return Boolean(formik.touched[field] && formik.errors[field]);
+    };
 
-    // const onSubmit4 = (data: any) => {
-    //     console.log("Formulario 4:", data);
-    //     reset();
-    // };
-
-    // const onSubmit5 = (data: any) => {
-    //     console.log("Formulario 5:", data);
-    //     reset();
-    // };
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const getFormErrorMessage = (field: keyof typeof formik.values): React.ReactNode => {
+        return isFormFieldInvalid(field) ? <small className="p-error">{formik.errors[field]}</small> : null;
+    };
 
     return (
-      
-            <Grid spacing={2} justifyContent="left" border={1}
-                direction="row"
-                borderColor="lightgray"
-                padding={2}
-                borderRadius={2}>
-                {/* <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit1)}>
-                        <label htmlFor="form1-value">Formulario 1: Tipo Documento ID</label>
-                        <InputText
-                            id="form1-value"
-                            aria-describedby="form1-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit2)}>
-                        <label htmlFor="form2-value">Formulario 2: Num Documento ID</label>
-                        <InputText
-                            id="form2-value"
-                            aria-describedby="form2-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit3)}>
-                        <label htmlFor="form3-value">Formulario 3: Num Documento ID</label>
-                        <InputText
-                            id="form3-value"
-                            aria-describedby="form3-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit4)}>
-                        <label htmlFor="form4-value">Formulario 4: Tipo Documento ID</label>
-                        <InputText
-                            id="form4-value"
-                            aria-describedby="form4-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid>
-
-                <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit5)}>
-                        <label htmlFor="form5-value">Formulario 5: Tipo Documento ID</label>
-                        <InputText
-                            id="form5-value"
-                            aria-describedby="form5-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid> */}
+        <Grid
+            container
+            sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                boxShadow: '0px 3px 6px #042F4A26',
+            }}
+        >
+            <Grid item md={12} xs={12}>
+                <Title title="Editables" />
+                <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
+                    <Grid item container spacing={2}>
+                        <div className="card flex justify-content-center">
+                            <form onSubmit={formik.handleSubmit} className="flex flex-column gap-2">
+                                <span className="p-float-label">
+                                    <Toast ref={toast} />
+                                    <InputText
+                                        id="value"
+                                        name="value"
+                                        value={formik.values.value}
+                                        onChange={formik.handleChange}
+                                        onBlur={formik.handleBlur}
+                                        className={classNames({ 'p-invalid': isFormFieldInvalid('value') })}
+                                    />
+                                    <label htmlFor="input_value">1</label>
+                                </span>
+                                {getFormErrorMessage('value')}
+                                <Button type="submit" label="Submit" />
+                            </form>
+                        </div>
+                    </Grid>
+                </Box>
             </Grid>
-       
+        </Grid>
     );
 };

@@ -21,6 +21,7 @@ const SeleccionarSiembra = ({
   const dispatch = useAppDispatch()
   const { current_planting, plantings, nurseries, germination_beds, vegetal_materials, current_nursery } = useAppSelector((state) => state.material_vegetal);
   const [file, set_file] = useState<any>(null);
+  const [selected_image_aux, set_selected_image_aux] = useState<any>(null);
   const [file_name, set_file_name] = useState<string>("");
 
 
@@ -101,6 +102,11 @@ const SeleccionarSiembra = ({
 
   useEffect(() => {
     if (file !== null) {
+      const reader = new FileReader();
+        reader.onload = () => {
+          set_selected_image_aux(reader.result);
+        };
+        reader.readAsDataURL(file);
       if ('name' in file) {
         console.log(file.name)
         set_file_name(file.name)
@@ -113,6 +119,7 @@ const SeleccionarSiembra = ({
           observaciones: get_values("observaciones") ,
           ruta_archivo_soporte: file
         }))
+        
       }
     }
   }, [file]);
@@ -121,6 +128,10 @@ const SeleccionarSiembra = ({
     if (current_planting.id_siembra !== null) {
       if (current_planting.ruta_archivo_soporte !== null) {
         set_file_name(String(current_planting.ruta_archivo_soporte))
+        const reader = new FileReader();
+        reader.onload = () => {
+          set_selected_image_aux(current_planting.ruta_archivo_soporte);
+        };
       }
     }
   }, [current_planting]);
@@ -148,6 +159,14 @@ const SeleccionarSiembra = ({
           set_models={set_plantings}
           button_submit_label='Buscar siembra'
           form_inputs={[
+            {
+              datum_type: "image_uploader",
+              xs: 12,
+              md: 12,
+              selected_image: selected_image_aux,
+              width_image: '150px',
+              height_image: 'auto',
+            },
             {
               datum_type: "select_controller",
               xs: 12,
@@ -221,6 +240,7 @@ const SeleccionarSiembra = ({
               set_value: set_file,
               file_name: file_name,
             },
+            
             {
               datum_type: "input_controller",
               xs: 12,

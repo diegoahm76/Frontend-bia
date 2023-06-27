@@ -1,15 +1,15 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useContext, useEffect, useRef, useState } from 'react';
-
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { useContext, useEffect, useRef, useState } from 'react';
 // Components Material UI
 import {
   Grid,
@@ -45,12 +45,22 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalContext } from '../context/ModalContext';
 import { CatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/CatalogoSeriesYSubseries';
 import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
+import { LoadingButton } from '@mui/lab';
+import {
+  create_or_delete_assignments_service,
+  get_assignments_service
+} from '../store/thunks/assignmentsThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
-  const { openModalModalSeriesAndSubseries } = useContext(ModalContext);
+  const {
+    openModalModalSeriesAndSubseries,
+    busquedaCreacionCCDModal,
+    openModalBusquedaCreacionCCD,
+    loadingButton
+  } = useContext(ModalContext);
 
   const dispatch: any = useAppDispatch();
 
@@ -64,39 +74,21 @@ export const CcdScreen: React.FC = () => {
   const { seriesAndSubseries } = useAppSelector(
     (state: any) => state.slice_series_and_subseries
   );
-  // ? const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
+  const { assignments_ccd } = useAppSelector((state: any) => state.assignments);
   const [flag_btn_finish, set_flag_btn_finish] = useState<boolean>(true);
 
-  console.log(series_ccd);
+  // console.log(series_ccd);
   useEffect(() => {
     set_flag_btn_finish(
       ccd_current?.fecha_terminado !== null &&
         ccd_current?.fecha_terminado !== '' &&
         ccd_current?.fecha_terminado !== undefined
     );
-
     console.log(
-      '🚀 ~ file: CcdScreen.tsx ~ line 45 ~ useEffect ~ ccd_current?.fecha_terminado',
+      '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ ccd_current?.fecha_terminado',
       ccd_current?.fecha_terminado
     );
-    /* if (ccd_current?.fecha_terminado != null) {
-      set_flag_btn_finish(true);
-    } else {
-      set_flag_btn_finish(false);
-    } */
   }, [ccd_current?.fecha_terminado]);
-
-  /* useEffect(() => {
-    if (ccd_current?.id_ccd) {
-      dispatch(to_resume_ccds_service(ccd_current?.id_ccd));
-    }
-  }, [ccd_current?.id_ccd]); */
-
-  /* useEffect(() => {
-    if (ccd_current?.id_ccd) {
-      dispatch(to_resume_ccds_service(ccd_current?.id_ccd));
-    }
-  }, [ccd_current?.id_ccd]); */
 
   useEffect(() => {
     if (ccd_current?.id_ccd) {
@@ -130,12 +122,9 @@ export const CcdScreen: React.FC = () => {
     set_create_is_active,
     set_consulta_ccd_is_active,
     // // Functions
-    // get_row_class,
     on_submit_create_ccd,
-    on_submit,
-    // register_create_ccd,
-    handle_submit,
-    handle_submit_create_ccd,
+    on_submit_create_or_delete_relation_unidad,
+    create_or_delete_relation_unidad,
     clean_ccd
   } = use_ccd() as any;
 
@@ -159,14 +148,8 @@ export const CcdScreen: React.FC = () => {
               marginTop: '20px'
             }}
             onSubmit={(e: any) => {
-              // console.log('hola')
-              console.log(e);
               on_submit_create_ccd(e);
             }}
-
-            // sx={{ mt: '20px' }}
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
-            /* onSubmit={handle_submit_create_ccd(on_submit_create_ccd)} */
           >
             <Grid container spacing={2}>
               <Grid
@@ -277,9 +260,7 @@ export const CcdScreen: React.FC = () => {
                   )}
                 />
               </Grid>
-
               {/* new spaces */}
-
               <Grid item xs={12} sm={3}>
                 <Controller
                   name="valor_aumento_serie"
@@ -295,7 +276,9 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
-                      disabled={series_ccd.length > 0}
+                      disabled={
+                        series_ccd.length > 0 /* && ccd_current == null */
+                      }
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -339,7 +322,6 @@ export const CcdScreen: React.FC = () => {
                   )}
                 />
               </Grid>
-
               {/* third new spaces  */}
               {/* fourth new spaces, optional for the support route  */}
               <Grid item xs={12} sm={3}>
@@ -358,11 +340,6 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       variant="outlined"
                       type="file"
-                      disabled={
-                        ccd_current?.fecha_terminado !== null &&
-                        ccd_current?.fecha_terminado !== '' &&
-                        ccd_current?.fecha_terminado !== undefined
-                      }
                       InputLabelProps={{ shrink: true }}
                       onChange={(e) => {
                         const files = (e.target as HTMLInputElement).files;
@@ -370,7 +347,6 @@ export const CcdScreen: React.FC = () => {
                           onChange(files[0]);
                           console.log(files[0]);
                         }
-                        // console.log(value);
                       }}
                       error={!!error}
                       helperText={
@@ -414,14 +390,6 @@ export const CcdScreen: React.FC = () => {
                       control_create_ccd._formValues.version
                     )
                   ).then((data: any) => {
-                    /*  if (data.data.length > 0) {
-
-                      set_ccd_current(data.data[0]);
-                      set_save_ccd(false);
-                      set_create_ccd_is_active(false);
-                      set_update_ccd_is_active(true);
-                      set_delete_ccd_is_active(true);
-                    } */
                     console.log(data);
                     if (
                       data.data.length > 0 &&
@@ -431,25 +399,23 @@ export const CcdScreen: React.FC = () => {
                       dispatch(get_ccd_current(data.data[0]));
                       set_consulta_ccd_is_active(true);
                       set_title('Consultar CCD');
-                      // set_ccd_current(data);
-                      // set_save_ccd(false);
-                      // set_create_ccd_is_active(false);
-                      // set_update_ccd_is_active(false);
-                      // set_delete_ccd_is_active(false);
+                      openModalBusquedaCreacionCCD();
                     }
                   });
                 }}
               >
                 BUSCAR CCD
               </Button>
-              <Button
+
+              <LoadingButton
+                loading={loadingButton}
                 type="submit"
                 color="primary"
                 variant="contained"
                 startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
-              </Button>
+              </LoadingButton>
               <Button
                 color="success"
                 variant="contained"
@@ -465,374 +431,362 @@ export const CcdScreen: React.FC = () => {
           </form>
         </Grid>
       </Grid>
-      {/* {save_ccd && ( */}
-      <>
-        <Grid container sx={gridStyles}>
-          <Grid item xs={12}>
-            <Title title="Administrar catálogo de series y subseries" />
-            <Box
-              component="form"
-              sx={{ mt: '20px' }}
-              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              autoComplete="off"
-            >
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={2}>
-                  <Controller
-                    name="series"
-                    control={control}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error }
-                    }) => (
-                      <Select
-                        // {...field}
-                        value={value}
-                        onChange={(selectedOption: any) => {
-                          // Actualiza el valor seleccionado en el controlador
-                          // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
-                          onChange(selectedOption);
-                          dispatch(get_serie_ccd_current(selectedOption.value));
-                          /* if (!selectedOption.value) {
-                            // onChange(null);
-                            console.log(selectedOption.value);
-                          } else {
-                            onChange(selectedOption);
-                            dispatch(get_serie_ccd_current(selectedOption.value));
-
-                          } */
-                          //! dentro del selectedOption se encuentra el id_serie_doc, lo que me permite hacer la petición a la subserie de la serie seleccionada
-                          console.log('Valor seleccionado:', selectedOption);
-                        }}
-                        options={list_sries}
-                        // isClearable
-                        isSearchable
-                        placeholder="Seleccionar"
-                      />
-                    )}
-                  />
-                  {errors.sries !== null && (
-                    <div className="col-12">
-                      <small className="text-center text-danger">
-                        Campo obligatorio
-                      </small>
-                    </div>
-                  )}
-                </Grid>
-                <Grid item xs={12} sm={4}>
-                  <ButtonGroup
-                    variant="contained"
-                    aria-label=" primary button group"
-                  >
-                    <Button
-                      onClick={() => {
-                        set_create_is_active(true);
-                        set_title('Administrar series');
-                      }}
-                      disabled={
-                        ccd_current === null || ccd_current?.id_ccd === null
-                      }
-                    >
-                      ADMINISTRAR SERIES
-                    </Button>
-                    {/*                    <Button disabled>CLONAR</Button>
-                    <Button disabled>PREVISUALIZAR</Button> */}
-                  </ButtonGroup>
-                </Grid>
-                <Grid item xs={12} sm={2}>
-                  <Controller
-                    name="subserie"
-                    control={control}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error }
-                    }) => (
-                      <Select
-                        // {...field}
-                        value={value}
-                        options={list_subsries}
-                        placeholder="Seleccionar"
-                        onChange={(selectedOption) => {
-                          onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
-                          // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
-
-                          //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
-                          console.log('Valor seleccionado:', selectedOption);
-                        }}
-                        // isClearable
-                        isSearchable
-                      />
-                    )}
-                  />
-                  {errors.subserie !== null && (
-                    <div className="col-12">
-                      <small className="text-center text-danger">
-                        Campo obligatorio
-                      </small>
-                    </div>
-                  )}
-                </Grid>
-
-                <Grid item xs={12} sm={4}>
-                  <ButtonGroup
-                    variant="contained"
-                    aria-label=" primary button group"
-                  >
-                    <Button
-                      onClick={() => {
-                        set_create_sub_serie_active(true);
-                        // set_create_is_active(true);
-                        console.log(create_sub_serie_active);
-                        set_title('Administrar subseries');
-                      }}
-                      disabled={serie_ccd_current === null}
-                    >
-                      ADMINISTRAR SUBSERIES
-                    </Button>
-                    {/* <Button disabled>CLONAR</Button>
-                    <Button disabled>PREVISUALIZAR</Button> */}
-                  </ButtonGroup>
-                </Grid>
-              </Grid>
-              {/**/}
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                justifyContent="center"
-                alignItems="center"
-                sx={{
-                  mt: '20px',
-                  display: 'flex'
-                }}
+      {busquedaCreacionCCDModal ? (
+        <>
+          <Grid container sx={gridStyles}>
+            <Grid item xs={12}>
+              <Title title="Administrar catálogo de series y subseries" />
+              <Box
+                component="form"
+                sx={{ mt: '20px' }}
+                // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                autoComplete="off"
               >
-                <ButtonGroup
-                  variant="contained"
-                  aria-label=" primary button group"
-                >
-                  <Button
-                    color="warning"
-                    variant="outlined"
-                    disabled={ccd_current === null}
-                    onClick={() => {
-                      console.log('ver catalogo de series y subseries');
-                      openModalModalSeriesAndSubseries();
-                      dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
-                      // getCatalogoSeriesYSubseries();
-                    }}
-                  >
-                    <VisibilityIcon
-                      sx={{
-                        color: 'primary.main',
-                        width: '18px',
-                        height: '18px',
-                        marginRight: '7px'
-                      }}
-                    />{' '}
-                    VER CATÁLOGO
-                  </Button>
-                  {/*                    <Button disabled>CLONAR</Button>
-                    <Button disabled>PREVISUALIZAR</Button> */}
-                </ButtonGroup>
-              </Grid>
-              {/* */}
-            </Box>
-          </Grid>
-        </Grid>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={2}>
+                    <Controller
+                      name="series"
+                      control={control}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error }
+                      }) => (
+                        <Select
+                          value={value}
+                          onChange={(selectedOption: any) => {
+                            onChange(selectedOption);
+                            dispatch(
+                              get_serie_ccd_current(selectedOption.value)
+                            );
+                            console.log('Valor seleccionado:', selectedOption);
+                          }}
+                          options={list_sries}
+                          isSearchable
+                          placeholder="Seleccionar"
+                        />
+                      )}
+                    />
+                    {errors.sries !== null && (
+                      <div className="col-12">
+                        <small className="text-center text-danger">
+                          Campo obligatorio
+                        </small>
+                      </div>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <ButtonGroup
+                      variant="contained"
+                      aria-label=" primary button group"
+                    >
+                      <Button
+                        onClick={() => {
+                          set_create_is_active(true);
+                          set_title('Administrar series');
+                        }}
+                        disabled={
+                          ccd_current === null || ccd_current?.id_ccd === null
+                        }
+                      >
+                        ADMINISTRAR SERIES
+                      </Button>
+                    </ButtonGroup>
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <Controller
+                      name="subserie"
+                      control={control}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error }
+                      }) => (
+                        <Select
+                          value={value}
+                          options={list_subsries}
+                          placeholder="Seleccionar"
+                          onChange={(selectedOption) => {
+                            onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                            // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
 
-        <Grid
-          container
-          sx={{
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            p: '20px',
-            mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26'
-          }}
-        >
-          <Grid item xs={12}>
-            <Title title="Administrar catálogo de series y subseries por Unidad Organizacional" />
-            <Box
-              component="form"
-              sx={{ mt: '20px', mb: '20px' }}
-              noValidate
-              autoComplete="off"
-            >
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={4}>
-                  <label className="text-terciary">
-                    {' '}
-                    Unidades
-                    <samp className="text-danger">*</samp>
-                  </label>
-                  {/* este controler debe ser reemplazado por uno que me permite un dinamismo de los datos del ccd */}
-                  <Controller
-                    name="unidades_asignacion"
-                    control={control}
-                    rules={{
-                      required: true
-                    }}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        value={field.value}
-                        options={list_unitys}
-                        placeholder="Seleccionar"
-                      />
+                            //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
+                            console.log('Valor seleccionado:', selectedOption);
+                          }}
+                          // isClearable
+                          isSearchable
+                        />
+                      )}
+                    />
+                    {errors.subserie !== null && (
+                      <div className="col-12">
+                        <small className="text-center text-danger">
+                          Campo obligatorio
+                        </small>
+                      </div>
                     )}
-                  />
-                  {errors.unidades_asignacion !== null && (
-                    <div className="col-12">
-                      <small className="text-center text-danger">
-                        Este campo es obligatorio
-                      </small>
-                    </div>
-                  )}
+                  </Grid>
+
+                  <Grid item xs={12} sm={4}>
+                    <ButtonGroup
+                      variant="contained"
+                      aria-label=" primary button group"
+                    >
+                      <Button
+                        onClick={() => {
+                          set_create_sub_serie_active(true);
+                          set_title('Administrar subseries');
+                        }}
+                        disabled={serie_ccd_current === null}
+                      >
+                        ADMINISTRAR SUBSERIES
+                      </Button>
+                    </ButtonGroup>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={4}>
-                  <label className="text-terciary">
-                    Catalogo de series y subseries
-                    <samp className="text-danger">*</samp>
-                  </label>
-                  <Controller
-                    name="catalogo_asignacion"
-                    control={control}
-                    rules={{
-                      required: true
-                    }}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        value={field.value}
-                        options={list_sries_asignacion}
-                        placeholder="Seleccionar"
-                      />
-                    )}
-                  />
-                  {errors.sries_asignacion != null && (
-                    <div className="col-12">
-                      <small className="text-center text-danger">
-                        Este campo es obligatorio
-                      </small>
-                    </div>
-                  )}
-                </Grid>
-                {/* <Grid item xs={12} sm={4}>
-                  <label className="text-terciary">
-                    Catalogo de series y subseries
-                    <samp className="text-danger">*</samp>
-                  </label>
-                  <Controller
-                    name="subserie_asignacion"
-                    control={control}
-                    rules={{
-                      required: true
-                    }}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        value={field.value}
-                        isMulti
-                        options={list_subsries}
-                        placeholder="Seleccionar"
-                      />
-                    )}
-                  />
-                  {errors.subserie_asignacion != null && (
-                    <div className="col-12">
-                      <small className="text-center text-danger">
-                        Este campo es obligatorio
-                      </small>
-                    </div>
-                  )}
-                </Grid> */}
+                {/**/}
                 <Grid
                   item
                   xs={12}
-                  sm={4}
+                  sm={12}
+                  justifyContent="center"
+                  alignItems="center"
                   sx={{
-                    marginTop: '25px'
+                    mt: '20px',
+                    display: 'flex'
                   }}
                 >
-                  <Button
-                    fullWidth
-                    onClick={() => {
-                      /* void dispatch(
-                        to_assign_ccds_service(
-                          ccd_current,
-                          set_flag_btn_finish,
-                          set_title_button_asing
-                        )
-                      ); */
+                  <ButtonGroup
+                    variant="contained"
+                    aria-label=" primary button group"
+                  >
+                    <Button
+                      color="warning"
+                      variant="outlined"
+                      disabled={ccd_current === null}
+                      onClick={() => {
+                        console.log('ver catalogo de series y subseries');
+                        openModalModalSeriesAndSubseries();
+                        dispatch(
+                          getCatalogoSeriesYSubseries(ccd_current.id_ccd)
+                        );
+                      }}
+                    >
+                      <VisibilityIcon
+                        sx={{
+                          color: 'primary.main',
+                          width: '18px',
+                          height: '18px',
+                          marginRight: '7px'
+                        }}
+                      />{' '}
+                      VER CATÁLOGO
+                    </Button>
+                  </ButtonGroup>
+                </Grid>
+                {/* */}
+              </Box>
+            </Grid>
+          </Grid>
 
-                      console.log(
-                        'guardando la relación de asignaciones',
-                        control._formValues.unidades_asignacion,
-                        control._formValues.catalogo_asignacion
-                      );
-
-                      console.log('guardando la relación de asignaciones');
+          <Grid
+            container
+            sx={{
+              position: 'relative',
+              background: '#FAFAFA',
+              borderRadius: '15px',
+              p: '20px',
+              mb: '20px',
+              boxShadow: '0px 3px 6px #042F4A26'
+            }}
+          >
+            <Grid item xs={12}>
+              <Title title="Administrar catálogo de series y subseries por Unidad Organizacional" />
+              <Box
+                component="form"
+                sx={{ mt: '20px', mb: '20px' }}
+                noValidate
+                autoComplete="off"
+              >
+                <Grid container spacing={3}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={4}
+                    sx={{
+                      zIndex: 10
                     }}
-                    color="primary"
+                  >
+                    <label className="text-terciary">
+                      {' '}
+                      Unidades
+                      <samp className="text-danger">*</samp>
+                    </label>
+                    {/* este controler debe ser reemplazado por uno que me permite un dinamismo de los datos del ccd */}
+                    <Controller
+                      name="unidades_asignacion"
+                      control={control}
+                      rules={{
+                        required: true
+                      }}
+                      render={({ field }) => (
+                        <Select
+                          {...field}
+                          value={field.value}
+                          options={list_unitys}
+                          placeholder="Seleccionar"
+                        />
+                      )}
+                    />
+                    {errors.unidades_asignacion !== null && (
+                      <div className="col-12">
+                        <small className="text-center text-danger">
+                          Este campo es obligatorio
+                        </small>
+                      </div>
+                    )}
+                  </Grid>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={5}
+                    sx={{
+                      zIndex: 10
+                    }}
+                  >
+                    <label className="text-terciary">
+                      Catálogo de series y subseries
+                      <samp className="text-danger">*</samp>
+                    </label>
+                    <Controller
+                      name="catalogo_asignacion"
+                      control={control}
+                      rules={{
+                        required: true
+                      }}
+                      render={({
+                        field: { onChange, value },
+                        fieldState: { error }
+                      }) => (
+                        <Select
+                          value={value}
+                          // isMulti prop will enable the multi select
+                          isMulti
+                          onChange={(selectedOption) => {
+                            console.log('selectedOption', selectedOption);
+                            /* const spliceSelectedOptions = selectedOption.map(
+                              (item) => {
+                                const partes = item?.label?.split('-');
+                                return {
+                                  label: item.label,
+                                  value: item.value,
+                                  nombreSerie: partes?.[1],
+                                  nombreSubserie: partes?.[2],
+                                  codigoSerie: partes?.[0],
+                                  codigoSubserie: partes?.[3]
+                                };
+                              }
+                            ); */
+                            onChange(selectedOption);
+                          }}
+                          options={list_sries_asignacion}
+                          placeholder="Seleccionar"
+                        />
+                      )}
+                    />
+                    {errors.subserie_asignacion != null && (
+                      <div className="col-12">
+                        <small className="text-center text-danger">
+                          Este campo es obligatorio
+                        </small>
+                      </div>
+                    )}
+                  </Grid>
+                  {/* FINALIZAR EVENTO */}
+                  <Grid
+                    item
+                    xs={12}
+                    sm={3}
+                    sx={{
+                      marginTop: '25px'
+                    }}
+                  >
+                    <Button
+                      fullWidth
+                      onClick={() => {
+                        void dispatch(create_or_delete_relation_unidad);
+                        void dispatch(
+                          get_assignments_service(
+                            ccd_current,
+                            control._formValues.unidades_asignacion
+                          )
+                        );
+                      }}
+                      color="primary"
+                      variant="contained"
+                      startIcon={<SaveIcon />}
+                    >
+                      {title_button_asing}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+              <Grid item>
+                <Box sx={{ width: '100%' }}>
+                  <DataGrid
+                    density="compact"
+                    autoHeight
+                    rows={assignments_ccd}
+                    sx={{
+                      zIndex: 2
+                    }}
+                    columns={columns_asignacion}
+                    pageSize={5}
+                    rowsPerPageOptions={[5]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                  />
+                </Box>
+              </Grid>
+              <Stack
+                direction="row"
+                justifyContent="flex-end"
+                spacing={2}
+                sx={{ mt: '20px' }}
+              >
+                {flag_btn_finish ? (
+                  <Button
+                    onClick={() => {
+                      void dispatch(
+                        to_resume_ccds_service(set_flag_btn_finish, ccd_current)
+                      );
+                    }}
+                    color="success"
                     variant="contained"
                     startIcon={<SaveIcon />}
                   >
-                    {title_button_asing}
+                    REANUDAR
                   </Button>
-                </Grid>
-              </Grid>
-            </Box>
-            <Grid item>
-              <Box sx={{ width: '100%' }}>
-                {/* <DataGrid
-                  density="compact"
-                  autoHeight
-                  rows={assignments_ccd}
-                  columns={columns_asignacion}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                /> */}
-              </Box>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      void dispatch(
+                        to_finished_ccds_service(
+                          set_flag_btn_finish,
+                          ccd_current
+                        )
+                      );
+                    }}
+                    color="success"
+                    variant="contained"
+                    startIcon={<SaveIcon />}
+                  >
+                    TERMINAR
+                  </Button>
+                )}
+              </Stack>
             </Grid>
-            <Stack
-              direction="row"
-              justifyContent="flex-end"
-              spacing={2}
-              sx={{ mt: '20px' }}
-            >
-              {flag_btn_finish ? (
-                <Button
-                  onClick={() => {
-                    void dispatch(
-                      to_resume_ccds_service(set_flag_btn_finish, ccd_current)
-                    );
-                  }}
-                  color="success"
-                  variant="contained"
-                  startIcon={<SaveIcon />}
-                >
-                  REANUDAR
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    void dispatch(
-                      to_finished_ccds_service(set_flag_btn_finish, ccd_current)
-                    );
-                  }}
-                  color="success"
-                  variant="contained"
-                  startIcon={<SaveIcon />}
-                >
-                  TERMINAR
-                </Button>
-              )}
-            </Stack>
           </Grid>
-        </Grid>
-      </>
+        </>
+      ) : null}
+
       <CrearSeriesCcdDialog
         is_modal_active={create_is_active}
         set_is_modal_active={set_create_is_active}
