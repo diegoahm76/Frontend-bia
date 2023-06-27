@@ -105,6 +105,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
+    numero_documento,
     set_users_x_person_is_active,
     set_data_register,
     set_tipo_documento,

@@ -44,10 +44,6 @@ export const AgregarProyectos: React.FC<IProps> = ({
     set_end_date(date);
   };
 
-  const is_fecha_inicio_valid =
-    start_date && fecha_inicial_programa && start_date > fecha_inicial_programa;
-  const is_fecha_fin_valid =
-    end_date && fecha_fin_programa && end_date < fecha_fin_programa;
 
   const inversion_value: number = watch('inversion');
   const is_form_valid =
@@ -98,13 +94,11 @@ export const AgregarProyectos: React.FC<IProps> = ({
                 {...params}
                 {...register('vigencia_inicial', { required: true })}
                 error={
-                  Boolean(errors.vigencia_inicial) || !is_fecha_inicio_valid
+                  Boolean(errors.vigencia_inicial)
                 }
                 helperText={
                   errors.vigencia_inicial?.type === 'required'
                     ? 'Este campo es obligatorio'
-                    : !is_fecha_inicio_valid
-                    ? 'La fecha de inicio del proyecto debe ser posterior a la fecha de inicio del programa'
                     : ''
                 }
               />
@@ -128,12 +122,10 @@ export const AgregarProyectos: React.FC<IProps> = ({
                 size="small"
                 {...params}
                 {...register('vigencia_final', { required: true })}
-                error={Boolean(errors.vigencia_final) || !is_fecha_fin_valid}
+                error={Boolean(errors.vigencia_final)}
                 helperText={
                   errors.vigencia_final?.type === 'required'
                     ? 'Este campo es obligatorio'
-                    : !is_fecha_fin_valid
-                    ? 'La fecha de finalización del proyecto debe ser anterior a la fecha de finalización del programa'
                     : ''
                 }
               />
