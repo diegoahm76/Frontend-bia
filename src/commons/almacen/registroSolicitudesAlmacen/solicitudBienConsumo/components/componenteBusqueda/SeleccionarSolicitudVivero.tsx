@@ -1,4 +1,4 @@
-import { Grid, } from '@mui/material';
+import { Chip, Grid, } from '@mui/material';
 
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
@@ -52,6 +52,19 @@ const SeleccionarSolicitudVivero = ({
                     {params.value}
                 </div>
             ),
+
+        },
+        {
+            field: 'solicitud_anulada_solicitante',
+            headerName: 'Estado de la solicitud',
+            width: 350,
+            renderCell: (params) => {
+                return params.row.solicitud_anulada_solicitante === false ? (
+                    <Chip size="small" label="Abierta" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="Anulada" color="error" variant="outlined" />
+                );
+            },
 
         },
 
