@@ -49,9 +49,6 @@ export const AgregarSeccion: React.FC = () => {
   return (
       <>
         <Grid item xs={12}>
-          <Title title="ADMINISTRACION SECCIONES BIBLIOTECA" />
-        </Grid>
-        <Grid item xs={12}>
           <Typography variant="subtitle1" fontWeight="bold">
             Sección
           </Typography>
