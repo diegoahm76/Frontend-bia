@@ -115,7 +115,6 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_numero_documento,
     reset_admin_user,
     clean_user_info,
-    numero_documento,
   } = use_admin_users();
   // const numero_documento = watch('numero_documento');
   useEffect(() => {
