@@ -85,7 +85,7 @@ const FormInputFileController = ({
                                     size="small"
                                     variant="outlined"
                                     startIcon={<CloudUploadIcon />}
-                                    style={{height:"40px"}}
+                                    style={{ height: "40px" }}
                                 >
                                     {file_name !== "" ? file_name : label}
                                     <Input

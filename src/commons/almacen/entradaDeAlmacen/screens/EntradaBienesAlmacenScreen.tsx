@@ -264,8 +264,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           id_item_entrada_almacen: null,
           id_entrada_almacen: numero_entrada,
           id_bien: articulo.id_bien,
-          codigo: articulo.codigo_bien,
-          nombre: articulo.nombre,
+          codigo_bien: articulo.codigo_bien,
+          nombre_bien: articulo.nombre,
           cantidad: 1,
           id_bodega: parseInt(bodega_detalle),
           numero_posicion: (prevArray.length + 1),
@@ -286,8 +286,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
         id_entrada_almacen: numero_entrada,
         id_bien: articulo.id_bien,
         id_unidad_medida_vida_util: null,
-        codigo: articulo.codigo_bien,
-        nombre: articulo.nombre,
+        codigo_bien: articulo.codigo_bien,
+        nombre_bien: articulo.nombre,
         cantidad: parseInt(cantidad),
         id_bodega: parseInt(bodega_detalle),
         numero_posicion: (info_items.length + 1),
@@ -443,16 +443,15 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   useEffect(() => {
     if(buscar_articulo !== null){
-      set_numero_entrada(buscar_articulo.numero_entrada_almacen);
-      set_tipo_entrada(buscar_articulo.id_tipo_entrada);
-      set_bodega_ingreso(buscar_articulo.id_bodega);
-      set_motivo(buscar_articulo.motivo);
-      set_observaciones(buscar_articulo.observacion);
-      set_valor_total_entrada(buscar_articulo.valor_total_entrada);
-      set_observaciones(buscar_articulo.observacion);
-      set_observaciones(buscar_articulo.observacion);
-      set_fecha_entrada(dayjs(buscar_articulo.fecha_entrada));
-      obtener_persona_fc(buscar_articulo.id_proveedor);
+      set_numero_entrada(buscar_articulo.info_entrada.numero_entrada_almacen);
+      set_tipo_entrada(buscar_articulo.info_entrada.id_tipo_entrada);
+      set_bodega_ingreso(buscar_articulo.info_entrada.id_bodega);
+      set_motivo(buscar_articulo.info_entrada.motivo);
+      set_observaciones(buscar_articulo.info_entrada.observacion);
+      set_valor_total_entrada(buscar_articulo.info_entrada.valor_total_entrada);
+      set_fecha_entrada(dayjs(buscar_articulo.info_entrada.fecha_entrada));
+      obtener_persona_fc(buscar_articulo.info_entrada.id_proveedor);
+      set_info_items(buscar_articulo.info_items_entrada);
     }
   }, [buscar_articulo]);
 
@@ -942,12 +941,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     rowsPerPageOptions={[5, 10, 25, 50]}
                   >
                     <Column
-                      field="codigo"
+                      field="codigo_bien"
                       header="Código"
                       style={{ width: '20%' }}
                     ></Column>
                     <Column
-                      field="nombre"
+                      field="nombre_bien"
                       header="Nombre"
                       style={{ width: '40%' }}
                     ></Column>

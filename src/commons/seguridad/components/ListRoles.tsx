@@ -306,9 +306,44 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
               fullWidth
               maxWidth={'md'}
             >
-              <DialogTitle id="alert-dialog-title" textAlign="center">
-                {rol.nombre_rol}
-              </DialogTitle>
+
+<Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '20px',
+                    marginLeft: '14px',
+                    width: "860px"
+                }}
+            >
+
+              {/* <DialogTitle id="alert-dialog-title" textAlign="center"> */}
+                <Title title={rol.nombre_rol} />
+              {/* </DialogTitle> */}
+            </Grid>
+
+
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '6px',
+                    marginLeft: '14px',
+                    width: "860px"
+                }}
+            >
+
+            
               <DialogContent>
                 {is_loading_detail ? (
                   <>
@@ -364,6 +399,7 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
                   </>
                 )}
               </DialogContent>
+              </Grid>
               <DialogActions>
                 <Button
                   onClick={handle_close}

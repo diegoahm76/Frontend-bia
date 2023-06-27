@@ -464,6 +464,7 @@ export const editar_despacho: any = (
   }
 }
 
+
 // anular despacho
 export const annul_despacho_service = (
   id: number,
@@ -488,7 +489,30 @@ export const annul_despacho_service = (
       }
   };
 };
+// anular despacho
+export const closed_solicitud_service = (
+  id: number,
+  solicitud: any
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+      try {
+          const { data } = await api.patch(`conservacion/solicitudes/cerrar-solicitud/${id}/`, solicitud);
+          console.log(data)
+          // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+          if (data.success) {
+              control_success(data.detail)
 
+          } else {
+              control_error(data.detail)
+          }
+          return data;
+      } catch (error: any) {
+          console.log('closed_solicitud_service');
+          control_error(error.response.data.detail);
+          return error as AxiosError;
+      }
+  };
+};
 // obtener despachos
 export const get_despachos_service = (
   id_vivero: string | number,

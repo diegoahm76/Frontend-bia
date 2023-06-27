@@ -45,7 +45,7 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
     const [anular_entrega_is_active, set_anular_entrega_is_active] = useState<boolean>(false);
     const [detalle_is_active, set_detalle_is_active] = useState<boolean>(false);
     const [fecha_despacho, set_fecha_despacho] = useState<string>("");
-    
+
     useEffect(() => {
         obtener_usuario();
         obtener_consecutivo_fc();
@@ -123,7 +123,7 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
 
     return (
         <>
-            <h1>Entrega de bienes de consumo a vivero</h1>
+            {/* <h1>Entrega de bienes de consumo a vivero</h1> */}
             <Grid
                 container
                 sx={{
@@ -360,64 +360,65 @@ export const EntregaBienesConsumoViveroScreen: React.FC = () => {
                                     {user_info.nombre}
                                 </Stack>
                             </Grid>
+                            <Grid item xs={12}>
+                                <Box
+                                    component="form"
+                                    sx={{ mt: '20px', mb: '20px' }}
+                                    noValidate
+                                    autoComplete="off"
+                                >
+                                    <Stack
+                                        direction="row"
+                                        justifyContent="flex-end"
+                                        spacing={2}
+                                        sx={{ mt: '20px' }}
+                                    >
+                                        <Button
+                                            color='primary'
+                                            variant='contained'
+                                            startIcon={<SaveIcon />}
+                                            onClick={detalle_entrega}
+                                        >
+                                            {actualizar_entrega ? 'Actualizar selección de bienes' : 'Selección de bienes'}
+                                        </Button>
+                                        {detalle_is_active && (<VistaDetalleEntregaBienes is_modal_active={detalle_is_active} set_is_modal_active={set_detalle_is_active} formulario_entrega={undefined}></VistaDetalleEntregaBienes>)}
+                                        <Button
+                                            color='secondary'
+                                            variant='contained'
+                                            startIcon={<SearchIcon />}
+                                            onClick={() => { set_buscar_entrega_is_active(true) }}
+                                        >
+                                            Consultar entrega
+                                        </Button>
+                                        {buscar_entrega_is_active && (<BuscarEntregasCRDComponent is_modal_active={buscar_entrega_is_active} set_is_modal_active={set_buscar_entrega_is_active} title={"Búsqueda de entregas"} set_entrega={set_entrega}></BuscarEntregasCRDComponent>)}
+                                        <Button
+                                            color='error'
+                                            variant='contained'
+                                            startIcon={<DeleteForeverIcon />}
+                                            onClick={() => { set_anular_entrega_is_active(true) }}
+                                            disabled={!actualizar_entrega}
+                                        >
+                                            Anular
+                                        </Button>
+                                        {anular_entrega_is_active && (<AnularEntregaComponent
+                                            is_modal_active={anular_entrega_is_active} set_is_modal_active={set_anular_entrega_is_active} title={"Anulación de entrega"}
+                                            user_info={user_info} id_entrega={numero_entrega}></AnularEntregaComponent>)}
+                                        <Button
+                                            color='error'
+                                            variant='contained'
+                                            startIcon={<ClearIcon />}
+                                            onClick={salir_entrega}
+                                        >
+                                            Cancelar
+                                        </Button>
+                                    </Stack>
+                                </Box>
+                            </Grid>
                         </Grid>
                     </Box>
                 </Grid>
             </Grid>
-            <Grid item xs={6}>
-                <Box
-                    component="form"
-                    sx={{ mt: '20px', mb: '20px' }}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <Stack
-                        direction="row"
-                        justifyContent="flex-end"
-                        spacing={2}
-                        sx={{ mt: '20px' }}
-                    >
-                        <Button
-                            color='primary'
-                            variant='contained'
-                            startIcon={<SaveIcon />}
-                            onClick={detalle_entrega}
-                        >
-                            {actualizar_entrega ? 'Actualizar selección de bienes' : 'Selección de bienes'}
-                        </Button>
-                        {detalle_is_active && (<VistaDetalleEntregaBienes is_modal_active={detalle_is_active} set_is_modal_active={set_detalle_is_active} formulario_entrega={undefined}></VistaDetalleEntregaBienes>)}
-                        <Button
-                            color='secondary'
-                            variant='contained'
-                            startIcon={<SearchIcon />}
-                            onClick={() => { set_buscar_entrega_is_active(true) }}
-                        >
-                            Consultar entrega
-                        </Button>
-                        {buscar_entrega_is_active && (<BuscarEntregasCRDComponent is_modal_active={buscar_entrega_is_active} set_is_modal_active={set_buscar_entrega_is_active} title={"Búsqueda de entregas"} set_entrega={set_entrega}></BuscarEntregasCRDComponent>)}
-                        <Button
-                            color='error'
-                            variant='contained'
-                            startIcon={<DeleteForeverIcon />}
-                            onClick={() => { set_anular_entrega_is_active(true) }}
-                            disabled={!actualizar_entrega}
-                        >
-                            Anular
-                        </Button>
-                        {anular_entrega_is_active && (<AnularEntregaComponent
-                            is_modal_active={anular_entrega_is_active} set_is_modal_active={set_anular_entrega_is_active} title={"Anulación de entrega"}
-                            user_info={user_info} id_entrega={numero_entrega}></AnularEntregaComponent>)}
-                        <Button
-                            color='error'
-                            variant='contained'
-                            startIcon={<ClearIcon />}
-                            onClick={salir_entrega}
-                        >
-                            Cancelar
-                        </Button>
-                    </Stack>
-                </Box>
-            </Grid>
+
         </>
     );
 };

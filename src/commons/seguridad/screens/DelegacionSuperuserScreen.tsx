@@ -134,7 +134,7 @@ export const DelegacionSuperuserScreen: React.FC = () => {
               container
               spacing={1}
               sx={{
-                justifyContent: 'center',
+                justifyContent: '-moz-initial',
               }}
             >
               <Grid item sx={{ display: 'flex'  }}>
