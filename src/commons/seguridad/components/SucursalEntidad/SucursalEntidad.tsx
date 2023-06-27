@@ -163,7 +163,6 @@ export const SucursalEntidad: React.FC = () => {
                                 <InputLabel>Municipio</InputLabel>
                                 <Select
                                     label="Municipio"
-
                                 >
                                     <MenuItem>
                                     </MenuItem>
@@ -210,6 +209,45 @@ export const SucursalEntidad: React.FC = () => {
                         <Grid item xs={12} sx={{ marginTop: "-20px" }} >
                             <Title title="Dirección de notificación nacional" />
                         </Grid>
+                   
+
+
+                        <Grid item xs={12} sm={4}>
+                            <FormControl   size='small' fullWidth>
+                                <InputLabel>Dpto</InputLabel>
+                                <Select
+                                    label="Dpto"
+
+                                >
+                                    <MenuItem>
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <FormControl   size='small' fullWidth>
+                                <InputLabel>Municipio</InputLabel>
+                                <Select
+                                    label="Municipio"
+
+                                >
+                                    <MenuItem>
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={4}   >
+                        <FormControlLabel control={<Checkbox />} label="Misma dirección física" />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField variant="outlined"
+                                size="small"
+                                style={{ marginBottom: '10px' }}
+                                label="Dirección    "
+                                fullWidth
+
+                            />
+                        </Grid> 
                         <Grid item xs={12} sm={4}>
                             <TextField variant="outlined"
                                 size="small"
@@ -218,19 +256,14 @@ export const SucursalEntidad: React.FC = () => {
                                 fullWidth
 
                             />
-                        </Grid> <Grid item xs={12} sm={4}>
-                            <TextField variant="outlined"
-                                size="small"
-                                style={{ marginBottom: '10px' }}
-                                label="Dirección geografica  "
-                                fullWidth
-
-                            />
                         </Grid>
-                        <Grid item xs={12} sm={4}   >
-                            <FormControlLabel control={<Checkbox defaultChecked />} label="Misma dirección física" />
+                        <Grid item xs={4}>
+                            <Button
+                                variant="contained"
+                            >
+                                Generar dirección
+                            </Button>
                         </Grid>
-
                     </Grid>
 
                     <Grid item xs={12} sm={6}>
@@ -264,7 +297,7 @@ export const SucursalEntidad: React.FC = () => {
                         <FormControl required size="small" fullWidth>
                             <InputLabel>Principal</InputLabel>
                             <Select
-                                label="Municipio"
+                                label="Principal"
                             >
                                 <MenuItem value="si">Sí</MenuItem>
                                 <MenuItem value="no">No</MenuItem>
@@ -275,7 +308,7 @@ export const SucursalEntidad: React.FC = () => {
                         <FormControl required size="small" fullWidth>
                             <InputLabel>Activo</InputLabel>
                             <Select
-                                label="Municipio"
+                                label="Activo"
                             >
                                 <MenuItem value="si">Sí</MenuItem>
                                 <MenuItem value="no">No</MenuItem>
@@ -287,33 +320,7 @@ export const SucursalEntidad: React.FC = () => {
                             <DataGrid rows={rows} columns={columns} />
                         </div>
                     </Grid>
-
-
                 </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </Grid>
         </>
     );
