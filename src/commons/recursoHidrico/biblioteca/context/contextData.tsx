@@ -19,6 +19,7 @@ import {
 
 interface UserContext {
   mode: string;
+  is_saving: boolean;
   is_register_seccion: boolean;
   is_editar_seccion: boolean;
   is_seleccionar_seccion: boolean;
@@ -32,6 +33,7 @@ interface UserContext {
   id_seccion: number | null;
   id_subseccion: number | null;
   set_mode: (value: string) => void;
+  set_is_saving: (value: boolean) => void;
   set_is_register_seccion: (value: boolean) => void;
   set_is_editar_seccion: (value: boolean) => void;
   set_is_seleccionar_seccion: (value: boolean) => void;
@@ -58,6 +60,7 @@ interface UserContext {
 
 export const DataContext = createContext<UserContext>({
   mode: '',
+  is_saving: false,
   is_register_seccion: false,
   is_editar_seccion: false,
   is_seleccionar_seccion: false,
@@ -89,6 +92,7 @@ export const DataContext = createContext<UserContext>({
   id_seccion: null,
   id_subseccion: null,
   set_mode: () => {},
+  set_is_saving: () => {},
   set_is_register_seccion: () => {},
   set_is_editar_seccion: () => {},
   set_is_seleccionar_seccion: () => {},
@@ -130,7 +134,7 @@ export const UserProvider = ({
     setError,
   } = useForm();
 
-  // const [is_saving, set_is_saving] = useState(false);
+  const [is_saving, set_is_saving] = React.useState(false);
 
   // rows
   const [rows_seccion, set_rows_seccion] = React.useState<Seccion[]>([]);
@@ -176,30 +180,30 @@ export const UserProvider = ({
       set_is_editar_subseccion(false);
       set_is_seleccionar_subseccion(false);
     } else if (mode === 'register_seccion') {
-      set_is_seleccionar_seccion(false);
       set_is_register_seccion(true);
+      set_is_seleccionar_seccion(false);
       set_is_editar_seccion(false);
       set_is_register_subseccion(false);
       set_is_editar_subseccion(false);
       set_is_seleccionar_subseccion(false);
     } else if (mode === 'editar_seccion') {
+      set_is_editar_seccion(true);
       set_is_seleccionar_seccion(false);
       set_is_register_seccion(false);
-      set_is_editar_seccion(true);
       set_is_register_subseccion(false);
       set_is_editar_subseccion(false);
       set_is_seleccionar_subseccion(false);
     } else if (mode === 'select_subseccion') {
+      set_is_seleccionar_subseccion(true);
       set_is_register_subseccion(false);
       set_is_editar_subseccion(false);
-      set_is_seleccionar_subseccion(true);
     } else if (mode === 'register_subseccion') {
       set_is_register_subseccion(true);
       set_is_editar_subseccion(false);
       set_is_seleccionar_subseccion(false);
     } else if (mode === 'editar_subseccion') {
-      set_is_register_subseccion(false);
       set_is_editar_subseccion(true);
+      set_is_register_subseccion(false);
       set_is_seleccionar_subseccion(false);
     }
   }, [mode]);
@@ -228,6 +232,7 @@ export const UserProvider = ({
 
   const value: UserContext = {
     mode,
+    is_saving,
     is_register_seccion,
     is_editar_seccion,
     is_seleccionar_seccion,
@@ -241,6 +246,7 @@ export const UserProvider = ({
     id_seccion,
     id_subseccion,
     set_mode,
+    set_is_saving,
     set_is_register_seccion,
     set_is_editar_seccion,
     set_is_seleccionar_seccion,

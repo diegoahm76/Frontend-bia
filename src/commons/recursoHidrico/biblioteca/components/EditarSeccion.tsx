@@ -47,7 +47,7 @@ export const EditarSeccion: React.FC = () => {
           {...register('nombre_seccion', { required: true })}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} sm={6}>
         <TextField
           label="Descripción sección"
           multiline

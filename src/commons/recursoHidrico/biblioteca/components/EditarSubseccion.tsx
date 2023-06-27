@@ -3,48 +3,23 @@
 import type React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import {
-  Button,
   Divider,
   Grid,
   TextField,
   Typography,
-  Stack,
-  IconButton,
-  Avatar,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import ChecklistIcon from '@mui/icons-material/Checklist';
 import { DataContext } from '../context/contextData';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import dayjs from 'dayjs';
-import { Title } from '../../../../components/Title';
 import { LoadingButton } from '@mui/lab';
-import { control_success } from '../../requets/Request';
-import { control_error } from '../../../../helpers';
-import { post_seccion_subscción } from '../request/request';
-import { EditarSeccion } from './EditarSeccion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SeccionSubseccionMain: React.FC = () => {
+export const EditarSubseccion: React.FC = () => {
   const {
     register,
-    handleSubmit: handle_submit,
     watch,
     reset,
     setValue: set_value,
-    errors,
-    rows_subseccion,
-    id_seccion,
-    id_subseccion,
-    info_seccion,
     info_subseccion,
-    is_editar_seccion,
-    fetch_data_subseccion_por_seccion,
-    fetch_data_seccion,
-    set_info_subseccion,
-    set_id_seccion,
-    set_id_subseccion,
-    set_mode,
   } = useContext(DataContext);
 
   // watch
@@ -94,7 +69,7 @@ export const SeccionSubseccionMain: React.FC = () => {
           InputLabelProps={{
             shrink: true,
           }}
-          value={current_date}
+          value={info_subseccion?.fechaCreacion}
           disabled
           fullWidth
           required
@@ -138,7 +113,7 @@ export const SeccionSubseccionMain: React.FC = () => {
             //   loading={is_saving}
             // startIcon={<SaveIcon />}
           >
-            Guardar
+            Actualizar
           </LoadingButton>
         </Grid>
       </Grid>
