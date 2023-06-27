@@ -1,4 +1,4 @@
-.title {
+.Liquidator-title {
    font-size: .8em;
    font-weight: bold;
    margin-left: 1.9em;
@@ -10,7 +10,7 @@
    justify-content: space-between;
 }
 
-.title span {
+.Liquidator-title span {
    background-color: rgba(198, 203, 208, 0.472);
    color: rgb(98, 88, 88);
    font-size: larger;
