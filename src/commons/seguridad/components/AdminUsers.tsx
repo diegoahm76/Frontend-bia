@@ -407,9 +407,9 @@ export const AdminUsers: React.FC = () => {
                         !check_user_is_active &&
                         errors_admin_users.activo_justificacion_cambio?.message
                       }
-                      {...register_admin_user('activo_justificacion_cambio', {
-                        required: 'Este campo es obligatorio',
-                      })}
+                      {...register_admin_user('activo_justificacion_cambio', 
+                      // { required: 'Este campo es obligatorio',}
+                        )}
                       onChange={handle_change}
                     />
                   </Grid>
@@ -460,7 +460,7 @@ export const AdminUsers: React.FC = () => {
                       }
                       {...register_admin_user(
                         'bloqueado_justificacion_cambio',
-                        { required: 'Este campo es obligatorio' }
+                        // { required: 'Este campo es obligatorio' }
                       )}
                       onChange={handle_change}
                     />
