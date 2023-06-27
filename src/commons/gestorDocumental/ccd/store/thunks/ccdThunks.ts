@@ -236,7 +236,7 @@ export const to_finished_ccds_service: any = (
 export const create_ccds_service: any = (
   ccd: any,
   set_save_ccd: (arg0: boolean) => void,
-  closeModalBusquedaCreacionCCD: any,
+  openModalBusquedaCreacionCCD: any,
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -246,7 +246,7 @@ export const create_ccds_service: any = (
       control_success(data.detail);
       console.log(data.detail, 'success');
       set_save_ccd(true);
-      closeModalBusquedaCreacionCCD();
+      openModalBusquedaCreacionCCD();
       return data;
     } catch (error: any) {
       console.log(error.response.data, 'error');
@@ -259,7 +259,7 @@ export const create_ccds_service: any = (
 export const update_ccds_service: any = (
   formData: any,
   data_create_ccd: any,
-  closeModalBusquedaCreacionCCD: any,
+  // closeModalBusquedaCreacionCCD: any,
 ) => {
   return async (dispatch: Dispatch<any>, getState: any): Promise<any> => {
     // console.log(data_create_ccd, 'ccd_current')
@@ -277,7 +277,7 @@ export const update_ccds_service: any = (
         get_ccd_current(data.data)
       );
       control_success(data.detail);
-      closeModalBusquedaCreacionCCD();
+      // closeModalBusquedaCreacionCCD();
       // return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

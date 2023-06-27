@@ -147,7 +147,9 @@ export const DatosAccesoScreen: React.FC = () => {
                     variant="outlined"
                     component="label"
                     startIcon={<CloudUploadIcon />}
-                    style={{ marginTop: '1rem', justifyContent: 'center' }}
+                    style={{
+                      marginTop: '1rem', justifyContent: 'center', width: '100%', height: '13%',
+                    }}
                     size='small'
                   >
                     {file_name !== ''
@@ -158,13 +160,24 @@ export const DatosAccesoScreen: React.FC = () => {
                       id="foto-peril"
                       type="file"
                       autoFocus
-                      style={{ opacity: 0 }}
+                      style={{
+                        opacity: 0,
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        cursor: 'pointer',
+                      }}
                       {...register('profile_img')}
                       inputProps={{ accept: 'image/*' }}
                       error={Boolean(errors.profile_img)}
                       onChange={handle_file_select}
                     />
                   </Button>
+
+
+
                 </div>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>

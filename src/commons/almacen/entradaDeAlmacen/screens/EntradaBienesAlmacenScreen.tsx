@@ -451,12 +451,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_valor_total_entrada(buscar_articulo.info_entrada.valor_total_entrada);
       set_fecha_entrada(dayjs(buscar_articulo.info_entrada.fecha_entrada));
       obtener_persona_fc(buscar_articulo.info_entrada.id_proveedor);
-      if(buscar_articulo.info_items_entrada.length > 0){
-        buscar_articulo.info_items_entrada.forEach((item: any) => {
-          
-        });
-        set_info_items(buscar_articulo.info_items_entrada);
-      }
+      set_info_items(buscar_articulo.info_items_entrada);
     }
   }, [buscar_articulo]);
 
