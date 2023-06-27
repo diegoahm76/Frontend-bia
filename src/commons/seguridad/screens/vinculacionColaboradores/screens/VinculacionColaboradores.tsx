@@ -13,7 +13,7 @@ import { control_error } from "../../../../../helpers";
 import { get_tipo_documento } from "../../../../../request";
 import { useNavigate } from "react-router-dom";
 import { BuscadorPersonaDialog } from "../../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/components/RegistroMantenimiento/RegistroMantenimientoGeneral/BuscadorPersonaDialog";
-import { obtener_persona, vincular_colaborador,  obtener_cargos, obtener_unidades_org, desvincular_colaborador, actualizar_vinculo } from "../Thunks/VinculacionColaboradores";
+import { obtener_persona, vincular_colaborador, obtener_cargos, obtener_unidades_org, desvincular_colaborador, actualizar_vinculo } from "../Thunks/VinculacionColaboradores";
 import CargoUnidadOrganizacionalComponent from "./CargoUnidadOrganizacional";
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import CreateIcon from '@mui/icons-material/Create';
@@ -100,7 +100,7 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
                 cargo: 0,
                 cargo_actual: persona_vinculacion_tkx.cargo_actual,
                 fecha_inicio: dayjs(persona_vinculacion_tkx.fecha_inicio_cargo_actual),
-                fecha_finaliza:dayjs(persona_vinculacion_tkx.fecha_a_finalizar_cargo_actual),
+                fecha_finaliza: dayjs(persona_vinculacion_tkx.fecha_a_finalizar_cargo_actual),
                 obs_vin_cargo: persona_vinculacion_tkx.observaciones_vinculacion_cargo_actual,
                 unidad_organizacional: 0,
                 unidad_org_desc: persona_vinculacion_tkx.unidad_organizacional_actual,
@@ -131,7 +131,7 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
 
     const obtener_cargos_fc = (): void => {
         dispatch(obtener_cargos()).then((response: { success: boolean, detail: string, data: any }) => {
-            if (response.success){
+            if (response.success) {
                 const data_filter = response.data.filter((rd: any) => rd.activo);
                 set_tipos_cargos(data_filter);
             }
@@ -188,8 +188,8 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
     }
 
     const guardar_vinculacion = (): void => {
-        if(vinculacion.desvincular === true){
-            dispatch(desvincular_colaborador(persona.id_persona,{observaciones_desvinculacion: persona_vinculacion.obs_desvincula })).then((response: any) => {
+        if (vinculacion.desvincular === true) {
+            dispatch(desvincular_colaborador(persona.id_persona, { observaciones_desvinculacion: persona_vinculacion.obs_desvincula })).then((response: any) => {
                 limpiar_formulario();
             });
             return
@@ -201,17 +201,17 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
             observaciones_vinculacion_cargo_actual: obs_vin_cargo,
             justificacion_cambio_und_org: persona_vinculacion.justificacion
         }
-        if(update_vinculo && vinculacion.desvincular === false){
-            dispatch(actualizar_vinculo(persona.id_persona,formulario)).then((response: any) => {
+        if (update_vinculo && vinculacion.desvincular === false) {
+            dispatch(actualizar_vinculo(persona.id_persona, formulario)).then((response: any) => {
                 limpiar_formulario();
             })
             return
         }
-        if(valida_formulario() && (persona.id_persona !== null && persona.id_persona !== undefined)){
-            dispatch(vincular_colaborador(persona.id_persona,formulario)).then((response: any) => {
+        if (valida_formulario() && (persona.id_persona !== null && persona.id_persona !== undefined)) {
+            dispatch(vincular_colaborador(persona.id_persona, formulario)).then((response: any) => {
                 limpiar_formulario();
             })
-        }   
+        }
     }
 
     const salir: () => void = () => {
@@ -220,34 +220,34 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
 
     const valida_formulario = (): boolean => {
         let validador = true;
-        if (cargo_actual === ""){
+        if (cargo_actual === "") {
             set_msj_error_cargo_actual("El campo Cargo es obligatorio.");
             validador = false;
         }
-        if (fecha_inicio === ""){
+        if (fecha_inicio === "") {
             set_msj_error_fecha_finaliza("El campo Fecha inicio es obligatorio.");
             validador = false;
         }
-        if (fecha_finaliza === ""){
+        if (fecha_finaliza === "") {
             set_msj_error_fecha_finaliza("El campo Fecha a finalizar es obligatorio.");
             validador = false;
         }
-        if (fecha_asig === ""){
+        if (fecha_asig === "") {
             set_msj_error_fecha_finaliza("El campo Fecha asignaciòn es obligatorio.");
             validador = false;
         }
-        if (obs_vin_cargo === ""){
+        if (obs_vin_cargo === "") {
             set_msj_error_obs_vin_cargo("El campo Observación de la vinculación al cargo es obligatorio.");
             validador = false;
         }
-        if (unidad_org === ""){
+        if (unidad_org === "") {
             set_msj_error_unidad_org("El campo Unidad orgranizacional nueva es obligatorio.");
             validador = false;
         }
         return validador;
     }
 
-    const limpiar_formulario = (): void =>{
+    const limpiar_formulario = (): void => {
         set_persona(null);
         set_tipo_documento("");
         set_msj_error_tdoc("");
@@ -274,7 +274,7 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
 
     return (
         <>
-            <h1>Registrar candidato a colaborador</h1>
+            {/* <h1>Registrar candidato a colaborador</h1> */}
             <Grid
                 container
                 sx={{
@@ -354,21 +354,21 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
                     <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                         <Grid item container spacing={2}>
                             <Grid item xs={12} sm={12}>
-                            <Stack
-            direction="row"
-            justifyContent="center"
-            spacing={2}
-            sx={{ mt: '20px' }}
-          >
-            <Button
-              color='primary'
-              variant='contained'
-              startIcon={<ManageSearchIcon />}
-              onClick={() => {}}
-            >
-              Ver vinculaciones anteriores
-            </Button>
-          </Stack>
+                                <Stack
+                                    direction="row"
+                                    justifyContent="center"
+                                    spacing={2}
+                                    sx={{ mt: '20px' }}
+                                >
+                                    <Button
+                                        color='primary'
+                                        variant='contained'
+                                        startIcon={<ManageSearchIcon />}
+                                        onClick={() => { }}
+                                    >
+                                        Ver vinculaciones anteriores
+                                    </Button>
+                                </Stack>
                             </Grid>
                         </Grid>
                     </Box>
@@ -473,12 +473,12 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
                                     Vincular
                                 </Button>
                                 {modal_vincular_persona && (<CargoUnidadOrganizacionalComponent is_modal_active={modal_vincular_persona}
-                                set_is_modal_active={set_modal_vincular_persona}
-                                title={"Asignar/Cambiar cargo y unidad organizacional"}
-                                persona_vinculacion={persona_vinculacion}
-                                vinculacion={set_vinculacion} 
-                                tipos_cargos={tipos_cargos} 
-                                lista_unidad_org={lista_unidad_org}></CargoUnidadOrganizacionalComponent>)}
+                                    set_is_modal_active={set_modal_vincular_persona}
+                                    title={"Asignar/Cambiar cargo y unidad organizacional"}
+                                    persona_vinculacion={persona_vinculacion}
+                                    vinculacion={set_vinculacion}
+                                    tipos_cargos={tipos_cargos}
+                                    lista_unidad_org={lista_unidad_org}></CargoUnidadOrganizacionalComponent>)}
                             </Grid>
                         </Grid>
                     </Box>
@@ -499,41 +499,49 @@ export const VinculacionColaboradoresScreen: React.FC = () => {
                                 {(msj_error_obs_vin_cargo !== "") && (<FormHelperText error >{msj_error_obs_vin_cargo}</FormHelperText>)}
                             </Grid>
                         </Grid>
+
+
+                    </Box>
+
+                </Grid> <Grid
+                container
+                justifyContent="flex-end">
+                <Grid item xs={6}>
+                    <Box
+                        component="form"
+                        sx={{ mt: '20px', mb: '20px' }}
+                        noValidate
+                        autoComplete="off"
+                    >
+                        <Stack
+                            direction="row"
+                            justifyContent="flex-end"
+                            spacing={2}
+                            sx={{ mt: '20px' }}
+                        >
+                            <Button
+                                color='primary'
+                                variant='contained'
+                                startIcon={<SaveIcon />}
+                                onClick={guardar_vinculacion}
+                            >
+                                {update_vinculo ? 'Actualizar' : 'Guardar'}
+                            </Button>
+                            <Button
+                                color='error'
+                                variant='contained'
+                                startIcon={<ClearIcon />}
+                                onClick={salir}
+                            >
+                                Salir
+                            </Button>
+                        </Stack>
                     </Box>
                 </Grid>
             </Grid>
-            <Grid item xs={6}>
-                <Box
-                    component="form"
-                    sx={{ mt: '20px', mb: '20px' }}
-                    noValidate
-                    autoComplete="off"
-                >
-                    <Stack
-                        direction="row"
-                        justifyContent="flex-end"
-                        spacing={2}
-                        sx={{ mt: '20px' }}
-                    >
-                        <Button
-                            color='primary'
-                            variant='contained'
-                            startIcon={<SaveIcon />}
-                            onClick={guardar_vinculacion}
-                        >
-                            {update_vinculo ? 'Actualizar' : 'Guardar'}
-                        </Button>
-                        <Button
-                            color='error'
-                            variant='contained'
-                            startIcon={<ClearIcon />}
-                            onClick={salir}
-                        >
-                            Salir
-                        </Button>
-                    </Stack>
-                </Box>
             </Grid>
+           
+
         </>
     );
 }

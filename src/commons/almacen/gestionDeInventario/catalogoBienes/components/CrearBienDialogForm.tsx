@@ -186,10 +186,11 @@ const CrearBienDialogForm = ({
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
             <Title title="Seleccione tipo de bien"></Title>
-            <Grid item xs={12} md={12} margin={1}>
+            <Grid item xs={12} md={2} margin={1}>
               <TextField
                 margin="dense"
                 select
+                fullWidth
                 size="small"
                 label="Tipo de bien"
                 variant="outlined"
@@ -203,7 +204,7 @@ const CrearBienDialogForm = ({
                 ))}
               </TextField>
             </Grid>
-            <Title title="INFORMACION DEL BIEN"></Title>
+            <Title title="Informacion del bien"></Title>
 
             <Grid item xs={12} md={2} margin={1}>
               <Controller

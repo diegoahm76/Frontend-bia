@@ -23,6 +23,7 @@ import type { AxiosError } from 'axios';
 import { control_success } from '../../../recursoHidrico/requets/Request';
 import { CustomSelect } from '../../../../components';
 import dayjs from 'dayjs';
+import { auth_url } from '../../api/auth';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DesbloqueodeUsuario: React.FC = () => {
@@ -42,7 +43,7 @@ export const DesbloqueodeUsuario: React.FC = () => {
     email: '',
     fecha_nacimiento: '',
     redirect_url:
-      'https://macareniafrontendevelopv2.netlify.app/#/auth/cambiar_contrasena?desbloquear=true',
+      `${auth_url}/auth/cambiar_contrasena?desbloquear=true`,
   });
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
   const [tipo_documento, set_tipo_documento] = useState('');

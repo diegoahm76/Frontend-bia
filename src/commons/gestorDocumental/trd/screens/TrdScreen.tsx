@@ -74,25 +74,6 @@ const rows = [
   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
 ];
 
-// const currencies = [
-//   {
-//     value: 'CCD1',
-//     label: 'CCD1',
-//   },
-//   {
-//     value: 'CCD2',
-//     label: 'CCD2',
-//   },
-//   {
-//     value: 'CCD3',
-//     label: 'CCD3',
-//   },
-//   {
-//     value: 'CCD4',
-//     label: 'CCD4',
-//   },
-// ];
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TrdScreen: React.FC = () => {
   return (

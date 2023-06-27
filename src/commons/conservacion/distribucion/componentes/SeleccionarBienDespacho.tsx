@@ -306,6 +306,7 @@ const SeleccionarBienDespacho = () => {
                 }
                 if ((data.cantidad_despachada??0) <= (current_bien.cantidad_disponible ?? 0))
                 {  
+                    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
                     if ((bien_selected.cod_tipo_elemento_vivero === "MV")?(asignada):(data.cantidad_despachada??0) <= (bien_selected.cantidad ?? 0))
                     {  
                         const new_bien: IObjBienDespacho = {

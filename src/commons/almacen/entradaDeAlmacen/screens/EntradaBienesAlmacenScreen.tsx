@@ -264,8 +264,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           id_item_entrada_almacen: null,
           id_entrada_almacen: numero_entrada,
           id_bien: articulo.id_bien,
-          codigo: articulo.codigo_bien,
-          nombre: articulo.nombre,
+          codigo_bien: articulo.codigo_bien,
+          nombre_bien: articulo.nombre,
           cantidad: 1,
           id_bodega: parseInt(bodega_detalle),
           numero_posicion: (prevArray.length + 1),
@@ -286,8 +286,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
         id_entrada_almacen: numero_entrada,
         id_bien: articulo.id_bien,
         id_unidad_medida_vida_util: null,
-        codigo: articulo.codigo_bien,
-        nombre: articulo.nombre,
+        codigo_bien: articulo.codigo_bien,
+        nombre_bien: articulo.nombre,
         cantidad: parseInt(cantidad),
         id_bodega: parseInt(bodega_detalle),
         numero_posicion: (info_items.length + 1),
@@ -443,22 +443,25 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   useEffect(() => {
     if(buscar_articulo !== null){
-      set_numero_entrada(buscar_articulo.numero_entrada_almacen);
-      set_tipo_entrada(buscar_articulo.id_tipo_entrada);
-      set_bodega_ingreso(buscar_articulo.id_bodega);
-      set_motivo(buscar_articulo.motivo);
-      set_observaciones(buscar_articulo.observacion);
-      set_valor_total_entrada(buscar_articulo.valor_total_entrada);
-      set_observaciones(buscar_articulo.observacion);
-      set_observaciones(buscar_articulo.observacion);
-      set_fecha_entrada(dayjs(buscar_articulo.fecha_entrada));
-      obtener_persona_fc(buscar_articulo.id_proveedor);
+      set_numero_entrada(buscar_articulo.info_entrada.numero_entrada_almacen);
+      set_tipo_entrada(buscar_articulo.info_entrada.id_tipo_entrada);
+      set_bodega_ingreso(buscar_articulo.info_entrada.id_bodega);
+      set_motivo(buscar_articulo.info_entrada.motivo);
+      set_observaciones(buscar_articulo.info_entrada.observacion);
+      set_valor_total_entrada(buscar_articulo.info_entrada.valor_total_entrada);
+      set_fecha_entrada(dayjs(buscar_articulo.info_entrada.fecha_entrada));
+      obtener_persona_fc(buscar_articulo.info_entrada.id_proveedor);
+      if(buscar_articulo.info_items_entrada.length > 0){
+        buscar_articulo.info_items_entrada.forEach((item: any) => {
+          
+        });
+        set_info_items(buscar_articulo.info_items_entrada);
+      }
     }
   }, [buscar_articulo]);
 
   return (
     <>
-      <h1>Entrada de bienes de Almacen</h1>
       <Grid
         container
         sx={{
@@ -470,8 +473,9 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+      {/* <h1>Entrada de bienes de Almacen</h1> */}
         <Grid item md={12} xs={12}>
-          <Title title="Entrada" />
+          <Title title="Entrada de bienes de Almacen" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={4}>
@@ -483,6 +487,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   value={numero_entrada}
                   InputProps={{
                     readOnly: true,
+                  }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
                   }}
                 />
               </Grid>
@@ -572,7 +580,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
         <Grid item md={12} xs={12}>
           <Title title="Proveedor" />
           <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
-            <Grid item container spacing={2}>
+            <Grid item container spacing={3}>
               <Grid item xs={12} sm={3}>
                 <FormControl required size='small' fullWidth>
                   <InputLabel>Tipo de documento</InputLabel>
@@ -581,6 +589,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     label="Tipo de documento"
                     onChange={cambio_tipo_documento}
                     error={msj_error_tdoc !== ""}
+                     disabled
+                            
                   >
                     {tipos_documentos.map((tipos: any) => (
                       <MenuItem key={tipos.value} value={tipos.value}>
@@ -599,10 +609,14 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   fullWidth
                   value={proveedor.numero_documento ?? ""}
                   error={msj_error_proveedor !== ""}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
                 />
                 {(msj_error_proveedor !== "") && (<FormHelperText error >El campo Numero documento es obligatorio.</FormHelperText>)}
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
                 <TextField
                   label="Nombre proveedor"
                   type={'text'}
@@ -610,10 +624,14 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   fullWidth
                   value={proveedor.nombre_completo ?? ""}
                   error={msj_error_proveedor !== ""}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
                 />
                 {(msj_error_proveedor !== "") && (<FormHelperText error >{msj_error_proveedor}</FormHelperText>)}
               </Grid>
-              <Grid item xs={12} sm={2}>
+              <Grid item xs={12} sm={3}>
                 <Button
                   color='primary'
                   variant='contained'
@@ -633,7 +651,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
             </Grid>
 
           </Box>
-          <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
+          <Box component="form" sx={{ mt: '20px', }} noValidate autoComplete="off">
             <Grid item container spacing={2}>
               <Grid item xs={12} sm={4}>
                 <FormControl required size='small' fullWidth>
@@ -661,12 +679,16 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
                 />
               </Grid>
-              <Grid item xs={12} sm={2}>
+              <Grid item xs={12} sm={1.4}>
                 <div {...getRootProps()}>
                   <input {...getInputProps()} />
-                  <Button
+                  <Button sx={{ width: "auto"}}
                     color='primary'
                     variant='contained'
                     startIcon={<AttachFileIcon />}
@@ -675,7 +697,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   </Button>
                 </div>
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={4.4}>
                 <TextField
                   label="Elaborado por"
                   type={'text'}
@@ -685,6 +707,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  disabled
                 />
               </Grid>
             </Grid>
@@ -728,6 +751,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   error={msj_error_articulo !== ""}
                   InputProps={{
                     readOnly: true,
+                  }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
                   }}
                 />
                 {(msj_error_articulo !== "") && (<FormHelperText error >{msj_error_articulo}</FormHelperText>)}
@@ -785,6 +812,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     label="% Iva"
                     onChange={cambio_iva}
                     error={msj_error_iva !== ""}
+                    
                   >
                     {porcentaje_iva.map((bg: any) => (
                       <MenuItem key={bg.id_porcentaje_iva} value={bg.id_porcentaje_iva}>
@@ -805,6 +833,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   InputProps={{
                     readOnly: true,
                   }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
+                  }}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -816,6 +848,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   value={valor_total_item}
                   InputProps={{
                     readOnly: true,
+                  }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
                   }}
                 />
               </Grid>
@@ -850,6 +886,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   value={valor_total_entrada}
                   InputProps={{
                     readOnly: true,
+                  }}
+                  disabled
+                  InputLabelProps={{
+                      shrink: true,
                   }}
                 />
               </Grid>
@@ -906,12 +946,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     rowsPerPageOptions={[5, 10, 25, 50]}
                   >
                     <Column
-                      field="codigo"
+                      field="codigo_bien"
                       header="Código"
                       style={{ width: '20%' }}
                     ></Column>
                     <Column
-                      field="nombre"
+                      field="nombre_bien"
                       header="Nombre"
                       style={{ width: '40%' }}
                     ></Column>
@@ -935,81 +975,85 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           </Box>
 
         </Grid>
+    <Grid container justifyContent="flex-end">
 
-      </Grid>
-      <Grid item xs={6}>
-        <Box
-          component="form"
-          sx={{ mt: '20px', mb: '20px' }}
-          noValidate
-          autoComplete="off"
-        >
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mt: '20px' }}
+
+        <Grid item xs={7}>
+          <Box
+            component="form"
+            sx={{ mt: '20px', mb: '20px' }}
+            noValidate
+            autoComplete="off"
           >
-            <Button
-              color='primary'
-              variant='contained'
-              startIcon={<SaveIcon />}
-              onClick={guardar_entrada}
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mt: '20px' }}
             >
-              {entrada_update ? 'Actualizar' : 'Guardar' } 
-            </Button>
-            <Button
-              color='error'
-              variant='contained'
-              startIcon={<DeleteForeverIcon />}
-              onClick={() => { set_anular_entrada_is_active(true) }}
-              disabled={!entrada_update}
-            >
-              Anular
-            </Button>
-            {anular_entrada_is_active && (<AnularEntradaComponent is_modal_active={anular_entrada_is_active}
-              set_is_modal_active={set_anular_entrada_is_active}
-              title={"Anular entrada"} user_info={user_info} id_entrada={buscar_articulo.id_entrada_almacen}></AnularEntradaComponent>)}
-            <Button
-              color='inherit'
-              variant="contained"
-              startIcon={<CleanIcon />}
-              onClick={limpiar_formulario}
-            >
-              Limpiar
-            </Button>
-            <Button
-              color='secondary'
-              variant='contained'
-              startIcon={<SearchIcon />}
-              onClick={() => { set_buscar_entrada_is_active(true) }}
-            >
-              Buscar
-            </Button>
-            {buscar_entrada_is_active && (<BuscarEntradasComponent is_modal_active={buscar_entrada_is_active}
-            set_is_modal_active={set_buscar_entrada_is_active}
-            title={"Buscar entrada"} 
-            tipos_entrada={tipos_entrada} 
-            set_articulo={set_buscar_articulo}></BuscarEntradasComponent>)}
-            <Button
-              color='secondary'
-              variant='contained'
-              startIcon={<PrintIcon />}
-              onClick={() => { window.print() }}
-            >
-              Imprimir
-            </Button>
-            <Button
-              color='error'
-              variant='contained'
-              startIcon={<ClearIcon />}
-              onClick={salir_entrada}
-            >
-              Salir
-            </Button>
-          </Stack>
-        </Box>
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<SaveIcon />}
+                onClick={guardar_entrada}
+              >
+                {entrada_update ? 'Actualizar' : 'Guardar'}
+              </Button>
+              <Button
+                color='error'
+                variant='contained'
+                startIcon={<DeleteForeverIcon />}
+                onClick={() => { set_anular_entrada_is_active(true) }}
+                disabled={!entrada_update}
+              >
+                Anular
+              </Button>
+              {anular_entrada_is_active && (<AnularEntradaComponent is_modal_active={anular_entrada_is_active}
+                set_is_modal_active={set_anular_entrada_is_active}
+                title={"Anular entrada"} user_info={user_info} id_entrada={buscar_articulo.id_entrada_almacen}></AnularEntradaComponent>)}
+              <Button
+                color='inherit'
+                variant="contained"
+                startIcon={<CleanIcon />}
+                onClick={limpiar_formulario}
+              >
+                Limpiar
+              </Button>
+              <Button
+                color='secondary'
+                variant='contained'
+                startIcon={<SearchIcon />}
+                onClick={() => { set_buscar_entrada_is_active(true) }}
+              >
+                Buscar
+              </Button>
+              {buscar_entrada_is_active && (<BuscarEntradasComponent is_modal_active={buscar_entrada_is_active}
+                set_is_modal_active={set_buscar_entrada_is_active}
+                title={"Buscar entrada"}
+                tipos_entrada={tipos_entrada}
+                set_articulo={set_buscar_articulo}></BuscarEntradasComponent>)}
+              <Button
+                color='secondary'
+                variant='contained'
+                startIcon={<PrintIcon />}
+                onClick={() => { window.print() }}
+              >
+                Imprimir
+              </Button>
+              <Button
+                color='error'
+                variant='contained'
+                startIcon={<ClearIcon />}
+                onClick={salir_entrada}
+              >
+                Salir
+              </Button>
+            </Stack>
+          </Box>
+        </Grid>
       </Grid>
+      </Grid>
+  
     </>
   );
 }

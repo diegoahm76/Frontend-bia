@@ -380,8 +380,8 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           {conten_drawer}
         </Drawer>
       </Box>
-      <Box
-        sx={{
+      <Box sx={{
+      
           width: '100vw',
           height: '100%',
           ml: { sm: desktop_open ? `${drawer_width}px` : '0px' },
@@ -395,10 +395,11 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             mt: '64px',
             minHeight: '100vh',
             height: '-webkit-fill-available',
+           
           }}
         >
           <Outlet />
-        </Box>
+        </Box> 
         {userinfo.tipo_usuario === 'E' && <FooterGov />}
       </Box>
     </>

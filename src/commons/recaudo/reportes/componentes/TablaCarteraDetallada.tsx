@@ -25,7 +25,7 @@ export const TablaCarteraDetallada: React.FC = () => {
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
   const [total, set_total] = useState(0);
-  const [values, set_values] = useState([])
+  const [values, set_values] = useState([]);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 

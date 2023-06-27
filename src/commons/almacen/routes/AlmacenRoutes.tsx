@@ -23,7 +23,8 @@ import RechazoSolicitudScreen from "../registroSolicitudesAlmacen/despacho/scree
 export const AlmacenRoutes: React.FC = () => {
   return (
     <Routes>
-      <Route path="configuracion/*" element={<ConfiguracionRoutes />} />
+      <Route path="configuracion/*" element={<ConfiguracionRoutes />}
+      />
       <Route
         path="entrada_salida_articulos/*"
         element={<EntradaysalidArticulosRoutes />}

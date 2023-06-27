@@ -132,6 +132,7 @@ const AprobacionSolicitudCoordinadorScreen = () => {
         p: '20px',
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
+        marginTop:"20px"
 
       }}
     >
