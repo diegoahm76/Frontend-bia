@@ -51,7 +51,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     },
     {
       field: 'nombre_cientifico',
-      headerName: 'Nombre cientifico',
+      headerName: 'Nombre científico',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -62,7 +62,7 @@ export function TipificacionBienesScreen(): JSX.Element {
     },
     {
       field: 'cod_tipo_elemento_vivero',
-      headerName: 'Tipo elemento',
+      headerName: 'Tipo de elemento',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -166,7 +166,7 @@ export function TipificacionBienesScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Tipificación de bienes de vivero"></Title>
+          <Title title="Tipificación de bienes de los viveros"></Title>
           <Grid item mt={2}>
             <Box sx={{ width: '100%' }}>
               <DataGrid
