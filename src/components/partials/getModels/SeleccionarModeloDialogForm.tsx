@@ -25,6 +25,8 @@ import { v4 as uuid } from 'uuid';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
+import ImageUploader from '../form/ImageUploader';
+
 interface IProps {
     set_models: any;
     form_filters: any[];
@@ -141,6 +143,15 @@ const SeleccionarModeloDialogForm = ({
                 min_date={form_input.min_date ?? ""}
                 max_date={form_input.max_date ?? ""}
                 format={form_input.max_date ?? null}
+            />;
+        } else if(form_input.datum_type === "image_uploader"){
+            return <ImageUploader
+                xs={form_input.xs}
+                md={form_input.md}
+                margin={form_input.margin}
+                selected_image={form_input.selected_imagen}
+                width_image={form_input.width_image}
+                height_image={form_input.height_image}
             />;
         }
     }
