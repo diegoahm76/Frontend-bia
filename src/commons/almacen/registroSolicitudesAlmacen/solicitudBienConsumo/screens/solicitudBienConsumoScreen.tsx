@@ -89,7 +89,9 @@ const SolicitudConsumoScreen = () => {
                     nro_posicion: index,
                 })),
             }
-            void dispatch(editar_solicitud(current_solicitud.id_solicitud_consumibles, data_aux))
+            console.log(data_aux)
+            void dispatch(editar_solicitud(data_aux))
+
         } else {
             set_action("crear")
             const data_aux = {

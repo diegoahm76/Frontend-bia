@@ -107,14 +107,14 @@ export const crear_solicitud_bien_consumo: any = (
 
 // EDITAR SOLICITUD
 export const editar_solicitud: any = (
-    id: number,
+
     solicitud: any,
     // bienes: any
 ) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             console.log(solicitud)
-            const { data } = await api.put(`almacen/solicitudes/crear-solicitud-bienes-de-consumo/${id}/`, solicitud);
+            const { data } = await api.put(`almacen/solicitudes/crear-solicitud-bienes-de-consumo/`, solicitud);
             // await api.patch(`conservacion/solicitudes/update-items-solicitud/${id}/`, bienes);
             //  dispatch(get_solicitud_consumo_id());
             console.log(data)

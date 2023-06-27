@@ -1,34 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useEffect, } from 'react';
 import "react-datepicker/dist/react-datepicker.css";
-import { Button, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import FormButton from "../../../../../components/partials/form/FormButton";
 import CloseIcon from '@mui/icons-material/Close';
-import SendIcon from '@mui/icons-material/Send';
-import { type IObjSolicitud } from "../interfaces/solicitudBienConsumo";
+import { type IObjSolicitud } from "../../solicitudBienConsumo/interfaces/solicitudBienConsumo";
 import { type AuthSlice } from '../../../../auth/interfaces';
 import { useForm } from 'react-hook-form';
 
 import SaveIcon from '@mui/icons-material/Save';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service, get_bienes_solicitud } from '../store/solicitudBienConsumoThunks';
-import SeleccionarSolicitudDespacho from '../components/DespachoRechazoSolicitud/SeleccionarSolicitudesDespacho';
-import RechazoSolicitud from '../components/DespachoRechazoSolicitud/RechazarSolicitud';
-import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
-import FuncionarioRechazo from '../components/DespachoRechazoSolicitud/PersonaRechazoSolicitud';
-import BienRechazado from '../components/DespachoRechazoSolicitud/BienesRechazo';
-import { useNavigate } from 'react-router-dom';
+import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service, get_bienes_solicitud } from '../../solicitudBienConsumo/store/solicitudBienConsumoThunks';
+import SeleccionarSolicitudDespacho from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/SeleccionarSolicitudesDespacho';
+import RechazoSolicitud from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/RechazarSolicitud';
+import { set_current_solicitud, set_persona_solicita } from '../../solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
+import FuncionarioRechazo from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/PersonaRechazoSolicitud';
+import BienRechazado from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/BienesRechazo';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const DespachoBienesConsumoScreen = () => {
+const RechazoSolicitudScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud_despacho, handleSubmit: handle_submit, reset: reset_solicitud_aprobacion, getValues: get_values } = useForm<IObjSolicitud>();
-    const [action] = useState<string>("Despachar");
-    const navigate = useNavigate();
     const { current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
-    const [show_rechazo_solicitud, set_show_rechazo_solicitud] = useState(false);
-    const [show_buttons, set_show_buttons] = useState(true);
+
 
 
     const dispatch = useAppDispatch();
@@ -68,11 +63,8 @@ const DespachoBienesConsumoScreen = () => {
         dispatch(set_current_solicitud({ ...current_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional }));
     }, [persona_solicita]);
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const handle_rechazo_solicitud = () => {
-        set_show_rechazo_solicitud(!show_rechazo_solicitud);
-        set_show_buttons(false);
-    };
+
+
 
     const on_submit_despacho = (data: IObjSolicitud): void => {
         const form_data = {
@@ -110,63 +102,44 @@ const DespachoBienesConsumoScreen = () => {
                 <BienRechazado />
 
 
-                {show_rechazo_solicitud &&
 
-                    <RechazoSolicitud
-                        title={"Rechazo de solicitud"}
-                        control_solicitud_despacho={control_solicitud_despacho} get_values={get_values} />}
+
+                <RechazoSolicitud
+                    title={"Rechazo de solicitud"}
+                    control_solicitud_despacho={control_solicitud_despacho} get_values={get_values} />
             </Grid>
 
-            <Grid container direction="row" padding={2} spacing={2}>
-                {show_buttons && (
-                    <>
-                        <Grid item xs={8} md={3}>
-                            <FormButton
-                                variant_button="contained"
-                                on_click_function={() => { navigate("/app/almacen/solicitud_consumo") }}
-                                icon_class={<SendIcon />}
-                                label={action}
-                                type_button="submit"
-                            />
-                        </Grid>
-                        <Grid item xs={8} md={3}>
-                            <Button variant="outlined" onClick={handle_rechazo_solicitud}>
-                                RECHAZO DE SOLICITUD
-                            </Button>
-                        </Grid>
-                    </>
-                )}
-            </Grid>
-
-            {!show_buttons && (
-                <>
-                    <Grid item xs={6} md={2}>
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={handle_submit(on_submit_despacho)}
-                            icon_class={<SaveIcon />}
-                            label="Guardar"
-                            type_button="button" />
-                    </Grid>
-
-                    <Grid item xs={6} md={2}>
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={reset_solicitud_aprobacion}
-                            icon_class={<CloseIcon />}
-                            label="Cerrar"
-                            type_button="button" />
 
 
 
-                    </Grid>
+            <>
+                <Grid item xs={6} md={2}>
+                    <FormButton
+                        variant_button="contained"
+                        on_click_function={handle_submit(on_submit_despacho)}
+                        icon_class={<SaveIcon />}
+                        label="Guardar"
+                        type_button="button" />
+                </Grid>
 
-                </>
+                <Grid item xs={6} md={2}>
+                    <FormButton
+                        variant_button="contained"
+                        on_click_function={reset_solicitud_aprobacion}
+                        icon_class={<CloseIcon />}
+                        label="Cerrar"
+                        type_button="button" />
 
-            )}
+
+
+                </Grid>
+
+            </>
+
+
         </Grid>
     );
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default DespachoBienesConsumoScreen;
+export default RechazoSolicitudScreen;

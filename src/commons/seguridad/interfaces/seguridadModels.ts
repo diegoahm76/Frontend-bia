@@ -149,9 +149,9 @@ export interface AdminUserHook {
   tipo_persona_opt: IList[];
   tipo_usuario_opt: IList[];
   tipo_usuario: string;
-  activo: string;
+  activo: boolean;
   activo_opt: IList[];
-  bloqueado: string;
+  bloqueado: boolean;
   bloqueado_opt: IList[];
   roles: IList2[];
   roles_opt: IList2[];
@@ -177,7 +177,9 @@ export interface AdminUserHook {
   set_tipo_persona: Dispatch<SetStateAction<string>>;
   set_data_disponible: Dispatch<SetStateAction<boolean>>;
   set_loading_inputs: Dispatch<SetStateAction<boolean>>;
+  set_numero_documento: Dispatch<SetStateAction<string>>;
   reset_admin_user: UseFormReset<DataAadminUser>;
+  clean_user_info: () => void;
 }
 
 export interface EstadoCivil {
