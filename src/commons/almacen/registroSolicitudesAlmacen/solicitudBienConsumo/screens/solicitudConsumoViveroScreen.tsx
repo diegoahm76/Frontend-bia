@@ -8,7 +8,7 @@ import type { AuthSlice } from '../../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_num_solicitud_vivero, get_uni_organizacional, get_medida_service, anular_solicitud_service, crear_solicitud_bien_consumo_vivero, get_person_id_service, get_funcionario_id_service } from '../store/solicitudBienConsumoThunks';
+import { get_num_solicitud_vivero, get_uni_organizacional, get_medida_service, anular_solicitud_service, crear_solicitud_bien_consumo_vivero, get_person_id_service, get_funcionario_id_service, get_bienes_solicitud, editar_solicitud } from '../store/solicitudBienConsumoThunks';
 import CloseIcon from '@mui/icons-material/Close';
 
 
@@ -17,7 +17,6 @@ import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularS
 import SeleccionarSolicitudVivero from '../components/componenteBusqueda/SeleccionarSolicitudVivero';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
-import { Title } from '../../../../../components/Title';
 // import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
 
 
@@ -27,7 +26,7 @@ const SolicitudConsumoViveroScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud_vivero, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values } = useForm<IObjSolicitudVivero>();
     const { nro_solicitud_vivero, current_solicitud_vivero, persona_solicita, bienes_solicitud, current_funcionario } = useAppSelector((state) => state.solic_consumo);
-    const [action] = useState<string>("Crear solicitud Vivero");
+    const [action, set_action] = useState<string>("Crear solicitud Vivero");
     const [anular, set_anular] = useState<string>("Anular");
     const [anular_solicitud, set_anular_solicitud] =
         useState<boolean>(false);
@@ -55,7 +54,10 @@ const SolicitudConsumoViveroScreen = () => {
                 void dispatch(get_person_id_service(current_solicitud_vivero.id_persona_solicita))
 
         }
-        if (current_solicitud_vivero.id_solicitud_consumibles !== null) {
+        if (current_solicitud_vivero.id_solicitud_consumibles !== null && current_solicitud_vivero.id_solicitud_consumibles !== undefined) {
+            set_action("editar")
+            void dispatch(get_bienes_solicitud(current_solicitud_vivero.id_solicitud_consumibles))
+
             if (current_solicitud_vivero.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
                 void dispatch(get_funcionario_id_service(current_solicitud_vivero.id_funcionario_responsable_unidad))
                 console.log("ok")
@@ -78,19 +80,34 @@ const SolicitudConsumoViveroScreen = () => {
 
     }, [current_funcionario]);
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
     const on_submit = (data: IObjSolicitudVivero) => {
+        if (current_solicitud_vivero.id_solicitud_consumibles !== null && current_solicitud_vivero.id_solicitud_consumibles !== undefined) {
+            set_action("editar")
 
-        const data_aux = {
-            info_solicitud: { ...data, fecha_anulacion_solicitante: null },
-            items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
-                ...item,
-                nro_posicion: index,
-            })),
+            const data_aux = {
+                info_solicitud: { ...data, fecha_anulacion_solicitante: null },
+                items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
+                    ...item,
+                    nro_posicion: index,
+                })),
+            }
+
+
+            void dispatch(editar_solicitud(data_aux))
+        } else {
+            set_action("crear")
+            const data_aux = {
+                info_solicitud: { ...data, fecha_anulacion_solicitante: null },
+                items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
+                    ...item,
+                    nro_posicion: index,
+                })),
+            }
+            void dispatch(crear_solicitud_bien_consumo_vivero(data_aux));
         }
-
-        void dispatch(crear_solicitud_bien_consumo_vivero(data_aux));
-    };
+    }
     const on_submit_anular = (data: IObjSolicitudVivero): void => {
 
         const form_data = {
@@ -117,12 +134,12 @@ const SolicitudConsumoViveroScreen = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
-                top:"30px",
+                top: "30px",
                 boxShadow: '0px 3px 6px #042F4A26',
 
             }}
         >
-            <Title title="Solicitud de consumo para vivero"></Title>
+
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitudVivero
                     control_solicitud_vivero={control_solicitud_vivero}
@@ -197,8 +214,10 @@ const SolicitudConsumoViveroScreen = () => {
 
 
 
+
+
 };
 
 
 // eslint-disable-next-line no-restricted-syntax
-export default SolicitudConsumoViveroScreen;
+export default SolicitudConsumoViveroScreen; 

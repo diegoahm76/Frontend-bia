@@ -47,12 +47,6 @@ export const SeleccionarPrograma: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'id_proyecto',
-      headerName: 'No Proyecto',
-      sortable: true,
-      width: 120,
-    },
-    {
       field: 'nombre',
       headerName: 'NOMBRE',
       sortable: true,
