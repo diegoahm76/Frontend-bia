@@ -6,7 +6,6 @@ import {
   Avatar,
   Box,
   Button,
-  Fab,
   FormControl,
   Grid,
   IconButton,
@@ -16,42 +15,45 @@ import {
   Stack,
   TextField,
   InputLabel,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody
+  Modal,
   // TextareaAutosize
 } from "@mui/material"
-import DeleteIcon from '@mui/icons-material/Delete';
-import { Title } from "../../../components"
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { Title } from "../../../components";
 import { useEffect, useRef, useState } from 'react';
-import FindInPageIcon from '@mui/icons-material/FindInPage';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
 import { javascriptGenerator } from 'blockly/javascript';
 import { VisualBlockEditor } from "../components/visual-block-editor";
 import { TransitionAlerts } from "../components/alert";
-import { Modal } from "@material-ui/core";
 import { Liquidator } from "../components/liquidador/liquidator";
-import './LiquidacionScreen.css'
 import { PruebasLiquidacionModal } from "../components/constructorLiquidador/modal/PruebasLiquidacionModal";
 import type { OpcionLiquidacion } from "../interfaces/liquidacion";
-import { Add, AddCircleOutlineRounded, Build, Save, Science } from "@mui/icons-material";
 import { api } from "../../../api/axios";
+import { Add, Build, Save } from "@mui/icons-material";
+import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
+import './LiquidacionScreen.css';
 
 interface Rows {
   id: number;
   nombre: string;
 }
 
+const initial_rows = [
+  {
+    id: 1,
+    nombre: 'variable1',
+  },
+  {
+    id: 2,
+    nombre: 'variable2',
+  }
+]
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionScreen: React.FC = () => {
   const [opciones_liquidaciones, set_opciones_liquidaciones] = useState<OpcionLiquidacion[]>([]);
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState('');
-  const [row, set_row] = useState<Rows[]>([]);
-  const [variables, set_variables] = useState<string[]>([]);
+  const [row, set_row] = useState<Rows[]>(initial_rows);
+  const [variables, set_variables] = useState<string[]>(["variable1", "variable2"]);
   const [formData, setFormData] = useState({ variable: '', nombre_liquidacion: '' });
   const [configNotify, setConfigNotify] = useState({ open: false, message: '' });
   const [open, setOpen] = useState(false);
@@ -84,64 +86,6 @@ export const LiquidacionScreen: React.FC = () => {
   const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
     set_id_opcion_liquidacion(event.target.value);
   };
-
-  const column: GridColDef[] = [
-    {
-      field: 'nombre',
-      headerName: 'Nombre',
-      width: 200
-    },
-    {
-      field: 'acciones',
-      headerName: 'Acciones',
-      width: 100,
-      renderCell: (params) => (
-        <>
-          <IconButton
-            onClick={() => {
-              const updatedRow = row.filter((item) => item.id !== params.id);
-              set_row(updatedRow);
-              removeVariable(params.row.nombre)
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <RemoveCircleOutlinedIcon
-                color="error"
-                sx={{ width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </>
-      ),
-    },
-  ]
-
-  const rowTest = [
-    {
-      id: 1,
-      nombre: 'volprom',
-
-    },
-    {
-      id: 2,
-      nombre: 'rural',
-    },
-    {
-      id: 3,
-      nombre: 'estrato',
-    },
-  ]
-
-  // TEST
-
 
   const setNotifications = (notification: any) => {
     setConfigNotify(notification);
@@ -196,13 +140,13 @@ export const LiquidacionScreen: React.FC = () => {
     }));
 
     set_variables([
-      ...Array.from(new Set([...variables, formData.variable]))
+      ...Array.from(new Set([...variables, formData.variable.replace(/\s/g, '_')]))
     ]);
 
     const newRow = {
       id: row.length + 1,
       parametros: formData.nombre_liquidacion,
-      nombre: formData.variable,
+      nombre: formData.variable.replace(/\s/g, '_'),
       tipo: 'Tipo nuevo',
       opciones: '',
     };
@@ -254,6 +198,45 @@ export const LiquidacionScreen: React.FC = () => {
         console.log(error);
       });
   }
+
+  const column: GridColDef[] = [
+    {
+      field: 'nombre',
+      headerName: 'Nombre',
+      width: 200
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      width: 100,
+      renderCell: (params) => (
+        <>
+          <IconButton
+            onClick={() => {
+              const updatedRow = row.filter((item) => item.id !== params.id);
+              set_row(updatedRow);
+              removeVariable(params.row.nombre)
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid',
+              }}
+              variant="rounded"
+            >
+              <RemoveCircleOutlinedIcon
+                color="error"
+                sx={{ width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -405,10 +388,6 @@ export const LiquidacionScreen: React.FC = () => {
           </Stack>
         </Grid>
       </Grid>
-      {/* <AddParametroModal
-        is_modal_active={add_parametro}
-        set_is_modal_active={set_add_parametro}
-      /> */}
       <PruebasLiquidacionModal
         is_modal_active={modal_pruebas}
         set_is_modal_active={set_modal_pruebas}
@@ -421,6 +400,7 @@ export const LiquidacionScreen: React.FC = () => {
               variables={variables}
               generateCode={generateCode}
               preview
+              handle_close={setOpen}
             />
           </div>
         </Modal>
