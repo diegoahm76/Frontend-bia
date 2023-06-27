@@ -2,10 +2,11 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState, useEffect } from 'react';
-import { TextField, Button, Select, MenuItem } from '@material-ui/core';
-import './liquidator.css';
 import { LiquidatorService } from './liquidator.api';
 import { modifyVariableInitValue } from '../visual-block-editor/utils';
+import { Button, MenuItem, Select, Stack, TextField } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import './liquidator.css';
 
 function Liquidator(props) {
   const [formData, setFormData] = useState(
@@ -62,7 +63,7 @@ function Liquidator(props) {
      * set default values for variables
      */
     localVariables.forEach((v) => {
-      endCode= modifyVariableInitValue(endCode, v,initilState[v]);
+      endCode = modifyVariableInitValue(endCode, v, initilState[v]);
     });
     console.log(endCode);
 
@@ -89,60 +90,74 @@ function Liquidator(props) {
   };
 
   return (
-    <div className="App">
-      <header className="title">
+    <div className="Liquidator-wrapper">
+      <header className="Liquidator-title">
         <h3>Prueba Liquidador</h3>
         <div>Resultado: {textValue && <span>{textValue}</span>}</div>
       </header>
-      <div className="split">
-        <div className="left">
-          <form onSubmit={handleSubmit}>
-            {!props.preview && (
-              <Select
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                placeholder="Seleccione liquidador"
-                name="liquidador"
-                label="Liquidador a usar"
-                onChange={onChange}
-              >
-                {liquidaciones.map((liquidacion, i) => {
-                  return (
-                    <MenuItem
-                      key={liquidacion.id}
-                      value={liquidacion.id}
-                      selected={i === 0}
-                    >
-                      {liquidacion.descripcion}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            )}
-            {(isVisible || props.preview) &&
-              localVariables?.map((variable) => {
+      <div>
+        <form onSubmit={handleSubmit}>
+          {!props.preview && (
+            <Select
+              variant="outlined"
+              margin="normal"
+              fullWidth
+              placeholder="Seleccione liquidador"
+              name="liquidador"
+              label="Liquidador a usar"
+              onChange={onChange}
+            >
+              {liquidaciones.map((liquidacion, i) => {
                 return (
-                  <TextField
-                    key={variable}
-                    label={variable?.toUpperCase()}
-                    name={variable}
-                    required
-                    size="medium"
-                    type="number"
-                    value={formData[variable]}
-                    onChange={handleInputChange}
-                    variant="outlined"
-                    margin="normal"
-                    fullWidth
-                  />
+                  <MenuItem
+                    key={liquidacion.id}
+                    value={liquidacion.id}
+                    selected={i === 0}
+                  >
+                    {liquidacion.descripcion}
+                  </MenuItem>
                 );
               })}
+            </Select>
+          )}
+          {(isVisible || props.preview) &&
+            localVariables?.map((variable) => {
+              return (
+                <TextField
+                  key={variable}
+                  label={variable?.toUpperCase()}
+                  name={variable}
+                  required
+                  size="medium"
+                  type="number"
+                  value={formData[variable]}
+                  onChange={handleInputChange}
+                  variant="outlined"
+                  margin="normal"
+                  fullWidth
+                />
+              );
+            })
+          }
+          <Stack
+            direction='row'
+            justifyContent='center'
+            spacing={2}
+            sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+          >
+            <Button
+              type='button'
+              variant="outlined"
+              onClick={() => props.handle_close(false)}
+              startIcon={<CloseIcon />}
+            >
+              Cerrar
+            </Button>
             <Button variant="contained" color="primary" type="submit">
               Calcular
             </Button>
-          </form>
-        </div>
+          </Stack>
+        </form>
       </div>
     </div>
   );
