@@ -17,7 +17,6 @@ import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularS
 import SeleccionarSolicitudVivero from '../components/componenteBusqueda/SeleccionarSolicitudVivero';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
-import { Title } from '../../../../../components/Title';
 // import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
 
 
@@ -108,116 +107,116 @@ const SolicitudConsumoViveroScreen = () => {
             }
             void dispatch(crear_solicitud_bien_consumo_vivero(data_aux));
         }
+    }
+    const on_submit_anular = (data: IObjSolicitudVivero): void => {
 
-        const on_submit_anular = (data: IObjSolicitudVivero): void => {
+        const form_data = {
+            solicitud_anulada_solicitante: true,
+            justificacion_anulacion_solicitante: data.justificacion_anulacion_solicitante
+        }
 
-            const form_data = {
-                solicitud_anulada_solicitante: true,
-                justificacion_anulacion_solicitante: data.justificacion_anulacion_solicitante
-            }
-
-            void dispatch(anular_solicitud_service(form_data, data.id_solicitud_consumibles));
-
-        };
-
-
-
-
-        return (
-
-
-            <Grid
-                container
-                spacing={2}
-                sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px',
-                    mb: '20px',
-                    top: "30px",
-                    boxShadow: '0px 3px 6px #042F4A26',
-
-                }}
-            >
-                <Title title="Solicitud de consumo para vivero"></Title>
-                <Grid item xs={12} marginY={2}>
-                    <SeleccionarSolicitudVivero
-                        control_solicitud_vivero={control_solicitud_vivero}
-                        get_values={get_values}
-                        title={"Solicitudes a vivero"}
-
-                    />
-
-                    <>
-                        <PersonaResponsable
-                            title={"Funcionario responsable"}
-                            get_values_solicitud={get_values} />
-
-                        <SeleccionarBienConsumoVivero />
-                    </>
-
-
-                </Grid>
-                <Grid
-                    container
-                    direction="row"
-                    padding={2}
-                    spacing={2}
-                >
-                    <Grid item xs={12} md={4}>
-                        <FormButton
-                            variant_button="contained"
-                            on_click_function={handle_submit(on_submit)}
-                            icon_class={<SaveIcon />}
-                            label={action}
-                            type_button="button"
-                        />
-                    </Grid>
-
-                    <Grid item xs={6} md={2}>
-
-                        <FormButton
-                            variant_button="outlined"
-                            on_click_function={reset_solicitud}
-                            icon_class={<CloseIcon />}
-                            label={"Cancelar"}
-                            type_button="button"
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={5}>
-
-                        <Button
-                            variant="outlined"
-                            onClick={() => {
-                                set_anular("Anular")
-                                set_anular_solicitud(true);
-                            }}
-
-
-                        >
-                            ANULACIÓN DE SOLICITUDES DE CONSUMO
-                        </Button>
-
-                    </Grid>
-                    <AnularSolicitudModal
-                        is_modal_active={anular_solicitud}
-                        set_is_modal_active={set_anular_solicitud}
-                        action={anular}
-                        control_solicitud_vivero={control_solicitud_vivero}
-                        get_values={get_values}
-                        on_submit={handle_submit(on_submit_anular)}
-                    />
-                </Grid>
-            </Grid>
-
-        )
-
-
+        void dispatch(anular_solicitud_service(form_data, data.id_solicitud_consumibles));
 
     };
-}
 
+
+
+
+    return (
+
+
+        <Grid
+            container
+            spacing={2}
+            sx={{
+                position: 'relative',
+                background: '#FAFAFA',
+                borderRadius: '15px',
+                p: '20px',
+                mb: '20px',
+                top: "30px",
+                boxShadow: '0px 3px 6px #042F4A26',
+
+            }}
+        >
+
+            <Grid item xs={12} marginY={2}>
+                <SeleccionarSolicitudVivero
+                    control_solicitud_vivero={control_solicitud_vivero}
+                    get_values={get_values}
+                    title={"Solicitudes a vivero"}
+
+                />
+
+                <>
+                    <PersonaResponsable
+                        title={"Funcionario responsable"}
+                        get_values_solicitud={get_values} />
+
+                    <SeleccionarBienConsumoVivero />
+                </>
+
+
+            </Grid>
+            <Grid
+                container
+                direction="row"
+                padding={2}
+                spacing={2}
+            >
+                <Grid item xs={12} md={4}>
+                    <FormButton
+                        variant_button="contained"
+                        on_click_function={handle_submit(on_submit)}
+                        icon_class={<SaveIcon />}
+                        label={action}
+                        type_button="button"
+                    />
+                </Grid>
+
+                <Grid item xs={6} md={2}>
+
+                    <FormButton
+                        variant_button="outlined"
+                        on_click_function={reset_solicitud}
+                        icon_class={<CloseIcon />}
+                        label={"Cancelar"}
+                        type_button="button"
+                    />
+                </Grid>
+                <Grid item xs={12} md={5}>
+
+                    <Button
+                        variant="outlined"
+                        onClick={() => {
+                            set_anular("Anular")
+                            set_anular_solicitud(true);
+                        }}
+
+
+                    >
+                        ANULACIÓN DE SOLICITUDES DE CONSUMO
+                    </Button>
+
+                </Grid>
+                <AnularSolicitudModal
+                    is_modal_active={anular_solicitud}
+                    set_is_modal_active={set_anular_solicitud}
+                    action={anular}
+                    control_solicitud_vivero={control_solicitud_vivero}
+                    get_values={get_values}
+                    on_submit={handle_submit(on_submit_anular)}
+                />
+            </Grid>
+        </Grid>
+
+    )
+
+
+
+
+
+};
 
 
 // eslint-disable-next-line no-restricted-syntax

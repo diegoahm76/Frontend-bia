@@ -144,15 +144,15 @@ const SolicitudConsumoScreen = () => {
                     title={"Solicitudes de consumo"}
 
                 />
-                {current_solicitud.solicitud_anulada_solicitante !== true &&
-                    <>
-                        <PersonaResponsable
-                            title={"Funcionario responsable"}
-                            get_values_solicitud={get_values} />
 
-                        <SeleccionarBienConsumo />
-                    </>
-                }
+                <>
+                    <PersonaResponsable
+                        title={"Funcionario responsable"}
+                        get_values_solicitud={get_values} />
+
+                    <SeleccionarBienConsumo />
+                </>
+
 
             </Grid>
             <Grid
