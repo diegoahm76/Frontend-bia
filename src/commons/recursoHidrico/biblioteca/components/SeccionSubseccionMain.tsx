@@ -23,6 +23,8 @@ import { control_success } from '../../requets/Request';
 import { control_error } from '../../../../helpers';
 import { post_seccion_subscción } from '../request/request';
 import { EditarSeccion } from './EditarSeccion';
+import { AgregarSeccion } from './AgregarSeccion';
+import { SeleccionarSeccion } from './SeleccionarSeccion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeccionSubseccionMain: React.FC = () => {
@@ -39,6 +41,8 @@ export const SeccionSubseccionMain: React.FC = () => {
     info_seccion,
     info_subseccion,
     is_editar_seccion,
+    is_register_seccion,
+    is_seleccionar_seccion,
     fetch_data_subseccion_por_seccion,
     fetch_data_seccion,
     set_info_subseccion,
@@ -48,11 +52,25 @@ export const SeccionSubseccionMain: React.FC = () => {
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
-    { field: 'id_subseccion', headerName: 'No SUBSECCIÓN', width: 120 },
-    { field: 'nombre', headerName: 'NOMBRE', width: 200 },
-    { field: 'descripcion', headerName: 'DESCRIPCIÓN', width: 300 },
+    {
+      field: 'nombre',
+      headerName: 'NOMBRE',
+      width: 200,
+      renderCell: (params) => <div className="container">{params.value}</div>,
+    },
+    {
+      field: 'descripcion',
+      headerName: 'DESCRIPCIÓN',
+      width: 300,
+      renderCell: (params) => <div className="container">{params.value}</div>,
+    },
     { field: 'fecha_creacion', headerName: 'FECHA CREACIÓN', width: 200 },
-    { field: 'nombre_completo', headerName: 'PERSONA CREADORA', width: 300 },
+    {
+      field: 'nombre_completo',
+      headerName: 'PERSONA CREADORA',
+      width: 300,
+      renderCell: (params) => <div className="container">{params.value}</div>,
+    },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
@@ -137,14 +155,14 @@ export const SeccionSubseccionMain: React.FC = () => {
       set_value('descripcion_seccion', info_seccion.descripcion);
     }
   }, [info_seccion]);
-  
+
   useEffect(() => {
     if (info_subseccion) {
       set_value('nombre_subseccion', info_subseccion.nombre);
       set_value('descripcion_subseccion', info_subseccion.descripcion);
     }
   }, [info_subseccion]);
-  
+
   const on_submit = handle_submit(async (form: any) => {
     try {
       set_is_saving(true);
@@ -184,57 +202,9 @@ export const SeccionSubseccionMain: React.FC = () => {
         <Grid item xs={12}>
           <Title title="ADMINISTRACION SECCIONES BIBLIOTECA" />
         </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            Sección
-          </Typography>
-          <Divider />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Nombre sección"
-            fullWidth
-            required
-            autoFocus
-            size="small"
-            value={nombre_seccion}
-            {...register('nombre_seccion', { required: true })}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Fecha"
-            type="date"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={current_date}
-            disabled
-            fullWidth
-            required
-            autoFocus
-            size="small"
-            {...register('fecha_creacion')}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Descripción sección"
-            multiline
-            fullWidth
-            required
-            autoFocus
-            value={descripcion_seccion}
-            size="small"
-            {...register('descripcion_seccion', { required: true })}
-          />
-        </Grid>
-        {is_editar_seccion && (
-          <>
-          <h1>EDITAR</h1>
-          <EditarSeccion/>
-          </>
-          )}
+        {is_register_seccion && <AgregarSeccion />}
+        {is_editar_seccion && <EditarSeccion />}
+        {is_seleccionar_seccion && <SeleccionarSeccion />}
         {rows_subseccion.length > 0 && (
           <>
             <Grid item xs={12}>
@@ -254,6 +224,7 @@ export const SeccionSubseccionMain: React.FC = () => {
                 getRowId={(row) => row.id_subseccion}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
+                rowHeight={100}
               />
             </Grid>
           </>
