@@ -27,11 +27,7 @@ import {
 } from '../../organigrama/store/thunks/organigramThunks';
 // import { get_series_service } from '../store/thunks/seriesThunks';
 // import { get_subseries_service } from '../store/thunks/subseriesThunks';
-import {
-  // create_assignments_service,
-  get_assignments_service
-  // get_assignments_service,
-} from '../store/thunks/assignmentsThunks';
+import { get_assignments_service } from '../store/thunks/assignmentsThunks';
 import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
 import { get_series_service } from '../store/thunks/seriesThunks';
@@ -130,6 +126,7 @@ const use_ccd = () => {
   };
   // Estado Inicial de Formulario de Crear Asignación
   const initial_state_asig: ICCDAsingForm = {
+    catalogo_asignacion: [],
     sries_asignacion: { label: '', value: 0 },
     sries: '',
     subserie_asignacion: [],
@@ -159,8 +156,6 @@ const use_ccd = () => {
     formState: { errors }
   } = useForm({ defaultValues: initial_state_asig });
   const data_asing = watch();
-  console.log(data_asing, 'data_asing');
-  // console.log(data_asing, 'data_asing')
 
   // useForm Crear CCD
   const {
@@ -313,9 +308,9 @@ const use_ccd = () => {
         item,
         label: `${item.codigo_serie ? item.codigo_serie : ''} - ${
           item.nombre_serie ? item.nombre_serie : ''
-        } - ${item.nombre_subserie ? item.nombre_subserie : '(serie independiente)'} - ${
-          item.codigo_subserie ? item.codigo_subserie : ''
-        }`,
+        } - ${
+          item.nombre_subserie ? item.nombre_subserie : '(serie independiente)'
+        } - ${item.codigo_subserie ? item.codigo_subserie : ''}`,
         value: item.id_serie_doc
       }))
     );
@@ -420,17 +415,42 @@ const use_ccd = () => {
     );
   };
 
-  // console.log(data_asing, 'data_asing');
-
   const create_or_delete_relation_unidad = (): void => {
-    console.log('hola a todos perros hps desde la vida');
-    console.log(data_asing, 'data_asing');
+    console.log(data_asing.catalogo_asignacion, 'data_asing');
     console.log('epa la patria', ccd_current);
-    /* if (ccd_current !== null) {
-      update_ccd(data_create_ccd);
-    } else {
-      create_ccd();
-    } */
+
+    const itemSend = data_asing.catalogo_asignacion.map(
+      (item: {
+        item: {
+          codigo_serie: string;
+          codigo_subserie: string;
+          id_catalogo_serie: number;
+          id_serie_doc: number;
+          id_subserie_doc: number;
+          nombre_serie: string;
+          nombre_subserie: string;
+        };
+        value: number;
+      }) => {
+        console.log(item, 'item');
+
+        return {
+          // id_catalogo_serie_und: 'rigth now is null',
+          id_unidad_organizacional: item.value,
+          id_catalogo_serie: item.item.id_catalogo_serie,
+          id_serie_doc: item.item.id_serie_doc,
+          nombre_serie: item.item.nombre_serie,
+          codigo_serie: item.item.codigo_serie,
+          id_subserie_doc: item.item.id_subserie_doc,
+          nombre_subserie: item.item.nombre_subserie,
+          codigo_subserie: item.item.codigo_subserie
+        };
+      }
+    );
+
+    console.log(itemSend, 'itemSend');
+
+    // void dispatch(create_or_delete_assignments_service())
   };
 
   // Funcion para crear la asignacion
@@ -647,7 +667,7 @@ const use_ccd = () => {
 
     create_sub_serie_active,
     set_create_sub_serie_active,
-    create_or_delete_relation_unidad,
+    create_or_delete_relation_unidad
     // file,
     // set_file,
   };

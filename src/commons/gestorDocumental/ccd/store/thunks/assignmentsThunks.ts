@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 // import { NavigateFunction } from 'react-router-dom';
 import { api } from '../../../../../api/axios';
 import { type AxiosError, type AxiosResponse } from 'axios';
@@ -38,7 +39,7 @@ const control_success = (message: ToastContent) =>
   });
 
 // Obtiene ccd tabla intermedia
-export const get_assignments_service: any = (ccd_current: any, nombreUnidadActual: any) => {
+export const get_assignments_service: any = (ccd_current: any, nombreUnidadActual?: any) => {
   return async (
     dispatch: Dispatch<any>,
     // getState: any
@@ -47,7 +48,7 @@ export const get_assignments_service: any = (ccd_current: any, nombreUnidadActua
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.get(`gestor/ccd/catalogo/unidad/get-by-id-ccd/${id_ccd}/`);
       const new_data = data.data.map((item: any, index: number) => {
-        return { ...item, id: index + 1, nombreUnidad: nombreUnidadActual.label };
+        return { ...item, id: index + 1, nombreUnidad: nombreUnidadActual.label ? nombreUnidadActual.label : '' };
       });
       console.log(
         '🚀 ~ file: assignmentsThunks.ts ~ line 59 ~ return ~ new_data',
@@ -66,13 +67,13 @@ export const get_assignments_service: any = (ccd_current: any, nombreUnidadActua
 // Asignar series y subseries a unidades organizacionales
 //! this service allow to create a new relation or delete a relation
 export const create_or_delete_assignments_service: any = (
+  ccd_current: any,
   new_item: any,
   clean: () => void,
-  ccd_current: any,
 ) => {
   return async (
     dispatch: Dispatch<any>,
-    getState: any
+    // getState: any
   ): Promise<AxiosResponse | AxiosError> => {
     try {
       const id_ccd: number = ccd_current.id_ccd;
@@ -80,7 +81,7 @@ export const create_or_delete_assignments_service: any = (
         `gestor/ccd/catalogo/unidad/update/${id_ccd}/`,
         new_item
       );
-      // dispatch(get_assignments_service());
+      dispatch(get_assignments_service(ccd_current));
       control_success(data.detail);
       clean();
       return data;
