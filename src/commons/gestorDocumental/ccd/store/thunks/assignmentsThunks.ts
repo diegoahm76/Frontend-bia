@@ -38,24 +38,23 @@ const control_success = (message: ToastContent) =>
   });
 
 // Obtiene ccd tabla intermedia
-export const get_assignments_service: any = () => {
+export const get_assignments_service: any = (ccd_current: any, nombreUnidadActual: any) => {
   return async (
     dispatch: Dispatch<any>,
-    getState: any
+    // getState: any
   ): Promise<AxiosResponse | AxiosError> => {
-    const current = getState().ccd_current;
-    console.log(
-      '🚀 ~ file: assignmentsThunks.ts ~ line 54 ~ return ~ ccd_current',
-      current
-    )
     try {
-      const id_ccd: number = current.id_ccd;
-      const { data } = await api.get(`gestor/ccd/asignar/get/${id_ccd}/`);
+      const id_ccd: number = ccd_current.id_ccd;
+      const { data } = await api.get(`gestor/ccd/catalogo/unidad/get-by-id-ccd/${id_ccd}/`);
       const new_data = data.data.map((item: any, index: number) => {
-        return { ...item, id: index + 1 };
+        return { ...item, id: index + 1, nombreUnidad: nombreUnidadActual.label };
       });
+      console.log(
+        '🚀 ~ file: assignmentsThunks.ts ~ line 59 ~ return ~ new_data',
+        new_data
+      )
       dispatch(get_assignments_ccd(new_data));
-      // control_success(data.detail);
+      control_success(data.detail);
       return data;
     } catch (error: any) {
       // control_error(error.response.data.detail);
@@ -64,29 +63,30 @@ export const get_assignments_service: any = () => {
   };
 };
 
-// Asignar series y subseries a unidades documentales
-export const create_assignments_service: any = (
+// Asignar series y subseries a unidades organizacionales
+//! this service allow to create a new relation or delete a relation
+export const create_or_delete_assignments_service: any = (
   new_item: any,
-  clean: () => void
+  clean: () => void,
+  ccd_current: any,
 ) => {
   return async (
     dispatch: Dispatch<any>,
     getState: any
   ): Promise<AxiosResponse | AxiosError> => {
-    const { ccd_current } = getState().CCD;
     try {
       const id_ccd: number = ccd_current.id_ccd;
       const { data } = await api.put(
-        `gestor/ccd/asignar/create/${id_ccd}/`,
+        `gestor/ccd/catalogo/unidad/update/${id_ccd}/`,
         new_item
       );
-      dispatch(get_assignments_service());
+      // dispatch(get_assignments_service());
       control_success(data.detail);
       clean();
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      dispatch(get_assignments_service());
+      // dispatch(get_assignments_service());
       clean();
       return error as AxiosError;
     }

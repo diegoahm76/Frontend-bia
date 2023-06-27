@@ -48,6 +48,11 @@ import { CatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubserie
 import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
+import { LoadingButton } from '@mui/lab';
+import {
+  create_or_delete_assignments_service,
+  get_assignments_service
+} from '../store/thunks/assignmentsThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CcdScreen: React.FC = () => {
@@ -55,7 +60,7 @@ export const CcdScreen: React.FC = () => {
     openModalModalSeriesAndSubseries,
     busquedaCreacionCCDModal,
     openModalBusquedaCreacionCCD,
-    closeModalBusquedaCreacionCCD
+    loadingButton
   } = useContext(ModalContext);
 
   const dispatch: any = useAppDispatch();
@@ -138,10 +143,11 @@ export const CcdScreen: React.FC = () => {
     // // Functions
     // get_row_class,
     on_submit_create_ccd,
-    on_submit,
+    on_submit_create_or_delete_relation_unidad,
     // register_create_ccd,
     handle_submit,
     handle_submit_create_ccd,
+    create_or_delete_relation_unidad,
     clean_ccd
   } = use_ccd() as any;
 
@@ -166,7 +172,7 @@ export const CcdScreen: React.FC = () => {
             }}
             onSubmit={(e: any) => {
               // console.log('hola')
-              console.log(e);
+              // console.log(e);
 
               on_submit_create_ccd(e);
             }}
@@ -298,7 +304,9 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento serie"
-                      disabled={series_ccd.length > 0 /* && ccd_current == null */}
+                      disabled={
+                        series_ccd.length > 0 /* && ccd_current == null */
+                      }
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -433,14 +441,25 @@ export const CcdScreen: React.FC = () => {
               >
                 BUSCAR CCD
               </Button>
-              <Button
+
+              <LoadingButton
+                loading={loadingButton}
                 type="submit"
                 color="primary"
                 variant="contained"
                 startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
-              </Button>
+              </LoadingButton>
+
+              {/* <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
+              >
+                {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
+              </Button> */}
               <Button
                 color="success"
                 variant="contained"
@@ -695,7 +714,7 @@ export const CcdScreen: React.FC = () => {
                   <Grid
                     item
                     xs={12}
-                    sm={4}
+                    sm={5}
                     sx={{
                       zIndex: 10
                     }}
@@ -716,33 +735,24 @@ export const CcdScreen: React.FC = () => {
                       }) => (
                         <Select
                           value={value}
-                          //
-
+                          // isMulti prop will enable the multi select
                           isMulti
-                          // isClearable
-                          // requiredisSearchable
                           onChange={(selectedOption) => {
-
-                            const spliceSelectedOptions = selectedOption.map((item) => {
-                              const partes = item?.label?.split('-');
-
-                              const newObject = {
-                                label: item.label,
-                                value: item.value,
-                                nombreSerie: partes?.[1],
+                            console.log('selectedOption', selectedOption);
+                            /* const spliceSelectedOptions = selectedOption.map(
+                              (item) => {
+                                const partes = item?.label?.split('-');
+                                return {
+                                  label: item.label,
+                                  value: item.value,
+                                  nombreSerie: partes?.[1],
+                                  nombreSubserie: partes?.[2],
+                                  codigoSerie: partes?.[0],
+                                  codigoSubserie: partes?.[3]
+                                };
                               }
-
-                              return {
-                                label: item.label,
-                                value: item.value,
-                                nombreSerie: partes?.[1],
-                                nombreSubserie: partes?.[2],
-                                codigoSerie: partes?.[0],
-                                codigoSubserie: partes?.[3]
-                              };
-                            });
-
-                            onChange(spliceSelectedOptions);
+                            ); */
+                            onChange(selectedOption);
                           }}
                           options={list_sries_asignacion}
                           placeholder="Seleccionar"
@@ -761,7 +771,7 @@ export const CcdScreen: React.FC = () => {
                   <Grid
                     item
                     xs={12}
-                    sm={4}
+                    sm={3}
                     sx={{
                       marginTop: '25px'
                     }}
@@ -769,6 +779,26 @@ export const CcdScreen: React.FC = () => {
                     <Button
                       fullWidth
                       onClick={() => {
+                        void dispatch(create_or_delete_relation_unidad())
+                          .then((resultado: any) => {
+                            console.log(
+                              'resultado de la creación de la relación',
+                              resultado,
+                            )
+                            // Haz algo con el resultado devuelto por la función create_or_delete_assignments_service
+                            void dispatch(
+                              get_assignments_service(
+                                ccd_current,
+                                control._formValues.unidades_asignacion
+                                //  set_assignments_ccd
+                              )
+                            );
+                          })
+                          .catch((error: any) => {
+                            // Maneja el error si ocurre alguno durante la ejecución de create_or_delete_assignments_service o en el .then() anterior
+                            console.error(error);
+                          });
+
                         /* void dispatch(
                         to_assign_ccds_service(
                           ccd_current,

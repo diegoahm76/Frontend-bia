@@ -28,7 +28,7 @@ import {
 // import { get_series_service } from '../store/thunks/seriesThunks';
 // import { get_subseries_service } from '../store/thunks/subseriesThunks';
 import {
-  create_assignments_service,
+  // create_assignments_service,
   get_assignments_service
   // get_assignments_service,
 } from '../store/thunks/assignmentsThunks';
@@ -48,8 +48,12 @@ import { get_subseries_ccd_current } from '../store/slices/subseriesSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const use_ccd = () => {
-  const { openModalBusquedaCreacionCCD, closeModalBusquedaCreacionCCD } =
-    useContext(ModalContext);
+  const {
+    openModalBusquedaCreacionCCD,
+    closeModalBusquedaCreacionCCD,
+    activateLoadingButton,
+    desactivateLoadingButton
+  } = useContext(ModalContext);
 
   const dispatch = useAppDispatch();
   // Extracción estado global
@@ -59,6 +63,7 @@ const use_ccd = () => {
   const { ccd_current } = useAppSelector((state) => state.ccd);
   const { series_ccd } = useAppSelector((state) => state.series);
   const { subseries_ccd } = useAppSelector((state) => state.subseries);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { assignments_ccd, assignments_ccd_current } = useAppSelector(
     (state) => state.assignments
   );
@@ -154,6 +159,7 @@ const use_ccd = () => {
     formState: { errors }
   } = useForm({ defaultValues: initial_state_asig });
   const data_asing = watch();
+  console.log(data_asing, 'data_asing');
   // console.log(data_asing, 'data_asing')
 
   // useForm Crear CCD
@@ -230,6 +236,7 @@ const use_ccd = () => {
           value: assignments_ccd_current.id_unidad_organizacional
         }
       };
+      console.log(obj, 'obj');
       reset(obj);
       set_title_button_asing('Editar relación');
     }
@@ -303,16 +310,17 @@ const use_ccd = () => {
   useEffect(() => {
     set_list_sries_asignacion(
       seriesAndSubseries.map((item: any) => ({
-        label: `${item.codigo_serie} - ${item.nombre_serie} - ${item.nombre_subserie} - ${item.codigo_subserie}`,
+        item,
+        label: `${item.codigo_serie ? item.codigo_serie : ''} - ${
+          item.nombre_serie ? item.nombre_serie : ''
+        } - ${item.nombre_subserie ? item.nombre_subserie : '(serie independiente)'} - ${
+          item.codigo_subserie ? item.codigo_subserie : ''
+        }`,
         value: item.id_serie_doc
       }))
     );
   }, [seriesAndSubseries]);
 
-  // submit Asignar CCD
-  const on_submit = (): void => {
-    create_asing();
-  };
   // submit Crear CCD
   const on_submit_create_ccd = (e: any): void => {
     e.preventDefault();
@@ -326,7 +334,7 @@ const use_ccd = () => {
     }
   };
 
-  // Funcion para crear el CCD
+  //! Funcion para crear el CCD
   const create_ccd = (): void => {
     const new_ccd: any = {
       id_organigrama: data_create_ccd.organigrama.value,
@@ -347,10 +355,17 @@ const use_ccd = () => {
 
     console.log('new_ccd', new_ccd);
     void dispatch(
-      create_ccds_service(formData, set_save_ccd, openModalBusquedaCreacionCCD)
+      create_ccds_service(
+        formData,
+        set_save_ccd,
+        openModalBusquedaCreacionCCD,
+        activateLoadingButton,
+        desactivateLoadingButton
+      )
     );
   };
 
+  //! Funcion para actualizar el CCD
   const update_ccd = (data_create_ccd: any): void => {
     const updatedCCD: any = {
       id_organigrama: data_create_ccd.organigrama.value,
@@ -398,15 +413,28 @@ const use_ccd = () => {
     void dispatch(
       update_ccds_service(
         formData,
-        data_create_ccd /* closeModalBusquedaCreacionCCD */
+        data_create_ccd,
+        activateLoadingButton,
+        desactivateLoadingButton
       )
     );
   };
 
   // console.log(data_asing, 'data_asing');
 
+  const create_or_delete_relation_unidad = (): void => {
+    console.log('hola a todos perros hps desde la vida');
+    console.log(data_asing, 'data_asing');
+    console.log('epa la patria', ccd_current);
+    /* if (ccd_current !== null) {
+      update_ccd(data_create_ccd);
+    } else {
+      create_ccd();
+    } */
+  };
+
   // Funcion para crear la asignacion
-  const create_asing = (): void => {
+  /*  const create_asing = (): void => {
     let new_item: any[] = [];
     const old_items = assignments_ccd.map(
       (item: {
@@ -450,7 +478,7 @@ const use_ccd = () => {
       });
     }
     void dispatch(create_assignments_service(new_item, clean_asing));
-  };
+  }; */
 
   // ? Funciones para limpiar el formulario de Crear CCD
   const clean_ccd = (): void => {
@@ -503,37 +531,45 @@ const use_ccd = () => {
 
   const columns_asignacion: GridColDef[] = [
     {
-      headerName: 'Sección',
-      field: 'seccion',
-      minWidth: 150,
-      maxWidth: 200
+      headerName: 'ID Un. Org',
+      field: 'id_unidad_organizacional',
+      minWidth: 90,
+      maxWidth: 100
     },
     {
-      headerName: 'Subsección',
-      field: 'subseccion',
-      minWidth: 150,
-      maxWidth: 200
+      headerName: 'Unidad Organizacional',
+      field: 'nombreUnidad',
+      minWidth: 210,
+      maxWidth: 220
     },
     {
-      headerName: 'serie',
+      headerName: 'Cód. Serie',
+      field: 'codigo_serie',
+      minWidth: 95,
+      maxWidth: 100
+    },
+    {
+      headerName: 'Serie',
       field: 'nombre_serie',
       minWidth: 150,
       maxWidth: 200
     },
     {
-      headerName: 'subserie',
-      field: 'subseries_nombres',
+      headerName: 'Cód. Subserie',
+      field: 'codigo_subserie',
+      minWidth: 95,
+      maxWidth: 100
+    },
+    {
+      headerName: 'Subserie',
+      field: 'nombre_subserie',
       minWidth: 150
-      /* cellStyle: {
-         'white-space': 'pre-wrap',
-         'word-break': 'break-word'
-      }, */
     },
     {
       headerName: 'Acciones',
       field: 'accion',
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 110,
+      maxWidth: 120,
       /* (params: {
         row:  IAssignmentsObject any | null;
         data: { id: any };
@@ -604,14 +640,14 @@ const use_ccd = () => {
     // Functions
     get_row_class,
     on_submit_create_ccd,
-    on_submit,
     register_create_ccd,
     handle_submit,
     handle_submit_create_ccd,
     clean_ccd,
 
     create_sub_serie_active,
-    set_create_sub_serie_active
+    set_create_sub_serie_active,
+    create_or_delete_relation_unidad,
     // file,
     // set_file,
   };
