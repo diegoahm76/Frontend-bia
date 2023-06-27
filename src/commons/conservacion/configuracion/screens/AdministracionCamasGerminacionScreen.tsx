@@ -1,7 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Grid, Stack, Tooltip, IconButton, Avatar, Divider } from "@mui/material";
-import { Title } from "../../../../components";
-import { get_germination_beds_service, update_germination_beds_service } from '../store/thunks/configuracionThunks';
+import {
+  Box,
+  Button,
+  Grid,
+  Stack,
+  Tooltip,
+  IconButton,
+  Avatar,
+  Divider,
+} from '@mui/material';
+import { Title } from '../../../../components';
+import {
+  get_germination_beds_service,
+  update_germination_beds_service,
+} from '../store/thunks/configuracionThunks';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import {
   type IObjGerminationBed,
@@ -231,24 +243,35 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
       >
         <Grid item xs={12}>
           <Title title="Camas de germinacion viveros"></Title>
-          <Grid item xs={11} md={12} margin={2}  style={{ marginLeft: '1px' }} >
+          <Grid item xs={11} md={12} margin={2} style={{ marginLeft: '1px' }}>
             <AutocompleteVivero
               id={id}
               set_value={set_nursery}
               value={nursery}
             />
           </Grid>
-          <Divider style={{ width: '100%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
+          <Divider
+            style={{
+              width: '100%',
+              marginTop: '8px',
+              marginBottom: '8px',
+              marginLeft: 'auto',
+            }}
+          />
 
-          {nursery !== null ? nursery?.id_vivero !== null ? 
+          {nursery !== null && nursery?.id_vivero !== null && (
             <>
               <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
                 <Button
                   variant="outlined"
                   startIcon={<AddIcon />}
                   onClick={() => {
-                    dispatch(current_germination_bed(initial_state_current_germination_bed));
-                    set_action("create")
+                    dispatch(
+                      current_germination_bed(
+                        initial_state_current_germination_bed
+                      )
+                    );
+                    set_action('create');
                     set_add_bed_is_active(true);
                   }}
                 >
@@ -256,10 +279,16 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                 </Button>
               </Stack>
               <Grid item>
-              <Divider style={{ width: '100%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
+                <Divider
+                  style={{
+                    width: '100%',
+                    marginTop: '8px',
+                    marginBottom: '8px',
+                    marginLeft: 'auto',
+                  }}
+                />
 
                 <Box sx={{ width: '100%' }}>
-                
                   <DataGrid
                     density="compact"
                     autoHeight
@@ -277,36 +306,36 @@ export function AdministracionCamasGerminacionScreen(): JSX.Element {
                   >
                     <Button
                       onClick={() => {
-                        dispatch(get_germination_beds_service(nursery?.id_vivero))
+                        dispatch(
+                          get_germination_beds_service(nursery?.id_vivero)
+                        );
                       }}
-
                       variant="outlined"
                       startIcon={<CloseIcon />}
                     >
                       CANCELAR
                     </Button>
 
-                      <Button
-                        onClick={() => {
-                          dispatch(
-                            update_germination_beds_service(
-                              nursery?.id_vivero,
-                              aux_germination_beds
-                            )
-                          );
-                        }}
-                        type="button"
-                        variant="contained"
-                        startIcon={<SaveIcon />}
-                      >
-                        GUARDAR
-                      </Button>
-                    </Stack>
-                  </Box>
-                </Grid>
-              </>
-            ) : null
-          ) : null}
+                    <Button
+                      onClick={() => {
+                        dispatch(
+                          update_germination_beds_service(
+                            nursery?.id_vivero,
+                            aux_germination_beds
+                          )
+                        );
+                      }}
+                      type="button"
+                      variant="contained"
+                      startIcon={<SaveIcon />}
+                    >
+                      GUARDAR
+                    </Button>
+                  </Stack>
+                </Box>
+              </Grid>
+            </>
+          )}
           <CrearCamaGerminacionDialogForm
             is_modal_active={add_bed_is_active}
             set_is_modal_active={set_add_bed_is_active}

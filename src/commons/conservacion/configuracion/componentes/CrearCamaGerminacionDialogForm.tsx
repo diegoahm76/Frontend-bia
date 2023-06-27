@@ -10,6 +10,8 @@ import {
   Box,
   Divider,
   Grid,
+  DialogContent,
+  DialogTitle,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
@@ -24,7 +26,6 @@ import {
 } from '../interfaces/configuracion';
 
 import { initial_state_current_germination_bed } from '../store/slice/configuracionSlice';
-import { Title } from '../../../../components';
 
 interface IProps {
   action: string;
