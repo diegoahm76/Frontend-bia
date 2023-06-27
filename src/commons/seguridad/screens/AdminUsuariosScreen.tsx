@@ -148,6 +148,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     if (numero_documento !== undefined && numero_documento !== '') {
       set_numero_documento(numero_documento);
       set_value_ini('numero_documento', numero_documento);
+      console.log('numero_documento', numero_documento);
     }
   }, [numero_documento]);
 
