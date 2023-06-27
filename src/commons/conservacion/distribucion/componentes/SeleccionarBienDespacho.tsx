@@ -21,7 +21,7 @@ const SeleccionarBienDespacho = () => {
   
     const [bienes_aux, set_bienes_aux] = useState<any>([]);
     const [select_model_is_active, set_select_model_is_active] = useState<boolean>(false);
-    const [action, set_action] = useState<string>("agregar");
+    const [action, set_action] = useState<string>("Agregar");
     const [aux_insumos, set_aux_insumos] = useState<IObjBienDespacho[]>([]);
 
 
@@ -32,7 +32,7 @@ const SeleccionarBienDespacho = () => {
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -62,7 +62,7 @@ const SeleccionarBienDespacho = () => {
         },
         {
             field: 'nro_lote',
-            headerName: '# lote',
+            headerName: 'Número del lote',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -72,7 +72,7 @@ const SeleccionarBienDespacho = () => {
         },
         {
             field: 'cod_etapa_lote',
-            headerName: 'Etapa lote',
+            headerName: 'Etapa del lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -98,7 +98,7 @@ const SeleccionarBienDespacho = () => {
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -138,7 +138,7 @@ const SeleccionarBienDespacho = () => {
         },
         {
             field: 'nro_lote',
-            headerName: 'Nro lote',
+            headerName: 'Número del lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -148,7 +148,7 @@ const SeleccionarBienDespacho = () => {
         },
         {
             field: 'agno_lote',
-            headerName: 'Año lote',
+            headerName: 'Año del lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -158,7 +158,7 @@ const SeleccionarBienDespacho = () => {
         },
         {
             field: 'cod_etapa_lote',
-            headerName: 'Etapa lote',
+            headerName: 'Etapa del lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -168,7 +168,7 @@ const SeleccionarBienDespacho = () => {
         },
         {
             field: 'observacion_del_despacho',
-            headerName: 'Observacion',
+            headerName: 'Observación',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -347,13 +347,13 @@ const SeleccionarBienDespacho = () => {
                             }
                         }
                     } else{
-                        control_error("La cantidad asignada debe ser maximo "+ String(bien_selected.cantidad))
+                        control_error("La cantidad asignada debe ser máximo "+ String(bien_selected.cantidad))
                         }
                 } else{
-                    control_error("La cantidad asignada debe ser maximo "+ String(current_bien.cantidad_disponible))
+                    control_error("La cantidad asignada debe ser máximo "+ String(current_bien.cantidad_disponible))
                     }
             } else{
-                control_error("Codigo de bien no coincide con el seleccionado")
+                control_error("El código del bien no coincide con el seleccionado")
             }
         } else{
             control_error("Debe seleccionar el bien")
@@ -439,8 +439,8 @@ const SeleccionarBienDespacho = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                            label: "Codigo bien",
+                            rules: { required_rule: { rule: true, message: "Código bien requerido" } },
+                            label: "Código bien",
                             type: "number",
                             disabled: current_despacho.id_despacho_viveros !== null,
                             helper_text: "",
@@ -467,7 +467,7 @@ const SeleccionarBienDespacho = () => {
                             control_name: "nro_lote",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
-                            label: "Numero de lote",
+                            label: "Número de lote",
                             type: "text",
                             disabled: true,
                             helper_text: ""
@@ -480,7 +480,7 @@ const SeleccionarBienDespacho = () => {
                             control_name: "agno_lote",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "Debe seleccionar un bien" } },
-                            label: "Año lote",
+                            label: "Año del lote",
                             type: "text",
                             disabled: true,
                             helper_text: ""
@@ -492,7 +492,7 @@ const SeleccionarBienDespacho = () => {
                             control_form: control_bien,
                             control_name: "cod_etapa_lote",
                             default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            rules: { required_rule: { rule: false, message: "Requerido" } },
                             label: "Etapa de lote",
                             helper_text: "",
                             disabled: true,
@@ -514,8 +514,8 @@ const SeleccionarBienDespacho = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                            label: "Codigo bien",
+                            rules: { required_rule: { rule: true, message: "Código bien requerido" } },
+                            label: "Código bien",
                             type: "number",
                             disabled: current_despacho.id_despacho_viveros !== null,
                             helper_text: "",
@@ -585,7 +585,7 @@ const SeleccionarBienDespacho = () => {
                             control_name: "observacion_del_despacho",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                            label: "Observacion",
+                            label: "Observación",
                             type: "text",
                             multiline_text: true,
                             rows_text: 4,
@@ -609,8 +609,8 @@ const SeleccionarBienDespacho = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                            label: "Codigo bien",
+                            rules: { required_rule: { rule: true, message: "Código del bien requerido" } },
+                            label: "Código bien",
                             type: "number",
                             disabled: false,
                             helper_text: "",
@@ -640,7 +640,7 @@ const SeleccionarBienDespacho = () => {
                             label: "Etapa de lote",
                             helper_text: "",
                             disabled: false,
-                            select_options: [{ label: "Germinación", value: "G" },{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
+                            select_options: [{ label: "Germinación", value: "G" },{ label: "Producción", value: "P" }, { label: "Distribución", value: "D" }],
                             option_label: "label",
                             option_key: "value"
                           }

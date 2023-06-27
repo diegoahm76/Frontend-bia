@@ -160,7 +160,7 @@ const SeleccionarDespacho = ({
                     form_inputs={[
                         {
                             datum_type: "title",
-                            title_label: "Informacion del despacho"
+                            title_label: "Información del despacho"
                         },
                         {
                         datum_type: "select_controller",
@@ -185,7 +185,7 @@ const SeleccionarDespacho = ({
                             control_name: "nro_despachos_viveros",
                             default_value: "",
                             rules: {},
-                            label: "Numero despacho",
+                            label: "Número de despacho",
                             type: "number",
                             disabled: true,
                             helper_text: "",
@@ -212,7 +212,7 @@ const SeleccionarDespacho = ({
                             control_name: "motivo",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                            label: "observaciones",
+                            label: "Observaciones",
                             type: "text",
                             multiline_text: true,
                             rows_text: 4,
@@ -226,8 +226,8 @@ const SeleccionarDespacho = ({
                             control_form: control_despacho,
                             control_name: "persona_crea",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
-                            label: "Despacho realizada por",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar la persona que la creó" } },
+                            label: "Despacho realizado por",
                             type: "text",
                             disabled: true,
                             helper_text: ""
@@ -256,7 +256,7 @@ const SeleccionarDespacho = ({
                             control_name: "nro_despachos_viveros",
                             default_value: "",
                             rules: { },
-                            label: "Numero despacho",
+                            label: "Número despacho",
                             type: "number",
                             disabled: false,
                             helper_text: "",
