@@ -48,11 +48,25 @@ export const SeleccionarSeccion: React.FC = () => {
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
-    { field: 'id_subseccion', headerName: 'No SUBSECCIÓN', width: 120 },
-    { field: 'nombre', headerName: 'NOMBRE', width: 200 },
-    { field: 'descripcion', headerName: 'DESCRIPCIÓN', width: 300 },
+    {
+      field: 'nombre',
+      headerName: 'NOMBRE',
+      width: 200,
+      renderCell: (params) => <div className="container">{params.value}</div>,
+    },
+    {
+      field: 'descripcion',
+      headerName: 'DESCRIPCIÓN',
+      width: 300,
+      renderCell: (params) => <div className="container">{params.value}</div>,
+    },
     { field: 'fecha_creacion', headerName: 'FECHA CREACIÓN', width: 200 },
-    { field: 'nombre_completo', headerName: 'PERSONA CREADORA', width: 300 },
+    {
+      field: 'nombre_completo',
+      headerName: 'PERSONA CREADORA',
+      width: 300,
+      renderCell: (params) => <div className="container">{params.value}</div>,
+    },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
@@ -137,14 +151,14 @@ export const SeleccionarSeccion: React.FC = () => {
       set_value('descripcion_seccion', info_seccion.descripcion);
     }
   }, [info_seccion]);
-  
+
   useEffect(() => {
     if (info_subseccion) {
       set_value('nombre_subseccion', info_subseccion.nombre);
       set_value('descripcion_subseccion', info_subseccion.descripcion);
     }
   }, [info_subseccion]);
-  
+
   const on_submit = handle_submit(async (form: any) => {
     try {
       set_is_saving(true);
@@ -181,9 +195,6 @@ export const SeleccionarSeccion: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <Title title="ADMINISTRACION SECCIONES BIBLIOTECA" />
-        </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1" fontWeight="bold">
             Sección
@@ -231,10 +242,10 @@ export const SeleccionarSeccion: React.FC = () => {
         </Grid>
         {is_editar_seccion && (
           <>
-          <h1>EDITAR</h1>
-          <EditarSeccion/>
+            <h1>EDITAR</h1>
+            <EditarSeccion />
           </>
-          )}
+        )}
         {rows_subseccion.length > 0 && (
           <>
             <Grid item xs={12}>
@@ -254,6 +265,7 @@ export const SeleccionarSeccion: React.FC = () => {
                 getRowId={(row) => row.id_subseccion}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
+                rowHeight={100}
               />
             </Grid>
           </>
