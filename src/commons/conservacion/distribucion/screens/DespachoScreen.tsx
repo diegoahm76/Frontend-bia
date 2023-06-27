@@ -276,6 +276,7 @@ const DespachoScreen = () => {
             button_disabled={false}
             modal_title={current_solicitud.solicitud_abierta === true ? "Cerrar solicitud" : "Detalle del cierre de solicitud por no disponibilidad"}
             button_submit_label={"Cierre de solicitud"}
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             button_submit_disabled={!current_solicitud.solicitud_abierta}
             button_submit_icon_class={<Block />}
             button_submit_action={handle_submit_solicitud(on_submit_closed)}

@@ -18,10 +18,11 @@ import {
   type UseFormSetValue,
   useForm,
 } from 'react-hook-form';
+import { type Dayjs } from 'dayjs';
 interface UserContext {
-  is_nombre_programa_valid: boolean;
-  is_fechas_validas: boolean;
-  is_fecha_inicial_valida: boolean;
+  nombre_programa: string;
+  fecha_inicial: Dayjs | null;
+  fecha_fin: Dayjs | null;
   data_actividad: GetActividades | undefined;
   data_programa: GetPrograma | undefined;
   info_programa: InfoPorh | undefined;
@@ -43,6 +44,9 @@ interface UserContext {
   id_programa: number | null;
   id_proyecto: number | null;
   id_actividad: number | null;
+  set_nombre_programa: (value: string) => void;
+  set_fecha_inicial: (value: Dayjs | null) => void;
+  set_fecha_fin: (value: Dayjs | null) => void;
   set_info_programa: (value: InfoPorh) => void;
   set_rows_programas: (rows: GetPrograma[]) => void;
   set_rows_proyectos: (rows: GetProyectos[]) => void;
@@ -57,9 +61,6 @@ interface UserContext {
   set_is_agregar_proyecto: (value: boolean) => void;
   set_is_editar_proyecto: (value: boolean) => void;
   set_is_seleccionar_proyecto: (value: boolean) => void;
-  set_is_nombre_programa_valid: (value: boolean) => void;
-  set_is_fechas_validas: (value: boolean) => void;
-  set_is_fecha_inicial_valida: (value: boolean) => void;
   set_is_consulta: (value: boolean) => void;
   set_mode: (value: string) => void;
   set_id_programa: (value: number | null) => void;
@@ -68,6 +69,7 @@ interface UserContext {
   fetch_data_programas: () => Promise<void>;
   fetch_data_proyectos: () => Promise<void>;
   fetch_data_actividades: () => Promise<void>;
+  reset_form_agregar_programa: () => void;
   set_data_programa: (value: GetPrograma) => void;
   set_data_actividad: (value: GetActividades) => void;
   register: any;
@@ -81,9 +83,9 @@ interface UserContext {
 }
 
 export const DataContext = createContext<UserContext>({
-  is_nombre_programa_valid: false,
-  is_fechas_validas: false,
-  is_fecha_inicial_valida: false,
+  nombre_programa: '',
+  fecha_inicial: null,
+  fecha_fin: null,
   data_actividad: {
     id_actividades: 0,
     nombre: '',
@@ -127,6 +129,9 @@ export const DataContext = createContext<UserContext>({
   id_programa: null,
   id_proyecto: null,
   id_actividad: null,
+  set_nombre_programa: () => {},
+  set_fecha_inicial: () => {},
+  set_fecha_fin: () => {},
   set_rows_programas: () => {},
   set_rows_proyectos: () => {},
   set_rows_actividades: () => {},
@@ -141,9 +146,6 @@ export const DataContext = createContext<UserContext>({
   set_is_seleccionar_proyecto: () => {},
   set_is_general: () => {},
   set_is_consulta: () => {},
-  set_is_nombre_programa_valid: () => {},
-  set_is_fechas_validas: () => {},
-  set_is_fecha_inicial_valida: () => {},
   set_mode: () => {},
   set_id_programa: () => {},
   set_id_proyecto: () => {},
@@ -152,6 +154,7 @@ export const DataContext = createContext<UserContext>({
   fetch_data_programas: async () => {},
   fetch_data_proyectos: async () => {},
   fetch_data_actividades: async () => {},
+  reset_form_agregar_programa: () => {},
   set_data_programa: () => {},
   set_data_actividad: () => {},
   register: () => {},
@@ -346,19 +349,29 @@ export const UserProvider = ({
     }
   };
 
+  // programas
+  const [nombre_programa, set_nombre_programa] = React.useState(''); // Estado del campo "Nombre del programa"
+  const [fecha_inicial, set_fecha_inicial] = React.useState<Dayjs | null>(null); // Estado de la fecha inicial
+  const [fecha_fin, set_fecha_fin] = React.useState<Dayjs | null>(null); // Estado de la fecha final
+
+  const reset_form_agregar_programa = (): void => {
+    set_nombre_programa('');
+    set_fecha_inicial(null);
+    set_fecha_fin(null);
+    reset();
+    // Restablecer otros valores del formulario si es necesario
+  };
+
   // validaciones 
-  const [is_nombre_programa_valid, set_is_nombre_programa_valid] =
-    React.useState(false);
-  const [is_fechas_validas, set_is_fechas_validas] = React.useState(false);
-  const [is_fecha_inicial_valida, set_is_fecha_inicial_valida] = React.useState(false);
 
   const value = {
-    is_nombre_programa_valid,
-    set_is_nombre_programa_valid,
-    is_fechas_validas,
-    set_is_fechas_validas,
-    is_fecha_inicial_valida,
-    set_is_fecha_inicial_valida,
+    reset_form_agregar_programa,
+    nombre_programa,
+    set_nombre_programa,
+    fecha_inicial,
+    set_fecha_inicial,
+    fecha_fin,
+    set_fecha_fin,
     data_actividad,
     set_data_actividad,
     data_programa,

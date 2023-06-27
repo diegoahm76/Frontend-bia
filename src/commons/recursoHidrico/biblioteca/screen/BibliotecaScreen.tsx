@@ -1,30 +1,69 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Avatar, Divider, Grid, IconButton, Typography } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { DataContext } from '../context/contextData';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { AgregarSeccionSubSeccion } from '../components/AgregarSeccionSubSeccion';
 import EditIcon from '@mui/icons-material/Edit';
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import { useForm } from 'react-hook-form';
+import { SeccionSubseccionMain } from '../components/SeccionSubseccionMain';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BibliotecaScreen: React.FC = () => {
-  const { rows_seccion, fetch_data_seccion, set_id_seccion } =
-    useContext(DataContext);
+  const {
+    rows_seccion,
+    fetch_data_seccion,
+    set_id_seccion,
+    set_info_seccion,
+    set_is_editar_seccion,
+    set_is_seleccionar_seccion,
+  } = useContext(DataContext);
+
+  const {
+    register,
+    handleSubmit: handle_submit,
+    reset,
+    setValue: set_value,
+    formState: { errors },
+  } = useForm();
 
   const columns: GridColDef[] = [
     { field: 'id_seccion', headerName: 'No SECCIÓN', width: 120 },
     { field: 'nombre', headerName: 'NOMBRE', width: 200 },
-    { field: 'descripcion', headerName: 'DESCRIPCIÓN', width: 300 },
+    {
+      field: 'descripcion',
+      headerName: 'DESCRIPCIÓN',
+      width: 400,
+      renderCell: (params) => (
+        <div
+          style={{
+            whiteSpace: 'pre-wrap',
+            wordWrap: 'break-word',
+            height: 'auto',
+            overflowWrap: 'break-word',
+            wordBreak: 'break-word',
+            maxHeight: '100px',
+          }}
+        >
+          {params.value}
+        </div>
+      ),
+    },
     { field: 'fecha_creacion', headerName: 'FECHA CREACIÓN', width: 200 },
     { field: 'nombre_completo', headerName: 'PERSONA CREADORA', width: 300 },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 300,
+      width: 120,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => {}}>
+          <IconButton
+            onClick={() => {
+              set_info_seccion(params.row);
+              set_is_editar_seccion(true);
+            }}
+          >
             <Avatar
               sx={{
                 width: 24,
@@ -47,6 +86,8 @@ export const BibliotecaScreen: React.FC = () => {
           <IconButton
             onClick={() => {
               set_id_seccion(params.row.id_seccion);
+              set_info_seccion(params.row);
+              set_is_seleccionar_seccion(true);
             }}
           >
             <Avatar
@@ -79,6 +120,7 @@ export const BibliotecaScreen: React.FC = () => {
 
   return (
     <>
+      {<SeccionSubseccionMain />}
       <Grid
         container
         spacing={2}
@@ -95,7 +137,7 @@ export const BibliotecaScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="REGISTRO DE SECCIONES Y SUBSECCIONES" />
+          <Title title="SECCIÓN" />
         </Grid>
         {rows_seccion.length > 0 && (
           <>
@@ -109,16 +151,19 @@ export const BibliotecaScreen: React.FC = () => {
               <DataGrid
                 autoHeight
                 rows={rows_seccion}
-                columns={columns}
+                columns={columns.map((column) => ({
+                  ...column,
+                  wrapText: true,
+                }))}
                 getRowId={(row) => row.id_seccion}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
+                rowHeight={100} // Aumenta la altura de las filas
               />
             </Grid>
           </>
         )}
       </Grid>
-      {<AgregarSeccionSubSeccion />}
     </>
   );
 };

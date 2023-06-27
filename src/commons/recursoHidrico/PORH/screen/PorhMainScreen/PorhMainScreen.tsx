@@ -46,24 +46,19 @@ export const PorhMainScreen: React.FC = () => {
     is_editar_proyecto,
     id_actividad,
     id_proyecto,
-    set_id_programa,
+    is_general,
+    is_consulta,
     id_programa,
+    set_id_programa,
     fetch_data_actividades,
     fetch_data_proyectos,
     fetch_data_programas,
-    is_general,
-    is_consulta,
     set_mode,
+    reset_form_agregar_programa,
     set_data_programa,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
-    {
-      field: 'id_programa',
-      headerName: 'No PROGRAMA',
-      sortable: true,
-      width: 170,
-    },
     {
       field: 'nombre',
       headerName: 'NOMBRE PROGRAMA',
@@ -187,7 +182,9 @@ export const PorhMainScreen: React.FC = () => {
         rows_proyectos,
         rows_actividades
       );
+      reset_form_agregar_programa();
       reset();
+      set_mode('register_programa')
       control_success('Se creó correctamente');
       set_is_saving(false);
       await fetch_data_programas();
