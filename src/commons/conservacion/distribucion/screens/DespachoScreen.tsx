@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable react/jsx-no-undef */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 
