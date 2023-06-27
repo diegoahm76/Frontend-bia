@@ -3,7 +3,8 @@ import BuscarModelo from "../../../../../../components/partials/getModels/Buscar
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { get_computers_all_service } from '../store/thunks/cvComputoThunks';
-import { set_computers, set_current_computer } from '../store/slices/indexCvComputo';
+import { set_computers, set_current_computer, set_current_cv_computer } from '../store/slices/indexCvComputo';
+import { useEffect, useState } from 'react';
 
 
 
@@ -20,8 +21,10 @@ const Especificaciones = ({
 }: IProps) => {
 
 
-    const { computers, marcas } = useAppSelector((state) => state.cv);
-
+    const { computers, marcas, current_cv_computer } = useAppSelector((state) => state.cv);
+  const [file, set_file] = useState<any>(null);
+  const [selected_image_aux, set_selected_image_aux] = useState<any>(null);
+  const [file_name, set_file_name] = useState<string>("");
 
 
     const dispatch = useAppDispatch();
@@ -79,6 +82,56 @@ const Especificaciones = ({
         }
     })
 
+     useEffect(() => {
+    if (file !== null) {
+      const reader = new FileReader();
+        reader.onload = () => {
+          set_selected_image_aux(reader.result);
+        };
+        reader.readAsDataURL(file);
+      if ('name' in file) {
+        console.log(file.name)
+        set_file_name(file.name)
+        dispatch(set_current_cv_computer({ 
+          ...current_cv_computer, 
+          id_marca: get_values("id_marca"), 
+          estado: get_values("estado"), 
+          color: get_values("color"), 
+          tipo_de_equipo: get_values("tipo_de_equipo"), 
+          capacidad_almacenamiento: get_values("capacidad_almacenamiento"), 
+          procesador: get_values("procesador"), 
+          memoria_ram: get_values("memoria_ram"), 
+          tipo_almacenamiento: get_values("tipo_almacenamiento"), 
+          suite_ofimatica: get_values("suite_ofimatica"), 
+          antivirus: get_values("antivirus"), 
+          otras_aplicaciones: get_values("otras_aplicaciones"), 
+          ruta_imagen_foto: file
+        }))
+        
+      }
+    }
+  }, [file]);
+
+   useEffect(() => {
+    if (current_cv_computer.id_hoja_de_vida
+         !== null) {
+      if (current_cv_computer.ruta_imagen_foto !== null) {
+        const file = current_cv_computer.ruta_imagen_foto
+        console.log(file)
+        if(!(typeof file === "string")){
+            if ('name' in file) {
+                set_file_name(String(file.name))
+              
+            }
+        } else {
+            set_file_name(String(current_cv_computer.ruta_imagen_foto))
+            set_selected_image_aux(current_cv_computer.ruta_imagen_foto);
+        }
+        
+      }
+   }
+  }, [current_cv_computer]);
+
 
     return (
         <>
@@ -100,6 +153,14 @@ const Especificaciones = ({
                         {
                             datum_type: "title",
                             title_label: title ?? "hh"
+                        },
+                        {
+                            datum_type: "image_uploader",
+                            xs: 12,
+                            md: 12,
+                            selected_image: selected_image_aux,
+                            width_image: '150px',
+                            height_image: 'auto',
                         },
                         {
                             datum_type: "input_controller",
@@ -135,7 +196,7 @@ const Especificaciones = ({
                             xs: 12,
                             md: 3,
                             control_form: control_computo,
-                            control_name: "serie",
+                            control_name: "doc_identificador_nro",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Serie",
@@ -157,7 +218,7 @@ const Especificaciones = ({
                             helper_text: "debe seleccionar campo",
                             select_options: [{ label: "Óptimo", value: "O" }, { label: "Defectuoso", value: "D" }, { label: "Averiado", value: "A" }],
                             option_label: "label",
-                            option_key: "value",
+                            option_key: "label",
 
                         },
                         {
@@ -186,6 +247,20 @@ const Especificaciones = ({
                             disabled: true,
                             helper_text: "Portatil, Tablet, All-in-on"
                         },
+                          {
+                            datum_type: "input_file_controller",
+                            xs: 12,
+                            md: 6,
+                            control_form: control_computo,
+                            control_name: "ruta_imagen_foto",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "Archivo requerido" } },
+                            label: "Imagen equipo",
+                            disabled: false,
+                            helper_text: "",
+                            set_value: set_file,
+                            file_name,
+                            },
                     ]}
                     modal_select_model_title='Buscar Computadores'
                     modal_form_filters={[

@@ -1,13 +1,15 @@
-import { Grid, } from "@mui/material";
+import { Avatar, Grid, IconButton, Tooltip, } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../../../hooks";
-import { type IObjBienConsumo, type IObjBienesSolicitud } from "../../interfaces/solicitudBienConsumo";
+import { type IObjBienViveroConsumo, type IObjBienesViveroSolicitud } from "../../interfaces/solicitudBienConsumo";
 import { useEffect, useState, } from "react";
 import { type GridColDef } from "@mui/x-data-grid";
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 // import { get_bienes_consumo } from "../../store/solicitudBienConsumoThunks";
-import { set_bienes, set_bienes_solicitud, set_current_bien } from "../../store/slices/indexSolicitudBienesConsumo";
+import { set_bienes_solicitud, set_bienes_vivero, set_current_bien_vivero } from "../../store/slices/indexSolicitudBienesConsumo";
 import { useForm } from "react-hook-form";
-import { control_error, get_bienes_vivero_consumo, get_bienes_consumo_vivero_codigo_bien } from "../../store/solicitudBienConsumoThunks";
+import { control_error, get_bienes_consumo_vivero_codigo_bien, get_bienes_vivero_consumo } from "../../store/solicitudBienConsumoThunks";
+// import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
@@ -18,10 +20,10 @@ const SeleccionarBienConsumoVivero = () => {
 
 
     // const [action, set_action] = useState<string>("agregar");
-    const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjBienConsumo>();
-    const { control: control_bien_solicitud_vivero, handleSubmit: handle_submit_item_solicitud } = useForm<IObjBienesSolicitud>();
-    const { unidades_medida, bienes, bienes_solicitud, current_bien, current_solicitud_vivero } = useAppSelector((state) => state.solic_consumo);
-    const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesSolicitud[]>([]);
+    const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjBienViveroConsumo>();
+    const { control: control_bien_solicitud_vivero, handleSubmit: handle_submit_item_solicitud } = useForm<IObjBienesViveroSolicitud>();
+    const { unidades_medida, bienes_vivero, bienes_solicitud, current_bien_vivero, current_solicitud_vivero } = useAppSelector((state) => state.solic_consumo);
+    const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesViveroSolicitud[]>([]);
     const [action, set_action] = useState<string>("crear");
 
     // const [item_solicitudes, set_item_solicitudes] = useState<ItemSolicitudConsumible[]>([]);
@@ -36,9 +38,9 @@ const SeleccionarBienConsumoVivero = () => {
     }, [aux_bienes_solicitud]);
 
     useEffect(() => {
-        console.log(current_bien)
-        reset_bien(current_bien)
-    }, [current_bien]);
+        console.log(current_bien_vivero)
+        reset_bien(current_bien_vivero)
+    }, [current_bien_vivero]);
 
 
     const columns_bienes: GridColDef[] = [
@@ -124,11 +126,11 @@ const SeleccionarBienConsumoVivero = () => {
             width: 90,
             renderCell: (params) => (
                 <>
-
-                    {/* <Tooltip title="Editar">
+                    {/* 
+                     <Tooltip title="Editar">
                             <IconButton
                                 onClick={() => {
-                                    edit_bien_siembra(params.row)
+                                    edit_bien_solicitud(params.row)
 
                                 }}
                             >
@@ -147,46 +149,46 @@ const SeleccionarBienConsumoVivero = () => {
 
                                 </Avatar>
                             </IconButton>
-                        </Tooltip> */}
+                        </Tooltip>  */}
 
-                    {/* <Tooltip title="Borrar">
-                            <IconButton
-                                onClick={() => {
-                                    delete_bien_siembra(params.row)
+                    <Tooltip title="Borrar">
+                        <IconButton
+                            onClick={() => {
+                                delete_bien_solicitud(params.row)
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    width: 24,
+                                    height: 24,
+                                    background: '#fff',
+                                    border: '2px solid',
                                 }}
+                                variant="rounded"
                             >
-                                <Avatar
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        background: '#fff',
-                                        border: '2px solid',
-                                    }}
-                                    variant="rounded"
-                                >
-                                    <DeleteIcon
-                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                    />
+                                <DeleteIcon
+                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                />
 
-                                </Avatar>
-                            </IconButton>
-                        </Tooltip>
-                     */}
+                            </Avatar>
+                        </IconButton>
+                    </Tooltip>
+
                 </>
             ),
         },
     ];
 
-    const on_submit_item_solicitud = (data: IObjBienesSolicitud): void => {
-        if (current_bien.id_bien !== null) {
-            if (get_values_bien("codigo_bien") === current_bien.codigo_bien) {
-                const bien: IObjBienesSolicitud | undefined = aux_bienes_solicitud.find((p) => p.id_bien === current_bien.id_bien)
+    const on_submit_item_solicitud = (data: IObjBienesViveroSolicitud): void => {
+        if (current_bien_vivero.id_bien !== null) {
+            if (get_values_bien("codigo_bien") === current_bien_vivero.codigo_bien) {
+                const bien: IObjBienesViveroSolicitud | undefined = aux_bienes_solicitud.find((p) => p.id_bien === current_bien_vivero.id_bien)
 
-                const new_bien: IObjBienesSolicitud = {
+                const new_bien: IObjBienesViveroSolicitud = {
                     id_item_solicitud_consumible: null,
-                    codigo_bien: current_bien.codigo_bien ?? "",
-                    nombre_bien: current_bien.nombre ?? "",
-                    id_bien: current_bien.id_bien ?? null,
+                    codigo_bien: current_bien_vivero.codigo_bien ?? "",
+                    nombre_bien: current_bien_vivero.nombre ?? "",
+                    id_bien: current_bien_vivero.id_bien ?? null,
                     cantidad: data.cantidad,
                     observaciones: data.observaciones,
                     id_unidad_medida: data.id_unidad_medida,
@@ -198,9 +200,9 @@ const SeleccionarBienConsumoVivero = () => {
 
                 } else {
                     if (action === "editar") {
-                        const aux_items: IObjBienesSolicitud[] = []
+                        const aux_items: IObjBienesViveroSolicitud[] = []
                         aux_bienes_solicitud.forEach((option) => {
-                            if (option.id_bien === current_bien.id_bien) {
+                            if (option.id_bien === current_bien_vivero.id_bien) {
                                 aux_items.push(new_bien)
                             } else {
                                 aux_items.push(option)
@@ -223,12 +225,11 @@ const SeleccionarBienConsumoVivero = () => {
 
 
     const get_bienes_filtro: any = (async () => {
-        console.log("buscar tatata...")
-        const codigo_bien = get_values_bien("codigo_bien")
-        const nombre = get_values_bien("nombre")
-        const nombre_cientifico = get_values_bien("nombre_cientifico")
-        const cod_tipo_elemento_vivero = get_values_bien("cod_tipo_elemento_vivero")
-
+        console.log("buscar...")
+        const codigo_bien = get_values_bien("codigo_bien") ?? ""
+        const nombre = get_values_bien("nombre") ?? ""
+        const nombre_cientifico = get_values_bien("nombre_cientifico") ?? ""
+        const cod_tipo_elemento_vivero = get_values_bien("cod_tipo_elemento_vivero") ?? ""
         if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined && nombre_cientifico !== null && nombre_cientifico !== undefined && cod_tipo_elemento_vivero !== null && cod_tipo_elemento_vivero !== undefined) {
 
             void dispatch(get_bienes_vivero_consumo(codigo_bien, nombre, nombre_cientifico, cod_tipo_elemento_vivero))
@@ -241,6 +242,36 @@ const SeleccionarBienConsumoVivero = () => {
             void dispatch(get_bienes_consumo_vivero_codigo_bien(codigo_bien))
         }
     })
+
+    //  const edit_bien_solicitud = (item: IObjBienesViveroSolicitud): void => {
+    //     set_action("editar")
+    //     const item_bien = aux_bienes_solicitud.find((p) => p.id_bien === item.id_bien)
+    //     reset_bien_solicitud(item_bien)
+    //     const aux_items: IObjBienViveroConsumo[] = []
+    //     aux_bienes_solicitud.forEach((option) => {
+    //         if (option.id_bien !== item.id_bien) {
+    //             aux_items.push(option)
+    //         }
+    //     })
+
+    //     set_aux_bienes_solicitud(aux_items)
+    // };
+    const delete_bien_solicitud = (item: IObjBienesViveroSolicitud): void => {
+        const bien: IObjBienViveroConsumo | undefined = bienes_vivero.find((p: IObjBienViveroConsumo) => p.id_bien === item.id_bien)
+        console.log("bien", bien)
+        if (bien !== undefined) {
+            console.log(bien)
+            dispatch(set_current_bien_vivero(bien))
+        }
+        const aux_items: IObjBienesViveroSolicitud[] = []
+        aux_bienes_solicitud.forEach((option) => {
+            if (option.id_bien !== item.id_bien) {
+                aux_items.push(option)
+            }
+        })
+        set_aux_bienes_solicitud(aux_items)
+
+    };
     return (
         <>
             <Grid
@@ -250,12 +281,12 @@ const SeleccionarBienConsumoVivero = () => {
                 borderRadius={2}
             >
                 <BuscarModelo
-                    set_current_model={set_current_bien}
+                    set_current_model={set_current_bien_vivero}
                     row_id={"id_bien"}
                     columns_model={columns_bienes}
-                    models={bienes}
+                    models={bienes_vivero}
                     get_filters_models={get_bienes_filtro}
-                    set_models={set_bienes}
+                    set_models={set_bienes_vivero}
                     button_submit_label='Buscar bien'
                     form_inputs={[
                         {
@@ -368,6 +399,21 @@ const SeleccionarBienConsumoVivero = () => {
                             type: "text",
                             disabled: false,
                             helper_text: ""
+                        },
+                        {
+                            datum_type: "select_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "cod_tipo_elemento_vivero",
+                            default_value: "",
+                            rules: {},
+                            label: "Tipo de bien",
+                            disabled: false,
+                            helper_text: "",
+                            select_options: [{ label: "Insumos", value: "IN" }, { label: "Material Vegetal", value: "MV" }, { label: "Herramientas", value: "HE" }],
+                            option_label: "label",
+                            option_key: "value",
                         },
                     ]}
                 />

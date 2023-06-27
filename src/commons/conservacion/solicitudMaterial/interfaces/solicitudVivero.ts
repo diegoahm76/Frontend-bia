@@ -71,8 +71,6 @@ export interface IObjSolicitudVivero {
   fecha_aprobacion_responsable?: string | null;
   gestionada_viveros?: boolean;
   id_despacho_viveros?: number | null;
-  observacion_cierre_no_dispo_viveros?: string | null;
-  fecha_cierre_no_dispo?: string | null;
   revisada_coord_viveros?: boolean;
   estado_aprobacion_coord_viveros?: string | null;
   justificacion_aprobacion_coord_viveros?: string | null;
@@ -87,10 +85,13 @@ export interface IObjSolicitudVivero {
   id_funcionario_responsable_und_destino?: number | null;
   id_unidad_org_del_responsable?: number | null;
   id_persona_cierre_no_dispo_viveros?: number | null;
+  observacion_cierre_no_dispo_viveros?: string | null;
+  fecha_cierre_no_dispo?: string | null;
   id_persona_coord_viveros?: number | null;
   nombre_unidad_organizacional?: string | null;
   persona_solicita?: string | null;
   persona_responsable?: string | null;
+  persona_cierra?: string | null;
   nombre_unidad_organizacional_destino?: string | null;
 }
 
@@ -103,6 +104,8 @@ export interface IObjBienesSolicitud {
   codigo_bien?: string | null;
   nombre_bien?: string | null;
   cantidad?: number | null;
+  cantidad_faltante?: number | null;
+  cantidad_despachada?: number | null;
   observaciones?: string | null;
 }
 export interface IObjBienConsumo {

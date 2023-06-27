@@ -75,6 +75,16 @@ const SeleccionarBienDistribuir = () => {
                 </div>
             ),
         },
+        {
+            field: 'tipo_documento',
+            headerName: 'Tipo documento',
+            width: 150,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
 
     ];
 
@@ -233,7 +243,7 @@ const SeleccionarBienDistribuir = () => {
                         id_vivero: data.id_vivero,
                         id_bien: current_bien.id_bien,
                         cantidad_asignada: Number(data.cantidad_asignada),
-                        cod_etapa_lote_al_ingresar: (get_values_bien("es_semilla_vivero") !== false) ? "G" : data.cod_etapa_lote_al_ingresar,
+                        cod_etapa_lote_al_ingresar: data.cod_etapa_lote_al_ingresar ?? "G",
                         id_item_despacho_entrante: get_values_bien("id_item_despacho_entrante"),
                         vivero_nombre: vivero?.nombre ?? "",
                         unidad_medida: current_bien.unidad_medida ?? "",
@@ -404,7 +414,7 @@ const SeleccionarBienDistribuir = () => {
                             select_options: [{ label: "Producción", value: "P" }, { label: "Distribución", value: "D" }],
                             option_label: "label",
                             option_key: "value",
-                            hidden_text: get_values_bien("es_semilla_vivero") !== false
+                            hidden_text: !(get_values_bien("es_semilla_vivero") === false && current_bien.cod_tipo_elemento_vivero === "MV")
                         },
                         {
                             datum_type: "input_controller",

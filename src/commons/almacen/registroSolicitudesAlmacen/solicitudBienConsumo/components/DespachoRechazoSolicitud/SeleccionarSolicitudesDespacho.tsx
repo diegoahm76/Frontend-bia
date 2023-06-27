@@ -1,9 +1,9 @@
 import { Grid, } from '@mui/material';
-import BuscarModelo from "../../../../../components/partials/getModels/BuscarModelo";
+import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_solicitudes_pendientes_despacho } from '../store/solicitudBienConsumoThunks';
-import { set_current_solicitud, set_solicitudes } from '../store/slices/indexSolicitudBienesConsumo';
+import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
+import { get_solicitudes_pendientes_despacho } from '../../store/solicitudBienConsumoThunks';
+import { set_current_solicitud, set_solicitudes } from '../../store/slices/indexSolicitudBienesConsumo';
 // import type { AuthSlice } from '../../../../auth/interfaces';
 // import { useSelector } from 'react-redux';
 
@@ -54,7 +54,7 @@ const SeleccionarSolicitudDespacho = ({
 
         },
         {
-            field: 'nro_solicitud_por_tipo',
+            field: 'persona_solicita',
             headerName: 'Solicitud elaborada por:',
             width: 400,
 
@@ -78,12 +78,7 @@ const SeleccionarSolicitudDespacho = ({
         void dispatch(get_solicitudes_pendientes_despacho())
     })
 
-    const search_solicitud: any = (async () => {
-        const solicitud_id = get_values("id_solicitud_consumibles")
-        if (solicitud_id !== null) {
-            void dispatch(get_solicitudes_pendientes_despacho())
-        }
-    })
+
 
 
     return (
@@ -116,14 +111,13 @@ const SeleccionarSolicitudDespacho = ({
                             xs: 5,
                             md: 2,
                             control_form: control_solicitud_despacho,
-                            control_name: "id_solicitud_consumibles",
+                            control_name: "nro_solicitud_por_tipo",
                             default_value: "",
                             rules: {},
                             label: "ID",
                             type: "number",
                             disabled: false,
                             helper_text: "",
-                            on_blur_function: search_solicitud
                         },
 
                         {
@@ -154,34 +148,6 @@ const SeleccionarSolicitudDespacho = ({
                         },
                         {
                             datum_type: "input_controller",
-                            xs: 5,
-                            md: 6,
-                            control_form: control_solicitud_despacho,
-                            control_name: "persona_solicita",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Solicitud elaborada por:",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-
-                        {
-                            datum_type: "input_controller",
-                            xs: 5,
-                            md: 6,
-                            control_form: control_solicitud_despacho,
-                            control_name: "nombre_unidad_organizacional",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Unidad a la que pertenece:",
-                            type: "text",
-                            disabled: true,
-                            helper_text: ""
-                        },
-
-                        {
-                            datum_type: "input_controller",
                             xs: 12,
                             md: 12,
                             control_form: control_solicitud_despacho,
@@ -210,10 +176,19 @@ const SeleccionarSolicitudDespacho = ({
                             disabled: true,
                             helper_text: ""
                         },
-
-
-
-
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 9,
+                            control_form: control_solicitud_despacho,
+                            control_name: "persona_solicita",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Solicitud elaborada por:",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
 
                     ]}
                     modal_select_model_title='Buscar solicitud'

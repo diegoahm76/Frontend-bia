@@ -1,8 +1,4 @@
 
-
-
-
-
 export interface IObjDespacho {
     id_despacho_consumo?: number | null;
     numero_despacho_consumo?: number | null;
@@ -15,7 +11,7 @@ export interface IObjDespacho {
     despacho_anulado: null,
     justificacion_anulacion?: string | null;
     fecha_anulacion?: string | null;
-    ruta_archivo_doc_con_recibido: null;
+    ruta_archivo_doc_con_recibido: string | null;
     id_solicitud_consumo?: number | null;
     id_persona_despacha?: number | null;
     id_persona_solicita?: number | null;
@@ -24,6 +20,17 @@ export interface IObjDespacho {
     id_entrada_almacen_cv?: number | null;
     id_bodega_general?: number | null;
     id_persona_anula?: number | null;
+}
+export interface IObjBienDespacho {
+    id_item_despacho_consumo: number | null;
+    id_bien_despachado: number | null;
+    id_bien_solicitado: number | null;
+    id_bodega: number | null;
+    cantidad_solicitada: number | null;
+    id_unidad_medida_solicitada: number | null;
+    cantidad_despachada: number | null;
+    observacion: string | null;
+    numero_posicion_despacho: number | null;
 }
 
 export interface IObjBienConsumo {

@@ -3,7 +3,7 @@ import { Controller } from 'react-hook-form';
 import { TextField, Dialog, DialogActions, DialogTitle, Stack, Button, Box, Divider, Grid } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import CloseIcon from '@mui/icons-material/Close';
-import { type IList } from '../../../../../interfaces/globalModels';
+import { type IList } from '../../../../../../interfaces/globalModels';
 
 
 interface IProps {
@@ -119,7 +119,7 @@ const AnularSolicitudViveroModal = ({
                             }) => (
                                 <TextField
                                     margin="dense"
-                                    rows={4}
+                                    fullWidth
                                     size="small"
                                     label="Anulación elaborada por:"
                                     variant="outlined"

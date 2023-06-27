@@ -306,7 +306,7 @@ const SeleccionarLoteSiembra = () => {
                 if ((data.cantidad_baja??0) <= (current_siembra_material_vegetal.saldo_disponible_registro ?? 0))
                 {  
                     const new_bien: IObjItemMortalidad = {
-                        id_item_baja_viveros: null,
+                        id_item_baja_viveros: data.id_item_baja_viveros ?? null,
                         id_baja: current_mortalidad.id_baja,
                         agno_lote: current_siembra_material_vegetal.agno_lote,
                         nro_lote: current_siembra_material_vegetal.nro_lote,
@@ -317,7 +317,7 @@ const SeleccionarLoteSiembra = () => {
                         codigo_bien: current_siembra_material_vegetal.codigo_bien,
                         observaciones: data.observaciones,
                         unidad_medida: current_siembra_material_vegetal.unidad_medida,
-                        consec_cuaren_por_lote_etapa: null
+                        consec_cuaren_por_lote_etapa: data.consec_cuaren_por_lote_etapa ?? null
                     }
                     if (bien === undefined) {
                             set_aux_insumos([...aux_insumos, new_bien])

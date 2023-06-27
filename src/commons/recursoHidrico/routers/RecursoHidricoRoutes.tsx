@@ -4,6 +4,7 @@ import { EstacionesRoutes } from '../estaciones/routers/EstacionesRoutes';
 // import { IndexEstacionesScreen } from '../estaciones/screens';
 import { PorhRoutes } from './../PORH/router/PorhRoutes';
 import { AvancesRoutes } from '../Avances/router/AvancesRoutes';
+import { BibliotecaRouter } from '../biblioteca/router/BibliotecaRouter';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecursoHidricoRoutes: React.FC = () => {
@@ -14,6 +15,7 @@ export const RecursoHidricoRoutes: React.FC = () => {
       <Route path="estaciones/*" element={<EstacionesRoutes />} />
       <Route path="porh/*" element={<PorhRoutes />} />
       <Route path="proyectos/*" element={<AvancesRoutes />} />
+      <Route path="biblioteca/*" element={<BibliotecaRouter />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );

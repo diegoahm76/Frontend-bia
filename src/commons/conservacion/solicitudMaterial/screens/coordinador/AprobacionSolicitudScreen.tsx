@@ -104,10 +104,10 @@ const AprobacionSolicitudCoordinadorScreen = () => {
   const on_submit_aprobacion = (data: IObjSolicitudVivero): void => {
     console.log("aprobacion...")
     const form_data = {
-      estado_aprobacion_responsable: data.estado_aprobacion_responsable,
-      justificacion_aprobacion_responsable: data.justificacion_aprobacion_responsable,
-      fecha_aprobacion_responsable: null,
-      revisada_responsable: null,
+      estado_aprobacion_coord_viveros: data.estado_aprobacion_responsable,
+      justificacion_aprobacion_coord_viveros: data.justificacion_aprobacion_responsable,
+      fecha_aprobacion_coord_viv: null,
+      revisada_coord_viveros: null,
       solicitud_abierta: null,
       fecha_cierra_solicitud: null
     }
@@ -132,6 +132,7 @@ const AprobacionSolicitudCoordinadorScreen = () => {
         p: '20px',
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
+        marginTop:"20px"
 
       }}
     >
@@ -154,6 +155,7 @@ const AprobacionSolicitudCoordinadorScreen = () => {
       <SeleccionBienAprobacion />
 
       <Aprobacion
+        cordinador={true}
         control_solicitud_aprobada={control_solicitud_aprobada}
         get_values={get_values} />
 

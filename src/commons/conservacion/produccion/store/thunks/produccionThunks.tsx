@@ -461,7 +461,8 @@ export const get_bienes_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
-      // const { data } = await api.get(`conservacion/mezclas/get-insumo-por-codigo-y-nombre/${id_vivero??""}/${codigo_bien??""}/${nombre??""}/`);
+      // const { data } = await api.get(`conservacion/mezclas/get-insumo-por-codigo-y-nombre/?id_vivero=${id_vivero}&codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}`);
+      
       console.log(data)
       dispatch(set_bienes(data.data));
       return data;
@@ -480,7 +481,7 @@ export const get_lots_code_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`onservacion/mortalidad/material-vegetal/get-by-codigo/${id_vivero}/?codigo_bien=${code}/`);
+      const { data } = await api.get(`conservacion/mortalidad/material-vegetal/get-by-codigo/${id_vivero}/?codigo_bien=${code}/`);
       console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.data.length > 0) {

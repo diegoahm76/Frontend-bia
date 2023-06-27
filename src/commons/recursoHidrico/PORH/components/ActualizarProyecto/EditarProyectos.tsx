@@ -1,57 +1,54 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
-import { TextField, } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { TextField } from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import "react-datepicker/dist/react-datepicker.css";
+import 'react-datepicker/dist/react-datepicker.css';
 import esLocale from 'dayjs/locale/es';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DataContext } from '../../context/contextData';
+import dayjs, { type Dayjs } from 'dayjs';
 interface IProps {
   data: any;
-  set_data: any;
-  watch: any;
-  register: any;
-  set_value: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarProyecto: React.FC<IProps> = (
-  { data,
-    set_data,
+export const EditarProyecto: React.FC<IProps> = ({ data }: IProps) => {
+  const {
     register,
-    set_value,
-    watch
-  }:
-    IProps) => {
+    watch,
+    setValue: set_value,
+    // errors,
+  } = useContext(DataContext);
 
   const nombre = watch('nombre');
   const inversion = watch('inversion');
 
   useEffect(() => {
-    if (data !== undefined) {
-      set_start_date(new Date(data.vigencia_inicial))
-      set_value('vigencia_final', data.vigencia_final)
-      set_value('vigencia_inicial', data.vigencia_inicial)
-      set_end_date(new Date(data.vigencia_final))
-      set_value('nombre', data.nombre)
-      set_value('inversion', data.inversion)
+    if (data) {
+      set_start_date(dayjs(data.vigencia_inicial));
+      set_value('vigencia_final', data.vigencia_final);
+      set_value('vigencia_inicial', data.vigencia_inicial);
+      set_end_date(dayjs(data.vigencia_final));
+      set_value('nombre', data.nombre);
+      set_value('inversion', data.inversion);
     }
-  }, [data !== undefined]);
-
+  }, [data]);
 
   // fechas
-  const [start_date, set_start_date] = useState<Date | null>(new Date());
-  const [end_date, set_end_date] = useState<Date | null>(new Date());
+  const [start_date, set_start_date] = useState<Dayjs | null>(null);
+  const [end_date, set_end_date] = useState<Dayjs | null>(null);
 
-  const handle_start_date_change = (date: Date | null): void => {
-    set_value('vigencia_inicial', date)
-    set_start_date(date)
+  const handle_start_date_change = (date: Dayjs | null): void => {
+    set_value('vigencia_inicial', date);
+    set_start_date(dayjs(date));
   };
 
-  const handle_end_date_change = (date: Date | null): void => {
-    set_value('vigencia_final', date)
-    set_end_date(date)
+  const handle_end_date_change = (date: Dayjs | null): void => {
+    set_value('vigencia_final', date);
+    set_end_date(dayjs(date));
   };
   return (
     <>
@@ -67,7 +64,7 @@ export const EditarProyecto: React.FC<IProps> = (
           required
           value={nombre}
           autoFocus
-          {...register("nombre", { required: true })}
+          {...register('nombre', { required: true })}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -85,7 +82,7 @@ export const EditarProyecto: React.FC<IProps> = (
                 fullWidth
                 size="small"
                 {...params}
-                {...register("vigencia_inicial", { required: true })}
+                {...register('vigencia_inicial', { required: true })}
               />
             )}
           />
@@ -106,7 +103,7 @@ export const EditarProyecto: React.FC<IProps> = (
                 fullWidth
                 size="small"
                 {...params}
-                {...register("vigencia_final", { required: true })}
+                {...register('vigencia_final', { required: true })}
               />
             )}
           />
@@ -122,7 +119,7 @@ export const EditarProyecto: React.FC<IProps> = (
           autoFocus
           value={inversion}
           type="text"
-          {...register("inversion", { required: true })}
+          {...register('inversion', { required: true })}
         />
       </Grid>
     </>

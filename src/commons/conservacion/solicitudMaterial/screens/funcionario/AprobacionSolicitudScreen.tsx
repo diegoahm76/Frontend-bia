@@ -143,6 +143,7 @@ const AprobacionSolicitudScreen = () => {
       <SeleccionBienAprobacion />
 
       <Aprobacion
+        cordinador={false}
         control_solicitud_aprobada={control_solicitud_aprobada}
         get_values={get_values} />
 
