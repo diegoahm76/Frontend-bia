@@ -471,3 +471,14 @@ body::-webkit-scrollbar-thumb {
     display: none !important;
   }
 }
+
+.image-container {
+  width: 150px; /* Ancho deseado */
+  height: auto; /* Altura ajustada automáticamente */
+  margin-bottom: 10px; /* Espacio inferior entre la imagen y el campo de entrada */
+}
+
+.image {
+  width: 100%; /* Ajusta la imagen al ancho del contenedor */
+  height: auto; /* Altura ajustada automáticamente */
+}

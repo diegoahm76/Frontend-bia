@@ -34,7 +34,6 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
-
 const button_style = {
   color: 'white',
   borderRadius: '50%',
@@ -43,22 +42,20 @@ const button_style = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginRight: '10px'
+  marginRight: '10px',
 };
-
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function TipificacionBienesScreen(): JSX.Element {
   // const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
-  const [action, set_action] = useState<string>("create");
+  const [action, set_action] = useState<string>('create');
   const { bienes } = useAppSelector((state) => state.configuracion);
   const [edit_bien_is_active, set_edit_bien_is_active] =
     useState<boolean>(false);
   const [searchtext, setsearchtext] = useState('');
   const [filterednurseries, setfilterednurseries] = useState<any[]>(bienes);
-
 
   const columns: GridColDef[] = [
     { field: 'id_bien', headerName: 'ID', width: 20 },
@@ -74,22 +71,21 @@ export function TipificacionBienesScreen(): JSX.Element {
     },
     {
       field: 'nombre_cientifico',
-      headerName: 'Nombre cientifico',
+      headerName: 'Nombre científico',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value === null ? "Sin definir" : params.value}
+          {params.value === null ? 'Sin definir' : params.value}
         </div>
       ),
-
     },
     {
       field: 'cod_tipo_elemento_vivero',
-      headerName: 'Tipo elemento',
+      headerName: 'Tipo de elemento',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value === null ? "Sin definir" : params.value}
+          {params.value === null ? 'Sin definir' : params.value}
         </div>
       ),
     },
@@ -99,18 +95,15 @@ export function TipificacionBienesScreen(): JSX.Element {
       width: 100,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return (params.row.cod_tipo_elemento_vivero === "MV") ?
-          (params.row.es_semilla_vivero ?
-            (
-              <Chip size="small" label="SI" color="success" variant="outlined" />
-            )
-            :
-            (
-              <Chip size="small" label="NO" color="error" variant="outlined" />
-
-            ))
-          :
+        return params.row.cod_tipo_elemento_vivero === 'MV' ? (
+          params.row.es_semilla_vivero ? (
+            <Chip size="small" label="SI" color="success" variant="outlined" />
+          ) : (
+            <Chip size="small" label="NO" color="error" variant="outlined" />
+          )
+        ) : (
           <Chip size="small" label="N/A" color="primary" variant="outlined" />
+        );
       },
     },
     {
@@ -123,8 +116,8 @@ export function TipificacionBienesScreen(): JSX.Element {
             <IconButton
               onClick={() => {
                 dispatch(current_bien(params.row));
-                set_action("detail")
-                set_edit_bien_is_active(true)
+                set_action('detail');
+                set_edit_bien_is_active(true);
               }}
             >
               <Avatar
@@ -139,7 +132,6 @@ export function TipificacionBienesScreen(): JSX.Element {
                 <ArticleIcon
                   sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 />
-
               </Avatar>
             </IconButton>
           </Tooltip>
@@ -147,8 +139,8 @@ export function TipificacionBienesScreen(): JSX.Element {
             <IconButton
               onClick={() => {
                 dispatch(current_bien(params.row));
-                set_action("edit")
-                set_edit_bien_is_active(true)
+                set_action('edit');
+                set_edit_bien_is_active(true);
               }}
             >
               <Avatar
@@ -179,17 +171,17 @@ export function TipificacionBienesScreen(): JSX.Element {
     void dispatch(get_bienes_service()).then((response: any) => {
       console.log(response);
       setfilterednurseries(response.data);
-    }
-    );
+    });
   }, [dispatch]);
 
-
-
   // eslint-disable-next-line object-shorthand
-  const handle_clickxls = (): void => { download_xls({ nurseries: bienes, columns: columns }); };
+  const handle_clickxls = (): void => {
+    download_xls({ nurseries: bienes, columns });
+  };
   // eslint-disable-next-line object-shorthand
-  const handle_clickpdf = (): void => { download_pdf({ nurseries: bienes, columns: columns }); };
-
+  const handle_clickpdf = (): void => {
+    download_pdf({ nurseries: bienes, columns });
+  };
 
   return (
     <>
@@ -202,29 +194,32 @@ export function TipificacionBienesScreen(): JSX.Element {
           p: '20px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
-        }} spacing={2}
+        }}
+        spacing={2}
       >
         <Grid item xs={12}>
           <Grid container spacing={2}>
             <Grid item xs={12} spacing={2}>
               <Title title="Tipificación de bienes de vivero"></Title>
-
             </Grid>
             <Grid item xs={10}>
               <TextField
                 label="Buscar"
                 value={searchtext}
                 onChange={(e) => {
-                  setsearchtext(e.target.value)
+                  setsearchtext(e.target.value);
                 }}
                 variant="outlined"
                 size="small"
                 style={{ marginBottom: '10px' }}
               />
-              <Button variant="contained" 
+              <Button
+                variant="contained"
                 onClick={() => {
                   const filterednurseries = bienes.filter((bienes) =>
-                    bienes.nombre.toLowerCase().includes(searchtext.toLowerCase())
+                    bienes.nombre
+                      .toLowerCase()
+                      .includes(searchtext.toLowerCase())
                   );
                   setfilterednurseries(filterednurseries);
                 }}
@@ -234,21 +229,27 @@ export function TipificacionBienesScreen(): JSX.Element {
               </Button>
             </Grid>
             <Grid item xs={2}>
-                 <ButtonGroup style={{ margin: 7 }}  >
-            <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={handle_clickxls}>
-              <i className="pi pi-file-excel"></i>
-            </Button>
+              <ButtonGroup style={{ margin: 7 }}>
+                <Button
+                  style={{ ...button_style, backgroundColor: '#335B1E' }}
+                  onClick={handle_clickxls}
+                >
+                  <i className="pi pi-file-excel"></i>
+                </Button>
 
-            <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={handle_clickpdf}>
-              <i className="pi pi-file-pdf"></i>
-            </Button>
-          </ButtonGroup>
+                <Button
+                  style={{ ...button_style, backgroundColor: 'red' }}
+                  onClick={handle_clickpdf}
+                >
+                  <i className="pi pi-file-pdf"></i>
+                </Button>
+              </ButtonGroup>
             </Grid>
           </Grid>
 
           <Divider />
-       
-          <Grid item sx={{ marginTop: '20px',}}>
+
+          <Grid item sx={{ marginTop: '20px' }}>
             <Box sx={{ width: '100%' }}>
               <DataGrid
                 density="compact"
@@ -272,4 +273,3 @@ export function TipificacionBienesScreen(): JSX.Element {
     </>
   );
 }
-

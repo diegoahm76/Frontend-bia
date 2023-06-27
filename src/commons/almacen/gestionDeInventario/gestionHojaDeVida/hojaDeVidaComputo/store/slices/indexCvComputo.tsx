@@ -60,6 +60,7 @@ const initial_state_current_cv_computer = {
   marca: "",
   nombre: "",
   id_marca: 0,
+  id_hoja_de_vida: null,
 }
 
 const initial_state: Icv = {

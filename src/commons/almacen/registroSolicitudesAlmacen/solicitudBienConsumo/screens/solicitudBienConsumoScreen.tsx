@@ -89,7 +89,9 @@ const SolicitudConsumoScreen = () => {
                     nro_posicion: index,
                 })),
             }
-            void dispatch(editar_solicitud(current_solicitud.id_solicitud_consumibles, data_aux))
+            console.log(data_aux)
+            void dispatch(editar_solicitud(data_aux))
+
         } else {
             set_action("crear")
             const data_aux = {
@@ -142,15 +144,15 @@ const SolicitudConsumoScreen = () => {
                     title={"Solicitudes de consumo"}
 
                 />
-                {current_solicitud.solicitud_anulada_solicitante !== true &&
-                    <>
-                        <PersonaResponsable
-                            title={"Funcionario responsable"}
-                            get_values_solicitud={get_values} />
 
-                        <SeleccionarBienConsumo />
-                    </>
-                }
+                <>
+                    <PersonaResponsable
+                        title={"Funcionario responsable"}
+                        get_values_solicitud={get_values} />
+
+                    <SeleccionarBienConsumo />
+                </>
+
 
             </Grid>
             <Grid

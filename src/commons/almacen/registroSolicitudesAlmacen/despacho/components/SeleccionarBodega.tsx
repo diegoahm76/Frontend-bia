@@ -2,24 +2,22 @@ import { useEffect, useState } from 'react';
 
 import { Chip, Grid } from '@mui/material';
 
-import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
+import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import {
   set_bodega_seleccionada,
   get_bodega,
-} from '../store/slice/BodegaSlice';
-import { get_bodega_service } from '../store/thunks/BodegaThunks';
-import { api } from '../../../../api/axios';
-import type { IList } from '../../../../interfaces/globalModels';
-
-interface IProps {
-  control_bodega: any;
-  reset_bodega: any;
-}
+} from '../../../configuracion/store/slice/BodegaSlice';
+import { get_bodega_service } from '../../../configuracion/store/thunks/BodegaThunks';
+import { api } from '../../../../../api/axios';
+import type { IList } from '../../../../../interfaces/globalModels';
+import { type IBodega } from '../../../configuracion/interfaces/Bodega';
+import { useForm } from 'react-hook-form';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
+const SeleccionarBodega = () => {
+  const { control: control_bodega, reset: reset_bodega } = useForm<IBodega>();
   const { bodegas, bodega_seleccionada } = useAppSelector(
     (state: { bodegas: any }) => state.bodegas
   );
@@ -34,6 +32,9 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
     }));
     return data_new_format;
   };
+  useEffect(() => {
+    reset_bodega(bodega_seleccionada);
+  }, [bodega_seleccionada]);
 
   useEffect(() => {
     const get_selects_options: any = async () => {
@@ -55,12 +56,10 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
     void get_selects_options();
   }, []);
 
-  useEffect(() => {
-    reset_bodega(bodega_seleccionada);
-  }, [bodega_seleccionada]);
+  useEffect(() => {}, [bodega_seleccionada]);
 
   const columns_solicitudes: GridColDef[] = [
-    { field: 'id_bodega', headerName: 'ID', width: 40 },
+    { field: 'id_bodega', headerName: 'ID', width: 20 },
     {
       field: 'nombre',
       headerName: 'Nombre',
@@ -89,6 +88,11 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
         );
       },
     },
+    {
+      field: 'nombre_completo_responsable',
+      headerName: 'Responsable de Bodega',
+      width: 350,
+    },
   ];
 
   const get_bodegas_filtro: any = async () => {
@@ -109,9 +113,14 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
           button_submit_label="Buscar bodega"
           form_inputs={[
             {
+              datum_type: 'title',
+              title_label: 'Selección de bodega predeterminada',
+            },
+
+            {
               datum_type: 'input_controller',
               xs: 12,
-              md: 6,
+              md: 5,
               control_form: control_bodega,
               control_name: 'nombre',
               default_value: '',
@@ -123,51 +132,18 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
               disabled: false,
               helper_text: '',
             },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 6,
-              control_form: control_bodega,
-              control_name: 'direccion',
-              default_value: '',
-              rules: {
-                required_rule: { rule: true, message: 'campo requerido' },
-              },
-              label: 'Dirección',
-              type: 'text',
-              disabled: false,
-              helper_text: '',
-            },
+
             {
               datum_type: 'select_controller',
               xs: 12,
-              md: 3,
+              md: 4,
               control_form: control_bodega,
               control_name: 'cod_municipio',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'requerido' } },
               label: 'Municipio',
               disabled: false,
-              helper_text: 'debe seleccionar campo',
               select_options: municipalities,
-              option_label: 'label',
-              option_key: 'value',
-            },
-            {
-              datum_type: 'select_controller',
-              xs: 12,
-              md: 3,
-              control_form: control_bodega,
-              control_name: 'es_principal',
-              default_value: '',
-              rules: { required_rule: { rule: true, message: 'requerido' } },
-              label: 'Es principal',
-              disabled: false,
-              helper_text: 'debe seleccionar campo',
-              select_options: [
-                { label: 'SI', value: 'true' },
-                { label: 'NO', value: 'false' },
-              ],
               option_label: 'label',
               option_key: 'value',
             },

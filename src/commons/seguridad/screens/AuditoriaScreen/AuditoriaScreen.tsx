@@ -177,9 +177,9 @@ export const AuditoriaScreen = (): JSX.Element => {
           boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
-        <Typography sx={{ fontWeight: 'bold', fontSize: '20px', mb: '10px' }}>
+        {/* <Typography sx={{ fontWeight: 'bold', fontSize: '20px', mb: '10px' }}>
           Auditoría
-        </Typography>
+        </Typography> */}
 
         <Box sx={{ width: '100%', typography: 'body1' }}>
           <Title title="Información General" />

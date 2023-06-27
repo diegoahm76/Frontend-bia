@@ -627,6 +627,7 @@ const DatosOpcionales: (props: PropsElement) => JSX.Element = ({
       typeDirection('laboral');
     }
   };
+ 
   return (
     <>
       <Grid container spacing={2} mt={0.1}>
@@ -765,6 +766,10 @@ const AutorizaNotifiacion: (props: PropsElement) => JSX.Element = ({
   const acepta_notificacion_sms = watch('acepta_notificacion_sms') ?? false;
   const acepta_tratamiento_datos = watch('acepta_tratamiento_datos') ?? false;
 
+
+  const open_link = ():void => {
+    window.open('https://cormacarena.micolombiadigital.gov.co/sites/cormacarena/content/files/000025/1222_mtsc01-manual-para-la-proteccion-de-datos-personales-v3.pdf', '_blank');
+  };
   return (
     <>
       <Grid container spacing={2} mt={0.1}>
@@ -792,13 +797,14 @@ const AutorizaNotifiacion: (props: PropsElement) => JSX.Element = ({
             }
           />
         </Grid>
+      
         <Grid item xs={12}>
           <FormControl
             required
             error={errors.acepta_tratamiento_datos?.type === 'required'}
             component="fieldset"
             variant="standard"
-          >
+          > 
             <FormControlLabel
               control={
                 <Checkbox
@@ -809,7 +815,9 @@ const AutorizaNotifiacion: (props: PropsElement) => JSX.Element = ({
                 />
               }
               label="¿Autoriza tratamiento de datos? *"
-            />
+            /> <Grid item xs={12}>
+              <button onClick={open_link}>Privacidad de datos</button>
+            </Grid>
             {errors.acepta_tratamiento_datos?.type === 'required' && (
               <FormHelperText>
                 Debe autorizar el tratamiento de datos
@@ -817,6 +825,7 @@ const AutorizaNotifiacion: (props: PropsElement) => JSX.Element = ({
             )}
           </FormControl>
         </Grid>
+      
 
         {/* BOTONES */}
         <Grid item spacing={2} justifyContent="end" container>
