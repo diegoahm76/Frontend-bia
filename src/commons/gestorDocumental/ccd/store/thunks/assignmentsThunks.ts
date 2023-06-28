@@ -136,12 +136,12 @@ export const create_or_delete_assignments_service: any = (
       // const responses = await Promise.all(requests);
 
       dispatch(await get_assignments_service(ccd_current));
-      control_success('Solicitud completada exitosamente');
+      control_success(data.detail);
 
       return data;
     } catch (error: any) {
       console.log(error);
-      control_error(error.response?.data?.detail || 'Error en la solicitud');
+      control_error(error.response?.data?.detail);
       dispatch(get_assignments_service(ccd_current));
 
       return error as AxiosError;
