@@ -290,23 +290,23 @@ const DialogBusquedaAvanzada = ({
 
       <Divider />
       <Grid
-                container
-                sx={{
-                    position: 'relative',
-                    background: '#FAFAFA',
-                    borderRadius: '15px',
-                    p: '20px',
-                    mb: '20px',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                    width: '97%',
-                    marginLeft: '20px',
-                    marginTop: '20px',
-                }}
-            >
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+          width: '97%',
+          marginLeft: '20px',
+          marginTop: '20px',
+        }}
+      >
 
-          
 
-      {/* <DialogContent sx={{ mb: '0px' }}> */}
+
+        {/* <DialogContent sx={{ mb: '0px' }}> */}
         <Box
           component="form"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -394,7 +394,7 @@ const DialogBusquedaAvanzada = ({
             getRowId={(row) => row.id_persona}
           />
         </Grid>
-      {/* </DialogContent> */}
+        {/* </DialogContent> */}
 
       </Grid>
 
