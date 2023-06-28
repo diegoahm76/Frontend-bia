@@ -8,15 +8,16 @@ import { toast, type ToastContent } from 'react-toastify';
 // import { current_organigram, get_levels, get_mold_organigrams, get_organigrams, get_unitys } from "../../../organigrama/store/slices/organigramSlice";
 // Interfaces
 // import { FormValuesUnitys, IObjCreateOrganigram, IObjLevels } from '../../../organigrama/interfaces/organigrama';
-import { get_assignments_ccd } from '../slices/assignmentsSlice';
+// import { get_assignments_ccd } from '../slices/assignmentsSlice';
 import { type Dispatch } from 'react';
+import { get_assignments_ccd } from '../slices/assignmentsSlice';
 // import { ccd_slice } from './../slices/ccdSlice';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
   toast.error(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
+    position: 'bottom-left',
+    autoClose: 2000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -28,8 +29,8 @@ const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_success = (message: ToastContent) =>
   toast.success(message, {
-    position: 'bottom-right',
-    autoClose: 3000,
+    position: 'bottom-left',
+    autoClose: 1500,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
@@ -64,7 +65,7 @@ export const get_assignments_service: any = (
         new_data
       );
       dispatch(get_assignments_ccd(new_data));
-      control_success(data.detail);
+      // control_success(data.detail);
       return data;
     } catch (error: any) {
       // control_error(error.response.data.detail);
@@ -75,10 +76,9 @@ export const get_assignments_service: any = (
 
 // Asignar series y subseries a unidades organizacionales
 //! this service allow to create a new relation or delete a relation
-export const create_or_delete_assignments_service: any = (
-  new_item: any,
+/* export const create_or_delete_assignments_service: any = (
+  new_items: any,
   ccd_current: any
-  // clean: () => void,
 ) => {
   return async (
     dispatch: Dispatch<any>
@@ -87,21 +87,63 @@ export const create_or_delete_assignments_service: any = (
     try {
       
       const id_ccd: number = ccd_current.id_ccd;
+      const new_item = new_items[0];
 
-      console.log(new_item);
+
+       console.log(new_item);
       const { data } = await api.put(
         `gestor/ccd/catalogo/unidad/update/${id_ccd}/`,
         new_item
-      );
+      ); 
+
+      const requests = new_items.map(async (item: any) => {
+        const { data } = await api.put(
+          `gestor/ccd/catalogo/unidad/update/${id_ccd}/`,
+          item
+        );
+        return data;
+      });
+      const responses = await Promise.all(requests);
+
       dispatch(get_assignments_service(ccd_current));
-      control_success(data.detail);
-      //  clean();
-      return data;
+      control_success(responses.detail);
+      return responses;
     } catch (error: any) {
       console.log(error)
       control_error(error.response.data.detail);
       dispatch(get_assignments_service(ccd_current));
-      //  clean();
+      return error as AxiosError;
+    }
+  };
+};
+*/
+
+export const create_or_delete_assignments_service: any = (
+  new_items: any[],
+  ccd_current: any
+) => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse[] | AxiosError> => {
+    try {
+      const id_ccd: number = ccd_current.id_ccd;
+
+      const { data } = await api.put(
+        `gestor/ccd/catalogo/unidad/update/${id_ccd}/`,
+        new_items
+      );
+
+      // const responses = await Promise.all(requests);
+
+      dispatch(await get_assignments_service(ccd_current));
+      control_success(data.detail);
+
+      return data;
+    } catch (error: any) {
+      console.log(error);
+      control_error(error.response?.data?.detail);
+      dispatch(get_assignments_service(ccd_current));
+
       return error as AxiosError;
     }
   };
