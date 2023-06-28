@@ -34,7 +34,7 @@ export const post_seccion_subscción = async (
     const filtered_array = new_array.filter((item: any) => item !== null);
 
 
-    const response = await api.post('hidrico/bibliotecas/secciones/create/', {
+    const response = await api.post('hidrico/bibliotecas/secciones-subsecciones/create/', {
         ...form,
         id_seccion: form.id_seccion,
         nombre: form.nombre_seccion,
@@ -45,4 +45,39 @@ export const post_seccion_subscción = async (
 
     return response.data;
 };
+export const put_seccion_subscción = async (
+    form: any,
+    rows_subseccion: any,
+    rows_elimina: any,
+    id_seccion: number,
+): Promise<any> => {
+
+    const new_array = [
+        ...rows_subseccion,
+
+        form.nombre_subseccion === '' || form.descripcion_subseccion === ''
+            ? null
+            : {
+                id_subseccion: form.id_subseccion,
+                nombre: form.nombre_subseccion,
+                descripcion: form.descripcion_subseccion,
+            },
+    ];
+
+    const filtered_array = new_array.filter((item: any) => item !== null);
+
+
+    const response = await api.put(`hidrico/bibliotecas/secciones/update/${id_seccion}/`, {
+        ...form,
+        id_seccion: form.id_seccion,
+        nombre: form.nombre_seccion,
+        descripcion: form.descripcion_seccion,
+        fecha_creacion: form.fecha_creacion,
+        subsecciones_eliminar: rows_elimina,
+        subsecciones: filtered_array,
+    });
+
+    return response.data;
+};
+
 

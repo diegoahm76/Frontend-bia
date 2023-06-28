@@ -7,7 +7,10 @@ import { DataContext } from '../context/contextData';
 import { Title } from '../../../../components/Title';
 import { control_success } from '../../requets/Request';
 import { control_error } from '../../../../helpers';
-import { post_seccion_subscción } from '../request/request';
+import {
+  post_seccion_subscción,
+  put_seccion_subscción,
+} from '../request/request';
 import { EditarSeccion } from './EditarSeccion';
 import { AgregarSeccion } from './AgregarSeccion';
 import { SeleccionarSeccion } from './SeleccionarSeccion';
@@ -23,9 +26,15 @@ export const SeccionSubseccionMain: React.FC = () => {
     is_editar_seccion,
     is_register_seccion,
     is_seleccionar_seccion,
+    is_register_subseccion,
+    is_editar_subseccion,
     rows_resgister_subseccion,
+    rows_subseccion,
+    rows_to_delete_subseecion,
     fetch_data_seccion,
+    fetch_data_subseccion_por_seccion,
     set_rows_register_subseccion,
+    set_rows_to_delete_subseecion,
     set_is_saving,
     set_mode,
   } = useContext(DataContext);
@@ -45,11 +54,39 @@ export const SeccionSubseccionMain: React.FC = () => {
       control_error(error);
     }
   });
+  const on_submit_update = handle_submit(async (form: any) => {
+    try {
+      set_is_saving(true);
+      form.id_seccion = id_seccion;
+      await put_seccion_subscción(
+        form,
+        rows_subseccion,
+        rows_to_delete_subseecion,
+        id_seccion as number
+      );
+      control_success('Se actualizó exitosamente');
+      // reset();
+      // set_rows_register_subseccion([]);
+      set_rows_to_delete_subseecion([]);
+      await fetch_data_seccion();
+      await fetch_data_subseccion_por_seccion();
+      set_is_saving(false);
+    } catch (error) {
+      set_is_saving(false);
+      control_error(error);
+    }
+  });
+
   return (
     <form
       onSubmit={(e) => {
         console.log(errors);
-        void on_submit(e);
+        if (is_register_seccion || is_register_subseccion) {
+          void on_submit(e);
+        }
+        if (is_editar_seccion || is_editar_subseccion || is_seleccionar_seccion) {
+          void on_submit_update(e);
+        }
       }}
     >
       <Grid

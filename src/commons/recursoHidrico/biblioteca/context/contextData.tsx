@@ -26,6 +26,7 @@ interface UserContext {
   is_register_subseccion: boolean;
   is_editar_subseccion: boolean;
   is_seleccionar_subseccion: boolean;
+  rows_to_delete_subseecion: any[];
   rows_resgister_subseccion: TableAgregarSubseccion[];
   rows_subseccion: SubSeccionPorSeccion[];
   rows_seccion: Seccion[];
@@ -41,6 +42,7 @@ interface UserContext {
   set_is_register_subseccion: (value: boolean) => void;
   set_is_editar_subseccion: (value: boolean) => void;
   set_is_seleccionar_subseccion: (value: boolean) => void;
+  set_rows_to_delete_subseecion: (rows: any[]) => void;
   set_rows_register_subseccion: (rows: TableAgregarSubseccion[]) => void;
   set_rows_seccion: (rows: Seccion[]) => void;
   set_rows_subseccion: (rows: SubSeccionPorSeccion[]) => void;
@@ -69,6 +71,7 @@ export const DataContext = createContext<UserContext>({
   is_register_subseccion: false,
   is_editar_subseccion: false,
   is_seleccionar_subseccion: false,
+  rows_to_delete_subseecion: [],
   rows_resgister_subseccion: [],
   rows_subseccion: [],
   rows_seccion: [],
@@ -102,6 +105,7 @@ export const DataContext = createContext<UserContext>({
   set_is_register_subseccion: () => {},
   set_is_editar_subseccion: () => {},
   set_is_seleccionar_subseccion: () => {},
+  set_rows_to_delete_subseecion: () => {},
   set_rows_register_subseccion: () => {},
   set_rows_seccion: () => {},
   set_rows_subseccion: () => {},
@@ -149,6 +153,8 @@ export const UserProvider = ({
   const [rows_resgister_subseccion, set_rows_register_subseccion] = React.useState<
     TableAgregarSubseccion[]
   >([]);
+  // rows eliminar subseccion 
+  const [rows_to_delete_subseecion, set_rows_to_delete_subseecion] = React.useState<any[]>([]);
   // info
   const [info_seccion, set_info_seccion] = React.useState<Seccion>();
   const [info_subseccion, set_info_subseccion] =
@@ -247,6 +253,7 @@ export const UserProvider = ({
     is_register_subseccion,
     is_editar_subseccion,
     is_seleccionar_subseccion,
+    rows_to_delete_subseecion,
     rows_resgister_subseccion,
     rows_subseccion,
     rows_seccion,
@@ -262,6 +269,7 @@ export const UserProvider = ({
     set_is_register_subseccion,
     set_is_editar_subseccion,
     set_is_seleccionar_subseccion,
+    set_rows_to_delete_subseecion,
     set_rows_register_subseccion,
     set_rows_seccion,
     set_rows_subseccion,
