@@ -29,6 +29,7 @@ const FormButton = ({
             startIcon={icon_class}
             type={type_button}
             disabled={disabled??false}
+            
         >
             {label}
         </Button>

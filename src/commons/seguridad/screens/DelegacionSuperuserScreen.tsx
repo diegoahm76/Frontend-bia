@@ -137,8 +137,8 @@ export const DelegacionSuperuserScreen: React.FC = () => {
                 justifyContent: 'center',
               }}
             >
-              <Grid item sx={{ display: 'flex' }}>
-                <Typography variant="body2" sx={{ pr: '20px' }}>
+              <Grid item sx={{ display: 'flex'  }}>
+                <Typography variant="body2" sx={{ pr: '20px', margin: 1.3 }}>
                   SuperUsuarioActual:
                 </Typography>
                 <TextField
@@ -177,7 +177,6 @@ export const DelegacionSuperuserScreen: React.FC = () => {
                   required
                   label="Número de identificación"
                   size="small"
-                  helperText="Ingrese Número de Documento"
                   fullWidth
                   {...register('numero_documento')}
                 />

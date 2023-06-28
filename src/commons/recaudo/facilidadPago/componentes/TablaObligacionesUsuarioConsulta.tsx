@@ -5,6 +5,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { obligaciones_seleccionadas } from '../slices/ObligacionesSlice';
+import { get_datos_deudor } from '../slices/DeudoresSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type Obligacion } from '../interfaces/interfaces';
@@ -15,8 +16,12 @@ interface RootState {
   }
 }
 
+interface Deudor {
+  deudor: number;
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuarioConsulta: React.FC = () => {
+export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
@@ -24,22 +29,6 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
-
-  const handle_submit = async () => {
-    const arr_registro = []
-    for(let i=0; i<obligaciones.length; i++){
-      for(let j=0; j<selected.length; j++){
-        if(obligaciones[i].nombre === selected[j]){
-          arr_registro.push(obligaciones[i])
-        }
-      }
-    }
-    try {
-      dispatch(obligaciones_seleccionadas(arr_registro));
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  };
 
   const columns: GridColDef[] = [
     {
@@ -87,7 +76,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
       ),
     },
     {
-      field: 'nroResolucion',
+      field: 'numero_resolucion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (
@@ -127,6 +116,23 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
       ),
     },
   ];
+
+  const handle_submit = async () => {
+    const arr_registro = []
+    for(let i=0; i<obligaciones.length; i++){
+      for(let j=0; j<selected.length; j++){
+        if(obligaciones[i].nombre === selected[j]){
+          arr_registro.push(obligaciones[i])
+        }
+      }
+    }
+    try {
+      dispatch(obligaciones_seleccionadas(arr_registro));
+      void dispatch(get_datos_deudor(props.deudor));
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  };
 
   const handle_click = (event: React.MouseEvent<unknown>, name: string) => {
     const selected_index = selected.indexOf(name);
@@ -242,7 +248,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC = () => {
               void handle_submit()
             }}
           >
-          Crear Facilidad de Pago
+            Crear Facilidad de Pago
           </Button>
         </Stack>
         </Grid>

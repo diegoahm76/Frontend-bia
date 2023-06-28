@@ -11,7 +11,6 @@ import { Title } from '../../../../components/Title';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AlertasScreen: React.FC = () => {
   const [value, set_value] = useState('1');
-
   const handle_change = (event: SyntheticEvent, newValue: string): void => {
     set_value(newValue);
   };

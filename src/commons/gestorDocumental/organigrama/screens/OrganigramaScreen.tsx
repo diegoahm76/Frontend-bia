@@ -15,7 +15,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 export const OrganigramaScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const [position_tab, set_position_tab_organigrama] = useState('1');
-  const { organigram_current } = useAppSelector((state) => state.organigram);
+  const { organigram_current } = useAppSelector((state: any) => state.organigram);
   const handle_change = (event: SyntheticEvent, newValue: string): void => {
     set_position_tab_organigrama(newValue);
     void dispatch(clean_current_organigram());

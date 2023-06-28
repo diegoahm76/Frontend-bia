@@ -6,13 +6,14 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
+  // DialogTitle,
   Stack,
   Button,
   Box,
   Divider,
   MenuItem,
   Grid,
+
 } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
@@ -224,17 +225,17 @@ const CrearViveroDialogForm = ({
             : handle_submit(on_submit_edit)
         }
       >
-        <DialogTitle>
+        {/* <DialogTitle>
           {action === 'create'
             ? 'Crear vivero'
             : action === 'detail'
             ? 'Detalle de vivero'
             : 'Editar vivero'}
-        </DialogTitle>
+        </DialogTitle> */}
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
-            <Title title="INFORMACIÓN PRINCIPAL"></Title>
+            <Title title="INFORMACION PRINCIPAL"></Title>
             <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="nombre"
@@ -404,8 +405,9 @@ const CrearViveroDialogForm = ({
                 )}
               />
             </Grid>
-            <Title title="DETALLES VIVERO"></Title>
-            <Grid item xs={11} md={5} margin={1}>
+            <Title title="Detalles vivero"></Title>
+
+            <Grid item xs={11} md={5} margin={0}>
               <Controller
                 name="area_propagacion_mt2"
                 control={control_vivero}

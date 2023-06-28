@@ -52,18 +52,19 @@ const FormInputFileController = ({
     return (
         <>
             {(!(hidden_text ?? false)) &&
-            <Grid item xs={xs} md={md} margin={margin ?? 0}>
-                <Controller
-                    name={control_name}
-                    control={control_form}
-                    defaultValue={default_value}
-                    rules={{ required: rules.required_rule?.rule, min: rules.min_rule?.rule, max: rules.max_rule?.rule }}
-                    render={({
-                        field: { onChange, value },
-                        fieldState: { error },
-                    }) => (
-                        <FormControl fullWidth>
-                            <Button 
+                <Grid item xs={xs} md={md} margin={margin ?? 0}>
+                    <Controller
+                        name={control_name}
+                        control={control_form}
+                        defaultValue={default_value}
+                        rules={{ required: rules.required_rule?.rule, min: rules.min_rule?.rule, max: rules.max_rule?.rule }}
+                        render={({
+                            field: { onChange, value },
+                            fieldState: { error },
+                        }) => (
+                            <FormControl fullWidth>
+                                {/* original //////////////// */}
+                                {/* <Button 
                             fullWidth
                             size="small"
                             variant="outlined" 
@@ -77,17 +78,42 @@ const FormInputFileController = ({
                                 onChange={handle_file_input_change}
                                 error={!(error == null)}
                             />
-                            </Button>
-                            <FormHelperText
-                            error= {!(error == null)}>
-                                {(error != null)
-                                    ? rules.required_rule?.message
-                                    : helper_text}
-                            </FormHelperText>
-                        </FormControl>
-                    )}
-                />
-            </Grid>
+                            </Button> */}
+
+                                <Button
+                                    fullWidth
+                                    size="small"
+                                    variant="outlined"
+                                    startIcon={<CloudUploadIcon />}
+                                    style={{height:"40px"}}
+                                >
+                                    {file_name !== "" ? file_name : label}
+                                    <Input
+                                        type="file"
+                                        disabled={disabled}
+                                        style={{
+                                            opacity: 0,
+                                            position: 'absolute',
+                                            top: 0,
+                                            left: 0,
+                                            width: '100%',
+                                            height: '100%',
+                                            cursor: 'pointer',
+                                        }}
+                                        onChange={handle_file_input_change}
+                                        error={!(error == null)}
+                                    />
+                                </Button>
+                                <FormHelperText
+                                    error={!(error == null)}>
+                                    {(error != null)
+                                        ? rules.required_rule?.message
+                                        : helper_text}
+                                </FormHelperText>
+                            </FormControl>
+                        )}
+                    />
+                </Grid>
             }
         </>
     );

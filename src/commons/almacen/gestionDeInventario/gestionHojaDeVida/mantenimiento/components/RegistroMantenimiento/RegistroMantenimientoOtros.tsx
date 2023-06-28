@@ -95,7 +95,6 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
 
     return (
         <>
-            <h1>Registro mantenimiento de otros activos</h1>
             <Grid
                 container
                 sx={{
@@ -106,9 +105,10 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                     mb: '20px',
                     boxShadow: '0px 3px 6px #042F4A26',
                 }}
-            >
+                >
+                {/* <h1>Registro mantenimiento de otros activos</h1> */}
                 <Grid item xs={12}>
-                    <Title title="Búsqueda de programación" />
+                    <Title title="Registro mantenimiento de otros activos" />
                     <BusquedaProgramacionComponent set_prog_seleccion={set_programacion} parent_details={set_detalle_seleccionado} tipo_articulo={"otros activos"}  limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
@@ -155,7 +155,6 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                     <Title title='Detalles'/>
                     <DetallesComponent limpiar_formulario={limpiar_formulario} user_info={user_info} detalles={set_detalle} accion_guardar={accion_guardar} fecha_dias={fecha_dias}/>
                 </Grid>
-            </Grid>
             <Grid container>
                 <Grid item md={12} xs={12}>
                     <Box
@@ -197,6 +196,7 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                         </Stack>
                     </Box>
                 </Grid>
+            </Grid>
             </Grid>
         </>
     )

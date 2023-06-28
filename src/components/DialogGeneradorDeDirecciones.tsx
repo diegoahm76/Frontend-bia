@@ -201,6 +201,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
     <Dialog maxWidth="lg" open={open} onClose={clear_data_form}>
       <form
         onSubmit={(e) => {
+          console.log(errors, 'errors')
           void on_submit(e);
         }}
       >
@@ -291,13 +292,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={3} md={2}>
               <TextField
-                {...register('letras_via_principal', { required: true })}
-                error={errors.letras_via_principal?.type === 'required'}
-                helperText={
-                  errors.letras_via_principal?.type === 'required'
-                    ? 'Este campo es obligatorio'
-                    : ''
-                }
+                {...register('letras_via_principal')}
                 onChange={handle_change}
                 select
                 defaultValue={''}
@@ -314,13 +309,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={3} md={2}>
               <TextField
-                {...register('prefijo_bis', { required: true })}
-                error={errors.prefijo_bis?.type === 'required'}
-                helperText={
-                  errors.prefijo_bis?.type === 'required'
-                    ? 'Este campo es obligatorio'
-                    : ''
-                }
+                {...register('prefijo_bis')}
                 onChange={handle_change}
                 label="Prefijo bis"
                 size="small"
@@ -329,13 +318,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={2} md={2}>
               <TextField
-                {...register('cuadrante', { required: true })}
-                error={errors.cuadrante?.type === 'required'}
-                helperText={
-                  errors.cuadrante?.type === 'required'
-                    ? 'Este campo es obligatorio'
-                    : ''
-                }
+                {...register('cuadrante')}
                 onChange={handle_change}
                 label="Número"
                 type="number"
@@ -392,13 +375,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={4} md={2}>
               <TextField
-                {...register('letras_via_secundaria', { required: true })}
-                error={errors.letras_via_secundaria?.type === 'required'}
-                helperText={
-                  errors.letras_via_secundaria?.type === 'required'
-                    ? 'Este campo es obligatorio'
-                    : ''
-                }
+                {...register('letras_via_secundaria')}
                 onChange={handle_change}
                 select
                 defaultValue={''}
@@ -415,13 +392,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={4} md={2}>
               <TextField
-                {...register('sufijo_bis', { required: true })}
-                error={errors.sufijo_bis?.type === 'required'}
-                helperText={
-                  errors.sufijo_bis?.type === 'required'
-                    ? 'Este campo es obligatorio'
-                    : ''
-                }
+                {...register('sufijo_bis')}
                 onChange={handle_change}
                 label="Sufijo bis"
                 size="small"
@@ -430,13 +401,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
             </Grid>
             <Grid item xs={12} sm={4} md={2}>
               <TextField
-                {...register('letra_sufijo', { required: true })}
-                error={errors.letra_sufijo?.type === 'required'}
-                helperText={
-                  errors.letra_sufijo?.type === 'required'
-                    ? 'Este campo es obligatorio'
-                    : ''
-                }
+                {...register('letra_sufijo')}
                 onChange={handle_change}
                 label="Letra sufijo"
                 size="small"

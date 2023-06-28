@@ -181,7 +181,7 @@ const BuscarArriendoComponent = (props: IProps) => {
                       onSelectionChange={(e) => {
                         set_seleccion_arriendo(e.value);
                       }}
-                      dataKey="numero_entrada_almacen"
+                      dataKey="id_vehiculo_arrendado"
                     >
                       <Column
                         field="nombre"

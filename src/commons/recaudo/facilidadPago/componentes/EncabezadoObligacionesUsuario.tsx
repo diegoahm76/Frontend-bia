@@ -1,6 +1,8 @@
 import { Grid, Box, TextField } from "@mui/material";
 import { useSelector } from 'react-redux';
 import { type ObligacionesUsuario } from '../interfaces/interfaces';
+import { Title } from '../../../../components/Title';
+
 
 interface RootState {
   obligaciones: {
@@ -25,6 +27,8 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+        
+
         <Grid item xs={12}>
           <Box
             component="form"
@@ -32,6 +36,11 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
             autoComplete="off"
           >
             <Grid container spacing={2}>
+ <Grid item  xs={12}>
+          
+              <Title title='Listado de Obligaciones del Usuario Externo'/>
+         </Grid>
+
               <Grid item xs={12} sm={3}>
                 <TextField
                   disabled

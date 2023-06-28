@@ -224,6 +224,7 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
                                     label="Realizado por"
                                     size="small"
                                     required
+                                    disabled
                                     fullWidth
                                     value={realizado.nombre_completo}
                                     InputProps={{

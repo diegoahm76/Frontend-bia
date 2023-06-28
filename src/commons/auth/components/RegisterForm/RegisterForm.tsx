@@ -6,8 +6,8 @@ import {
   Skeleton,
   Alert,
   LinearProgress,
-  type SelectChangeEvent,
   Button,
+  type SelectChangeEvent,
 } from '@mui/material';
 import type { keys_object } from '../../interfaces';
 import { RegisterPersonaNatural } from '../RegisterPersonaNatural/RegisterPersonaNatural';
@@ -155,7 +155,6 @@ export const RegisterForm: React.FC = () => {
 
           </Grid>
 
-          
           {/* Muestra loading cuando esta buscando datos de la persona */}
           {is_search && (
             <Grid item xs={12}>

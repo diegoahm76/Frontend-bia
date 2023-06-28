@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { type CarteraEdad } from '../interfaces/interfaces';
 import { useSelector } from 'react-redux';
 import { faker } from '@faker-js/faker';
+import { Title } from '../../../../components/Title';
 
 interface RootState {
   reportes_recaudo: {
@@ -13,10 +14,19 @@ interface RootState {
   }
 }
 
-export const TablaCarteraEdad: React.FC = () => {
+interface Filtro {
+  filtro: string;
+}
+
+export const TablaCarteraEdad: React.FC<Filtro> = (props: Filtro) => {
   const [visible_rows, set_visible_rows] = useState(Array<CarteraEdad>);
   const [total, set_total] = useState(0);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
+
+  const total_precio_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
 
   useEffect(() => {
     if(visible_rows.length !== 0) {
@@ -110,6 +120,7 @@ export const TablaCarteraEdad: React.FC = () => {
               boxShadow: '0px 3px 6px #042F4A26',
             }}
           >
+            <Title title={`${props.filtro}`} />
             <Grid item xs={12}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
@@ -135,7 +146,7 @@ export const TablaCarteraEdad: React.FC = () => {
                     label={<strong>Total General</strong>}
                     size="small"
                     fullWidth
-                    value={total}
+                    value={total_precio_cop}
                   />
                 </Grid>
             </Stack>
@@ -155,6 +166,11 @@ export const TablaCarteraEdadProps: React.FC<RangoEdad> = (props: RangoEdad) => 
   const [visible_rows, set_visible_rows] = useState(Array<CarteraEdad>);
   const [total, set_total] = useState(0);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
+
+  const total_precio_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
 
   useEffect(() => {
     const data = []
@@ -254,6 +270,12 @@ export const TablaCarteraEdadProps: React.FC<RangoEdad> = (props: RangoEdad) => 
               boxShadow: '0px 3px 6px #042F4A26',
             }}
           >
+            {
+              props.id_rango === 1 ? <Title title='0 a 180 días' /> :
+              props.id_rango === 2 ? <Title title='181 a 360 días' /> :
+              props.id_rango === 3 ? <Title title='Mayor a 361 días' /> :
+              null
+            }
             <Grid item xs={12}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
@@ -279,7 +301,7 @@ export const TablaCarteraEdadProps: React.FC<RangoEdad> = (props: RangoEdad) => 
                     label={<strong>Total General</strong>}
                     size="small"
                     fullWidth
-                    value={total}
+                    value={total_precio_cop}
                   />
                 </Grid>
             </Stack>

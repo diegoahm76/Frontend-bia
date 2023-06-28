@@ -31,11 +31,37 @@ const control_success = (message: ToastContent) =>
     theme: 'light'
   });
 
-  // Obtiene consecutivo de entregas
+// Obtiene consecutivo de entregas
 export const obtener_consecutivo: any = () => {
     return async () => {
       try {
         const { data } = await api.get('almacen/entregas/get-number-despacho/');
+        return data;
+      } catch (error: any) {
+        control_error(error.response.data.detail);
+        return error as AxiosError;
+      }
+    };
+  };
+
+// Obtiene todas las entradas que pueden ser utilizadas en entregas
+export const obtener_entradas_entregas: any = () => {
+    return async () => {
+      try {
+        const { data } = await api.get('almacen/entregas/get-entradas-entregas/');
+        return data;
+      } catch (error: any) {
+        control_error(error.response.data.detail);
+        return error as AxiosError;
+      }
+    };
+  };
+
+// Obtener todas las entregas que han sido realizadas
+export const obtener_entregas: any = () => {
+    return async () => {
+      try {
+        const { data } = await api.get('almacen/entregas/get-entregas/');
         return data;
       } catch (error: any) {
         control_error(error.response.data.detail);
