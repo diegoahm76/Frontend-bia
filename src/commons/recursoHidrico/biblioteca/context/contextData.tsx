@@ -4,7 +4,7 @@
 
 import React, { createContext } from 'react';
 import { control_error } from '../../../../helpers';
-import type { Seccion, SubSeccionPorSeccion } from '../interfaces/interfaces';
+import type { Seccion, SubSeccionPorSeccion, TableAgregarSubseccion } from '../interfaces/interfaces';
 import {
   get_data_seccion,
   get_data_subseccion_por_seccion,
@@ -26,6 +26,7 @@ interface UserContext {
   is_register_subseccion: boolean;
   is_editar_subseccion: boolean;
   is_seleccionar_subseccion: boolean;
+  rows_resgister_subseccion: TableAgregarSubseccion[];
   rows_subseccion: SubSeccionPorSeccion[];
   rows_seccion: Seccion[];
   info_seccion: Seccion | undefined;
@@ -40,6 +41,7 @@ interface UserContext {
   set_is_register_subseccion: (value: boolean) => void;
   set_is_editar_subseccion: (value: boolean) => void;
   set_is_seleccionar_subseccion: (value: boolean) => void;
+  set_rows_register_subseccion: (rows: TableAgregarSubseccion[]) => void;
   set_rows_seccion: (rows: Seccion[]) => void;
   set_rows_subseccion: (rows: SubSeccionPorSeccion[]) => void;
   set_info_seccion: (info_seccion: Seccion) => void;
@@ -67,6 +69,7 @@ export const DataContext = createContext<UserContext>({
   is_register_subseccion: false,
   is_editar_subseccion: false,
   is_seleccionar_subseccion: false,
+  rows_resgister_subseccion: [],
   rows_subseccion: [],
   rows_seccion: [],
   info_seccion: {
@@ -99,6 +102,7 @@ export const DataContext = createContext<UserContext>({
   set_is_register_subseccion: () => {},
   set_is_editar_subseccion: () => {},
   set_is_seleccionar_subseccion: () => {},
+  set_rows_register_subseccion: () => {},
   set_rows_seccion: () => {},
   set_rows_subseccion: () => {},
   set_info_seccion: () => {},
@@ -140,6 +144,10 @@ export const UserProvider = ({
   const [rows_seccion, set_rows_seccion] = React.useState<Seccion[]>([]);
   const [rows_subseccion, set_rows_subseccion] = React.useState<
     SubSeccionPorSeccion[]
+  >([]);
+  // rows register subseccion
+  const [rows_resgister_subseccion, set_rows_register_subseccion] = React.useState<
+    TableAgregarSubseccion[]
   >([]);
   // info
   const [info_seccion, set_info_seccion] = React.useState<Seccion>();
@@ -239,6 +247,7 @@ export const UserProvider = ({
     is_register_subseccion,
     is_editar_subseccion,
     is_seleccionar_subseccion,
+    rows_resgister_subseccion,
     rows_subseccion,
     rows_seccion,
     info_seccion,
@@ -253,6 +262,7 @@ export const UserProvider = ({
     set_is_register_subseccion,
     set_is_editar_subseccion,
     set_is_seleccionar_subseccion,
+    set_rows_register_subseccion,
     set_rows_seccion,
     set_rows_subseccion,
     set_info_seccion,

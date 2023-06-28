@@ -14,6 +14,7 @@ import { DataContext } from '../context/contextData';
 import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
 import { LoadingButton } from '@mui/lab';
+import { AgregarSubseccion } from './AgregarSubseccion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarSeccion: React.FC = () => {
@@ -26,6 +27,7 @@ export const AgregarSeccion: React.FC = () => {
     info_seccion,
     set_id_seccion,
     set_mode,
+    is_register_subseccion,
   } = useContext(DataContext);
 
   // watch
@@ -113,7 +115,7 @@ export const AgregarSeccion: React.FC = () => {
           Registrar nueva subsección
         </Button>
       </Stack>
-
+      {is_register_subseccion && <AgregarSubseccion />}
       <Grid item spacing={2} justifyContent="end" container>
         <Grid item>
           <LoadingButton

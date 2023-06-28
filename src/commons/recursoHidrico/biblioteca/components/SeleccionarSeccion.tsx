@@ -170,6 +170,7 @@ export const SeleccionarSeccion: React.FC = () => {
           fullWidth
           required
           autoFocus
+          disabled
           size="small"
           value={nombre_seccion}
           {...register('nombre_seccion', { required: true })}
@@ -197,6 +198,7 @@ export const SeleccionarSeccion: React.FC = () => {
           multiline
           fullWidth
           required
+          disabled
           autoFocus
           value={descripcion_seccion}
           size="small"

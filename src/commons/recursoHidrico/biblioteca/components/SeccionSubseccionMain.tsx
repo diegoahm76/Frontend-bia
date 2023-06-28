@@ -23,7 +23,9 @@ export const SeccionSubseccionMain: React.FC = () => {
     is_editar_seccion,
     is_register_seccion,
     is_seleccionar_seccion,
+    rows_resgister_subseccion,
     fetch_data_seccion,
+    set_rows_register_subseccion,
     set_is_saving,
     set_mode,
   } = useContext(DataContext);
@@ -32,9 +34,10 @@ export const SeccionSubseccionMain: React.FC = () => {
     try {
       set_is_saving(true);
       form.id_seccion = id_seccion;
-      await post_seccion_subscción(form);
+      await post_seccion_subscción(form, rows_resgister_subseccion);
       control_success('Sección creada exitosamente');
       reset();
+      set_rows_register_subseccion([]);
       await fetch_data_seccion();
       set_is_saving(false);
     } catch (error) {
