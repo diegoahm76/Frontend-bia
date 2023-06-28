@@ -520,7 +520,7 @@ const use_ccd = () => {
       }) => {
         return {
           // id_catalogo_serie_und: 'rigth now is null',
-          id_catalogo_serie_und: 19,
+          // id_catalogo_serie_und: 19,
           id_unidad_organizacional: data_asing.unidades_asignacion.value,
           id_catalogo_serie: item.item.id_catalogo_serie,
           id_serie_doc: item.item.id_serie_doc,
@@ -535,8 +535,15 @@ const use_ccd = () => {
 
     console.log(itemSend, 'itemSend');
 
+    const itemSendDef = [
+      ...assignments_ccd,
+      ...itemSend
+    ]
+
+    console.log(itemSendDef, 'itemSendDef');
+
     void dispatch(
-      create_or_delete_assignments_service(itemSend, ccd_current)
+      create_or_delete_assignments_service(itemSendDef, ccd_current)
     ).then(() => {
       void dispatch(
         get_assignments_service(
