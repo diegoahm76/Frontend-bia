@@ -29,7 +29,9 @@ export interface IObjBienesSolicitud {
   codigo_bien: string;
   nombre_bien: string;
   id_bien: number | null;
-  cantidad: string | null;
+  cantidad: number | null;
+  cantidad_faltante?: number | null;
+  cantidad_despachada?: number | null;
   observaciones: string;
   nro_posicion?: string;
   id_unidad_medida?: null;
