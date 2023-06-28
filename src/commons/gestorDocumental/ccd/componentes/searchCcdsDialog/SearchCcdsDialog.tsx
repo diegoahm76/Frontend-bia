@@ -151,6 +151,7 @@ const SearchCcdModal = ({
                   params.row.id_ccd,
                 )
               )
+              // dispatch(get_assignments_service(params.row.id_ccd));
               console.log('params para ver ccd en el icono del ojito', params);
               // dispatch(get_ccd_current(params.row.id_ccd));
               set_is_modal_active(false);
