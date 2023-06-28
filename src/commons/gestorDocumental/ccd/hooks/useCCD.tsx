@@ -27,7 +27,10 @@ import {
 } from '../../organigrama/store/thunks/organigramThunks';
 // import { get_series_service } from '../store/thunks/seriesThunks';
 // import { get_subseries_service } from '../store/thunks/subseriesThunks';
-import { create_or_delete_assignments_service, get_assignments_service } from '../store/thunks/assignmentsThunks';
+import {
+  create_or_delete_assignments_service,
+  get_assignments_service
+} from '../store/thunks/assignmentsThunks';
 import type { GridColDef } from '@mui/x-data-grid';
 import type { IList } from '../../../../interfaces/globalModels';
 import { get_series_service } from '../store/thunks/seriesThunks';
@@ -252,7 +255,7 @@ const use_ccd = () => {
   }, [ccd_current]);
   //  UseEffect para obtener asignaciones
   useEffect(() => {
-    dispatch(get_assignments_service());
+    dispatch(get_assignments_service(ccd_current, control._formValues.unidades_asignacion));
   }, [ccd_current]);
 
   //  UseEffect para obtener asignaciones
@@ -415,43 +418,6 @@ const use_ccd = () => {
     );
   };
 
-  const create_or_delete_relation_unidad = (): void => {
-    // console.log(data_asing, 'data_asing');
-    // console.log('epa la patria', ccd_current);
-
-    const itemSend = data_asing.catalogo_asignacion.map(
-      (item: {
-        item: {
-          codigo_serie: string;
-          codigo_subserie: string;
-          id_catalogo_serie: number;
-          id_serie_doc: number;
-          id_subserie_doc: number;
-          nombre_serie: string;
-          nombre_subserie: string;
-        };
-        value: number;
-      }) => {
-        return {
-          // id_catalogo_serie_und: 'rigth now is null',
-          id_catalogo_serie_und: 19,
-          id_unidad_organizacional: data_asing.unidades_asignacion.value,
-          id_catalogo_serie: item.item.id_catalogo_serie,
-          id_serie_doc: item.item.id_serie_doc,
-          nombre_serie: item.item.nombre_serie,
-          codigo_serie: item.item.codigo_serie,
-          id_subserie_doc: item.item.id_subserie_doc,
-          nombre_subserie: item.item.nombre_subserie,
-          codigo_subserie: item.item.codigo_subserie
-        };
-      }
-    );
-
-    console.log(itemSend, 'itemSend');
-
-    void dispatch(create_or_delete_assignments_service(itemSend, ccd_current))
-  };
-
   // Funcion para crear la asignacion
   /*  const create_asing = (): void => {
     let new_item: any[] = [];
@@ -535,18 +501,81 @@ const use_ccd = () => {
     dispatch(get_subseries_ccd_current(null));
   }, [dispatch, reset, set_title_button_asing]);
 
+  const create_or_delete_relation_unidad = (): void => {
+    // console.log(data_asing, 'data_asing');
+    // console.log('epa la patria', ccd_current);
+
+    const itemSend = data_asing.catalogo_asignacion.map(
+      (item: {
+        item: {
+          codigo_serie: string;
+          codigo_subserie: string;
+          id_catalogo_serie: number;
+          id_serie_doc: number;
+          id_subserie_doc: number;
+          nombre_serie: string;
+          nombre_subserie: string;
+        };
+        value: number;
+      }) => {
+        return {
+          // id_catalogo_serie_und: 'rigth now is null',
+          // id_catalogo_serie_und: 19,
+          id_unidad_organizacional: data_asing.unidades_asignacion.value,
+          id_catalogo_serie: item.item.id_catalogo_serie,
+          id_serie_doc: item.item.id_serie_doc,
+          nombre_serie: item.item.nombre_serie,
+          codigo_serie: item.item.codigo_serie,
+          id_subserie_doc: item.item.id_subserie_doc,
+          nombre_subserie: item.item.nombre_subserie,
+          codigo_subserie: item.item.codigo_subserie
+        };
+      }
+    );
+
+    console.log(itemSend, 'itemSend');
+
+    const itemSendDef = [
+      ...assignments_ccd,
+      ...itemSend
+    ]
+
+    console.log(itemSendDef, 'itemSendDef');
+
+    void dispatch(
+      create_or_delete_assignments_service(itemSendDef, ccd_current)
+    ).then(() => {
+      void dispatch(
+        get_assignments_service(
+          ccd_current,
+          control._formValues.unidades_asignacion
+        )
+      );
+    });
+  };
+
   // Funcion para eliminar Asignaciones
-  // const delete_asing = (id: any): void => {
-  //   const new_items = assignments_ccd.filter((item) => item.id !== id);
-  //   const item_final = new_items.map((item: any) => {
-  //     return {
-  //       id_unidad_organizacional: item?.id_unidad_organizacional,
-  //       id_serie_doc: item?.codigo_serie,
-  //       subseries: item?.subseries?.map((item: { value: any }) => item.value),
-  //     };
-  //   });
-  //   void dispatch(create_assignments_service(item_final, clean_asing));
-  // };
+  const delete_asing = (id: any): void => {
+    const new_items = assignments_ccd.filter((item) => item.id !== id);
+    console.log(new_items, 'new_items');
+    /* const item_final = new_items.map((item: any) => {
+      return {
+        id_unidad_organizacional: item?.id_unidad_organizacional,
+        id_serie_doc: item?.codigo_serie,
+        subseries: item?.subseries?.map((item: { value: any }) => item.value),
+      };
+    }); */
+    void dispatch(
+      create_or_delete_assignments_service(new_items, ccd_current)
+    ).then(() => {
+      void dispatch(
+        get_assignments_service(
+          ccd_current,
+          control._formValues.unidades_asignacion
+        )
+      );
+    });
+  };
 
   const columns_asignacion: GridColDef[] = [
     {
@@ -589,26 +618,14 @@ const use_ccd = () => {
       field: 'accion',
       minWidth: 110,
       maxWidth: 120,
-      /* (params: {
-        row:  IAssignmentsObject any | null;
-        data: { id: any };
-         } */
       renderCell: (params: any) => {
         return (
           <>
-            {/*  <button
-              className="btn text-capitalize "
-              type="button"
-              title="Editar"
-              onClick={() => {
-                dispatch(get_assignments_ccd_current(params.row));
-              }}
-            >
-              <i className="fa-regular fa-pen-to-square fs-4"></i>
-            </button> */}
             <IconButton
               onClick={() => {
                 console.log('elimaniando relación');
+                delete_asing(params.row.id);
+                console.log(params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
