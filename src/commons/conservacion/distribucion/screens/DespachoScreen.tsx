@@ -392,7 +392,9 @@ const DespachoScreen = () => {
                 : 'Detalle del cierre de solicitud por no disponibilidad'
             }
             button_submit_label={'Cierre de solicitud'}
-            button_submit_disabled={!current_solicitud.solicitud_abierta}
+            button_submit_disabled={
+              !(current_solicitud.solicitud_abierta === true)
+            }
             button_submit_icon_class={<Block />}
             button_submit_action={handle_submit_solicitud(on_submit_closed)}
             modal_inputs={[
