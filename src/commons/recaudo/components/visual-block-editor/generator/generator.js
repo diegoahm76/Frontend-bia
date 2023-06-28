@@ -24,12 +24,12 @@
 // More on generating code:
 // https://developers.google.com/blockly/guides/create-custom-blocks/generating-code
 
-import {pythonGenerator} from 'blockly/python';
+import { javascriptGenerator } from 'blockly/javascript';
 
-pythonGenerator.test_react_field = function (block) {
+javascriptGenerator.test_react_field = function (block) {
     return 'console.log(\'custom block\');\n';
 };
 
-pythonGenerator.test_react_date_field = function (block) {
+javascriptGenerator.test_react_date_field = function (block) {
     return 'console.log(' + block.getField('DATE').getText() + ');\n';
 };
