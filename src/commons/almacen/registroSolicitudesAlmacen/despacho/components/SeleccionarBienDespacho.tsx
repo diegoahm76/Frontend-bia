@@ -290,7 +290,7 @@ const SeleccionarBienDespacho = () => {
               observacion: data.observacion,
               unidad_medida: current_bien.unidad_medida ?? null,
               id_unidad_medida_solicitada:
-                current_bien.id_unidad_medida ?? null,
+                bien_selected.id_unidad_medida ?? null,
               bodega: current_bien.bodega ?? null,
               id_entrada_bien: current_bien.id_entrada_bien ?? null,
             };
