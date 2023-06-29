@@ -230,22 +230,25 @@ export const GeolocalizacionScreen: React.FC = () => {
   ];
 
   return (
-    <Grid item>
-      <Box sx={{ width: '100%' }}>
-        <MapContainer
-          center={center}
-          zoom={8}
-          style={map_style}
-          scrollWheelZoom={true}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-          />
 
-          {markers}
-        </MapContainer>
-      </Box>
-    </Grid>
+    <>
+      <Grid item>
+        <Box sx={{ width: '100%' }}>
+          <MapContainer
+            center={center}
+            zoom={8}
+            style={map_style}
+            scrollWheelZoom={true}
+          >
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+            />
+
+            {markers}
+          </MapContainer>
+        </Box>
+      </Grid>
+    </>
   );
 };

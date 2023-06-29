@@ -11,6 +11,7 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { DataGrid } from '@mui/x-data-grid';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
+import { control_error } from './utils/control_error_or_success';
 
 const columns = [
     { field: 'id', headerName: 'Nro Sucursal', width: 150 },
@@ -34,7 +35,7 @@ export const SucursalEntidad: FC = () => {
 
     const [email, set_email] = useState('');
     const [confirm_email, set_confirm_email] = useState('');
-    const [error, set_error] = useState('');
+    const [error, set_error] = useState<any>('');
 
     const handle_email_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
         set_email(event.target.value);
@@ -48,15 +49,16 @@ export const SucursalEntidad: FC = () => {
         if (email === confirm_email) {
             set_error('');
         } else {
-            set_error('Los correos electrónicos no coinciden');
+            set_error(control_error('Los Emails  no coinciden'));
         }
     };
     const is_error = error !== '';
     const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false)
     const [type_direction,
         // set_type_direction
-    ] = useState('');
 
+    ] = useState('');
+    console.log(is_error);
     // Establece la dirección generada en el generador de direcciones
     const set_value_direction = (_value: string, type: string): void => {
 
@@ -318,9 +320,10 @@ export const SucursalEntidad: FC = () => {
                             fullWidth
                             value={email}
                             onChange={handle_email_change}
-                        />{is_error && <div
+                        />
+                        {/* {is_error && <div
                         //   style={{color: "red"}} 
-                        >{error}</div>}
+                        >{error}</div>} */}
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
@@ -331,9 +334,10 @@ export const SucursalEntidad: FC = () => {
                             fullWidth
                             value={confirm_email}
                             onChange={handle_confirm_email_change}
-                        />     {is_error && <div
+                        />
+                        {/* {is_error && <div
                         //   style={{color: "red"}} 
-                        >{error}</div>}
+                        >{error}</div>} */}
                     </Grid>
                     <Grid item xs={12} sm={4} >
                         <TextField variant="outlined"
