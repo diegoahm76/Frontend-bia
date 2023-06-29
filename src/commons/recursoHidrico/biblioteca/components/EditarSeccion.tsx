@@ -2,15 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type React from 'react';
 import { useContext, useEffect, useState } from 'react';
-import {
-  Divider,
-  Grid,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Divider, Grid, TextField, Typography } from '@mui/material';
 import { DataContext } from '../context/contextData';
-import dayjs from 'dayjs';
-import { Title } from '../../../../components/Title';
 import { LoadingButton } from '@mui/lab';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -38,9 +31,6 @@ export const EditarSeccion: React.FC = () => {
   return (
     <>
       <Grid item xs={12}>
-        <Title title="ADMINISTRACION SECCIONES BIBLIOTECA" />
-      </Grid>
-      <Grid item xs={12}>
         <Typography variant="subtitle1" fontWeight="bold">
           Sección
         </Typography>
@@ -57,7 +47,7 @@ export const EditarSeccion: React.FC = () => {
           {...register('nombre_seccion', { required: true })}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} sm={6}>
         <TextField
           label="Descripción sección"
           multiline

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
 import { useEffect, useState } from 'react';
 import {
   Box,

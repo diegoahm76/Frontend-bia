@@ -198,7 +198,7 @@ const dialog_busqueda_avanzada_usuario = ({
                   required: true,
                 })}
                 required
-                label="Nombre de usuario"
+                label="Nombreee de usuario"
                 size="small"
                 helperText="Nombre de usuario"
                 fullWidth
