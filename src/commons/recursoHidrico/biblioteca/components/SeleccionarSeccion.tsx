@@ -228,6 +228,10 @@ export const SeleccionarSeccion: React.FC = () => {
     set_rows_subseccion(updated_rows);
   };
 
+  useEffect(() => {
+    console.log(rows_to_delete_subseecion, 'rows_to_delete_subseecion');
+  }, [rows_to_delete_subseecion]);
+
   const handle_eliminar = (row: any): void => {
     void Swal.fire({
       customClass: {
