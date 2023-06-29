@@ -5,7 +5,6 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { obligaciones_seleccionadas } from '../slices/ObligacionesSlice';
-import { get_datos_deudor } from '../slices/DeudoresSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
@@ -42,7 +41,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
     }
     try {
       dispatch(obligaciones_seleccionadas(arr_registro));
-      void dispatch(get_datos_deudor(obligaciones.id_deudor));
     } catch (error: any) {
       throw new Error(error);
     }
@@ -94,7 +92,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'numero_resolucion',
+      field: 'nroResolucion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (

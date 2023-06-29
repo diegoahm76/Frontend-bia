@@ -1,18 +1,11 @@
 import { Grid, Box, TextField } from "@mui/material";
-import { useSelector } from 'react-redux';
-import { type ObligacionesUsuario } from '../interfaces/interfaces';
-
-interface RootState {
-  obligaciones: {
-    obligaciones: ObligacionesUsuario;
-  }
-}
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EncabezadoObligacionesUsuario: React.FC = () => {
-  const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
-
+export const InputsEncabezado: React.FC = () => {
   return (
+    <>
       <Grid
         container
         sx={{
@@ -25,6 +18,7 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+
         <Grid item xs={12}>
           <Box
             component="form"
@@ -35,10 +29,10 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
               <Grid item xs={12} sm={3}>
                 <TextField
                   disabled
-                  label="Nombres"
+                  label="Nombre o Razón Social"
                   size="small"
                   fullWidth
-                  value={`${obligaciones.nombre_completo}`}
+                  value={'Marcela Cardenas'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -47,7 +41,7 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={`${obligaciones.numero_identificacion}`}
+                  value={'138223930'}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -56,12 +50,33 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
                   label="Correo Electrónico"
                   size="small"
                   fullWidth
-                  value={`${obligaciones.email}`}
+                  value={'marce@gmail.com'}
                 />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  disabled
+                  label="Dirección Notificación"
+                  size="small"
+                  fullWidth
+                  value={'Cl 56 #220-120'}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Fecha Solicitud"
+                  value={new Date()}
+                  renderInput={(props) => <TextField {...props} />}
+                  onChange={()=>{}}
+                  disabled
+                />
+                </LocalizationProvider>
               </Grid>
             </Grid>
           </Box>
         </Grid>
       </Grid>
+    </>
   )
 }

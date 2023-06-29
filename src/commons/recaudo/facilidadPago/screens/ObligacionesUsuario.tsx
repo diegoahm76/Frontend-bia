@@ -1,3 +1,4 @@
+import { Title } from '../../../../components/Title';
 import { EncabezadoObligacionesUsuario } from '../componentes/EncabezadoObligacionesUsuario';
 import { TablaObligacionesUsuario } from '../componentes/TablaObligacionesUsuario';
 import { Grid, Box } from "@mui/material";
@@ -28,6 +29,7 @@ export const ObligacionesUsuarios: React.FC = () => {
 
   return (
     <>
+      <Title title='Listado de Obligaciones del Usuario Externo'/>
       <EncabezadoObligacionesUsuario />
       <Grid
         container
