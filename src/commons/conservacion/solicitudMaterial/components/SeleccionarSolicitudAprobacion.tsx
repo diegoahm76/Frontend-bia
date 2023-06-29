@@ -189,6 +189,7 @@ const SeleccionarSolicitudAprobada = ({
               disabled: true,
               helper_text: '',
               set_value: null,
+              // eslint-disable-next-line object-shorthand
               file_name: file_name,
             },
 
