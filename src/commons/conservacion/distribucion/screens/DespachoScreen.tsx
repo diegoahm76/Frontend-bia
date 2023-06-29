@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable react/jsx-no-undef */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 
@@ -387,195 +388,182 @@ const DespachoScreen = () => {
             />
           </Grid>
         )}
-        {current_despacho.id_despacho_viveros === null ? (
-          <Grid item xs={12} md={4}>
-            <AnularEliminar
-              action={
-                current_solicitud.solicitud_abierta === true
-                  ? 'Cerrar por no disponibilidad'
-                  : 'Detalle del cierre'
-              }
-              button_icon_class={<Block />}
-              button_disabled={false}
-              modal_title={
-                current_solicitud.solicitud_abierta === true
-                  ? 'Cerrar solicitud'
-                  : 'Detalle del cierre de solicitud por no disponibilidad'
-              }
-              button_submit_label={'Cierre de solicitud'}
-              button_submit_disabled={
-                !(current_solicitud.solicitud_abierta === true)
-              }
-              button_submit_icon_class={<Block />}
-              button_submit_action={handle_submit_solicitud(on_submit_closed)}
-              modal_inputs={[
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_solicitud_aprobada,
-                  control_name: 'nro_solicitud',
-                  default_value: '',
-                  rules: {},
-                  label: 'Numero solicitud',
-                  type: 'number',
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'input_controller',
-                  person: true,
-                  xs: 12,
-                  md: 4,
-                  control_form: control_solicitud_aprobada,
-                  control_name: 'persona_cierra',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Debe seleccionar la personas que la creó',
-                    },
+        <Grid item xs={12} md={4}>
+          <AnularEliminar
+            action={
+              current_solicitud.solicitud_abierta === true
+                ? 'Cerrar por no disponibilidad'
+                : 'Detalle del cierre'
+            }
+            button_icon_class={<Block />}
+            button_disabled={false}
+            modal_title={current_solicitud.solicitud_abierta === true ? "Cerrar solicitud" : "Detalle del cierre de solicitud por no disponibilidad"}
+            button_submit_label={"Cierre de solicitud"}
+            button_submit_disabled={!current_solicitud.solicitud_abierta}
+            button_submit_icon_class={<Block />}
+            button_submit_action={handle_submit_solicitud(on_submit_closed)}
+            modal_inputs={[
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_solicitud_aprobada,
+                control_name: 'nro_solicitud',
+                default_value: '',
+                rules: {},
+                label: 'Numero solicitud',
+                type: 'number',
+                disabled: true,
+                helper_text: '',
+              },
+              {
+                datum_type: 'input_controller',
+                person: true,
+                xs: 12,
+                md: 4,
+                control_form: control_solicitud_aprobada,
+                control_name: 'persona_cierra',
+                default_value: '',
+                rules: {
+                  required_rule: {
+                    rule: true,
+                    message: 'Debe seleccionar la personas que la creó',
                   },
-                  label: 'Cierre realizao por',
-                  type: 'text',
-                  disabled: true,
-                  helper_text: '',
                 },
-                {
-                  datum_type: 'date_picker_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_solicitud_aprobada,
-                  control_name:
-                    current_solicitud.solicitud_anulada_solicitante === true
-                      ? 'fecha_cierre_no_dispo'
-                      : 'fecha',
-                  default_value: new Date().toString(),
-                  rules: {
-                    required_rule: { rule: true, message: 'requerido' },
+                label: 'Cierre realizao por',
+                type: 'text',
+                disabled: true,
+                helper_text: '',
+              },
+              {
+                datum_type: 'date_picker_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_solicitud_aprobada,
+                control_name:
+                  current_solicitud.solicitud_anulada_solicitante === true
+                    ? 'fecha_cierre_no_dispo'
+                    : 'fecha',
+                default_value: new Date().toString(),
+                rules: { required_rule: { rule: true, message: 'requerido' } },
+                label: 'Fecha actual',
+                type: 'text',
+                disabled: true,
+                helper_text: '',
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 12,
+                control_form: control_solicitud_aprobada,
+                control_name: 'observacion_cierre_no_dispo_viveros',
+                default_value: '',
+                rules: {
+                  required_rule: {
+                    rule: true,
+                    message: 'Observación requerida',
                   },
-                  label: 'Fecha actual',
-                  type: 'text',
-                  disabled: true,
-                  helper_text: '',
                 },
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 12,
-                  control_form: control_solicitud_aprobada,
-                  control_name: 'observacion_cierre_no_dispo_viveros',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Observación requerida',
-                    },
+                label: 'Observación',
+                type: 'text',
+                multiline_text: true,
+                rows_text: 4,
+                disabled: false,
+                helper_text: '',
+              },
+            ]}
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <AnularEliminar
+            action={
+              current_despacho.despacho_anulado === true
+                ? 'Detalle anulación'
+                : 'Anular'
+            }
+            button_icon_class={<Block />}
+            button_disabled={false}
+            modal_title={
+              current_despacho.despacho_anulado === true
+                ? 'Detalle anulación'
+                : 'Anular despacho'
+            }
+            button_submit_label={'Anular'}
+            button_submit_disabled={current_despacho.despacho_anulado}
+            button_submit_icon_class={<Block />}
+            button_submit_action={handle_submit(on_submit_annul)}
+            modal_inputs={[
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_despacho,
+                control_name: 'nro_despachos_viveros',
+                default_value: '',
+                rules: {},
+                label: 'Numero despacho',
+                type: 'number',
+                disabled: true,
+                helper_text: '',
+              },
+              {
+                datum_type: 'input_controller',
+                person: true,
+                xs: 12,
+                md: 4,
+                control_form: control_despacho,
+                control_name: 'persona_anula',
+                default_value: '',
+                rules: {
+                  required_rule: {
+                    rule: true,
+                    message: 'Debe seleccionar la personas que la creó',
                   },
-                  label: 'Observación',
-                  type: 'text',
-                  multiline_text: true,
-                  rows_text: 4,
-                  disabled: false,
-                  helper_text: '',
                 },
-              ]}
-            />
-          </Grid>
-        ) : (
-          <Grid item xs={12} md={3}>
-            <AnularEliminar
-              action={
-                current_despacho.despacho_anulado === true
-                  ? 'Detalle anulación'
-                  : 'Anular'
-              }
-              button_icon_class={<Block />}
-              button_disabled={false}
-              modal_title={
-                current_despacho.despacho_anulado === true
-                  ? 'Detalle anulación'
-                  : 'Anular despacho'
-              }
-              button_submit_label={'Anular'}
-              button_submit_disabled={current_despacho.despacho_anulado}
-              button_submit_icon_class={<Block />}
-              button_submit_action={handle_submit(on_submit_annul)}
-              modal_inputs={[
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_despacho,
-                  control_name: 'nro_despachos_viveros',
-                  default_value: '',
-                  rules: {},
-                  label: 'Numero despacho',
-                  type: 'number',
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'input_controller',
-                  person: true,
-                  xs: 12,
-                  md: 4,
-                  control_form: control_despacho,
-                  control_name: 'persona_anula',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Debe seleccionar la personas que la creó',
-                    },
+                label: 'Anulación realizada por',
+                type: 'text',
+                disabled: true,
+                helper_text: '',
+              },
+              {
+                datum_type: 'date_picker_controller',
+                xs: 12,
+                md: 4,
+                control_form: control_despacho,
+                control_name:
+                  current_solicitud.solicitud_anulada_solicitante === true
+                    ? 'fecha_anulacion'
+                    : 'fecha',
+                default_value: new Date().toString(),
+                rules: { required_rule: { rule: true, message: 'requerido' } },
+                label: 'Fecha actual',
+                type: 'text',
+                disabled: true,
+                helper_text: '',
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 12,
+                control_form: control_despacho,
+                control_name: 'justificacion_anulacion',
+                default_value: '',
+                rules: {
+                  required_rule: {
+                    rule: true,
+                    message: 'Observación requerida',
                   },
-                  label: 'Anulación realizada por',
-                  type: 'text',
-                  disabled: true,
-                  helper_text: '',
                 },
-                {
-                  datum_type: 'date_picker_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_despacho,
-                  control_name:
-                    current_solicitud.solicitud_anulada_solicitante === true
-                      ? 'fecha_anulacion'
-                      : 'fecha',
-                  default_value: new Date().toString(),
-                  rules: {
-                    required_rule: { rule: true, message: 'requerido' },
-                  },
-                  label: 'Fecha actual',
-                  type: 'text',
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 12,
-                  control_form: control_despacho,
-                  control_name: 'justificacion_anulacion',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Observación requerida',
-                    },
-                  },
-                  label: 'Justificacion',
-                  type: 'text',
-                  multiline_text: true,
-                  rows_text: 4,
-                  disabled: false,
-                  helper_text: '',
-                },
-              ]}
-            />
-          </Grid>
-        )}
+                label: 'Justificacion',
+                type: 'text',
+                multiline_text: true,
+                rows_text: 4,
+                disabled: false,
+                helper_text: '',
+              },
+            ]}
+          />
+        </Grid>
       </Grid>
     </Grid>
   );

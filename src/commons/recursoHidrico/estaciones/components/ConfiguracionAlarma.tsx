@@ -115,7 +115,7 @@ export const ConfiguracionAlarma: React.FC = () => {
         cancelButton: "square-btn",
       },
       width: 350,
-      text: "¿Estas seguro?",
+      text: "¿Estás seguro?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#8BC34A",
