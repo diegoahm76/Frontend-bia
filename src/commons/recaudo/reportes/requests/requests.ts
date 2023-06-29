@@ -1,9 +1,10 @@
 import { api } from '../../../../api/axios';
 import { type Filtro } from '../../facilidadPago/interfaces/interfaces';
 
-// Ver Reporte General Cartera
-export const get_cartera_general = async (): Promise<any> => {
-  const data = await api.get(`recaudo/reportes/reporte-general-cartera/2023-11-20/`)
+// Ver Reporte General Cartera por Fecha de Corte
+export const get_cartera_general = async (fecha: string| Date | null): Promise<any> => {
+  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+  const data = await api.get(`recaudo/reportes/reporte-general-cartera/${fecha}/`)
   return data.data
 }
 

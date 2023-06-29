@@ -22,8 +22,9 @@ export const PersonaNatural: React.FC = () => {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={3.5}>
+            <Grid item xs={12} sm={5}>
               <Button
+                fullWidth
                 color='primary'
                 variant='outlined'
                 size='medium'
@@ -33,7 +34,7 @@ export const PersonaNatural: React.FC = () => {
                 Ver Documento de Identidad
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Dirección Notificación"
@@ -42,7 +43,7 @@ export const PersonaNatural: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Ciudad"
@@ -51,7 +52,7 @@ export const PersonaNatural: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Teléfono Contacto"
@@ -79,8 +80,9 @@ export const PersonaJuridica: React.FC = () => {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={4.6}>
+            <Grid item xs={12} sm={5}>
               <Button
+                fullWidth
                 color='primary'
                 variant='outlined'
                 size='medium'
@@ -90,8 +92,9 @@ export const PersonaJuridica: React.FC = () => {
                 Ver Documento de Identidad Apoderado
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <Button
+                fullWidth
                 color='primary'
                 variant='outlined'
                 size='medium'
@@ -103,6 +106,7 @@ export const PersonaJuridica: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={5}>
               <Button
+                fullWidth
                 color='primary'
                 variant='outlined'
                 size='medium'
@@ -112,7 +116,7 @@ export const PersonaJuridica: React.FC = () => {
                 Ver Cert. Existencia y Representación Legal
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Dirección Notificación"
@@ -121,7 +125,7 @@ export const PersonaJuridica: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Ciudad"
@@ -130,7 +134,7 @@ export const PersonaJuridica: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Teléfono Contacto"
@@ -158,17 +162,9 @@ export const DeudorSolidarioNatural: React.FC = () => {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                disabled
-                label="Tipo Deudor Solidario"
-                value={'Deudor Solidario Natural'}
-                size="small"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={5}>
               <Button
+                fullWidth
                 color='primary'
                 variant='outlined'
                 size='medium'
@@ -178,8 +174,9 @@ export const DeudorSolidarioNatural: React.FC = () => {
                 Ver Documento Deudor Solidario
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3.7}>
+            <Grid item xs={12} sm={5}>
               <Button
+                fullWidth
                 color='primary'
                 variant='outlined'
                 size='medium'
@@ -189,7 +186,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                 Ver Oficio Respaldando Deuda
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Dirección Notificación"
@@ -198,7 +195,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Ciudad"
@@ -207,7 +204,7 @@ export const DeudorSolidarioNatural: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Teléfono Contacto"
@@ -235,17 +232,9 @@ export const DeudorSolidarioJuridico: React.FC = () => {
           autoComplete="off"
         >
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={3}>
-              <TextField
-                disabled
-                label="Tipo Deudor Solidario"
-                value={'Deudor Solidario Natural'}
-                size="small"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={5}>
               <Button
+                fullWidth
                 color='primary'
                 variant='outlined'
                 size='medium'
@@ -255,8 +244,9 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                 Ver Documento Deudor Solidario
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3.7}>
+            <Grid item xs={12} sm={5}>
               <Button
+                fullWidth
                 color='primary'
                 variant='outlined'
                 size='medium'
@@ -268,6 +258,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
             </Grid>
             <Grid item xs={12} sm={5}>
               <Button
+                fullWidth
                 color='primary'
                 variant='outlined'
                 size='medium'
@@ -277,7 +268,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                 Ver Cert. Existencia y Representación Legal
               </Button>
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Dirección Notificación"
@@ -286,7 +277,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Ciudad"
@@ -295,7 +286,7 @@ export const DeudorSolidarioJuridico: React.FC = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={5}>
               <TextField
                 disabled
                 label="Teléfono Contacto"

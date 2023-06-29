@@ -27,6 +27,7 @@ export const TablaConsultaAdmin: React.FC = () => {
   const [visible_rows, set_visible_rows] = useState(Array<Contribuyente>);
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
+  const [deudor, set_deudor] = useState(0);
   const [obligaciones_module, set_obligaciones_module] = useState(false);
   const { deudores } = useSelector((state: RootState) => state.deudores);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -64,6 +65,7 @@ export const TablaConsultaAdmin: React.FC = () => {
                   onClick={() => {
                     void dispatch(get_obligaciones_id(params.row.identificacion))
                     set_obligaciones_module(true)
+                    set_deudor(params.row.id_deudor)
                   }}
                 >
                   <Avatar
@@ -227,7 +229,7 @@ export const TablaConsultaAdmin: React.FC = () => {
               autoComplete="off"
             >
                 <p>Las obligaciones pendientes por pago son las siguientes:</p>
-                <TablaObligacionesUsuarioConsulta />
+                <TablaObligacionesUsuarioConsulta deudor={deudor} />
             </Box>
           </Grid>
         </Grid>
