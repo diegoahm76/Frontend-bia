@@ -91,10 +91,9 @@ export const CcdScreen: React.FC = () => {
   }, [ccd_current?.fecha_terminado]);
 
   useEffect(() => {
-    if (ccd_current?.id_ccd) {
       dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
-    }
-  }, [ccd_current?.id_ccd]);
+      get_assignments_service(ccd_current?.id_ccd)(dispatch);
+  }, [ccd_current]);
 
   // Hooks
   const {
@@ -742,6 +741,7 @@ export const CcdScreen: React.FC = () => {
                     pageSize={5}
                     rowsPerPageOptions={[5]}
                     experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => row.id_cat_serie_und}
                   />
                 </Box>
               </Grid>
