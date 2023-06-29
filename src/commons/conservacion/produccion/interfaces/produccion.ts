@@ -9,6 +9,101 @@ export interface IProduccion {
   current_stage_change: IObjChange;
   persons: Persona[];
   changing_person: Persona;
+  // preparación mezcla
+  mezclas: IObjMezcla [];
+  current_mezcla:IObjMezcla;
+  bienes : IObjBienes [];
+  current_bien : IObjBienes;
+  preparaciones : IObjPreparacionMezcla [];
+  current_preparacion : IObjPreparacionMezcla;
+  preparacion_bienes : IObjPreparacionBienes [];
+  // Mortalidad
+  mortalidades: IObjMortalidad[];
+  current_mortalidad: IObjMortalidad;
+  siembras_material_vegetal: IObjSiembraMV[];
+  current_siembra_material_vegetal: IObjSiembraMV;
+  items_mortalidad: IObjItemMortalidad[];
+  nro_mortalidad: number | null;
+  persona_anula: Persona;
+  // Incidencias
+  incidencias: IObjIncidencia[];
+  current_incidencia: IObjIncidencia;
+
+}
+
+export interface IObjIncidencia {
+  id_incidencia: number | null;
+  id_bien?: number | null;
+  agno_lote: number | null;
+  nro_lote: number | null;
+	cod_etapa_lote: string | null;
+  id_vivero: number | null;
+	consec_cuaren_lote_etapa?: number | null;
+  fecha_incidencia: string | null;
+	cod_tipo_incidencia: string | null;
+  altura_lote_en_cms: number | null;
+  nombre_incidencia: string | null;
+  descripcion: string | null;
+  ruta_archivo_soporte?: string | null;
+  id_persona_crea?: number | null;
+  persona_crea?: string | null;
+  id_persona_anula?: number | null;
+  persona_anula?: string | null;
+  incidencia_anulado?: boolean | null;
+  justificacion_anulacion?: string | null;
+  fecha_anulacion?: string | null;
+  consec_incidencia?: number | null;
+}
+
+export interface IObjItemMortalidad {
+  id_item_baja_viveros: number | null;
+  codigo_bien: string | null;
+  nombre_bien: string | null;
+  unidad_medida?: string | null;
+  desc_etapa_lote?: string | null;
+  agno_lote: number | null;
+  nro_lote: number | null;
+  cod_etapa_lote: string | null;
+  consec_cuaren_por_lote_etapa: string | null;
+  cantidad_baja: number | null;
+  observaciones: string | null;
+  nro_posicion?: number | null;
+  id_baja: number | null;
+  id_bien: number | null;
+}
+
+export interface IObjSiembraMV {
+  id_inventario_vivero: number | null;
+  id_bien: number | null;
+  codigo_bien: string | null;
+  nombre_bien: string | null;
+  agno_lote: number | null;
+  nro_lote: number | null;
+  cod_etapa_lote: string | null;
+  desc_etapa_lote: string | null;
+  saldo_disponible?: number | null;
+  unidad_medida: string | null;
+  registros_cuarentena: string | null;
+  saldo_disponible_registro?: number | null;
+}
+
+export interface IObjMortalidad {
+  id_baja: number | null;
+  tipo_baja?: string | null;
+  nro_baja_por_tipo?: number | null;
+	fecha_baja: string | Date | null;
+	fecha_registro?: string | Date | null;
+	motivo: string | null;
+  baja_anulado?: boolean | null;
+  justificacion_anulacion?: string | null;
+  fecha_anulacion?: string | null;
+  ruta_archivo_soporte: string | null;
+  id_vivero: number | null;
+  nombre_vivero?: string | null;
+  id_persona_baja?: number | null;
+  persona_baja?: string | null;
+  id_persona_anula?: number | null;
+  persona_anula?: string | null;
 }
 
 export interface IObjChange {
@@ -29,6 +124,11 @@ export interface IObjChange {
   nombre?: string | null;
   desc_etapa_lote_destino?: string | null;
   desc_etapa_lote_origen?: string | null;
+  id_persona_anula?:  number | null;
+  persona_anula?: string | null;
+  fecha_anula?: string | null;
+  justificacion_anulacion?: string | null;
+  cambio_anulado?: boolean | null;
 
 }
 
@@ -74,4 +174,68 @@ export interface IObjNursery {
   id_persona_abre: number | null;
   id_persona_cierra: number | null;
   id_persona_cuarentena: number | null;
+}
+
+export interface IObjMezcla {
+  nombre: string | null;
+  item_activo: boolean | null;
+  item_ya_usado: boolean | null;
+  id_unidad_medida: number | null;
+  id_mezcla: number | null;
+  unidad_medida?: string | null;
+   }
+export interface IObjPreparacionMezcla{
+  id_preparacion_mezcla: number | null;
+  consec_vivero_mezclas : number | null;
+  fecha_preparacion: string| Date | null;
+  fecha_registro: string| Date | null;
+  preparacion_anulada: boolean | null;
+  justificacion_anulacion: string | null;
+  fecha_anulacion: string | Date | null;
+  id_persona_prepara: number|null;
+  id_persona_anula: number| null;
+  id_mezcla: number | null;
+  id_item_preparacion_mezcla: number | null;
+  cantidad_usada: number | null;
+  nro_posicion: number | null;
+  id_vivero?: number | null;
+  cantidad_creada: number | null;
+  observaciones: string | null;
+  nombre_mezcla?: string | null;
+  unidad_medida?: string | null;
+  nombre_persona_prepara?: string | null;
+  nombre_persona_anula?: string | null;
+}
+
+export interface IObjBienes{
+  id_bien: number|null;
+  unidad_disponible: string | null;
+  saldo_disponible?: number | null;
+  cantidad_disponible_bien?: number | null;
+  codigo_bien : string | null;
+  nombre?: string | null;
+  nombre_bien?: string | null;
+  tipo_bien?: string | null;
+}
+
+export interface IObjPreparacionBienes {
+  id_item_preparacion_mezcla?: number | null;
+  cantidad_usada?: number | null;
+  observaciones?: string | null;
+  nro_posicion?: number | null;
+  codigo_bien?: string | null;
+  nombre_bien?: string | null;
+  id_bien_usado?: number | null;
+  // incidencia
+  id_bien?: number | null;
+  id_mezcla?: number | null;
+  id_vivero?: number | null;
+  nombre?: string | null;
+  unidad_medida?: string | null;
+  tipo_bien?: string | null;
+  cantidad_a_consumir?: number | null;
+  saldo_disponible?: number | null;
+
+
+
 }

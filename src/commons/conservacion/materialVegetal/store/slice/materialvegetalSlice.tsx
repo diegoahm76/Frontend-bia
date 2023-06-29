@@ -15,11 +15,11 @@ import {
 import { type Persona } from "../../../../../interfaces/globalModels";
 
 
-
+const fecha = new Date()
 export const initial_state_planting: IObjPlanting = {
   id_siembra: null,
   nro_lote: null,
-  fecha_siembra: (new Date().toString()),
+  fecha_siembra: fecha.toString(),
   agno_lote: null,
   id_vivero: null,
   cama_germinacion: [],
@@ -63,7 +63,7 @@ const initial_state_current_nursery = {
 const initial_state_person: Persona = {
   id_persona: null,
   tipo_persona: "",
-  tipo_documento: "",
+  tipo_documento: null,
   numero_documento: "",
   primer_nombre: "",
   segundo_nombre: "",
@@ -124,12 +124,12 @@ const initial_satate_current_plant_quarantine: IObjQuarantine = {
   id_persona_cuarentena: null,
   id_persona_anula: null,
 }
-
+fecha.setDate(fecha.getDate()+1)
 export const initial_satate_current_lifting: IObjLifting = {
   id_item_levanta_cuarentena: null,
   realizado_por: "",
   consec_levan_por_cuaren: null,
-  fecha_levantamiento: (new Date().toString()),
+  fecha_levantamiento: fecha.toString(),
   fecha_registro: null,
   cantidad_a_levantar:null,
   observaciones: "",

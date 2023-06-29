@@ -81,25 +81,28 @@ const CrearBienDialogForm = ({
 
   const on_submit = (data: FormValues): void => {
     if (action === 'create_sub') {
-      data.id_bien = null;
+      data.id_bien = current_nodo.data.bien?.id_bien ?? null;
       data.nivel_jerarquico =
         current_nodo.data.bien?.nivel_jerarquico != null
-          ? Number(current_nodo.data.bien.nivel_jerarquico) + 1
+          ? (current_nodo.data.bien?.nivel_jerarquico === 5) ? 5 :
+            Number(current_nodo.data.bien?.nivel_jerarquico ?? 0) + 1
           : 1;
       data.id_bien_padre =
         current_nodo.data.bien?.id_bien != null
-          ? current_nodo.data.bien.id_bien
+          ? (current_nodo.data.bien?.nivel_jerarquico === 5) ? current_nodo.data.bien.id_bien_padre : current_nodo.data.bien.id_bien
           : null;
       data.nombre_padre =
         current_nodo.data.bien?.nombre != null
-          ? current_nodo.data.bien.nombre
+          ? (current_nodo.data.bien?.nivel_jerarquico === 5) ? current_nodo.data.bien.nombre_padre : current_nodo.data.bien.nombre
           : null;
-      data.solicitable_vivero = true;
     } else if (action === 'create') {
       data.nivel_jerarquico = 1;
     }
     data.cod_tipo_bien = tipo_bien_selected;
-
+    data.id_unidad_medida_vida_util = 59
+    data.maneja_hoja_vida = data.maneja_hoja_vida === "true"
+    data.solicitable_vivero = data.solicitable_vivero === "true"
+    data.visible_solicitudes = data.visible_solicitudes === "true"
     console.log(data);
     void dispatch(add_bien_service(data));
     handle_close_add_bien();
@@ -146,7 +149,9 @@ const CrearBienDialogForm = ({
   }, []);
   useEffect(() => {
     if (action === 'create_sub') {
-      void dispatch(get_code_bien_service(current_nodo.data.bien?.codigo_bien));
+      if (current_nodo.data.bien?.nivel_jerarquico !== 5) {
+        void dispatch(get_code_bien_service(current_nodo.data.bien?.codigo_bien));
+      }
 
       set_tipo_bien_selected(current_nodo.data.bien?.cod_tipo_bien);
 
@@ -181,10 +186,11 @@ const CrearBienDialogForm = ({
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
             <Title title="Seleccione tipo de bien"></Title>
-            <Grid item xs={12} md={12} margin={1}>
+            <Grid item xs={12} md={2} margin={1}>
               <TextField
                 margin="dense"
                 select
+                fullWidth
                 size="small"
                 label="Tipo de bien"
                 variant="outlined"
@@ -198,7 +204,7 @@ const CrearBienDialogForm = ({
                 ))}
               </TextField>
             </Grid>
-            <Title title="INFORMACION DEL BIEN"></Title>
+            <Title title="Informacion del bien"></Title>
 
             <Grid item xs={12} md={2} margin={1}>
               <Controller

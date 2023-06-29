@@ -10,19 +10,20 @@ import { type IObjLifting} from "../interfaces/materialvegetal";
 import { useForm } from "react-hook-form";
 import FormButton from "../../../../components/partials/form/FormButton";
 import SaveIcon from '@mui/icons-material/Save';
-import CloseIcon from '@mui/icons-material/Close';
 import BuscarModelo from "../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import AnularEliminar from "../../componentes/AnularEliminar";
+import Block from '@mui/icons-material/Block';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function LevantamientoCuarentenaScreen(): JSX.Element {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
-  const { current_lifting, plant_quarantine_lifting, planting_person, current_nursery, current_plant_quarantine, plant_quarantine_mortalities } = useAppSelector((state) => state.material_vegetal);
+  const { nurseries, current_lifting, plant_quarantine_lifting, planting_person, current_nursery, current_plant_quarantine, plant_quarantine_mortalities } = useAppSelector((state) => state.material_vegetal);
 
   const { control: control_levantamiento, handleSubmit: handle_submit, reset: reset_levantamiento, getValues: get_values } = useForm<IObjLifting>();
 
@@ -172,6 +173,13 @@ useEffect(() => {
       form_data.append('fecha_levantamiento', fecha.slice(0, 10) + " " + fecha.slice(11, 19));
       form_data.append('cantidad_a_levantar', Number(data.cantidad_a_levantar));
       form_data.append('observaciones', data.observaciones);
+      const aux ={
+        id_cuarentena_mat_vegetal: current_plant_quarantine.id_cuarentena_mat_vegetal,
+        fecha_levantamiento: fecha.slice(0, 10) + " " + fecha.slice(11, 19),
+        cantidad_a_levantar: Number(data.cantidad_a_levantar),
+        observaciones: data.observaciones
+      }
+      console.log(aux)
       void dispatch(add_lifting_quarantine_service(form_data));
     }
   };
@@ -216,7 +224,7 @@ useEffect(() => {
             spacing={2}
           >
             {plant_quarantine_lifting.length > 0 && 
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={4}>
                 <BuscarModelo
                   set_current_model={null}
                   row_id={"id_item_levanta_cuarentena"}
@@ -235,7 +243,7 @@ useEffect(() => {
               </Grid>
             }
             {plant_quarantine_mortalities.length > 0 && 
-              <Grid item xs={12} md={3}>
+              <Grid item xs={12} md={4}>
                 <BuscarModelo
                   set_current_model={null}
                   row_id={"id_item_baja_viveros"}
@@ -270,13 +278,75 @@ useEffect(() => {
                 type_button="button"
               />
             </Grid>
-          <Grid item xs={12} md={3}>
-            <FormButton
-              variant_button="outlined"
-              on_click_function={handle_submit(on_submit_annul)}
-              icon_class={<CloseIcon />}
-              label={"Anular"}
-              type_button="button"
+            <Grid item xs={12} md={3}>
+            <AnularEliminar
+              action= {current_lifting.levantamiento_anulado === true ? "Detalle anulación" :"Anular" }
+              button_icon_class= {<Block/>}
+              button_disabled= {false}
+              modal_title= {current_lifting.levantamiento_anulado === true ? "Detalle anulación" :"Anular levantamiento"}
+              button_submit_label= { "Anular"}
+              button_submit_disabled= {current_lifting.levantamiento_anulado}
+              button_submit_icon_class= {<Block/>}
+              button_submit_action= {handle_submit(on_submit_annul)}
+              modal_inputs= {[
+                {
+                  datum_type: "select_controller",
+                  xs: 12,
+                  md: 4,
+                  control_form: control_levantamiento,
+                  control_name: "id_vivero",
+                  default_value: current_plant_quarantine.id_vivero,
+                  rules: { required_rule: { rule: true, message: "Vivero requerido" } },
+                  label: "Vivero",
+                  disabled: true,
+                  helper_text: "",
+                  select_options: nurseries,
+                  option_label: "nombre",
+                  option_key: "id_vivero",
+                },
+                {
+                  datum_type: "input_controller",
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_levantamiento,
+                  control_name: "persona_anula",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
+                  label: "Preparación realizada por",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+              },
+                {
+                  datum_type: "date_picker_controller",
+                  xs: 12,
+                  md: 4,
+                  control_form: control_levantamiento,
+                  control_name: current_plant_quarantine.cuarentena_anulada === true ? "fecha_anulacion":"fecha",
+                  default_value: (new Date().toString()),
+                  rules: { required_rule: { rule: true, message: "requerido" } },
+                  label: "Fecha actual",
+                  type: "text",
+                  disabled: true,
+                  helper_text: ""
+                },
+                {
+                  datum_type: "input_controller",
+                  xs: 12,
+                  md: 12,
+                  control_form: control_levantamiento,
+                  control_name: "justificacion_anulacion",
+                  default_value: "",
+                  rules: { required_rule: { rule: true, message: "Observación requerida" } },
+                  label: "Justificacion",
+                  type: "text",
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: ""
+                },
+              ]}
             />
           </Grid>
         </Grid>

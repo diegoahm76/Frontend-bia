@@ -1,38 +1,41 @@
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import storage from "redux-persist/lib/storage";
-import thunk from "redux-thunk";
-import { persistReducer } from "redux-persist";
-import { layout_slice } from "./layoutSlice";
-import { auth_slice } from "../commons/auth/store/authSlice";
-import { seguridad_slice } from "../commons/seguridad/store/seguridadSlice";
-import { nursery_slice } from "../commons/conservacion/gestorVivero/store/slice/viveroSlice";
-import { material_vegetal_slice } from "../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice";
-import { configuracion_slice } from "../commons/conservacion/configuracion/store/slice/configuracionSlice";
-import { distribucion_slice } from "../commons/conservacion/distribucion/store/slice/distribucionSlice";
-import { produccion_slice } from "../commons/conservacion/produccion/store/slice/produccionSlice";
-import { bien_slice } from "../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes";
-import { cv_computo_slice } from "../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo";
-import { organigrama_slice } from "../commons/gestorDocumental/organigrama/store/slices/organigramSlice";
-import { ccd_slice } from "../commons/gestorDocumental/ccd/store/slices/ccdSlice";
-import { series_slice } from "../commons/gestorDocumental/ccd/store/slices/seriesSlice";
-import { subseries_slice } from "../commons/gestorDocumental/ccd/store/slices/subseriesSlice";
-import { assignments_slice } from "../commons/gestorDocumental/ccd/store/slices/assignmentsSlice";
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import storage from 'redux-persist/lib/storage';
+import thunk from 'redux-thunk';
+import { persistReducer } from 'redux-persist';
+import { layout_slice } from './layoutSlice';
+import { auth_slice } from '../commons/auth/store/authSlice';
+import { seguridad_slice } from '../commons/seguridad/store/seguridadSlice';
+import { nursery_slice } from '../commons/conservacion/gestorVivero/store/slice/viveroSlice';
+import { material_vegetal_slice } from '../commons/conservacion/materialVegetal/store/slice/materialvegetalSlice';
+import { configuracion_slice } from '../commons/conservacion/configuracion/store/slice/configuracionSlice';
+import { distribucion_slice } from '../commons/conservacion/distribucion/store/slice/distribucionSlice';
+import { produccion_slice } from '../commons/conservacion/produccion/store/slice/produccionSlice';
+import { bien_slice } from '../commons/almacen/gestionDeInventario/catalogoBienes/store/slices/indexCatalogodeBienes';
+import { cv_computo_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaComputo/store/slices/indexCvComputo';
+import { organigrama_slice } from '../commons/gestorDocumental/organigrama/store/slices/organigramSlice';
+import { ccd_slice } from '../commons/gestorDocumental/ccd/store/slices/ccdSlice';
+import { series_slice } from '../commons/gestorDocumental/ccd/store/slices/seriesSlice';
+import { subseries_slice } from '../commons/gestorDocumental/ccd/store/slices/subseriesSlice';
+import { assignments_slice } from '../commons/gestorDocumental/ccd/store/slices/assignmentsSlice';
 import {
   marcas_slice,
   porcentajes_slice,
   medida_slice
 } from '../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice';
 import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/BodegaSlice';
+import { despacho_slice } from '../commons/almacen/registroSolicitudesAlmacen/despacho/store/slices/indexDespacho';
 import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
 import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
 import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
 import { obligaciones_slice } from '../commons/recaudo/facilidadPago/slices/ObligacionesSlice';
 import { deudores_slice } from '../commons/recaudo/facilidadPago/slices/DeudoresSlice';
-import { facilidades_slice } from "../commons/recaudo/facilidadPago/slices/FacilidadesSlice";
-import { funcionarios_slice } from "../commons/recaudo/facilidadPago/slices/FuncionariosSlice";
-import { calidad_personas_slice } from "../commons/recaudo/facilidadPago/slices/CalidadPersonasSlice";
-import { solicitud_facilidad_slice } from "../commons/recaudo/facilidadPago/slices/SolicitudSlice";
-import { reportes_recaudo_slice } from "../commons/recaudo/reportes/slices/ReportesSlice";
+import { facilidades_slice } from '../commons/recaudo/facilidadPago/slices/FacilidadesSlice';
+import { funcionarios_slice } from '../commons/recaudo/facilidadPago/slices/FuncionariosSlice';
+import { calidad_personas_slice } from '../commons/recaudo/facilidadPago/slices/CalidadPersonasSlice';
+import { solicitud_facilidad_slice } from '../commons/recaudo/facilidadPago/slices/SolicitudSlice';
+import { reportes_recaudo_slice } from '../commons/recaudo/reportes/slices/ReportesSlice';
+import { seriesAndSubseriesSlice } from '../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice';
+import { solicitud_vivero_slice } from '../commons/conservacion/solicitudMaterial/store/slices/indexSolicitud';
 
 const persist_config = {
   key: 'macarenia_app',
@@ -60,6 +63,7 @@ const app_reducers = combineReducers({
   material_vegetal: material_vegetal_slice.reducer,
   distribucion: distribucion_slice.reducer,
   bodegas: bodegas_slice.reducer,
+  despacho: despacho_slice.reducer,
   cvo: cv_others_slice.reducer,
   cve: cve_vehicle_slice.reducer,
   solic_consumo: solicitud_consumo_slice.reducer,
@@ -69,7 +73,10 @@ const app_reducers = combineReducers({
   funcionarios: funcionarios_slice.reducer,
   calidad_personas: calidad_personas_slice.reducer,
   solicitud_facilidad: solicitud_facilidad_slice.reducer,
-  reportes_recaudo: reportes_recaudo_slice.reducer
+  solicitud_vivero: solicitud_vivero_slice.reducer,
+  reportes_recaudo: reportes_recaudo_slice.reducer,
+  slice_series_and_subseries: seriesAndSubseriesSlice.reducer
+
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

@@ -48,7 +48,7 @@ export const TablaObligacionesAdminAsignadas: React.FC = () => {
       ),
     },
     {
-      field: 'obligacion',
+      field: 'numero_radicacion',
       headerName: 'Número Radicación F.P.',
       width: 200,
       renderCell: (params) => (

@@ -103,7 +103,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
 
     return (
         <>
-            <h1>Programación mantenimiento computadores</h1>
+            {/* <h1>Programación mantenimiento computadores</h1> */}
             <Grid
                 container
                 sx={{
@@ -117,7 +117,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
             >
                 <Grid item xs={12}>
                     {/* ARTICULO COMPONENT */}
-                    <Title title="Búsqueda de computador" />
+                    <Title title="Programación mantenimiento computadores" />
                     <ArticuloComponent detalle_seleccionado_prop={detalle_seleccionado} tipo_articulo={"computadores"} parent_details={set_details_state} user_info_prop={set_user_info_state} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
@@ -189,9 +189,8 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                     {/* PREVISUALIZACION COMPONENT */}
                     <Title title='Previsualización' />
                     <PrevisualizacionComponent data_grid={rows} limpiar_formulario={limpiar_formulario} />
-                </Grid>
-            </Grid>
-            <Grid container>
+                </Grid>  
+                 <Grid container>
                 <Grid item xs={6}>
                     <Box
                         component="form"
@@ -289,6 +288,8 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                     </Box>
                 </Grid>
             </Grid>
+            </Grid>
+         
         </>
     )
 }

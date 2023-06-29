@@ -3,6 +3,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Button, Grid } from '@mui/material';
 import SeleccionarSolicitud from '../components/componenteBusqueda/SeleccionarSolicitud';
 import FormButton from "../../../../../components/partials/form/FormButton";
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import SeleccionarBienConsumo from "../components/componenteBusqueda/SeleccionarBienConsumo";
 import { type IObjSolicitud } from "../interfaces/solicitudBienConsumo";
@@ -10,14 +11,11 @@ import type { AuthSlice } from '../../../../../commons/auth/interfaces';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, get_funcionario_id_service, anular_solicitud_service } from '../store/solicitudBienConsumoThunks';
-import { Title } from '../../../../../components/Title';
-import CloseIcon from '@mui/icons-material/Close';
-
+import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, editar_solicitud, get_funcionario_id_service, anular_solicitud_service, get_bienes_solicitud, } from '../store/solicitudBienConsumoThunks';
 
 import { set_current_solicitud, set_persona_solicita } from '../store/slices/indexSolicitudBienesConsumo';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
-import AnularSolicitudModal from '../components/AnularSolicitud';
+import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
 
 
 
@@ -25,8 +23,8 @@ import AnularSolicitudModal from '../components/AnularSolicitud';
 const SolicitudConsumoScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values } = useForm<IObjSolicitud>();
-    const { nro_solicitud, current_solicitud, persona_solicita, bienes_solicitud, current_funcionario } = useAppSelector((state) => state.solic_consumo);
-    const [action] = useState<string>("Crear solicitud de consumo");
+    const { nro_solicitud, current_solicitud, persona_solicita, bienes_solicitud, current_funcionario } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
+    const [action, set_action] = useState<string>("Crear");
     const [anular, set_anular] = useState<string>("Anular");
     const [anular_solicitud, set_anular_solicitud] =
         useState<boolean>(false);
@@ -54,7 +52,9 @@ const SolicitudConsumoScreen = () => {
                 void dispatch(get_person_id_service(current_solicitud.id_persona_solicita))
 
         }
-        if (current_solicitud.id_solicitud_consumibles !== null) {
+        if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
+            set_action("editar")
+            void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
             if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
                 void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad))
                 console.log("ok")
@@ -78,16 +78,33 @@ const SolicitudConsumoScreen = () => {
     }, [current_funcionario]);
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     const on_submit = (data: IObjSolicitud) => {
+        if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
+            set_action("editar")
 
-        const data_aux = {
-            info_solicitud: { ...data, fecha_anulacion_solicitante: null },
-            items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
-                ...item,
-                nro_posicion: index,
-            })),
+
+            const data_aux = {
+                info_solicitud: { ...data, fecha_anulacion_solicitante: null },
+                items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
+                    ...item,
+                    nro_posicion: index,
+                })),
+            }
+            console.log(data_aux)
+            void dispatch(editar_solicitud(data_aux))
+
+        } else {
+            set_action("crear")
+            const data_aux = {
+                info_solicitud: { ...data, fecha_anulacion_solicitante: null },
+                items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
+                    ...item,
+                    nro_posicion: index,
+                })),
+            }
+            void dispatch(crear_solicitud_bien_consumo(data_aux));
         }
 
-        void dispatch(crear_solicitud_bien_consumo(data_aux));
+
     };
     const on_submit_anular = (data: IObjSolicitud): void => {
 
@@ -119,22 +136,23 @@ const SolicitudConsumoScreen = () => {
 
             }}
         >
-            <Title title="Solicitud de consumo "></Title>
+
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitud
                     control_solicitud={control_solicitud}
                     get_values={get_values}
+                    title={"Solicitudes de consumo"}
 
                 />
-                {current_solicitud.solicitud_anulada_solicitante !== true &&
-                    <>
-                        <PersonaResponsable
-                            title={"Funcionario responsable"}
-                            get_values_solicitud={get_values} />
 
-                        <SeleccionarBienConsumo />
-                    </>
-                }
+                <>
+                    <PersonaResponsable
+                        title={"Funcionario responsable"}
+                        get_values_solicitud={get_values} />
+
+                    <SeleccionarBienConsumo />
+                </>
+
 
             </Grid>
             <Grid
@@ -143,7 +161,17 @@ const SolicitudConsumoScreen = () => {
                 padding={2}
                 spacing={2}
             >
-                <Grid item xs={12} md={3}>
+                <Grid item xs={6} md={3}>
+
+                    <FormButton
+                        variant_button="outlined"
+                        on_click_function={reset_solicitud}
+                        icon_class={<CleaningServicesIcon />}
+                        label={"Limpiar"}
+                        type_button="button"
+                    />
+                </Grid>
+                <Grid item xs={6} md={3}>
                     <FormButton
                         variant_button="contained"
                         on_click_function={handle_submit(on_submit)}
@@ -153,17 +181,8 @@ const SolicitudConsumoScreen = () => {
                     />
                 </Grid>
 
-                <Grid item xs={6} md={2}>
 
-                    <FormButton
-                        variant_button="outlined"
-                        on_click_function={reset_solicitud}
-                        icon_class={<CloseIcon />}
-                        label={"Cancelar"}
-                        type_button="button"
-                    />
-                </Grid>
-                <Grid item xs={12} md={10}>
+                <Grid item xs={6} md={3}>
 
                     <Button
                         variant="outlined"
@@ -176,6 +195,7 @@ const SolicitudConsumoScreen = () => {
                     >
                         ANULACIÓN DE SOLICITUDES DE CONSUMO
                     </Button>
+
 
                 </Grid>
                 <AnularSolicitudModal
@@ -198,3 +218,4 @@ const SolicitudConsumoScreen = () => {
 
 // eslint-disable-next-line no-restricted-syntax
 export default SolicitudConsumoScreen;
+

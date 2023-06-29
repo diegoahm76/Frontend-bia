@@ -1,10 +1,10 @@
-import { Grid, } from '@mui/material';
+import { Chip, Grid, } from '@mui/material';
 
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-import { get_solicitud_service, get_solicitudes_id_persona_service } from '../../store/solicitudBienConsumoThunks';
+import { get_solicitud_service_vivero, get_solicitudes_id_persona_service_vivero } from '../../store/solicitudBienConsumoThunks';
 import { set_current_solicitud_vivero, set_solicitudes_vivero } from '../../store/slices/indexSolicitudBienesConsumo';
 import type { AuthSlice } from '../../../../../../commons/auth/interfaces';
 import { useSelector } from 'react-redux';
@@ -12,11 +12,13 @@ import { useSelector } from 'react-redux';
 
 
 interface IProps {
+    title: string;
     control_solicitud_vivero: any;
     get_values: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudVivero = ({
+    title,
     control_solicitud_vivero,
     get_values
 }: IProps) => {
@@ -28,7 +30,7 @@ const SeleccionarSolicitudVivero = ({
 
     const dispatch = useAppDispatch();
 
-    const columns_solicitudes: GridColDef[] = [
+    const columns_solicitudes_vivero: GridColDef[] = [
         { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
         {
             field: 'fecha_solicitud',
@@ -42,7 +44,7 @@ const SeleccionarSolicitudVivero = ({
 
         },
         {
-            field: 'persona_solicita',
+            field: 'observacion',
             headerName: 'Observación',
             width: 350,
             renderCell: (params) => (
@@ -52,17 +54,30 @@ const SeleccionarSolicitudVivero = ({
             ),
 
         },
+        {
+            field: 'solicitud_anulada_solicitante',
+            headerName: 'Estado de la solicitud',
+            width: 350,
+            renderCell: (params) => {
+                return params.row.solicitud_anulada_solicitante === false ? (
+                    <Chip size="small" label="Abierta" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="Anulada" color="error" variant="outlined" />
+                );
+            },
+
+        },
 
     ];
 
-    const get_solicitudes_filtro: any = (async () => {
-        void dispatch(get_solicitudes_id_persona_service(userinfo.id_persona))
+    const get_solicitudes_filtro_vivero: any = (async () => {
+        void dispatch(get_solicitudes_id_persona_service_vivero(userinfo.id_persona))
     })
 
-    const search_solicitud: any = (async () => {
+    const search_solicitud_vivero: any = (async () => {
         const solicitud_id = get_values("id_solicitud_consumibles")
         if (solicitud_id !== null) {
-            void dispatch(get_solicitud_service(solicitud_id))
+            void dispatch(get_solicitud_service_vivero(solicitud_id))
         }
     })
 
@@ -79,12 +94,17 @@ const SeleccionarSolicitudVivero = ({
                 <BuscarModelo
                     set_current_model={set_current_solicitud_vivero}
                     row_id={"id_solicitud_consumibles"}
-                    columns_model={columns_solicitudes}
+                    columns_model={columns_solicitudes_vivero}
                     models={solicitudes_vivero}
-                    get_filters_models={get_solicitudes_filtro}
+                    get_filters_models={get_solicitudes_filtro_vivero}
                     set_models={set_solicitudes_vivero}
                     button_submit_label='Buscar solicitud'
                     form_inputs={[
+                        {
+                            datum_type: "title",
+                            title_label: title ?? "hh"
+
+                        },
                         {
                             datum_type: "input_controller",
                             xs: 5,
@@ -97,7 +117,7 @@ const SeleccionarSolicitudVivero = ({
                             type: "number",
                             disabled: false,
                             helper_text: "",
-                            on_blur_function: search_solicitud
+                            on_blur_function: search_solicitud_vivero
                         },
                         {
                             datum_type: "input_controller",
@@ -111,7 +131,7 @@ const SeleccionarSolicitudVivero = ({
                             type: "number",
                             disabled: true,
                             helper_text: "",
-                            on_blur_function: search_solicitud
+                            on_blur_function: search_solicitud_vivero
                         },
                         {
                             datum_type: "input_controller",

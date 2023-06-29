@@ -118,30 +118,32 @@ export const ArticuloComponent: React.FC<IProps> = ({ tipo_articulo, parent_deta
                 autoComplete="off"
             >
                 <Grid container spacing={2}>
-                    <Grid item xs={12} sm={5}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             label="Código"
                             helperText="Ingresar Código"
                             size="small"
                             required
+                            disabled
                             value={codigo_bien}
                             onBlur={busqueda_articulo}
                             fullWidth
                         />
                     </Grid>
-                    <Grid item xs={12} sm={5}>
+                    <Grid item xs={12} sm={4}>
                         <TextField
                             label="Nombre"
                             helperText="Nombre"
                             size="small"
                             value={nombre}
                             fullWidth
+                            disabled
                             InputProps={{
                                 readOnly: true,
                             }}
                         />
                     </Grid>
-                    <Grid item xs={12} sm={2}>
+                    <Grid item xs={12} sm={4}>
                         <Stack
                             direction="row"
                             justifyContent="flex-end"

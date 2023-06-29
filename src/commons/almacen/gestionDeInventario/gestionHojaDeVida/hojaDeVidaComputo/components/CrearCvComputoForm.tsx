@@ -92,7 +92,7 @@ const CrearCvComputoForm = ({
       data.observaciones_adicionales
     );
     form_data.append('otras_aplicaciones', data.otras_aplicaciones);
-    form_data.append('id_marca', data.id_marca.toString());
+    form_data.append('id_marca', data.id_marca);
     form_data.append('id_articulo', (data.id_articulo ?? "").toString());
     // form_data.append('ruta_imagen_foto', file === null ? '' : file);
 
@@ -145,8 +145,9 @@ const CrearCvComputoForm = ({
 
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
+
           <Grid container spacing={2}>
-            <Title title="ESPECIFICACIONES FÍSICAS" />
+            <Title title="Especificasiones físicas" />
 
             <Grid item xs={12} sm={3}>
               <Controller
@@ -337,202 +338,208 @@ const CrearCvComputoForm = ({
               />
             </Grid>
 
-            <DialogContent sx={{ mb: '0px' }}>
-              <Grid container spacing={2}>
-                <Title title="ESPECIFICACIONES TÉCNICAS" />
+            {/* <DialogContent sx={{ mb: '0px' }}> */}
 
-                <Grid item xs={11} sm={3}>
-                  <Controller
-                    name="capacidad_almacenamiento"
-                    control={control_computo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Capacidad de almacenamiento"
-                        variant="outlined"
-                        disabled={action !== 'create'}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar la capacidad de almacenamiento'
-                            : ''
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={12}>
 
-                <Grid item xs={11} sm={3}>
-                  <Controller
-                    name="procesador"
-                    control={control_computo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Procesador"
-                        variant="outlined"
-                        disabled={action !== 'create'}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={error != null ? '' : ''}
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={11} sm={3}>
-                  <Controller
-                    name="memoria_ram"
-                    control={control_computo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Memoria RAM"
-                        variant="outlined"
-                        disabled={action !== 'create'}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={error != null ? '' : ''}
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={11} sm={3}>
-                  <Controller
-                    name="tipo_almacenamiento"
-                    control={control_computo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label=" Tipo de almacenamiento"
-                        helperText="PDisco Duro, SSD, NVME"
-                        variant="outlined"
-                        disabled={action !== 'create'}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                      />
-                    )}
-                  />
-                </Grid>
+                <Title title="Especificaciones técnicas" />
               </Grid>
-            </DialogContent>
-            <DialogContent sx={{ mb: '0px' }}>
-              <Grid container spacing={2}>
-                <Title title="CARACTERÍSTICAS" />
-
-                <Grid item xs={11} sm={3}>
-                  <Controller
-                    name="suite_ofimatica"
-                    control={control_computo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Suit ofimatica"
-                        variant="outlined"
-                        disabled={action !== 'create'}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={error != null ? '' : ''}
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={11} sm={3}>
-                  <Controller
-                    name="antivirus"
-                    control={control_computo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Antivirus"
-                        variant="outlined"
-                        disabled={action !== 'create'}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={error != null ? '' : ''}
-                      />
-                    )}
-                  />
-                </Grid>
-
-                <Grid item xs={11} sm={3}>
-                  <Controller
-                    name="otras_aplicaciones"
-                    control={control_computo}
-                    defaultValue=""
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        label="Otras aplicaciones"
-                        variant="outlined"
-                        disabled={action !== 'create'}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={error != null ? '' : ''}
-                      />
-                    )}
-                  />
-                </Grid>
+              <Grid item xs={11} sm={3} sx={{ marginLeft: '12px' }}>
+                <Controller
+                  name="capacidad_almacenamiento"
+                  control={control_computo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Capacidad de almacenamiento"
+                      variant="outlined"
+                      disabled={action !== 'create'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={
+                        error != null
+                          ? 'Es obligatorio ingresar la capacidad de almacenamiento'
+                          : ''
+                      }
+                    />
+                  )}
+                />
               </Grid>
-            </DialogContent>
+
+              <Grid item xs={11} sm={3}>
+                <Controller
+                  name="procesador"
+                  control={control_computo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Procesador"
+                      variant="outlined"
+                      disabled={action !== 'create'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={error != null ? '' : ''}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={11} sm={2.9}>
+                <Controller
+                  name="memoria_ram"
+                  control={control_computo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Memoria RAM"
+                      variant="outlined"
+                      disabled={action !== 'create'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={error != null ? '' : ''}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={11} sm={2.9}>
+                <Controller
+                  name="tipo_almacenamiento"
+                  control={control_computo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label=" Tipo de almacenamiento"
+                      helperText="PDisco Duro, SSD, NVME"
+                      variant="outlined"
+                      disabled={action !== 'create'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+            {/* </DialogContent> */}
+            {/* <DialogContent sx={{ mb: '0px' }}> */}
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={12}>
+
+                <Title title="Características" />
+              </Grid>
+
+              <Grid item xs={11} sm={3} sx={{ marginLeft: '12px' }}>
+                <Controller
+                  name="suite_ofimatica"
+                  control={control_computo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Suit ofimatica"
+                      variant="outlined"
+                      disabled={action !== 'create'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={error != null ? '' : ''}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={11} sm={3}>
+                <Controller
+                  name="antivirus"
+                  control={control_computo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Antivirus"
+                      variant="outlined"
+                      disabled={action !== 'create'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={error != null ? '' : ''}
+                    />
+                  )}
+                />
+              </Grid>
+
+              <Grid item xs={11} sm={2.9}>
+                <Controller
+                  name="otras_aplicaciones"
+                  control={control_computo}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error },
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      size="small"
+                      label="Otras aplicaciones"
+                      variant="outlined"
+                      disabled={action !== 'create'}
+                      value={value}
+                      onChange={onChange}
+                      error={!(error == null)}
+                      helperText={error != null ? '' : ''}
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
+            {/* </DialogContent> */}
           </Grid>
         </DialogContent>
 

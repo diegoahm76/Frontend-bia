@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -7,14 +8,14 @@ import {
   type SelectChangeEvent,
   TextField,
   Skeleton,
-  Box,
+  Box
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { use_admin_users } from '../hooks/AdminUserHooks';
 import type {
   DataAadminUser,
   keys_object,
-  SeguridadSlice,
+  SeguridadSlice
 } from '../interfaces';
 import DialogBusquedaAvanzadaUsuario from '../components/DialogBusquedaAvanzadaUsuario';
 import DialogBusquedaAvanzadaPersona from '../components/DialogBusquedaAvanzadaPersona';
@@ -28,7 +29,7 @@ import {
   initial_state_user_info,
   set_action_admin_users,
   set_data_person_search,
-  set_user_info,
+  set_user_info
 } from '../store/seguridadSlice';
 import { get_person_user_or_users_by_document } from '../request/seguridadRequest';
 import { control_error } from '../../../helpers';
@@ -49,8 +50,8 @@ const initial_state_data_register: DataAadminUser = {
   roles: [
     {
       value: 0,
-      label: '',
-    },
+      label: ''
+    }
   ],
   activo: false,
   activo_fecha_ultimo_cambio: '',
@@ -61,7 +62,7 @@ const initial_state_data_register: DataAadminUser = {
   fecha_creacion: '',
   fecha_activación_inicial: '',
   creado_desde_portal: false,
-  persona_que_creo: '',
+  persona_que_creo: ''
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -73,19 +74,29 @@ export const AdminUsuariosScreen: React.FC = () => {
 
   const [
     busqueda_avanzada_person_is_active,
-    set_busqueda_avanzada_person_is_active,
+    set_busqueda_avanzada_person_is_active
   ] = useState<boolean>(false);
   const [
     busqueda_avanzada_user_is_active,
-    set_busqueda_avanzada_user_is_active,
+    set_busqueda_avanzada_user_is_active
   ] = useState<boolean>(false);
   const {
     handleSubmit: handle_submit_ini,
     register: register_search_ini,
     setValue: set_value_ini,
     formState: { errors },
-    watch,
-  } = useForm<DataAadminUser>();
+    watch
+    // reset: reset_form
+  } = useForm<DataAadminUser>({
+    defaultValues: {
+      tipo_persona: '',
+      tipo_documento: '',
+      numero_documento: ''
+    }
+  });
+
+  // const dataForm = watch();
+
   const {
     users_x_person_is_active,
     data_register,
@@ -94,23 +105,53 @@ export const AdminUsuariosScreen: React.FC = () => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
+    numero_documento,
     set_users_x_person_is_active,
     set_data_register,
     set_tipo_documento,
     set_tipo_persona,
     set_data_disponible,
     set_loading_inputs,
+    set_numero_documento,
     reset_admin_user,
+    clean_user_info    
   } = use_admin_users();
   // const numero_documento = watch('numero_documento');
+  useEffect(() => {
+    clean_user_info();
+    set_value_form('tipo_persona', '');
+    set_value_form('tipo_documento', '');
+    set_value_form('numero_documento', '');
+    set_value_form('razon_social', '');
+    set_value_form('nombre_comercial', '');
+    set_value_form('primer_apellido', '');
+    set_value_form('primer_nombre', '');
+    set_value_form('segundo_apellido', '');
+    set_value_form('segundo_nombre', '');
+    set_value_form('nombre_de_usuario', '');
+    set_value_form('imagen_usuario', '');
+    set_value_form('tipo_usuario', '');
+    set_value_form('activo', '');
+    set_value_form('activo_fecha_ultimo_cambio', '');
+    set_value_form('activo_justificacion_cambio', '');
+    set_value_form('bloqueado', '');
+    set_value_form('bloqueado_fecha_ultimo_cambio', '');
+    set_value_form('bloqueado_justificacion_cambio', '');
+    set_value_form('fecha_creacion', '');
+    set_value_form('fecha_activación_inicial', '');
+    set_value_form('creado_desde_portal', '');
+    set_value_form('persona_que_creo', '');
+  }, []);
 
   // Consultamos si el usuario existe
-  // useEffect(() => {
-  //   if (numero_documento !== undefined && numero_documento !== '') {
-  //     set_numero_documento(numero_documento);
-  //     set_value_ini('numero_documento', numero_documento);
-  //   }
-  // }, [numero_documento]);
+  useEffect(() => {
+    if (numero_documento !== undefined && numero_documento !== '') {
+      set_numero_documento(numero_documento);
+      set_value_ini('numero_documento', numero_documento);
+      console.log('numero_documento', numero_documento);
+    }
+  }, [numero_documento]);
+
   useEffect(() => {
     set_tipo_persona(data_user_search.tipo_persona);
   }, [data_user_search]);
@@ -173,7 +214,7 @@ export const AdminUsuariosScreen: React.FC = () => {
   const set_value_form = (name: string, value: string): void => {
     set_data_register({
       ...data_register,
-      [name]: value,
+      [name]: value
     });
     set_value_ini(name as keys_object, value);
   };
@@ -185,6 +226,7 @@ export const AdminUsuariosScreen: React.FC = () => {
 
   // Cambio inputs
   const handle_change = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    console.log(e.target.value);
     set_value_form(e.target.name, e.target.value);
   };
 
@@ -192,7 +234,6 @@ export const AdminUsuariosScreen: React.FC = () => {
   const on_submit_search_ini_persona = async (
     data_search_ini: any
   ): Promise<void> => {
-    console.log(data_search_ini.numero_documento);
     const { data: data_person_search } =
       await get_person_user_or_users_by_document(
         data_search_ini.tipo_documento,
@@ -292,8 +333,9 @@ export const AdminUsuariosScreen: React.FC = () => {
                     label="Número de documento *"
                     type="number"
                     size="small"
+                    // value={numero_documento}
                     disabled={tipo_persona === '' ?? true}
-                    inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                    // inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                     error={errors.numero_documento?.type === 'required'}
                     helperText={
                       errors.numero_documento?.type === 'required'
@@ -301,7 +343,7 @@ export const AdminUsuariosScreen: React.FC = () => {
                         : ''
                     }
                     {...register_search_ini('numero_documento', {
-                      required: true,
+                      required: true
                     })}
                     onChange={handle_change}
                   />

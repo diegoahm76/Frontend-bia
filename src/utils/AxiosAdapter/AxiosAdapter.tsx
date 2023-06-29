@@ -4,7 +4,7 @@
 import axios from 'axios';
 import { api } from './../../api/axios';
 
-const default_headers = {
+export const default_headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json'
 };

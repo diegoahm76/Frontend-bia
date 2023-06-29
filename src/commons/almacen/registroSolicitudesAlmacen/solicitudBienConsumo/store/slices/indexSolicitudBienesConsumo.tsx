@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type UnidadOrganizacional, type ISolicitudConsumo, type UnidadesMedida, type IObjSolicitud, type IObjBienConsumo, type IObjFuncionario, type IObjBienesSolicitud, type IObjPersonaSolicita, type IObjSolicitudVivero, } from "../../interfaces/solicitudBienConsumo"
+import { type UnidadOrganizacional, type ISolicitudConsumo, type UnidadesMedida, type IObjSolicitud, type IObjBienConsumo, type IObjFuncionario, type IObjBienesSolicitud, type IObjPersonaSolicita, type IObjSolicitudVivero, type IObjBienViveroConsumo, type IObjBienesViveroSolicitud, } from "../../interfaces/solicitudBienConsumo"
 
 
 const initial_state_current_solicitud: IObjSolicitud = {
@@ -51,6 +51,11 @@ const initial_state_current_bien: IObjBienConsumo = {
     nombre: "",
     codigo_bien: ""
 }
+const initial_state_current_bien_vivero: IObjBienViveroConsumo = {
+    id_bien: null,
+    nombre: "",
+    codigo_bien: ""
+}
 
 const initial_state_current_funcionario: IObjFuncionario = {
     id_persona: null,
@@ -80,7 +85,10 @@ const initial_state: ISolicitudConsumo | any = {
     current_solicitud_vivero: initial_state_current_solicitud_vivero,
     solicitudes_vivero: [],
     bienes_solicitud: [],
+    bienes_solicitud_vivero: [],
     bienes: [],
+    bienes_vivero: [],
+    current_bien_vivero: initial_state_current_bien_vivero,
     current_bien: initial_state_current_bien,
     funcionarios: [],
     current_funcionario: initial_state_current_funcionario,
@@ -134,6 +142,12 @@ export const solicitud_consumo_slice = createSlice({
             state.bienes_solicitud = action.payload;
         },
 
+        set_bienes_vivero_solicitud: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjBienesViveroSolicitud[]>
+        ) => {
+            state.bienes_solicitud_vivero = action.payload;
+        },
         set_bienes: (
             state: ISolicitudConsumo,
             action: PayloadAction<IObjBienConsumo[]>
@@ -146,6 +160,19 @@ export const solicitud_consumo_slice = createSlice({
             action: PayloadAction<IObjBienConsumo>
         ) => {
             state.current_bien = action.payload;
+        },
+        set_bienes_vivero: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjBienViveroConsumo[]>
+        ) => {
+            state.bienes_vivero = action.payload;
+        },
+
+        set_current_bien_vivero: (
+            state: ISolicitudConsumo,
+            action: PayloadAction<IObjBienViveroConsumo>
+        ) => {
+            state.current_bien_vivero = action.payload;
         },
 
         get_unidad_organizacional: (
@@ -203,4 +230,4 @@ export const solicitud_consumo_slice = createSlice({
     }
 })
 
-export const { set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero, set_solicitudes_vivero, set_current_solicitud_vivero } = solicitud_consumo_slice.actions;
+export const { set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero, set_bienes_vivero, set_current_bien_vivero, set_solicitudes_vivero, set_current_solicitud_vivero } = solicitud_consumo_slice.actions;

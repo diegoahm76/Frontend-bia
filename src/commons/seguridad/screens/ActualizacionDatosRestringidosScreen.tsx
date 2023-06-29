@@ -353,7 +353,7 @@ export const ActualizacionDatosRestringidosScreen: React.FC = () => {
                   >
                     {file_name !== ''
                       ? file_name
-                      : 'Seleccione archivo soporte'}
+                      : 'Seleccione archivo'}
                     <Input
                       hidden
                       id="archivo-de-soporte-natural"

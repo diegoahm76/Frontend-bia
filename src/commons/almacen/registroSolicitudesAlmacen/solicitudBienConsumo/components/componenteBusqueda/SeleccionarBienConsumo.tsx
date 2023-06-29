@@ -1,4 +1,4 @@
-import { Grid, } from "@mui/material";
+import { Avatar, Grid, IconButton, Tooltip, } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../../../../hooks";
 import { type IObjBienConsumo, type IObjBienesSolicitud } from "../../interfaces/solicitudBienConsumo";
 import { useEffect, useState, } from "react";
@@ -8,6 +8,8 @@ import BuscarModelo from "../../../../../../components/partials/getModels/Buscar
 import { set_bienes, set_bienes_solicitud, set_current_bien } from "../../store/slices/indexSolicitudBienesConsumo";
 import { useForm } from "react-hook-form";
 import { get_bienes_consumo, get_bienes_consumo_codigo_bien, control_error } from "../../store/solicitudBienConsumoThunks";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
@@ -18,8 +20,8 @@ const SeleccionarBienConsumo = () => {
 
 
     // const [action, set_action] = useState<string>("agregar");
-    const { control: control_bien, reset: reset_bien, getValues: get_values_bien } = useForm<IObjBienConsumo>();
-    const { control: control_bien_solicitud, handleSubmit: handle_submit_item_solicitud } = useForm<IObjBienesSolicitud>();
+    const { control: control_bien, reset: reset_bien, getValues: get_values_bien, reset: reset_bien_solicitud } = useForm<IObjBienConsumo>();
+    const { control: control_bien_solicitud, handleSubmit: handle_submit_item_solicitud, } = useForm<IObjBienesSolicitud>();
     const { unidades_medida, bienes, bienes_solicitud, current_bien, current_solicitud } = useAppSelector((state) => state.solic_consumo);
     const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesSolicitud[]>([]);
     const [action, set_action] = useState<string>("crear");
@@ -125,53 +127,53 @@ const SeleccionarBienConsumo = () => {
             renderCell: (params) => (
                 <>
 
-                    {/* <Tooltip title="Editar">
-                            <IconButton
-                                onClick={() => {
-                                    edit_bien_siembra(params.row)
+                    <Tooltip title="Editar">
+                        <IconButton
+                            onClick={() => {
+                                edit_bien_solicitud(params.row)
 
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    width: 24,
+                                    height: 24,
+                                    background: '#fff',
+                                    border: '2px solid',
                                 }}
+                                variant="rounded"
                             >
-                                <Avatar
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        background: '#fff',
-                                        border: '2px solid',
-                                    }}
-                                    variant="rounded"
-                                >
-                                    <EditIcon
-                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                    />
+                                <EditIcon
+                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                />
 
-                                </Avatar>
-                            </IconButton>
-                        </Tooltip> */}
+                            </Avatar>
+                        </IconButton>
+                    </Tooltip>
 
-                    {/* <Tooltip title="Borrar">
-                            <IconButton
-                                onClick={() => {
-                                    delete_bien_siembra(params.row)
+                    {<Tooltip title="Borrar">
+                        <IconButton
+                            onClick={() => {
+                                delete_bien_solicitud(params.row)
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    width: 24,
+                                    height: 24,
+                                    background: '#fff',
+                                    border: '2px solid',
                                 }}
+                                variant="rounded"
                             >
-                                <Avatar
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        background: '#fff',
-                                        border: '2px solid',
-                                    }}
-                                    variant="rounded"
-                                >
-                                    <DeleteIcon
-                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                    />
+                                <DeleteIcon
+                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                />
 
-                                </Avatar>
-                            </IconButton>
-                        </Tooltip>
-                     */}
+                            </Avatar>
+                        </IconButton>
+                    </Tooltip>
+                    }
                 </>
             ),
         },
@@ -238,6 +240,38 @@ const SeleccionarBienConsumo = () => {
             void dispatch(get_bienes_consumo_codigo_bien(codigo_bien))
         }
     })
+    const edit_bien_solicitud = (item: IObjBienesSolicitud): void => {
+        set_action("editar")
+        const item_bien = aux_bienes_solicitud.find((p) => p.id_bien === item.id_bien)
+        reset_bien_solicitud(item_bien)
+        const aux_items: IObjBienesSolicitud[] = []
+        aux_bienes_solicitud.forEach((option) => {
+            if (option.id_bien !== item.id_bien) {
+                aux_items.push(option)
+            }
+        })
+
+        set_aux_bienes_solicitud(aux_items)
+    };
+    const delete_bien_solicitud = (item: IObjBienesSolicitud): void => {
+        const bien: IObjBienConsumo | undefined = bienes.find((p: IObjBienConsumo) => p.id_bien === item.id_bien)
+        console.log("bien", bien)
+        if (bien !== undefined) {
+            console.log(bien)
+            dispatch(set_current_bien(bien))
+        }
+        const aux_items: IObjBienesSolicitud[] = []
+        aux_bienes_solicitud.forEach((option) => {
+            if (option.id_bien !== item.id_bien) {
+                aux_items.push(option)
+            }
+        })
+        set_aux_bienes_solicitud(aux_items)
+
+    };
+
+
+
     return (
         <>
             <Grid

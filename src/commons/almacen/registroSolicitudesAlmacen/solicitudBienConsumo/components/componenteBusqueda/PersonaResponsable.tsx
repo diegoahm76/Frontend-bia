@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-
 import { api } from '../../../../../../api/axios';
-
 import { useForm } from 'react-hook-form';
 import { Grid } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
@@ -60,7 +58,7 @@ const FuncionarioResponsable = ({
         },
         {
             field: 'nombre_completo',
-            headerName: 'Nombre',
+            headerName: 'Nombre Completo',
             width: 300,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -71,8 +69,8 @@ const FuncionarioResponsable = ({
         },
 
         {
-            field: 'id_unidad_para_la_que_solicita',
-            headerName: 'unidad',
+            field: 'nombre_unidad_organizacional_actual',
+            headerName: 'Unidad organizacional actual',
             width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>

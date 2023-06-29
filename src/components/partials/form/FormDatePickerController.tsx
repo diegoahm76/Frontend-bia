@@ -18,6 +18,7 @@ interface IRules {
 interface IProps {
     xs: number;
     md: number;
+    margin?: number;
     control_form: any;
     control_name: string;
     default_value: string | number | null;
@@ -45,14 +46,15 @@ const FormDatePickerController = ({
     hidden_text,
     min_date,
     max_date,
-    format
+    format,
+    margin
 }: IProps) => {
     const min = new Date(min_date ?? "");
     const max = new Date(max_date ?? "");
     return (
         <>
             {(!(hidden_text ?? false)) &&
-                <Grid item xs={xs} md={md}>
+                <Grid item xs={xs} md={md} margin={margin??0}>
                     <Controller
                         name={control_name}
                         control={control_form}
@@ -65,10 +67,11 @@ const FormDatePickerController = ({
                             <FormControl fullWidth>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
+                                        disabled={disabled}
                                         label={label}
                                         value={value}
                                         onChange={onChange}
-                                        inputFormat={format ?? "DD/MM/YYYY"}
+                                        inputFormat={format ?? "YYYY/MM/DD"}
                                         minDate={((min_date ?? "") === "") ? null : min}
                                         maxDate={((max_date ?? "") === "") ? null : max}
                                         renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (

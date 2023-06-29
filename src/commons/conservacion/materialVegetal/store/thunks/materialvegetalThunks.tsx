@@ -8,7 +8,7 @@ import {
 // Slices
 import {
   initial_state_planting,
-  set_goods, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting, set_planting_person, set_persons, set_current_germination_beds, set_current_plant_quarantine, set_current_plant_seed_lot, set_plant_seed_lots, set_plant_quarantines, set_plant_quarantine_lifting, set_plant_quarantine_mortalities
+  set_goods, set_nurseries, set_vegetal_materials, set_germination_beds, set_planting_goods, set_plantings, set_current_planting, set_planting_person, set_persons, set_current_germination_beds, set_current_plant_quarantine, set_current_plant_seed_lot, set_plant_seed_lots, set_plant_quarantines, set_plant_quarantine_lifting, set_plant_quarantine_mortalities, set_current_good
 } from '../slice/materialvegetalSlice';
 import { api } from '../../../../../api/axios';
 
@@ -127,9 +127,9 @@ export const get_goods_service = (
   ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${cod_elemento??""}`);
-      const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/`);
-
+      const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=${cod_elemento??""}`);
+      // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/`);
+      console.log(data)
       dispatch(set_goods(data.data));
       return data;
     } catch (error: any) {
@@ -139,11 +139,40 @@ export const get_goods_service = (
     }
   };
 };
+
+// Obtener bien actual
+export const get_good_code_siembra_service = (
+  id_vivero: string | number,
+  code: string | number,
+  ): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`conservacion/bajas/get-bienes-bajas/${code}/${id_vivero}/`);
+      
+      console.log(data)
+        if ('data' in data){
+          dispatch(set_current_good(data.data));
+          control_success("Se selecciono el bien")
+        } else{
+          control_error("no sé encontrarion bienes")
+        }
+    
+      return data;
+    } catch (error: any) {
+      console.log('get_good_code_baja_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+}
+
 // obtener siembras
 export const get_plantings_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
+    
       const { data } = await api.get('conservacion/camas-siembras/siembra/get/');
+      console.log(data)
       dispatch(set_plantings(data.data));
       return data;
     } catch (error: any) {
@@ -494,14 +523,14 @@ export const edit_plant_quarantine_service = (
   };
 };
 
-// borrar siembra
+// anular cuarentena
 export const annul_plant_quarantine_service = (
   id: number,
   quarantine: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.delete(`conservacion/ingreso-cuarentena/anular/${id}/`, quarantine);
+      const { data } = await api.put(`conservacion/ingreso-cuarentena/anular/${id}/`, quarantine);
       console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
@@ -565,8 +594,12 @@ export const get_lifting_quarantines_service = (
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       console.log(data)
       if (data.success === true) {
-        dispatch(set_plant_quarantines(data.data))
-        control_success(data.detail)      
+        if(data.data.length > 0){
+          dispatch(set_plant_quarantines(data.data))
+          control_success(data.detail)
+         }     else{
+        control_error("No sé encontrarón cuarentenas")
+         }
       } else {
         control_error(data.detail)
       }
@@ -665,7 +698,7 @@ export const annul_lifting_quarantine_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.delete(`conservacion/ingreso-cuarentena/anular/${id}/`, quarantine);
+      const { data } = await api.put(`conservacion/levantamiento-cuarentena/anular-levantamiento-cuarentena/${id}/`, quarantine);
       console.log(data)
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {

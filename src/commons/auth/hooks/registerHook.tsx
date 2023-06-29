@@ -15,6 +15,7 @@ import {
 import { type AxiosError } from 'axios';
 import { create_user } from '../request/authRequest';
 import { control_success } from '../../../helpers';
+import { auth_url } from '../api/auth';
 
 export const use_register = (): ReisterHookNew => {
   const {
@@ -151,7 +152,7 @@ export const use_register = (): ReisterHookNew => {
         persona,
         password,
         redirect_url:
-          'https://macareniafrontendevelopv2.netlify.app/#/auth/activacion_cuenta',
+          `${auth_url}/auth/activacion_cuenta`,
       });
       control_success(data.detail);
       window.location.href = '#/app/auth/login';
@@ -206,6 +207,7 @@ export const use_register = (): ReisterHookNew => {
     set_value,
     validate_exits,
     watch,
+    reset,
     on_submit,
     get_values,
   };

@@ -1,189 +1,85 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import SaveIcon from '@mui/icons-material/Save';
+import { Grid} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
-
-import {
-  Grid,
-  Box,
-  IconButton,
-  Avatar,
-  Chip,
-  Stack,
-  Button,
-  Tooltip,
-
-} from '@mui/material';
-
-
-
-
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-// Componentes personalizados
-import { Title } from '../../../../../../components/Title';
-// // Hooks
+import { create_cv_computers_service, delete_cv_computers_service, get_marca_service, update_cv_computers_service, } from '../store/thunks/cvComputoThunks';
+import { useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-// Thunks
-
-import CrearCvComputoForm from '../components/CrearCvComputoForm';
-// // Slices
-import { current_computer } from '../store/slices/indexCvComputo';
-// import { get_cv_computer_service, } from '../store/thunks/cvComputoThunks';
-
-
-
-const initial_state_current_computer = {
-  id_bien: 0,
-  codigo_bien: null,
-  nro_elemento_bien: null,
-  nombre: "",
-  cod_tipo_bien: null,
-  cod_tipo_activo: null,
-  nivel_jerarquico: null,
-  nombre_cientifico: null,
-  descripcion: "",
-  doc_identificador_nro: null,
-  cod_metodo_valoracion: null,
-  cod_tipo_depreciacion: null,
-  cantidad_vida_util: null,
-  valor_residual: null,
-  stock_minimo: null,
-  stock_maximo: null,
-  solicitable_vivero: false,
-  tiene_hoja_vida: false,
-  maneja_hoja_vida: false,
-  visible_solicitudes: false,
-  id_marca: null,
-  id_unidad_medida: null,
-  id_articulo: 0,
-  id_porcentaje_iva: null,
-  id_unidad_medida_vida_util: null,
-  id_bien_padre: null,
-  cod_tipo_elemento_vivero: 0,
-  es_semilla_vivero: false,
-  estado: "",
-  marca: "",
-  nombre_padre: "",
-  porcentaje_iva: 0,
-  unidad_medida: "",
-  unidad_medida_vida_util: "",
-}
-
+import { type ICvcomputers as FormValues } from '../interfaces/CvComputo';
+import CloseIcon from '@mui/icons-material/Close';
+import { useNavigate } from 'react-router-dom';
+import SeleccionarComputer from '../components/BuscarElementos';
+import Especificaciones from '../components/EspecificacionesFisc';
+import EspecificacionesTec from '../components/EspecificacionesTec';
+import Caracteristicas from '../components/Caracteristicas';
+import FormButton from '../../../../../../components/partials/form/FormButton';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaComputoScreen(): JSX.Element {
-  // const navigate = useNavigate();
+  const [action, set_action] = useState<string>("crear");
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { computers } = useAppSelector((state) => state.cv);
-  const [action, set_action] = useState<string>("create");
-  const [add_cv_com_is_active, set_add_cv_com_is_active] =
-    useState<boolean>(false);
 
-  const columns: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
-    {
-      field: 'nombre',
-      headerName: 'Nombre',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'maneja_hoja_vida',
-      headerName: '¿maneja Hoja de vida?',
-      width: 120,
-      renderCell: (params) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.maneja_hoja_vida ? (
-          <Chip size="small" label="SI" color="success" variant="outlined" />
-        ) : (
-          <Chip size="small" label="NO" color="error" variant="outlined" />
+  const { current_cv_computer } = useAppSelector(
+    (state) => state.cv
+  );
 
-        );
-      },
-    },
-    {
-      field: 'cod_tipo_activo',
-      headerName: 'Tipo Activo',
-      width: 50,
-    },
-    {
-      field: 'estado',
-      headerName: 'Estado',
-      width: 100,
-
-    },
-
-    {
-      field: 'acciones',
-      headerName: 'Acciones',
-      width: 300,
-      renderCell: (params) => (
-        <>
-          {params.row.tiene_hoja_vida ?
-            <Tooltip title="Editar">
-              <IconButton
-                onClick={() => {
-                  dispatch(current_computer(params.row));
-                  set_action("create")
-                  set_add_cv_com_is_active(true)
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <EditIcon
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                  />
-
-                </Avatar>
-              </IconButton>
-            </Tooltip> :
-            <Tooltip title="Crear hoja de vida">
-              <IconButton
-                onClick={() => {
-
-                  set_add_cv_com_is_active(true);
-                }}
-              >
-                <Avatar
-                  sx={{
-                    width: 24,
-                    height: 24,
-                    background: '#fff',
-                    border: '2px solid',
-                  }}
-                  variant="rounded"
-                >
-                  <NoteAddIcon
-                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                  />
-
-                </Avatar>
-              </IconButton>
-            </Tooltip>
-          }
-
-
-        </>
-      ),
-    },
-  ];
+  const { control: control_cv_computo, handleSubmit: handle_submit, reset: reset_cv_computer, getValues: get_values } = useForm<FormValues>();
 
   useEffect(() => {
-    // void dispatch(get_cv_computer_service())
-
+    void dispatch(get_marca_service());
   }, []);
+
+  useEffect(() => {
+    if(current_cv_computer.id_hoja_de_vida !== null){
+      set_action("editar")
+    }
+  }, [current_cv_computer]);
+
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const on_submit = (data: FormValues): void => {
+    const form_data: any = new FormData();
+    form_data.append('sistema_operativo', data.sistema_operativo);
+    form_data.append('suite_ofimatica', data.suite_ofimatica);
+    form_data.append('antivirus', data.antivirus);
+    form_data.append('color', data.color);
+    form_data.append('tipo_de_equipo', data.tipo_de_equipo);
+    form_data.append('tipo_almacenamiento', data.tipo_almacenamiento);
+    form_data.append('capacidad_almacenamiento', data.capacidad_almacenamiento);
+    form_data.append('procesador', data.procesador);
+    form_data.append('memoria_ram', data.memoria_ram);
+    form_data.append('estado', data.estado);
+    form_data.append('doc_identificador_nro', data.doc_identificador_nro);
+    form_data.append(
+      'observaciones_adicionales',
+      data.observaciones_adicionales
+    );
+    form_data.append('otras_aplicaciones', data.otras_aplicaciones);
+    form_data.append('id_marca', data.id_marca ?? null);
+    form_data.append('id_articulo', (data.id_articulo ?? "").toString());
+    form_data.append('ruta_imagen_foto',data.ruta_imagen_foto);
+    if(data.id_hoja_de_vida === null){
+      void dispatch(create_cv_computers_service(form_data, navigate));
+    } else {
+      void dispatch(update_cv_computers_service(data.id_hoja_de_vida, form_data));
+
+    }
+
+
+  };
+  const delete_hoja_vida = (): void => {
+    
+    if (current_cv_computer.id_hoja_de_vida !== null && current_cv_computer.id_hoja_de_vida !== undefined) {
+      void dispatch(delete_cv_computers_service(current_cv_computer.id_hoja_de_vida));
+    } 
+  };
+
+  useEffect(() => {
+    reset_cv_computer(current_cv_computer);
+    console.log(current_cv_computer)
+  }, [current_cv_computer]);
 
   return (
 
@@ -200,46 +96,59 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
+          <SeleccionarComputer />
+
+          <Especificaciones
+            control_computo={control_cv_computo}
+            get_values={get_values}
+            title="ESPECIFICACIONES FÍSICAS" />
+          <EspecificacionesTec
+            control_computo={control_cv_computo}
+            get_values={get_values}
+            title="ESPECIFICACIONES TECNICAS" />
+          <Caracteristicas
+            control_computo={control_cv_computo}
+            get_values={get_values}
+            title="CARACTERISTÍCAS" />
 
 
-          <Title title="Computadores"></Title>
-          <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
-            <Button
-              variant="outlined"
-              startIcon={<AddIcon />}
-              onClick={() => {
-                dispatch(current_computer(initial_state_current_computer));
-                set_action("create")
-                set_add_cv_com_is_active(true);
-              }}
-            >
-              Crear hoja de vida
-            </Button>
-          </Stack>
-
-          <Grid item>
-            <Box sx={{ width: '100%' }}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={computers}
-                columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id_bien}
-              />
-            </Box>
+        <Grid
+          container
+          direction="row"
+          padding={2}
+          spacing={2}
+        >
+          <Grid item xs={12} md={3}>
+            <FormButton
+              variant_button="contained"
+              on_click_function={handle_submit(on_submit)}
+              icon_class={action === "create"?<SaveIcon />:<EditIcon/>}
+              label={action}
+              type_button="button"
+            />
           </Grid>
-          <CrearCvComputoForm
-            is_modal_active={add_cv_com_is_active}
-            set_is_modal_active={set_add_cv_com_is_active}
-            action={action}
-          />
-
+          
+          <Grid item xs={12} md={3}>
+            <FormButton
+              variant_button="outlined"
+              on_click_function={delete_hoja_vida}
+              icon_class={<CloseIcon />}
+              label={"Eliminar"}
+              type_button="button"
+            />
+          </Grid>
         </Grid>
+        
+
+
+
+
+
+
       </Grid>
+
     </>
   );
 }
+
+

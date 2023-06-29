@@ -63,7 +63,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'nro_lote',
-            headerName: '# lote',
+            headerName: 'Número del lote',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -73,7 +73,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'cod_etapa_lote',
-            headerName: 'Etapa lote',
+            headerName: 'Etapa del lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -262,7 +262,8 @@ const SeleccionarBienSiembra = () => {
             const codigo_bien = get_values_bien("codigo_bien") ?? ""
             const nombre = get_values_bien("nombre")??""
             const tipo_bien = get_values_bien("cod_tipo_elemento_vivero")??""
-            void dispatch(get_goods_service(id_vivero, codigo_bien, nombre, tipo_bien));
+            const semilla = tipo_bien === "SE" 
+            void dispatch(get_goods_service(id_vivero, codigo_bien, nombre, tipo_bien, semilla));
         }
     })
 
@@ -338,7 +339,7 @@ const SeleccionarBienSiembra = () => {
                         nro_lote_destino_MV: data.nro_lote_destino_MV ?? null,
                         cod_etapa_lote_destino_MV: data.cod_etapa_lote_destino_MV ?? null,
                         cantidad_a_trasladar: Number(data.cantidad_a_trasladar),
-                        altura_lote_destion_en_cms: (data.altura_lote_destion_en_cms??null) !== null ? Number(data.altura_lote_destion_en_cms): null,
+                        altura_lote_destion_en_cms:(current_good.cod_etapa_lote === null)?null : (data.altura_lote_destion_en_cms??null) !== null ? Number(data.altura_lote_destion_en_cms): null,
                         id_traslado: current_transfer.id_traslado,
                         id_bien_origen: current_good.id_bien,
                         codigo_bien: current_good.codigo_bien,
@@ -581,7 +582,7 @@ const SeleccionarBienSiembra = () => {
                             label: "Tipo de bien",
                             disabled: false,
                             helper_text: "",
-                            select_options: [{label: "Semillas", value: "Semillas"}, {label: "Insumos", value: "Insumos"}, {label: "Plantas", value: "Plantas"}, {label: "Herramientas", value: "Herramientas"}],
+                            select_options: [{label: "Semillas", value: "SE"}, {label: "Insumos", value: "IN"}, {label: "Plantas", value: "MV"}, {label: "Herramientas", value: "HE"}],
                             option_label: "label",
                             option_key: "value",
                         },

@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Stack,
   Button,
   Box,
@@ -22,6 +21,7 @@ import { add_mixture_service, edit_mixture_service, get_medida_service } from '.
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { type IObjMixture as FormValues } from '../interfaces/configuracion';
+import { Title } from '../../../../components';
 interface IProps {
   action: string,
   is_modal_active: boolean;
@@ -36,13 +36,13 @@ const EditarBienDialogForm = ({
   is_modal_active,
   set_is_modal_active,
 }: IProps) => {
-  
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   // const [tipo_elemento_selected, set_tipo_elemento_selected] = useState<any>("MV");
- 
 
-  const {current_mixture, unidad_medida} = useAppSelector((state) => state.configuracion);
+
+  const { current_mixture, unidad_medida } = useAppSelector((state) => state.configuracion);
 
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -59,7 +59,7 @@ const EditarBienDialogForm = ({
 
 
   const on_submit = (data: FormValues): void => {
-    
+
     void dispatch(add_mixture_service(data, navigate));
     handle_close_add_mixture();
   };
@@ -69,11 +69,11 @@ const EditarBienDialogForm = ({
   };
 
 
-  
+
   useEffect(() => {
     void dispatch(get_medida_service());
   }, []);
-  
+
   return (
     <Dialog
       maxWidth="xl"
@@ -83,13 +83,37 @@ const EditarBienDialogForm = ({
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={action==="create"? handle_submit(on_submit):handle_submit(on_submit_edit)}
+        onSubmit={action === "create" ? handle_submit(on_submit) : handle_submit(on_submit_edit)}
 
       >
-        <DialogTitle>{action==="create"? "Crear mezcla": action==="detail"? "Detalle mezcla": "Editar mezcla" }</DialogTitle>
+
+        <Grid container
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '2px',
+            mb: '10px',
+            boxShadow: '0px 3px 6px #042F4A26',
+            marginTop: '10px',
+            width: '460px',
+            height: '70px',
+            marginLeft: '20px', 
+          }} item xs={11.5}  margin={1} >
+             <Title title={action === "create" ? "Crear mezcla" : action === "detail" ? "Detalle mezcla" : "Editar mezcla"} ></Title>
+        </Grid>
+
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-          <Grid container>
+          <Grid container
+            sx={{
+              position: 'relative',
+              background: '#FAFAFA',
+              borderRadius: '15px',
+              p: '20px',
+              mb: '0px',
+              boxShadow: '0px 3px 6px #042F4A26',
+            }} >
             <Grid item xs={11} md={12} margin={1}>
               <Controller
                 name="nombre"
@@ -106,7 +130,7 @@ const EditarBienDialogForm = ({
                     size="small"
                     label="Nombre"
                     variant="outlined"
-                    disabled = {action === "detail"}
+                    disabled={action === "detail"}
                     value={value}
                     onChange={onChange}
                     error={!(error == null)}
@@ -135,7 +159,7 @@ const EditarBienDialogForm = ({
                     size="small"
                     label="Unidad de medida"
                     variant="outlined"
-                    disabled = {action === "detail"}
+                    disabled={action === "detail"}
                     defaultValue={value}
                     value={value}
                     onChange={onChange}
@@ -143,7 +167,7 @@ const EditarBienDialogForm = ({
                     helperText={
                       error != null
                         ? 'Es obligatorio seleccionar unidad de medida'
-                        : 'seleccione unidad de media'
+                        : 'Seleccione unidad de media'
                     }
                   >
                     {unidad_medida.map((option) => (
@@ -171,15 +195,15 @@ const EditarBienDialogForm = ({
             >
               CERRAR
             </Button>
-            {action === "create"?
-            <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
-              GUARDAR
-            </Button>:
-            action === "edit"?
-            <Button type="submit" variant="contained" startIcon={<EditIcon />}>
-              EDITAR
-            </Button>:
-            null
+            {action === "create" ?
+              <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
+                GUARDAR
+              </Button> :
+              action === "edit" ?
+                <Button type="submit" variant="contained" startIcon={<EditIcon />}>
+                  EDITAR
+                </Button> :
+                null
             }
           </Stack>
         </DialogActions>

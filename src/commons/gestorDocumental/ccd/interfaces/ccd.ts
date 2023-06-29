@@ -6,6 +6,9 @@ export interface ICCD {
 }
 
 export interface ICCDObject {
+  nombre_unidad_organizacional: string | number;
+  valor_aumento_serie: string | number;
+  valor_aumento_subserie: string | number;
   id_ccd: number;
   id_organigrama: number;
   version: string;
@@ -14,18 +17,22 @@ export interface ICCDObject {
   fecha_puesta_produccion: null | Date;
   fecha_retiro_produccion: null | Date;
   justificacion: null | string;
-  ruta_soporte: string;
+  ruta_soporte?: File | string | any;
   actual: boolean;
 }
 export interface ICCDForm {
+  ruta_soporte?: File | string | any;
   id_ccd: number;
   version: string;
   nombre_ccd: string;
   fecha_terminado: null | Date | string;
-  organigrama: IList;
-  unidades_organigrama: IList;
+  organigrama: IList | any;
+  unidades_organigrama: IList | any;
+  valor_aumento_serie: string | number | any;
+  valor_aumento_subserie: string | number | any;
 }
 export interface ICCDAsingForm {
+  [x: string]: any;
   sries_asignacion: IList;
   sries: string;
   subserie_asignacion: IList[] | [];

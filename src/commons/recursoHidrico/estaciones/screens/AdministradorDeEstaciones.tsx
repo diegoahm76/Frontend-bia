@@ -169,7 +169,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 cancelButton: "square-btn",
             },
             width: 350,
-            text: "¿Estas seguro?",
+            text: "¿Estás seguro?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#0EC32C",
@@ -193,6 +193,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
+                mt: '20px',
                 boxShadow: '0px 3px 6px #042F4A26',
             }}>
             <style>
@@ -206,7 +207,7 @@ export const AdministradorDeEstaciones: React.FC = () => {
           }
         `}
             </style>
-            <Title title="ESTACIONES HIDROMETEOROLÓGICAS"></Title>
+            <Title title="Estaciones hidrometeorológicas"></Title>
             <Grid item xs={12}>
                 <Button
                     sx={{ mb: '20px' }}

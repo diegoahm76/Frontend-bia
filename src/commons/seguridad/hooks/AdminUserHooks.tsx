@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -58,7 +59,7 @@ const bloqueado_opt: IList[] = [
   { value: 'true', label: 'Si' },
 ];
 
-export const initial_state_data_register: DataAadminUser = {
+export const initial_state_data_register: any = {
   tipo_persona: '',
   tipo_documento: '',
   numero_documento: '',
@@ -97,14 +98,16 @@ export const use_admin_users = (): AdminUserHook => {
     IList[]
   >([]);
   const [tipo_documento, set_tipo_documento] = useState('');
+  const [numero_documento, set_numero_documento] = useState('');
   const [tipo_persona, set_tipo_persona] = useState('');
   const [tipo_persona_opt, set_tipo_persona_opt] = useState<IList[]>([]);
   const [roles_opt, set_roles_opt] = useState<IList2[]>([]);
-  const rol_fixed = [roles_opt[0]];
-  const [roles, set_roles] = useState<IList2[]>([...rol_fixed]);
+  // const rol_fixed = [roles_opt[0]];
+  // const [roles, set_roles] = useState<IList2[]>([...rol_fixed]);
+  const [roles, set_roles] = useState<IList2[]>([]);
   const [tipo_usuario, set_tipo_usuario] = useState('');
-  const [activo, set_activo] = useState('');
-  const [bloqueado, set_bloqueado] = useState('');
+  const [activo, set_activo] = useState<any>('');
+  const [bloqueado, set_bloqueado] = useState<any>('');
   const [tipo_usuario_opt, set_tipo_usuario_opt] = useState<IList[]>([]);
   const [data_register, set_data_register] = useState<DataAadminUser>(
     initial_state_data_register
@@ -160,7 +163,6 @@ export const use_admin_users = (): AdminUserHook => {
 
       const { data } = await roles_request();
       const res_roles_adapter: IList2[] = await roles_choise_adapter(data);
-      console.log(res_roles_adapter);
       set_roles_opt(res_roles_adapter);
 
       const {
@@ -197,15 +199,8 @@ export const use_admin_users = (): AdminUserHook => {
           'redirect_url',
           'http://localhost:3000/#/app/seguridad/administracion_usuarios'
         );
-        console.log(file_image);
         data_create_user.append('profile_img', file_image ?? '');
 
-        // for (const [key, value] of data_create_user.entries()) {
-        //   // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        //   console.log(key + ': ' + value);
-        // }
-
-        // Creación de usuario Persona Natural
         const { data } = await crear_user_admin_user(data_create_user);
 
         control_success(data.detail);
@@ -236,7 +231,6 @@ export const use_admin_users = (): AdminUserHook => {
           user_info.id_usuario,
           data_update_user
         );
-        console.log(data);
         control_success(data.detail);
       }
     } catch (error) {
@@ -255,19 +249,15 @@ export const use_admin_users = (): AdminUserHook => {
       ...data_register,
       [name]: value,
     });
-    console.log(`${name} : `, value);
     set_value_admin_user(name as keys_object, value);
   };
 
   const on_change = (e: SelectChangeEvent<string>): void => {
     switch (e.target.name) {
       case 'tipo_usuario':
-        console.log(e.target.value);
         set_tipo_usuario(e.target.value);
         break;
       case 'activo':
-        console.log('valor actual', valor_actual_user_is_active);
-        console.log('selected actual', e.target.value);
         set_activo(e.target.value);
         if (
           // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
@@ -277,7 +267,6 @@ export const use_admin_users = (): AdminUserHook => {
         } else {
           set_check_user_is_active(true);
         }
-        // set_valor_actual_user_is_active(e.target.value !== 'false');
         break;
       case 'bloqueado':
         set_bloqueado(e.target.value);
@@ -343,14 +332,16 @@ export const use_admin_users = (): AdminUserHook => {
     set_check_user_is_blocked(true);
     if (data_person_search.id_persona !== 0) {
       set_tipo_documento(data_person_search.tipo_documento);
-      // set_numero_documento(data_person_search.numero_documento);
+      set_numero_documento(data_person_search.numero_documento);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      set_activo(`${data_register.activo}`);
+      const activoo = data_register.activo
+      set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      set_bloqueado(`${data_register.bloqueado}`);
+      const bloqueadoo = data_register.bloqueado
+      set_bloqueado(bloqueadoo);
       set_valor_actual_user_is_blocked(data_register.bloqueado);
 
       if (data_person_search.tipo_persona === 'N') {
@@ -402,15 +393,10 @@ export const use_admin_users = (): AdminUserHook => {
         // Disparar modal con los 2 usuarios disponibles
         set_users_x_person_is_active(true);
       }
-      console.log('Si hay data person');
       set_tipo_persona(data_person_search.tipo_persona);
       set_loading_inputs(false);
       dispatch(set_action_admin_users('CREATE'));
-      console.log(action_admin_users);
-
       set_data_disponible(true);
-    } else {
-      console.log('No hay data person');
     }
   }, [data_person_search]);
 
@@ -419,16 +405,17 @@ export const use_admin_users = (): AdminUserHook => {
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (user_info.id_usuario !== 0) {
-      console.log(action_admin_users);
       set_tipo_documento(user_info.tipo_documento);
-      // set_numero_documento(user_info.numero_documento);
+      set_numero_documento(user_info.numero_documento);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      set_activo(`${data_register.activo}`);
+      const activoo = data_register.activo
+      set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      set_bloqueado(`${data_register.bloqueado}`);
+      const bloqueadoo = data_register.bloqueado
+      set_bloqueado(bloqueadoo);
       set_valor_actual_user_is_blocked(data_register.bloqueado);
       set_data_register({
         ...data_register,
@@ -470,6 +457,8 @@ export const use_admin_users = (): AdminUserHook => {
           user_info.primer_apellido_usuario_creador ?? ''
         }`,
       });
+      set_value_admin_user('tipo_documento', user_info.tipo_documento);
+      set_value_admin_user('numero_documento', user_info.numero_documento);
       set_value_admin_user('razon_social', user_info.razon_social);
       set_value_admin_user('nombre_comercial', user_info.nombre_comercial);
       set_value_admin_user('primer_nombre', user_info.primer_nombre);
@@ -521,18 +510,16 @@ export const use_admin_users = (): AdminUserHook => {
         }`
       );
 
-      console.log('Si hay data user');
+      set_tipo_persona(user_info.tipo_persona);
       set_data_disponible(true);
       dispatch(set_action_admin_users('EDIT'));
-    } else {
-      console.log('No hay data user');
     }
   }, [user_info]);
 
   useEffect(() => {
     if (tipo_persona === 'N') {
       set_tipo_documento_opt(
-        tipo_documento_opt_all.filter((e) => e.value !== 'NT')
+        tipo_documento_opt_all.filter((e) => String(e.value) !== 'NT')
       );
     } else {
       set_tipo_documento_opt(tipo_documento_opt_all);
@@ -556,13 +543,23 @@ export const use_admin_users = (): AdminUserHook => {
   useEffect(() => {
     if (watch_admin_user('tipo_usuario') !== undefined) {
       set_tipo_usuario(watch_admin_user('tipo_usuario'));
-    } else {
-      // console.log('Tipo de usuario sin definir');
-      // if (watch_admin_user('tipo_usuario') === 'I') {
-      //   set_roles([{ value: 2, label: 'Rol Usuarios Web' }]);
-      // }
     }
   }, [watch_admin_user('tipo_usuario')]);
+
+  const clean_user_info = (): void => {
+    reset_admin_user(initial_state_data_register);
+    set_tipo_persona('N');
+    set_tipo_documento('NT');
+    set_numero_documento('');
+    set_tipo_usuario('U');
+    set_activo('');
+    set_bloqueado('');
+    set_roles([]);
+    set_data_disponible(false);
+    set_historial_cambios_estado_is_active(false);
+    set_users_x_person_is_active(false);
+    dispatch(set_action_admin_users('NEW'));
+  };
 
   return {
     errors_admin_users,
@@ -589,9 +586,11 @@ export const use_admin_users = (): AdminUserHook => {
     users_x_person_is_active,
     tipo_documento_opt,
     tipo_documento,
+    numero_documento,
     tipo_persona_opt,
-    rol_fixed,
+    // rol_fixed,
     set_historial_cambios_estado_is_active,
+    set_numero_documento,
     set_users_x_person_is_active,
     on_submit,
     on_change,
@@ -605,5 +604,6 @@ export const use_admin_users = (): AdminUserHook => {
     set_data_disponible,
     set_loading_inputs,
     reset_admin_user,
+    clean_user_info,
   };
 };

@@ -1,4 +1,7 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useContext, useEffect, useState } from 'react';
 import {
   Avatar,
   Box,
@@ -19,6 +22,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import { get_ccd_current } from '../../store/slices/ccdSlice';
 import type { IProps } from './types/types';
+import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
+import { ModalContext } from '../../context/ModalContext';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -26,8 +31,13 @@ const SearchCcdModal = ({
   set_is_modal_active,
   title,
 }: IProps) => {
-  const { ccds } = useAppSelector((state) => state.ccd);
+
   const dispatch = useAppDispatch();
+  const {
+    closeModalBusquedaCreacionCCD
+  } = useContext(ModalContext);
+
+  const { ccds } = useAppSelector((state) => state.ccd);
 
   const [world_search, set_world_search] = useState<string>('');
   const [filter_ccds, set_filter_ccds] = useState<any>([]);
@@ -66,23 +76,26 @@ const SearchCcdModal = ({
     {
       headerName: 'Nombre',
       field: 'nombre',
-      minWidth: 200,
+      minWidth: 170,
+      maxWidth: 200,
     },
     {
       headerName: 'Versión',
       field: 'version',
-      minWidth: 150,
+      minWidth: 170,
+      maxWidth: 200,
     },
     {
       headerName: 'Estado',
       field: 'estado',
-      minWidth: 100,
+      minWidth: 170,
+      maxWidth: 250,
       renderCell: (params: { row: { fecha_terminado: null } }) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.fecha_terminado !== null ? (
           <Chip
             size="small"
-            label="Terminado"
+            label={`Terminado ${params.row.fecha_terminado}`}
             color="success"
             variant="outlined"
           />
@@ -97,14 +110,50 @@ const SearchCcdModal = ({
       },
     },
     {
+      headerName: 'Actual',
+      field: 'is_actual',
+      minWidth: 50,
+      maxWidth: 60,
+      renderCell: (params: { row: { actual: null } }) => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        return params.row.actual !== false ? (
+          <Chip
+            size="small"
+            label="Si"
+            color="info"
+            variant="outlined"
+          />
+        ) : (
+          <Chip
+            size="small"
+            label="No"
+            color="warning"
+            variant="outlined"
+          />
+        );
+      },
+    },
+    {
       headerName: 'Acciones',
       field: 'accion',
       renderCell: (params: any) => (
         <>
           <IconButton
             onClick={() => {
-              console.log(params.data);
-              dispatch(get_ccd_current(params.data));
+              console.log(
+                'params para ver ccd en el icono del ojito',
+                params,
+              );
+              void dispatch(
+                get_classification_ccds_service(
+                  params.row.nombre,
+                  params.row.version,
+                  params.row.id_ccd,
+                )
+              )
+              // dispatch(get_assignments_service(params.row.id_ccd));
+              console.log('params para ver ccd en el icono del ojito', params);
+              // dispatch(get_ccd_current(params.row.id_ccd));
               set_is_modal_active(false);
             }}
           >
@@ -146,6 +195,7 @@ const SearchCcdModal = ({
             aria-label="close"
             onClick={() => {
               set_is_modal_active(false);
+              closeModalBusquedaCreacionCCD()
             }}
             sx={{
               position: 'absolute',
@@ -192,6 +242,7 @@ const SearchCcdModal = ({
               variant="outlined"
               onClick={() => {
                 set_is_modal_active(false);
+                closeModalBusquedaCreacionCCD();
               }}
               startIcon={<CloseIcon />}
             >

@@ -17,8 +17,7 @@ import type {
   GridColDef,
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-import { useState } from 'react';
-import CrearSeriesCcdDialog from '../../ccd/componentes/crearSeriesCcdDialog/CrearSeriesCcdDialog';
+import { containerStyles } from './utils/constants';
 // Graficas
 
 const columns: GridColDef[] = [
@@ -86,8 +85,6 @@ const tipos_unidades = [
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TcaScreen: React.FC = () => {
-  const [create_is_active, set_create_is_active] = useState<boolean>(false);
-
   return (
     <>
       <Grid
@@ -199,14 +196,7 @@ export const TcaScreen: React.FC = () => {
       </Grid>
       <Grid
         container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
+        sx={containerStyles}
       >
         <Grid item xs={12}>
           <Title title="Registro de series y subseries" />
@@ -239,16 +229,9 @@ export const TcaScreen: React.FC = () => {
                   variant="contained"
                   aria-label=" primary button group"
                 >
-                  <Button
-                    onClick={() => {
-                      set_create_is_active(true);
-                      // set_title('Crear series');
-                    }}
-                  >
-                    CREAR
-                  </Button>
-                  <Button>CLONAR</Button>
-                  <Button>PREVISUALIZAR</Button>
+                  <Button>CREAR</Button>
+                  {/* <Button>CLONAR</Button>
+                  <Button>PREVISUALIZAR</Button> */}
                 </ButtonGroup>
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -274,8 +257,8 @@ export const TcaScreen: React.FC = () => {
                   aria-label=" primary button group"
                 >
                   <Button>CREAR</Button>
-                  <Button>CLONAR</Button>
-                  <Button>PREVISUALIZAR</Button>
+                  {/* <Button>CLONAR</Button>
+                  <Button>PREVISUALIZAR</Button> */}
                 </ButtonGroup>
               </Grid>
             </Grid>
@@ -284,14 +267,7 @@ export const TcaScreen: React.FC = () => {
       </Grid>
       <Grid
         container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
+        sx={containerStyles}
       >
         <Grid item xs={12}>
           <Title title="Asignaciones" />
@@ -394,11 +370,6 @@ export const TcaScreen: React.FC = () => {
           </Stack>
         </Grid>
       </Grid>
-      <CrearSeriesCcdDialog
-        is_modal_active={create_is_active}
-        set_is_modal_active={set_create_is_active}
-        title="title"
-      />
     </>
   );
 };

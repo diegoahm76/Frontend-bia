@@ -96,9 +96,10 @@ export const VistaSolicitud: React.FC = () => {
 
   return (
     <>
-      <Grid container spacing={5}>
-        <Grid item xs={12} sm={3}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={5}>
           <Button
+            fullWidth
             color='primary'
             variant='outlined'
             size='medium'
@@ -108,8 +109,9 @@ export const VistaSolicitud: React.FC = () => {
             Ver Documento Solicitud
           </Button>
         </Grid>
-        <Grid item xs={12} sm={3.1}>
+        <Grid item xs={12} sm={5}>
           <Button
+            fullWidth
             color='primary'
             variant='outlined'
             size='medium'
@@ -119,16 +121,17 @@ export const VistaSolicitud: React.FC = () => {
             Ver Soporte Consignación
           </Button>
         </Grid>
-        <Grid item xs={12} sm={3.1}>
+        <Grid item xs={12} sm={5}>
           <TextField
             label="Calidad en que actúa la persona"
             size="small"
             fullWidth
-            value={solicitud_facilidad.tipo_actuacion === 'tipo 1' ? 'Persona Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 2' ? 'Persona Juridica' : solicitud_facilidad.tipo_actuacion === 'tipo 3' ? 'Deudor Solidario Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 4' ? 'Deudor Solidario Juridico' : null }
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            value={`${solicitud_facilidad.tipo_actuacion === 'tipo 1' ? 'Persona Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 2' ? 'Persona Juridica' : solicitud_facilidad.tipo_actuacion === 'tipo 3' ? 'Deudor Solidario Natural' : solicitud_facilidad.tipo_actuacion === 'tipo 4' ? 'Deudor Solidario Juridico' : null}`}
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={10}>
+        <Grid item xs={12} sm={15}>
           {
             solicitud_facilidad.tipo_actuacion === 'tipo 1' ? (
               <PersonaNatural />
@@ -141,7 +144,7 @@ export const VistaSolicitud: React.FC = () => {
             ) : null
           }
         </Grid>
-        <Grid item xs={12} sm={2.9}>
+        <Grid item xs={12} sm={5}>
           <TextField
             label="Periodicidad y Modalidad"
             size="small"
@@ -150,7 +153,7 @@ export const VistaSolicitud: React.FC = () => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={2.9}>
+        <Grid item xs={12} sm={5}>
           <TextField
             label="Plazo"
             size="small"
@@ -159,8 +162,9 @@ export const VistaSolicitud: React.FC = () => {
             disabled
           />
         </Grid>
-        <Grid item xs={12} sm={3.4}>
+        <Grid item xs={12} sm={5}>
           <Button
+            fullWidth
             color='primary'
             variant='outlined'
             size='medium'
@@ -170,8 +174,9 @@ export const VistaSolicitud: React.FC = () => {
             Ver Documento No Enajenación
           </Button>
         </Grid>
-        <Grid item xs={12} sm={2.9}>
+        <Grid item xs={12} sm={5}>
           <Button
+            fullWidth
             color='primary'
             variant='outlined'
             size='medium'
