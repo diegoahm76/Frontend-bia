@@ -3,8 +3,10 @@
 import type React from 'react';
 import { useContext, useEffect, useState } from 'react';
 import {
+  Button,
   Divider,
   Grid,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material';
@@ -12,6 +14,7 @@ import { DataContext } from '../context/contextData';
 import dayjs from 'dayjs';
 import { Title } from '../../../../components/Title';
 import { LoadingButton } from '@mui/lab';
+import { AgregarSubseccion } from './AgregarSubseccion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarSeccion: React.FC = () => {
@@ -22,7 +25,9 @@ export const AgregarSeccion: React.FC = () => {
     setValue: set_value,
     errors,
     info_seccion,
+    set_id_seccion,
     set_mode,
+    is_register_subseccion,
   } = useContext(DataContext);
 
   // watch
@@ -45,81 +50,99 @@ export const AgregarSeccion: React.FC = () => {
       set_value('descripcion_seccion', info_seccion.descripcion);
     }
   }, [info_seccion]);
-  
-  return (
-      <>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" fontWeight="bold">
-            Sección
-          </Typography>
-          <Divider />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Nombre sección"
-            fullWidth
-            required
-            autoFocus
-            size="small"
-            value={nombre_seccion}
-            {...register('nombre_seccion', { required: true })}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Fecha"
-            type="date"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={current_date}
-            disabled
-            fullWidth
-            required
-            autoFocus
-            size="small"
-            {...register('fecha_creacion')}
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Descripción sección"
-            multiline
-            fullWidth
-            required
-            autoFocus
-            value={descripcion_seccion}
-            size="small"
-            {...register('descripcion_seccion', { required: true })}
-          />
-        </Grid>
-        <Grid item spacing={2} justifyContent="end" container>
-          <Grid item>
-            <LoadingButton
-              variant="outlined"
-              color="primary"
-              onClick={() => {
-                reset();
-              }}
-              // startIcon={<SaveIcon />}
-            >
-              Limpiar
-            </LoadingButton>
-          </Grid>
 
-          <Grid item>
-            <LoadingButton
-              type="submit"
-              variant="contained"
-              color="success"
+  return (
+    <>
+      <Grid item xs={12}>
+        <Typography variant="subtitle1" fontWeight="bold">
+          Sección
+        </Typography>
+        <Divider />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          label="Nombre sección"
+          fullWidth
+          required
+          autoFocus
+          size="small"
+          value={nombre_seccion}
+          {...register('nombre_seccion', { required: true })}
+        />
+      </Grid>
+      <Grid item xs={12} sm={6}>
+        <TextField
+          label="Fecha"
+          type="date"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          value={current_date}
+          disabled
+          fullWidth
+          required
+          autoFocus
+          size="small"
+          {...register('fecha_creacion')}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <TextField
+          label="Descripción sección"
+          multiline
+          fullWidth
+          required
+          autoFocus
+          value={descripcion_seccion}
+          size="small"
+          {...register('descripcion_seccion', { required: true })}
+        />
+      </Grid>
+      <Stack
+        justifyContent="flex-end"
+        sx={{ m: '20px 20px 20px 20px' }}
+        direction="row"
+        spacing={2}
+      >
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => {
+            set_id_seccion(null);
+            set_mode('register_subseccion');
+          }}
+        >
+          Registrar nueva subsección
+        </Button>
+      </Stack>
+      {is_register_subseccion && <AgregarSubseccion />}
+      <Grid item spacing={2} justifyContent="end" container>
+        <Grid item>
+          <LoadingButton
+            variant="outlined"
+            color="primary"
+            onClick={() => {
+              reset();
+            }}
+            // startIcon={<SaveIcon />}
+          >
+            Limpiar
+          </LoadingButton>
+        </Grid>
+
+        <Grid item>
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            color="success"
             //   disabled={is_saving}
             //   loading={is_saving}
-              // startIcon={<SaveIcon />}
-            >
-              Guardar
-            </LoadingButton>
-          </Grid>
+            // startIcon={<SaveIcon />}
+          >
+            Guardar
+          </LoadingButton>
         </Grid>
-      </>
+      </Grid>
+    </>
   );
 };
