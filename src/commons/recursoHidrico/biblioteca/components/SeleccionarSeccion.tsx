@@ -21,6 +21,10 @@ import { Title } from '../../../../components/Title';
 import { AgregarSubseccion } from './AgregarSubseccion';
 import { SeleccionarSubseccion } from './SeleccionarSubseccion';
 import { LoadingButton } from '@mui/lab';
+import { delete_seccion_id } from '../request/request';
+import Swal from 'sweetalert2';
+import { control_success } from '../../requets/Request';
+import { control_error } from '../../../../helpers';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarSeccion: React.FC = () => {
@@ -40,6 +44,7 @@ export const SeleccionarSeccion: React.FC = () => {
     is_seleccionar_subseccion,
     rows_to_delete_subseecion,
     set_rows_to_delete_subseecion,
+    fetch_data_seccion,
     fetch_data_subseccion_por_seccion,
     set_info_subseccion,
     set_id_seccion,
@@ -232,6 +237,37 @@ export const SeleccionarSeccion: React.FC = () => {
     handle_eliminar_subseccion(row);
   };
 
+  const confirmar_eliminar = (id_seccion: number): void => {
+    void Swal.fire({
+      // title: "Estas seguro?",
+      customClass: {
+        confirmButton: 'square-btn',
+        cancelButton: 'square-btn',
+      },
+      width: 350,
+      text: '¿Estás seguro?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#0EC32C',
+      cancelButtonColor: '#DE1616',
+      confirmButtonText: 'Si, elminar!',
+      cancelButtonText: 'Cancelar',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await delete_seccion_id(id_seccion);
+          void fetch_data_seccion();
+          control_success('Se eliminó correctamente');
+        } catch (error: any) {
+          control_error(
+            Boolean(error.response.data.detail) ||
+              'hubo un error al eliminar, intenta de nuevo'
+          );
+        }
+      }
+    });
+  };
+
   return (
     <>
       <Grid item xs={12}>
@@ -305,23 +341,25 @@ export const SeleccionarSeccion: React.FC = () => {
           </Grid>
         </>
       )}
-      <Stack
-        justifyContent="flex-end"
-        sx={{ m: '20px 20px 20px 20px' }}
-        direction="row"
-        spacing={2}
-      >
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={() => {
-            set_id_seccion(null);
-            set_mode('register_subseccion');
-          }}
+      {!is_editar_subseccion && !is_seleccionar_subseccion && (
+        <Stack
+          justifyContent="flex-end"
+          sx={{ m: '20px 20px 20px 20px' }}
+          direction="row"
+          spacing={2}
         >
-          Registrar nueva subsección
-        </Button>
-      </Stack>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => {
+              // set_id_seccion(null);
+              set_mode('register_subseccion');
+            }}
+          >
+            Registrar nueva subsección
+          </Button>
+        </Stack>
+      )}
       {is_register_subseccion && <AgregarSubseccion />}
       {is_editar_subseccion && (
         <>
@@ -347,10 +385,7 @@ export const SeleccionarSeccion: React.FC = () => {
           <Grid item xs={12} sm={6}>
             <TextField
               label="Fecha"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
+              type="text"
               value={info_subseccion?.fechaCreacion}
               disabled
               fullWidth
@@ -377,19 +412,6 @@ export const SeleccionarSeccion: React.FC = () => {
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <LoadingButton
-                variant="outlined"
-                color="primary"
-                onClick={() => {
-                  reset();
-                }}
-                // startIcon={<SaveIcon />}
-              >
-                Limpiar
-              </LoadingButton>
-            </Grid>
-
-            <Grid item>
-              <LoadingButton
                 variant="contained"
                 color="success"
                 onClick={handle_actualizar_subseccion}
@@ -401,21 +423,20 @@ export const SeleccionarSeccion: React.FC = () => {
         </>
       )}
       {is_seleccionar_subseccion && <SeleccionarSubseccion />}
-
       <Grid item spacing={2} justifyContent="end" container>
         <Grid item>
           <LoadingButton
             variant="outlined"
-            color="primary"
+            color="error"
+            disabled={!(rows_subseccion.length === 0)}
             onClick={() => {
-              reset();
+              confirmar_eliminar(id_seccion as number);
             }}
             // startIcon={<SaveIcon />}
           >
-            Limpiar
+            Borrar Sección
           </LoadingButton>
         </Grid>
-
         <Grid item>
           <LoadingButton
             type="submit"

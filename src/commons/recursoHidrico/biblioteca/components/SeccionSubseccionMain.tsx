@@ -9,6 +9,7 @@ import { control_success } from '../../requets/Request';
 import { control_error } from '../../../../helpers';
 import {
   post_seccion_subscción,
+  put_seccion_sección,
   put_seccion_subscción,
 } from '../request/request';
 import { EditarSeccion } from './EditarSeccion';
@@ -76,6 +77,18 @@ export const SeccionSubseccionMain: React.FC = () => {
       control_error(error);
     }
   });
+  const on_submit_update_seccion = handle_submit(async (form: any) => {
+    try {
+      set_is_saving(true);
+      form.id_seccion = id_seccion;
+      await put_seccion_sección(form, id_seccion as number);
+      control_success('Se actualizó exitosamente');
+      await fetch_data_seccion();
+    } catch (error) {
+      set_is_saving(false);
+      control_error(error);
+    }
+  });
 
   return (
     <form
@@ -84,8 +97,11 @@ export const SeccionSubseccionMain: React.FC = () => {
         if (is_register_seccion || is_register_subseccion) {
           void on_submit(e);
         }
-        if (is_editar_seccion || is_editar_subseccion || is_seleccionar_seccion) {
+        if (is_editar_subseccion || is_seleccionar_seccion) {
           void on_submit_update(e);
+        }
+        if (is_editar_seccion) {
+          void on_submit_update_seccion(e);
         }
       }}
     >
