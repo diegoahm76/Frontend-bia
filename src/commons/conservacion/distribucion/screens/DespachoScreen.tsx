@@ -238,7 +238,7 @@ const DespachoScreen = () => {
         info_despacho: {
           ...data,
         },
-        ruta_archivo_con_recibido: data.ruta_archivo_con_recibido,
+        ruta_archivo_con_recibido: current_solicitud.ruta_archivo_info_tecnico,
         items_despacho: aux_items,
       };
       console.log(aux);
@@ -246,6 +246,7 @@ const DespachoScreen = () => {
       form_data.append('info_despacho', JSON.stringify({ ...data }));
       form_data.append(
         'ruta_archivo_con_recibido',
+        // current_solicitud.ruta_archivo_info_tecnico
         data.ruta_archivo_con_recibido
       );
       form_data.append('items_despacho', JSON.stringify(aux_items));
@@ -280,13 +281,14 @@ const DespachoScreen = () => {
         info_despacho: {
           ...data_edit,
         },
-        ruta_archivo_con_recibido: data.ruta_archivo_con_recibido,
+        ruta_archivo_con_recibido: current_solicitud.ruta_archivo_info_tecnico,
         items_despacho: aux_items,
       };
       console.log(aux);
       form_data.append('info_despacho', JSON.stringify({ ...data_edit }));
       form_data.append(
         'ruta_archivo_con_recibido',
+        // current_solicitud.ruta_archivo_info_tecnico
         data.ruta_archivo_con_recibido
       );
       form_data.append('items_despacho', JSON.stringify(aux_items));
@@ -296,7 +298,7 @@ const DespachoScreen = () => {
 
   const on_submit_annul = (data: IObjDespacho): void => {
     const data_annul = {
-      justificacion: data.justificacion_anulacion,
+      justificacion_anulacion: data.justificacion_anulacion,
     };
     console.log(data_annul);
     if (
