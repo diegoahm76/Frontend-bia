@@ -50,12 +50,6 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
 
   const columns: GridColDef[] = [
     {
-      field: 'id_actividades',
-      headerName: 'No ACTIVIDAD',
-      sortable: true,
-      width: 170,
-    },
-    {
       field: 'nombre',
       headerName: 'DESCRIPCIÓN',
       sortable: true,

@@ -38,6 +38,7 @@ import {
   roles_request,
 } from '../request/seguridadRequest';
 import { Title } from '../../../components/Title';
+import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 interface IProps {
   on_edit: (tab: string, rol: Rol) => void;
 }
@@ -217,6 +218,8 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
       set_is_loading(false);
     }
   };
+  const handle_clickxls = (): void => { download_xls({ nurseries: roles, columns }); };
+
 
   useEffect(() => {
     void get_data();
@@ -229,6 +232,19 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
           <CircularProgress />
         ) : (
           <Box sx={{ width: '100%' }}>
+              <Button
+                style={{
+                  color: 'white',
+                  backgroundColor: '#335B1E',
+                  borderRadius: '50%', 
+                  width: '45px',
+                  height: '50px', 
+                  margin:5,
+                }}
+                onClick={handle_clickxls}
+              >
+                <i className="pi pi-file-excel"></i>
+              </Button>
             <DataGrid
               density="compact"
               autoHeight

@@ -111,7 +111,7 @@ export const get_classification_ccds_service = (
 // Reanudar Cuadro de Clasificación Documental
 export const to_resume_ccds_service: any = (
   set_flag_btn_finish: (arg0: boolean) => void,
-  ccd_current: any,
+  ccd_current: any
 ) => {
   return async (dispatch: Dispatch<any>, getState: any): Promise<any> => {
     // const { ccd_current } = getState().CCD;
@@ -167,9 +167,7 @@ export const to_finished_ccds_service: any = (
       return data;
     } catch (error: any) {
       console.log(error);
-      control_error(
-        error.response.data.detail
-      );
+      control_error(error.response.data.detail);
       // return error as AxiosError;
     }
   };
@@ -237,9 +235,12 @@ export const create_ccds_service: any = (
   ccd: any,
   set_save_ccd: (arg0: boolean) => void,
   openModalBusquedaCreacionCCD: any,
+  activateLoadingButton: any,
+  desactivateLoadingButton: any
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
+      activateLoadingButton();
       const { data } = await api.post('gestor/ccd/create/', ccd);
       // console.log('🚀 ~ file: ccds.ts ~ line 139 ~ return ~ data', data);
       dispatch(get_ccd_current(data.data));
@@ -252,6 +253,8 @@ export const create_ccds_service: any = (
       console.log(error.response.data, 'error');
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      desactivateLoadingButton();
     }
   };
 };
@@ -259,13 +262,15 @@ export const create_ccds_service: any = (
 export const update_ccds_service: any = (
   formData: any,
   data_create_ccd: any,
-  // closeModalBusquedaCreacionCCD: any,
+  activateLoadingButton: any,
+  deactivateLoadingButton: any
 ) => {
   return async (dispatch: Dispatch<any>, getState: any): Promise<any> => {
     // console.log(data_create_ccd, 'ccd_current')
     // console.log(formData, 'formData')
     // const { ccd_current } = getState().ccd;
     try {
+      activateLoadingButton();
       const id_ccd: number = data_create_ccd.id_ccd;
       const { data } = await api.patch(
         `gestor/ccd/update/${id_ccd}/`,
@@ -273,15 +278,15 @@ export const update_ccds_service: any = (
       );
       console.log('🚀 ~ file: ccds.ts ~ line 164 ~ return ~ data', data);
       // console.log(data_create_ccd, 'data_create_ccd')
-      dispatch(
-        get_ccd_current(data.data)
-      );
+      dispatch(get_ccd_current(data.data));
       control_success(data.detail);
       // closeModalBusquedaCreacionCCD();
-      // return data;
+      return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
       return error as AxiosError;
+    } finally {
+      deactivateLoadingButton();
     }
   };
 };

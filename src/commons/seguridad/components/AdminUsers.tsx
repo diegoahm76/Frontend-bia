@@ -425,7 +425,7 @@ export const AdminUsers: React.FC = () => {
                       label="Justificación del cambio"
                       multiline
                       value={data_register.activo_justificacion_cambio}
-                      required={!check_user_is_active}
+                      required={!check_user_is_active && check_user_is_active}
                       error={
                         !check_user_is_active &&
                         Boolean(errors_admin_users.activo_justificacion_cambio)
@@ -434,9 +434,9 @@ export const AdminUsers: React.FC = () => {
                         !check_user_is_active &&
                         errors_admin_users.activo_justificacion_cambio?.message
                       }
-                      {...register_admin_user('activo_justificacion_cambio', {
-                        required: 'Este campo es obligatorio',
-                      })}
+                      {...register_admin_user('activo_justificacion_cambio', 
+                      // { required: 'Este campo es obligatorio',}
+                        )}
                       onChange={handle_change}
                     />
                   </Grid>
@@ -473,7 +473,7 @@ export const AdminUsers: React.FC = () => {
                       label="Justificación del cambio"
                       multiline
                       value={data_register.bloqueado_justificacion_cambio}
-                      required={!check_user_is_blocked}
+                      required={!check_user_is_blocked && check_user_is_blocked}
                       error={
                         !check_user_is_blocked &&
                         Boolean(
@@ -487,7 +487,7 @@ export const AdminUsers: React.FC = () => {
                       }
                       {...register_admin_user(
                         'bloqueado_justificacion_cambio',
-                        { required: 'Este campo es obligatorio' }
+                        // { required: 'Este campo es obligatorio' }
                       )}
                       onChange={handle_change}
                     />

@@ -114,7 +114,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_loading_inputs,
     set_numero_documento,
     reset_admin_user,
-    clean_user_info
+    clean_user_info    
   } = use_admin_users();
   // const numero_documento = watch('numero_documento');
   useEffect(() => {
@@ -148,6 +148,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     if (numero_documento !== undefined && numero_documento !== '') {
       set_numero_documento(numero_documento);
       set_value_ini('numero_documento', numero_documento);
+      console.log('numero_documento', numero_documento);
     }
   }, [numero_documento]);
 
