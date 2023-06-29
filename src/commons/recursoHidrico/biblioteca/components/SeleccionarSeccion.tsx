@@ -31,7 +31,6 @@ export const SeleccionarSeccion: React.FC = () => {
   const {
     register,
     watch,
-    reset,
     setValue: set_value,
     errors,
     rows_subseccion,
@@ -43,11 +42,11 @@ export const SeleccionarSeccion: React.FC = () => {
     is_editar_subseccion,
     is_seleccionar_subseccion,
     rows_to_delete_subseecion,
+    is_saving,
     set_rows_to_delete_subseecion,
     fetch_data_seccion,
     fetch_data_subseccion_por_seccion,
     set_info_subseccion,
-    set_id_seccion,
     set_id_subseccion,
     set_rows_subseccion,
     set_mode,
@@ -169,10 +168,6 @@ export const SeleccionarSeccion: React.FC = () => {
   const descripcion_seccion = watch('descripcion_seccion');
 
   useEffect(() => {
-    console.log('rows_to_delete_subseecion', rows_to_delete_subseecion);
-  }, [rows_to_delete_subseecion]);
-
-  useEffect(() => {
     void fetch_data_subseccion_por_seccion();
   }, [id_seccion]);
 
@@ -234,12 +229,28 @@ export const SeleccionarSeccion: React.FC = () => {
   };
 
   const handle_eliminar = (row: any): void => {
-    handle_eliminar_subseccion(row);
+    void Swal.fire({
+      customClass: {
+        confirmButton: 'square-btn',
+        cancelButton: 'square-btn',
+      },
+      width: 350,
+      text: '¿Estás seguro de eliminar esta subsección?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#0EC32C',
+      cancelButtonColor: '#DE1616',
+      confirmButtonText: 'Si, elminar!',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handle_eliminar_subseccion(row);
+      }
+    });
   };
 
   const confirmar_eliminar = (id_seccion: number): void => {
     void Swal.fire({
-      // title: "Estas seguro?",
       customClass: {
         confirmButton: 'square-btn',
         cancelButton: 'square-btn',
@@ -412,8 +423,8 @@ export const SeleccionarSeccion: React.FC = () => {
           <Grid item spacing={2} justifyContent="end" container>
             <Grid item>
               <LoadingButton
-                variant="contained"
-                color="success"
+                variant="outlined"
+                color="primary"
                 onClick={handle_actualizar_subseccion}
               >
                 Aceptar
@@ -432,23 +443,36 @@ export const SeleccionarSeccion: React.FC = () => {
             onClick={() => {
               confirmar_eliminar(id_seccion as number);
             }}
-            // startIcon={<SaveIcon />}
           >
             Borrar Sección
           </LoadingButton>
         </Grid>
-        <Grid item>
-          <LoadingButton
-            type="submit"
-            variant="contained"
-            color="success"
-            //   disabled={is_saving}
-            //   loading={is_saving}
-            // startIcon={<SaveIcon />}
-          >
-            Actualizar
-          </LoadingButton>
-        </Grid>
+        {is_register_subseccion && (
+          <Grid item>
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              color="success"
+              disabled={is_saving}
+              loading={is_saving}
+            >
+              Guaradar
+            </LoadingButton>
+          </Grid>
+        )}
+        {!is_register_subseccion && (
+          <Grid item>
+            <LoadingButton
+              type="submit"
+              variant="contained"
+              color="success"
+              disabled={is_saving}
+              loading={is_saving}
+            >
+              Actualizar
+            </LoadingButton>
+          </Grid>
+        )}
       </Grid>
     </>
   );

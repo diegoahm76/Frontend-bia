@@ -1,3 +1,4 @@
+/* eslint-disable no-void */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type React from 'react';
@@ -50,9 +51,11 @@ export const SeccionSubseccionMain: React.FC = () => {
       set_rows_register_subseccion([]);
       await fetch_data_seccion();
       set_is_saving(false);
-    } catch (error) {
+    } catch (error: any) {
       set_is_saving(false);
-      control_error(error);
+      control_error(
+        error.response.data.detail || 'hubo un error al crear, intenta de nuevo'
+      );
     }
   });
   const on_submit_update = handle_submit(async (form: any) => {
@@ -72,9 +75,12 @@ export const SeccionSubseccionMain: React.FC = () => {
       await fetch_data_seccion();
       await fetch_data_subseccion_por_seccion();
       set_is_saving(false);
-    } catch (error) {
+    } catch (error: any) {
       set_is_saving(false);
-      control_error(error);
+      control_error(
+        error.response.data.detail ||
+          'hubo un error al editar, intenta de nuevo'
+      );
     }
   });
   const on_submit_update_seccion = handle_submit(async (form: any) => {
@@ -84,9 +90,13 @@ export const SeccionSubseccionMain: React.FC = () => {
       await put_seccion_sección(form, id_seccion as number);
       control_success('Se actualizó exitosamente');
       await fetch_data_seccion();
-    } catch (error) {
       set_is_saving(false);
-      control_error(error);
+    } catch (error: any) {
+      set_is_saving(false);
+      control_error(
+        error.response.data.detail ||
+          'hubo un error al editar, intenta de nuevo'
+      );
     }
   });
 
@@ -94,15 +104,12 @@ export const SeccionSubseccionMain: React.FC = () => {
     <form
       onSubmit={(e) => {
         console.log(errors);
-        if (is_register_seccion || is_register_subseccion) {
-          void on_submit(e);
-        }
-        if (is_editar_subseccion || is_seleccionar_seccion) {
-          void on_submit_update(e);
-        }
-        if (is_editar_seccion) {
-          void on_submit_update_seccion(e);
-        }
+        if (is_register_seccion || is_register_subseccion)
+          return void on_submit(e);
+        if (is_editar_subseccion || is_seleccionar_seccion)
+          return void on_submit_update(e);
+        if (is_editar_seccion) return void on_submit_update_seccion(e);
+        return void 0;
       }}
     >
       <Grid

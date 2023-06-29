@@ -86,13 +86,13 @@ export const put_seccion_subscción = async (
 
 export const put_seccion_sección = async (
     form: any,
-    id_seccion : number,
+    id_seccion: number,
 ): Promise<any> => {
     const response = await api.put(`hidrico/bibliotecas/secciones/update/${id_seccion}/`, {
         ...form,
         nombre: form.nombre_seccion,
         descripcion: form.descripcion_seccion,
-        subsecciones: []    
+        subsecciones: []
     });
 
     return response.data;
