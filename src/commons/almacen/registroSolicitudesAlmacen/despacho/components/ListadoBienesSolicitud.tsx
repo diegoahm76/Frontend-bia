@@ -10,7 +10,7 @@ import {
   set_bien_selected,
   set_bienes_solicitud_aux,
 } from '../store/slices/indexDespacho';
-import { type IObjBienDespacho } from '../interfaces/despacho';
+// import { type IObjBienDespacho } from '../interfaces/despacho';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoBienesSolicitud = () => {
@@ -112,7 +112,7 @@ const ListadoBienesSolicitud = () => {
       width: 140,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {String(params.value) + String(params.row.unidad_medida ?? '')}
         </div>
       ),
     },

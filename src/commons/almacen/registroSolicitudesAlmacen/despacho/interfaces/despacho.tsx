@@ -63,6 +63,8 @@ export interface IObjBienDespacho {
   nombre_bien?: string | null;
   codigo_bien?: string | null;
   unidad_medida?: string | null;
+  bodega?: string | null;
+  id_entrada_bien?: number | null;
 }
 
 export interface IObjBienConsumo {
@@ -75,4 +77,6 @@ export interface IObjBienConsumo {
   disponible?: boolean | null;
   codigo_bien?: string | null;
   bodega?: string | null;
+  id_entrada_bien?: number | null;
+  id_unidad_medida?: number | null;
 }

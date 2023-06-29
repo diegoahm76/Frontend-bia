@@ -192,6 +192,7 @@ export interface IObjSolicitud {
   id_persona_cierre_no_dispo_alm?: number | null;
   id_persona_almacen_rechaza?: number | null;
   persona_solicita?: string | null;
+  persona_cierra?: string | null;
   nombre_unidad_organizacional?: string | null;
 }
 export interface IObjSolicitudVivero {

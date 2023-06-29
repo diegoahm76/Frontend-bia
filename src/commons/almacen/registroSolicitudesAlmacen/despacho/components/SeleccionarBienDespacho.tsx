@@ -36,6 +36,9 @@ const SeleccionarBienDespacho = () => {
   // const { bodega_seleccionada } = useAppSelector(
   //   (state: { bodegas: any }) => state.bodegas
   // );
+  const { current_solicitud } = useAppSelector(
+    (state: { solic_consumo: any }) => state.solic_consumo
+  );
   const [bienes_aux, set_bienes_aux] = useState<any>([]);
   const [select_model_is_active, set_select_model_is_active] =
     useState<boolean>(false);
@@ -115,13 +118,23 @@ const SeleccionarBienDespacho = () => {
       width: 140,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {String(params.value) + String(params.row.unidad_medida)}
+        </div>
+      ),
+    },
+    {
+      field: 'bodega',
+      headerName: 'Bodega',
+      width: 140,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
         </div>
       ),
     },
 
     {
-      field: 'observacion_del_despacho',
+      field: 'observacion',
       headerName: 'Observacion',
       width: 150,
       renderCell: (params) => (
@@ -180,7 +193,8 @@ const SeleccionarBienDespacho = () => {
       const data = await dispatch(
         get_bien_code_service(
           bien_selected.codigo_bien ?? '',
-          fecha.slice(0, 10) + ' ' + fecha.slice(11, 19)
+          fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
+          current_solicitud.es_solicitud_de_conservacion
         )
       );
       set_bienes_aux(data);
@@ -232,7 +246,9 @@ const SeleccionarBienDespacho = () => {
     if (current_bien.id_bien !== null) {
       if (get_values_bien('codigo_bien') === current_bien.codigo_bien) {
         const bien: IObjBienDespacho | undefined = aux_insumos.find(
-          (p) => p.id_bien_solicitado === current_bien.id_bien
+          (p) =>
+            p.id_bien_solicitado === current_bien.id_bien &&
+            p.id_bodega === current_bien.id_bodega
         );
         let asignada = 0;
 
@@ -241,13 +257,14 @@ const SeleccionarBienDespacho = () => {
             asignada = asignada + (option.cantidad_despachada ?? 0);
           }
         });
-        asignada = asignada + (data.cantidad_despachada ?? 0);
+        asignada = asignada + Number(data.cantidad_despachada ?? 0);
 
         if (
           (data.cantidad_despachada ?? 0) <=
           (current_bien.cantidad_disponible ?? 0)
         ) {
           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+          console.log(asignada, bien_selected.cantidad);
           if (asignada <= (bien_selected.cantidad ?? 0)) {
             const new_bien: IObjBienDespacho = {
               id_inventario: current_bien.id_inventario ?? null,
@@ -261,6 +278,10 @@ const SeleccionarBienDespacho = () => {
               codigo_bien: current_bien.codigo_bien,
               observacion: data.observacion,
               unidad_medida: current_bien.unidad_medida ?? null,
+              id_unidad_medida_solicitada:
+                current_bien.id_unidad_medida ?? null,
+              bodega: current_bien.bodega ?? null,
+              id_entrada_bien: current_bien.id_entrada_bien ?? null,
             };
             console.log(new_bien);
             if (bien === undefined) {
@@ -329,62 +350,42 @@ const SeleccionarBienDespacho = () => {
     }
   };
 
-  // const edit_bien_mortalidad = (item: IObjBienDespacho): void => {
-  //     set_action("editar")
-  //     const bien: IObjBien | undefined =bienes.find((p: IObjBien) => p.id_bien === item.id_bien)
-  //     const item_bien = aux_insumos.find((p) => p.id_bien === item.id_bien)
-  //     reset_despacho(item_bien)
-  //     const aux_items: IObjBienDespacho[] = []
-  //     aux_insumos.forEach((option) => {
-  //         if (option.id_bien !== item.id_bien) {
-  //             aux_items.push(option)
-  //         }
-  //     })
-  //     console.log(bien)
-  //     if(bien !== undefined){
-  //         dispatch(set_current_bien(bien))
-  //     }
-  //     set_aux_insumos(aux_items)
-  // };
+  // const delete_bien_despacho = (item: IObjBienDespacho): void => {
+  //   let bien: IObjBienConsumo | undefined;
 
-  //   const delete_bien_despacho = (item: IObjBienDespacho): void => {
-  //     let bien: IObjBien | undefined;
+  //     bien = bienes.find(
+  //       (p: IObjBienConsumo) =>
+  //         p.id_bien === item.id_bien_solicitado && p.id_bodega === item.id_bodega
+  //     );
+
+  //   console.log(bien);
+
+  //   if (bien !== undefined) {
+  //     dispatch(set_current_bien(bien));
+  //   }
+  //   reset_despacho({
+  //     id_bien: bien?.id_bien,
+  //     cantidad_despachada: null,
+  //     observacion_del_despacho: null,
+  //   });
+  //   const aux_items: IObjBienDespacho[] = [];
+  //   aux_insumos.forEach((option) => {
   //     if (item.cod_tipo_elemento_vivero === 'IN') {
-  //       bien = bienes.find((p: IObjBien) => p.id_bien === item.id_bien);
-  //     } else {
-  //       bien = bienes.find(
-  //         (p: IObjBien) =>
-  //           p.id_bien === item.id_bien && p.nro_lote === item.nro_lote
-  //       );
-  //     }
-  //     console.log(bien);
-
-  //     if (bien !== undefined) {
-  //       dispatch(set_current_bien(bien));
-  //     }
-  //     reset_despacho({
-  //       id_bien: bien?.id_bien,
-  //       cantidad_despachada: null,
-  //       observacion_del_despacho: null,
-  //     });
-  //     const aux_items: IObjBienDespacho[] = [];
-  //     aux_insumos.forEach((option) => {
-  //       if (item.cod_tipo_elemento_vivero === 'IN') {
-  //         if (option.id_bien !== item.id_bien) {
-  //           aux_items.push(option);
-  //         }
-  //       } else {
-  //         if (
-  //           !(
-  //             option.id_bien === item.id_bien && option.nro_lote === item.nro_lote
-  //           )
-  //         ) {
-  //           aux_items.push(option);
-  //         }
+  //       if (option.id_bien !== item.id_bien) {
+  //         aux_items.push(option);
   //       }
-  //     });
-  //     set_aux_insumos(aux_items);
-  //   };
+  //     } else {
+  //       if (
+  //         !(
+  //           option.id_bien === item.id_bien && option.nro_lote === item.nro_lote
+  //         )
+  //       ) {
+  //         aux_items.push(option);
+  //       }
+  //     }
+  //   });
+  //   set_aux_insumos(aux_items);
+  // };
 
   return (
     <>
@@ -467,7 +468,7 @@ const SeleccionarBienDespacho = () => {
                 },
               },
               label: 'Cantidad Usada',
-              type: 'text',
+              type: 'number',
               disabled: false,
               helper_text: '',
             },
@@ -512,7 +513,7 @@ const SeleccionarBienDespacho = () => {
               xs: 12,
               md: 6,
               control_form: control_despacho,
-              control_name: 'observacion_del_despacho',
+              control_name: 'observacion',
               default_value: '',
               rules: {
                 required_rule: { rule: true, message: 'Observación requerida' },
