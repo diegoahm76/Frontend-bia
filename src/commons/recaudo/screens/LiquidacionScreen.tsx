@@ -30,6 +30,8 @@ import type { OpcionLiquidacion } from "../interfaces/liquidacion";
 import { api } from "../../../api/axios";
 import { Add, Build, Save } from "@mui/icons-material";
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
+import { NotificationModal } from "../components/NotificationModal";
+import Blockly from 'blockly';
 import './LiquidacionScreen.css';
 
 interface Rows {
@@ -40,11 +42,11 @@ interface Rows {
 const initial_rows = [
   {
     id: 1,
-    nombre: 'variable1',
+    nombre: 'numero1',
   },
   {
     id: 2,
-    nombre: 'variable2',
+    nombre: 'numero2',
   }
 ]
 
@@ -53,13 +55,16 @@ export const LiquidacionScreen: React.FC = () => {
   const [opciones_liquidaciones, set_opciones_liquidaciones] = useState<OpcionLiquidacion[]>([]);
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState('');
   const [row, set_row] = useState<Rows[]>(initial_rows);
-  const [variables, set_variables] = useState<string[]>(["variable1", "variable2"]);
+  const [variables, set_variables] = useState<string[]>(["numero1", "numero2"]);
   const [formData, setFormData] = useState({ variable: '', nombre_liquidacion: '' });
   const [configNotify, setConfigNotify] = useState({ open: false, message: '' });
   const [open, setOpen] = useState(false);
   const [enableTest, setEnableTest] = useState(false);
   const primaryWorkspace = useRef<any>();
   const [modal_pruebas, set_modal_pruebas] = useState<boolean>(false);
+  const [open_notification_modal, set_open_notification_modal] = useState<boolean>(false);
+  const [notification_info, set_notification_info] = useState({ type: '', message: '' });
+  const [refresh_page, set_refresh_page] = useState<boolean>(false);
 
   useEffect(() => {
     api.get('recaudo/liquidaciones/opciones-liquidacion-base')
@@ -69,7 +74,7 @@ export const LiquidacionScreen: React.FC = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [refresh_page]);
 
   useEffect(() => {
     if (id_opcion_liquidacion) {
@@ -80,6 +85,7 @@ export const LiquidacionScreen: React.FC = () => {
       }));
       set_row(new_rows);
       set_variables(Object.keys(opcion_liquidacion.variables));
+      Blockly.serialization.workspaces.load(JSON.parse(opcion_liquidacion.bloques), primaryWorkspace.current);
     }
   }, [id_opcion_liquidacion]);
 
@@ -133,6 +139,22 @@ export const LiquidacionScreen: React.FC = () => {
   }
 
   const handleSubmit = (event: any) => {
+    if (variables.includes(formData.variable)) {
+      set_notification_info({ type: 'warning', message: `Ya existe la variable ${formData.variable}` });
+      set_open_notification_modal(true);
+      return;
+    }
+
+    if (formData.variable.includes('variable')) {
+      set_notification_info({ 
+        type: 'warning', 
+        message: `El nombre de la variable a agregar (${formData.variable}) no debe incluir la palabra reservada variable.
+        \nPor favor ingrese otro nombre diferente.`,
+      });
+      set_open_notification_modal(true);
+      return;
+    }
+
     event.preventDefault();
     setFormData(prevState => ({
       ...prevState,
@@ -182,6 +204,8 @@ export const LiquidacionScreen: React.FC = () => {
     // console.log("data", data);
     // // console.log("data stringfly", JSON.stringify(data));
     // console.log("generateCode(): ", generateCode())
+    const json = Blockly.serialization.workspaces.save(primaryWorkspace.current);
+    console.log(JSON.stringify(json));
 
     api.post('recaudo/liquidaciones/opciones-liquidacion-base/', {
       nombre: formData.nombre_liquidacion,
@@ -189,10 +213,11 @@ export const LiquidacionScreen: React.FC = () => {
       variables: variables.reduce((acumulador, valor) => {
         return { ...acumulador, [valor]: '' };
       }, {}),
-      bloques: '1'
+      bloques: JSON.stringify(json),
     })
       .then((response) => {
         console.log(response);
+        set_refresh_page(true);
       })
       .catch((error) => {
         console.log(error);
@@ -382,7 +407,7 @@ export const LiquidacionScreen: React.FC = () => {
                 startIcon={<Save />}
                 fullWidth
               >
-                Guardar liquidación
+                Guardar opción liquidación
               </Button>
             </Grid>
           </Stack>
@@ -405,6 +430,11 @@ export const LiquidacionScreen: React.FC = () => {
           </div>
         </Modal>
       )}
+      <NotificationModal
+        open_notification_modal={open_notification_modal} 
+        set_open_notification_modal={set_open_notification_modal}
+        notification_info={notification_info}
+      />
     </>
   )
 }
