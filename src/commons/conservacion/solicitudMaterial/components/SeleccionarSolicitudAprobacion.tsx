@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 import { Grid } from '@mui/material';
 import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
@@ -189,7 +190,6 @@ const SeleccionarSolicitudAprobada = ({
               disabled: true,
               helper_text: '',
               set_value: null,
-              // eslint-disable-next-line object-shorthand
               file_name: file_name,
             },
 
