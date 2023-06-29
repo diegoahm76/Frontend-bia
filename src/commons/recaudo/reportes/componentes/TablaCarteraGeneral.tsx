@@ -2,21 +2,34 @@
 import { Grid, Box, Stack, TextField } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { type CarteraEdad } from '../interfaces/interfaces';
-import { useSelector } from 'react-redux';
 import { faker } from '@faker-js/faker';
 
-interface RootState {
-  reportes_recaudo: {
-    reportes_recaudo: CarteraEdad[];
-  }
-}
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaCarteraEdad: React.FC = () => {
-  const [visible_rows, set_visible_rows] = useState(Array<CarteraEdad>);
+export const TablaCarteraGeneral: React.FC = () => {
   const [total, set_total] = useState(0);
-  const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
+
+  const visible_rows = [
+    {
+      codigo_contable: 1,
+      concepto_deuda: 'Tasa Retributiva',
+      valor_sancion: '30300000.00',
+    },
+    {
+      codigo_contable: 2,
+      concepto_deuda: 'Tasa Uso de Agua',
+      valor_sancion: '12000000.00',
+    },
+    {
+      codigo_contable: 3,
+      concepto_deuda: 'Intereses Multas y Sanciones',
+      valor_sancion: '75000000.00',
+    },
+    {
+      codigo_contable: 4,
+      concepto_deuda: 'Transferencia de Sector Eléctrico',
+      valor_sancion: '13400000.00',
+    },
+  ];
 
   useEffect(() => {
     if(visible_rows.length !== 0) {
@@ -30,28 +43,8 @@ export const TablaCarteraEdad: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'identificacion',
-      headerName: 'NIT',
-      width: 170,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'nombre_deudor',
-      headerName: 'Nombre Deudor',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'expediente',
-      headerName: 'Expediente',
+      field: 'codigo_contable',
+      headerName: 'Código Contable',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -60,19 +53,9 @@ export const TablaCarteraEdad: React.FC = () => {
       ),
     },
     {
-      field: 'resolucion',
-      headerName: 'Resolución',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'id_rango',
-      headerName: 'Edad',
-      width: 150,
+      field: 'concepto_deuda',
+      headerName: 'Concepto Deuda',
+      width: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -81,7 +64,7 @@ export const TablaCarteraEdad: React.FC = () => {
     },
     {
       field: 'valor_sancion',
-      headerName: 'Valor',
+      headerName: 'Total',
       width: 170,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -91,14 +74,8 @@ export const TablaCarteraEdad: React.FC = () => {
     },
   ];
 
-  useEffect(() => {
-    set_visible_rows(reportes_recaudo)
-  }, [reportes_recaudo])
-
   return (
-    <Box sx={{ width: '100%' }}>
-      {
-        visible_rows.length !== 0 ? (
+    <Box sx={{ width: '55%' }}>
           <Grid
             container
             sx={{
@@ -141,8 +118,6 @@ export const TablaCarteraEdad: React.FC = () => {
             </Stack>
             </Grid>
           </Grid>
-        ) : null
-      }
     </Box>
   );
 }

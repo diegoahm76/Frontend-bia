@@ -8,7 +8,7 @@ const initial_state = {
 
 // Listar facilidades de pago ingresadas desde Pag. Usuario Admin
 export const get_facilidades_ingresadas = createAsyncThunk('facilidades_pago/admin', async () => {
-  const { data } = await api.get(`recaudo/pagos/listado-facilidades-pagos/`)
+  const { data } = await api.get('recaudo/pagos/listado-facilidades-pagos/')
   return data.data
 })
 
@@ -20,7 +20,7 @@ export const get_filtro_fac_pago_ingresadas = createAsyncThunk('facilidades_pago
 
 // Listar facilidades de pago asignadas desde Pag. Usuario Interno
 export const get_facilidades_asignadas = createAsyncThunk('facilidades_pago/funcionario', async () => {
-  const { data } = await api.get(`recaudo/pagos/listado-facilidades-funcionarios/`)
+  const { data } = await api.get('recaudo/pagos/listado-facilidades-funcionarios/')
   return data.data
 })
 

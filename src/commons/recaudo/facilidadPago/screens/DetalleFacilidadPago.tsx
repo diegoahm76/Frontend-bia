@@ -7,12 +7,12 @@ import { useNavigate } from 'react-router-dom';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DetalleFacilidadPago: React.FC = () => {
-  const [estado] = useState('Cancelada/Anulada');
+  const [ estado ] = useState('Cancelada/Anulada');
   const navigate = useNavigate();
 
   return (
     <>
-
+      <Title title={`Detalle de la Facilidad de Pago ${'#2121231'}`} />
       <Grid
         container
         sx={{
@@ -25,8 +25,7 @@ export const DetalleFacilidadPago: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-
-        {/* <h3>Encabezado</h3> */}
+        <h3>Encabezado</h3>
         <Grid item xs={12}>
           <Box
             component="form"
@@ -34,9 +33,6 @@ export const DetalleFacilidadPago: React.FC = () => {
             autoComplete="off"
           >
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Title title={estado !== 'Cancelada/Anulada' ? `Detalle de la Facilidad de Pago ${'#2121231'}` : `Facilidad de Pago Cancelada o Bloqueada ${'#2121231'}`} />
-                </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
                   label="Nombres"
@@ -171,7 +167,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                       variant='outlined'
                       size='medium'
                       startIcon={<CloudDownloadIcon />}
-                      onClick={() => { }}
+                      onClick={() => {}}
                     >
                       Ver
                     </Button>
@@ -191,7 +187,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                       variant='outlined'
                       size='medium'
                       startIcon={<CloudDownloadIcon />}
-                      onClick={() => { }}
+                      onClick={() => {}}
                     >
                       Ver
                     </Button>
@@ -207,7 +203,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                 autoComplete="off"
               >
                 <Grid container spacing={2}>
-                  <Grid item xs={12} sm={2}>
+                <Grid item xs={12} sm={2}>
                     <TextField
                       label="Plan de Pagos"
                       size="small"
@@ -231,7 +227,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                       variant='outlined'
                       size='medium'
                       startIcon={<CloudDownloadIcon />}
-                      onClick={() => { }}
+                      onClick={() => {}}
                     >
                       Ver
                     </Button>
@@ -249,7 +245,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                     startIcon={<Add />}
                     sx={{ marginTop: '30px' }}
                     onClick={() => {
-                      navigate('../reposicion_externa')
+                      navigate('/') // aún no se ha construido esta pantalla
                     }}
                   >
                     Crear recurso de reposición

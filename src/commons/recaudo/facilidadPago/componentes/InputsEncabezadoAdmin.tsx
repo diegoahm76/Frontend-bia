@@ -1,10 +1,8 @@
-import { Grid, Box, TextField, FormControl } from "@mui/material";
-import esLocale from 'dayjs/locale/es';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { type Deudor } from "../interfaces/interfaces";
+import { Grid, Box, TextField, Button } from "@mui/material";
+import { useState } from "react";
+import { TablaObligacionesSolicitud } from "./TablaObligacionesSolicitud";
 import { useSelector } from 'react-redux';
+import { type Deudor } from "../interfaces/interfaces";
 
 interface RootState {
   deudores: {
@@ -12,8 +10,13 @@ interface RootState {
   }
 }
 
+interface Fecha {
+  fecha_solicitud: string;
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EncabezadoRegistro: React.FC = () => {
+export const InputsEncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
+  const [obligaciones, set_obligaciones] = useState(false);
   const { deudores } = useSelector((state: RootState) => state.deudores);
 
   return (
@@ -30,6 +33,7 @@ export const EncabezadoRegistro: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+        <h3>Datos Encabezado</h3>
         <Grid item xs={12}>
           <Box
             component="form"
@@ -39,66 +43,80 @@ export const EncabezadoRegistro: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  disabled
                   label="Nombre o Razón Social"
                   size="small"
                   fullWidth
                   value={''.concat(deudores.nombres, ' ', deudores.apellidos)}
+                  disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  disabled
                   label="Identificación"
                   size="small"
                   fullWidth
-                  value={''.concat(deudores.identificacion)}
+                  value={`${deudores.identificacion}`}
+                  disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  disabled
                   label="Correo Electrónico"
                   size="small"
                   fullWidth
-                  value={''.concat(deudores.email)}
+                  value={`${deudores.email}`}
+                  disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
-                  disabled
                   label="Dirección Notificación"
                   size="small"
                   fullWidth
-                  value={''.concat(deudores.ubicacion)}
+                  value={`${deudores.ubicacion}`}
+                  disabled
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
-                <FormControl fullWidth>
-                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
-                    <DatePicker
-                      label="Fecha Solicitud"
-                      disabled
-                      inputFormat="YYYY/MM/DD"
-                      openTo="day"
-                      views={[ 'day', 'month', 'year' ]}
-                      value={new Date()}
-                      onChange={()=>{}}
-                      renderInput={(params) => (
-                        <TextField
-                          size='small'
-                          fullWidth
-                          disabled
-                          {...params}
-                        />
-                      )}
-                    />
-                  </LocalizationProvider>
-                </FormControl>
+                <TextField
+                  label="Fecha Solicitud"
+                  size="small"
+                  fullWidth
+                  value={`${props.fecha_solicitud}`}
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <TextField
+                  label="Obligaciones asociadas al radicado nro:"
+                  size="small"
+                  fullWidth
+                  value={"QWEO9283812"}
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Button
+                  color='primary'
+                  variant='contained'
+                  onClick={() => {
+                    set_obligaciones(true)
+                  }}
+                >
+                Consultar listado obligaciones
+                </Button>
               </Grid>
             </Grid>
           </Box>
         </Grid>
+        {
+          obligaciones ? (
+            <>
+              <p><strong>Obligaciones objeto de la solicitud</strong></p>
+              <TablaObligacionesSolicitud />
+            </>
+          ) : null
+        }
       </Grid>
     </>
   )

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Title } from '../../../../components/Title';
-import { EncabezadoAdmin } from '../componentes/EncabezadoAdmin';
+import { InputsEncabezadoAdmin } from '../componentes/InputsEncabezadoAdmin';
 import { VistaSolicitud } from '../componentes/VistaSolicitud';
 import { Grid, Box, FormControl, InputLabel, Select, MenuItem, Button, Stack, DialogActions, Dialog, TextField, DialogTitle, FormControlLabel, Checkbox } from "@mui/material";
 import { Close } from '@mui/icons-material';
@@ -26,7 +26,6 @@ interface RootState {
 export const VisualizarSolicitudAdmin: React.FC = () => {
   const [plan_pagos, set_plan_pagos] = useState('');
   const [resolucion, set_resolucion] = useState('');
-  const [check_dbme, set_check_dbme] = useState(false);
   const [existe] = useState(true); // Mientras nos conectamos con el Backend
   const [modal, set_modal] = useState(false);
   const [modal_anular, set_modal_anular] = useState(false);
@@ -52,12 +51,15 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
     }
   };
 
+  /* useEffect(()=>{
+    void get_bienes_deudor(1)
+  },[]) */
+
   useEffect(() => {
     if(solicitud_facilidad.id_deudor_actuacion !== undefined){
       try {
         void dispatch(get_datos_deudor(solicitud_facilidad.id_deudor_actuacion));
         void dispatch(get_datos_contacto(solicitud_facilidad.id_deudor_actuacion));
-        // void get_bienes_deudor(solicitud_facilidad.id_deudor_actuacion);
       } catch (error: any) {
         throw new Error(error);
       }
@@ -67,7 +69,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
   return (
     <>
       <Title title='Visualizar Solicitud Facilidad de Pago - Usuario Cormacarena'/>
-      <EncabezadoAdmin fecha_solicitud={solicitud_facilidad.fecha_generacion} />
+      <InputsEncabezadoAdmin fecha_solicitud={solicitud_facilidad.fecha_generacion} />
       <Grid
         container
         sx={{
@@ -163,10 +165,10 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
               <Grid item xs={12} sm={3.5}>
                 <FormControlLabel
                   control={ <Checkbox
-                    name='reportado_dbme'
+                    name='BDME'
                     onChange={(event: check) => {
                       const { checked } = event.target
-                      set_check_dbme(checked)
+                      console.log('Reportado en BDME', checked)
                     }}
                   />}
                   label="Usuario reportado en BDME"
@@ -216,7 +218,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                           }
                         }}
                       >
-                        Crear Plan de Pagos
+                      Crear Plan de Pagos
                       </Button>
                     </Grid>
                     <Grid item sm={5}>
@@ -225,7 +227,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                         variant='contained'
                         onClick={() => {}}
                       >
-                        Ver Plan de Pagos
+                      Ver Plan de Pagos
                       </Button>
                     </Grid>
                   </>
@@ -303,7 +305,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                     color="primary"
                     startIcon={<SaveIcon />}
                     onClick={()=>{
-                      navigate('../incumplimiento')
+                      navigate('/') // aún no se ha construido esta pantalla
                   }}
                   >
                     Si
@@ -323,16 +325,10 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
                 startIcon={<SaveIcon />}
                 sx={{ marginTop: '30px' }}
                 onClick={() => {
-                  void post_respuesta_fac_pago({
-                    ...form_state,
-                    id_facilidades_pago: solicitud_facilidad.id,
-                    id_funcionario: solicitud_facilidad.id_funcionario,
-                    reportado_dbme: check_dbme,
-                    consulta_dbme: file
-                  })
+                  void post_respuesta_fac_pago({...form_state, id_facilidades_pago: solicitud_facilidad.id, id_funcionario: solicitud_facilidad.id_funcionario, consulta_dbme: file })
                 }}
               >
-                Actualizar / Enviar
+              Actualizar / Enviar
               </Button>
             </Stack>
           </Box>
