@@ -63,7 +63,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'nro_lote',
-            headerName: '# lote',
+            headerName: 'Número del lote',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -73,7 +73,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'cod_etapa_lote',
-            headerName: 'Etapa lote',
+            headerName: 'Etapa del lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>

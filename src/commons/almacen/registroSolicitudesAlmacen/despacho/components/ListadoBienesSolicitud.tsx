@@ -1,16 +1,16 @@
 import { Box, Grid } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { type IObjBienesSolicitud } from '../interfaces/solicitudVivero';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import { type IObjBienesSolicitud } from '../../solicitudBienConsumo/interfaces/solicitudBienConsumo';
 import { useEffect, useState } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Title } from '../../../../components/Title';
-import FormButton from '../../../../components/partials/form/FormButton';
+import { Title } from '../../../../../components/Title';
+import FormButton from '../../../../../components/partials/form/FormButton';
 import SearchIcon from '@mui/icons-material/Search';
 import {
   set_bien_selected,
   set_bienes_solicitud_aux,
-} from '../../distribucion/store/slice/distribucionSlice';
-import { type IObjBienDespacho } from '../../distribucion/interfaces/distribucion';
+} from '../store/slices/indexDespacho';
+// import { type IObjBienDespacho } from '../interfaces/despacho';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const ListadoBienesSolicitud = () => {
@@ -18,11 +18,9 @@ const ListadoBienesSolicitud = () => {
 
   // const [action, set_action] = useState<string>("agregar");
 
-  const { bienes_solicitud } = useAppSelector(
-    (state) => state.solicitud_vivero
-  );
+  const { bienes_solicitud } = useAppSelector((state) => state.solic_consumo);
   const { bienes_solicitud_aux, bienes_despacho } = useAppSelector(
-    (state) => state.distribucion
+    (state) => state.despacho
   );
 
   // const [item_solicitudes, set_item_solicitudes] = useState<ItemSolicitudConsumible[]>([]);
@@ -33,31 +31,21 @@ const ListadoBienesSolicitud = () => {
     if (bienes_solicitud.length > 0) {
       if (bienes_despacho.length > 0) {
         const aux_items: IObjBienesSolicitud[] = [];
-        let bien: IObjBienDespacho | undefined;
+        // let bien: IObjBienDespacho | undefined;
         let despachada: number = 0;
 
-        bienes_solicitud.forEach((option) => {
-          if (option.cod_tipo_elemento_vivero === 'IN') {
-            bien = bienes_despacho.find((p) => p.id_bien === option.id_bien);
-            aux_items.push({
-              ...option,
-              cantidad_despachada: bien?.cantidad_despachada,
-              cantidad_faltante:
-                (option.cantidad ?? 0) - (bien?.cantidad_despachada ?? 0),
-            });
-          } else {
-            bienes_despacho.forEach((option_despacho) => {
-              if (option.id_bien === option_despacho.id_bien) {
-                despachada =
-                  despachada + (option_despacho.cantidad_despachada ?? 0);
-              }
-            });
-            aux_items.push({
-              ...option,
-              cantidad_despachada: despachada,
-              cantidad_faltante: (option.cantidad ?? 0) - despachada,
-            });
-          }
+        bienes_solicitud.forEach((option: IObjBienesSolicitud) => {
+          bienes_despacho.forEach((option_despacho) => {
+            if (option.id_bien === option_despacho.id_bien_solicitado) {
+              despachada =
+                despachada + (option_despacho.cantidad_despachada ?? 0);
+            }
+          });
+          aux_items.push({
+            ...option,
+            cantidad_despachada: despachada,
+            cantidad_faltante: (option.cantidad ?? 0) - despachada,
+          });
         });
         dispatch(set_bienes_solicitud_aux(aux_items));
       } else {
@@ -74,31 +62,21 @@ const ListadoBienesSolicitud = () => {
     if (bienes_solicitud.length > 0) {
       if (bienes_despacho.length > 0) {
         const aux_items: IObjBienesSolicitud[] = [];
-        let bien: IObjBienDespacho | undefined;
+        // let bien: IObjBienDespacho | undefined;
         let despachada: number = 0;
 
-        bienes_solicitud.forEach((option) => {
-          if (option.cod_tipo_elemento_vivero === 'IN') {
-            bien = bienes_despacho.find((p) => p.id_bien === option.id_bien);
-            aux_items.push({
-              ...option,
-              cantidad_despachada: bien?.cantidad_despachada,
-              cantidad_faltante:
-                (option.cantidad ?? 0) - (bien?.cantidad_despachada ?? 0),
-            });
-          } else {
-            bienes_despacho.forEach((option_despacho) => {
-              if (option.id_bien === option_despacho.id_bien) {
-                despachada =
-                  despachada + (option_despacho.cantidad_despachada ?? 0);
-              }
-            });
-            aux_items.push({
-              ...option,
-              cantidad_despachada: despachada,
-              cantidad_faltante: (option.cantidad ?? 0) - despachada,
-            });
-          }
+        bienes_solicitud.forEach((option: IObjBienesSolicitud) => {
+          bienes_despacho.forEach((option_despacho) => {
+            if (option.id_bien === option_despacho.id_bien_solicitado) {
+              despachada =
+                despachada + (option_despacho.cantidad_despachada ?? 0);
+            }
+          });
+          aux_items.push({
+            ...option,
+            cantidad_despachada: despachada,
+            cantidad_faltante: (option.cantidad ?? 0) - despachada,
+          });
         });
         dispatch(set_bienes_solicitud_aux(aux_items));
       } else {
@@ -129,22 +107,12 @@ const ListadoBienesSolicitud = () => {
       ),
     },
     {
-      field: 'cod_tipo_elemento_vivero',
-      headerName: 'Tipo',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value === 'IN' ? 'Insumo' : 'Planta'}
-        </div>
-      ),
-    },
-    {
       field: 'cantidad',
       headerName: 'Cantidad solictada',
       width: 140,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {String(params.value) + String(params.row.unidad_medida ?? '')}
         </div>
       ),
     },
@@ -185,7 +153,7 @@ const ListadoBienesSolicitud = () => {
   };
 
   const select_model = (): void => {
-    const model = bienes_solicitud_aux.find(
+    const model: IObjBienesSolicitud | undefined = bienes_solicitud_aux.find(
       (p) => p.id_bien === selected_row[0]
     );
     if (model !== undefined) {
