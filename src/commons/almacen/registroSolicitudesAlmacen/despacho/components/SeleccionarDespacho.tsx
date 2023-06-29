@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Chip, Grid } from '@mui/material';
-import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
+import { Grid } from '@mui/material';
+import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
 import {
   set_current_despacho,
   set_despachos,
-} from '../store/slice/distribucionSlice';
-import { useAppDispatch, useAppSelector } from '../../../../hooks';
+} from '../store/slices/indexDespacho';
+import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
-import { api } from '../../../../api/axios';
-import { get_despachos_service } from '../store/thunks/distribucionThunks';
+import { api } from '../../../../../api/axios';
+import { get_despachos_service } from '../store/thunks/despachoThunks';
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import EditIcon from '@mui/icons-material/Edit';
 
@@ -31,8 +31,13 @@ const initial_options: IList[] = [
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
   // const [action, set_action] = useState<string>("agregar");
-  const { despachos, current_despacho, transfer_person, origin_nursery } =
-    useAppSelector((state) => state.distribucion);
+  const { despachos, current_despacho, persona_despacha } = useAppSelector(
+    (state) => state.despacho
+  );
+  const { unidad_organizacional } = useAppSelector(
+    (state) => state.solic_consumo
+  );
+
   const { nurseries } = useAppSelector((state) => state.solicitud_vivero);
 
   const dispatch = useAppDispatch();
@@ -68,10 +73,10 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
   }, []);
 
   const columns_despacho: GridColDef[] = [
-    { field: 'id_despacho_viveros', headerName: 'ID', width: 20 },
+    { field: 'id_despacho_consumo', headerName: 'ID', width: 20 },
     {
-      field: 'nro_despachos_viveros',
-      headerName: 'Numero de despacho',
+      field: 'consec_incidencia',
+      headerName: 'Consecutivo',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -80,18 +85,8 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
       ),
     },
     {
-      field: 'nro_solicitud_a_viveros',
-      headerName: 'Numero de solicitud',
-      width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    {
-      field: 'fecha_despacho',
-      headerName: 'Fecha de despacho',
+      field: 'fecha_incidencia',
+      headerName: 'Fecha de incidencia',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -100,22 +95,14 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
       ),
     },
     {
-      field: 'despacho_anulado',
-      headerName: 'Estado de despacho',
-      width: 200,
-      renderCell: (params) => {
-        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-        return params.row.despacho_anulado ? (
-          <Chip size="small" label="ANULADO" color="error" variant="outlined" />
-        ) : (
-          <Chip
-            size="small"
-            label="NO ANULADO"
-            color="success"
-            variant="outlined"
-          />
-        );
-      },
+      field: 'nombre_incidencia',
+      headerName: 'Nombre/Asunto',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
     },
   ];
 
@@ -126,42 +113,35 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
         dispatch(
           set_current_despacho({
             ...current_despacho,
-            id_vivero: get_values('id_vivero'),
             fecha_despacho: get_values('fecha_despacho'),
             motivo: get_values('motivo'),
-            id_persona_despacha: transfer_person.id_persona,
-            persona_crea: transfer_person.nombre_completo,
-            ruta_archivo_con_recibido: file,
+            id_persona_despacha: persona_despacha.id_persona,
+            persona_crea: persona_despacha.nombre_completo ?? '',
+            ruta_archivo_doc_con_recibido: file,
           })
         );
       }
     }
   }, [file]);
   useEffect(() => {
-    if (current_despacho.id_despacho_viveros !== null) {
+    if (current_despacho.id_despacho_consumo !== null) {
       if (
-        current_despacho.ruta_archivo_con_recibido !== null &&
-        current_despacho.ruta_archivo_con_recibido !== undefined
+        current_despacho.ruta_archivo_doc_con_recibido !== null &&
+        current_despacho.ruta_archivo_doc_con_recibido !== undefined
       ) {
-        set_file_name(String(current_despacho.ruta_archivo_con_recibido));
+        set_file_name(String(current_despacho.ruta_archivo_doc_con_recibido));
       }
     }
   }, [current_despacho]);
 
   const get_despachos: any = async () => {
-    if (origin_nursery.id_vivero !== null) {
-      const nro = get_values('nro_despacho');
-      const fecha_desde = get_values('fecha_desde');
-      const fecha_hasta = get_values('fecha_hasta');
-      void dispatch(
-        get_despachos_service(
-          origin_nursery.id_vivero,
-          nro,
-          fecha_desde,
-          fecha_hasta
-        )
-      );
-    }
+    const nro = get_values('numero_solicitud_por_tipo') ?? '';
+    const id_unidad = get_values('id_unidad_para_la_que_solicita') ?? '';
+    const fecha_despacho = get_values('fecha_despacho') ?? '';
+    const es_conservacion = get_values('es_despacho_conservacion') ?? '';
+    void dispatch(
+      get_despachos_service(nro, id_unidad, fecha_despacho, es_conservacion)
+    );
   };
 
   return (
@@ -169,7 +149,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
       <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
           set_current_model={set_current_despacho}
-          row_id={'id_despacho_viveros'}
+          row_id={'id_despacho_consumo'}
           columns_model={columns_despacho}
           models={despachos}
           get_filters_models={get_despachos}
@@ -181,28 +161,11 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
               title_label: 'Informacion del despacho',
             },
             {
-              datum_type: 'select_controller',
-              xs: 12,
-              md: 5,
-              control_form: control_despacho,
-              control_name: 'id_vivero',
-              default_value: '',
-              rules: {
-                required_rule: { rule: true, message: 'Vivero requerido' },
-              },
-              label: 'Vivero',
-              disabled: false,
-              helper_text: 'Seleccione Vivero',
-              select_options: nurseries,
-              option_label: 'nombre',
-              option_key: 'id_vivero',
-            },
-            {
               datum_type: 'input_controller',
               xs: 12,
               md: 3,
               control_form: control_despacho,
-              control_name: 'nro_despachos_viveros',
+              control_name: 'numero_despacho_consumo',
               default_value: '',
               rules: {},
               label: 'Numero despacho',
@@ -215,7 +178,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
               xs: 12,
               md: 4,
               control_form: control_despacho,
-              control_name: 'ruta_archivo_con_recibido',
+              control_name: 'ruta_archivo_doc_con_recibido',
               default_value: '',
               rules: {
                 required_rule: { rule: false, message: 'Archivo requerido' },
@@ -274,7 +237,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
                   message: 'Debe seleccionar fecha',
                 },
               },
-              label: 'Fecha de incidencia',
+              label: 'Fecha de despacho',
               type: 'text',
               disabled: true,
               helper_text: '',
@@ -287,13 +250,46 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
               xs: 12,
               md: 3,
               control_form: control_despacho,
-              control_name: 'nro_despachos_viveros',
+              control_name: 'numero_solicitud_por_tipo',
               default_value: '',
               rules: {},
               label: 'Numero despacho',
               type: 'number',
               disabled: false,
               helper_text: '',
+            },
+            {
+              datum_type: 'select_controller',
+              xs: 12,
+              md: 3,
+              control_form: control_despacho,
+              control_name: 'id_unidad_para_la_que_solicita',
+              default_value: '',
+              rules: { required_rule: { rule: true, message: 'requerido' } },
+              label: 'Unidad organizacional',
+              disabled: false,
+              helper_text: 'debe seleccionar campo',
+              select_options: unidad_organizacional,
+              option_label: 'nombre',
+              option_key: 'id_unidad_organizacional',
+            },
+            {
+              datum_type: 'select_controller',
+              xs: 12,
+              md: 3,
+              control_form: control_despacho,
+              control_name: 'es_despacho_conservacion',
+              default_value: '',
+              rules: { required_rule: { rule: true, message: 'requerido' } },
+              label: '¿Es despacho para conservación?',
+              disabled: false,
+              helper_text: 'debe seleccionar campo',
+              select_options: [
+                { label: 'SI', key: true },
+                { label: 'NO', key: false },
+              ],
+              option_label: 'label',
+              option_key: 'key',
             },
           ]}
         />
