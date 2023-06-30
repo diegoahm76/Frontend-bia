@@ -1,13 +1,23 @@
 
 import { MostrarEditables } from "../components/Editables/MostrarEditables";
 import { MostrarEntidad } from "../components/Entidad/MostrarEntidad";
+import { TablaLineresUnidadesOrganizacionales } from "../components/TablaLideres/TablaLideresUnidades";
+import { MostrarEmail } from "../components/TextEmail/MostarImail";
+import { TablaSucursales } from "../components/tablasSucursales/tablasSucursales";
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConfiguracionEntidad: React.FC = () => {
     return (
         <>
             <MostrarEntidad/>
-            <br /> {/* Salto de línea */}
+         
+            <MostrarEmail/>
+          
             <MostrarEditables/>
+            <br /> {/* Salto de línea */}
+            <TablaSucursales/>
+            <br /> {/* Salto de línea */}
+            <TablaLineresUnidadesOrganizacionales/>
         </>
     );
 }

@@ -23,19 +23,22 @@ export interface GetPrograma {
     fecha_fin: string;
 }
 export interface GetProyectos {
-    id_proyecto: number;
+    id?: string;
+    id_proyecto?: number;
     nombre: string;
     vigencia_inicial: string;
     vigencia_final: string;
     inversion: number;
-    fecha_registro: string;
-    id_programa: number;
+    fecha_registro?: string;
+    id_programa?: number;
+    actividades?: GetActividades[];
 }
 export interface GetActividades {
-    id_actividades: number;
+    id?: string;
+    id_actividades?: number;
     nombre: string;
-    fecha_registro: string;
-    id_proyecto: number;
+    fecha_registro?: string;
+    id_proyecto?: number;
 }
 export interface InfoPorh {
     id_proyecto: number;

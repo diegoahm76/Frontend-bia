@@ -15,7 +15,7 @@ export const get_data_subseccion_por_seccion = async (id_seccion: number): Promi
     return data.data;
 };
 export const delete_seccion_id = async (id: number,): Promise<any> => {
-    return await api.delete(`hidrico/bibliotecas/secciones/eliminar/${id}/`);
+    return await api.delete(`hidrico/bibliotecas/secciones/delete/${id}/`);
 };
 
 export const post_seccion_subscción = async (
@@ -86,13 +86,13 @@ export const put_seccion_subscción = async (
 
 export const put_seccion_sección = async (
     form: any,
-    id_seccion : number,
+    id_seccion: number,
 ): Promise<any> => {
     const response = await api.put(`hidrico/bibliotecas/secciones/update/${id_seccion}/`, {
         ...form,
         nombre: form.nombre_seccion,
         descripcion: form.descripcion_seccion,
-        subsecciones: []    
+        subsecciones: []
     });
 
     return response.data;

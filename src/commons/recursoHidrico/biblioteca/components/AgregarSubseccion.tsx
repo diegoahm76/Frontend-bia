@@ -117,12 +117,20 @@ export const AgregarSubseccion: React.FC = () => {
   const nombre_subseccion = watch('nombre_subseccion');
   const descripcion_subseccion = watch('descripcion_subseccion');
 
+  const [is_form_valid, set_is_form_valid] = useState(false);
   const [edit_row, set_edit_row] = useState<TableAgregarSubseccion | null>(
     null
   );
   const [current_date, set_current_date] = useState(
     dayjs().format('YYYY-MM-DD')
   );
+
+  const check_form_validity = (): void => {
+    const is_nombre_subseccion_valid = nombre_subseccion !== '';
+    const is_descripcion_subseccion_valid = descripcion_subseccion !== '';
+
+    set_is_form_valid(is_nombre_subseccion_valid && is_descripcion_subseccion_valid);
+  };
 
   const handle_aceptar = (): void => {
     const new_subseccion = {
@@ -145,7 +153,10 @@ export const AgregarSubseccion: React.FC = () => {
       set_edit_row(null); // Restablecer el estado de edición
     } else {
       // Agregar una nueva fila
-      set_rows_register_subseccion([...rows_resgister_subseccion, new_subseccion]);
+      set_rows_register_subseccion([
+        ...rows_resgister_subseccion,
+        new_subseccion,
+      ]);
     }
 
     limpiar();
@@ -162,6 +173,9 @@ export const AgregarSubseccion: React.FC = () => {
     set_value('descripcion_subseccion', '');
     set_value('nombre_subseccion', '');
   };
+  useEffect(() => {
+    check_form_validity();
+  }, [nombre_subseccion, descripcion_subseccion]);
 
   useEffect(() => {
     void fetch_data_subseccion_por_seccion();
@@ -224,7 +238,7 @@ export const AgregarSubseccion: React.FC = () => {
           value={current_date}
           disabled
           fullWidth
-          required= {!(rows_resgister_subseccion.length > 0)}
+          required={!(rows_resgister_subseccion.length > 0)}
           autoFocus
           size="small"
           {...register('fecha_creacion_subseccion')}
@@ -234,11 +248,13 @@ export const AgregarSubseccion: React.FC = () => {
         <TextField
           label="Nombre subsección"
           fullWidth
-          required= {!(rows_resgister_subseccion.length > 0)}
+          required={!(rows_resgister_subseccion.length > 0)}
           autoFocus
           size="small"
           value={nombre_subseccion}
-          {...register('nombre_subseccion', { required: !(rows_resgister_subseccion.length > 0)})}
+          {...register('nombre_subseccion', {
+            required: !(rows_resgister_subseccion.length > 0),
+          })}
         />
       </Grid>
       <Grid item xs={12}>
@@ -246,11 +262,13 @@ export const AgregarSubseccion: React.FC = () => {
           label="Descripción subsección"
           multiline
           fullWidth
-          required= {!(rows_resgister_subseccion.length > 0)}
+          required={!(rows_resgister_subseccion.length > 0)}
           autoFocus
           size="small"
           value={descripcion_subseccion}
-          {...register('descripcion_subseccion', { required: !(rows_resgister_subseccion.length > 0)})}
+          {...register('descripcion_subseccion', {
+            required: !(rows_resgister_subseccion.length > 0),
+          })}
         />
       </Grid>
       <Grid item spacing={2} justifyContent="end" container>
@@ -272,9 +290,7 @@ export const AgregarSubseccion: React.FC = () => {
             variant="contained"
             color="success"
             onClick={handle_aceptar}
-            //   disabled={is_saving}
-            //   loading={is_saving}
-            // startIcon={<SaveIcon />}
+            disabled={!is_form_valid}
           >
             Aceptar
           </LoadingButton>

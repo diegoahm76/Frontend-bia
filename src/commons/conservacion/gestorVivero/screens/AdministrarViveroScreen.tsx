@@ -118,7 +118,7 @@ export function AdministrarViveroScreen(): JSX.Element {
     },
     {
       field: 'direccion',
-      headerName: 'Direccion',
+      headerName: 'Dirección',
       width: 200,
     },
     {
@@ -156,13 +156,13 @@ export function AdministrarViveroScreen(): JSX.Element {
     },
     {
       field: 'area_mt2',
-      headerName: 'Area',
+      headerName: 'Área',
       width: 100,
       type: 'number'
     },
     {
       field: 'area_propagacion_mt2',
-      headerName: 'Area propagacion',
+      headerName: 'Área de propagación',
       width: 100,
       type: 'number'
     },

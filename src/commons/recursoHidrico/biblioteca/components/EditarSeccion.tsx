@@ -14,7 +14,7 @@ export const EditarSeccion: React.FC = () => {
     setValue: set_value,
     errors,
     info_seccion,
-    set_mode,
+    is_saving,
   } = useContext(DataContext);
 
   // watch
@@ -65,9 +65,8 @@ export const EditarSeccion: React.FC = () => {
             type="submit"
             variant="contained"
             color="success"
-            // disabled={is_saving}
-            // loading={is_saving}
-            // startIcon={<SaveIcon />}
+            disabled={is_saving}
+            loading={is_saving}
           >
             Actualizar
           </LoadingButton>
