@@ -11,7 +11,7 @@ export const VisualBlockEditor = ({ workspace, readOnly, variables }) => {
   return (
     <BlocklyComponent
       readOnly={readOnly}
-      sounds={false}
+      sounds={true}
       trashcan={true}
       media={'https://blockly-demo.appspot.com/static/media/'}
       grid={{ spacing: 20, length: 3, colour: '#ccc', snap: true }}
@@ -22,11 +22,14 @@ export const VisualBlockEditor = ({ workspace, readOnly, variables }) => {
         drag: true,
         wheel: true
       }}
+      zoom={{
+        controls: true,
+      }}
       initialXml={`
         <xml xmlns="http://www.w3.org/1999/xhtml">
           <variables>
-            <variable id="dgo%0q,A$LNqB;0N+3(V">variable1</variable>
-            <variable id="oPO/j7uIo:!{2KVBxz^[">variable2</variable>
+            <variable id="dgo%0q,A$LNqB;0N+3(V">numero1</variable>
+            <variable id="oPO/j7uIo:!{2KVBxz^[">numero2</variable>
           </variables>
           <block type="math_arithmetic" id="[wuD+14!tj/+%ihTu6_|" x="263" y="163">
             <field name="OP">ADD</field>
@@ -35,7 +38,7 @@ export const VisualBlockEditor = ({ workspace, readOnly, variables }) => {
                 <field name="NUM">1</field>
               </shadow>
               <block type="variables_get" id="c9U%;1IxCwm(RCxfGT4T">
-                <field name="VAR" id="dgo%0q,A$LNqB;0N+3(V">variable1</field>
+                <field name="VAR" id="dgo%0q,A$LNqB;0N+3(V">numero1</field>
               </block>
             </value>
             <value name="B">
@@ -43,7 +46,7 @@ export const VisualBlockEditor = ({ workspace, readOnly, variables }) => {
                 <field name="NUM">1</field>
               </shadow>
               <block type="variables_get" id="[:A+Cg@E5p),yA9L%k[!">
-                <field name="VAR" id="oPO/j7uIo:!{2KVBxz^[">variable2</field>
+                <field name="VAR" id="oPO/j7uIo:!{2KVBxz^[">numero2</field>
               </block>
             </value>
           </block>
@@ -53,7 +56,6 @@ export const VisualBlockEditor = ({ workspace, readOnly, variables }) => {
         <Block type="variables_get" />
         <Block type="variables_set" />
       </Category>
-
       <Category name="control" categorystyle="logic_category">
         <Block type="controls_ifelse" />
         <Block type="logic_compare" />
