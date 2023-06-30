@@ -5,19 +5,19 @@ import { DataGrid } from '@mui/x-data-grid';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
     const roles = [
-        { field: "apple", headerName: "Apple", width: 150 },
-        { field: "banana", headerName: "Banana", width: 150 },
-        { field: "orange", headerName: "Orange", width: 150 },
-        { field: "red", headerName: "Red", width: 150 },
-        { field: "green", headerName: "Green", width: 150 },
+        { field: "nrosucursal", headerName: "Nro Sucursal", width: 150 },
+        { field: "banana", headerName: "Descripcion de la Sucursal", width: 150 },
+        { field: "orange", headerName: "principal", width: 150 },
+        
     ];
 
     const rows = [
-        { id: 1, apple: "Apple 1", banana: "Banana 1", orange: "Orange 1", red: "Banana 1", green: "Orange 1" },
-        { id: 2, apple: "Apple 2", banana: "Banana 2", orange: "Orange 2", red: "Banana 1", green: "Orange 1" },
-        { id: 3, apple: "Apple 3", banana: "Banana 3", orange: "Orange 3", red: "Banana 1", green: "Orange 1" }, { id: 1, apple: "Apple 1", banana: "Banana 1", orange: "Orange 1", red: "Banana 1", green: "Orange 1" },
-        { id: 4, apple: "Apple 2", banana: "Banana 2", orange: "Orange 2", red: "Banana 1", green: "Orange 1" },
-        { id: 5, apple: "Apple 3", banana: "Banana 3", orange: "Orange 3", red: "Banana 1", green: "Orange 1" },
+        { id: 1, nrosucursal: "1", descripcionsucursal: "Sucursal del departamento 1", principal: "Principal 1"}, 
+        { id: 2, nrosucursal: "2", descripcionsucursal: "Sucursal del departamento 2", principal: "Principal 2"}, 
+        { id: 3, nrosucursal: "3", descripcionsucursal: "Sucursal del departamento 3", principal: "Principal 3"}, 
+        { id: 1, nrosucursal: "4", descripcionsucursal: "Sucursal del departamento 4", principal: "Principal 1"}, 
+        { id: 4, nrosucursal: "5", descripcionsucursal: "Sucursal del departamento 5", principal: "Principal 2"}, 
+        { id: 5, nrosucursal: "3", descripcionsucursal: "Sucursal del departamento 3", principal: "Orange 3"}, 
     ];
 
     return (
