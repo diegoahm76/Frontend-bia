@@ -5,6 +5,7 @@ import { TreeTable } from "primereact/treetable";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FolderIcon from "@mui/icons-material/Folder";
 // // Hooks
 // import { useAppDispatch, useAppSelector } from '../../../../hooks';
 // Thunks
@@ -119,7 +120,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
               <TreeTable value={nodo} filterMode="strict">
                 <Column
                   expander
-                  body={<i className="fa-regular fa-folder fs-4"></i>}
+                  body={() => <FolderIcon />}
                   style={{ width: "250px" }}
                 ></Column>
                 <Column
