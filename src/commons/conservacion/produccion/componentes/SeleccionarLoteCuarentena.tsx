@@ -24,7 +24,7 @@ const SeleccionarLoteSiembra = () => {
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Código',
+            headerName: 'Codigo',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -54,7 +54,7 @@ const SeleccionarLoteSiembra = () => {
         },
         {
             field: 'nro_lote',
-            headerName: 'Número lote',
+            headerName: '# lote',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -163,8 +163,8 @@ const SeleccionarLoteSiembra = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Código bien requerido" } },
-                            label: "Código bien",
+                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
+                            label: "Codigo bien",
                             type: "number",
                             disabled: current_incidencia.id_incidencia !== null,
                             helper_text: "",
@@ -229,7 +229,7 @@ const SeleccionarLoteSiembra = () => {
                             control_form: control_bien,
                             control_name: "cod_etapa_lote",
                             default_value: "",
-                            rules: { required_rule: { rule: false, message: "Requerido" } },
+                            rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Etapa de lote",
                             helper_text: "",
                             disabled: true,
@@ -248,7 +248,7 @@ const SeleccionarLoteSiembra = () => {
                             control_name: "codigo_bien",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                            label: "Código bien",
+                            label: "Codigo bien",
                             type: "number",
                             disabled: false,
                             helper_text: "",
