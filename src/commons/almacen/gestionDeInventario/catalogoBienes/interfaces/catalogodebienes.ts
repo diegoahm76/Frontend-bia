@@ -49,10 +49,10 @@ export interface IObjBien {
   valor_residual: number | null;
   stock_minimo: number | null;
   stock_maximo: number | null;
-  solicitable_vivero: boolean | string;
-  tiene_hoja_vida: boolean;
-  maneja_hoja_vida: boolean | string;
-  visible_solicitudes: boolean| string;
+  solicitable_vivero: boolean | null  | string;
+  tiene_hoja_vida: boolean | null ;
+  maneja_hoja_vida: boolean | null  | string;
+  visible_solicitudes: boolean | null | string;
   id_marca?: number | null;
   id_unidad_medida?: number | null;
   id_porcentaje_iva?: number | null;

@@ -21,19 +21,7 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
 
   return (
     <>
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          mb: '20px',
-          mt: '20px',
-          p: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <h3>Datos Encabezado</h3>
+        <h3>Encabezado</h3>
         <Grid item xs={12}>
           <Box
             component="form"
@@ -117,7 +105,6 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
             </>
           ) : null
         }
-      </Grid>
     </>
   )
 }

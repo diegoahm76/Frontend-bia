@@ -127,7 +127,7 @@ export function CuarentenaViveroScreen(): JSX.Element {
                     multiline
                     rows={4}
                     size="small"
-                    label={nursery.vivero_en_cuarentena?"Justificación de finalizacion de cuarentena":"Justificacion ingreso a cuarentena"}
+                    label={nursery.vivero_en_cuarentena?"Justificación de finalización de la cuarentena":"Justificación de ingreso a cuarentena"}
                     variant="outlined"
                     value={value}
                     onChange={onChange}
