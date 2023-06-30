@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Grid } from '@mui/material';
+import { Chip, Grid } from '@mui/material';
 import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
 import {
@@ -70,8 +70,8 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
   const columns_despacho: GridColDef[] = [
     { field: 'id_despacho_viveros', headerName: 'ID', width: 20 },
     {
-      field: 'consec_incidencia',
-      headerName: 'Consecutivo',
+      field: 'nro_despachos_viveros',
+      headerName: 'Numero de despacho',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -80,8 +80,18 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
       ),
     },
     {
-      field: 'fecha_incidencia',
-      headerName: 'Fecha de incidencia',
+      field: 'nro_solicitud_a_viveros',
+      headerName: 'Numero de solicitud',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'fecha_despacho',
+      headerName: 'Fecha de despacho',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -90,14 +100,22 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
       ),
     },
     {
-      field: 'nombre_incidencia',
-      headerName: 'Nombre/Asunto',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      field: 'despacho_anulado',
+      headerName: 'Estado de despacho',
+      width: 200,
+      renderCell: (params) => {
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        return params.row.despacho_anulado ? (
+          <Chip size="small" label="ANULADO" color="error" variant="outlined" />
+        ) : (
+          <Chip
+            size="small"
+            label="NO ANULADO"
+            color="success"
+            variant="outlined"
+          />
+        );
+      },
     },
   ];
 

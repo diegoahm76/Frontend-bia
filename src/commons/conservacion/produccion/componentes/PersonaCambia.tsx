@@ -246,7 +246,7 @@ const PersonaCambia = ({
                             control_name: "primer_nombre",
                             default_value: "",
                             rules: {},
-                            label: "Primer nombre",
+                            label: "Primer Nombre",
                             type: "text",
                             disabled: false,
                             helper_text: ""
@@ -272,7 +272,7 @@ const PersonaCambia = ({
                             control_name: "razon_social",
                             default_value: "",
                             rules: {},
-                            label: "Razon social",
+                            label: "Razón social",
                             type: "text",
                             disabled: false,
                             helper_text: ""

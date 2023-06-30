@@ -178,8 +178,8 @@ const SeleccionarLoteSiembra = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                            label: "Codigo bien",
+                            rules: { required_rule: { rule: true, message: "Código bien requerido" } },
+                            label: "Código bien",
                             type: "number",
                             disabled: current_plant_quarantine.id_cuarentena_mat_vegetal !== null,
                             helper_text: "",
@@ -206,7 +206,7 @@ const SeleccionarLoteSiembra = () => {
                             control_name: "nro_lote",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
-                            label: "Numero de lote",
+                            label: "Número de lote",
                             type: "text",
                             disabled: true,
                             helper_text: ""
@@ -249,8 +249,8 @@ const SeleccionarLoteSiembra = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                            label: "Codigo bien",
+                            rules: { required_rule: { rule: true, message: "Código bien requerido" } },
+                            label: "Código bien",
                             type: "number",
                             disabled: false,
                             helper_text: "",
@@ -310,7 +310,7 @@ const SeleccionarLoteSiembra = () => {
                     models={plant_seed_lots}
                     columns_model={columns_bienes}
                     row_id={"id_inventario_vivero"}
-                    title_table_modal={"Resultados de la busqueda"}
+                    title_table_modal={"Resultados de la búsqueda"}
                 />
                 
             </Grid>

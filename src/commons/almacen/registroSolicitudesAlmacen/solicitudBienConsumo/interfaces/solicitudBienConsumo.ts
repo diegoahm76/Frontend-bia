@@ -29,7 +29,9 @@ export interface IObjBienesSolicitud {
   codigo_bien: string;
   nombre_bien: string;
   id_bien: number | null;
-  cantidad: string | null;
+  cantidad: number | null;
+  cantidad_faltante?: number | null;
+  cantidad_despachada?: number | null;
   observaciones: string;
   nro_posicion?: string;
   id_unidad_medida?: null;
@@ -190,6 +192,7 @@ export interface IObjSolicitud {
   id_persona_cierre_no_dispo_alm?: number | null;
   id_persona_almacen_rechaza?: number | null;
   persona_solicita?: string | null;
+  persona_cierra?: string | null;
   nombre_unidad_organizacional?: string | null;
 }
 export interface IObjSolicitudVivero {
