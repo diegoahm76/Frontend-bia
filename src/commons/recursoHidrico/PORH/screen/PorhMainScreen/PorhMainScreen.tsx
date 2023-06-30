@@ -16,6 +16,7 @@ import {
   editar_programa,
   editar_proyecto,
   eliminar_id,
+  post_actividades,
   post_programa,
 } from '../../Request/request';
 import { EditarPrograma } from '../../components/ActualizarPrograma/EditarPrograma';
@@ -35,11 +36,15 @@ export const PorhMainScreen: React.FC = () => {
     errors,
     rows_programas,
     rows_proyectos,
+    rows_actividades_register,
+    rows_proyectos_register,
     is_agregar_programa,
     is_editar_programa,
     is_seleccionar_programa,
     is_agregar_actividad,
+    // is_seleccionar_actividad,
     is_agregar_proyecto,
+    is_seleccionar_proyecto,
     is_editar_actividad,
     is_editar_proyecto,
     id_actividad,
@@ -54,6 +59,7 @@ export const PorhMainScreen: React.FC = () => {
     set_mode,
     reset_form_agregar_programa,
     set_data_programa,
+    set_rows_actividades_register,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -180,10 +186,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(true);
       form.id_programa = id_programa;
       form.id_proyecto = id_proyecto;
-      await post_programa(
-        form,
-        rows_proyectos,
-      );
+      await post_programa(form, rows_proyectos_register);
       reset_form_agregar_programa();
       reset();
       set_mode('register_programa');
@@ -199,8 +202,29 @@ export const PorhMainScreen: React.FC = () => {
       );
     }
   });
+  const on_submit_actividades = handle_submit(async (form: any) => {
+    console.log('hi, from onSubmit actividades');
+    try {
+      set_is_saving(true);
+      form.id_programa = id_programa;
+      form.id_proyecto = id_proyecto;
+      await post_actividades(form, rows_proyectos, rows_actividades_register);
+      set_rows_actividades_register([]);
+      control_success('Se creó correctamente');
+      set_is_saving(false);
+      await fetch_data_programas();
+      await fetch_data_proyectos();
+      await fetch_data_actividades();
+    } catch (error: any) {
+      set_is_saving(false);
+      control_error(
+        error.response.data.detail || 'hubo un error al crear, intenta de nuevo'
+      );
+    }
+  });
 
   const on_submit_editar = handle_submit(async (form: any) => {
+    console.log('hi, from onSubmit edit');
     try {
       set_is_saving(true);
       await editar_programa(id_programa as number, form);
@@ -280,22 +304,22 @@ export const PorhMainScreen: React.FC = () => {
     <>
       <form
         onSubmit={(form) => {
+          form.preventDefault();
           console.log(errors, 'errors');
-          if (
-            is_agregar_programa ||
-            is_agregar_actividad ||
-            is_agregar_proyecto
-          ) {
-            void on_submit(form);
+          if (is_seleccionar_proyecto && is_agregar_actividad) {
+            return on_submit_actividades(form);
+          }
+          if (is_agregar_programa || is_agregar_proyecto) {
+            return on_submit(form);
           }
           if (is_editar_programa) {
-            void on_submit_editar(form);
+            return on_submit_editar(form);
           }
           if (is_editar_actividad) {
-            void on_submit_editar_actividad(form);
+            return on_submit_editar_actividad(form);
           }
           if (is_editar_proyecto) {
-            void on_submit_editar_proyecto(form);
+            return on_submit_editar_proyecto(form);
           }
         }}
       >
@@ -390,7 +414,7 @@ export const PorhMainScreen: React.FC = () => {
                   variant="contained"
                   color="success"
                   type="submit"
-                  disabled={is_saving || Object.keys(errors).length > 0}
+                  disabled={is_saving}
                   loading={is_saving}
                 >
                   Finalizar
