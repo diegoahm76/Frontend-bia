@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+//! libraries or frameworks
+
+import { useContext, type FC } from 'react';
+
 // Components Material UI
 import { Grid, Box, TextField, MenuItem, Stack, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -5,11 +10,17 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Title } from '../../../../components/Title';
 
 import type {
-  GridColDef,
+  GridColDef
   // GridValueGetterParams
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-// Graficas
+import { ModalContextTRD } from '../context/ModalsContextTrd';
+import { ModalSearchTRD } from '../components/ModalBusqueda/ModalSearchTRD';
+import { useAppSelector } from '../../../../hooks';
+
+// Íconos
+import SyncIcon from '@mui/icons-material/Sync';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -17,49 +28,49 @@ const columns: GridColDef[] = [
     field: 'firstName',
     headerName: 'First name',
     width: 150,
-    editable: true,
+    editable: true
   },
   {
     field: 'lastName',
     headerName: 'Last name',
     width: 150,
-    editable: true,
+    editable: true
   },
   {
     field: 'age',
     headerName: 'Age',
     type: 'number',
     width: 110,
-    editable: true,
+    editable: true
   },
   {
     field: 'fullName',
     headerName: 'Full name',
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
-    width: 160,
+    width: 160
     // valueGetter: (params: GridValueGetterParams) =>
     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
+  }
 ];
 
 const tipos_unidades = [
   {
     value: '1',
-    label: 'Test',
+    label: 'Test'
   },
   {
     value: 'EUR',
-    label: 'Test',
+    label: 'Test'
   },
   {
     value: 'BTC',
-    label: '฿',
+    label: '฿'
   },
   {
     value: 'JPY',
-    label: '¥',
-  },
+    label: '¥'
+  }
 ];
 
 const rows = [
@@ -71,11 +82,20 @@ const rows = [
   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
   { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TrdScreen: React.FC = () => {
+export const TrdScreen: FC = (): JSX.Element => {
+  // const dispatch = useDispatch();
+
+  // ? redux toolkit
+  const { trd_current } = useAppSelector(
+    (state: any) => state.searched_trd_slice
+  );
+
+  const { openModalModalSearchTRD } = useContext(ModalContextTRD);
+
   return (
     <>
       <Grid
@@ -86,7 +106,7 @@ export const TrdScreen: React.FC = () => {
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
+          boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
         <Grid item xs={12}>
@@ -141,10 +161,30 @@ export const TrdScreen: React.FC = () => {
             direction="row"
             justifyContent="flex-end"
             spacing={2}
-            sx={{ mb: '20px' }}
+            sx={{ mb: '20px', mt: '20px' }}
           >
-            <Button color="primary" variant="outlined" startIcon={<SaveIcon />}>
-              EDITAR
+            <Button
+              color="primary"
+              variant="outlined"
+              startIcon={<SearchIcon />}
+              onClick={openModalModalSearchTRD}
+            >
+              BUSCAR
+            </Button>
+            <Button
+              color="primary"
+              variant="contained"
+              startIcon={trd_current !== null ? <SyncIcon /> : <SaveIcon />}
+            >
+              {trd_current !== null ? 'ACTUALIZAR TRD' : 'GUARDAR TRD'}
+            </Button>
+
+            <Button
+              color="success"
+              variant="contained"
+              startIcon={<CleanIcon />}
+            >
+              LIMPIAR CAMPOS
             </Button>
           </Stack>
           <Grid item>
@@ -166,31 +206,19 @@ export const TrdScreen: React.FC = () => {
             spacing={2}
             sx={{ m: '20px 0' }}
           >
-            {/* <Button
-              color="primary"
-              variant="outlined"
-              startIcon={<ArrowBackIcon />}
-              // onClick={handle_to_go_back}
-            >
-              VOLVER
-            </Button> */}
-            <Button
-              color="primary"
-              variant="contained"
-              startIcon={<SearchIcon />}
-            >
-              BUSCAR
-            </Button>
             <Button
               color="success"
               variant="contained"
               startIcon={<SaveIcon />}
             >
-              LIMPIAR
+              FINALIZAR
             </Button>
           </Stack>
         </Grid>
       </Grid>
+      {/* -- this modal allow us to do the TRD search  -- */}
+      <ModalSearchTRD />
+      {/* -- this modal allow us to do the TRD search -- */}
     </>
   );
 };

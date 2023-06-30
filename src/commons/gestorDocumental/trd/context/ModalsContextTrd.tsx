@@ -4,24 +4,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { createContext, useReducer, useCallback, type FC } from 'react';
 import { type ModalContextState } from './types/modal.types';
-import { Modal, initialState } from './state/initialState';
-
-const reducer = (state: any, { payload, type }: any) => {
-  switch (type) {
-    case Modal.OPEN_MODAL_SEARCH_TRD:
-      return {
-        ...state,
-        modalSearchTRD: payload || true
-      };
-    case Modal.CLOSE_MODAL_SEARCH_TRD:
-      return {
-        ...state,
-        modalSearchTRD: payload || false
-      };
-    default:
-      return state;
-  }
-};
+import { initialState } from './state/initialState';
+import { reducer } from './reducer/reducerContext';
 
 const ModalContextTRD = createContext<ModalContextState>({
   modalSearchTRD: false,
