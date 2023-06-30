@@ -34,9 +34,7 @@ export const PorhMainScreen: React.FC = () => {
     handleSubmit: handle_submit,
     errors,
     rows_programas,
-    set_rows_programas,
     rows_proyectos,
-    rows_actividades,
     is_agregar_programa,
     is_editar_programa,
     is_seleccionar_programa,
@@ -46,24 +44,19 @@ export const PorhMainScreen: React.FC = () => {
     is_editar_proyecto,
     id_actividad,
     id_proyecto,
-    set_id_programa,
+    is_general,
+    is_consulta,
     id_programa,
+    set_id_programa,
     fetch_data_actividades,
     fetch_data_proyectos,
     fetch_data_programas,
-    is_general,
-    is_consulta,
     set_mode,
+    reset_form_agregar_programa,
     set_data_programa,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
-    {
-      field: 'id_programa',
-      headerName: 'No PROGRAMA',
-      sortable: true,
-      width: 170,
-    },
     {
       field: 'nombre',
       headerName: 'NOMBRE PROGRAMA',
@@ -100,12 +93,20 @@ export const PorhMainScreen: React.FC = () => {
                   }}
                 >
                   <Avatar
-                    sx={{ width: 24, height: 24, background: '#fff', border: '2px solid',}}variant="rounded"
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
+                    }}
+                    variant="rounded"
                   >
                     <EditIcon
-                    titleAccess="Editar Programa"
+                      titleAccess="Editar Programa"
                       sx={{
-                        color: 'primary.main', width: '18px', height: '18px',
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
                       }}
                     />
                   </Avatar>
@@ -176,18 +177,16 @@ export const PorhMainScreen: React.FC = () => {
 
   const on_submit = handle_submit(async (form: any) => {
     try {
-      
       set_is_saving(true);
       form.id_programa = id_programa;
       form.id_proyecto = id_proyecto;
       await post_programa(
         form,
-        set_rows_programas,
-        rows_programas,
         rows_proyectos,
-        rows_actividades
       );
+      reset_form_agregar_programa();
       reset();
+      set_mode('register_programa');
       control_success('Se creó correctamente');
       set_is_saving(false);
       await fetch_data_programas();
@@ -254,7 +253,7 @@ export const PorhMainScreen: React.FC = () => {
         cancelButton: 'square-btn',
       },
       width: 350,
-      text: '¿Estas seguro?',
+      text: '¿Estás seguro?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',

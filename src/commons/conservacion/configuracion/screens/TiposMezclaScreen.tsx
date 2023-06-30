@@ -73,7 +73,7 @@ export function TiposMezclaScreen(): JSX.Element {
     },
     {
       field: 'unidad_medida',
-      headerName: 'Unidad medida',
+      headerName: 'Unidad de medida',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>

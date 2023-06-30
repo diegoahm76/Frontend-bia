@@ -28,7 +28,7 @@ export const FacilidadPagoAutorizadas: React.FC = () => {
           >
             <Grid container spacing={2}>
               <Grid item xs={12}  >
-                <Title title='Mis Facilidades de Pago Autorizadas' />
+                <Title title='Mis Facilidades de Pago' />
               </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField

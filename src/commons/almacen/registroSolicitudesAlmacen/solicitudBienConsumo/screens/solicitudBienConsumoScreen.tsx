@@ -23,7 +23,7 @@ import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularS
 const SolicitudConsumoScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth);
     const { control: control_solicitud, handleSubmit: handle_submit, reset: reset_solicitud, getValues: get_values } = useForm<IObjSolicitud>();
-    const { nro_solicitud, current_solicitud, persona_solicita, bienes_solicitud, current_funcionario } = useAppSelector((state) => state.solic_consumo);
+    const { nro_solicitud, current_solicitud, persona_solicita, bienes_solicitud, current_funcionario } = useAppSelector((state: { solic_consumo: any; }) => state.solic_consumo);
     const [action, set_action] = useState<string>("Crear");
     const [anular, set_anular] = useState<string>("Anular");
     const [anular_solicitud, set_anular_solicitud] =
@@ -144,15 +144,15 @@ const SolicitudConsumoScreen = () => {
                     title={"Solicitudes de consumo"}
 
                 />
-                {current_solicitud.solicitud_anulada_solicitante !== true &&
-                    <>
-                        <PersonaResponsable
-                            title={"Funcionario responsable"}
-                            get_values_solicitud={get_values} />
 
-                        <SeleccionarBienConsumo />
-                    </>
-                }
+                <>
+                    <PersonaResponsable
+                        title={"Funcionario responsable"}
+                        get_values_solicitud={get_values} />
+
+                    <SeleccionarBienConsumo />
+                </>
+
 
             </Grid>
             <Grid

@@ -27,7 +27,7 @@ const SeleccionarBienDistribuir = () => {
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -77,7 +77,7 @@ const SeleccionarBienDistribuir = () => {
         },
         {
             field: 'tipo_documento',
-            headerName: 'Tipo documento',
+            headerName: 'Tipo de documento',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -92,7 +92,7 @@ const SeleccionarBienDistribuir = () => {
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -270,14 +270,14 @@ const SeleccionarBienDistribuir = () => {
                             dispatch(set_current_bien({ ...current_bien, cantidad_restante: restante }))
                             set_action("agregar")
                         } else {
-                            control_error("el bien ya se asigno en el vivero, seleccione la opcion de editar")
+                            control_error("El bien ya se asignó en el vivero, seleccione la opción de editar")
                         }
                     }
                 } else {
-                    control_error("La cantidad asignada debe ser maximo " + String(current_bien.cantidad_restante))
+                    control_error("La cantidad asignada debe ser máximo " + String(current_bien.cantidad_restante))
                 }
             } else {
-                control_error("Codigo de bien no coincide con el seleccionado")
+                control_error("Código de bien no coincide con el seleccionado")
             }
         } else {
             control_error("Debe seleccionar el bien")
@@ -350,8 +350,8 @@ const SeleccionarBienDistribuir = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                            label: "Codigo bien",
+                            rules: { required_rule: { rule: true, message: "Código bien requerido" } },
+                            label: "Código bien",
                             type: "number",
                             disabled: true,
                             helper_text: "",
@@ -395,7 +395,7 @@ const SeleccionarBienDistribuir = () => {
                             rules: { required_rule: { rule: true, message: "Seleccione vivero" } },
                             label: "Vivero",
                             disabled: action === "editar",
-                            helper_text: "debe seleccionar campo",
+                            helper_text: "Debe seleccionar campo",
                             select_options: nurseries,
                             option_label: "nombre",
                             option_key: "id_vivero",
@@ -410,7 +410,7 @@ const SeleccionarBienDistribuir = () => {
                             rules: { required_rule: { rule: true, message: "Seleccione etapa de material vegetal" } },
                             label: "Etapa a ingresar",
                             disabled: action === "editar",
-                            helper_text: "debe seleccionar campo",
+                            helper_text: "Debe seleccionar campo",
                             select_options: [{ label: "Producción", value: "P" }, { label: "Distribución", value: "D" }],
                             option_label: "label",
                             option_key: "value",

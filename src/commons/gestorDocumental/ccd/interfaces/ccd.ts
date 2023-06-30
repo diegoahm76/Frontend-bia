@@ -32,6 +32,7 @@ export interface ICCDForm {
   valor_aumento_subserie: string | number | any;
 }
 export interface ICCDAsingForm {
+  [x: string]: any;
   sries_asignacion: IList;
   sries: string;
   subserie_asignacion: IList[] | [];

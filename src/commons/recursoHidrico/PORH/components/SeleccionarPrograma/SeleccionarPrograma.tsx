@@ -47,12 +47,6 @@ export const SeleccionarPrograma: React.FC = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'id_proyecto',
-      headerName: 'No Proyecto',
-      sortable: true,
-      width: 120,
-    },
-    {
       field: 'nombre',
       headerName: 'NOMBRE',
       sortable: true,
@@ -203,7 +197,7 @@ export const SeleccionarPrograma: React.FC = () => {
         cancelButton: 'square-btn',
       },
       width: 350,
-      text: '¿Estas seguro?',
+      text: '¿Estás seguro?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',

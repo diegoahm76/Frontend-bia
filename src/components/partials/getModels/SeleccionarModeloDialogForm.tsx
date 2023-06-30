@@ -144,7 +144,7 @@ const SeleccionarModeloDialogForm = ({
                 max_date={form_input.max_date ?? ""}
                 format={form_input.max_date ?? null}
             />;
-        } else if(form_input.datum_type === "image_uploader"){
+        } else if (form_input.datum_type === "image_uploader") {
             return <ImageUploader
                 xs={form_input.xs}
                 md={form_input.md}
@@ -254,7 +254,7 @@ const SeleccionarModeloDialogForm = ({
                         }} spacing={2} justifyContent="center" direction="row" marginTop={2}>
                             <Box sx={{ width: '100%' }}>
                                 <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
-                                <Grid container  justifyContent="flex-end" sx={{marginTop:"6px"}}>
+                                <Grid container justifyContent="flex-end" sx={{ marginTop: "6px" }}>
                                     <ButtonGroup style={{ margin: 7 }}  >
                                         <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={handle_clickxls}>
                                             <i className="pi pi-file-excel"></i>
