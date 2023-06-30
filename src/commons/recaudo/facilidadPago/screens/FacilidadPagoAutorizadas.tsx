@@ -27,6 +27,9 @@ export const FacilidadPagoAutorizadas: React.FC = () => {
             autoComplete="off"
           >
             <Grid container spacing={2}>
+              <Grid item xs={12}  >
+                <Title title='Mis Facilidades de Pago' />
+              </Grid>
               <Grid item xs={12} sm={3}>
                 <TextField
                   disabled

@@ -183,7 +183,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       />
                   </Button>
                 </Grid>
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={11} sm={5}>
                   <FormControl size='small' fullWidth>
                     <InputLabel>Calidad en que actúa la persona</InputLabel>
                     <Select
@@ -200,6 +200,18 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       <MenuItem value='4'>Deudor Solidario Juridico</MenuItem>
                     </Select>
                   </FormControl>
+                </Grid>
+                <Grid item xs={11} sm={5}>
+                  <TextField
+                    required
+                    label="Valor Abonado"
+                    helperText='Escribe el Valor Abonado'
+                    size="small"
+                    fullWidth
+                    onChange={on_input_change}
+                    name='valor_abonado'
+                    type='number'
+                  />
                 </Grid>
             </Grid>
           </Box>

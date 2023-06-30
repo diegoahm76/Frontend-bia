@@ -96,8 +96,9 @@ export const VistaSolicitud: React.FC = () => {
 
   return (
     <>
-      <Grid container spacing={5}>
-        <Grid item xs={12} sm={3}>
+      <h3>Detalle</h3>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={5}>
           <Button
             color='primary'
             variant='outlined'
