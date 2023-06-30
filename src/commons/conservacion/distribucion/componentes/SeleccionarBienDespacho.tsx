@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useForm } from 'react-hook-form';
 import { Avatar, Grid, IconButton, Tooltip } from '@mui/material';
 import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
