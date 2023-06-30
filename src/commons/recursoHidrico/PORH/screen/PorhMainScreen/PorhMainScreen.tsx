@@ -4,7 +4,7 @@ import { Title } from '../../../../../components/Title';
 import { AgregarPrograma } from '../../components/AgregarNuevoPrograma/AgregarPrograma';
 import { useContext, useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { Avatar, Divider, IconButton, Typography } from '@mui/material';
+import { Avatar, Divider, IconButton,   } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChecklistIcon from '@mui/icons-material/Checklist';
@@ -216,7 +216,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(false);
       control_error(
         error.response.data.detail ||
-          'hubo un error al editar, intenta de nuevo'
+        'hubo un error al editar, intenta de nuevo'
       );
     }
   });
@@ -231,7 +231,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(false);
       control_error(
         error.response.data.detail ||
-          'hubo un error al editar, intenta de nuevo'
+        'hubo un error al editar, intenta de nuevo'
       );
     }
   });
@@ -245,7 +245,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(false);
       control_error(
         error.response.data.detail ||
-          'hubo un error al editar, intenta de nuevo'
+        'hubo un error al editar, intenta de nuevo'
       );
     }
   });
@@ -274,7 +274,7 @@ export const PorhMainScreen: React.FC = () => {
         } catch (error: any) {
           control_error(
             error.response.data.detail ||
-              'hubo un error al eliminar, intenta de nuevo'
+            'hubo un error al eliminar, intenta de nuevo'
           );
         }
       }
@@ -320,7 +320,7 @@ export const PorhMainScreen: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="CONTENIDO PROGRAMÁTICO PLAN DE ORDENAMIENTO DE RECURSO HÍDRICO" />
+            <Title title="Contenido programático pla  de ordenamiento de recursos hídrico" />
           </Grid>
           <BusquedaPorh />
           {is_general && (
@@ -328,9 +328,10 @@ export const PorhMainScreen: React.FC = () => {
               {rows_programas.length > 0 && (
                 <>
                   <Grid item xs={12}>
-                    <Typography variant="subtitle1" fontWeight="bold">
+                    <Title title=" Programas" />
+                    {/* <Typography variant="subtitle1" fontWeight="bold">
                       Programas
-                    </Typography>
+                    </Typography> */}
                     <Divider />
                   </Grid>
                   <Grid item xs={12}>

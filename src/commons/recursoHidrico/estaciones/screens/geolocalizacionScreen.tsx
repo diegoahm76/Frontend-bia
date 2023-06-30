@@ -8,6 +8,7 @@ import { consultar_datos_id, consultar_datos_id_migracion, consultar_estaciones 
 import { control_error } from '../../../../helpers/controlError';
 import { Box, Divider, Typography } from '@mui/material';
 import type { AxiosError } from 'axios';
+import { Title } from '../../../../components';
 
 // const position: L.LatLngExpression = [5.258179477894017, -73.60700306515551];
 
@@ -21,7 +22,7 @@ const icon_locate = new L.Icon({
 
 const map_style = {
   height: "90vh",
-  width: "90vw"
+  width: "100%"
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -232,22 +233,34 @@ export const GeolocalizacionScreen: React.FC = () => {
   return (
 
     <>
-      <Grid item>
-        <Box sx={{ width: '100%' }}>
-          <MapContainer
-            center={center}
-            zoom={8}
-            style={map_style}
-            scrollWheelZoom={true}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-            />
+      <Grid item sx={{
+        position: 'relative',
+        background: '#FAFAFA',
+        borderRadius: '15px',
+        p: '20px', mb: '20px',
+        boxShadow: '0px 3px 6px #042F4A26',
+        marginTop: '20px',
+        marginLeft: '-5px',
+      }}>
+        <Grid item xs={12}>
+          <Title title="Geolocalización" />
+        </Grid>
+        <Grid item xs={12}  sx={{ marginTop: '10px'}} >
+            <MapContainer
+          center={center}
+          zoom={8}
+          style={map_style}
+          scrollWheelZoom={true}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+          />
 
-            {markers}
-          </MapContainer>
-        </Box>
+          {markers}
+        </MapContainer>
+        </Grid>
+      
       </Grid>
     </>
   );

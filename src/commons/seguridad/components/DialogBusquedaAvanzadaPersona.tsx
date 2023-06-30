@@ -204,13 +204,13 @@ const DialogBusquedaAvanzada = ({
 
   const trigger_user_person_create_active = (data: any): void => {
     user_person_create_active();
-    set_is_modal_active(false);
+    set_is_modal_active(false );
     dispatch(set_data_person_search(data));
   };
 
   const trigger_user_edit_active = (data: any): void => {
     user_edit_active();
-    set_is_modal_active(false);
+    set_is_modal_active(false );
     dispatch(set_data_person_search(data));
   };
 

@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent,   Divider, Grid, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from 'react-hook-form';
 import { type EditarPersona } from '../interfaces/interfaces';
 import { control_success, editar_persona } from '../../requets/Request';
 import { control_error } from '../../../../helpers/controlError';
+import { Title } from '../../../../components';
 
 interface IProps {
   is_modal_active: boolean;
@@ -77,11 +78,34 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
       open={is_modal_active}
       onClose={handle_close}
     >
-      <DialogTitle>Editar Parte Interesada</DialogTitle>
+       <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '20px',
+                    marginLeft: '-5px',
+                }}
+            >
+              <Title title=" Editar Parte Interesada" />
+            </Grid>
+       
       <Divider />
       <DialogContent>
         <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    // marginTop: '6px',
+                    marginLeft: '-5px',
+                }}>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Primer Nombre"
@@ -303,22 +327,25 @@ export const EditarPersonaDialog: React.FC<IProps> = ({ is_modal_active, set_is_
                 }}
               />
             </Grid>
+            <Grid item container sx={{justifyContent:"flex-end"}}>
+              <DialogActions>
+                <Button
+                  variant="text"
+                  color="primary"
+                  onClick={() => {
+                    handle_close();
+                    reset();
+                  }}
+                >
+                  Cancelar
+                </Button>
+                <Button variant="contained" color="primary" type="submit">
+                  ACTUALIZAR
+                </Button>
+              </DialogActions>
+            </Grid>
+         
           </Grid>
-          <DialogActions>
-            <Button
-              variant="text"
-              color="primary"
-              onClick={() => {
-                handle_close();
-                reset();
-              }}
-            >
-              Cancelar
-            </Button>
-            <Button variant="contained" color="primary" type="submit">
-              ACTUALIZAR
-            </Button>
-          </DialogActions>
         </form>
       </DialogContent>
     </Dialog>

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent,   Divider, FormHelperText, Grid, InputLabel, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { Controller, type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { crear_persona } from '../../requets/Request';
 import Select from "react-select";
 import { api } from '../../../../api/axios';
+import { Title } from '../../../../components';
 
 interface IProps {
   is_modal_active: boolean;
@@ -121,11 +122,34 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
       open={is_modal_active}
       onClose={handle_close}
     >
-      <DialogTitle>Nuevo Parte Interesada</DialogTitle>
+       <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '20px',
+                    marginLeft: '-5px',
+                }}
+            >
+              <Title title="Nuevo Parte Interesada" />
+            </Grid>
+       
       <Divider />
       <DialogContent sx={{ mb: '0px' }}>
         <form onSubmit={handleSubmit(on_sumbit_persona)}>
-          <Grid container spacing={2}>
+          <Grid container spacing={2}  sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    // marginTop: '6px',
+                    marginLeft: '-5px',
+                }}>
             <Grid item xs={12}>
               <TextField
                 label="Tipo de Identificación"
@@ -341,8 +365,8 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 <FormHelperText error>Este campo es obligatorio</FormHelperText>
               )}
             </Grid>
-          </Grid>
-          <DialogActions>
+        <Grid item container sx={{justifyContent:"flex-end"}}>
+ <DialogActions>
             <Button
               variant="text"
               color="primary"
@@ -350,6 +374,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
                 handle_close();
                 reset();
               }}
+              
             >
               Cancelar
             </Button>
@@ -357,6 +382,9 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({ is_modal_active, set_is_mo
               Guardar
             </Button>
           </DialogActions>
+        </Grid>
+         
+            </Grid>
         </form>
       </DialogContent>
     </Dialog>
