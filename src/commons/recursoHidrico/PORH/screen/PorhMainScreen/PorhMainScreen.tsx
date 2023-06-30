@@ -34,9 +34,7 @@ export const PorhMainScreen: React.FC = () => {
     handleSubmit: handle_submit,
     errors,
     rows_programas,
-    set_rows_programas,
     rows_proyectos,
-    rows_actividades,
     is_agregar_programa,
     is_editar_programa,
     is_seleccionar_programa,
@@ -184,10 +182,7 @@ export const PorhMainScreen: React.FC = () => {
       form.id_proyecto = id_proyecto;
       await post_programa(
         form,
-        set_rows_programas,
-        rows_programas,
         rows_proyectos,
-        rows_actividades
       );
       reset_form_agregar_programa();
       reset();
