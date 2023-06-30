@@ -4,7 +4,11 @@
 
 import React, { createContext } from 'react';
 import { control_error } from '../../../../helpers';
-import type { Seccion, SubSeccionPorSeccion, TableAgregarSubseccion } from '../interfaces/interfaces';
+import type {
+  Seccion,
+  SubSeccionPorSeccion,
+  TableAgregarSubseccion,
+} from '../interfaces/interfaces';
 import {
   get_data_seccion,
   get_data_subseccion_por_seccion,
@@ -16,6 +20,7 @@ import {
   type UseFormSetValue,
   useForm,
 } from 'react-hook-form';
+import type { AxiosError } from 'axios';
 
 interface UserContext {
   mode: string;
@@ -150,11 +155,11 @@ export const UserProvider = ({
     SubSeccionPorSeccion[]
   >([]);
   // rows register subseccion
-  const [rows_resgister_subseccion, set_rows_register_subseccion] = React.useState<
-    TableAgregarSubseccion[]
-  >([]);
-  // rows eliminar subseccion 
-  const [rows_to_delete_subseecion, set_rows_to_delete_subseecion] = React.useState<any[]>([]);
+  const [rows_resgister_subseccion, set_rows_register_subseccion] =
+    React.useState<TableAgregarSubseccion[]>([]);
+  // rows eliminar subseccion
+  const [rows_to_delete_subseecion, set_rows_to_delete_subseecion] =
+    React.useState<any[]>([]);
   // info
   const [info_seccion, set_info_seccion] = React.useState<Seccion>();
   const [info_subseccion, set_info_subseccion] =
@@ -227,8 +232,11 @@ export const UserProvider = ({
     try {
       const response = await get_data_seccion();
       set_rows_seccion(response);
-    } catch (error: any) {
-      control_error(error.response.data.detail);
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
     }
   };
 
@@ -239,8 +247,11 @@ export const UserProvider = ({
         const response = await get_data_subseccion_por_seccion(id_seccion);
         set_rows_subseccion(response);
       }
-    } catch (error: any) {
-      control_error(error.response.data.detail);
+    } catch (err: any) {
+      const temp = err as AxiosError;
+      if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+        control_error(err.response.data.detail);
+      }
     }
   };
 

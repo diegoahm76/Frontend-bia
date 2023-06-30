@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import Grid from '@mui/material/Grid';
@@ -55,29 +56,31 @@ export const AgregarPrograma: React.FC = () => {
     nombre_programa && fecha_inicial && fecha_fin;
 
   const handle_agregar_proyecto_click = (): void => {
-    if (is_campos_obligatorios_completos) {
-      // Validar las condiciones
-      const current_date = dayjs();
-      if (nombre_programa.trim() === '') {
-        control_error('El nombre del programa no puede estar vacío');
-        return;
-      }
-      if (dayjs(fecha_inicial) && dayjs(fecha_fin)) {
-        if (dayjs(fecha_inicial) >= dayjs(fecha_fin)) {
-          control_error(
-            'La fecha de inicio debe ser anterior a la fecha de finalización'
-          );
-          return;
-        }
-        if (dayjs(fecha_inicial) <= dayjs(current_date)) {
-          control_error(
-            'La fecha de inicio debe ser posterior a la fecha actual'
-          );
-          return;
-        }
-      }
-      set_is_agregar(true);
-    }
+    set_is_agregar(true);
+
+    // if (is_campos_obligatorios_completos) {
+    //   // Validar las condiciones
+    //   const current_date = dayjs();
+    //   if (nombre_programa.trim() === '') {
+    //     control_error('El nombre del programa no puede estar vacío');
+    //     return;
+    //   }
+    //   if (dayjs(fecha_inicial) && dayjs(fecha_fin)) {
+    //     if (dayjs(fecha_inicial) >= dayjs(fecha_fin)) {
+    //       control_error(
+    //         'La fecha de inicio debe ser anterior a la fecha de finalización'
+    //       );
+    //       return;
+    //     }
+    //     if (dayjs(fecha_inicial) <= dayjs(current_date)) {
+    //       control_error(
+    //         'La fecha de inicio debe ser posterior a la fecha actual'
+    //       );
+    //       return;
+    //     }
+    //   }
+    //   set_is_agregar(true);
+    // }
   };
 
   return (
@@ -93,7 +96,6 @@ export const AgregarPrograma: React.FC = () => {
           mb: '0px',
         }}
       >
-        {' '}
         <Grid item xs={12}>
           <Title title="INFORMACIÓN DE PROGRAMA" />
         </Grid>
@@ -112,7 +114,7 @@ export const AgregarPrograma: React.FC = () => {
                 required: true,
               }),
             }}
-            error={Boolean(errors.nombre_programa) }
+            error={Boolean(errors.nombre_programa)}
             helperText={
               errors.nombre_programa?.type === 'required'
                 ? 'Este campo es obligatorio'
@@ -138,9 +140,7 @@ export const AgregarPrograma: React.FC = () => {
                   {...register('fecha_inicio', {
                     required: true,
                   })}
-                  error={
-                    Boolean(errors.fecha_inicio)
-                  }
+                  error={Boolean(errors.fecha_inicio)}
                   helperText={
                     errors.fecha_inicio?.type === 'required'
                       ? 'Este campo es obligatorio'

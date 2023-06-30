@@ -67,8 +67,18 @@ const SeleccionarBienDespacho = () => {
       ),
     },
     {
-      field: 'nombre_bien',
+      field: 'nombre',
       headerName: 'Nombre',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'bodega',
+      headerName: 'Bodega',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -197,6 +207,7 @@ const SeleccionarBienDespacho = () => {
           current_solicitud.es_solicitud_de_conservacion
         )
       );
+      console.log(data);
       set_bienes_aux(data);
     } catch (error) {
       console.error(error);
@@ -204,9 +215,9 @@ const SeleccionarBienDespacho = () => {
   };
 
   useEffect(() => {
-    if ('success' in bienes) {
-      if (bienes.success === true) {
-        if ('data' in bienes) {
+    if ('success' in bienes_aux) {
+      if (bienes_aux.success === true) {
+        if ('data' in bienes_aux) {
           if (bienes_aux.data.length > 1) {
             set_select_model_is_active(true);
           }
@@ -279,7 +290,7 @@ const SeleccionarBienDespacho = () => {
               observacion: data.observacion,
               unidad_medida: current_bien.unidad_medida ?? null,
               id_unidad_medida_solicitada:
-                current_bien.id_unidad_medida ?? null,
+                bien_selected.id_unidad_medida ?? null,
               bodega: current_bien.bodega ?? null,
               id_entrada_bien: current_bien.id_entrada_bien ?? null,
             };
@@ -589,11 +600,11 @@ const SeleccionarBienDespacho = () => {
           set_current_model={set_current_bien}
           is_modal_active={select_model_is_active}
           set_is_modal_active={set_select_model_is_active}
-          modal_title={'Seleccionar lote de material vegetal'}
+          modal_title={'Seleccionar bodega para despachar'}
           form_filters={[]}
-          set_models={set_bienes_aux}
+          set_models={set_bienes}
           get_filters_models={null}
-          models={bienes_aux}
+          models={bienes}
           columns_model={columns_bienes}
           row_id={'id_inventario'}
           title_table_modal={'Resultados de la busqueda'}
