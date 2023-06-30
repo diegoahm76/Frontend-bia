@@ -96,6 +96,7 @@ export const VistaSolicitud: React.FC = () => {
 
   return (
     <>
+      <h3>Detalle</h3>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={5}>
           <Button

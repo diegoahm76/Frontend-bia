@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, Stack, TextField } from '@mui/material';
 import { EditorTexto } from '../../componentes/EditorTexto/EditorTexto';
@@ -12,6 +12,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { use_form } from '../../../../../hooks/useForm';
+import { post_notificacion_fisica, post_notificacion_email_edicto, get_datos_remitente } from '../requests/requests';
 
 export const Email: React.FC = () => {
   const [file_name, set_file_name] = useState('');
@@ -31,6 +32,10 @@ export const Email: React.FC = () => {
   };
 
   console.log('texto', form_state)
+
+  useEffect(() => {
+    void get_datos_remitente()
+  }, [])
 
   return (
     <>
@@ -145,7 +150,17 @@ export const Email: React.FC = () => {
                 variant='contained'
                 startIcon={<Add />}
                 sx={{ marginTop: '30px' }}
-                onClick={handle_open}
+                onClick={() => {
+                  try {
+                    void post_notificacion_email_edicto({
+                      ...form_state
+                    })
+                    handle_open()
+                  } catch (error: any) {
+                    throw new Error(error);
+                  }
+
+                }}
               >
                 Crear Notificación Electrónica
               </Button>
@@ -283,7 +298,7 @@ export const Fisico: React.FC = () => {
                   size="small"
                   fullWidth
                   required
-                  name='direccion'
+                  name='direccion_entrega'
                   onChange={on_input_change}
                 />
               </Grid>
@@ -315,7 +330,7 @@ export const Fisico: React.FC = () => {
                   size="small"
                   fullWidth
                   required
-                  name='empresa'
+                  name='empresa_entrega'
                   onChange={on_input_change}
                 />
               </Grid>
@@ -325,7 +340,7 @@ export const Fisico: React.FC = () => {
                   size="small"
                   fullWidth
                   required
-                  name='funcionario'
+                  name='funcionario_entrega'
                   onChange={on_input_change}
                 />
               </Grid>
@@ -344,7 +359,7 @@ export const Fisico: React.FC = () => {
                       required
                       autoFocus
                       style={{ opacity: 0 }}
-                      name='doc_adjunto'
+                      name='documento_adjunto'
                       onChange={handle_file_selected}
                     />
                 </Button>
@@ -372,7 +387,17 @@ export const Fisico: React.FC = () => {
                 color='primary'
                 variant='contained'
                 startIcon={<Add />}
-                onClick={handle_open}
+                onClick={() => {
+                  try {
+                    void post_notificacion_fisica({
+                      ...form_state,
+                      fecha_despacho: fecha_string,
+                    })
+                    handle_open()
+                  } catch (error: any) {
+                    throw new Error(error);
+                  }
+                }}
               >
                 Crear Notificación Física
               </Button>
