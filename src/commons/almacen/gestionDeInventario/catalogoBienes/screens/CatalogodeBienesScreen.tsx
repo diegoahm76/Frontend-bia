@@ -13,14 +13,15 @@ import FolderIcon from "@mui/icons-material/Folder";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import Button from "@mui/material/Button";
-import { Grid, Stack, Box } from "@mui/material";
+import { Grid, Stack, Box, Tooltip, IconButton, Avatar } from "@mui/material";
 import { Title } from "../../../../../components/Title";
 import CrearBienDialogForm from "../components/CrearBienDialogForm";
 import { get_bienes_service, delete_nodo_service } from "../store/thunks/catalogoBienesThunks";
 import { useAppDispatch, useAppSelector } from "../../../../../hooks/hooks";
 import { initial_state_current_nodo, current_bien } from "../store/slices/indexCatalogodeBienes";
 import { type INodo } from "../interfaces/Nodo";
-
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-unused-vars
 export const CatalogodeBienesScreen: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -37,44 +38,79 @@ export const CatalogodeBienesScreen: React.FC = () => {
   ) => {
     return (
       <>
-        {node.data.crear ?
-          <Button
-            type="button"
-            startIcon={<AddIcon />}
-            title="Agregar"
-            style={{ marginRight: ".5em", color: "black", border: "none" }}
-            onClick={() => {
-              dispatch(current_bien(node));
-              set_action("create_sub")
-              set_add_bien_is_active(true)
-            }}
-            disabled={!node.data.crear}
-          ></Button> : null}
-        {node.data.editar ?
-          <Button
-            type="button"
-            startIcon={<EditIcon />}
-            title="Editar"
-            style={{ marginRight: ".5em", color: "black", border: "none" }}
-            disabled={!node.data.editar}
-            onClick={() => {
-              dispatch(current_bien(node));
-              set_action("create_sub")
-              set_add_bien_is_active(true)
-            }}
-          ></Button> : null}
-        {node.data.eliminar ?
-          <Button
-            type="button"
-            startIcon={<DeleteIcon />}
-            className="p-button-danger p-button-outlined"
-            title="Eliminar"
-            onClick={() => {
-              dispatch(delete_nodo_service(node.data.id_nodo));
-            }}
-            style={{ marginRight: ".5em", color: "black", border: "none" }}
-            disabled={!node.data.eliminar}
-          ></Button> : null}
+        {node.data.crear &&
+          <Tooltip title="Agregar">
+            <IconButton
+              onClick={() => {
+                dispatch(current_bien(node));
+                set_action("create_sub")
+                set_add_bien_is_active(true)
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 40,
+                  height: 40,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <CreateNewFolderIcon
+                  sx={{ color: '#495057', width: '25px', height: '25px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        }
+        {node.data.editar &&
+          <Tooltip title="Editar">
+            <IconButton
+              onClick={() => {
+                dispatch(current_bien(node));
+                set_action("editar")
+                set_add_bien_is_active(true)
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 40,
+                  height: 40,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <EditIcon
+                  sx={{ color: '#495057', width: '25px', height: '25px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        }
+        {node.data.eliminar &&
+          <Tooltip title="Editar">
+            <IconButton
+              onClick={() => {
+                dispatch(delete_nodo_service(node.data.id_nodo));
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 40,
+                  height: 40,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <DeleteIcon
+                  sx={{ color: '#495057', width: '25px', height: '25px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        }
       </>
     );
   };
@@ -120,7 +156,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
               <TreeTable value={nodo} filterMode="strict">
                 <Column
                   expander
-                  body={() => <FolderIcon />}
+                  body={(row) => (row.data.bien.nivel_jerarquico === 5 ? <InsertDriveFileIcon /> : <FolderIcon />)}
                   style={{ width: "250px" }}
                 ></Column>
                 <Column
