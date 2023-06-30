@@ -289,7 +289,7 @@ export function PreparacionMezclaScreen(): JSX.Element {
                       : 'fecha',
                   default_value: new Date().toString(),
                   rules: {
-                    required_rule: { rule: true, message: 'requerido' },
+                    required_rule: { rule: true, message: 'Requerido' },
                   },
                   label: 'Fecha actual',
                   type: 'text',
@@ -306,10 +306,10 @@ export function PreparacionMezclaScreen(): JSX.Element {
                   rules: {
                     required_rule: {
                       rule: true,
-                      message: 'Observación requerida',
+                      message: 'Justificación requerida',
                     },
                   },
-                  label: 'Justificacion',
+                  label: 'Justificación',
                   type: 'text',
                   multiline_text: true,
                   rows_text: 4,
