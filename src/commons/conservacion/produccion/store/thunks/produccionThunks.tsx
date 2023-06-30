@@ -2,19 +2,35 @@ import { type Dispatch } from 'react';
 import { toast, type ToastContent } from 'react-toastify';
 // import Swal from 'sweetalert2'; // , { type SweetAlertResult }
 import {
-  type AxiosError
+  type AxiosError,
   // type AxiosResponse
 } from 'axios';
 // Slices
 import {
-  set_nurseries, set_vegetal_materials, set_stage_changes, set_changing_person, set_persons, set_mezclas, set_bienes,set_preparaciones, set_preparacion_bienes, set_siembras_material_vegetal, set_current_siembra_material_vegetal, set_mortalidades, set_current_mortalidad, set_items_mortalidad, set_nro_mortalidad, set_persona_anula, set_incidencias
+  set_nurseries,
+  set_vegetal_materials,
+  set_stage_changes,
+  set_changing_person,
+  set_persons,
+  set_mezclas,
+  set_bienes,
+  set_preparaciones,
+  set_preparacion_bienes,
+  set_siembras_material_vegetal,
+  set_current_siembra_material_vegetal,
+  set_mortalidades,
+  set_current_mortalidad,
+  set_items_mortalidad,
+  set_nro_mortalidad,
+  set_persona_anula,
+  set_incidencias,
 } from '../slice/produccionSlice';
 import { api } from '../../../../../api/axios';
 
-
-
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const control_error = (message: ToastContent = 'Algo pasó, intente de nuevo') =>
+export const control_error = (
+  message: ToastContent = 'Algo pasó, intente de nuevo'
+) =>
   toast.error(message, {
     position: 'bottom-right',
     autoClose: 3000,
@@ -23,7 +39,7 @@ export const control_error = (message: ToastContent = 'Algo pasó, intente de nu
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: 'light'
+    theme: 'light',
   });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -36,15 +52,16 @@ export const control_success = (message: ToastContent) =>
     pauseOnHover: true,
     draggable: true,
     progress: undefined,
-    theme: 'light'
+    theme: 'light',
   });
-
 
 // Obtener viveros
 export const get_nurseries_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('conservacion/camas-siembras/siembra/get-viveros/');
+      const { data } = await api.get(
+        'conservacion/camas-siembras/siembra/get-viveros/'
+      );
       dispatch(set_nurseries(data.data));
       return data;
     } catch (error: any) {
@@ -61,18 +78,22 @@ export const get_vegetal_materials_service = (
   code_bien: string,
   name: string,
   cod_etapa: string,
-  anio: number,
+  anio: number
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/etapas/filtro-material-vegetal/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote=${cod_etapa??""}&agno_lote=${anio??""}`);
+      const { data } = await api.get(
+        `conservacion/etapas/filtro-material-vegetal/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote=${
+          cod_etapa ?? ''
+        }&agno_lote=${anio ?? ''}`
+      );
       dispatch(set_vegetal_materials(data.data));
-      console.log(data)
-      if ("data" in data){
-        if (data.data.length>0){
-          control_success("Se encontraron materiales vegetales")
+      console.log(data);
+      if ('data' in data) {
+        if (data.data.length > 0) {
+          control_success('Se encontraron materiales vegetales');
         } else {
-          control_error("No se encontraron materiales vegetales")
+          control_error('No se encontraron materiales vegetales');
         }
       }
       return data;
@@ -84,24 +105,27 @@ export const get_vegetal_materials_service = (
   };
 };
 
-
 // obtener siembras
 export const get_stage_changes_service = (
   id: number,
   code_bien: string,
   name: string,
   cod_etapa: string,
-  anio: number,
+  anio: number
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/etapas/filtro-cambio-etapa/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote_origen=${cod_etapa??""}&agno_lote=${anio??""}`);
-      console.log(data)
+      const { data } = await api.get(
+        `conservacion/etapas/filtro-cambio-etapa/${id}/?codigo_bien=${code_bien}&nombre=${name}&cod_etapa_lote_origen=${
+          cod_etapa ?? ''
+        }&agno_lote=${anio ?? ''}`
+      );
+      console.log(data);
       dispatch(set_stage_changes(data.data));
       if (data.data.length > 0) {
-        control_success("Se encontraron cambios de etapa")
+        control_success('Se encontraron cambios de etapa');
       } else {
-        control_error("No se encontraron cambios de etapa")
+        control_error('No se encontraron cambios de etapa');
       }
       return data;
     } catch (error: any) {
@@ -112,27 +136,31 @@ export const get_stage_changes_service = (
   };
 };
 
-
 // obtener personas filtro
 export const get_persons_service = (
-  type: string|null,
-  document: string|null,
-  primer_nombre: string|null,
-  primer_apellido: string|null,
-  razon_social: string|null,
-  comercial_name: string|null,
-
+  type: string | null,
+  document: string | null,
+  primer_nombre: string | null,
+  primer_apellido: string | null,
+  razon_social: string | null,
+  comercial_name: string | null
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `personas/get-personas-filters/?tipo_documento=${type??""}&numero_documento=${document??""}&primer_nombre=${primer_nombre??""}&primer_apellido=${primer_apellido??""}&razon_social=${razon_social??""}&nombre_comercial=${comercial_name??""}`
+        `personas/get-personas-filters/?tipo_documento=${
+          type ?? ''
+        }&numero_documento=${document ?? ''}&primer_nombre=${
+          primer_nombre ?? ''
+        }&primer_apellido=${primer_apellido ?? ''}&razon_social=${
+          razon_social ?? ''
+        }&nombre_comercial=${comercial_name ?? ''}`
       );
       dispatch(set_persons(data.data));
       if (data.data.length > 0) {
-        control_success("Se selecciono persona")
+        control_success('Se selecciono persona');
       } else {
-        control_error("No se encontro persona")
+        control_error('No se encontro persona');
       }
       return data;
     } catch (error: any) {
@@ -150,16 +178,18 @@ export const get_person_document_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`personas/get-personas-by-document/${type}/${document}/`);
-      if ("data" in data) {
+      const { data } = await api.get(
+        `personas/get-personas-by-document/${type}/${document}/`
+      );
+      if ('data' in data) {
         if (data.data.length > 0) {
-          dispatch(set_changing_person(data.data))
-          control_success("Se selecciono la persona ")
+          dispatch(set_changing_person(data.data));
+          control_success('Se selecciono la persona ');
         } else {
-          control_error("No se encontro la persona")
+          control_error('No se encontro la persona');
         }
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -171,18 +201,25 @@ export const get_person_document_service = (
 };
 
 // obtener persona por iddocumento
-export const get_person_id_service = (
-  id: number,
-): any => {
+export const get_person_id_service = (id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`personas/get-by-id/${id}/`);
-      console.log(data)
-      if ("data" in data) {
-        dispatch (set_changing_person({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
-          nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido)}))
+      console.log(data);
+      if ('data' in data) {
+        dispatch(
+          set_changing_person({
+            id_persona: data.data.id_persona,
+            tipo_documento: data.data.tipo_documento,
+            numero_documento: data.data.numero_documento,
+            nombre_completo:
+              String(data.data.primer_nombre) +
+              ' ' +
+              String(data.data.primer_apellido),
+          })
+        );
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -194,18 +231,25 @@ export const get_person_id_service = (
 };
 
 // obtener persona por iddocumento
-export const get_person_anula_service = (
-  id: number,
-): any => {
+export const get_person_anula_service = (id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(`personas/get-by-id/${id}/`);
- 
-      if ("data" in data) {
-        dispatch (set_persona_anula({id_persona: data.data.id_persona, tipo_documento: data.data.tipo_documento, numero_documento: data.data.numero_documento, 
-          nombre_completo: String(data.data.primer_nombre) + " " + String(data.data.primer_apellido)}))
+
+      if ('data' in data) {
+        dispatch(
+          set_persona_anula({
+            id_persona: data.data.id_persona,
+            tipo_documento: data.data.tipo_documento,
+            numero_documento: data.data.numero_documento,
+            nombre_completo:
+              String(data.data.primer_nombre) +
+              ' ' +
+              String(data.data.primer_apellido),
+          })
+        );
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -219,7 +263,9 @@ export const get_person_anula_service = (
 export const get_mezclas_service = (name: string): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mezclas/get-list-mezclas/?nombre=${name ?? "" }`);
+      const { data } = await api.get(
+        `conservacion/mezclas/get-list-mezclas/?nombre=${name ?? ''}`
+      );
       console.log(data);
       dispatch(set_mezclas(data.data));
       return data;
@@ -231,23 +277,24 @@ export const get_mezclas_service = (name: string): any => {
   };
 };
 // crear cambio de etapa
-export const add_stage_change_service = (
-  cambio: any,
-): any => {
+export const add_stage_change_service = (cambio: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.post('conservacion/etapas/guardar-cambio-etapa/', cambio);
-      console.log(data)
+      const { data } = await api.post(
+        'conservacion/etapas/guardar-cambio-etapa/',
+        cambio
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
       console.log('add_siembra_service');
-      console.log(error)
+      console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -255,24 +302,24 @@ export const add_stage_change_service = (
 };
 
 // crear cambio de etapa
-export const annul_stage_change_service = (
-  id: number,
-  cambio: any,
-): any => {
+export const annul_stage_change_service = (id: number, cambio: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/etapas/anular-cambio-etapa/${id}/`, cambio);
-      console.log(data)
+      const { data } = await api.put(
+        `conservacion/etapas/anular-cambio-etapa/${id}/`,
+        cambio
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
       console.log('add_siembra_service');
-      console.log(error)
+      console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -280,24 +327,24 @@ export const annul_stage_change_service = (
 };
 
 // editar cambio etapa
-export const edit_stage_change_service = (
-  cambio: any,
-  id: number
-): any => {
+export const edit_stage_change_service = (cambio: any, id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/etapas/actualizar-cambio-etapa/${id}/`, cambio);
-      console.log(data)
+      const { data } = await api.put(
+        `conservacion/etapas/actualizar-cambio-etapa/${id}/`,
+        cambio
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
       console.log('edit_stage_change_service');
-      console.log(error)
+      console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -305,42 +352,41 @@ export const edit_stage_change_service = (
 };
 
 // editar siembra
-export const edit_siembra_service = (
-  siembra: any,
-  id: number
-): any => {
+export const edit_siembra_service = (siembra: any, id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(siembra, id)
-      const { data } = await api.put(`conservacion/camas-siembras/siembra/update/${id}/`, siembra);
-      console.log(data)
+      console.log(siembra, id);
+      const { data } = await api.put(
+        `conservacion/camas-siembras/siembra/update/${id}/`,
+        siembra
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
       console.log('add_siembra_service');
-      console.log(error)
+      console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
 
-
 // obtener bienes preparacion
-export const get_bien_preparacion_id_service = (
-  id: number,
-): any => {
+export const get_bien_preparacion_id_service = (id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mezclas/get-items-preparacion-mezclas/?id_preparacion_mezcla=${id}`);
-      console.log(data)
-      if ("data" in data) {
-        dispatch (set_preparacion_bienes(data.data))
+      const { data } = await api.get(
+        `conservacion/mezclas/get-items-preparacion-mezclas/?id_preparacion_mezcla=${id}`
+      );
+      console.log(data);
+      if ('data' in data) {
+        dispatch(set_preparacion_bienes(data.data));
       } else {
         // control_error(data.detail)
       }
@@ -361,14 +407,18 @@ export const get_preparaciones_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mezclas/filtro-preparacion-mezclas/?id_mezcla=${mezcla?? ""}&id_vivero=${vivero?? ""}&nombre_mezcla=${name?? ""}`);
+      const { data } = await api.get(
+        `conservacion/mezclas/filtro-preparacion-mezclas/?id_mezcla=${
+          mezcla ?? ''
+        }&id_vivero=${vivero ?? ''}&nombre_mezcla=${name ?? ''}`
+      );
       dispatch(set_preparaciones(data.data));
-      console.log(data)
-      if ("data" in data){
-        if (data.data.length>0){
-          control_success("Se encontraron preparaciones")
+      console.log(data);
+      if ('data' in data) {
+        if (data.data.length > 0) {
+          control_success('Se encontraron preparaciones');
         } else {
-          control_error("No se encontraron preparaciones")
+          control_error('No se encontraron preparaciones');
         }
       }
       return data;
@@ -381,23 +431,24 @@ export const get_preparaciones_service = (
 };
 
 // crear cambio de etapa
-export const add_preparacion_service = (
-  preparacion: any,
-): any => {
+export const add_preparacion_service = (preparacion: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put('conservacion/mezclas/crear-preparacion-mezclas/', preparacion);
-      console.log(data)
+      const { data } = await api.put(
+        'conservacion/mezclas/crear-preparacion-mezclas/',
+        preparacion
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
       console.log('add_siembra_service');
-      console.log(error)
+      console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -405,23 +456,24 @@ export const add_preparacion_service = (
 };
 
 // editar siembra
-export const edit_preparacion_service = (
-  preparacion: any,
-): any => {
+export const edit_preparacion_service = (preparacion: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put('conservacion/mezclas/actualizar-preparacion-mezclas/', preparacion);
-      console.log(data)
+      const { data } = await api.put(
+        'conservacion/mezclas/actualizar-preparacion-mezclas/',
+        preparacion
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
       console.log('edit_preparacion_service');
-      console.log(error)
+      console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -435,12 +487,15 @@ export const annul_preparacion_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/mezclas/anular-preparacion-mezclas/${id}/`, preparacion);
- 
+      const { data } = await api.put(
+        `conservacion/mezclas/anular-preparacion-mezclas/${id}/`,
+        preparacion
+      );
+
       if (data.success === true) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -451,19 +506,22 @@ export const annul_preparacion_service = (
   };
 };
 
-
 // Obtener bienes preparacion
 export const get_bienes_service = (
   id_vivero: string | number,
   codigo_bien: string | null,
-  nombre: string | null,
-  ): any => {
+  nombre: string | null
+): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
-      // const { data } = await api.get(`conservacion/mezclas/get-insumo-por-codigo-y-nombre/?id_vivero=${id_vivero}&codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}`);
-      
-      console.log(data)
+      // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
+      const { data } = await api.get(
+        `conservacion/mezclas/get-insumo-por-codigo-y-nombre/?id_vivero=${id_vivero}&codigo_bien=${
+          codigo_bien ?? ''
+        }&nombre=${nombre ?? ''}`
+      );
+
+      console.log(data);
       dispatch(set_bienes(data.data));
       return data;
     } catch (error: any) {
@@ -481,19 +539,21 @@ export const get_lots_code_service = (
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mortalidad/material-vegetal/get-by-codigo/${id_vivero}/?codigo_bien=${code}/`);
-      console.log(data)
+      const { data } = await api.get(
+        `conservacion/mortalidad/material-vegetal/get-by-codigo/${id_vivero}/?codigo_bien=${code}/`
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.data.length > 0) {
-        if (data.data.length === 1){
+        if (data.data.length === 1) {
           dispatch(set_current_siembra_material_vegetal(data.data[0]));
-          control_success("Se selecciono el lote")
-        }else{
+          control_success('Se selecciono el lote');
+        } else {
           dispatch(set_siembras_material_vegetal(data.data));
-          control_success("Se encontraron lotes")
+          control_success('Se encontraron lotes');
         }
       } else {
-        control_error("No se encontró el lote")
+        control_error('No se encontró el lote');
       }
       return data;
     } catch (error: any) {
@@ -508,20 +568,23 @@ export const get_lots_code_service = (
 export const get_lots_service = (
   id_vivero: string | number,
   code: string | null,
-  name:string | null,
-  cod_etapa: string | null,
-
+  name: string | null,
+  cod_etapa: string | null
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mortalidad/material-vegetal/filtro/${id_vivero}/?codigo_bien=${code??""}&nombre=${name ?? ""}&cod_etapa_lote=${cod_etapa ?? ""}`);
+      const { data } = await api.get(
+        `conservacion/mortalidad/material-vegetal/filtro/${id_vivero}/?codigo_bien=${
+          code ?? ''
+        }&nombre=${name ?? ''}&cod_etapa_lote=${cod_etapa ?? ''}`
+      );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data)
+      console.log(data);
       if (data.success === true) {
-        dispatch(set_siembras_material_vegetal(data.data))
-        control_success(data.detail)      
+        dispatch(set_siembras_material_vegetal(data.data));
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -536,7 +599,9 @@ export const get_lots_service = (
 export const get_nurseries_mortalidad_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get('conservacion/levantamiento-cuarentena/filtro-vivero/');
+      const { data } = await api.get(
+        'conservacion/levantamiento-cuarentena/filtro-vivero/'
+      );
       dispatch(set_nurseries(data.data));
       return data;
     } catch (error: any) {
@@ -548,20 +613,22 @@ export const get_nurseries_mortalidad_service = (): any => {
 };
 
 // obtener mortalidades filtro
-export const get_mortalidades_service = (
-  nro: number | null,
-): any => {
+export const get_mortalidades_service = (nro: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=${nro??""}`);
+      const { data } = await api.get(
+        `conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=${
+          nro ?? ''
+        }`
+      );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data)
+      console.log(data);
       if (data.success === true) {
-        dispatch(set_mortalidades(data.data))
-        control_success(data.detail)      
+        dispatch(set_mortalidades(data.data));
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -573,20 +640,22 @@ export const get_mortalidades_service = (
 };
 
 // obtener mortalidades filtro
-export const get_mortalidad_nro_service = (
-  nro: number | null,
-): any => {
+export const get_mortalidad_nro_service = (nro: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=${nro??""}`);
+      const { data } = await api.get(
+        `conservacion/mortalidad/get-mortalidad-by-nro/?nro_registro_mortalidad=${
+          nro ?? ''
+        }`
+      );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data)
+      console.log(data);
       if (data.success === true) {
-        dispatch(set_current_mortalidad(data.data))
-        control_success("sé selecciono la mortalidad")      
+        dispatch(set_current_mortalidad(data.data));
+        control_success('sé selecciono la mortalidad');
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -598,22 +667,23 @@ export const get_mortalidad_nro_service = (
 };
 
 // crearmortalidad
-export const add_mortalidad_service = (
-  mortalidad: any,
-): any => {
+export const add_mortalidad_service = (mortalidad: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.post('conservacion/mortalidad/registrar/', mortalidad);
+      const { data } = await api.post(
+        'conservacion/mortalidad/registrar/',
+        mortalidad
+      );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
       console.log('add_mortalidad_service');
-      console.log(error)
+      console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -621,18 +691,18 @@ export const add_mortalidad_service = (
 };
 
 // editar ingreso a cuarentena
-export const edit_mortalidad_service = (
-  id: number,
-  mortalidad: any,
-): any => {
+export const edit_mortalidad_service = (id: number, mortalidad: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/mortalidad/actualizar/${id}/`, mortalidad);
+      const { data } = await api.put(
+        `conservacion/mortalidad/actualizar/${id}/`,
+        mortalidad
+      );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -644,20 +714,19 @@ export const edit_mortalidad_service = (
 };
 
 // borrar siembra
-export const annul_mortalidad_service = (
-  id: number,
-  mortalidad: any
-): any => {
+export const annul_mortalidad_service = (id: number, mortalidad: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/mortalidad/anular/${id}/`, mortalidad);
-      console.log(data)
+      const { data } = await api.put(
+        `conservacion/mortalidad/anular/${id}/`,
+        mortalidad
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)   
-         
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -669,15 +738,15 @@ export const annul_mortalidad_service = (
 };
 
 // obtener bienes mortalidad
-export const get_bien_mortalidad_id_service = (
-  id: number,
-): any => {
+export const get_bien_mortalidad_id_service = (id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/mortalidad/get-items-mortalidad-by-id/${id}`);
-      console.log(data)
-      if ("data" in data) {
-        dispatch (set_items_mortalidad(data.data))
+      const { data } = await api.get(
+        `conservacion/mortalidad/get-items-mortalidad-by-id/${id}`
+      );
+      console.log(data);
+      if ('data' in data) {
+        dispatch(set_items_mortalidad(data.data));
       } else {
         // control_error(data.detail)
       }
@@ -705,22 +774,23 @@ export const get_nro_mortalidad_service = (): any => {
   };
 };
 
-
 // obtener incidenciaes filtro
-export const get_incidencias_service = (
-  nro: number | null,
-): any => {
+export const get_incidencias_service = (nro: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/incidencia/get-incidencia-by-nro/?nro_registro_incidencia=${nro??""}`);
+      const { data } = await api.get(
+        `conservacion/incidencia/get-incidencia-by-nro/?nro_registro_incidencia=${
+          nro ?? ''
+        }`
+      );
       // const { data } = await api.get('conservacion/ingreso-cuarentena/get-ingresos-cuarentena/');
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data)
+      console.log(data);
       if (data.success === true) {
-        dispatch(set_incidencias(data.data))
-        control_success(data.detail)      
+        dispatch(set_incidencias(data.data));
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -734,21 +804,24 @@ export const get_incidencias_service = (
 // crearincidencia
 export const add_incidencia_service = (
   id_vivero: number,
-  incidencia: any,
+  incidencia: any
 ): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.post(`conservacion/incidencias/create-incidencias/${id_vivero}/`, incidencia);
+      const { data } = await api.post(
+        `conservacion/incidencias/create-incidencias/${id_vivero}/`,
+        incidencia
+      );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
       console.log('add_incidencia_service');
-      console.log(error)
+      console.log(error);
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -756,18 +829,18 @@ export const add_incidencia_service = (
 };
 
 // editar ingreso a cuarentena
-export const edit_incidencia_service = (
-  id: number,
-  incidencia: any,
-): any => {
+export const edit_incidencia_service = (id: number, incidencia: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/incidencias/actualizacion-incidencias/${id}/`, incidencia);
+      const { data } = await api.put(
+        `conservacion/incidencias/actualizacion-incidencias/${id}/`,
+        incidencia
+      );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)      
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -779,20 +852,19 @@ export const edit_incidencia_service = (
 };
 
 // borrar siembra
-export const annul_incidencia_service = (
-  id: number,
-  incidencia: any
-): any => {
+export const annul_incidencia_service = (id: number, incidencia: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(`conservacion/incidencias/anulacion-incidencias/${id}/`, incidencia);
-      console.log(data)
+      const { data } = await api.put(
+        `conservacion/incidencias/anulacion-incidencias/${id}/`,
+        incidencia
+      );
+      console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       if (data.success) {
-        control_success(data.detail)   
-         
+        control_success(data.detail);
       } else {
-        control_error(data.detail)
+        control_error(data.detail);
       }
       return data;
     } catch (error: any) {
@@ -804,14 +876,14 @@ export const annul_incidencia_service = (
 };
 
 // obtener bienes incidencia
-export const get_bien_incidencia_id_service = (
-  id: number,
-): any => {
+export const get_bien_incidencia_id_service = (id: number): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.get(`conservacion/incidencias/get-consumo-by-incidencia/${id}`);
-      console.log(data)
-      if ("data" in data) {
+      const { data } = await api.get(
+        `conservacion/incidencias/get-consumo-by-incidencia/${id}`
+      );
+      console.log(data);
+      if ('data' in data) {
         // dispatch (set_items_incidencia(data.data))
       } else {
         // control_error(data.detail)

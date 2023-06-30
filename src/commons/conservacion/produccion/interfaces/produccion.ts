@@ -210,9 +210,11 @@ export interface IObjPreparacionMezcla{
 export interface IObjBienes{
   id_bien: number|null;
   unidad_disponible: string | null;
-  cantidad_disponible_bien: number | null;
+  saldo_disponible?: number | null;
+  cantidad_disponible_bien?: number | null;
   codigo_bien : string | null;
-  nombre_bien: string | null;
+  nombre?: string | null;
+  nombre_bien?: string | null;
   tipo_bien?: string | null;
 }
 

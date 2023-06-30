@@ -21,21 +21,8 @@ export const eliminar_id = async (id: number, url: string): Promise<any> => {
 // post 
 export const post_programa = async (
   form: any,
-  set_data: any,
-  programas: any,
   proyectos: any,
-  actividades: any[]
 ): Promise<any> => {
-  const proyecto = {
-    id_proyecto: form.id_proyecto,
-    nombre: form.nombre,
-    vigencia_inicial: dayjs(form.vigencia_inicial).format('YYYY-MM-DD'),
-    vigencia_final: dayjs(form.vigencia_final).format('YYYY-MM-DD'),
-    inversion: form.inversion,
-    actividades: form.descripcion ? [{ nombre: form.descripcion }] : [],
-  };
-
-  const nuevos_proyectos = [...proyectos, proyecto];
 
   const response = await api.post(
     'hidrico/programas/programa/recurso/hidrico/create/',
@@ -45,11 +32,10 @@ export const post_programa = async (
       nombre: form.nombre_programa,
       fecha_inicio: dayjs(form.fecha_inicio).format('YYYY-MM-DD'),
       fecha_fin: dayjs(form.fecha_fin).format('YYYY-MM-DD'),
-      proyectos: form.nombre ? nuevos_proyectos : [],
+      proyectos
     }
   );
 
-  // set_data([...programas, response.data]);
   return response.data;
 };
 

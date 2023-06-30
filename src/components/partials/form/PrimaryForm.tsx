@@ -16,6 +16,7 @@ interface IProps {
     form_inputs: any[];
     button_submit_label: string;
     button_submit_icon_class: any;
+    show_button?: boolean | null;
 }
 
 
@@ -25,7 +26,8 @@ const PrimaryForm = ({
     on_submit_form,
     form_inputs,
     button_submit_label,
-    button_submit_icon_class
+    button_submit_icon_class,
+    show_button
 }: IProps) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
     const TypeDatum: any = (input: any) => {
@@ -112,7 +114,7 @@ const PrimaryForm = ({
                 max_date={form_input.max_date ?? ""}
                 format={form_input.max_date ?? null}
             />;
-        } else if(form_input.datum_type === "image_uploader"){
+        } else if (form_input.datum_type === "image_uploader") {
             return <ImageUploader
                 xs={form_input.xs}
                 md={form_input.md}
@@ -138,20 +140,21 @@ const PrimaryForm = ({
                     <TypeDatum key={index} form_input={option} />
                 ))}
             </Grid>
-
-            <Stack
-                direction="row"
-                spacing={2}
-                sx={{ mr: '15px', mb: '10px', mt: '10px' }}
-            >
-                <FormButton
-                    variant_button="contained"
-                    on_click_function={null}
-                    icon_class={button_submit_icon_class}
-                    label={button_submit_label}
-                    type_button="submit"
-                />
-            </Stack>
+            {(show_button ?? true) &&
+                <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{ mr: '15px', mb: '10px', mt: '10px' }}
+                >
+                    <FormButton
+                        variant_button="contained"
+                        on_click_function={null}
+                        icon_class={button_submit_icon_class}
+                        label={button_submit_label}
+                        type_button="submit"
+                    />
+                </Stack>
+            }
         </Box>
     );
 }
