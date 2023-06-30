@@ -34,7 +34,7 @@ const SeleccionarMortalidad = ({ control_mortalidad, get_values }: IProps) => {
     { field: 'id_baja', headerName: 'ID', width: 20 },
     {
       field: 'nro_baja_por_tipo',
-      headerName: '# baja',
+      headerName: 'Número de baja',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
