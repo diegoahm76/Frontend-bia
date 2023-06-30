@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Avatar, Box, Button, Grid, IconButton, Stack, Tab, Tooltip, Typography } from "@mui/material"
 import { Title } from '../../../components/Title';
 import { TabContext, TabList, TabPanel } from "@mui/lab";
