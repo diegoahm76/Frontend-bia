@@ -396,7 +396,8 @@ export function AdministrarViveroScreen(): JSX.Element {
   </Button>
 </Grid>
   <Divider style={{ width: '98%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
-            <Grid item   xs={12} sm={12} md={12} lg={10.8} xl={10.8}> 
+  <Grid container>
+  <Grid item xs={6}>
               <TextField
                 label="Buscar"
                 value={searchtext}
@@ -422,7 +423,7 @@ export function AdministrarViveroScreen(): JSX.Element {
               </Button>
             </Grid>
             {/* <Divider /> */}
-            <Grid item  xs={12} sm={12} md={12} lg={1} xl={0.7}>
+            <Grid item  xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <ButtonGroup >
                 <IconButton style={{ ...button_style, backgroundColor: '#335B1E',  }} onClick={handle_clickxls}>
                   <i className="pi pi-file-excel"></i>
@@ -432,7 +433,7 @@ export function AdministrarViveroScreen(): JSX.Element {
                 </IconButton> 
               </ButtonGroup> 
                 </Grid>
-                
+                </Grid>
           
           </Grid>
 
