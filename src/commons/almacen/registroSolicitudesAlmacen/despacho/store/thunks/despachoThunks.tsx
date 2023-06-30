@@ -222,13 +222,13 @@ export const get_bien_code_service = (
       if (data.data.length > 0) {
         if (data.data.length === 1) {
           dispatch(set_current_bien(data.data[0]));
-          control_success('Se selecciono el lote');
+          control_success('Se selecciono el bien');
         } else {
           dispatch(set_bienes(data.data));
-          control_success('Se encontraron lotes');
+          control_success('Se encontraron bienes');
         }
       } else {
-        control_error('No se encontró el lote');
+        control_error('No se encontró el bien');
       }
 
       return data;

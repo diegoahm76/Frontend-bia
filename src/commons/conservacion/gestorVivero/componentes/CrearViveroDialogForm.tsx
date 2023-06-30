@@ -162,7 +162,7 @@ const CrearViveroDialogForm = ({
       } = await get_ciudades("50");
       set_municipalities(municipios);
     } catch (err) {
-      control_error("error encontrando municipios");
+      control_error("Error encontrando municipios");
     } 
   };
   const text_choise_adapter: any = (dataArray: string[]) => {
@@ -229,23 +229,14 @@ const CrearViveroDialogForm = ({
           {action === 'create'
             ? 'Crear vivero'
             : action === 'detail'
-            ? 'Detalle vivero'
+            ? 'Detalle de vivero'
             : 'Editar vivero'}
         </DialogTitle> */}
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
-        <Grid container    sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-          marginLeft: '-6px',
-          marginTop: '-6px',
-        }} spacing={2}>
-            <Title title="Informacion pricipal"></Title>
-            <Grid item xs={11} md={5} margin={0}>
+          <Grid container>
+            <Title title="INFORMACION PRINCIPAL"></Title>
+            <Grid item xs={11} md={5} margin={1}>
               <Controller
                 name="nombre"
                 control={control_vivero}
@@ -268,7 +259,7 @@ const CrearViveroDialogForm = ({
                     helperText={
                       error != null
                         ? 'Es obligatorio ingresar un nombre'
-                        : 'Ingrese nombre'
+                        : 'Ingrese el nombre'
                     }
                   />
                 )}
@@ -357,7 +348,7 @@ const CrearViveroDialogForm = ({
                     margin="dense"
                     fullWidth
                     size="small"
-                    label="Area m2"
+                    label="Área m2"
                     variant="outlined"
                     type="number"
                     disabled={action === 'detail'}
@@ -367,11 +358,11 @@ const CrearViveroDialogForm = ({
                     helperText={
                       error != null
                         ? error.type === 'required'
-                          ? 'El area es requerida'
-                          : `El valor del area debe ser mayor al area de propagacion (${
+                          ? 'El área es requerida'
+                          : `El valor del área debe ser mayor al área de propagación (${
                               get_values('area_propagacion_mt2') ?? ''
                             })`
-                        : 'Ingrese area'
+                        : 'Ingrese área'
                     }
                   />
                 )}
@@ -392,7 +383,7 @@ const CrearViveroDialogForm = ({
                     fullWidth
                     select
                     size="small"
-                    label="Tipo vivero"
+                    label="Tipo de vivero"
                     variant="outlined"
                     disabled={action === 'detail'}
                     defaultValue={value}
@@ -401,8 +392,8 @@ const CrearViveroDialogForm = ({
                     error={!(error == null)}
                     helperText={
                       error != null
-                        ? 'Es obligatorio seleccionar tipo de vivero'
-                        : 'seleccione tipo vivero'
+                        ? 'Es obligatorio seleccionar el tipo de vivero'
+                        : 'Seleccione tipo vivero'
                     }
                   >
                     {nursery_types.map((option: IList) => (
@@ -430,7 +421,7 @@ const CrearViveroDialogForm = ({
                     margin="dense"
                     fullWidth
                     size="small"
-                    label="Area propagacion m2"
+                    label="Area propagación m2"
                     variant="outlined"
                     type="number"
                     disabled={action === 'detail'}
@@ -440,11 +431,11 @@ const CrearViveroDialogForm = ({
                     helperText={
                       error != null
                         ? error.type === 'required'
-                          ? 'El area de propagacion es requerida'
+                          ? 'El área de propagación es requerida'
                           : `El valor del área de propagación debe ser menor al área total (${
                               get_values('area_mt2') ?? ''
                             })`
-                        : 'Ingrese area'
+                        : 'Ingrese área'
                     }
                   />
                 )}
@@ -465,7 +456,7 @@ const CrearViveroDialogForm = ({
                     fullWidth
                     select
                     size="small"
-                    label="¿Tiene area de produccion?"
+                    label="¿Tiene area de producción?"
                     variant="outlined"
                     disabled={action === 'detail'}
                     defaultValue={value}
@@ -499,7 +490,7 @@ const CrearViveroDialogForm = ({
                     fullWidth
                     select
                     size="small"
-                    label="¿Tiene area preparacion de sustrato?"
+                    label="¿Tiene área preparación de sustrato?"
                     variant="outlined"
                     disabled={action === 'detail'}
                     defaultValue={value}
@@ -533,7 +524,7 @@ const CrearViveroDialogForm = ({
                     fullWidth
                     select
                     size="small"
-                    label="¿Tiene area de embolsado?"
+                    label="¿Tiene área de embolsado?"
                     variant="outlined"
                     disabled={action === 'detail'}
                     defaultValue={value}

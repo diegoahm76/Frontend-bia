@@ -148,6 +148,134 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
     }
   }, [current_despacho]);
 
+<<<<<<< HEAD
+    return (
+        <>
+            <Grid
+                container
+                direction="row"
+                padding={2}
+                borderRadius={2}
+            >
+                <BuscarModelo
+                    set_current_model={set_current_despacho}
+                    row_id={"id_despacho_viveros"}
+                    columns_model={columns_despacho}
+                    models={despachos}
+                    get_filters_models={get_despachos}
+                    set_models={set_despachos}
+                    button_submit_label='Buscar despachos'
+                    form_inputs={[
+                        {
+                            datum_type: "title",
+                            title_label: "Información del despacho"
+                        },
+                        {
+                        datum_type: "select_controller",
+                        xs: 12,
+                        md: 5,
+                        control_form: control_despacho,
+                        control_name: "id_vivero",
+                        default_value: "",
+                        rules: { required_rule: { rule: true, message: "Vivero requerido" } },
+                        label: "Vivero",
+                        disabled: false,
+                        helper_text: "Seleccione Vivero",
+                        select_options: nurseries,
+                        option_label: "nombre",
+                        option_key: "id_vivero",
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_despacho,
+                            control_name: "nro_despachos_viveros",
+                            default_value: "",
+                            rules: {},
+                            label: "Número de despacho",
+                            type: "number",
+                            disabled: true,
+                            helper_text: "",
+                        },
+                        {
+                            datum_type: "input_file_controller",
+                            xs: 12,
+                            md: 4,
+                            control_form: control_despacho,
+                            control_name: "ruta_archivo_con_recibido",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "Archivo requerido" } },
+                            label: "Archivo soporte",
+                            disabled: false,
+                            helper_text: "",
+                            set_value: set_file,
+                            file_name,
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 12,
+                            control_form: control_despacho,
+                            control_name: "motivo",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Observación requerida" } },
+                            label: "Observaciones",
+                            type: "text",
+                            multiline_text: true,
+                            rows_text: 4,
+                            disabled: false,
+                            helper_text: ""
+                          },
+                          {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 4,
+                            control_form: control_despacho,
+                            control_name: "persona_crea",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar la persona que la creó" } },
+                            label: "Despacho realizado por",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 5,
+                            control_form: control_despacho,
+                            control_name: "fecha_despacho",
+                            default_value: "",
+                            rules: { required_rule: { rule: true, message: "Debe seleccionar fecha" } },
+                            label: "Fecha de incidencia",
+                            type: "text",
+                            disabled: true,
+                            helper_text: ""
+                        },
+                    ]}
+                    modal_select_model_title='Buscar despacho'
+                    modal_form_filters={[
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_despacho,
+                            control_name: "nro_despachos_viveros",
+                            default_value: "",
+                            rules: { },
+                            label: "Número despacho",
+                            type: "number",
+                            disabled: false,
+                            helper_text: "",
+                        }
+                     ]}   
+                />
+            </Grid>
+        </>
+    );
+}
+=======
   const get_despachos: any = async () => {
     if (origin_nursery.id_vivero !== null) {
       const nro = get_values('nro_despacho');
@@ -301,6 +429,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
     </>
   );
 };
+>>>>>>> d3d6f4f379bae3d51692b1dd1f365c7d6bc5d30d
 
 // eslint-disable-next-line no-restricted-syntax
 export default SeleccionarDespacho;
