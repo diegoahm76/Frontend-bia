@@ -172,6 +172,7 @@ const SeleccionarSolicitud = ({
               disabled: false,
               helper_text: '',
               set_value: set_file,
+              // eslint-disable-next-line object-shorthand
               file_name: file_name,
             },
             {

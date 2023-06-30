@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, FileDownloadOutlined } from '@mui/icons-material';
@@ -10,8 +9,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { get_filtro_cartera_detallada, get_cartera_detallada } from '../slices/ReportesSlice';
 import { faker } from '@faker-js/faker';
-import JsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 interface RootState {
   reportes_recaudo: {
@@ -25,7 +22,6 @@ export const TablaCarteraDetallada: React.FC = () => {
   const [filter, set_filter] = useState('');
   const [search, set_search] = useState('');
   const [total, set_total] = useState(0);
-  const [values, set_values] = useState([]);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
@@ -38,51 +34,6 @@ export const TablaCarteraDetallada: React.FC = () => {
       }
     }
   }, [visible_rows])
-
-  const handle_export_excel = async (): Promise<void> => {
-    try {
-      const xlsx = await import('xlsx');
-      const worksheet = xlsx.utils.json_to_sheet(visible_rows);
-      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-      const excel_buffer = xlsx.write(workbook, {
-        bookType: 'xlsx',
-        type: 'array'
-      });
-      save_as_excel_file(excel_buffer, 'Reporte General de Cartera con Detalle');
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const save_as_excel_file = (buffer: Buffer, fileName: string): void => {
-    import('file-saver')
-      .then((module) => {
-        const save_as_fn = module.default.saveAs;
-        const excel_type =
-          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-        const excel_extension = '.xlsx';
-        const data = new Blob([buffer], {
-          type: excel_type
-        });
-        save_as_fn(data, fileName + excel_extension);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const handle_export_pdf = () => {
-    const report = new JsPDF('l','pt','letter');
-    report.text("Reporte General de Cartera con Detalle", 40, 30);
-    // eslint-disable-next-line @typescript-eslint/no-confusing-void-expression
-    autoTable(report, {
-      theme: 'grid',
-      head: [['Código Contable', 'Concepto Deuda', 'Nombre Deudor', 'NIT', 'Expediente', 'Resolución', '#Factura', 'Total']],
-      body: values,
-      foot:[['Total General', '', '', '', '', '', '', `${total.toFixed(2)}`]],
-    })
-    report.save('Reporte General de Cartera con Detalle.pdf');
-  }
 
   const columns: GridColDef[] = [
     {
@@ -171,12 +122,6 @@ export const TablaCarteraDetallada: React.FC = () => {
     set_visible_rows(reportes_recaudo)
   }, [reportes_recaudo])
 
-  useEffect(() => {
-    if(visible_rows.length !== 0){
-      set_values(visible_rows.map((obj) => Object.values(obj)) as any)
-    }
-  }, [visible_rows])
-
   return (
     <Box sx={{ width: '100%' }}>
       <Stack
@@ -250,7 +195,8 @@ export const TablaCarteraDetallada: React.FC = () => {
             color='primary'
             variant='outlined'
             startIcon={<FileDownloadOutlined />}
-            onClick={handle_export_excel}
+            onClick={() => {
+            }}
           >
             Exportar Excel
           </Button>
@@ -258,13 +204,13 @@ export const TablaCarteraDetallada: React.FC = () => {
             color='primary'
             variant='outlined'
             startIcon={<FileDownloadOutlined />}
-            onClick={handle_export_pdf}
+            onClick={() => {
+            }}
           >
             Exportar PDF
           </Button>
         </Stack>
       </Stack>
-      <div id='report'>
       {
         visible_rows.length !== 0 ? (
           <Grid
@@ -303,7 +249,7 @@ export const TablaCarteraDetallada: React.FC = () => {
                     label={<strong>Total General</strong>}
                     size="small"
                     fullWidth
-                    value={total.toFixed(2)}
+                    value={total}
                   />
                 </Grid>
             </Stack>
@@ -311,7 +257,6 @@ export const TablaCarteraDetallada: React.FC = () => {
           </Grid>
         ) : null
       }
-      </div>
     </Box>
   );
 }

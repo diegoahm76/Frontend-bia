@@ -167,6 +167,7 @@ export const FacilidadPago: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
+
     </>
   )
 }

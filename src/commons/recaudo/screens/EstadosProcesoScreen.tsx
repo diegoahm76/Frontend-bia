@@ -142,7 +142,6 @@ export const EstadosProcesoScreen: React.FC = () => {
       id: atributo.id.toString(),
       descripcion: atributo.descripcion,
       tipo_atributo: atributo.id_tipo.tipo,
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
       obligatorio: atributo.obligatorio ? 'Si' : 'No',
       opciones: ''
     }));

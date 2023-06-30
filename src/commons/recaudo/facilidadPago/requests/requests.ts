@@ -1,5 +1,5 @@
 import { api } from '../../../../api/axios';
-import { type RespuestaFacilidadPago, type RegistroFacilidadPago, type Bien } from '../interfaces/interfaces';
+import { type RespuestaFacilidadPago, type RegistroFacilidadPago } from '../interfaces/interfaces';
 
 interface Funcionario {
   id_funcionario: number;
@@ -105,8 +105,3 @@ export const post_documentos_persona = async (archivo: any = {} ): Promise<any> 
   return data
 }
 
-// Crear Bienes desde Pag. Usuario Externo
-export const post_registro_bienes = async (bien: Bien): Promise<any> => {
-  const data = await api.post(`recaudo/garantias/crear-bien/`, bien)
-  return data
-}
