@@ -24,7 +24,7 @@ import {
 } from '@mui/material';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
 //! helpers
-import { ModalContextTRD } from '../../context/ModalsContextTrd';
+
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Controller } from 'react-hook-form';
 
@@ -33,6 +33,7 @@ import { get_searched_trd } from '../../toolkit/modalBusquedaTRD/thunks/modalBus
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { get_trd_current } from '../../toolkit/modalBusquedaTRD/slices/modalBusquedaTRDSlice';
+import { ModalContextTRD } from '../../context/ModalsContextTrd';
 //! toolkit-redux values
 
 export const ModalSearchTRD: FC = (): JSX.Element => {
