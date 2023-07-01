@@ -2,12 +2,14 @@
 //! libraries or frameworks
 
 import { useContext, type FC } from 'react';
-
+import { Controller } from 'react-hook-form';
 // Components Material UI
-import { Grid, Box, TextField, MenuItem, Stack, Button } from '@mui/material';
+import { Grid, Box, TextField, Stack, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import { Title } from '../../../../components/Title';
+// * react select
+import Select from 'react-select';
 
 import type {
   GridColDef
@@ -21,6 +23,9 @@ import { useAppSelector } from '../../../../hooks';
 // Íconos
 import SyncIcon from '@mui/icons-material/Sync';
 import CleanIcon from '@mui/icons-material/CleaningServices';
+
+//* personalized hook
+import { use_trd } from '../hooks/use_trd';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -54,7 +59,7 @@ const columns: GridColDef[] = [
   }
 ];
 
-const tipos_unidades = [
+/* const tipos_unidades = [
   {
     value: '1',
     label: 'Test'
@@ -71,7 +76,7 @@ const tipos_unidades = [
     value: 'JPY',
     label: '¥'
   }
-];
+]; */
 
 const rows = [
   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
@@ -87,6 +92,13 @@ const rows = [
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TrdScreen: FC = (): JSX.Element => {
+  //! use_trd hook
+  const {
+    // ? create_trd_modal - ccd, name and version
+    control_create_trd_modal,
+    // ? list of finished ccd
+    list_finished_ccd
+  } = use_trd();
   // const dispatch = useDispatch();
 
   // ? redux toolkit
@@ -119,7 +131,55 @@ export const TrdScreen: FC = (): JSX.Element => {
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
-                <TextField
+                {/* <label className="text-terciary">
+                  Lista de ccds terminadoss
+                  <samp className="text-danger">*</samp>
+                </label> */}
+                {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
+                <Controller
+                  name="id_ccd"
+                  control={control_create_trd_modal}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <Select
+                      
+                      value={value}
+                      // isMulti prop will enable the multi select
+                      // isMulti
+                      onChange={(selectedOption) => {
+                        console.log('selectedOption', selectedOption);
+                        /* const spliceSelectedOptions = selectedOption.map(
+                              (item) => {
+                                const partes = item?.label?.split('-');
+                                return {
+                                  label: item.label,
+                                  value: item.value,
+                                  nombreSerie: partes?.[1],
+                                  nombreSubserie: partes?.[2],
+                                  codigoSerie: partes?.[0],
+                                  codigoSubserie: partes?.[3]
+                                };
+                              }
+                            ); */
+                        // onChange(selectedOption);
+                      }}
+                      options={list_finished_ccd}
+                      placeholder="Seleccionar"
+                    />
+                  )}
+                />
+                {/* {errors.subserie_asignacion != null && (
+                  <div className="col-12">
+                    <small className="text-center text-danger">
+                      Este campo es obligatorio
+                    </small>
+                  </div>
+                )} */}
+
+                {/* <TextField
                   name="tipoUnidad"
                   select
                   label="CCD"
@@ -133,7 +193,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                       {option.label}
                     </MenuItem>
                   ))}
-                </TextField>
+                </TextField> */}
               </Grid>
               <Grid item xs={12} sm={4}>
                 <TextField

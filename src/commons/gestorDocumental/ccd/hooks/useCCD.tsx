@@ -373,7 +373,7 @@ const use_ccd = () => {
       valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
       ruta_soporte: data_create_ccd.ruta_soporte
         ? data_create_ccd.ruta_soporte
-        : null
+        : data_create_ccd.ruta_soporte
     };
     // console.log(data_create_ccd.ruta_soporte, 'data_create_ccd.ruta_soporte')
 
@@ -393,7 +393,7 @@ const use_ccd = () => {
       String(updatedCCD.valor_aumento_subserie)
     );
     // formData.append('ruta_soporte', updatedCCD.ruta_soporte);
-    if (!updatedCCD.ruta_soporte) {
+    if (updatedCCD.ruta_soporte) {
       formData.append('ruta_soporte', updatedCCD.ruta_soporte);
     }
 
