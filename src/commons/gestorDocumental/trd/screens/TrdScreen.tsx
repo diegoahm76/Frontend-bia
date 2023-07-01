@@ -122,7 +122,7 @@ export const TrdScreen: FC = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Tabla de retención documental" />
+          <Title title="TRD - Tabla de retención documental" />
           <Box
             component="form"
             sx={{ mt: '20px' }}
@@ -208,7 +208,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                       fullWidth
                       name="nombre"
                       label="Nombre del TRD"
-                      helperText="Nombre del TRD"
+                      helperText="Ingrese nombre"
                       size="small"
                       variant="outlined"
                       value={value}
@@ -284,14 +284,14 @@ export const TrdScreen: FC = (): JSX.Element => {
               startIcon={<SearchIcon />}
               onClick={openModalModalSearchTRD}
             >
-              BUSCAR
+              BUSCAR TRD
             </Button>
             <Button
               color="primary"
               variant="contained"
               startIcon={trd_current !== null ? <SyncIcon /> : <SaveIcon />}
             >
-              {trd_current !== null ? 'ACTUALIZAR TRD' : 'GUARDAR TRD'}
+              {trd_current !== null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
             </Button>
 
             <Button
