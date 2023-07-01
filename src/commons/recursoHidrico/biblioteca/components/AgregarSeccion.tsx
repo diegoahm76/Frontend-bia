@@ -12,7 +12,6 @@ import {
 } from '@mui/material';
 import { DataContext } from '../context/contextData';
 import dayjs from 'dayjs';
-import { Title } from '../../../../components/Title';
 import { LoadingButton } from '@mui/lab';
 import { AgregarSubseccion } from './AgregarSubseccion';
 
@@ -25,9 +24,10 @@ export const AgregarSeccion: React.FC = () => {
     setValue: set_value,
     errors,
     info_seccion,
+    is_saving,
+    is_register_subseccion,
     set_id_seccion,
     set_mode,
-    is_register_subseccion,
   } = useContext(DataContext);
 
   // watch
@@ -37,6 +37,18 @@ export const AgregarSeccion: React.FC = () => {
   const [current_date, set_current_date] = useState(
     dayjs().format('YYYY-MM-DD')
   );
+  const [is_form_valid, set_is_form_valid] = useState(false);
+
+  const check_form_validity = (): void => {
+    const is_nombre_seccion_valid = nombre_seccion !== '';
+    const is_descripcion_seccion_valid = descripcion_seccion !== '';
+
+    set_is_form_valid(is_nombre_seccion_valid && is_descripcion_seccion_valid);
+  };
+
+  useEffect(() => {
+    check_form_validity();
+  }, [nombre_seccion, descripcion_seccion]);
 
   useEffect(() => {
     set_current_date(dayjs().format('YYYY-MM-DD'));
@@ -107,6 +119,7 @@ export const AgregarSeccion: React.FC = () => {
         <Button
           variant="outlined"
           color="primary"
+          disabled={!is_form_valid}
           onClick={() => {
             set_id_seccion(null);
             set_mode('register_subseccion');
@@ -124,7 +137,6 @@ export const AgregarSeccion: React.FC = () => {
             onClick={() => {
               reset();
             }}
-            // startIcon={<SaveIcon />}
           >
             Limpiar
           </LoadingButton>
@@ -135,9 +147,8 @@ export const AgregarSeccion: React.FC = () => {
             type="submit"
             variant="contained"
             color="success"
-            //   disabled={is_saving}
-            //   loading={is_saving}
-            // startIcon={<SaveIcon />}
+            disabled={is_saving}
+            loading={is_saving}
           >
             Guardar
           </LoadingButton>

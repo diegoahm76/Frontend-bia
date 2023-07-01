@@ -73,7 +73,7 @@ const PersonaResponsableAprobacion = ({
 
     {
       field: 'id_unidad_para_la_que_solicita',
-      headerName: 'unidad',
+      headerName: 'Unidad',
       width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -171,7 +171,7 @@ const PersonaResponsableAprobacion = ({
               rules: {},
               label: 'Tipo documento',
               disabled: true,
-              helper_text: 'debe seleccionar campo',
+              helper_text: 'Debe seleccionar campo',
               select_options: document_type,
               option_label: 'label',
               option_key: 'value',
@@ -227,7 +227,7 @@ const PersonaResponsableAprobacion = ({
               control_name: 'tipo_documento',
               default_value: '',
               rules: {},
-              label: 'Tipo documento',
+              label: 'Tipo de documento',
               disabled: false,
               helper_text: '',
               select_options: document_type,

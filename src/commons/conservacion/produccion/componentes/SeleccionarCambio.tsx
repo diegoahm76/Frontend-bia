@@ -26,7 +26,7 @@ const SeleccionarCambio = ({
     { field: 'id_cambio_de_etapa', headerName: 'ID', width: 20 },
     {
       field: 'nro_lote',
-      headerName: '# lote',
+      headerName: 'Número lote',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -256,7 +256,7 @@ const SeleccionarCambio = ({
               control_name: "observaciones",
               default_value: "",
               rules: { required_rule: { rule: true, message: "Observación requerida" } },
-              label: "Observacion",
+              label: "Observación",
               type: "text",
               multiline_text: true,
               rows_text: 4,
@@ -274,7 +274,7 @@ const SeleccionarCambio = ({
               control_name: "codigo",
               default_value: "",
               rules: { required_rule: { rule: true, message: "Cantidad requerida" } },
-              label: "Codigo de material vegetal",
+              label: "Código de material vegetal",
               type: "string",
               disabled: true,
               helper_text: ""
