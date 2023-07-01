@@ -130,7 +130,7 @@ export const TrdScreen: FC = (): JSX.Element => {
             autoComplete="off"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={6}>
                 {/* <label className="text-terciary">
                   Lista de ccds terminadoss
                   <samp className="text-danger">*</samp>
@@ -144,14 +144,14 @@ export const TrdScreen: FC = (): JSX.Element => {
                     field: { onChange, value },
                     fieldState: { error }
                   }) => (
-                    <Select
-                      
-                      value={value}
-                      // isMulti prop will enable the multi select
-                      // isMulti
-                      onChange={(selectedOption) => {
-                        console.log('selectedOption', selectedOption);
-                        /* const spliceSelectedOptions = selectedOption.map(
+                    <div>
+                      <Select
+                        value={value}
+                        // isMulti prop will enable the multi select
+                        // isMulti
+                        onChange={(selectedOption) => {
+                          console.log('selectedOption', selectedOption);
+                          /* const spliceSelectedOptions = selectedOption.map(
                               (item) => {
                                 const partes = item?.label?.split('-');
                                 return {
@@ -164,11 +164,25 @@ export const TrdScreen: FC = (): JSX.Element => {
                                 };
                               }
                             ); */
-                        // onChange(selectedOption);
-                      }}
-                      options={list_finished_ccd}
-                      placeholder="Seleccionar"
-                    />
+                          // onChange(selectedOption);
+                        }}
+                        options={list_finished_ccd}
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem'
+                          }}
+                        >
+                          Seleccionar CCD
+                        </small>
+                      </label>
+                    </div>
                   )}
                 />
                 {/* {errors.subserie_asignacion != null && (
@@ -178,41 +192,82 @@ export const TrdScreen: FC = (): JSX.Element => {
                     </small>
                   </div>
                 )} */}
+              </Grid>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="version"
+                  control={control_create_trd_modal}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      name="nombre"
+                      label="Nombre del TRD"
+                      helperText="Nombre del TRD"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                        console.log(e.target.value);
+                      }}
+                      // error={!!error}
+                      /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+                    />
+                  )}
+                />
 
                 {/* <TextField
-                  name="tipoUnidad"
-                  select
-                  label="CCD"
-                  defaultValue="Seleccione"
-                  helperText="Seleccione CCD"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField> */}
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
                   required
                   name="nombre"
                   label="Nombre"
                   helperText="Nombre del TRD"
                   size="small"
                   fullWidth
-                />
+                /> */}
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  required
-                  name="version"
-                  label="Versión"
-                  helperText="Ingrese versión"
-                  size="small"
-                  fullWidth
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name="nombre"
+                  control={control_create_trd_modal}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      name="version"
+                      label="Versión del TRD"
+                      helperText="Ingrese versión"
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                        console.log(e.target.value);
+                      }}
+                      // error={!!error}
+                      /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+                    />
+                  )}
                 />
               </Grid>
             </Grid>

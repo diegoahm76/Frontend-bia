@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { initial_state_searched_trd } from './utils/constants';
@@ -51,12 +52,12 @@ export const use_trd = (): any => {
   // ? get list of finished ccd
   useEffect(() => {
     void dispatch(get_finished_ccd_service()).then((res: any) => {
-      console.log(res);
+      // console.log(res);
       set_list_finished_ccd(
         res.map((item: any) => {
           return {
             item,
-            label: item.nombre,
+            label: `V.${item.version} - ${item.nombre} `,
             value: item.id_ccd
           };
         })

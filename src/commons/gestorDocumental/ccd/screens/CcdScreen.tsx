@@ -91,8 +91,8 @@ export const CcdScreen: React.FC = () => {
   }, [ccd_current?.fecha_terminado]);
 
   useEffect(() => {
-      dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
-      get_assignments_service(ccd_current?.id_ccd)(dispatch);
+    dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
+    get_assignments_service(ccd_current?.id_ccd)(dispatch);
   }, [ccd_current]);
 
   // Hooks
@@ -164,13 +164,26 @@ export const CcdScreen: React.FC = () => {
                   rules={{ required: true }}
                   control={control_create_ccd}
                   render={({ field }) => (
-                    <Select
-                      {...field}
-                      isDisabled={ccd_current != null}
-                      value={field.value}
-                      options={list_organigrams}
-                      placeholder="Seleccionar"
-                    />
+                    <div>
+                      <Select
+                        {...field}
+                        isDisabled={ccd_current != null}
+                        value={field.value}
+                        options={list_organigrams}
+                        placeholder="Seleccionar"
+                      />
+                      <label htmlFor={field.name}>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          Seleccionar Organigrama
+                        </small>
+                      </label>
+                    </div>
                   )}
                 />
                 {errors_create_ccd.organigrama != null && (
@@ -193,13 +206,26 @@ export const CcdScreen: React.FC = () => {
                   name="unidades_organigrama"
                   control={control_create_ccd}
                   render={({ field }) => (
-                    <Select
-                      {...field}
-                      isDisabled={ccd_current != null}
-                      value={field.value}
-                      options={list_unitys}
-                      placeholder="Seleccionar"
-                    />
+                    <div>
+                      <Select
+                        {...field}
+                        isDisabled={ccd_current != null}
+                        value={field.value}
+                        options={list_unitys}
+                        placeholder="Seleccionar"
+                      />
+                      <label htmlFor={field.name}>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          Seleccionar Unidad
+                        </small>
+                      </label>
+                    </div>
                   )}
                 />
               </Grid>
