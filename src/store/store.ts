@@ -35,8 +35,8 @@ import { solicitud_facilidad_slice } from '../commons/recaudo/facilidadPago/slic
 import { reportes_recaudo_slice } from '../commons/recaudo/reportes/slices/ReportesSlice';
 import { seriesAndSubseriesSlice } from '../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice';
 import { solicitud_vivero_slice } from '../commons/conservacion/solicitudMaterial/store/slices/indexSolicitud';
-import { searched_trd_slice } from '../commons/gestorDocumental/trd/toolkit/modalBusquedaTRD/slices/modalBusquedaTRDSlice';
 import { finished_ccd_slice } from '../commons/gestorDocumental/trd/toolkit/CCDResources/slices/CCDResourcesSlice';
+import { trd_slice } from './../commons/gestorDocumental/trd/toolkit/TRDResources/slice/TRDResourcesSlice';
 
 const persist_config = {
   key: 'macarenia_app',
@@ -77,8 +77,8 @@ const app_reducers = combineReducers({
   reportes_recaudo: reportes_recaudo_slice.reducer,
   slice_series_and_subseries: seriesAndSubseriesSlice.reducer,
   // ? trd slices open
-  searched_trd_slice: searched_trd_slice.reducer,
   finished_ccd_slice: finished_ccd_slice.reducer,
+  trd_slice : trd_slice.reducer
   // ? trd slices close
 });
 

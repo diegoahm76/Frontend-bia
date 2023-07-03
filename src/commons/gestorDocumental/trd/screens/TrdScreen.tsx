@@ -83,14 +83,15 @@ export const TrdScreen: FC = (): JSX.Element => {
     list_finished_ccd,
 
     // ? clean searched trd
-    reset_create_trd_modal
+    // reset_create_trd_modal,
+
+    // ? reset all
+    reset_all_trd
   } = use_trd();
   // const dispatch = useDispatch();
 
   // ? redux toolkit - values
-  const { trd_current } = useAppSelector(
-    (state: any) => state.searched_trd_slice
-  );
+  const { trd_current } = useAppSelector((state: any) => state.trd_slice);
 
   // ? modal context
   const { openModalModalSearchTRD } = useContext(ModalContextTRD);
@@ -113,7 +114,7 @@ export const TrdScreen: FC = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="TRD - Tabla de retención documental" />
+          <Title title="TRD - ( Tabla de retención documental )" />
           <form
             onSubmit={(w) => {
               w.preventDefault();
@@ -261,9 +262,9 @@ export const TrdScreen: FC = (): JSX.Element => {
                 color="primary"
                 variant="contained"
                 type="submit"
-                startIcon={trd_current !== null ? <SyncIcon /> : <SaveIcon />}
+                startIcon={trd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
-                {trd_current !== null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
+                {trd_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
               </Button>
 
               <Button
@@ -271,7 +272,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                 variant="contained"
                 startIcon={<CleanIcon />}
                 onClick={() => {
-                  reset_create_trd_modal();
+                  reset_all_trd();
                   console.log('reset_create_trd_modal');
 
                   // setTrdCurrent(null);

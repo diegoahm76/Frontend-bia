@@ -29,19 +29,19 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Controller } from 'react-hook-form';
 
 import { use_trd } from '../../hooks/use_trd';
-import { get_searched_trd } from '../../toolkit/modalBusquedaTRD/thunks/modalBusquedaTRDThunks';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { get_trd_current } from '../../toolkit/modalBusquedaTRD/slices/modalBusquedaTRDSlice';
 import { ModalContextTRD } from '../../context/ModalsContextTrd';
+import { get_trd_current } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { get_searched_trd } from '../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 //! toolkit-redux values
 
 export const ModalSearchTRD: FC = (): JSX.Element => {
   //! dispatch hook from react-redux
   const dispatch: any = useAppDispatch();
 
-  const { searched_trd } = useAppSelector(
-    (state: any) => state.searched_trd_slice
+  const { trds } = useAppSelector(
+    (state: any) => state.trd_slice
   );
 
   // ? use_trd hook
@@ -122,7 +122,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
             onClick={() => {
               dispatch(get_trd_current(params.row))
               closeModalModalSearchTRD();
-              reset_busqueda_trd();
+              // reset_busqueda_trd();
               console.log(params.row);
             }}
           >
@@ -272,7 +272,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                   sx={{ mt: '15px' }}
                   density="compact"
                   autoHeight
-                  rows={searched_trd}
+                  rows={trds}
                   columns={columns_trd_busqueda}
                   pageSize={5}
                   rowsPerPageOptions={[7]}
