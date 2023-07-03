@@ -404,7 +404,7 @@ export const CcdScreen: React.FC = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={2} sx={{marginTop: ".15rem"}}>
                 <DownloadButton
                   fileName="ruta_soporte"
                   condition={
