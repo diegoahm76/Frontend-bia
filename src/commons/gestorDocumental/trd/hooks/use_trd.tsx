@@ -27,7 +27,7 @@ export const use_trd = (): any => {
   const {
     // handleSubmit: handle_submit_create_trd_modal,
     control: control_create_trd_modal,
-    // watch: watch_create_trd_modal,
+    watch: watch_create_trd_modal,
     reset: reset_create_trd_modal,
 
     // formState: { errors: errors_create_trd_modal }
@@ -38,6 +38,7 @@ export const use_trd = (): any => {
       version: ''
     }
   });
+  const data_create_trd_modal = watch_create_trd_modal();
 
   //! useStates that I will use in different components
 
@@ -82,6 +83,9 @@ export const use_trd = (): any => {
 
     // ? create_trd_modal - ccd, name and version
     control_create_trd_modal,
+    // handle_submit_create_trd_modal,
+    data_create_trd_modal,
+    
 
     // ? reset functions
     reset_busqueda_trd,

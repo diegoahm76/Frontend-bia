@@ -86,7 +86,7 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
     }
   }, [is_modal_active]);
 
-  // 1.1 Traer data
+ 
 /* const get_list_ccds = async (): Promise<void> => {
     set_loading(true);
     try {
@@ -110,14 +110,14 @@ const DialogCcdActual = ({ is_modal_active, set_is_modal_active }: IProps) => {
       set_loading(false);
     }
   }; */
-
+ // 1.1 Traer data
 const get_list_ccds = async (): Promise<void> => {
     set_loading(true);
     try {
       const { data } = await dispatch(get_organigrama_actual());
       console.log(typeof data.id_organigrama, 'organigramaActualData');
   
-      const response_ccds = await dispatch(get_ccds_posibles(String(data.id_organigrama /* 54 */)));
+      const response_ccds = await dispatch(get_ccds_posibles(String(data.id_organigrama /* 54   */)));
       //* se realiza prueba con el organigrama 54 ya que el organigrama con id 58 no tiene CCD's disponibles
       console.log('response_ccds', response_ccds);
   

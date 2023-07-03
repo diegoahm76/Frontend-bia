@@ -59,25 +59,6 @@ const columns: GridColDef[] = [
   }
 ];
 
-/* const tipos_unidades = [
-  {
-    value: '1',
-    label: 'Test'
-  },
-  {
-    value: 'EUR',
-    label: 'Test'
-  },
-  {
-    value: 'BTC',
-    label: '฿'
-  },
-  {
-    value: 'JPY',
-    label: '¥'
-  }
-]; */
-
 const rows = [
   { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
   { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
@@ -90,27 +71,33 @@ const rows = [
   { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
 ];
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 export const TrdScreen: FC = (): JSX.Element => {
   //! use_trd hook
   const {
     // ? create_trd_modal - ccd, name and version
     control_create_trd_modal,
+    // handle_submit_create_trd_modal,
+    data_create_trd_modal,
+
     // ? list of finished ccd
     list_finished_ccd,
 
-
     // ? clean searched trd
-    reset_create_trd_modal,
+    reset_create_trd_modal
   } = use_trd();
   // const dispatch = useDispatch();
 
-  // ? redux toolkit
+  // ? redux toolkit - values
   const { trd_current } = useAppSelector(
     (state: any) => state.searched_trd_slice
   );
 
+  // ? modal context
   const { openModalModalSearchTRD } = useContext(ModalContextTRD);
+
+  const onSubmit = (): any => {
+    console.log('data', data_create_trd_modal);
+  };
 
   return (
     <>
@@ -127,11 +114,14 @@ export const TrdScreen: FC = (): JSX.Element => {
       >
         <Grid item xs={12}>
           <Title title="TRD - Tabla de retención documental" />
-          <Box
-            component="form"
-            sx={{ mt: '20px' }}
-            noValidate
-            autoComplete="off"
+          <form
+            onSubmit={(w) => {
+              w.preventDefault();
+              onSubmit();
+            }}
+            style={{
+              marginTop: '20px'
+            }}
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -151,24 +141,9 @@ export const TrdScreen: FC = (): JSX.Element => {
                     <div>
                       <Select
                         value={value}
-                        name='id_ccd'
-                        // isMulti prop will enable the multi select
-                        // isMulti
+                        name="id_ccd"
                         onChange={(selectedOption) => {
                           console.log('selectedOption', selectedOption);
-                          /* const spliceSelectedOptions = selectedOption.map(
-                              (item) => {
-                                const partes = item?.label?.split('-');
-                                return {
-                                  label: item.label,
-                                  value: item.value,
-                                  nombreSerie: partes?.[1],
-                                  nombreSubserie: partes?.[2],
-                                  codigoSerie: partes?.[0],
-                                  codigoSubserie: partes?.[3]
-                                };
-                              }
-                            ); */
                           onChange(selectedOption);
                         }}
                         options={list_finished_ccd}
@@ -184,7 +159,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                             marginLeft: '0.25rem'
                           }}
                         >
-                          Seleccionar CCD
+                          CDD Terminados
                         </small>
                       </label>
                     </div>
@@ -203,7 +178,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                   name="version"
                   control={control_create_trd_modal}
                   defaultValue=""
-                  // rules={{ required: false }}
+                  rules={{ required: true }}
                   render={({
                     field: { onChange, value },
                     fieldState: { error }
@@ -267,46 +242,45 @@ export const TrdScreen: FC = (): JSX.Element => {
                 />
               </Grid>
             </Grid>
-          </Box>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mb: '20px', mt: '20px' }}
-          >
-            <Button
-              color="primary"
-              variant="outlined"
-              startIcon={<SearchIcon />}
-              onClick={openModalModalSearchTRD}
-            >
-              BUSCAR TRD
-            </Button>
-            <Button
-              color="primary"
-              variant="contained"
-              startIcon={trd_current !== null ? <SyncIcon /> : <SaveIcon />}
-            >
-              {trd_current !== null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
-            </Button>
 
-            <Button
-              color="success"
-              variant="contained"
-              startIcon={<CleanIcon />}
-              onClick={() => {
-                reset_create_trd_modal();
-                console.log(
-                  'reset_create_trd_modal',
-                );
-
-                // setTrdCurrent(null);
-              }
-              }
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mb: '20px', mt: '20px' }}
             >
-              LIMPIAR CAMPOS
-            </Button>
-          </Stack>
+              <Button
+                color="primary"
+                variant="outlined"
+                startIcon={<SearchIcon />}
+                onClick={openModalModalSearchTRD}
+              >
+                BUSCAR TRD
+              </Button>
+              <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                startIcon={trd_current !== null ? <SyncIcon /> : <SaveIcon />}
+              >
+                {trd_current !== null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
+              </Button>
+
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<CleanIcon />}
+                onClick={() => {
+                  reset_create_trd_modal();
+                  console.log('reset_create_trd_modal');
+
+                  // setTrdCurrent(null);
+                }}
+              >
+                LIMPIAR CAMPOS
+              </Button>
+            </Stack>
+          </form>
           <Grid item>
             <Box sx={{ width: '100%' }}>
               <DataGrid
