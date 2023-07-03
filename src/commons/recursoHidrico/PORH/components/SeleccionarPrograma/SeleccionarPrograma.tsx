@@ -336,10 +336,7 @@ export const SeleccionarPrograma: React.FC = () => {
       <Grid container spacing={2} mt={0.1}>
         {is_agregar_proyecto && (
           <>
-            <AgregarProyectos
-              fecha_inicial_programa={start_date as any}
-              fecha_fin_programa={end_date as any}
-            />
+            <AgregarProyectos />
           </>
         )}
         {is_editar_proyecto && (

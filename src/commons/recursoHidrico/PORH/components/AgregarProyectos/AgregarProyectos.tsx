@@ -18,17 +18,11 @@ import dayjs, { type Dayjs } from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
-interface IProps {
-  fecha_inicial_programa: Date | null; // Fecha de inicio del programa
-  fecha_fin_programa: Date | null; // Fecha de finalización del programa
-}
-
+dayjs.extend(isSameOrAfter);
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarProyectos: React.FC<IProps> = ({
-  fecha_inicial_programa,
-  fecha_fin_programa,
-}: IProps) => {
+export const AgregarProyectos: React.FC = () => {
   const columns_proyectos: GridColDef[] = [
     {
       field: 'nombre',
@@ -202,6 +196,8 @@ export const AgregarProyectos: React.FC<IProps> = ({
     id_proyecto,
     set_rows_proyectos_register,
     set_rows_actividades_register,
+    fecha_inicial,
+    fecha_fin,
   } = useContext(DataContext);
 
   const [is_agregar, set_is_agregar] = useState(false);
@@ -210,6 +206,29 @@ export const AgregarProyectos: React.FC<IProps> = ({
   const [proyectoSeleccionado, setProyectoSeleccionado] = useState<any>(null);
   const [start_date, set_start_date] = useState<Dayjs | null>(null);
   const [end_date, set_end_date] = useState<Dayjs | null>(null);
+
+  const isVigenciasValid =
+    start_date && end_date && fecha_inicial && fecha_fin
+      ? start_date.isSameOrAfter(fecha_inicial) &&
+        end_date.isSameOrBefore(fecha_fin)
+      : false;
+
+  const isNombreValid = watch('nombre') !== '';
+
+  const isVigenciaFinalValid =
+    start_date && end_date ? end_date.isAfter(start_date) : false;
+
+  const isNombreRepetido = rows_proyectos_register.some(
+    (proyecto) => proyecto.nombre === watch('nombre')
+  );
+
+  const isFormValid =
+    isVigenciasValid &&
+    isNombreValid &&
+    isVigenciaFinalValid &&
+    !isNombreRepetido;
+
+  const isAgregarActividadEnabled = proyectoSeleccionado !== null;
 
   const handle_start_date_change = (date: Dayjs | null): void => {
     set_value('vigencia_inicial', dayjs(date));
@@ -386,12 +405,8 @@ export const AgregarProyectos: React.FC<IProps> = ({
           margin="dense"
           required
           {...register('nombre', { required: true })}
-          error={Boolean(errors.nombre)}
-          helperText={
-            errors.nombre?.type === 'required'
-              ? 'Este campo es obligatorio'
-              : ''
-          }
+          error={!isNombreValid}
+          helperText={!isNombreValid ? 'Este campo es obligatorio' : ''}
         />
       </Grid>
       <Grid item xs={12} sm={6}>
@@ -410,10 +425,10 @@ export const AgregarProyectos: React.FC<IProps> = ({
                 size="small"
                 {...params}
                 {...register('vigencia_inicial', { required: true })}
-                error={(errors.vigencia_inicial)}
+                error={!isVigenciasValid}
                 helperText={
-                  errors.vigencia_inicial?.type === 'required'
-                    ? 'Este campo es obligatorio'
+                  !isVigenciasValid
+                    ? 'La vigencia debe estar dentro del rango'
                     : ''
                 }
               />
@@ -437,10 +452,12 @@ export const AgregarProyectos: React.FC<IProps> = ({
                 size="small"
                 {...params}
                 {...register('vigencia_final', { required: true })}
-                error={Boolean(errors.vigencia_final)}
+                error={!isVigenciasValid || !isVigenciaFinalValid}
                 helperText={
-                  errors.vigencia_final?.type === 'required'
-                    ? 'Este campo es obligatorio'
+                  !isVigenciasValid
+                    ? 'La vigencia debe estar dentro del rango'
+                    : !isVigenciaFinalValid
+                    ? 'La fecha final debe ser superior a la fecha inicial'
                     : ''
                 }
               />

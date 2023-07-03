@@ -4,7 +4,7 @@
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { Button, TextField } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AgregarProyectos } from '../AgregarProyectos/AgregarProyectos';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -14,7 +14,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import AddIcon from '@mui/icons-material/Add';
 import { control_error } from '../../../../../helpers';
 import { DataContext } from '../../context/contextData';
-import dayjs, { type Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+
+dayjs.extend(isSameOrBefore);
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarPrograma: React.FC = () => {
@@ -32,55 +35,57 @@ export const AgregarPrograma: React.FC = () => {
   } = useContext(DataContext);
 
   const [is_agregar, set_is_agregar] = useState(false);
+  const [is_fecha_final_valida, set_is_fecha_final_valida] = useState(true);
 
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  useEffect(() => {
+    if (nombre_programa && fecha_inicial && fecha_fin) {
+      if (nombre_programa.trim() === '' || !fecha_inicial.isBefore(fecha_fin)) {
+        set_is_agregar(false);
+      }
+    } else {
+      set_is_agregar(false);
+    }
+  }, [nombre_programa, fecha_inicial, fecha_fin]);
+
   const handle_nombre_programa_change = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  ): void => {
     const { value } = event.target;
     set_nombre_programa(value);
-    set_value('nombre_programa', value); // Actualizar el valor en el objeto de registro
+    set_value('nombre_programa', value);
   };
 
-  const handle_start_date_change = (date: Dayjs | null): void => {
-    set_value('fecha_inicio', dayjs(date));
-    set_fecha_inicial(dayjs(date));
+  const handle_start_date_change = (date: dayjs.Dayjs | null): void => {
+    set_value('fecha_inicio', date);
+    set_fecha_inicial(date);
   };
 
-  const handle_end_date_change = (date: Dayjs | null): void => {
-    set_value('fecha_fin', dayjs(date));
-    set_fecha_fin(dayjs(date));
+  const handle_end_date_change = (date: dayjs.Dayjs | null): void => {
+    set_value('fecha_fin', date);
+    set_fecha_fin(date);
+
+    if (fecha_inicial && date) {
+      set_is_fecha_final_valida(date.isAfter(fecha_inicial));
+    }
   };
 
   const is_campos_obligatorios_completos =
     nombre_programa && fecha_inicial && fecha_fin;
 
   const handle_agregar_proyecto_click = (): void => {
-    set_is_agregar(true);
-
-    // if (is_campos_obligatorios_completos) {
-    //   // Validar las condiciones
-    //   const current_date = dayjs();
-    //   if (nombre_programa.trim() === '') {
-    //     control_error('El nombre del programa no puede estar vacío');
-    //     return;
-    //   }
-    //   if (dayjs(fecha_inicial) && dayjs(fecha_fin)) {
-    //     if (dayjs(fecha_inicial) >= dayjs(fecha_fin)) {
-    //       control_error(
-    //         'La fecha de inicio debe ser anterior a la fecha de finalización'
-    //       );
-    //       return;
-    //     }
-    //     if (dayjs(fecha_inicial) <= dayjs(current_date)) {
-    //       control_error(
-    //         'La fecha de inicio debe ser posterior a la fecha actual'
-    //       );
-    //       return;
-    //     }
-    //   }
-    //   set_is_agregar(true);
-    // }
+    if (is_campos_obligatorios_completos) {
+      if (nombre_programa.trim() === '') {
+        control_error('El nombre del programa no puede estar vacío');
+        return;
+      }
+      if (!fecha_inicial.isBefore(fecha_fin)) {
+        control_error(
+          'La fecha de inicio debe ser anterior a la fecha de finalización'
+        );
+        return;
+      }
+      set_is_agregar(true);
+    }
   };
 
   return (
@@ -169,10 +174,12 @@ export const AgregarPrograma: React.FC = () => {
                   {...register('fecha_fin', {
                     required: true,
                   })}
-                  error={Boolean(errors.fecha_fin)}
+                  error={Boolean(errors.fecha_fin) || !is_fecha_final_valida}
                   helperText={
                     errors.fecha_fin?.type === 'required'
                       ? 'Este campo es obligatorio'
+                      : !is_fecha_final_valida
+                      ? 'La fecha de finalización debe ser posterior a la fecha de inicio'
                       : ''
                   }
                 />
@@ -192,13 +199,12 @@ export const AgregarPrograma: React.FC = () => {
               Limpiar
             </Button>
           </Grid>
-
           <Grid item>
             <Button
               variant="outlined"
               onClick={handle_agregar_proyecto_click}
               startIcon={<AddIcon />}
-              disabled={Object.keys(errors).length > 0}
+              disabled={!is_campos_obligatorios_completos}
             >
               Agregar Nuevo Proyecto
             </Button>
@@ -208,10 +214,7 @@ export const AgregarPrograma: React.FC = () => {
       <Grid container spacing={2} mt={0.1}>
         {is_agregar && (
           <>
-            <AgregarProyectos
-              fecha_inicial_programa={fecha_inicial as any}
-              fecha_fin_programa={fecha_fin as any}
-            />
+            <AgregarProyectos />
           </>
         )}
       </Grid>
