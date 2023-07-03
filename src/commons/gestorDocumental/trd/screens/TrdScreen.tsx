@@ -97,7 +97,11 @@ export const TrdScreen: FC = (): JSX.Element => {
     // ? create_trd_modal - ccd, name and version
     control_create_trd_modal,
     // ? list of finished ccd
-    list_finished_ccd
+    list_finished_ccd,
+
+
+    // ? clean searched trd
+    reset_create_trd_modal,
   } = use_trd();
   // const dispatch = useDispatch();
 
@@ -147,6 +151,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                     <div>
                       <Select
                         value={value}
+                        name='id_ccd'
                         // isMulti prop will enable the multi select
                         // isMulti
                         onChange={(selectedOption) => {
@@ -164,7 +169,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                                 };
                               }
                             ); */
-                          // onChange(selectedOption);
+                          onChange(selectedOption);
                         }}
                         options={list_finished_ccd}
                         placeholder="Seleccionar"
@@ -289,6 +294,15 @@ export const TrdScreen: FC = (): JSX.Element => {
               color="success"
               variant="contained"
               startIcon={<CleanIcon />}
+              onClick={() => {
+                reset_create_trd_modal();
+                console.log(
+                  'reset_create_trd_modal',
+                );
+
+                // setTrdCurrent(null);
+              }
+              }
             >
               LIMPIAR CAMPOS
             </Button>

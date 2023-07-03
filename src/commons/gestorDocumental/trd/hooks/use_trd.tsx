@@ -26,13 +26,14 @@ export const use_trd = (): any => {
 
   const {
     // handleSubmit: handle_submit_create_trd_modal,
-    control: control_create_trd_modal
+    control: control_create_trd_modal,
     // watch: watch_create_trd_modal,
-    // reset: reset_create_trd_modal,
+    reset: reset_create_trd_modal,
+
     // formState: { errors: errors_create_trd_modal }
   } = useForm({
     defaultValues: {
-      ccd: '',
+      id_ccd: 0,
       nombre: '',
       version: ''
     }
@@ -84,7 +85,7 @@ export const use_trd = (): any => {
 
     // ? reset functions
     reset_busqueda_trd,
-
+    reset_create_trd_modal,
     // ? list of finished ccd
     list_finished_ccd
   };
