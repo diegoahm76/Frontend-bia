@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
-
 import { useContext, type FC } from 'react';
 import { Controller } from 'react-hook-form';
-// Components Material UI
+//* Components Material UI
 import { Grid, Box, TextField, Stack, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
@@ -18,7 +17,7 @@ import type {
 import { DataGrid } from '@mui/x-data-grid';
 import { ModalContextTRD } from '../context/ModalsContextTrd';
 import { ModalSearchTRD } from '../components/ModalBusqueda/ModalSearchTRD';
-import { useAppSelector } from '../../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
 
 // Íconos
 import SyncIcon from '@mui/icons-material/Sync';
@@ -26,6 +25,9 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 
 //* personalized hook
 import { use_trd } from '../hooks/use_trd';
+
+//* thunks
+import { create_trd_service } from '../toolkit/TRDResources/thunks/TRDResourcesThunks';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -72,6 +74,10 @@ const rows = [
 ];
 
 export const TrdScreen: FC = (): JSX.Element => {
+
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
+
   //! use_trd hook
   const {
     // ? create_trd_modal - ccd, name and version
@@ -98,6 +104,9 @@ export const TrdScreen: FC = (): JSX.Element => {
 
   const onSubmit = (): any => {
     console.log('data', data_create_trd_modal);
+
+    dispatch(create_trd_service(data_create_trd_modal))
+
   };
 
   return (

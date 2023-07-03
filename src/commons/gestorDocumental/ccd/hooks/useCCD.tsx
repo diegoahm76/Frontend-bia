@@ -212,6 +212,7 @@ const use_ccd = () => {
     }
   }, [ccd_current]);
 
+  //  UseEffect para obtener asignaciones
   useEffect(() => {
     if (assignments_ccd_current !== null) {
       const obj = {

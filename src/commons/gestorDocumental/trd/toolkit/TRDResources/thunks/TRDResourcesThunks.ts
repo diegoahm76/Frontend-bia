@@ -46,9 +46,13 @@ export const create_trd_service: any = (
   return async (dispatch: Dispatch<any>) => {
     // activateLoadingButton();
     try {
-      const { data } = await api.post('gestor/trd/create/', bodyPost);
-      control_success(data.detail);
+      const { data } = await api.post('gestor/trd/create/', {
+        id_ccd: bodyPost.id_ccd.item.id_ccd,
+        nombre: bodyPost.nombre,
+        version: bodyPost.version,
+      });
       dispatch(get_trd_current(data.data));
+      control_success(data.detail);
       /* set_save_ccd(true);
       openModalBusquedaCreacionCCD(); */
       return data;
