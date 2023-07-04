@@ -79,7 +79,22 @@ export const DialogActividades: React.FC<IProps> = ({
                 maxWidth={'lg'}
             >
                 <DialogTitle>
-                    <Title title="ACTIVIDADES DEL PROYECTO" />
+                <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '20px',
+                    marginLeft: '-5px',
+                }}
+            >
+
+                    <Title title="Actividades del proyecto" />
+            </Grid>
                 </DialogTitle>
                 <Divider />
                 <Grid

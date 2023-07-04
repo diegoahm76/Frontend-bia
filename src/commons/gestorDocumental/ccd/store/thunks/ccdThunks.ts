@@ -52,7 +52,7 @@ export const control_success = (message: ToastContent) =>
     theme: 'light'
   });
 
-// Obtener los CCDS terminados
+//! Obtener los CCDS terminados
 export const get_finished_ccd_service = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -150,8 +150,6 @@ export const to_finished_ccds_service: any = (
       ) {
         // Mostrar una alerta antes de continuar
         throw new Error('La propiedad "id_ccd" de ccd_current es falsa.');
-        alert('La propiedad "id" de ccd_current es falsa.');
-        return;
       }
 
       const id_ccd: number = ccd_current.id_ccd;
@@ -172,63 +170,6 @@ export const to_finished_ccds_service: any = (
     }
   };
 };
-
-/*
-
-      if (error.response.data.delete === true) {
-        /* const message_detail: string = error.response.data.detail;
-        const message: string = error.response.data.data
-          .map((item: any) => item)
-          .join(', '); 
-
-          void Swal.fire({
-            title: '¿Está seguro de finalizar el CCD?',
-            // text: `${message_detail}, Estas son las faltanes: ${message}. Las podemos eliminar del sistema`,
-            text: ` Estas son las faltanes:. Las podemos eliminar del sistema`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Si, finalizar!'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              const id_ccd: number = ccd_current.id_ccd;
-              api
-                .put(`gestor/ccd/finish/${id_ccd}/?confirm=true`)
-                 .put(`gestor/ccd/finish/${id_ccd}/?confirm=true`)
-                .then((response) => {
-                  control_success(response.data.detail);
-                  //! revisar luego estas funciones porque pueden ocasionar un error al inicio del renderizado
-                  // ? revisar la manera en la que está recibiendo los parametros
-                  dispatch(
-                    get_classification_ccds_service(
-                      ccd_current.nombre,
-                      ccd_current.version
-                    )
-                  );
-                  dispatch(get_series_service());
-                  dispatch(get_subseries_service());
-                  set_flag_btn_finish(true);
-                })
-                .catch((error) => {
-                  control_error(error.response.data.detail);
-                });
-            }
-          });
-        } else {
-          const message: string = error.response.data.data
-            .map((item: any) => item)
-            .join(', ');
-            console.log(error.response.data.detail, 'error.response.data.detail')
-          void notification_error(
-            error.response.data.detail,
-             `Estas son las faltanes: ${message}`
-            `Estas son las faltanes:`
-          );
-        }
-        return error as AxiosError;
-
-*/
 
 // Crear Cuadro de Clasificación Documental (CCD)
 export const create_ccds_service: any = (
@@ -312,9 +253,6 @@ export const get_ccds_posibles: any = (id_organigrama: string) => {
   return async () => {
     try {
       const { data } = await api.get(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        /* gestor/activar/get-ccd-posibles/?id_organigrama=1 */
-
         `gestor/activar/get-ccd-posibles/?id_organigrama=${id_organigrama}`
       );
       return data;
