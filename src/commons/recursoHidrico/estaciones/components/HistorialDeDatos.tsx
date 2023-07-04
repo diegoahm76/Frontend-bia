@@ -264,7 +264,7 @@ export const HistorialDeDatos: React.FC = () => {
             </Box>
             {dato.length > 0 ? (
                 <>
-                    <Title title="HISTORIAL DE DATOS "></Title>
+                    <Title title="Historial de datos"></Title>
                     <Box sx={{ mt: '20px' }}>
                         <DataGrid
                             autoHeight
@@ -279,7 +279,7 @@ export const HistorialDeDatos: React.FC = () => {
             ) : ""}
             {dato_migracion.length > 0 ? (
                 <>
-                    <Title title="HISTORIAL DE DATOS "></Title>
+                    <Title title="Historial de datos "></Title>
                     <Box sx={{ mt: '20px' }}>
                         <DataGrid
                             autoHeight
