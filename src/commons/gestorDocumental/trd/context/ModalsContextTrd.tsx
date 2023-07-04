@@ -10,7 +10,10 @@ import { reducer } from './reducer/reducerContext';
 const ModalContextTRD = createContext<ModalContextState>({
   modalSearchTRD: false,
   openModalModalSearchTRD: () => {},
-  closeModalModalSearchTRD: () => {}
+  closeModalModalSearchTRD: () => {},
+  modalCCDUsados: false,
+  openModalCCDUsados: () => {},
+  closeModalCCDUsados: () => {}
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {
@@ -24,12 +27,23 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_SEARCH_TRD' });
   }, []);
 
+  const openModalCCDUsados = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_CCD_USADOS' });
+  }, []);
+
+  const closeModalCCDUsados = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_CCD_USADOS' });
+  }, []);
+
   return (
     <ModalContextTRD.Provider
       value={{
         modalSearchTRD: state.modalSearchTRD,
         openModalModalSearchTRD,
-        closeModalModalSearchTRD
+        closeModalModalSearchTRD,
+        modalCCDUsados: state.modalCCDUsados,
+        openModalCCDUsados,
+        closeModalCCDUsados,
       }}
     >
       {children}

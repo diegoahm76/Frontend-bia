@@ -7,6 +7,7 @@ import { Grid, Box, TextField, Stack, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import { Title } from '../../../../components/Title';
+import { LoadingButton } from '@mui/lab';
 // * react select
 import Select from 'react-select';
 
@@ -27,7 +28,12 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import { use_trd } from '../hooks/use_trd';
 
 //* thunks
-import { create_trd_service } from '../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import {
+  create_trd_service,
+  update_trd_service
+} from '../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ModalCCDUsados } from '../components/ModalCCDSUsados/ModalCCDSUsados';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -74,7 +80,6 @@ const rows = [
 ];
 
 export const TrdScreen: FC = (): JSX.Element => {
-
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
@@ -100,13 +105,15 @@ export const TrdScreen: FC = (): JSX.Element => {
   const { trd_current } = useAppSelector((state: any) => state.trd_slice);
 
   // ? modal context
-  const { openModalModalSearchTRD } = useContext(ModalContextTRD);
+  const { openModalModalSearchTRD, openModalCCDUsados } =
+    useContext(ModalContextTRD);
 
-  const onSubmit = (): any => {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const onSubmit = () => {
     console.log('data', data_create_trd_modal);
-
-    dispatch(create_trd_service(data_create_trd_modal))
-
+    trd_current != null
+      ? dispatch(update_trd_service(data_create_trd_modal))
+      : dispatch(create_trd_service(data_create_trd_modal));
   };
 
   return (
@@ -156,7 +163,14 @@ export const TrdScreen: FC = (): JSX.Element => {
                           console.log('selectedOption', selectedOption);
                           onChange(selectedOption);
                         }}
-                        options={list_finished_ccd}
+                        isDisabled={trd_current != null}
+                        options={
+                          trd_current != null
+                            ? list_finished_ccd
+                            : list_finished_ccd.filter(
+                                (ccd: any) => ccd.usado === false
+                              )
+                        }
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -169,7 +183,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                             marginLeft: '0.25rem'
                           }}
                         >
-                          CDD Terminados
+                          {`CDD's no usados en otro TRD`}
                         </small>
                       </label>
                     </div>
@@ -260,6 +274,14 @@ export const TrdScreen: FC = (): JSX.Element => {
               sx={{ mb: '20px', mt: '20px' }}
             >
               <Button
+                color="warning"
+                variant="contained"
+                startIcon={<VisibilityIcon />}
+                onClick={openModalCCDUsados}
+              >
+                {`VER CCD'S USADOS`}
+              </Button>
+              <Button
                 color="primary"
                 variant="outlined"
                 startIcon={<SearchIcon />}
@@ -267,14 +289,15 @@ export const TrdScreen: FC = (): JSX.Element => {
               >
                 BUSCAR TRD
               </Button>
-              <Button
+              <LoadingButton
+                // loading={loadingButton}
+                type="submit"
                 color="primary"
                 variant="contained"
-                type="submit"
                 startIcon={trd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
                 {trd_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
-              </Button>
+              </LoadingButton>
 
               <Button
                 color="success"
@@ -323,6 +346,10 @@ export const TrdScreen: FC = (): JSX.Element => {
       {/* -- this modal allow us to do the TRD search  -- */}
       <ModalSearchTRD />
       {/* -- this modal allow us to do the TRD search -- */}
+
+      {/* -- this modal allow us to see the ccds used in other TRD -- */}
+      <ModalCCDUsados />
+      {/* -- this modal allow us to see the ccds used in other TRD -- */}
     </>
   );
 };

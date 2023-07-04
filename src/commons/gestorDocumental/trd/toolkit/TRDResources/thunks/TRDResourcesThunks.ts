@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { type Dispatch } from 'react';
 import { api } from '../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../helpers';
 import { type AxiosResponse, type AxiosError } from 'axios';
 import { get_trd_current, get_trds } from '../slice/TRDResourcesSlice';
-
 
 // ? Obtener TRD's
 export const get_searched_trd = (
@@ -33,7 +33,6 @@ export const get_searched_trd = (
   };
 };
 
-
 // ? crear TRD
 export const create_trd_service: any = (
   /* ccd: any,
@@ -50,7 +49,7 @@ export const create_trd_service: any = (
       const { data } = await api.post('gestor/trd/create/', {
         id_ccd: bodyPost.id_ccd.item.id_ccd,
         nombre: bodyPost.nombre,
-        version: bodyPost.version,
+        version: bodyPost.version
       });
       dispatch(get_trd_current(data.data));
       control_success(data.detail);
@@ -63,6 +62,30 @@ export const create_trd_service: any = (
       return error as AxiosError;
     } finally {
       // desactivateLoadingButton();
+    }
+  };
+};
+
+export const update_trd_service = (bodyPost: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(bodyPost, 'bodyPost');
+      // const { trd_current } = getState().trd;
+      const { data } = await api.patch(
+        `gestor/trd/update/${bodyPost.id_trd}/`,
+        {
+          nombre: bodyPost.nombre,
+          version: bodyPost.version
+        }
+      );
+      console.log(data, 'data');
+      /* dispatch(get_trd_current(data.data));
+      control_success(data.detail);
+      return data; */
+    } catch (error: any) {
+      console.log(error);
+      // control_error(error.response.data.detail);
+      // return error as AxiosError;
     }
   };
 };

@@ -13,12 +13,12 @@ export const use_trd = (): any => {
   const dispatch: any = useAppDispatch();
 
   // eslint-disable-next-line no-empty-pattern
-  const { /* trd_current */ /* trds */ } = useAppSelector(
+  const { trd_current /* trds */ } = useAppSelector(
     (state: any) => state.trd_slice
   );
 
   // eslint-disable-next-line no-empty-pattern
-  const { /* ccd_finished */ /* trds */ } = useAppSelector(
+  const { ccd_finished/* trds */ } = useAppSelector(
     (state: any) => state.finished_ccd_slice
   );
 
@@ -81,7 +81,7 @@ export const use_trd = (): any => {
   }, []);
 
   // ? try to edit trd
-/*  useEffect(() => {
+useEffect(() => {
     console.log(data_create_trd_modal, 'data_create_trd');
     console.log(trd_current, 'trd_current');
     if (trd_current !== null) {
@@ -91,18 +91,19 @@ export const use_trd = (): any => {
       console.log('result_name', result_name);
       const obj: any = {
         id_ccd: {
-          label: trd_current.id_ccd.label,
-          value: trd_current.id_ccd.value
+          label: result_name[0].nombre,
+          value: result_name[0].id_ccd
         },
         nombre: trd_current.nombre,
-        version: trd_current.version
+        version: trd_current.version,
+        id_trd: trd_current.id_trd,
       };
       console.log(obj, 'obj');
       reset_create_trd_modal(obj);
     }
   }, [
     trd_current,
-  ]); */
+  ]);
 
   const reset_all_trd = (): void => {
     //* reset trd list
