@@ -28,7 +28,9 @@ interface UserContext {
   info_programa: InfoPorh | undefined;
   rows_programas: GetPrograma[];
   rows_proyectos: GetProyectos[];
+  rows_proyectos_register: GetProyectos[];
   rows_actividades: GetActividades[];
+  rows_actividades_register: GetActividades[];
   is_general: boolean;
   is_agregar_actividad: boolean;
   is_editar_actividad: boolean;
@@ -50,7 +52,9 @@ interface UserContext {
   set_info_programa: (value: InfoPorh) => void;
   set_rows_programas: (rows: GetPrograma[]) => void;
   set_rows_proyectos: (rows: GetProyectos[]) => void;
+  set_rows_proyectos_register: (rows: GetProyectos[]) => void;
   set_rows_actividades: (rows: GetActividades[]) => void;
+  set_rows_actividades_register: (rows: GetActividades[]) => void;
   set_is_general: (value: boolean) => void;
   set_is_agregar_actividad: (value: boolean) => void;
   set_is_editar_actividad: (value: boolean) => void;
@@ -113,7 +117,9 @@ export const DataContext = createContext<UserContext>({
   },
   rows_programas: [],
   rows_proyectos: [],
+  rows_proyectos_register: [],
   rows_actividades: [],
+  rows_actividades_register: [],
   is_agregar_actividad: false,
   is_editar_actividad: false,
   is_seleccionar_actividad: false,
@@ -134,7 +140,9 @@ export const DataContext = createContext<UserContext>({
   set_fecha_fin: () => {},
   set_rows_programas: () => {},
   set_rows_proyectos: () => {},
+  set_rows_proyectos_register: () => {},
   set_rows_actividades: () => {},
+  set_rows_actividades_register: () => {},
   set_is_agregar_actividad: () => {},
   set_is_editar_actividad: () => {},
   set_is_seleccionar_actividad: () => {},
@@ -194,7 +202,13 @@ export const UserProvider = ({
   const [rows_proyectos, set_rows_proyectos] = React.useState<GetProyectos[]>(
     []
   );
+  const [rows_proyectos_register, set_rows_proyectos_register] = React.useState<GetProyectos[]>(
+    []
+  );
   const [rows_actividades, set_rows_actividades] = React.useState<
+    GetActividades[]
+  >([]);
+  const [rows_actividades_register, set_rows_actividades_register] = React.useState<
     GetActividades[]
   >([]);
 
@@ -365,6 +379,10 @@ export const UserProvider = ({
   // validaciones 
 
   const value = {
+    rows_proyectos_register,
+    set_rows_proyectos_register,
+    rows_actividades_register,
+    set_rows_actividades_register,
     reset_form_agregar_programa,
     nombre_programa,
     set_nombre_programa,
