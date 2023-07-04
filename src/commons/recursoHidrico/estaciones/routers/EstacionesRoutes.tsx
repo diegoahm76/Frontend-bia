@@ -13,6 +13,9 @@ import {
 import { HistorialDatos } from '../screens/HistorialScreen';
 import { HistorialEquipos } from '../components/HistorialEquipos';
 import { HistorialAlertas } from '../components/HistorialAlertas';
+import { ParametrosReferencia } from '../components/ParametrosReferencia';
+import { HistorialDeDatos } from '../components/HistorialDeDatos';
+import { ConfiguracionAlarma } from '../components/ConfiguracionAlarma';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstacionesRoutes: React.FC = () => {
@@ -36,7 +39,7 @@ export const EstacionesRoutes: React.FC = () => {
       <Route path="historial/*" element={<HistorialDatos />} />
 
       {/* Geolocalizacion Estaciones */}
-      <Route path="reportes/*" element={<ReportesScreen />}   />
+      <Route path="reportes/*" element={<ReportesScreen />} />
 
       {/* Dashboard Estaciones */}
       <Route path="dashboard/*" element={<DashboardScreen />} />
@@ -44,11 +47,20 @@ export const EstacionesRoutes: React.FC = () => {
       {/* Analitica Estaciones */}
       <Route path="analitica/*" element={<AnaliticaScreen />} />
 
+      {/* Historial_Datos   */}
+      <Route path="Historial_Datos/*" element={<HistorialDeDatos />} />
+
       {/* historial_equipos   */}
       <Route path="historial_equipos/*" element={<HistorialEquipos />} />
 
       {/* historial_alertas   */}
       <Route path="historial_alertas/*" element={<HistorialAlertas />} />
+
+      {/* ParametrosReferencia   */}
+      <Route path="Parametros_Referencia/*" element={<ParametrosReferencia />} />
+
+      {/* Configuracion_alarma   */}
+      <Route path="Configuracion_alarma/*" element={<ConfiguracionAlarma />} />
 
       <Route path="/*" element={<Page404 />} />
     </Routes>
