@@ -33,12 +33,6 @@ export const BusquedaAvances: React.FC<PropsBuscador> = ({
 
   const columns: GridColDef[] = [
     {
-      field: 'id_avance',
-      headerName: 'No AVANCE',
-      sortable: true,
-      width: 170,
-    },
-    {
       field: 'nombre_PORH',
       headerName: 'NOMBRE PORH',
       sortable: true,

@@ -27,11 +27,10 @@ export const post_seccion_subscción = async (
         ...rows_resgister_subseccion,
 
         form.nombre_subseccion === '' || form.descripcion_subseccion === ''
-            ? null
-            : {
+            ? null :
+            {
                 nombre: form.nombre_subseccion,
                 descripcion: form.descripcion_subseccion,
-                // fecha_creacion: form.fecha_creacion_subseccion,
             },
     ];
 
@@ -44,7 +43,7 @@ export const post_seccion_subscción = async (
         nombre: form.nombre_seccion,
         descripcion: form.descripcion_seccion,
         fecha_creacion: form.fecha_creacion,
-        subsecciones: filtered_array,
+        subsecciones: rows_resgister_subseccion.length === 0 ? [] : filtered_array,
     });
 
     return response.data;
