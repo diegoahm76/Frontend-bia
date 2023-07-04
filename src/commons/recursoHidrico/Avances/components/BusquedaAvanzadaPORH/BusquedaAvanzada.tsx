@@ -234,7 +234,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Button
-            variant="outlined"
+            variant="contained"
             color="primary"
             onClick={handle_click_open}
           >
@@ -244,7 +244,23 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
+
+        <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '20px',
+                    marginLeft: '-5px',
+                }}
+            >
+
           <Title title="Búsqueda avanzada" />
+          
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -293,6 +309,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
                   Buscar
                 </LoadingButton>
               </Grid>
+              
               {rows.length > 0 && (
                 <>
                   <Grid item xs={12}>
@@ -315,6 +332,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
               )}
             </Grid>
           </form>
+            </Grid>
         </DialogContent>
       </Dialog>
     </>

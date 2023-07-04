@@ -121,7 +121,7 @@ export const AvanceScreen: React.FC = () => {
             }}
         >
             <Grid item xs={12}>
-                <Title title="AVANCES POR PROYECTO" />
+                <Title title="Avances del proyecto" />
             </Grid>
             <BusquedaAvanzada onResult={on_result} />
             {is_select_proyecto && rows_avances.length > 0 && (
@@ -170,7 +170,7 @@ export const AvanceScreen: React.FC = () => {
                 <EditarAvance />)}
             <Grid item spacing={2} justifyContent="end" container>
                 <Grid item>
-                    <ButtonSalir />
+                    <ButtonSalir  />
                 </Grid>
                 <BusquedaAvances
                     onResult={on_result_avance} />

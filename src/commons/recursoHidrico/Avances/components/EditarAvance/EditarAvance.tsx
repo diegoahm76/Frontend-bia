@@ -327,9 +327,11 @@ export const EditarAvance: React.FC = () => {
           {rows_evidencia.length > 0 && (
             <>
               <Grid item xs={12}>
-                <Typography variant="subtitle1" fontWeight="bold">
+                <Title title="            Evidencias  " />
+
+                {/* <Typography variant="subtitle1" fontWeight="bold">
                   Evidencias
-                </Typography>
+                </Typography> */}
               </Grid>
               <Grid item xs={12} sm={6}>
                 <DataGrid
