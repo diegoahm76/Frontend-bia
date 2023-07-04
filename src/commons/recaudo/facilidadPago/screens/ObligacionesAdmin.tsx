@@ -7,8 +7,6 @@ import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 
-
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ObligacionesAdmin: React.FC = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();

@@ -12,7 +12,6 @@ export const DetalleFacilidadPago: React.FC = () => {
 
   return (
     <>
-
       <Grid
         container
         sx={{
