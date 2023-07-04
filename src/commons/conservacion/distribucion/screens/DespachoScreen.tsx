@@ -406,13 +406,9 @@ const DespachoScreen = () => {
                 control_name: 'nro_solicitud',
                 default_value: '',
                 rules: {},
-<<<<<<< HEAD
-                label: "Número de solicitud",
-                type: "number",
-=======
-                label: 'Numero solicitud',
+                label: 'Número de solicitud',
                 type: 'number',
->>>>>>> d3d6f4f379bae3d51692b1dd1f365c7d6bc5d30d
+
                 disabled: true,
                 helper_text: '',
               },
@@ -422,13 +418,6 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 4,
                 control_form: control_solicitud_aprobada,
-<<<<<<< HEAD
-                control_name: "persona_cierra",
-                default_value: "",
-                rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
-                label: "Cierre realizado por",
-                type: "text",
-=======
                 control_name: 'persona_cierra',
                 default_value: '',
                 rules: {
@@ -437,9 +426,9 @@ const DespachoScreen = () => {
                     message: 'Debe seleccionar la personas que la creó',
                   },
                 },
-                label: 'Cierre realizao por',
+                label: 'Cierre realizado por',
                 type: 'text',
->>>>>>> d3d6f4f379bae3d51692b1dd1f365c7d6bc5d30d
+
                 disabled: true,
                 helper_text: '',
               },
@@ -448,22 +437,15 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 4,
                 control_form: control_solicitud_aprobada,
-<<<<<<< HEAD
-                control_name: current_solicitud.solicitud_anulada_solicitante === true ? "fecha_cierre_no_dispo" : "fecha",
-                default_value: (new Date().toString()),
-                rules: { required_rule: { rule: true, message: "Requerido" } },
-                label: "Fecha actual",
-                type: "text",
-=======
                 control_name:
                   current_solicitud.solicitud_anulada_solicitante === true
                     ? 'fecha_cierre_no_dispo'
                     : 'fecha',
                 default_value: new Date().toString(),
-                rules: { required_rule: { rule: true, message: 'requerido' } },
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Fecha actual',
                 type: 'text',
->>>>>>> d3d6f4f379bae3d51692b1dd1f365c7d6bc5d30d
+
                 disabled: true,
                 helper_text: '',
               },
@@ -517,13 +499,9 @@ const DespachoScreen = () => {
                 control_name: 'nro_despachos_viveros',
                 default_value: '',
                 rules: {},
-<<<<<<< HEAD
-                label: "Numero de despacho",
-                type: "number",
-=======
-                label: 'Numero despacho',
+                label: 'Numero de despacho',
                 type: 'number',
->>>>>>> d3d6f4f379bae3d51692b1dd1f365c7d6bc5d30d
+
                 disabled: true,
                 helper_text: '',
               },
@@ -551,22 +529,15 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 4,
                 control_form: control_despacho,
-<<<<<<< HEAD
-                control_name: current_solicitud.solicitud_anulada_solicitante === true ? "fecha_anulacion" : "fecha",
-                default_value: (new Date().toString()),
-                rules: { required_rule: { rule: true, message: "Requerido" } },
-                label: "Fecha actual",
-                type: "text",
-=======
                 control_name:
                   current_solicitud.solicitud_anulada_solicitante === true
                     ? 'fecha_anulacion'
                     : 'fecha',
                 default_value: new Date().toString(),
-                rules: { required_rule: { rule: true, message: 'requerido' } },
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Fecha actual',
                 type: 'text',
->>>>>>> d3d6f4f379bae3d51692b1dd1f365c7d6bc5d30d
+
                 disabled: true,
                 helper_text: '',
               },
@@ -575,13 +546,6 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 12,
                 control_form: control_despacho,
-<<<<<<< HEAD
-                control_name: "justificacion_anulacion",
-                default_value: "",
-                rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                label: "Justificación",
-                type: "text",
-=======
                 control_name: 'justificacion_anulacion',
                 default_value: '',
                 rules: {
@@ -590,9 +554,9 @@ const DespachoScreen = () => {
                     message: 'Observación requerida',
                   },
                 },
-                label: 'Justificacion',
+                label: 'Justificación',
                 type: 'text',
->>>>>>> d3d6f4f379bae3d51692b1dd1f365c7d6bc5d30d
+
                 multiline_text: true,
                 rows_text: 4,
                 disabled: false,
