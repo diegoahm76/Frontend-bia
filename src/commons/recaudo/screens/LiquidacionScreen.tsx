@@ -39,23 +39,12 @@ interface Rows {
   nombre: string;
 }
 
-const initial_rows = [
-  {
-    id: 1,
-    nombre: 'numero1',
-  },
-  {
-    id: 2,
-    nombre: 'numero2',
-  }
-]
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const LiquidacionScreen: React.FC = () => {
   const [opciones_liquidaciones, set_opciones_liquidaciones] = useState<OpcionLiquidacion[]>([]);
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState('');
-  const [row, set_row] = useState<Rows[]>(initial_rows);
-  const [variables, set_variables] = useState<string[]>(["numero1", "numero2"]);
+  const [row, set_row] = useState<Rows[]>([]);
+  const [variables, set_variables] = useState<string[]>([]);
   const [formData, setFormData] = useState({ variable: '', nombre_liquidacion: '' });
   const [configNotify, setConfigNotify] = useState({ open: false, message: '' });
   const [open, setOpen] = useState(false);
@@ -121,7 +110,7 @@ export const LiquidacionScreen: React.FC = () => {
     code = lines.join('\n');
     // Eliminar los saltos de línea del código final
     code = code.replace(/\n/g, '');
-    setNotifications({ open: true, message: 'Se ha procesado', type: 'success' });
+    // setNotifications({ open: true, message: 'Se ha procesado', type: 'success' });
     return code;
   }
 
@@ -146,8 +135,8 @@ export const LiquidacionScreen: React.FC = () => {
     }
 
     if (formData.variable.includes('variable')) {
-      set_notification_info({ 
-        type: 'warning', 
+      set_notification_info({
+        type: 'warning',
         message: `El nombre de la variable a agregar (${formData.variable}) no debe incluir la palabra reservada variable.
         \nPor favor ingrese otro nombre diferente.`,
       });
@@ -217,10 +206,14 @@ export const LiquidacionScreen: React.FC = () => {
     })
       .then((response) => {
         console.log(response);
+        set_notification_info({ type: 'success', message: `Se creó correctamente la opción de liquidación "${formData.nombre_liquidacion}".` });
+        set_open_notification_modal(true);
         set_refresh_page(true);
       })
       .catch((error) => {
         console.log(error);
+        set_notification_info({ type: 'error', message: `Hubo un error.` });
+        set_open_notification_modal(true);
       });
   }
 
@@ -389,7 +382,7 @@ export const LiquidacionScreen: React.FC = () => {
           >
             <Grid item xs={3}>
               <TextField
-                label="Ingrese nombre liquidacion"
+                label="Ingrese nombre opción liquidacion"
                 name="nombre_liquidacion"
                 required
                 autoComplete="off"
@@ -431,7 +424,7 @@ export const LiquidacionScreen: React.FC = () => {
         </Modal>
       )}
       <NotificationModal
-        open_notification_modal={open_notification_modal} 
+        open_notification_modal={open_notification_modal}
         set_open_notification_modal={set_open_notification_modal}
         notification_info={notification_info}
       />
