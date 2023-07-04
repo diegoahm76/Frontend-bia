@@ -151,7 +151,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                     <div>
                       <Select
                         value={value}
-                        name="id_ccd"
+                        // name="id_ccd"
                         onChange={(selectedOption) => {
                           console.log('selectedOption', selectedOption);
                           onChange(selectedOption);
@@ -185,7 +185,7 @@ export const TrdScreen: FC = (): JSX.Element => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
-                  name="version"
+                  name="nombre"
                   control={control_create_trd_modal}
                   defaultValue=""
                   rules={{ required: true }}
@@ -196,7 +196,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                     <TextField
                       margin="dense"
                       fullWidth
-                      name="nombre"
+                      // name="nombre"
                       label="Nombre del TRD"
                       helperText="Ingrese nombre"
                       size="small"
@@ -219,7 +219,7 @@ export const TrdScreen: FC = (): JSX.Element => {
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
-                  name="nombre"
+                  name="version"
                   control={control_create_trd_modal}
                   defaultValue=""
                   // rules={{ required: false }}
@@ -230,7 +230,7 @@ export const TrdScreen: FC = (): JSX.Element => {
                     <TextField
                       margin="dense"
                       fullWidth
-                      name="version"
+                      // name="version"
                       label="Versión del TRD"
                       helperText="Ingrese versión"
                       size="small"

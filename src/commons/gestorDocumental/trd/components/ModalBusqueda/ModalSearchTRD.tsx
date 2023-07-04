@@ -32,7 +32,7 @@ import { use_trd } from '../../hooks/use_trd';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { ModalContextTRD } from '../../context/ModalsContextTrd';
-import { get_trd_current } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { get_trd_current, get_trds } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { get_searched_trd } from '../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 //! toolkit-redux values
 
@@ -122,6 +122,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
             onClick={() => {
               dispatch(get_trd_current(params.row))
               closeModalModalSearchTRD();
+              dispatch(get_trds([]));
               // reset_busqueda_trd();
               console.log(params.row);
             }}
