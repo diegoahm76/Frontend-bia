@@ -227,9 +227,9 @@ export const CcdScreen: React.FC = () => {
                             fontSize: '0.75rem'
                           }}
                         >
-                          {
-                            ccd_current ? `Unidad Seleccionada` : `Seleccionar Unidad`
-                          }
+                          {ccd_current
+                            ? `Unidad Seleccionada`
+                            : `Seleccionar Unidad`}
                         </small>
                       </label>
                     </div>
@@ -824,12 +824,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       onClick={() => {
                         void dispatch(create_or_delete_relation_unidad);
-                        void dispatch(
-                          get_assignments_service(
-                            ccd_current,
-                            control._formValues.unidades_asignacion
-                          )
-                        );
+                        void dispatch(get_assignments_service(ccd_current));
                       }}
                       color="primary"
                       variant="contained"

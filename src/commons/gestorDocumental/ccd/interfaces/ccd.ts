@@ -6,6 +6,7 @@ export interface ICCD {
 }
 
 export interface ICCDObject {
+  id_unidad_organizacional: number | undefined;
   nombre_unidad_organizacional: string | number;
   valor_aumento_serie: string | number;
   valor_aumento_subserie: string | number;

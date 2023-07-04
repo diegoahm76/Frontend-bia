@@ -178,12 +178,13 @@ const use_ccd = () => {
     console.log(ccd_current, 'ccd_current');
     if (ccd_current !== null) {
       const result_name = organigram.filter((item) => {
-        // console.log(ccd_current, 'ccd_current')
-        // console.log(organigram, 'organigrama')
-
-        return item.id_organigrama === ccd_current.id_organigrama;
+          return item.id_organigrama === ccd_current.id_organigrama;
       });
+
+      const result_unity = unity_organigram.filter((item) => item.id_organigrama === ccd_current.id_organigrama);
+
       console.log('result_name', result_name);
+      console.log('result_unity', result_unity);
       const obj: ICCDForm = {
         id_ccd: ccd_current.id_ccd ? ccd_current.id_ccd : 0,
         nombre_ccd: ccd_current.nombre ? ccd_current.nombre : '',
@@ -193,8 +194,8 @@ const use_ccd = () => {
           value: ccd_current.id_organigrama
         },
         unidades_organigrama: {
-          label: assignments_ccd_current?.seccion,
-          value: assignments_ccd_current?.id_unidad_organizacional
+          label: ' -- ' /* result_unity && result_unity.length > 0 ? result_unity[0].nombre : '' */,
+          // value: result_unity && result_unity.length > 0 ? result_unity[0].id_unidad_organizacional : 0
         },
         version: ccd_current.version,
         fecha_terminado: ccd_current.fecha_terminado,
@@ -251,7 +252,7 @@ const use_ccd = () => {
   }, [ccd_current]);
   //  UseEffect para obtener asignaciones
   useEffect(() => {
-    dispatch(get_assignments_service(ccd_current, control._formValues.unidades_asignacion));
+    dispatch(get_assignments_service(ccd_current));
   }, [ccd_current]);
 
   //  UseEffect para obtener asignaciones
@@ -498,7 +499,6 @@ const use_ccd = () => {
       void dispatch(
         get_assignments_service(
           ccd_current,
-          control._formValues.unidades_asignacion
         )
       );
     });
@@ -521,7 +521,6 @@ const use_ccd = () => {
       void dispatch(
         get_assignments_service(
           ccd_current,
-          control._formValues.unidades_asignacion
         )
       );
     });
