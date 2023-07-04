@@ -121,7 +121,7 @@ const SeleccionarDespacho = ({
         if ("data" in data) {
           if(data.data.length > 0){
           dispatch(set_current_despacho(data.data[0]))
-          control_success("Se selecciono el despacho ")
+          control_success("Se seleccionó el despacho ")
         } else{
           dispatch(set_current_despacho(initial_state_despacho))
           control_error(data.detail)
@@ -181,7 +181,7 @@ const SeleccionarDespacho = ({
               control_name: "numero_despacho_consumo",
               default_value: "",
               rules: {required_rule: { rule: true, message: "Debe seleccionar despacho" }},
-              label: "Numero despacho",
+              label: "Número de despacho",
               type: "number",
               disabled: false,
               helper_text: "",
@@ -207,8 +207,8 @@ const SeleccionarDespacho = ({
               control_form: control_despacho,
               control_name: "observacion_distribucion",
               default_value: "",
-              rules: {required_rule: { rule: true, message: "Observaciopn requerida" }},
-              label: "Observacion de distribucion",
+              rules: {required_rule: { rule: true, message: "Observación requerida" }},
+              label: "Observación de distribución",
               type: "text",
               multiline_text: true,
               rows_text: 4,
@@ -239,7 +239,7 @@ const SeleccionarDespacho = ({
               control_name: "numero_despacho_consumo",
               default_value: "",
               rules: {},
-              label: "Numero despacho",
+              label: "Número despacho",
               type: "number",
               disabled: false,
               helper_text: "",

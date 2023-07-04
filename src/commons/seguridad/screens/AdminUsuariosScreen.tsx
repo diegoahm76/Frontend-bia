@@ -105,6 +105,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     tipo_documento,
     tipo_persona_opt,
     tipo_persona,
+    numero_documento,
     set_users_x_person_is_active,
     set_data_register,
     set_tipo_documento,
@@ -113,8 +114,7 @@ export const AdminUsuariosScreen: React.FC = () => {
     set_loading_inputs,
     set_numero_documento,
     reset_admin_user,
-    clean_user_info,
-    numero_documento,
+    clean_user_info    
   } = use_admin_users();
   // const numero_documento = watch('numero_documento');
   useEffect(() => {
@@ -290,6 +290,7 @@ export const AdminUsuariosScreen: React.FC = () => {
               </Button>
             </Grid>
           </Grid>
+          
           <Box
             component="form"
             // eslint-disable-next-line @typescript-eslint/no-misused-promises

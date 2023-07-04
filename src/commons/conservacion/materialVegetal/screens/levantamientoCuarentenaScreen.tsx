@@ -232,9 +232,9 @@ useEffect(() => {
                   models={plant_quarantine_lifting}
                   get_filters_models={null}
                   set_models={null}
-                  button_submit_label='Historial levantamientos'
+                  button_submit_label='Historial de levantamientos'
                   form_inputs= {[]}
-                  modal_select_model_title='Historial levantamientos'
+                  modal_select_model_title='Historial de levantamientos'
                   modal_form_filters={[]}
                   button_add_selection_hidden= {true}
                   md_button={12}
@@ -251,9 +251,9 @@ useEffect(() => {
                   models={plant_quarantine_mortalities}
                   get_filters_models={null}
                   set_models={null}
-                  button_submit_label='Historial mortalidades'
+                  button_submit_label='Historial de mortalidades'
                   form_inputs= {[]}
-                  modal_select_model_title='Historial mortalidades'
+                  modal_select_model_title='Historial de mortalidades'
                   modal_form_filters={[]}
                   button_add_selection_hidden= {true}
                   md_button={12}
@@ -325,7 +325,7 @@ useEffect(() => {
                   control_form: control_levantamiento,
                   control_name: current_plant_quarantine.cuarentena_anulada === true ? "fecha_anulacion":"fecha",
                   default_value: (new Date().toString()),
-                  rules: { required_rule: { rule: true, message: "requerido" } },
+                  rules: { required_rule: { rule: true, message: "Requerido" } },
                   label: "Fecha actual",
                   type: "text",
                   disabled: true,
@@ -339,7 +339,7 @@ useEffect(() => {
                   control_name: "justificacion_anulacion",
                   default_value: "",
                   rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                  label: "Justificacion",
+                  label: "Justificación",
                   type: "text",
                   multiline_text: true,
                   rows_text: 4,

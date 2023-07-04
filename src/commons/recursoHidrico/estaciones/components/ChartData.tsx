@@ -85,11 +85,12 @@ const ChartData = ({
         }
       
     };
-
+  
   return (
     <>
        <div id="wrapper">
   <div id="chart-line2">
+       
   <ReactApexChart options={chart_data} series={series} type='line' height={230} />
 
 </div>

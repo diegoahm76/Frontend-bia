@@ -31,8 +31,8 @@ export const ButtonSalir: React.FC = () => {
 
   return (
     <LoadingButton
-      variant="outlined"
-      color="warning"
+      variant="contained"
+      color="error"
       onClick={confirmar_eliminar}
     >
       Salir
