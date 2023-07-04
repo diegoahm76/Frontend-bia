@@ -320,7 +320,7 @@ const SolicitudViveroScreen = () => {
                 control_name: 'nro_solicitud',
                 default_value: '',
                 rules: {},
-                label: 'Numero solicitud',
+                label: 'Número de solicitud',
                 type: 'number',
                 disabled: true,
                 helper_text: '',
@@ -370,10 +370,10 @@ const SolicitudViveroScreen = () => {
                 rules: {
                   required_rule: {
                     rule: true,
-                    message: 'Observación requerida',
+                    message: 'Justificación requerida',
                   },
                 },
-                label: 'Justificacion',
+                label: 'Justificación',
                 type: 'text',
                 multiline_text: true,
                 rows_text: 4,

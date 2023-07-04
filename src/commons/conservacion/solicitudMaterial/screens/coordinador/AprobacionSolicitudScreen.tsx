@@ -102,7 +102,7 @@ const AprobacionSolicitudCoordinadorScreen = () => {
   // }
 
   const on_submit_aprobacion = (data: IObjSolicitudVivero): void => {
-    console.log("aprobacion...")
+    console.log("aprobación...")
     const form_data = {
       estado_aprobacion_coord_viveros: data.estado_aprobacion_responsable,
       justificacion_aprobacion_coord_viveros: data.justificacion_aprobacion_responsable,
