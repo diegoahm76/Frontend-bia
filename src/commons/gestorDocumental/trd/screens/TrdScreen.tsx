@@ -34,6 +34,7 @@ import {
 } from '../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalCCDUsados } from '../components/ModalCCDSUsados/ModalCCDSUsados';
+import { control_error } from '../../../../helpers';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -110,7 +111,12 @@ export const TrdScreen: FC = (): JSX.Element => {
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {
-    console.log('data', data_create_trd_modal);
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (!data_create_trd_modal.nombre) {
+      control_error('datos requeridos');
+      return;
+    }
+
     trd_current != null
       ? dispatch(update_trd_service(data_create_trd_modal))
       : dispatch(create_trd_service(data_create_trd_modal));
@@ -183,7 +189,11 @@ export const TrdScreen: FC = (): JSX.Element => {
                             marginLeft: '0.25rem'
                           }}
                         >
-                          {`CDD's no usados en otro TRD`}
+                          {
+                            trd_current != null
+                              ? `CCD seleccionado`
+                              : `CDD's no usados en otro TRD`
+                          }
                         </small>
                       </label>
                     </div>
@@ -212,7 +222,11 @@ export const TrdScreen: FC = (): JSX.Element => {
                       fullWidth
                       // name="nombre"
                       label="Nombre del TRD"
-                      helperText="Ingrese nombre"
+                      helperText={
+                        trd_current != null
+                          ? 'Actualice el nombre'
+                          : 'Ingrese nombre'
+                      }
                       size="small"
                       variant="outlined"
                       value={value}
@@ -246,7 +260,11 @@ export const TrdScreen: FC = (): JSX.Element => {
                       fullWidth
                       // name="version"
                       label="Versión del TRD"
-                      helperText="Ingrese versión"
+                      helperText={
+                        trd_current != null
+                          ? 'Actualice la versión'
+                          : 'Ingrese versión'
+                      }
                       size="small"
                       variant="outlined"
                       value={value}

@@ -78,8 +78,8 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
     {
       headerName: 'Estado',
       field: 'estado',
-      minWidth: 170,
-      maxWidth: 250,
+      minWidth: 180,
+      maxWidth: 220,
       renderCell: (params: { row: { fecha_terminado: null } }) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.fecha_terminado !== null ? (
