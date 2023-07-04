@@ -683,7 +683,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       }
                     }}
                   >
-                    <MenuItem value='1'>Mensual</MenuItem>
+                    <MenuItem value="1">Mensual</MenuItem>
                     <MenuItem value="3">Trimestral</MenuItem>
                     <MenuItem value="6">Semestral</MenuItem>
                     <MenuItem value="12">Anual</MenuItem>

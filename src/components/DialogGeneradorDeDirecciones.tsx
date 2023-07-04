@@ -313,7 +313,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                       : ''
                   }
                   onChange={handle_change}
-                  label="Nombre o número de la vía"
+                  label="Nombre o número de la vía *"
                   size="small"
                   fullWidth
                 />
@@ -354,6 +354,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                   fullWidth
                 />
               </Grid>
+
             </Grid>
             <Grid container spacing={2}>
               <Grid item xs={12}>
@@ -465,6 +466,23 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                   ACEPTAR
                 </Button>
               </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                {...register('direccion_estandarizada', { required: true })}
+                error={errors.direccion_estandarizada?.type === 'required'}
+                helperText={
+                  errors.direccion_estandarizada?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+                value={direccion_estandarizada}
+                label="Dirección generada *"
+                fullWidth
+                multiline
+                maxRows={4}
+                disabled
+              />
             </Grid>
           </Grid>
         </DialogContent>

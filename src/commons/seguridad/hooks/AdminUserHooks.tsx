@@ -331,21 +331,18 @@ export const use_admin_users = (): AdminUserHook => {
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (data_person_search.id_persona !== 0) {
-      set_tipo_documento(data_person_search.tipo_documento);
-      set_numero_documento(data_person_search.numero_documento);
       set_roles(roles_choise_adapter(user_info.roles));
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const activoo = data_register.activo
+      const activoo = data_register.activo;
       set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const bloqueadoo = data_register.bloqueado
+      const bloqueadoo = data_register.bloqueado;
       set_bloqueado(bloqueadoo);
       set_valor_actual_user_is_blocked(data_register.bloqueado);
 
       if (data_person_search.tipo_persona === 'N') {
-        // set_tipo_usuario('');
         set_data_register({
           ...data_register,
           primer_nombre: data_person_search.primer_nombre,
@@ -394,9 +391,11 @@ export const use_admin_users = (): AdminUserHook => {
         set_users_x_person_is_active(true);
       }
       set_tipo_persona(data_person_search.tipo_persona);
+      set_tipo_documento(data_person_search.tipo_documento);
+      set_numero_documento(data_person_search.numero_documento);
       set_loading_inputs(false);
-      dispatch(set_action_admin_users('CREATE'));
       set_data_disponible(true);
+      dispatch(set_action_admin_users('CREATE'));
     }
   }, [data_person_search]);
 
@@ -405,16 +404,18 @@ export const use_admin_users = (): AdminUserHook => {
     set_check_user_is_active(true);
     set_check_user_is_blocked(true);
     if (user_info.id_usuario !== 0) {
-      set_tipo_documento(user_info.tipo_documento);
-      set_numero_documento(user_info.numero_documento);
-      set_roles(roles_choise_adapter(user_info.roles));
+      if (user_info.roles.length === 0 && user_info.tipo_usuario === 'E') {
+        set_roles([{ value: 2, label: 'Rol Usuarios Web' }]);
+      } else {
+        set_roles(roles_choise_adapter(user_info.roles));
+      }
       set_selected_image(user_info.profile_img);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const activoo = data_register.activo
+      const activoo = data_register.activo;
       set_activo(activoo);
       set_valor_actual_user_is_active(data_register.activo);
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const bloqueadoo = data_register.bloqueado
+      const bloqueadoo = data_register.bloqueado;
       set_bloqueado(bloqueadoo);
       set_valor_actual_user_is_blocked(data_register.bloqueado);
       set_data_register({
@@ -511,6 +512,8 @@ export const use_admin_users = (): AdminUserHook => {
       );
 
       set_tipo_persona(user_info.tipo_persona);
+      set_tipo_documento(user_info.tipo_documento);
+      set_numero_documento(user_info.numero_documento);
       set_data_disponible(true);
       dispatch(set_action_admin_users('EDIT'));
     }
@@ -543,8 +546,23 @@ export const use_admin_users = (): AdminUserHook => {
   useEffect(() => {
     if (watch_admin_user('tipo_usuario') !== undefined) {
       set_tipo_usuario(watch_admin_user('tipo_usuario'));
+      if (watch_admin_user('tipo_usuario') === 'E' && tipo_persona === 'N') {
+        set_roles([{ value: 2, label: 'Rol Usuarios Web' }]);
+      }
     }
-  }, [watch_admin_user('tipo_usuario')]);
+  }, [watch_admin_user('tipo_usuario'), tipo_persona]);
+
+  useEffect(() => {
+    if (tipo_usuario === 'I') {
+      set_roles((prevRoles) => {
+        const new_roles = prevRoles.length > 0 ? [...prevRoles] : [];
+        if (new_roles.length === 0 || new_roles[0].value !== 2) {
+          new_roles.unshift({ value: 2, label: 'Rol Usuarios Web' });
+        }
+        return new_roles;
+      });
+    }
+  }, [roles, tipo_usuario]);
 
   const clean_user_info = (): void => {
     reset_admin_user(initial_state_data_register);

@@ -78,7 +78,7 @@ const SeleccionarBienPreparacion = () => {
     { field: 'id_item_preparacion_mezcla', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
-      headerName: 'Código',
+      headerName: 'Codigo',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -109,7 +109,7 @@ const SeleccionarBienPreparacion = () => {
     },
     {
       field: 'observaciones',
-      headerName: 'Observación',
+      headerName: 'Observacion',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -276,12 +276,12 @@ const SeleccionarBienPreparacion = () => {
           }
         } else {
           control_error(
-            'La cantidad asignada debe ser máximo ' +
+            'La cantidad asignada debe ser maximo ' +
               String(current_bien.saldo_disponible)
           );
         }
       } else {
-        control_error('Código de bien no coincide con el seleccionado');
+        control_error('Codigo de bien no coincide con el seleccionado');
       }
     } else {
       control_error('Debe seleccionar el bien');
@@ -355,9 +355,9 @@ const SeleccionarBienPreparacion = () => {
               control_name: 'codigo_bien',
               default_value: '',
               rules: {
-                required_rule: { rule: true, message: 'Código bien requerido' },
+                required_rule: { rule: true, message: 'Codigo bien requerido' },
               },
-              label: 'Código bien',
+              label: 'Codigo bien',
               type: 'text',
               disabled: false,
               helper_text: '',
@@ -456,7 +456,7 @@ const SeleccionarBienPreparacion = () => {
               rules: {
                 required_rule: { rule: true, message: 'Observación requerida' },
               },
-              label: 'Observación',
+              label: 'Observacion',
               type: 'text',
               multiline_text: true,
               rows_text: 4,
@@ -480,7 +480,7 @@ const SeleccionarBienPreparacion = () => {
               control_name: 'codigo_bien',
               default_value: '',
               rules: {},
-              label: 'Código bien',
+              label: 'Codigo bien',
               type: 'number',
               disabled: false,
               helper_text: '',

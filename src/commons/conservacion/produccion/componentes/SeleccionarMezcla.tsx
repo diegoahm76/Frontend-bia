@@ -61,7 +61,7 @@ const SeleccionarMezcla = ({
         },
         {
             field: 'fecha_preparacion',
-            headerName: 'Fecha de preparación',
+            headerName: 'Fecha de preparacion',
             width: 200,
             renderCell: (params) => (
               <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -71,7 +71,7 @@ const SeleccionarMezcla = ({
           },
         {
             field: 'observaciones',
-            headerName: 'Unidad',
+            headerName: 'unidad',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -177,7 +177,7 @@ const SeleccionarMezcla = ({
                             control_name: "unidad_medida",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Debe seleccionar mezcla" } },
-                            label: "Unidad",
+                            label: "unidad",
                             type: "text",
                             disabled: true,
                             helper_text: ""
@@ -216,7 +216,7 @@ const SeleccionarMezcla = ({
                             control_name: "observaciones",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                            label: "Observación",
+                            label: "Observacion",
                             type: "text",
                             multiline_text: true,
                             rows_text: 4,
@@ -238,7 +238,7 @@ const SeleccionarMezcla = ({
                         disabled: false,
                         helper_text: "Seleccione Vivero",
                         select_options: nurseries,
-                        option_label: "Nombre",
+                        option_label: "nombre",
                         option_key: "id_vivero",
                         },
                         {
