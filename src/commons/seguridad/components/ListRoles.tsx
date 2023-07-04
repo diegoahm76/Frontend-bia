@@ -226,25 +226,29 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
   }, []);
 
   return (
-    <>
-      <Grid container justifyContent="center">
-        {is_loading ? (
-          <CircularProgress />
-        ) : (
-          <Box sx={{ width: '100%' }}>
-              <Button
+    <>  <Grid container justifyContent="flex-end" >
+      <Grid item  >
+            <IconButton
                 style={{
                   color: 'white',
                   backgroundColor: '#335B1E',
-                  borderRadius: '50%', 
-                  width: '45px',
-                  height: '50px', 
+                  // width: '45px',
+                  // height: '50px', 
                   margin:5,
                 }}
                 onClick={handle_clickxls}
               >
                 <i className="pi pi-file-excel"></i>
-              </Button>
+              </IconButton>
+      </Grid>
+
+    </Grid>
+      <Grid container justifyContent="center" marginTop={2}>
+        {is_loading ? (
+          <CircularProgress />
+        ) : (
+          <Box sx={{ width: '100%' }}>
+             
             <DataGrid
               density="compact"
               autoHeight
