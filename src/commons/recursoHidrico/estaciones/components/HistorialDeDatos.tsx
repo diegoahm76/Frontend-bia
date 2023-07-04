@@ -200,7 +200,20 @@ export const HistorialDeDatos: React.FC = () => {
 
     return (
 
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px', mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+            marginTop: '20px',
+            marginLeft: '-5px',
+        }} >
+            <Grid item xs={12} sx={{ marginTop: "10px" }} >
+
+            <Title title="Historial de datos" />
+            </Grid>
+         
             <Box component="form" onSubmit={handleSubmit(submit_general)}>
                 <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
                     <FormControl fullWidth>
