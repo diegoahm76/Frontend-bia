@@ -44,6 +44,8 @@ export const SeleccionarPrograma: React.FC = () => {
     fetch_data_proyectos,
     setValue: set_value,
     data_programa,
+    set_fecha_inicial,
+    set_fecha_fin,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -187,6 +189,8 @@ export const SeleccionarPrograma: React.FC = () => {
       set_value('fecha_fin', data_programa.fecha_fin);
       set_value('fecha_inicio', data_programa.fecha_inicio);
       set_end_date(dayjs(data_programa.fecha_fin));
+      set_fecha_inicial(dayjs(data_programa.fecha_inicio));
+      set_fecha_fin(dayjs(data_programa.fecha_fin));
     }
   }, [data_programa !== undefined]);
 

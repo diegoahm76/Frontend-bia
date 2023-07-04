@@ -34,19 +34,12 @@ export const EditarAvance: React.FC = () => {
 
   let columns: GridColDef[] = [
     {
-      field: 'id_evidencia_avance',
-      headerName: 'No EVIDENCIA',
-      sortable: true,
-      width: 150,
-    },
-    {
       field: 'nombre_archivo',
       headerName: 'NOMBRE ARCHIVO',
       sortable: true,
       width: 250,
     },
   ];
-
   if (is_editar_avance) {
     columns = [
       ...columns,
@@ -219,7 +212,6 @@ export const EditarAvance: React.FC = () => {
             mb: '0px',
           }}
         >
-          {' '}
           {is_select_avance && (
             <Grid item xs={12}>
               <Title title=" INFORMACIÓN DE AVANCE" />
@@ -288,6 +280,7 @@ export const EditarAvance: React.FC = () => {
               />
             </LocalizationProvider>
           </Grid>
+          <Grid item xs={12} sm={6}></Grid>
           {is_editar_avance &&
             archivos.map((file, index) => (
               <Fragment key={index}>
