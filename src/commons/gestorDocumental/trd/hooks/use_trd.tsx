@@ -18,7 +18,7 @@ export const use_trd = (): any => {
   );
 
   // eslint-disable-next-line no-empty-pattern
-  const { ccd_finished/* trds */ } = useAppSelector(
+  const { ccd_finished /* trds */ } = useAppSelector(
     (state: any) => state.finished_ccd_slice
   );
 
@@ -67,21 +67,23 @@ export const use_trd = (): any => {
   // ? get list of finished ccd
   useEffect(() => {
     void dispatch(get_finished_ccd_service()).then((res: any[]) => {
-      // console.log(res);
+      console.log(res);
       set_list_finished_ccd(
-        res.map((item: any) => {
-          return {
-            item,
-            label: `V.${item.version} - ${item.nombre} `,
-            value: item.id_ccd
-          };
-        })
+        res
+          .filter((cdd) => cdd.usado === false)
+          .map((item: any) => {
+            return {
+              item,
+              label: `V.${item.version} - ${item.nombre} `,
+              value: item.id_ccd
+            };
+          })
       );
     });
-  }, []);
+  }, [trd_current]);
 
   // ? try to edit trd
-useEffect(() => {
+  useEffect(() => {
     console.log(data_create_trd_modal, 'data_create_trd');
     console.log(trd_current, 'trd_current');
     if (trd_current !== null) {
@@ -96,14 +98,12 @@ useEffect(() => {
         },
         nombre: trd_current.nombre,
         version: trd_current.version,
-        id_trd: trd_current.id_trd,
+        id_trd: trd_current.id_trd
       };
       console.log(obj, 'obj');
       reset_create_trd_modal(obj);
     }
-  }, [
-    trd_current,
-  ]);
+  }, [trd_current]);
 
   const reset_all_trd = (): void => {
     //* reset trd list

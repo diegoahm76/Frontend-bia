@@ -193,8 +193,8 @@ const use_ccd = () => {
           value: ccd_current.id_organigrama
         },
         unidades_organigrama: {
-          label: ccd_current.nombre_unidad_organizacional,
-          value: ccd_current.nombre_unidad_organizacional
+          label: assignments_ccd_current?.seccion,
+          value: assignments_ccd_current?.id_unidad_organizacional
         },
         version: ccd_current.version,
         fecha_terminado: ccd_current.fecha_terminado,
@@ -202,11 +202,6 @@ const use_ccd = () => {
         valor_aumento_subserie: ccd_current.valor_aumento_subserie,
         ruta_soporte: ccd_current.ruta_soporte
       };
-      /* console.log(
-        obj,
-        'obj'
-      )
-      */
       reset_create_ccd(obj);
       set_save_ccd(true);
     }
@@ -394,7 +389,7 @@ const use_ccd = () => {
       String(updatedCCD.valor_aumento_subserie)
     );
     // formData.append('ruta_soporte', updatedCCD.ruta_soporte);
-    if (updatedCCD.ruta_soporte) {
+    if (!updatedCCD.ruta_soporte || typeof updatedCCD.ruta_soporte !== 'string') {
       formData.append('ruta_soporte', updatedCCD.ruta_soporte);
     }
 

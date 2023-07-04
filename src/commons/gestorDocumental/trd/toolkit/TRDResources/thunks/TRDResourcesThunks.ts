@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { type Dispatch } from 'react';
 import { api } from '../../../../../../api/axios';
@@ -69,23 +70,28 @@ export const create_trd_service: any = (
 export const update_trd_service = (bodyPost: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      console.log(bodyPost, 'bodyPost');
-      // const { trd_current } = getState().trd;
-      const { data } = await api.patch(
-        `gestor/trd/update/${bodyPost.id_trd}/`,
-        {
-          nombre: bodyPost.nombre,
-          version: bodyPost.version
-        }
+      const url = `gestor/trd/update/${bodyPost.id_trd}/`;
+
+      const { nombre, version } = bodyPost;
+
+      const objectToSend = { nombre, version };
+
+      const { data: updatedData } = await api.put(url, objectToSend);
+
+      const searchUrl = `gestor/trd/buscar/trd/nombre-version/?nombre=${nombre}&version=${version}`;
+      const { data: searchData } = await api.get(searchUrl);
+
+      const updatedTrd = searchData.data.find(
+        (trd: any) => trd.id_trd === bodyPost.id_trd
       );
-      console.log(data, 'data');
-      /* dispatch(get_trd_current(data.data));
-      control_success(data.detail);
-      return data; */
+      dispatch(get_trd_current(updatedTrd));
+
+      control_success(updatedData.detail);
+      return updatedData;
     } catch (error: any) {
       console.log(error);
-      // control_error(error.response.data.detail);
-      // return error as AxiosError;
+      control_error(error.response.data.detail);
+      return error as AxiosError;
     }
   };
 };

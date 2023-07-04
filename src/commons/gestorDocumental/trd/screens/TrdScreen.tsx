@@ -171,11 +171,12 @@ export const TrdScreen: FC = (): JSX.Element => {
                         }}
                         isDisabled={trd_current != null}
                         options={
-                          trd_current != null
+                          list_finished_ccd
+                          /* trd_current != null
                             ? list_finished_ccd
                             : list_finished_ccd.filter(
                                 (ccd: any) => ccd.usado === false
-                              )
+                              ) */
                         }
                         placeholder="Seleccionar"
                       />
