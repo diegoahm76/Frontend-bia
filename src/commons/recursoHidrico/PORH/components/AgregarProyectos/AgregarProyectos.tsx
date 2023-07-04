@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { Avatar, IconButton, TextField, Typography } from '@mui/material';
@@ -18,17 +17,11 @@ import dayjs, { type Dayjs } from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 
-interface IProps {
-  fecha_inicial_programa: Date | null; // Fecha de inicio del programa
-  fecha_fin_programa: Date | null; // Fecha de finalización del programa
-}
-
+dayjs.extend(isSameOrAfter);
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarProyectos: React.FC<IProps> = ({
-  fecha_inicial_programa,
-  fecha_fin_programa,
-}: IProps) => {
+export const AgregarProyectos: React.FC = () => {
   const columns_proyectos: GridColDef[] = [
     {
       field: 'nombre',
@@ -63,7 +56,7 @@ export const AgregarProyectos: React.FC<IProps> = ({
           <>
             <IconButton
               onClick={() => {
-                setEditRowProyectos(params.row);
+                set_edit_row_proyectos(params.row);
               }}
             >
               <Avatar
@@ -108,7 +101,7 @@ export const AgregarProyectos: React.FC<IProps> = ({
             <IconButton
               onClick={() => {
                 set_is_agregar(true);
-                setProyectoSeleccionado(params.row);
+                set_proyecto_seleccionado(params.row);
               }}
             >
               <Avatar
@@ -152,7 +145,7 @@ export const AgregarProyectos: React.FC<IProps> = ({
           <>
             <IconButton
               onClick={() => {
-                setEditRowActividades(params.row);
+                set_edit_row_actividades(params.row);
               }}
             >
               <Avatar
@@ -202,14 +195,47 @@ export const AgregarProyectos: React.FC<IProps> = ({
     id_proyecto,
     set_rows_proyectos_register,
     set_rows_actividades_register,
+    fecha_inicial,
+    fecha_fin,
   } = useContext(DataContext);
 
   const [is_agregar, set_is_agregar] = useState(false);
-  const [edit_row_proyectos, setEditRowProyectos] = useState<any>(null);
-  const [edit_row_actividades, setEditRowActividades] = useState<any>(null);
-  const [proyectoSeleccionado, setProyectoSeleccionado] = useState<any>(null);
+  const [edit_row_proyectos, set_edit_row_proyectos] = useState<any>(null);
+  const [edit_row_actividades, set_edit_row_actividades] = useState<any>(null);
+  const [proyecto_seleccionado, set_proyecto_seleccionado] =
+    useState<any>(null);
   const [start_date, set_start_date] = useState<Dayjs | null>(null);
   const [end_date, set_end_date] = useState<Dayjs | null>(null);
+
+  const is_vigencias_valid =
+    start_date && end_date && fecha_inicial && fecha_fin
+      ? start_date.isSameOrAfter(fecha_inicial) &&
+        end_date.isSameOrBefore(fecha_fin)
+      : false;
+
+  const is_nombre_valid = watch('nombre') !== '';
+
+  const is_vigencia_final_valid =
+    start_date && end_date ? end_date.isAfter(start_date) : false;
+
+  const is_nombre_repetido = rows_proyectos_register.some(
+    (proyecto) => proyecto.nombre === watch('nombre')
+  );
+
+  const inversion_value: number = watch('inversion');
+  const is_form_valid =
+    !errors.nombre &&
+    !errors.vigencia_inicial &&
+    !errors.vigencia_final &&
+    !errors.inversion &&
+    watch('nombre') &&
+    start_date &&
+    end_date &&
+    is_vigencias_valid &&
+    is_nombre_valid &&
+    is_vigencia_final_valid &&
+    !is_nombre_repetido &&
+    inversion_value;
 
   const handle_start_date_change = (date: Dayjs | null): void => {
     set_value('vigencia_inicial', dayjs(date));
@@ -240,7 +266,7 @@ export const AgregarProyectos: React.FC<IProps> = ({
     };
 
     if (edit_row_proyectos) {
-      const proyectosActualizados = rows_proyectos_register.map((proyecto) => {
+      const proyectos_actualizados = rows_proyectos_register.map((proyecto) => {
         if (proyecto.id === edit_row_proyectos.id) {
           return {
             ...proyecto,
@@ -252,8 +278,8 @@ export const AgregarProyectos: React.FC<IProps> = ({
         }
         return proyecto;
       });
-      set_rows_proyectos_register(proyectosActualizados);
-      setEditRowProyectos(null);
+      set_rows_proyectos_register(proyectos_actualizados);
+      set_edit_row_proyectos(null);
     } else {
       set_rows_proyectos_register([...rows_proyectos_register, new_subseccion]);
     }
@@ -261,47 +287,47 @@ export const AgregarProyectos: React.FC<IProps> = ({
   };
 
   const handle_aceptar_actividad = (): void => {
-    setEditRowActividades(null);
+    set_edit_row_actividades(null);
     const descripcion = watch('descripcion');
     const new_actividad = {
       id_act: uuidv4(),
       nombre: descripcion,
     };
     if (edit_row_actividades) {
-      const proyectosActualizados = rows_proyectos_register.map((proyecto) => {
-        if (proyecto.id === proyectoSeleccionado.id) {
-          const actividadesActualizadas = proyecto.actividades
+      const proyectos_actualizados = rows_proyectos_register.map((proyecto) => {
+        if (proyecto.id === proyecto_seleccionado.id) {
+          const actividades_ctualizadas = proyecto.actividades
             ? proyecto.actividades.map((actividad) =>
                 actividad.id_act === edit_row_actividades.id_act
                   ? { ...actividad, nombre: descripcion }
                   : actividad
               )
             : [];
-          return { ...proyecto, actividades: actividadesActualizadas };
+          return { ...proyecto, actividades: actividades_ctualizadas };
         }
         return proyecto;
       });
-      set_rows_proyectos_register(proyectosActualizados);
-      setProyectoSeleccionado(
-        proyectosActualizados.find((p) => p.id === proyectoSeleccionado.id)
+      set_rows_proyectos_register(proyectos_actualizados);
+      set_proyecto_seleccionado(
+        proyectos_actualizados.find((p) => p.id === proyecto_seleccionado.id)
       );
     } else {
-      if (proyectoSeleccionado) {
-        const proyectosActualizados = rows_proyectos_register.map(
+      if (proyecto_seleccionado) {
+        const proyectos_actualizados = rows_proyectos_register.map(
           (proyecto) => {
-            if (proyecto.id === proyectoSeleccionado.id) {
-              const actividadesActualizadas = [
+            if (proyecto.id === proyecto_seleccionado.id) {
+              const actividades_ctualizadas = [
                 ...(proyecto.actividades ?? []),
                 new_actividad,
               ];
-              return { ...proyecto, actividades: actividadesActualizadas };
+              return { ...proyecto, actividades: actividades_ctualizadas };
             }
             return proyecto;
           }
         );
-        set_rows_proyectos_register(proyectosActualizados);
-        setProyectoSeleccionado(
-          proyectosActualizados.find((p) => p.id === proyectoSeleccionado.id)
+        set_rows_proyectos_register(proyectos_actualizados);
+        set_proyecto_seleccionado(
+          proyectos_actualizados.find((p) => p.id === proyecto_seleccionado.id)
         );
       } else {
         set_rows_actividades_register([
@@ -325,17 +351,6 @@ export const AgregarProyectos: React.FC<IProps> = ({
     set_value('descripcion', '');
   };
 
-  const inversion_value: number = watch('inversion');
-  const is_form_valid =
-    !errors.nombre &&
-    !errors.vigencia_inicial &&
-    !errors.vigencia_final &&
-    !errors.inversion &&
-    watch('nombre') &&
-    start_date &&
-    end_date &&
-    inversion_value;
-
   useEffect(() => {
     if (edit_row_proyectos) {
       set_value('nombre', edit_row_proyectos.nombre);
@@ -354,8 +369,8 @@ export const AgregarProyectos: React.FC<IProps> = ({
   }, [edit_row_actividades]);
 
   useEffect(() => {
-    console.log(proyectoSeleccionado, 'proyectoSeleccionado');
-  }, [proyectoSeleccionado]);
+    console.log(proyecto_seleccionado, 'proyecto_seleccionado');
+  }, [proyecto_seleccionado]);
 
   return (
     <>
@@ -384,12 +399,16 @@ export const AgregarProyectos: React.FC<IProps> = ({
           fullWidth
           size="small"
           margin="dense"
-          required
-          {...register('nombre', { required: true })}
-          error={Boolean(errors.nombre)}
+          required={rows_proyectos_register.length === 0}
+          {...register('nombre', {
+            required: rows_proyectos_register.length === 0,
+          })}
+          error={!is_nombre_valid || is_nombre_repetido}
           helperText={
-            errors.nombre?.type === 'required'
+            !is_nombre_valid
               ? 'Este campo es obligatorio'
+              : is_nombre_repetido
+              ? 'El nombre del proyecto no debe ya existe'
               : ''
           }
         />
@@ -397,7 +416,7 @@ export const AgregarProyectos: React.FC<IProps> = ({
       <Grid item xs={12} sm={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
           <DatePicker
-            label="Fecha Inicial"
+            label="Vigencia Inicial"
             inputFormat="YYYY/MM/DD"
             openTo="day"
             views={['year', 'month', 'day']}
@@ -405,15 +424,17 @@ export const AgregarProyectos: React.FC<IProps> = ({
             onChange={handle_start_date_change}
             renderInput={(params) => (
               <TextField
-                required
+                required={rows_proyectos_register.length === 0}
                 fullWidth
                 size="small"
                 {...params}
-                {...register('vigencia_inicial', { required: true })}
-                error={(errors.vigencia_inicial)}
+                {...register('vigencia_inicial', {
+                  required: rows_proyectos_register.length === 0,
+                })}
+                error={!is_vigencias_valid}
                 helperText={
-                  errors.vigencia_inicial?.type === 'required'
-                    ? 'Este campo es obligatorio'
+                  !is_vigencias_valid
+                    ? 'La vigencia debe estar dentro del rango del programa'
                     : ''
                 }
               />
@@ -424,7 +445,7 @@ export const AgregarProyectos: React.FC<IProps> = ({
       <Grid item xs={12} sm={6}>
         <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
           <DatePicker
-            label="Fecha Final"
+            label="Vigencia Final"
             inputFormat="YYYY/MM/DD"
             openTo="day"
             views={['year', 'month', 'day']}
@@ -432,15 +453,19 @@ export const AgregarProyectos: React.FC<IProps> = ({
             onChange={handle_end_date_change}
             renderInput={(params) => (
               <TextField
-                required
+                required={rows_proyectos_register.length === 0}
                 fullWidth
                 size="small"
                 {...params}
-                {...register('vigencia_final', { required: true })}
-                error={Boolean(errors.vigencia_final)}
+                {...register('vigencia_final', {
+                  required: rows_proyectos_register.length === 0,
+                })}
+                error={!is_vigencias_valid || !is_vigencia_final_valid}
                 helperText={
-                  errors.vigencia_final?.type === 'required'
-                    ? 'Este campo es obligatorio'
+                  !is_vigencias_valid
+                    ? 'La vigencia debe estar dentro del rango del programa'
+                    : !is_vigencia_final_valid
+                    ? 'La fecha final debe ser superior a la fecha inicial'
                     : ''
                 }
               />
@@ -454,10 +479,13 @@ export const AgregarProyectos: React.FC<IProps> = ({
           fullWidth
           size="small"
           margin="dense"
-          required
+          required={rows_proyectos_register.length === 0}
           autoFocus
           type="number"
-          {...register('inversion', { required: true, min: 0 })}
+          {...register('inversion', {
+            required: rows_proyectos_register.length === 0,
+            min: 0,
+          })}
           error={Boolean(errors.inversion)}
           helperText={
             errors.inversion?.type === 'required'
@@ -488,18 +516,6 @@ export const AgregarProyectos: React.FC<IProps> = ({
             <Typography variant="subtitle1" fontWeight="bold">
               Descripción de la actividad
             </Typography>
-            {/* {rows_actividades_register.length > 0 && (
-              <Grid item xs={12}>
-                <DataGrid
-                  autoHeight
-                  rows={rows_actividades_register}
-                  columns={columns_actividades}
-                  getRowId={(row) => row.id_act? row.id_act : uuidv4()}
-                  pageSize={5}
-                  rowsPerPageOptions={[5]}
-                />
-              </Grid>
-            )} */}
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -519,15 +535,15 @@ export const AgregarProyectos: React.FC<IProps> = ({
               }
             />
           </Grid>
-          {proyectoSeleccionado &&
-            proyectoSeleccionado.actividades.length > 0 && (
+          {proyecto_seleccionado &&
+            proyecto_seleccionado.actividades.length > 0 && (
               <Grid item xs={12}>
                 <Typography variant="subtitle1" fontWeight="bold">
                   Actividades del proyecto
                 </Typography>
                 <DataGrid
                   autoHeight
-                  rows={proyectoSeleccionado.actividades}
+                  rows={proyecto_seleccionado.actividades}
                   columns={columns_actividades}
                   getRowId={(row) => (row.id_act ? row.id_act : uuidv4())}
                   pageSize={5}
