@@ -4,7 +4,7 @@ import { Title } from '../../../../../components/Title';
 import { AgregarPrograma } from '../../components/AgregarNuevoPrograma/AgregarPrograma';
 import { useContext, useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { Avatar, Divider, IconButton, Typography } from '@mui/material';
+import { Avatar, Divider, IconButton,   } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChecklistIcon from '@mui/icons-material/Checklist';
@@ -16,6 +16,7 @@ import {
   editar_programa,
   editar_proyecto,
   eliminar_id,
+  post_actividades,
   post_programa,
 } from '../../Request/request';
 import { EditarPrograma } from '../../components/ActualizarPrograma/EditarPrograma';
@@ -34,14 +35,16 @@ export const PorhMainScreen: React.FC = () => {
     handleSubmit: handle_submit,
     errors,
     rows_programas,
-    set_rows_programas,
     rows_proyectos,
-    rows_actividades,
+    rows_actividades_register,
+    rows_proyectos_register,
     is_agregar_programa,
     is_editar_programa,
     is_seleccionar_programa,
     is_agregar_actividad,
+    // is_seleccionar_actividad,
     is_agregar_proyecto,
+    is_seleccionar_proyecto,
     is_editar_actividad,
     is_editar_proyecto,
     id_actividad,
@@ -56,6 +59,7 @@ export const PorhMainScreen: React.FC = () => {
     set_mode,
     reset_form_agregar_programa,
     set_data_programa,
+    set_rows_actividades_register,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -95,12 +99,20 @@ export const PorhMainScreen: React.FC = () => {
                   }}
                 >
                   <Avatar
-                    sx={{ width: 24, height: 24, background: '#fff', border: '2px solid',}}variant="rounded"
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
+                    }}
+                    variant="rounded"
                   >
                     <EditIcon
-                    titleAccess="Editar Programa"
+                      titleAccess="Editar Programa"
                       sx={{
-                        color: 'primary.main', width: '18px', height: '18px',
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
                       }}
                     />
                   </Avatar>
@@ -171,20 +183,33 @@ export const PorhMainScreen: React.FC = () => {
 
   const on_submit = handle_submit(async (form: any) => {
     try {
-      
       set_is_saving(true);
       form.id_programa = id_programa;
       form.id_proyecto = id_proyecto;
-      await post_programa(
-        form,
-        set_rows_programas,
-        rows_programas,
-        rows_proyectos,
-        rows_actividades
-      );
+      await post_programa(form, rows_proyectos_register);
       reset_form_agregar_programa();
       reset();
-      set_mode('register_programa')
+      set_mode('register_programa');
+      control_success('Se creó correctamente');
+      set_is_saving(false);
+      await fetch_data_programas();
+      await fetch_data_proyectos();
+      await fetch_data_actividades();
+    } catch (error: any) {
+      set_is_saving(false);
+      control_error(
+        error.response.data.detail || 'hubo un error al crear, intenta de nuevo'
+      );
+    }
+  });
+  const on_submit_actividades = handle_submit(async (form: any) => {
+    console.log('hi, from onSubmit actividades');
+    try {
+      set_is_saving(true);
+      form.id_programa = id_programa;
+      form.id_proyecto = id_proyecto;
+      await post_actividades(form, rows_proyectos, rows_actividades_register);
+      set_rows_actividades_register([]);
       control_success('Se creó correctamente');
       set_is_saving(false);
       await fetch_data_programas();
@@ -199,6 +224,7 @@ export const PorhMainScreen: React.FC = () => {
   });
 
   const on_submit_editar = handle_submit(async (form: any) => {
+    console.log('hi, from onSubmit edit');
     try {
       set_is_saving(true);
       await editar_programa(id_programa as number, form);
@@ -209,7 +235,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(false);
       control_error(
         error.response.data.detail ||
-          'hubo un error al editar, intenta de nuevo'
+        'hubo un error al editar, intenta de nuevo'
       );
     }
   });
@@ -224,7 +250,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(false);
       control_error(
         error.response.data.detail ||
-          'hubo un error al editar, intenta de nuevo'
+        'hubo un error al editar, intenta de nuevo'
       );
     }
   });
@@ -238,7 +264,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(false);
       control_error(
         error.response.data.detail ||
-          'hubo un error al editar, intenta de nuevo'
+        'hubo un error al editar, intenta de nuevo'
       );
     }
   });
@@ -251,7 +277,7 @@ export const PorhMainScreen: React.FC = () => {
         cancelButton: 'square-btn',
       },
       width: 350,
-      text: '¿Estas seguro?',
+      text: '¿Estás seguro?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#0EC32C',
@@ -267,7 +293,7 @@ export const PorhMainScreen: React.FC = () => {
         } catch (error: any) {
           control_error(
             error.response.data.detail ||
-              'hubo un error al eliminar, intenta de nuevo'
+            'hubo un error al eliminar, intenta de nuevo'
           );
         }
       }
@@ -278,22 +304,22 @@ export const PorhMainScreen: React.FC = () => {
     <>
       <form
         onSubmit={(form) => {
+          form.preventDefault();
           console.log(errors, 'errors');
-          if (
-            is_agregar_programa ||
-            is_agregar_actividad ||
-            is_agregar_proyecto
-          ) {
-            void on_submit(form);
+          if (is_seleccionar_proyecto && is_agregar_actividad) {
+            return on_submit_actividades(form);
+          }
+          if (is_agregar_programa || is_agregar_proyecto) {
+            return on_submit(form);
           }
           if (is_editar_programa) {
-            void on_submit_editar(form);
+            return on_submit_editar(form);
           }
           if (is_editar_actividad) {
-            void on_submit_editar_actividad(form);
+            return on_submit_editar_actividad(form);
           }
           if (is_editar_proyecto) {
-            void on_submit_editar_proyecto(form);
+            return on_submit_editar_proyecto(form);
           }
         }}
       >
@@ -313,7 +339,7 @@ export const PorhMainScreen: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="CONTENIDO PROGRAMÁTICO PLAN DE ORDENAMIENTO DE RECURSO HÍDRICO" />
+            <Title title="Contenido programático pla  de ordenamiento de recursos hídrico" />
           </Grid>
           <BusquedaPorh />
           {is_general && (
@@ -321,9 +347,10 @@ export const PorhMainScreen: React.FC = () => {
               {rows_programas.length > 0 && (
                 <>
                   <Grid item xs={12}>
-                    <Typography variant="subtitle1" fontWeight="bold">
+                    <Title title=" Programas" />
+                    {/* <Typography variant="subtitle1" fontWeight="bold">
                       Programas
-                    </Typography>
+                    </Typography> */}
                     <Divider />
                   </Grid>
                   <Grid item xs={12}>
@@ -388,7 +415,7 @@ export const PorhMainScreen: React.FC = () => {
                   variant="contained"
                   color="success"
                   type="submit"
-                  disabled={is_saving || Object.keys(errors).length > 0}
+                  disabled={is_saving}
                   loading={is_saving}
                 >
                   Finalizar

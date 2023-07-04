@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable react/jsx-no-undef */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 
@@ -387,9 +386,15 @@ const DespachoScreen = () => {
             }
             button_icon_class={<Block />}
             button_disabled={false}
-            modal_title={current_solicitud.solicitud_abierta === true ? "Cerrar solicitud" : "Detalle del cierre de solicitud por no disponibilidad"}
-            button_submit_label={"Cierre de solicitud"}
-            button_submit_disabled={!current_solicitud.solicitud_abierta}
+            modal_title={
+              current_solicitud.solicitud_abierta === true
+                ? 'Cerrar solicitud'
+                : 'Detalle del cierre de solicitud por no disponibilidad'
+            }
+            button_submit_label={'Cierre de solicitud'}
+            button_submit_disabled={
+              !(current_solicitud.solicitud_abierta === true)
+            }
             button_submit_icon_class={<Block />}
             button_submit_action={handle_submit_solicitud(on_submit_closed)}
             modal_inputs={[
@@ -401,8 +406,8 @@ const DespachoScreen = () => {
                 control_name: 'nro_solicitud',
                 default_value: '',
                 rules: {},
-                label: 'Numero solicitud',
-                type: 'number',
+                label: "Número de solicitud",
+                type: "number",
                 disabled: true,
                 helper_text: '',
               },
@@ -412,16 +417,11 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 4,
                 control_form: control_solicitud_aprobada,
-                control_name: 'persona_cierra',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Debe seleccionar la personas que la creó',
-                  },
-                },
-                label: 'Cierre realizao por',
-                type: 'text',
+                control_name: "persona_cierra",
+                default_value: "",
+                rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
+                label: "Cierre realizado por",
+                type: "text",
                 disabled: true,
                 helper_text: '',
               },
@@ -430,14 +430,11 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 4,
                 control_form: control_solicitud_aprobada,
-                control_name:
-                  current_solicitud.solicitud_anulada_solicitante === true
-                    ? 'fecha_cierre_no_dispo'
-                    : 'fecha',
-                default_value: new Date().toString(),
-                rules: { required_rule: { rule: true, message: 'requerido' } },
-                label: 'Fecha actual',
-                type: 'text',
+                control_name: current_solicitud.solicitud_anulada_solicitante === true ? "fecha_cierre_no_dispo" : "fecha",
+                default_value: (new Date().toString()),
+                rules: { required_rule: { rule: true, message: "Requerido" } },
+                label: "Fecha actual",
+                type: "text",
                 disabled: true,
                 helper_text: '',
               },
@@ -491,8 +488,8 @@ const DespachoScreen = () => {
                 control_name: 'nro_despachos_viveros',
                 default_value: '',
                 rules: {},
-                label: 'Numero despacho',
-                type: 'number',
+                label: "Numero de despacho",
+                type: "number",
                 disabled: true,
                 helper_text: '',
               },
@@ -520,14 +517,11 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 4,
                 control_form: control_despacho,
-                control_name:
-                  current_solicitud.solicitud_anulada_solicitante === true
-                    ? 'fecha_anulacion'
-                    : 'fecha',
-                default_value: new Date().toString(),
-                rules: { required_rule: { rule: true, message: 'requerido' } },
-                label: 'Fecha actual',
-                type: 'text',
+                control_name: current_solicitud.solicitud_anulada_solicitante === true ? "fecha_anulacion" : "fecha",
+                default_value: (new Date().toString()),
+                rules: { required_rule: { rule: true, message: "Requerido" } },
+                label: "Fecha actual",
+                type: "text",
                 disabled: true,
                 helper_text: '',
               },
@@ -536,16 +530,11 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 12,
                 control_form: control_despacho,
-                control_name: 'justificacion_anulacion',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Observación requerida',
-                  },
-                },
-                label: 'Justificacion',
-                type: 'text',
+                control_name: "justificacion_anulacion",
+                default_value: "",
+                rules: { required_rule: { rule: true, message: "Observación requerida" } },
+                label: "Justificación",
+                type: "text",
                 multiline_text: true,
                 rows_text: 4,
                 disabled: false,

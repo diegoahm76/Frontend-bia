@@ -58,7 +58,7 @@ export const BibliotecaScreen: React.FC = () => {
           <IconButton
             onClick={() => {
               set_info_seccion(params.row);
-              set_is_editar_seccion(true);
+              set_id_seccion(params.row.id_seccion);
               set_mode('editar_seccion');
             }}
           >

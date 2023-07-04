@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { type Dispatch, type SetStateAction } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import {
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
@@ -11,10 +10,8 @@ import {
   Button,
   Box,
   Divider,
-  MenuItem,
   Grid,
 } from '@mui/material';
-import { Title } from '../../../../../components/Title';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
 import {
@@ -27,6 +24,9 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../../../hooks/hooks';
 import { type IList, type IObjBien as FormValues } from "../interfaces/catalogodebienes";
 import { api } from "../../../../../api/axios";
+import { initial_state_current_nodo } from "../store/slices/indexCatalogodeBienes";
+import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
+
 interface IProps {
   action: string;
   is_modal_active: boolean;
@@ -56,13 +56,12 @@ const CrearBienDialogForm = ({
   const { marca, unidad_medida, porcentaje_iva, current_nodo, code_bien } =
     useAppSelector((state) => state.bien);
 
-  const [tipo_bien_selected, set_tipo_bien_selected] = useState<
-    string | null | undefined
-  >('A');
+
   const {
     control: control_bien,
     handleSubmit: handle_submit,
     reset: reset_bien,
+    watch
   } = useForm<FormValues>();
   const handle_close_add_bien = (): void => {
     set_is_modal_active(false);
@@ -75,30 +74,19 @@ const CrearBienDialogForm = ({
     }));
     return data_new_format;
   };
-  const on_change_tipo_bien: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    set_tipo_bien_selected(e.target.value);
-  };
+  // const on_change_tipo_bien: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   set_tipo_bien_selected(e.target.value);
+  // };
 
   const on_submit = (data: FormValues): void => {
     if (action === 'create_sub') {
-      data.id_bien = current_nodo.data.bien?.id_bien ?? null;
-      data.nivel_jerarquico =
-        current_nodo.data.bien?.nivel_jerarquico != null
-          ? (current_nodo.data.bien?.nivel_jerarquico === 5) ? 5 :
-            Number(current_nodo.data.bien?.nivel_jerarquico ?? 0) + 1
-          : 1;
-      data.id_bien_padre =
-        current_nodo.data.bien?.id_bien != null
-          ? (current_nodo.data.bien?.nivel_jerarquico === 5) ? current_nodo.data.bien.id_bien_padre : current_nodo.data.bien.id_bien
-          : null;
-      data.nombre_padre =
-        current_nodo.data.bien?.nombre != null
-          ? (current_nodo.data.bien?.nivel_jerarquico === 5) ? current_nodo.data.bien.nombre_padre : current_nodo.data.bien.nombre
-          : null;
+      data.id_bien = null
+      data.nivel_jerarquico = Number(current_nodo.data.bien?.nivel_jerarquico ?? 0) + 1
+      data.id_bien_padre = current_nodo.data.bien?.id_bien
+      data.nombre_padre = current_nodo.data.bien?.nombre
     } else if (action === 'create') {
       data.nivel_jerarquico = 1;
     }
-    data.cod_tipo_bien = tipo_bien_selected;
     data.id_unidad_medida_vida_util = 59
     data.maneja_hoja_vida = data.maneja_hoja_vida === "true"
     data.solicitable_vivero = data.solicitable_vivero === "true"
@@ -137,7 +125,6 @@ const CrearBienDialogForm = ({
           depreciacion_types_no_format
         );
         set_depreciacion_types(depreciacion_types_format);
-        console.log('jhdjsajkdhakj')
       } catch (err) {
         console.log(err);
       }
@@ -152,20 +139,32 @@ const CrearBienDialogForm = ({
       if (current_nodo.data.bien?.nivel_jerarquico !== 5) {
         void dispatch(get_code_bien_service(current_nodo.data.bien?.codigo_bien));
       }
-
-      set_tipo_bien_selected(current_nodo.data.bien?.cod_tipo_bien);
-
-      reset_bien(current_nodo.data.bien);
+      reset_bien({
+        ...current_nodo.data.bien,
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        maneja_hoja_vida: (current_nodo.data.bien?.maneja_hoja_vida ?? false) ? "true" : "false",
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        solicitable_vivero: (current_nodo.data.bien?.solicitable_vivero ?? false) ? "true" : "false",
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        visible_solicitudes: (current_nodo.data.bien?.visible_solicitudes ?? false) ? "true" : "false"
+      });
     } else if (action === 'create') {
-      console.log('create');
       void dispatch(get_code_bien_service(null));
-      set_tipo_bien_selected('A');
-      console.log(current_nodo.data.bien);
+      reset_bien(initial_state_current_nodo.data.bien)
+    } else {
+      reset_bien({
+        ...current_nodo.data.bien,
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        maneja_hoja_vida: (current_nodo.data.bien?.maneja_hoja_vida ?? false) ? "true" : "false",
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        solicitable_vivero: (current_nodo.data.bien?.solicitable_vivero ?? false) ? "true" : "false",
+        // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+        visible_solicitudes: (current_nodo.data.bien?.visible_solicitudes ?? false) ? "true" : "false"
+      });
     }
   }, [current_nodo]);
 
   useEffect(() => {
-
     reset_bien({ ...current_nodo.data.bien, codigo_bien: code_bien });
   }, [code_bien]);
 
@@ -185,604 +184,425 @@ const CrearBienDialogForm = ({
         <Divider />
         <DialogContent sx={{ mb: '0px' }}>
           <Grid container>
-            <Title title="Seleccione tipo de bien"></Title>
-            <Grid item xs={12} md={2} margin={1}>
-              <TextField
-                margin="dense"
-                select
-                fullWidth
-                size="small"
-                label="Tipo de bien"
-                variant="outlined"
-                value={tipo_bien_selected}
-                onChange={on_change_tipo_bien}
-              >
-                {tipo_bien.map((option: IList) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            <Title title="Informacion del bien"></Title>
+            <PrimaryForm
+              show_button={false}
+              on_submit_form={handle_submit(on_submit)}
+              button_submit_label='Guardar'
+              button_submit_icon_class={<SaveIcon />}
+              form_inputs={watch("cod_tipo_bien") === 'A' ?
+                [
+                  {
+                    datum_type: "title",
+                    title_label: "Tipo de bien"
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 12,
+                    control_form: control_bien,
+                    control_name: "cod_tipo_bien",
+                    default_value: "A",
+                    rules: { required_rule: { rule: true, message: "Tipo de bien requerido" } },
+                    label: "Tipo de bien",
+                    disabled: false,
+                    helper_text: "Seleccione Tipo de bien",
+                    select_options: tipo_bien,
+                    option_label: "label",
+                    option_key: "value",
+                  },
+                  {
+                    datum_type: "title",
+                    title_label: "Información del bien"
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "codigo_bien",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "requerida" } },
+                    label: "Codigo",
+                    type: "number",
+                    disabled: true,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "nombre",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Nombre requerido" } },
+                    label: "Nombre",
+                    type: "text",
+                    disabled: false,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "cod_tipo_activo",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Tipo de activo requerido" } },
+                    label: "Tipo de bien",
+                    disabled: false,
+                    helper_text: "Tipo de activo",
+                    select_options: activo_types,
+                    option_label: "label",
+                    option_key: "value",
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "nombre_padre",
+                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
+                    rules: { required_rule: { rule: false, message: "Nombre requerido" } },
+                    label: "Carpeta padre",
+                    type: "text",
+                    disabled: true,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "id_unidad_medida",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Unidad de medida requerida" } },
+                    label: "Unidad de medida",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: unidad_medida,
+                    option_label: "nombre",
+                    option_key: "id_unidad_medida",
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "id_porcentaje_iva",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Porcentaje IVA requerido" } },
+                    label: "Porcentaje IVA",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: porcentaje_iva,
+                    option_label: "porcentaje",
+                    option_key: "id_porcentaje_iva",
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "cod_tipo_depreciacion",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Tipo de depreciación requerido" } },
+                    label: "Tipo de depreciación",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: depreciacion_types,
+                    option_label: "label",
+                    option_key: "value",
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "id_unidad_medida_vida_util",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Unidad de medida vida util requerida" } },
+                    label: "Unidad de medida vida util",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: unidad_medida,
+                    option_label: "nombre",
+                    option_key: "id_unidad_medida",
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "cantidad_vida_util",
+                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
+                    rules: { required_rule: { rule: true, message: "Cantidad de vida util requerido" } },
+                    label: "Cantidad de vida util",
+                    type: "number",
+                    disabled: false,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "valor_residual",
+                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
+                    rules: { required_rule: { rule: true, message: "Valor residual requerido" } },
+                    label: "Valor residual",
+                    type: "number",
+                    disabled: false,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "id_marca",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Marca requerida" } },
+                    label: "Marca",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: marca,
+                    option_label: "nombre",
+                    option_key: "id_marca",
+                  },
 
-            <Grid item xs={12} md={2} margin={1}>
-              <Controller
-                name="codigo_bien"
-                control={control_bien}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    size="small"
-                    label="Codigo"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    disabled
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio ingresar un codigo'
-                        : 'Ingrese codigo'
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12} md={2} margin={1}>
-              <Controller
-                name="nombre"
-                control={control_bien}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    size="small"
-                    label="Nombre"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio ingresar un nombre'
-                        : 'Ingrese nombre'
-                    }
-                  />
-                )}
-              />
-            </Grid>
-            {tipo_bien_selected === 'A' ? (
-              <Grid item xs={11} md={2} margin={1}>
-                <Controller
-                  name="cod_tipo_activo"
-                  control={control_bien}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      select
-                      size="small"
-                      label="Tipo activo"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio seleccionar tipo de activo'
-                          : 'Seleccione tipo activo'
-                      }
-                    >
-                      {activo_types.map((option: IList) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                />
-              </Grid>
-            ) : (
-              <Grid item xs={11} md={2} margin={1}>
-                <Controller
-                  name="cod_metodo_valoracion"
-                  control={control_bien}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      select
-                      size="small"
-                      label="Metodo valoración"
-                      variant="outlined"
-                      value={value}
-                      onChange={onChange}
-                      error={!(error == null)}
-                      helperText={
-                        error != null
-                          ? 'Es obligatorio seleccionar metodo valoración'
-                          : 'Seleccione metodo valoración'
-                      }
-                    >
-                      {metodo_valoracion.map((option: IList) => (
-                        <MenuItem key={option.value} value={option.value}>
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  )}
-                />
-              </Grid>
-            )}
-            <Grid item xs={11} md={3} margin={1}>
-              <TextField
-                margin="dense"
-                fullWidth
-                size="small"
-                label="Carpeta padre"
-                variant="outlined"
-                value={
-                  action === 'create_sub' ? current_nodo.data.bien?.nombre : ''
-                }
-                disabled
-              />
-            </Grid>
-            <Grid item xs={11} md={2} margin={1}>
-              <Controller
-                name="id_unidad_medida"
-                control={control_bien}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="Unidad de medida"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar unidad de medida'
-                        : 'seleccione unidad de media'
-                    }
-                  >
-                    {unidad_medida.map((option) => (
-                      <MenuItem
-                        key={option.id_unidad_medida}
-                        value={option.id_unidad_medida}
-                      >
-                        {option.nombre}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            </Grid>
-            <Grid item xs={11} md={2} margin={1}>
-              <Controller
-                name="id_porcentaje_iva"
-                control={control_bien}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="Porcentaje IVA"
-                    variant="outlined"
-                    defaultValue={value}
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar porcentaje de iva'
-                        : 'seleccione porcentaje de iva'
-                    }
-                  >
-                    {porcentaje_iva.map((option) => (
-                      <MenuItem
-                        key={option.id_porcentaje_iva}
-                        value={option.id_porcentaje_iva}
-                      >
-                        {option.porcentaje}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
-              />
-            </Grid>
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "visible_solicitudes",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Visible en solicitudes por vivero requerida" } },
+                    label: "¿Visible en solicitudes?",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
+                    option_label: "label",
+                    option_key: "value",
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "maneja_hoja_vida",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Seleccionar una opción" } },
+                    label: "¿Maneja hoja de vida?",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
+                    option_label: "label",
+                    option_key: "value",
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 12,
+                    control_form: control_bien,
+                    control_name: "descripcion",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Descripción requerida" } },
+                    label: "Descripción",
+                    type: "text",
+                    multiline_text: true,
+                    rows_text: 4,
+                    disabled: false,
+                    helper_text: ""
+                  }
+                ] :
+                [
+                  {
+                    datum_type: "title",
+                    title_label: "Tipo de bien"
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 12,
+                    control_form: control_bien,
+                    control_name: "cod_tipo_bien",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Tipo de bien requerido" } },
+                    label: "Tipo de bien",
+                    disabled: false,
+                    helper_text: "Seleccione Tipo de bien",
+                    select_options: tipo_bien,
+                    option_label: "label",
+                    option_key: "value",
+                  },
+                  {
+                    datum_type: "title",
+                    title_label: "Información del bien"
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "codigo_bien",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "requerida" } },
+                    label: "Codigo",
+                    type: "number",
+                    disabled: true,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "nombre",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Nombre requerido" } },
+                    label: "Nombre",
+                    type: "text",
+                    disabled: false,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "cod_metodo_valoracion",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Tipo de activo requerido" } },
+                    label: "Metodo de valoración",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: metodo_valoracion,
+                    option_label: "label",
+                    option_key: "value",
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "nombre_padre",
+                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
+                    rules: { required_rule: { rule: false, message: "Nombre requerido" } },
+                    label: "Carpeta padre",
+                    type: "text",
+                    disabled: true,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "id_unidad_medida",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Unidad de medida requerida" } },
+                    label: "Unidad de medida",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: unidad_medida,
+                    option_label: "nombre",
+                    option_key: "id_unidad_medida",
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "id_porcentaje_iva",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Porcentaje IVA requerido" } },
+                    label: "Porcentaje IVA",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: porcentaje_iva,
+                    option_label: "porcentaje",
+                    option_key: "id_porcentaje_iva",
+                  },
 
-            {tipo_bien_selected === 'A' ? (
-              <>
-                <Grid item xs={11} md={2} margin={1}>
-                  <Controller
-                    name="cod_tipo_depreciacion"
-                    control={control_bien}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        select
-                        size="small"
-                        label="Tipo depreciación"
-                        variant="outlined"
-                        defaultValue={value}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio seleccionar tipo de depreciación'
-                            : 'Seleccione tipo depreciación'
-                        }
-                      >
-                        {depreciacion_types.map((option: IList) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={11} md={2} margin={1}>
-                  <Controller
-                    name="id_unidad_medida_vida_util"
-                    control={control_bien}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        select
-                        size="small"
-                        label="Unidad de medida vida util"
-                        variant="outlined"
-                        defaultValue={value}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio seleccionar unidad de medida vida util'
-                            : 'seleccione unidad de media vida util'
-                        }
-                      >
-                        {unidad_medida.map((option) => (
-                          <MenuItem
-                            key={option.id_unidad_medida}
-                            value={option.id_unidad_medida}
-                          >
-                            {option.nombre}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={11} md={2} margin={1}>
-                  <Controller
-                    name="cantidad_vida_util"
-                    control={control_bien}
-                    defaultValue={0}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        type="number"
-                        label="Cantidad vida util"
-                        variant="outlined"
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar cantidad vida util'
-                            : 'Ingrese cantidad vida util'
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={11} md={2} margin={1}>
-                  <Controller
-                    name="valor_residual"
-                    control={control_bien}
-                    defaultValue={0}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        type="number"
-                        label="Valor residual"
-                        variant="outlined"
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar valor residual'
-                            : 'Ingrese cantidad valor residual'
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={11} md={2} margin={1}>
-                  <Controller
-                    name="id_marca"
-                    control={control_bien}
-                    defaultValue={0}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        select
-                        size="small"
-                        label="Marca"
-                        variant="outlined"
-                        defaultValue={value}
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio seleccionar marca'
-                            : 'seleccione marca'
-                        }
-                      >
-                        {marca.map((option) => (
-                          <MenuItem
-                            key={option.id_marca}
-                            value={option.id_marca}
-                          >
-                            {option.nombre}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    )}
-                  />
-                </Grid>
-              </>
-            ) : (
-              <>
-                <Grid item xs={11} md={2} margin={1}>
-                  <Controller
-                    name="stock_minimo"
-                    control={control_bien}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        type="number"
-                        label="Stock minimo"
-                        variant="outlined"
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar stock minimo'
-                            : 'Ingrese stock minimo'
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={11} md={2} margin={1}>
-                  <Controller
-                    name="stock_maximo"
-                    control={control_bien}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        size="small"
-                        type="number"
-                        label="Stock maximo"
-                        variant="outlined"
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio ingresar stock maximo'
-                            : 'Ingrese stock maximo'
-                        }
-                      />
-                    )}
-                  />
-                </Grid>
-                <Grid item xs={11} md={2} margin={1}>
-                  <Controller
-                    name="solicitable_vivero"
-                    control={control_bien}
-                    rules={{ required: true }}
-                    render={({
-                      field: { onChange, value },
-                      fieldState: { error },
-                    }) => (
-                      <TextField
-                        margin="dense"
-                        fullWidth
-                        select
-                        size="small"
-                        label="¿Solicitable por vivero?"
-                        variant="outlined"
-                        value={value}
-                        onChange={onChange}
-                        error={!(error == null)}
-                        helperText={
-                          error != null
-                            ? 'Es obligatorio seleccionar una opción'
-                            : 'Seleccionar opción'
-                        }
-                      >
-                        <MenuItem value="true">SI</MenuItem>
-                        <MenuItem value="false">NO</MenuItem>
-                      </TextField>
-                    )}
-                  />
-                </Grid>
-              </>
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "stock_minimo",
+                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
+                    rules: { required_rule: { rule: true, message: "Stock minimo requerido" } },
+                    label: "Stock minimo",
+                    type: "number",
+                    disabled: false,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "stock_maximo",
+                    default_value: action === 'create_sub' ? current_nodo.data.bien?.nombre : '',
+                    rules: { required_rule: { rule: true, message: "Stock maximo requerido" } },
+                    label: "Stock maximo",
+                    type: "number",
+                    disabled: false,
+                    helper_text: ""
+                  },
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "solicitable_vivero",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Solicitable por vivero requerida" } },
+                    label: "Solicitable por vivero",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
+                    option_label: "label",
+                    option_key: "value",
+                  },
 
-            )}
+                  {
+                    datum_type: "select_controller",
+                    xs: 12,
+                    md: 2,
+                    control_form: control_bien,
+                    control_name: "visible_solicitudes",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Visible en solicitudes por vivero requerida" } },
+                    label: "¿Visible en solicitudes?",
+                    disabled: false,
+                    helper_text: "",
+                    select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
+                    option_label: "label",
+                    option_key: "value",
+                  },
+
+                  {
+                    datum_type: "input_controller",
+                    xs: 12,
+                    md: 12,
+                    control_form: control_bien,
+                    control_name: "descripcion",
+                    default_value: "",
+                    rules: { required_rule: { rule: true, message: "Descripción requerida" } },
+                    label: "Descripción",
+                    type: "text",
+                    multiline_text: true,
+                    rows_text: 4,
+                    disabled: false,
+                    helper_text: ""
+                  }
+                ]
+              }
+            />
 
 
-
-            <Grid item xs={11} md={2} margin={1}>
-              <Controller
-                name="visible_solicitudes"
-                control={control_bien}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="¿Visible a solicitudes?"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar una opción'
-                        : 'Seleccionar opción'
-                    }
-                  >
-                    <MenuItem value="true">SI</MenuItem>
-                    <MenuItem value="false">NO</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={11} md={2} margin={1}>
-              <Controller
-                name="maneja_hoja_vida"
-                control={control_bien}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    select
-                    size="small"
-                    label="¿Maneja hoja de vida?"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio seleccionar una opción'
-                        : 'Seleccionar opción'
-                    }
-                  >
-                    <MenuItem value="true">SI</MenuItem>
-                    <MenuItem value="false">NO</MenuItem>
-                  </TextField>
-                )}
-              />
-            </Grid>
-
-            <Grid item xs={11} md={12} margin={1}>
-              <Controller
-                name="descripcion"
-                control={control_bien}
-                defaultValue=""
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    multiline
-                    rows={4}
-                    size="small"
-                    label="Descripcion"
-                    variant="outlined"
-                    value={value}
-                    onChange={onChange}
-                    error={!(error == null)}
-                    helperText={
-                      error != null
-                        ? 'Es obligatorio ingresar descripción'
-                        : 'Ingrese descripción'
-                    }
-                  />
-                )}
-              />
-            </Grid>
           </Grid>
         </DialogContent>
         <Divider />

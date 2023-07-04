@@ -36,7 +36,7 @@ export function IngresoCuarentenaScreen(): JSX.Element {
   const columns_levantamiento: GridColDef[] = [
     {
         field: 'consec_levan_por_cuaren',
-        headerName: 'Consecutivo levantamiento',
+        headerName: 'Consecutivo de levantamiento',
         width: 200,
         renderCell: (params) => (
             <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -359,7 +359,7 @@ useEffect(() => {
                   control_form: control_cuarentena,
                   control_name: current_plant_quarantine.cuarentena_anulada === true ? "fecha_anulacion":"fecha",
                   default_value: (new Date().toString()),
-                  rules: { required_rule: { rule: true, message: "requerido" } },
+                  rules: { required_rule: { rule: true, message: "Requerido" } },
                   label: "Fecha actual",
                   type: "text",
                   disabled: true,
@@ -373,7 +373,7 @@ useEffect(() => {
                   control_name: "justificacion_anulacion",
                   default_value: "",
                   rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                  label: "Justificacion",
+                  label: "Justificación",
                   type: "text",
                   multiline_text: true,
                   rows_text: 4,

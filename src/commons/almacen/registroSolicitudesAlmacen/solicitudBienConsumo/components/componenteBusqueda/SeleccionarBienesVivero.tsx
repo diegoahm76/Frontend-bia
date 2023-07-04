@@ -9,7 +9,7 @@ import BuscarModelo from "../../../../../../components/partials/getModels/Buscar
 import { set_bienes_solicitud, set_bienes_vivero, set_current_bien_vivero } from "../../store/slices/indexSolicitudBienesConsumo";
 import { useForm } from "react-hook-form";
 import { control_error, get_bienes_consumo_vivero_codigo_bien, get_bienes_vivero_consumo } from "../../store/solicitudBienConsumoThunks";
-// import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
@@ -21,7 +21,7 @@ const SeleccionarBienConsumoVivero = () => {
 
 
     // const [action, set_action] = useState<string>("agregar");
-    const { control: control_bien, reset: reset_bien, getValues: get_values_bien, } = useForm<IObjBienViveroConsumo>();
+    const { control: control_bien, reset: reset_bien, getValues: get_values_bien, reset: reset_bien_solicitud } = useForm<IObjBienViveroConsumo>();
     const { control: control_bien_solicitud_vivero, handleSubmit: handle_submit_item_solicitud } = useForm<IObjBienesSolicitud>();
     const { unidades_medida, bienes_vivero, bienes_solicitud, current_bien_vivero, current_solicitud_vivero } = useAppSelector((state) => state.solic_consumo);
     const [aux_bienes_solicitud, set_aux_bienes_solicitud] = useState<IObjBienesSolicitud[]>([]);
@@ -45,11 +45,11 @@ const SeleccionarBienConsumoVivero = () => {
 
 
     const columns_bienes: GridColDef[] = [
-        { field: 'id_bien', headerName: 'ID', width: 20 },
+        { field: 'id_bien', headerName: 'ID', width: 100 },
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 200,
+            width: 350,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -59,7 +59,7 @@ const SeleccionarBienConsumoVivero = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200,
+            width: 350,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -70,7 +70,7 @@ const SeleccionarBienConsumoVivero = () => {
 
     ];
     const columns_bienes_solicitud: GridColDef[] = [
-        { field: 'id_bien_consumido', headerName: 'ID', width: 20 },
+        { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
             headerName: 'Codigo',
@@ -91,16 +91,7 @@ const SeleccionarBienConsumoVivero = () => {
                 </div>
             ),
         },
-        {
-            field: 'tipo_bien',
-            headerName: 'Tipo',
-            width: 200,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
-                </div>
-            ),
-        },
+
         {
             field: 'cantidad',
             headerName: 'Cantidad',
@@ -128,29 +119,29 @@ const SeleccionarBienConsumoVivero = () => {
             renderCell: (params) => (
                 <>
 
-                    {/* <Tooltip title="Editar">
-                            <IconButton
-                                onClick={() => {
-                                    edit_bien_solicitud(params.row)
+                    <Tooltip title="Editar">
+                        <IconButton
+                            onClick={() => {
+                                edit_bien_solicitud(params.row)
 
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    width: 24,
+                                    height: 24,
+                                    background: '#fff',
+                                    border: '2px solid',
                                 }}
+                                variant="rounded"
                             >
-                                <Avatar
-                                    sx={{
-                                        width: 24,
-                                        height: 24,
-                                        background: '#fff',
-                                        border: '2px solid',
-                                    }}
-                                    variant="rounded"
-                                >
-                                    <EditIcon
-                                        sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                                    />
+                                <EditIcon
+                                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                                />
 
-                                </Avatar>
-                            </IconButton>
-                        </Tooltip>   */}
+                            </Avatar>
+                        </IconButton>
+                    </Tooltip>
 
                     <Tooltip title="Borrar">
                         <IconButton
@@ -244,19 +235,19 @@ const SeleccionarBienConsumoVivero = () => {
         }
     })
 
-    //  const edit_bien_solicitud = (item: IObjBienesSolicitud): void => {
-    //     set_action("editar")
-    //     const item_bien = aux_bienes_solicitud.find((p) => p.id_bien === item.id_bien)
-    //     reset_bien_solicitud(item_bien)
-    //     const aux_items: IObjBienViveroConsumo[] = []
-    //     aux_bienes_solicitud.forEach((option) => {
-    //         if (option.id_bien !== item.id_bien) {
-    //             aux_items.push(option)
-    //         }
-    //     })
+    const edit_bien_solicitud = (item: IObjBienesSolicitud): void => {
+        set_action("editar")
+        const item_bien = aux_bienes_solicitud.find((p) => p.id_bien === item.id_bien)
+        reset_bien_solicitud(item_bien)
+        const aux_items: IObjBienesSolicitud[] = []
+        aux_bienes_solicitud.forEach((option) => {
+            if (option.id_bien !== item.id_bien) {
+                aux_items.push(option)
+            }
+        })
 
-    //     set_aux_bienes_solicitud(aux_items)
-    // };
+        set_aux_bienes_solicitud(aux_items)
+    };
     const delete_bien_solicitud = (item: IObjBienesSolicitud): void => {
         const bien: IObjBienViveroConsumo | undefined = bienes_vivero.find((p: IObjBienViveroConsumo) => p.id_bien === item.id_bien)
         console.log("bien", bien)

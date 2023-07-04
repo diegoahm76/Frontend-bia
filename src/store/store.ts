@@ -23,6 +23,7 @@ import {
   medida_slice
 } from '../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice';
 import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/BodegaSlice';
+import { despacho_slice } from '../commons/almacen/registroSolicitudesAlmacen/despacho/store/slices/indexDespacho';
 import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
 import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
 import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
@@ -35,6 +36,8 @@ import { solicitud_facilidad_slice } from '../commons/recaudo/facilidadPago/slic
 import { reportes_recaudo_slice } from '../commons/recaudo/reportes/slices/ReportesSlice';
 import { seriesAndSubseriesSlice } from '../commons/gestorDocumental/ccd/componentes/CatalogoSeriesYSubseries/slice/CatalogoSeriesYSubseriesSlice';
 import { solicitud_vivero_slice } from '../commons/conservacion/solicitudMaterial/store/slices/indexSolicitud';
+import { finished_ccd_slice } from '../commons/gestorDocumental/trd/toolkit/CCDResources/slices/CCDResourcesSlice';
+import { trd_slice } from './../commons/gestorDocumental/trd/toolkit/TRDResources/slice/TRDResourcesSlice';
 
 const persist_config = {
   key: 'macarenia_app',
@@ -62,6 +65,7 @@ const app_reducers = combineReducers({
   material_vegetal: material_vegetal_slice.reducer,
   distribucion: distribucion_slice.reducer,
   bodegas: bodegas_slice.reducer,
+  despacho: despacho_slice.reducer,
   cvo: cv_others_slice.reducer,
   cve: cve_vehicle_slice.reducer,
   solic_consumo: solicitud_consumo_slice.reducer,
@@ -73,8 +77,11 @@ const app_reducers = combineReducers({
   solicitud_facilidad: solicitud_facilidad_slice.reducer,
   solicitud_vivero: solicitud_vivero_slice.reducer,
   reportes_recaudo: reportes_recaudo_slice.reducer,
-  slice_series_and_subseries: seriesAndSubseriesSlice.reducer
-
+  slice_series_and_subseries: seriesAndSubseriesSlice.reducer,
+  // ? trd slices open
+  finished_ccd_slice: finished_ccd_slice.reducer,
+  trd_slice : trd_slice.reducer
+  // ? trd slices close
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

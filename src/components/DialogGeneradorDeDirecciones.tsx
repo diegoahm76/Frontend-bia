@@ -206,7 +206,23 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
         }}
       >
         <DialogTitle>
-          Generador de direcciones
+        <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '20px',
+                    marginLeft: '-5px',
+                }}
+            >
+               <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
+               < Title title=" Generador de direcciones" />
+               </Grid>
+            </Grid>
           <IconButton
             aria-label="close"
             onClick={() => {
@@ -225,6 +241,19 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
         <Divider />
         <DialogContent>
           {/* DIRECCION PRINCIPAL */}
+          <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '6px',
+                    marginLeft: '-5px',
+                }}
+            >
           <Grid container spacing={2} sx={{ mb: '20px' }}>
             <Grid item xs={12} sm={4} md={3}>
               <TextField
@@ -425,6 +454,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                 disabled
               />
             </Grid>
+          </Grid>
           </Grid>
         </DialogContent>
         <Divider />
