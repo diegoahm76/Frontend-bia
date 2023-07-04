@@ -4,6 +4,7 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
 import { CcdScreen } from '../screens/CcdScreen';
 import { ModalProvider } from '../context/ModalContext';
+import { Page404 } from '../../../../screens/404';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const routes = [
   {
@@ -12,7 +13,7 @@ const routes = [
   },
   {
     path: '/*',
-    element: () => <Navigate to={'/'} />
+    element: () => <Page404/>
   }
 ];
 

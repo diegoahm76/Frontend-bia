@@ -48,6 +48,7 @@ import { getCatalogoSeriesYSubseries } from '../componentes/CatalogoSeriesYSubse
 // import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 import { LoadingButton } from '@mui/lab';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import {
   create_or_delete_assignments_service,
   get_assignments_service
@@ -91,8 +92,8 @@ export const CcdScreen: React.FC = () => {
   }, [ccd_current?.fecha_terminado]);
 
   useEffect(() => {
-      dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
-      get_assignments_service(ccd_current?.id_ccd)(dispatch);
+    dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
+    get_assignments_service(ccd_current?.id_ccd)(dispatch);
   }, [ccd_current]);
 
   // Hooks
@@ -141,7 +142,7 @@ export const CcdScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Cuadro de clasificación documental" />
+          <Title title="Cuadro de clasificación documental - Busca CCD por nombre y versión" />
           <form
             style={{
               marginTop: '20px'
@@ -164,13 +165,26 @@ export const CcdScreen: React.FC = () => {
                   rules={{ required: true }}
                   control={control_create_ccd}
                   render={({ field }) => (
-                    <Select
-                      {...field}
-                      isDisabled={ccd_current != null}
-                      value={field.value}
-                      options={list_organigrams}
-                      placeholder="Seleccionar"
-                    />
+                    <div>
+                      <Select
+                        {...field}
+                        isDisabled={ccd_current != null}
+                        value={field.value}
+                        options={list_organigrams}
+                        placeholder="Seleccionar"
+                      />
+                      <label htmlFor={field.name}>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          Seleccionar Organigrama
+                        </small>
+                      </label>
+                    </div>
                   )}
                 />
                 {errors_create_ccd.organigrama != null && (
@@ -193,13 +207,26 @@ export const CcdScreen: React.FC = () => {
                   name="unidades_organigrama"
                   control={control_create_ccd}
                   render={({ field }) => (
-                    <Select
-                      {...field}
-                      isDisabled={ccd_current != null}
-                      value={field.value}
-                      options={list_unitys}
-                      placeholder="Seleccionar"
-                    />
+                    <div>
+                      <Select
+                        {...field}
+                        isDisabled={ccd_current != null}
+                        value={field.value}
+                        options={list_unitys}
+                        placeholder="Seleccionar"
+                      />
+                      <label htmlFor={field.name}>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          Seleccionar Unidad
+                        </small>
+                      </label>
+                    </div>
                   )}
                 />
               </Grid>
@@ -333,32 +360,51 @@ export const CcdScreen: React.FC = () => {
                     field: { onChange, value },
                     fieldState: { error }
                   }) => (
-                    <TextField
-                      margin="dense"
-                      fullWidth
-                      size="small"
-                      variant="outlined"
-                      type="file"
-                      InputLabelProps={{ shrink: true }}
-                      onChange={(e) => {
-                        const files = (e.target as HTMLInputElement).files;
-                        if (files && files.length > 0) {
-                          onChange(files[0]);
-                          console.log(files[0]);
-                        }
-                      }}
-                      error={!!error}
-                      helperText={
-                        error
-                          ? 'Es obligatorio subir un archivo'
-                          : 'Seleccione un archivo'
-                      }
-                    />
+                    <>
+                      <Button
+                        variant={value === '' ? 'outlined' : 'contained'}
+                        component="label"
+                        style={{
+                          marginTop: '.15rem',
+                          width: '100%'
+                        }}
+                        startIcon={<CloudUploadIcon />}
+                      >
+                        {value === '' ? 'Subir archivo' : 'Archivo subido'}
+                        <input
+                          style={{ display: 'none' }}
+                          type="file"
+                          onChange={(e) => {
+                            console.log('valueeee', value);
+                            const files = (e.target as HTMLInputElement).files;
+                            if (files && files.length > 0) {
+                              onChange(files[0]);
+                              console.log(files[0]);
+                            }
+                          }}
+                        />
+                      </Button>
+                      <label htmlFor="">
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem'
+                          }}
+                        >
+                          {control_create_ccd._formValues.ruta_soporte?.name ||
+                            control_create_ccd._formValues.ruta_soporte.replace(
+                              /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                              ''
+                            )}
+                        </small>
+                      </label>
+                    </>
                   )}
                 />
               </Grid>
 
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={2} sx={{marginTop: ".15rem"}}>
                 <DownloadButton
                   fileName="ruta_soporte"
                   condition={
@@ -441,37 +487,74 @@ export const CcdScreen: React.FC = () => {
                 // eslint-disable-next-line @typescript-eslint/no-misused-promises
                 autoComplete="off"
               >
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={2}>
+                <Grid container spacing={2} sx={{ ZIndex: 10 }}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={2}
+                    sx={{
+                      zIndex: 6
+                    }}
+                  >
                     <Controller
                       name="series"
                       control={control}
                       render={({
-                        field: { onChange, value },
+                        field: { onChange, value, name },
                         fieldState: { error }
                       }) => (
-                        <Select
-                          value={value}
-                          onChange={(selectedOption: any) => {
-                            onChange(selectedOption);
-                            dispatch(
-                              get_serie_ccd_current(selectedOption.value)
-                            );
-                            console.log('Valor seleccionado:', selectedOption);
-                          }}
-                          options={list_sries}
-                          isSearchable
-                          placeholder="Seleccionar"
-                        />
+                        <>
+                          <Select
+                            styles={{
+                              control: (provided) => ({
+                                ...provided,
+                                // maxHeight: '200px',
+                                overflowY: 'auto'
+                              })
+                            }}
+                            value={value}
+                            onChange={(selectedOption: any) => {
+                              onChange(selectedOption);
+                              dispatch(
+                                get_serie_ccd_current(selectedOption.value)
+                              );
+                              console.log(
+                                'Valor seleccionado:',
+                                selectedOption
+                              );
+                            }}
+                            options={list_sries}
+                            // isSearchable
+                            placeholder="Seleccionar"
+                          />
+                          <label htmlFor={name}>
+                            <small
+                              style={{
+                                color: 'rgba(0, 0, 0, 0.6)',
+                                fontWeight: 'thin',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              {/* {error ? (
+                                <span className="text-danger text-small d-block mb-2">
+                                  {error.message}
+                                </span>
+                              ) : (
+                                ''
+                              )} */}
+                              series
+                            </small>
+                          </label>
+                        </>
                       )}
                     />
-                    {errors.sries !== null && (
+                    {/* {errors.sries !== null && (
                       <div className="col-12">
                         <small className="text-center text-danger">
                           Campo obligatorio
                         </small>
                       </div>
-                    )}
+                    )} */}
                   </Grid>
                   <Grid item xs={12} sm={4}>
                     <ButtonGroup
@@ -491,37 +574,64 @@ export const CcdScreen: React.FC = () => {
                       </Button>
                     </ButtonGroup>
                   </Grid>
-                  <Grid item xs={12} sm={2}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={2}
+                    sx={{
+                      zIndex: 6
+                    }}
+                  >
                     <Controller
                       name="subserie"
                       control={control}
                       render={({
-                        field: { onChange, value },
+                        field: { onChange, value, name },
                         fieldState: { error }
                       }) => (
-                        <Select
-                          value={value}
-                          options={list_subsries}
-                          placeholder="Seleccionar"
-                          onChange={(selectedOption) => {
-                            onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
-                            // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
+                        <>
+                          <Select
+                            value={value}
+                            options={list_subsries}
+                            placeholder="Seleccionar"
+                            onChange={(selectedOption) => {
+                              onChange(selectedOption); // Actualiza el valor seleccionado en el controlador
+                              // Aquí puedes agregar cualquier lógica adicional que desees ejecutar cuando se seleccione una opción
 
-                            //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
-                            console.log('Valor seleccionado:', selectedOption);
-                          }}
-                          // isClearable
-                          isSearchable
-                        />
+                              //! apenas se obtengan los valores de la subserie, se debe analizar que nueva petición se debe hacer
+                              // console.log('Valor seleccionado:', selectedOption);
+                            }}
+                            // isClearable
+                            // isSearchable
+                          />
+                          <label htmlFor={name}>
+                            <small
+                              style={{
+                                color: 'rgba(0, 0, 0, 0.6)',
+                                fontWeight: 'thin',
+                                fontSize: '0.75rem'
+                              }}
+                            >
+                              {/* {error ? (
+                                <span className="text-danger text-small d-block mb-2">
+                                  {error.message}
+                                </span>
+                              ) : (
+                                ''
+                              )} */}
+                              subseries
+                            </small>
+                          </label>
+                        </>
                       )}
                     />
-                    {errors.subserie !== null && (
+                    {/* {errors.subserie !== null && (
                       <div className="col-12">
                         <small className="text-center text-danger">
                           Campo obligatorio
                         </small>
                       </div>
-                    )}
+                    )} */}
                   </Grid>
 
                   <Grid item xs={12} sm={4}>
@@ -611,7 +721,7 @@ export const CcdScreen: React.FC = () => {
                     xs={12}
                     sm={4}
                     sx={{
-                      zIndex: 10
+                      zIndex: 5
                     }}
                   >
                     <label className="text-terciary">
@@ -635,20 +745,20 @@ export const CcdScreen: React.FC = () => {
                         />
                       )}
                     />
-                    {errors.unidades_asignacion !== null && (
+                    {/* {errors.unidades_asignacion !== null && (
                       <div className="col-12">
                         <small className="text-center text-danger">
                           Este campo es obligatorio
                         </small>
                       </div>
-                    )}
+                    )} */}
                   </Grid>
                   <Grid
                     item
                     xs={12}
                     sm={5}
                     sx={{
-                      zIndex: 10
+                      zIndex: 5
                     }}
                   >
                     <label className="text-terciary">
@@ -670,20 +780,7 @@ export const CcdScreen: React.FC = () => {
                           // isMulti prop will enable the multi select
                           isMulti
                           onChange={(selectedOption) => {
-                            console.log('selectedOption', selectedOption);
-                            /* const spliceSelectedOptions = selectedOption.map(
-                              (item) => {
-                                const partes = item?.label?.split('-');
-                                return {
-                                  label: item.label,
-                                  value: item.value,
-                                  nombreSerie: partes?.[1],
-                                  nombreSubserie: partes?.[2],
-                                  codigoSerie: partes?.[0],
-                                  codigoSubserie: partes?.[3]
-                                };
-                              }
-                            ); */
+                            // console.log('selectedOption', selectedOption);
                             onChange(selectedOption);
                           }}
                           options={list_sries_asignacion}
