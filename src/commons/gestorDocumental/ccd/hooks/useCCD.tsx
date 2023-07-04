@@ -212,6 +212,7 @@ const use_ccd = () => {
     }
   }, [ccd_current]);
 
+  //  UseEffect para obtener asignaciones
   useEffect(() => {
     if (assignments_ccd_current !== null) {
       const obj = {
@@ -373,7 +374,7 @@ const use_ccd = () => {
       valor_aumento_subserie: data_create_ccd.valor_aumento_subserie,
       ruta_soporte: data_create_ccd.ruta_soporte
         ? data_create_ccd.ruta_soporte
-        : null
+        : data_create_ccd.ruta_soporte
     };
     // console.log(data_create_ccd.ruta_soporte, 'data_create_ccd.ruta_soporte')
 
@@ -393,7 +394,7 @@ const use_ccd = () => {
       String(updatedCCD.valor_aumento_subserie)
     );
     // formData.append('ruta_soporte', updatedCCD.ruta_soporte);
-    if (!updatedCCD.ruta_soporte) {
+    if (updatedCCD.ruta_soporte) {
       formData.append('ruta_soporte', updatedCCD.ruta_soporte);
     }
 
@@ -418,52 +419,6 @@ const use_ccd = () => {
     );
   };
 
-  // Funcion para crear la asignacion
-  /*  const create_asing = (): void => {
-    let new_item: any[] = [];
-    const old_items = assignments_ccd.map(
-      (item: {
-        id_unidad_organizacional: number;
-        id_serie_doc: any;
-        subseries: any;
-      }) => {
-        return {
-          id_unidad_organizacional: item.id_unidad_organizacional,
-          id_serie_doc: item.id_serie_doc,
-          subseries: item.subseries?.map((item: { value: any }) => item.value)
-        };
-      }
-    );
-    if (title_button_asing === 'Guardar relación') {
-      new_item = [
-        ...old_items,
-        {
-          id_unidad_organizacional: data_asing.unidades_asignacion.value,
-          id_serie_doc: data_asing.sries_asignacion.value,
-          subseries: data_asing.subserie_asignacion.map((item) => item.value)
-        }
-      ];
-    } else {
-      new_item = assignments_ccd.map((item) => {
-        return item.id === assignments_ccd_current?.id
-          ? {
-              id_unidad_organizacional: data_asing.unidades_asignacion.value,
-              id_serie_doc: data_asing.sries_asignacion.value,
-              subseries: data_asing.subserie_asignacion.map(
-                (item) => item.value
-              )
-            }
-          : {
-              id_unidad_organizacional: item.id_unidad_organizacional,
-              id_serie_doc: item.id_serie_doc,
-              subseries: item.subseries?.map(
-                (item: { value: any }) => item.value
-              )
-            };
-      });
-    }
-    void dispatch(create_assignments_service(new_item, clean_asing));
-  }; */
 
   // ? Funciones para limpiar el formulario de Crear CCD
   const clean_ccd = (): void => {

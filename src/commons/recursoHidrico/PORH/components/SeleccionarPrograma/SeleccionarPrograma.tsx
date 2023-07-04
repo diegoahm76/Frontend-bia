@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import {
@@ -212,7 +213,7 @@ export const SeleccionarPrograma: React.FC = () => {
           control_success('El proyecto se eliminó correctamente');
         } catch (error: any) {
           control_error(
-            Boolean(error.response.data.detail) ||
+            error.response.data.detail ||
               'hubo un error al eliminar, intenta de nuevo'
           );
         }
