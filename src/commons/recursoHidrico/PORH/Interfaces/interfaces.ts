@@ -34,7 +34,7 @@ export interface GetProyectos {
     actividades?: GetActividades[];
 }
 export interface GetActividades {
-    id?: string;
+    id_act?: string;
     id_actividades?: number;
     nombre: string;
     fecha_registro?: string;

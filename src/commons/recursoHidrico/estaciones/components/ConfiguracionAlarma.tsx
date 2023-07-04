@@ -182,7 +182,7 @@ export const ConfiguracionAlarma: React.FC = () => {
       <Grid container>
   <Grid item xs={6}>
     <Button
-      sx={{ mb: '20px' }}
+      sx={{ mb: '20px' }} 
       variant="outlined"
       startIcon={<AddIcon />}
       onClick={() => {
