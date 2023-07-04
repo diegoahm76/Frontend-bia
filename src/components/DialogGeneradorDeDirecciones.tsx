@@ -5,6 +5,7 @@ import {
   TextField,
   MenuItem,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   IconButton,
@@ -205,23 +206,23 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
         }}
       >
         <DialogTitle>
-          <Grid
-            container
-            spacing={2}
-            sx={{
-              position: 'relative',
-              background: '#FAFAFA',
-              borderRadius: '15px',
-              p: '20px', mb: '20px',
-              boxShadow: '0px 3px 6px #042F4A26',
-              marginTop: '20px',
-              marginLeft: '-5px',
-            }}
-          >
-            <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
-              < Title title=" Generador de direcciones" />
+        <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '20px',
+                    marginLeft: '-5px',
+                }}
+            >
+               <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
+               < Title title=" Generador de direcciones" />
+               </Grid>
             </Grid>
-          </Grid>
           <IconButton
             aria-label="close"
             onClick={() => {
@@ -241,232 +242,201 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
         <DialogContent>
           {/* DIRECCION PRINCIPAL */}
           <Grid
-            container
-            spacing={2}
-            sx={{
-              position: 'relative',
-              background: '#FAFAFA',
-              borderRadius: '15px',
-              p: '20px', mb: '20px',
-              boxShadow: '0px 3px 6px #042F4A26',
-              marginTop: '6px',
-              marginLeft: '-5px',
-            }}
-          >
-            <Grid container spacing={2} sx={{ mb: '20px' }}>
-              <Grid item xs={12} sm={4} md={3}>
-                <TextField
-                  {...register('ubicacion', { required: true })}
-                  error={errors.ubicacion?.type === 'required'}
-                  helperText={
-                    errors.ubicacion?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  onChange={handle_change}
-                  select
-                  defaultValue={''}
-                  label="Ubicación"
-                  size="small"
-                  fullWidth
-                >
-                  {ubicacion_options.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12}>
-                <Title title="Datos de dirección principal" />
-              </Grid>
-              <Grid item xs={12} sm={4} md={3}>
-                <TextField
-                  {...register('via_principal', { required: true })}
-                  error={errors.via_principal?.type === 'required'}
-                  helperText={
-                    errors.via_principal?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  onChange={handle_change}
-                  select
-                  defaultValue={''}
-                  label="Vía principal"
-                  size="small"
-                  fullWidth
-                >
-                  {via_principal_options.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={3} md={3}>
-                <TextField
-                  {...register('numero_o_nombre_via', { required: true })}
-                  error={errors.numero_o_nombre_via?.type === 'required'}
-                  helperText={
-                    errors.numero_o_nombre_via?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  onChange={handle_change}
-                  label="Nombre o número de la vía *"
-                  size="small"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} sm={3} md={2}>
-                <TextField
-                  {...register('letras_via_principal')}
-                  onChange={handle_change}
-                  select
-                  defaultValue={''}
-                  label="Letra"
-                  size="small"
-                  fullWidth
-                >
-                  {letras_options.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={3} md={2}>
-                <TextField
-                  {...register('prefijo_bis')}
-                  onChange={handle_change}
-                  label="Prefijo bis"
-                  size="small"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} sm={2} md={2}>
-                <TextField
-                  {...register('cuadrante')}
-                  onChange={handle_change}
-                  label="Número"
-                  type="number"
-                  size="small"
-                  fullWidth
-                />
-              </Grid>
-
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '6px',
+                    marginLeft: '-5px',
+                }}
+            >
+          <Grid container spacing={2} sx={{ mb: '20px' }}>
+            <Grid item xs={12} sm={4} md={3}>
+              <TextField
+                {...register('ubicacion', { required: true })}
+                error={errors.ubicacion?.type === 'required'}
+                helperText={
+                  errors.ubicacion?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+                onChange={handle_change}
+                select
+                defaultValue={''}
+                label="Ubicación"
+                size="small"
+                fullWidth
+              >
+                {ubicacion_options.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Title title="Datos de dirección secundaria" />
-              </Grid>
-              <Grid item xs={12} sm={3} md={3}>
-                <TextField
-                  {...register('via_secundaria', { required: true })}
-                  error={errors.via_secundaria?.type === 'required'}
-                  helperText={
-                    errors.via_secundaria?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  onChange={handle_change}
-                  select
-                  defaultValue={''}
-                  label="Vía secundaria"
-                  size="small"
-                  fullWidth
-                >
-                  {via_principal_options.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={4} md={3}>
-                <TextField
-                  {...register('numero_o_nombre_via_secundaria', {
-                    required: true,
-                  })}
-                  error={
-                    errors.numero_o_nombre_via_secundaria?.type === 'required'
-                  }
-                  helperText={
-                    errors.numero_o_nombre_via_secundaria?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  onChange={handle_change}
-                  label="Nombre o número de la vía"
-                  size="small"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} md={2}>
-                <TextField
-                  {...register('letras_via_secundaria')}
-                  onChange={handle_change}
-                  select
-                  defaultValue={''}
-                  label="Letra"
-                  size="small"
-                  fullWidth
-                >
-                  {letras_options.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
-              <Grid item xs={12} sm={4} md={2}>
-                <TextField
-                  {...register('sufijo_bis')}
-                  onChange={handle_change}
-                  label="Sufijo bis"
-                  size="small"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12} sm={4} md={2}>
-                <TextField
-                  {...register('letra_sufijo')}
-                  onChange={handle_change}
-                  label="Letra sufijo"
-                  size="small"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  {...register('direccion_estandarizada', { required: true })}
-                  error={errors.direccion_estandarizada?.type === 'required'}
-                  helperText={
-                    errors.direccion_estandarizada?.type === 'required'
-                      ? 'Este campo es obligatorio'
-                      : ''
-                  }
-                  value={direccion_estandarizada}
-                  label="Dirección generada"
-                  fullWidth
-                  multiline
-                  maxRows={4}
-                  disabled
-                />
-              </Grid>
+            <Grid item xs={12}>
+              <Title title="Datos de dirección principal" />
             </Grid>
-            <Grid container spacing={2} padding={2} justifyContent="center">
-              <Grid item xs={12} sm={4} md={2}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  fullWidth
-                  startIcon={<SaveIcon />}
-                >
-                  ACEPTAR
-                </Button>
-              </Grid>
-
+            <Grid item xs={12} sm={4} md={3}>
+              <TextField
+                {...register('via_principal', { required: true })}
+                error={errors.via_principal?.type === 'required'}
+                helperText={
+                  errors.via_principal?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+                onChange={handle_change}
+                select
+                defaultValue={''}
+                label="Vía principal"
+                size="small"
+                fullWidth
+              >
+                {via_principal_options.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={3} md={3}>
+              <TextField
+                {...register('numero_o_nombre_via', { required: true })}
+                error={errors.numero_o_nombre_via?.type === 'required'}
+                helperText={
+                  errors.numero_o_nombre_via?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+                onChange={handle_change}
+                label="Nombre o número de la vía *"
+                size="small"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={3} md={2}>
+              <TextField
+                {...register('letras_via_principal')}
+                onChange={handle_change}
+                select
+                defaultValue={''}
+                label="Letra"
+                size="small"
+                fullWidth
+              >
+                {letras_options.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={3} md={2}>
+              <TextField
+                {...register('prefijo_bis')}
+                onChange={handle_change}
+                label="Prefijo bis"
+                size="small"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={2} md={2}>
+              <TextField
+                {...register('cuadrante')}
+                onChange={handle_change}
+                label="Número"
+                type="number"
+                size="small"
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Title title="Datos de dirección secundaria" />
+            </Grid>
+            <Grid item xs={12} sm={3} md={3}>
+              <TextField
+                {...register('via_secundaria', { required: true })}
+                error={errors.via_secundaria?.type === 'required'}
+                helperText={
+                  errors.via_secundaria?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+                onChange={handle_change}
+                select
+                defaultValue={''}
+                label="Vía secundaria"
+                size="small"
+                fullWidth
+              >
+                {via_principal_options.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={4} md={3}>
+              <TextField
+                {...register('numero_o_nombre_via_secundaria', {
+                  required: true,
+                })}
+                error={
+                  errors.numero_o_nombre_via_secundaria?.type === 'required'
+                }
+                helperText={
+                  errors.numero_o_nombre_via_secundaria?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+                onChange={handle_change}
+                label="Nombre o número de la vía *"
+                size="small"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} md={2}>
+              <TextField
+                {...register('letras_via_secundaria')}
+                onChange={handle_change}
+                select
+                defaultValue={''}
+                label="Letra"
+                size="small"
+                fullWidth
+              >
+                {letras_options.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12} sm={4} md={2}>
+              <TextField
+                {...register('sufijo_bis')}
+                onChange={handle_change}
+                label="Sufijo bis"
+                size="small"
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={12} sm={4} md={2}>
+              <TextField
+                {...register('letra_sufijo')}
+                onChange={handle_change}
+                label="Letra sufijo"
+                size="small"
+                fullWidth
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 {...register('direccion_estandarizada', { required: true })}
@@ -485,8 +455,23 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
               />
             </Grid>
           </Grid>
+          </Grid>
         </DialogContent>
         <Divider />
+        <DialogActions>
+          <Grid container spacing={2} padding={2} justifyContent="center">
+            <Grid item xs={12} sm={4} md={2}>
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                startIcon={<SaveIcon />}
+              >
+                ACEPTAR
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
       </form>
     </Dialog>
   );
