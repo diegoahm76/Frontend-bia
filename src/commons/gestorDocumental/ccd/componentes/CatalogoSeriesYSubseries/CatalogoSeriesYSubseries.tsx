@@ -43,11 +43,6 @@ export const CatalogoSeriesYSubseries = () => {
       void dispatch(delete_independiente_serie_service(id_serie_doc, ccd_current));
     };
 
-  /* useEffect(() => {
-    console.log('useEffect, getCatalogoSeriesYSubseries');
-    console.log(ccd_current);
-    dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
-  }, [dispatch]); */
 
   const columns: GridColDef[] = [
     {

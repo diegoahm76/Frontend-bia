@@ -193,6 +193,7 @@ export const RegistroAvance: React.FC = () => {
               }
             />
           </Grid>
+          <Grid item xs={12} sm={6}></Grid>
           {archivos.map((file, index) => (
             <Fragment key={index}>
               <Grid item xs={12} sm={6}>

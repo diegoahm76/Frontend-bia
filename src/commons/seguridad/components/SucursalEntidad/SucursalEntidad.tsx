@@ -1,3 +1,4 @@
+import { useState, type FC } from 'react';
 import { Grid, Select } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -9,6 +10,8 @@ import { Title } from '../../../../components';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { DataGrid } from '@mui/x-data-grid';
+import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
+import { control_error } from './utils/control_error_or_success';
 
 const columns = [
     { field: 'id', headerName: 'Nro Sucursal', width: 150 },
@@ -27,9 +30,58 @@ const rows = [
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SucursalEntidad: React.FC = () => {
+export const SucursalEntidad: FC = () => {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+
+    const [email, set_email] = useState('');
+    const [confirm_email, set_confirm_email] = useState('');
+    const [error, set_error] = useState<any>('');
+
+    const handle_email_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        set_email(event.target.value);
+    };
+
+    const handle_confirm_email_change = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        set_confirm_email(event.target.value);
+    };
+
+    const handle_submit = (): void => {
+        if (email === confirm_email) {
+            set_error('');
+        } else {
+            set_error(control_error('Los Emails  no coinciden'));
+        }
+    };
+    const is_error = error !== '';
+    const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false)
+    const [type_direction,
+        // set_type_direction
+
+    ] = useState('');
+    console.log(is_error);
+    // Establece la dirección generada en el generador de direcciones
+    const set_value_direction = (_value: string, type: string): void => {
+
+        switch (type) {
+            case 'residencia':
+                break;
+            case 'notificacion':
+                break;
+            case 'laboral':
+                break;
+        }
+    };
+
     return (
         <>
+            < >
+                <DialogGeneradorDeDirecciones
+                    open={opengeneradordirecciones}
+                    openDialog={setopengeneradordirecciones}
+                    onChange={set_value_direction}
+                    type={type_direction}
+                />
+            </>
             <Grid
                 container
                 spacing={2}
@@ -52,7 +104,7 @@ export const SucursalEntidad: React.FC = () => {
                     borderRadius={2}
                     sx={{ marginTop: '10px', marginLeft: "7px", }}
                 >
-                    {/* ENTIDAD////////////////////////////////// */}
+                    {/* ENTIDAD,  se encuentra DOC , NUMERO DOC, NOMBRE, BOTON BUSCAR */}
                     <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
                         <Title title="Entidad" />
                     </Grid>
@@ -90,7 +142,6 @@ export const SucursalEntidad: React.FC = () => {
                         </Button>
                     </Grid>
                 </Grid>
-
                 <Grid
                     container
                     spacing={2}
@@ -122,7 +173,6 @@ export const SucursalEntidad: React.FC = () => {
                             fullWidth
                         />
                     </Grid>
-
                     <Grid
                         container
                         spacing={2}
@@ -151,7 +201,6 @@ export const SucursalEntidad: React.FC = () => {
                                 <InputLabel>Dpto</InputLabel>
                                 <Select
                                     label="Dpto"
-
                                 >
                                     <MenuItem>
                                     </MenuItem>
@@ -163,7 +212,6 @@ export const SucursalEntidad: React.FC = () => {
                                 <InputLabel>Municipio</InputLabel>
                                 <Select
                                     label="Municipio"
-
                                 >
                                     <MenuItem>
                                     </MenuItem>
@@ -186,18 +234,19 @@ export const SucursalEntidad: React.FC = () => {
                                 style={{ marginBottom: '10px' }}
                                 label="Dirección geografica  "
                                 fullWidth
-
                             />
                         </Grid>
                         <Grid item xs={4}>
                             <Button
                                 variant="contained"
+                                onClick={() => {
+                                    setopengeneradordirecciones(true);
+                                }}
                             >
                                 Generar dirección
                             </Button>
                         </Grid>
                     </Grid>
-
                     <Grid
                         container
                         spacing={2}
@@ -211,45 +260,84 @@ export const SucursalEntidad: React.FC = () => {
                             <Title title="Dirección de notificación nacional" />
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <TextField variant="outlined"
-                                size="small"
-                                style={{ marginBottom: '10px' }}
-                                label="Dirección geografica  "
-                                fullWidth
-
-                            />
-                        </Grid> <Grid item xs={12} sm={4}>
-                            <TextField variant="outlined"
-                                size="small"
-                                style={{ marginBottom: '10px' }}
-                                label="Dirección geografica  "
-                                fullWidth
-
-                            />
+                            <FormControl size='small' fullWidth>
+                                <InputLabel>Dpto</InputLabel>
+                                <Select
+                                    label="Dpto"
+                                >
+                                    <MenuItem>
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <FormControl size='small' fullWidth>
+                                <InputLabel>Municipio</InputLabel>
+                                <Select
+                                    label="Municipio"
+                                >
+                                    <MenuItem>
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12} sm={4}   >
-                            <FormControlLabel control={<Checkbox defaultChecked />} label="Misma dirección física" />
+                            <FormControlLabel control={<Checkbox />} label="Misma dirección física" />
                         </Grid>
-
+                        <Grid item xs={12} sm={4}>
+                            <TextField variant="outlined"
+                                size="small"
+                                style={{ marginBottom: '10px' }}
+                                label="Dirección    "
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField variant="outlined"
+                                size="small"
+                                style={{ marginBottom: '10px' }}
+                                label="Dirección geografica  "
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={4}>
+                            <Button
+                                variant="contained"
+                                onClick={() => {
+                                    setopengeneradordirecciones(true);
+                                }}
+                            >
+                                Generar dirección
+                            </Button>
+                        </Grid>
                     </Grid>
-
                     <Grid item xs={12} sm={6}>
-                        <TextField variant="outlined"
+                        <TextField
+                            variant="outlined"
                             size="small"
                             style={{ marginBottom: '10px' }}
-                            label="Email de notificaciónes "
+                            label="Email de notificaciónes"
                             fullWidth
-
+                            value={email}
+                            onChange={handle_email_change}
                         />
+                        {/* {is_error && <div
+                        //   style={{color: "red"}} 
+                        >{error}</div>} */}
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                        <TextField variant="outlined"
+                        <TextField
+                            variant="outlined"
                             size="small"
                             style={{ marginBottom: '10px' }}
                             label="Confirmar Email de notificaciónes"
                             fullWidth
-
+                            value={confirm_email}
+                            onChange={handle_confirm_email_change}
                         />
+                        {/* {is_error && <div
+                        //   style={{color: "red"}} 
+                        >{error}</div>} */}
                     </Grid>
                     <Grid item xs={12} sm={4} >
                         <TextField variant="outlined"
@@ -257,14 +345,13 @@ export const SucursalEntidad: React.FC = () => {
                             style={{ marginBottom: '10px' }}
                             fullWidth
                             size="small"
-                          
                         />
                     </Grid>
                     <Grid item xs={12} sm={2}>
                         <FormControl required size="small" fullWidth>
                             <InputLabel>Principal</InputLabel>
                             <Select
-                                label="Municipio"
+                                label="Principal"
                             >
                                 <MenuItem value="si">Sí</MenuItem>
                                 <MenuItem value="no">No</MenuItem>
@@ -275,7 +362,7 @@ export const SucursalEntidad: React.FC = () => {
                         <FormControl required size="small" fullWidth>
                             <InputLabel>Activo</InputLabel>
                             <Select
-                                label="Municipio"
+                                label="Activo"
                             >
                                 <MenuItem value="si">Sí</MenuItem>
                                 <MenuItem value="no">No</MenuItem>
@@ -287,33 +374,10 @@ export const SucursalEntidad: React.FC = () => {
                             <DataGrid rows={rows} columns={columns} />
                         </div>
                     </Grid>
-
-
+                    <Grid item xs={12} sm={12}>
+                        <Button variant='contained' onClick={handle_submit}>Verificar correos </Button>
+                    </Grid>
                 </Grid>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             </Grid>
         </>
     );

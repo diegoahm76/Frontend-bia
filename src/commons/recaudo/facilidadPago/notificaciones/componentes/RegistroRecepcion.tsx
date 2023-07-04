@@ -11,6 +11,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { use_form } from '../../../../../hooks/useForm';
 import { useFormFiles } from '../../hooks/useFormFiles';
+import { post_recepcion_fisica } from '../requests/requests';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegistroRecepcion: React.FC = () => {
@@ -110,7 +111,7 @@ export const RegistroRecepcion: React.FC = () => {
             <Grid container spacing={2} mb='20px'>
               <Grid item xs={12} sm={3}>
                 <FormControl fullWidth>
-                  <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                     <DatePicker
                       label="Fecha de Radicación en Cormacarena"
                       inputFormat="YYYY/MM/DD"
@@ -136,7 +137,7 @@ export const RegistroRecepcion: React.FC = () => {
                   size="small"
                   fullWidth
                   required
-                  name='empresa'
+                  name='empresa_entrega'
                   onChange={on_input_change}
                 />
               </Grid>
@@ -146,7 +147,7 @@ export const RegistroRecepcion: React.FC = () => {
                   size="small"
                   fullWidth
                   required
-                  name='funcionario'
+                  name='funcionario_entrega'
                   onChange={on_input_change}
                 />
               </Grid>
@@ -204,6 +205,14 @@ export const RegistroRecepcion: React.FC = () => {
                 startIcon={<Add />}
                 sx={{ marginTop: '30px' }}
                 onClick={() => {
+                  try {
+                    void post_recepcion_fisica({
+                      ...form_state,
+                      fecha_prestacion: fecha_string,
+                    })
+                  } catch (error: any) {
+                    throw new Error(error);
+                  }
                 }}
               >
                 Crear Registro Entrada

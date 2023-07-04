@@ -66,8 +66,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
 
   return (
     <>
-      <Title title='Visualizar Solicitud Facilidad de Pago - Usuario Cormacarena'/>
-      <EncabezadoAdmin fecha_solicitud={solicitud_facilidad.fecha_generacion} />
+      <Title title='Gestionar Solicitud de Facilidad de Pago'/>
       <Grid
         container
         sx={{
@@ -80,13 +79,14 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <h3>Detalles de la Solicitud</h3>
+        <h3>Datos de la Solicitud</h3>
         <Grid item xs={12}>
           <Box
             component="form"
             noValidate
             autoComplete="off"
           >
+            <EncabezadoAdmin fecha_solicitud={solicitud_facilidad.fecha_generacion} />
             <VistaSolicitud />
           </Box>
         </Grid>
@@ -103,7 +103,7 @@ export const VisualizarSolicitudAdmin: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <h3>Respuesta de Cormacarena</h3>
+        <h3>Respuesta a la Solicitud</h3>
         <Grid item xs={12}>
           <Box
             component="form"

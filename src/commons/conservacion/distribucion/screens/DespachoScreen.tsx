@@ -409,6 +409,7 @@ const DespachoScreen = () => {
                 label: 'Número de solicitud',
                 type: 'number',
 
+
                 disabled: true,
                 helper_text: '',
               },
@@ -429,6 +430,7 @@ const DespachoScreen = () => {
                 label: 'Cierre realizado por',
                 type: 'text',
 
+
                 disabled: true,
                 helper_text: '',
               },
@@ -445,6 +447,7 @@ const DespachoScreen = () => {
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Fecha actual',
                 type: 'text',
+
 
                 disabled: true,
                 helper_text: '',
@@ -499,8 +502,9 @@ const DespachoScreen = () => {
                 control_name: 'nro_despachos_viveros',
                 default_value: '',
                 rules: {},
-                label: 'Numero de despacho',
+                label: 'Número de despacho',
                 type: 'number',
+
 
                 disabled: true,
                 helper_text: '',
@@ -538,6 +542,7 @@ const DespachoScreen = () => {
                 label: 'Fecha actual',
                 type: 'text',
 
+
                 disabled: true,
                 helper_text: '',
               },
@@ -556,6 +561,7 @@ const DespachoScreen = () => {
                 },
                 label: 'Justificación',
                 type: 'text',
+
 
                 multiline_text: true,
                 rows_text: 4,

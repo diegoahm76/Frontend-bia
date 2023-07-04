@@ -38,6 +38,7 @@ import {
   roles_request,
 } from '../request/seguridadRequest';
 import { Title } from '../../../components/Title';
+import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 interface IProps {
   on_edit: (tab: string, rol: Rol) => void;
 }
@@ -217,18 +218,37 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
       set_is_loading(false);
     }
   };
+  const handle_clickxls = (): void => { download_xls({ nurseries: roles, columns }); };
+
 
   useEffect(() => {
     void get_data();
   }, []);
 
   return (
-    <>
-      <Grid container justifyContent="center">
+    <>  <Grid container justifyContent="flex-end" >
+      <Grid item  >
+            <IconButton
+                style={{
+                  color: 'white',
+                  backgroundColor: '#335B1E',
+                  // width: '45px',
+                  // height: '50px', 
+                  margin:5,
+                }}
+                onClick={handle_clickxls}
+              >
+                <i className="pi pi-file-excel"></i>
+              </IconButton>
+      </Grid>
+
+    </Grid>
+      <Grid container justifyContent="center" marginTop={2}>
         {is_loading ? (
           <CircularProgress />
         ) : (
           <Box sx={{ width: '100%' }}>
+             
             <DataGrid
               density="compact"
               autoHeight
@@ -290,9 +310,44 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
               fullWidth
               maxWidth={'md'}
             >
-              <DialogTitle id="alert-dialog-title" textAlign="center">
-                {rol.nombre_rol}
-              </DialogTitle>
+
+<Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '20px',
+                    marginLeft: '14px',
+                    width: "860px"
+                }}
+            >
+
+              {/* <DialogTitle id="alert-dialog-title" textAlign="center"> */}
+                <Title title={rol.nombre_rol} />
+              {/* </DialogTitle> */}
+            </Grid>
+
+
+              <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '6px',
+                    marginLeft: '14px',
+                    width: "860px"
+                }}
+            >
+
+            
               <DialogContent>
                 {is_loading_detail ? (
                   <>
@@ -348,6 +403,7 @@ export const ListRoles = ({ on_edit }: IProps): JSX.Element => {
                   </>
                 )}
               </DialogContent>
+              </Grid>
               <DialogActions>
                 <Button
                   onClick={handle_close}

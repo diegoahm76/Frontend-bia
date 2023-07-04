@@ -38,6 +38,7 @@ const ListadoBienesSolicitud = () => {
           bienes_despacho.forEach((option_despacho) => {
             if (option.id_bien === option_despacho.id_bien_solicitado) {
               despachada =
+                // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                 despachada + (option_despacho.cantidad_despachada ?? 0);
             }
           });
@@ -69,6 +70,7 @@ const ListadoBienesSolicitud = () => {
           bienes_despacho.forEach((option_despacho) => {
             if (option.id_bien === option_despacho.id_bien_solicitado) {
               despachada =
+                // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                 despachada + (option_despacho.cantidad_despachada ?? 0);
             }
           });

@@ -18,6 +18,7 @@ import { CustomSelect } from '../../../components/CustomSelect';
 import { Title } from '../../../components/Title';
 import { DialogHistorialCambiosEstadoUser } from './DialogHistorialCambiosEstadoUser';
 import { use_admin_users } from '../hooks/AdminUserHooks';
+import { useEffect } from 'react';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AdminUsers: React.FC = () => {
@@ -50,7 +51,12 @@ export const AdminUsers: React.FC = () => {
     handle_image_select,
     register_admin_user,
     set_historial_cambios_estado_is_active,
+    clean_user_info,
   } = use_admin_users();
+
+  useEffect(() => {
+    clean_user_info();
+  }, []);
 
   return (
     <>
@@ -267,7 +273,14 @@ export const AdminUsers: React.FC = () => {
                       name="tipo_usuario"
                       value={tipo_usuario}
                       options={tipo_usuario_opt}
-                      disabled={tipo_persona === 'J' && true}
+                      disabled={
+                        tipo_persona === 'J'
+                          ? true
+                          : tipo_persona === 'N' &&
+                            tipo_usuario === 'I' &&
+                            action_admin_users === 'EDIT' &&
+                            true
+                      }
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />
@@ -365,10 +378,10 @@ export const AdminUsers: React.FC = () => {
                       onChange={on_change}
                       label="Activo"
                       name="activo"
-                      value={activo}
+                      value={String(activo)}
                       options={activo_opt}
                       disabled={tipo_usuario === 'E' && true}
-                      required={true}
+                      // required={true}
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />
@@ -392,7 +405,7 @@ export const AdminUsers: React.FC = () => {
                       label="Justificación del cambio"
                       multiline
                       value={data_register.activo_justificacion_cambio}
-                      required={!check_user_is_active}
+                      required={!check_user_is_active && check_user_is_active}
                       error={
                         !check_user_is_active &&
                         Boolean(errors_admin_users.activo_justificacion_cambio)
@@ -401,9 +414,10 @@ export const AdminUsers: React.FC = () => {
                         !check_user_is_active &&
                         errors_admin_users.activo_justificacion_cambio?.message
                       }
-                      {...register_admin_user('activo_justificacion_cambio', {
-                        required: 'Este campo es obligatorio',
-                      })}
+                      {...register_admin_user(
+                        'activo_justificacion_cambio'
+                        // { required: 'Este campo es obligatorio',}
+                      )}
                       onChange={handle_change}
                     />
                   </Grid>
@@ -412,10 +426,10 @@ export const AdminUsers: React.FC = () => {
                       onChange={on_change}
                       label="Bloqueado"
                       name="bloqueado"
-                      value={bloqueado}
+                      value={String(bloqueado)}
                       options={bloqueado_opt}
                       disabled={false}
-                      required={true}
+                      // required={true}
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />
@@ -440,7 +454,7 @@ export const AdminUsers: React.FC = () => {
                       label="Justificación del cambio"
                       multiline
                       value={data_register.bloqueado_justificacion_cambio}
-                      required={!check_user_is_blocked}
+                      required={!check_user_is_blocked && check_user_is_blocked}
                       error={
                         !check_user_is_blocked &&
                         Boolean(
@@ -453,8 +467,8 @@ export const AdminUsers: React.FC = () => {
                           ?.message
                       }
                       {...register_admin_user(
-                        'bloqueado_justificacion_cambio',
-                        { required: 'Este campo es obligatorio' }
+                        'bloqueado_justificacion_cambio'
+                        // { required: 'Este campo es obligatorio' }
                       )}
                       onChange={handle_change}
                     />

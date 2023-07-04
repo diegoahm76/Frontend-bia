@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/prefer-optional-chain */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
@@ -24,7 +26,12 @@ export const DownloadButton = ({
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href={fileUrl}
+        href={
+          fileUrl &&
+          fileUrl.includes('https://back-end-bia-beta.up.railway.app')
+            ? fileUrl
+            : `https://back-end-bia-beta.up.railway.app${fileUrl}`
+        }
         ref={linkRef}
         style={{ display: 'none' }}
         download={fileName}

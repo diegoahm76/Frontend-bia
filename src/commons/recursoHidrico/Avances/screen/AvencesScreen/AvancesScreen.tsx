@@ -18,13 +18,6 @@ import { ButtonSalir } from "../../../../../components/Salir/ButtonSalir";
 export const AvanceScreen: React.FC = () => {
 
     const columns: GridColDef[] = [
-
-        {
-            field: 'id_avance',
-            headerName: 'No AVANCE',
-            sortable: true,
-            width: 80,
-        },
         {
             field: 'accion',
             headerName: 'ACCIÓN',
@@ -128,7 +121,7 @@ export const AvanceScreen: React.FC = () => {
             }}
         >
             <Grid item xs={12}>
-                <Title title="AVANCES POR PROYECTO" />
+                <Title title="Avances del proyecto" />
             </Grid>
             <BusquedaAvanzada onResult={on_result} />
             {is_select_proyecto && rows_avances.length > 0 && (
@@ -177,7 +170,7 @@ export const AvanceScreen: React.FC = () => {
                 <EditarAvance />)}
             <Grid item spacing={2} justifyContent="end" container>
                 <Grid item>
-                    <ButtonSalir />
+                    <ButtonSalir  />
                 </Grid>
                 <BusquedaAvances
                     onResult={on_result_avance} />

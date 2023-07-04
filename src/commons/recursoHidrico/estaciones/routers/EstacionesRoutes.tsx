@@ -11,6 +11,8 @@ import {
   AnaliticaScreen,
 } from '../screens';
 import { HistorialDatos } from '../screens/HistorialScreen';
+import { HistorialEquipos } from '../components/HistorialEquipos';
+import { HistorialAlertas } from '../components/HistorialAlertas';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstacionesRoutes: React.FC = () => {
@@ -34,13 +36,19 @@ export const EstacionesRoutes: React.FC = () => {
       <Route path="historial/*" element={<HistorialDatos />} />
 
       {/* Geolocalizacion Estaciones */}
-      <Route path="reportes/*" element={<ReportesScreen />} />
+      <Route path="reportes/*" element={<ReportesScreen />}   />
 
       {/* Dashboard Estaciones */}
       <Route path="dashboard/*" element={<DashboardScreen />} />
 
       {/* Analitica Estaciones */}
       <Route path="analitica/*" element={<AnaliticaScreen />} />
+
+      {/* historial_equipos   */}
+      <Route path="historial_equipos/*" element={<HistorialEquipos />} />
+
+      {/* historial_alertas   */}
+      <Route path="historial_alertas/*" element={<HistorialAlertas />} />
 
       <Route path="/*" element={<Page404 />} />
     </Routes>
