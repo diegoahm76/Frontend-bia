@@ -16,7 +16,6 @@ import { type event, type check, type Deudor, type Bien } from '../interfaces/in
 import { post_registro_fac_pago, post_registro_bienes } from '../requests/requests';
 import { useSelector } from 'react-redux';
 
-
 interface RootState {
   deudores: {
     deudores: Deudor;
