@@ -21,12 +21,9 @@
  * @author samelh@google.com (Sam El-Husseini)
  */
 import * as Blockly from 'blockly/core';
-
 import BlocklyReactField from './BlocklyReactField';
-
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
 
 class ReactDateField extends BlocklyReactField {
 
@@ -50,13 +47,16 @@ class ReactDateField extends BlocklyReactField {
   }
 
   render() {
-    return <DatePicker
+    return (
+      <DatePicker
         selected={this.value_}
         onChange={this.onDateSelected_}
-        inline />
+        inline
+      />
+    );
   }
 }
 
 Blockly.fieldRegistry.register('field_react_date', ReactDateField);
 
-export {ReactDateField};
+export { ReactDateField };
