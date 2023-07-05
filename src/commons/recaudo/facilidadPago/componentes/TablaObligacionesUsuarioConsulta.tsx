@@ -204,10 +204,11 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
           </Grid>
           <Stack
             direction="row"
-            display='flex'
-            justifyContent='flex-end'
+            justifyContent="right"
+            spacing={2}
+            sx={{ mt: '30px' }}
           >
-            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
+            <Grid item xs={12} sm={2}>
               <TextField
                 label="Total Capital"
                 size="small"
@@ -215,7 +216,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
                 value={capital}
               />
             </Grid>
-            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
+            <Grid item xs={12} sm={2}>
               <TextField
                 label="Total Intereses"
                 size="small"
@@ -223,7 +224,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
                 value={intereses}
               />
             </Grid>
-            <Grid item xs={12} sm={2} mt='30px'>
+            <Grid item xs={12}>
               <TextField
                 label={<strong>Gran Total a Deber</strong>}
                 size="small"

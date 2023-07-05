@@ -8,6 +8,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useState, useEffect } from 'react';
 import { type event } from '../interfaces/interfaces';
+import { TablaLiquidacion } from '../componentes/TablaLiquidacion';
+import { TablaLiquidacionResumen } from '../componentes/TablaLiquidacionResumen';
+import { TablaProyeccionPagos } from '../componentes/TablaProyeccionPagos';
+import { ResumenLiquidacionFacilidad } from '../componentes/ResumenLiquidacionFacilidad';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Amortizacion: React.FC = () => {
@@ -16,6 +20,7 @@ export const Amortizacion: React.FC = () => {
   const [periodicidad, set_periodicidad] = useState('');
   const [tasa_usura, set_tasa_usura] = useState(0);
   const [tasa_diaria, set_tasa_diaria] = useState(0);
+  const [modal, set_modal] = useState(false);
 
   console.log('periodicidad: ', num_periodicidad);
 
@@ -259,13 +264,25 @@ export const Amortizacion: React.FC = () => {
               variant='contained'
               startIcon={<Add />}
               sx={{ marginTop: '30px' }}
-              onClick={() => {}}
+              onClick={() => {
+                set_modal(true)
+              }}
             >
               Generar Plan de Pagos
             </Button>
           </Stack>
         </Grid>
       </Grid>
+      {
+        modal ? (
+          <>
+            <TablaLiquidacion />
+            <TablaLiquidacionResumen />
+            <ResumenLiquidacionFacilidad />
+            <TablaProyeccionPagos />
+          </>
+        ) : null
+      }
     </>
   )
 }
