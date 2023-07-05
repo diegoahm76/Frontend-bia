@@ -19,6 +19,7 @@ import {
 import CancelIcon from '@mui/icons-material/Cancel';
 import { Title } from '../../../../../components/Title';
 import { DataContext } from '../../context/contextData';
+import '../../css/styles.css';
 
 interface IProps {
   is_modal_active: boolean;
@@ -28,22 +29,17 @@ interface IProps {
 const columns: GridColDef[] = [
   {
     field: 'nombre',
-    headerName: 'NOMBRE ACTIVIDAD',
+    headerName: 'DESCRIPCIÓN DE LA ACTIVIDAD',
     sortable: true,
-    width: 200,
+    width: 500,
+    renderCell: (params) => <div className="container">{params.value}</div>,
   },
   {
     field: 'fecha_registro',
     headerName: 'FECHA DE REGISTRO',
     sortable: true,
-    width: 170,
-  },
-  {
-    field: 'id_proyecto',
-    headerName: 'No PROYECTO',
-    sortable: true,
-    width: 170,
-  },
+    width: 200,
+  }
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/prop-types
@@ -99,6 +95,7 @@ export const DialogActividades: React.FC<IProps> = ({
                 getRowId={(row) => row.id_proyecto}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
+                rowHeight={100}
               />
             ) : (
               <Grid item xs={12}>
