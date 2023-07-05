@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Grid, Box, TextField, Stack, Button } from '@mui/material';
 import { FileDownloadOutlined, Visibility } from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
@@ -88,6 +89,38 @@ export const TablaProyeccionPagos: React.FC = () => {
       ),
     },
   ];
+
+  const handle_export_excel = async (): Promise<void> => {
+    try {
+      const xlsx = await import('xlsx');
+      const worksheet = xlsx.utils.json_to_sheet(lista);
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excel_buffer = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array'
+      });
+      save_as_excel_file(excel_buffer, 'Proyección de Pagos');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const save_as_excel_file = (buffer: Buffer, fileName: string): void => {
+    import('file-saver')
+      .then((module) => {
+        const save_as_fn = module.default.saveAs;
+        const excel_type =
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const excel_extension = '.xlsx';
+        const data = new Blob([buffer], {
+          type: excel_type
+        });
+        save_as_fn(data, fileName + excel_extension);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   useEffect(() => {
     let sub_capital = 0
@@ -187,7 +220,7 @@ export const TablaProyeccionPagos: React.FC = () => {
               color='primary'
               variant='contained'
               startIcon={<FileDownloadOutlined />}
-              onClick={() => {}}
+              onClick={handle_export_excel}
             >
               Exportar Proyección de Pagos
             </Button>

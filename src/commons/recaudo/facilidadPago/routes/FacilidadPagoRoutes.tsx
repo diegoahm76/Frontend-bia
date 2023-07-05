@@ -9,6 +9,7 @@ import { Amortizacion } from '../screens/Amortizacion';
 import { ResolucionRespuesta } from '../screens/ResolucionRespuesta';
 import { FacilidadPagoAutorizadas } from '../screens/FacilidadPagoAutorizadas';
 import { DetalleFacilidadPago } from '../screens/DetalleFacilidadPago';
+import { ReciboPago } from '../screens/ReciboPago';
 import { IncumplimientoFacilidadPago } from '../screens/IncumplimientoFacilidadPago';
 import { ReposicionUsuarioExterno } from '../screens/ReposicionUsuarioExterno';
 import { ReposicionUsuarioInterno } from '../screens/ReposicionUsuarioInterno';
@@ -28,6 +29,7 @@ export const FacilidadPagoRoutes: React.FC = () => {
       <Route path='resolucion' element={<ResolucionRespuesta />} />
       <Route path='autorizadas' element={<FacilidadPagoAutorizadas />} />
       <Route path='seguimiento' element={<DetalleFacilidadPago />} />
+      <Route path='recibo' element={<ReciboPago />} />
       <Route path='incumplimiento' element={<IncumplimientoFacilidadPago />} />
       <Route path='reposicion_externa' element={<ReposicionUsuarioExterno />} />
       <Route path='reposicion_interna' element={<ReposicionUsuarioInterno />} />
