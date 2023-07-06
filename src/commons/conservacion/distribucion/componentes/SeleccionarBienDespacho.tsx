@@ -316,7 +316,7 @@ const SeleccionarBienDespacho = () => {
           bien_selected.cod_tipo_elemento_vivero === 'IN'
             ? p.id_bien === current_bien.id_bien
             : p.id_bien === current_bien.id_bien &&
-              p.nro_lote === current_bien.nro_lote
+            p.nro_lote === current_bien.nro_lote
         );
         let asignada = 0;
         if (bien_selected.cod_tipo_elemento_vivero === 'MV') {
@@ -333,6 +333,7 @@ const SeleccionarBienDespacho = () => {
         ) {
           // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
           if (
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
             bien_selected.cod_tipo_elemento_vivero === 'MV'
               ? asignada
               : (data.cantidad_despachada ?? 0) <= (bien_selected.cantidad ?? 0)
@@ -400,13 +401,13 @@ const SeleccionarBienDespacho = () => {
           } else {
             control_error(
               'La cantidad asignada debe ser maximo ' +
-                String(bien_selected.cantidad)
+              String(bien_selected.cantidad)
             );
           }
         } else {
           control_error(
             'La cantidad asignada debe ser maximo ' +
-              String(current_bien.cantidad_disponible)
+            String(current_bien.cantidad_disponible)
           );
         }
       } else {
@@ -490,148 +491,148 @@ const SeleccionarBienDespacho = () => {
           form_inputs={
             bien_selected.cod_tipo_elemento_vivero === 'MV'
               ? [
-                  {
-                    datum_type: 'title',
-                    title_label: 'Seleccione bien',
-                  },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: 'codigo_bien',
-                    default_value: '',
-                    rules: {
-                      required_rule: {
-                        rule: true,
-                        message: 'Codigo bien requerido',
-                      },
+                {
+                  datum_type: 'title',
+                  title_label: 'Seleccione bien',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 2,
+                  control_form: control_bien,
+                  control_name: 'codigo_bien',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Codigo bien requerido',
                     },
-                    label: 'Codigo bien',
-                    type: 'number',
-                    disabled: current_despacho.id_despacho_viveros !== null,
-                    helper_text: '',
-                    on_blur_function: search_bien,
                   },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 4,
-                    control_form: control_bien,
-                    control_name: 'nombre',
-                    default_value: '',
-                    rules: {
-                      required_rule: {
-                        rule: true,
-                        message: 'Debe seleccionar un bien',
-                      },
+                  label: 'Codigo bien',
+                  type: 'number',
+                  disabled: current_despacho.id_despacho_viveros !== null,
+                  helper_text: '',
+                  on_blur_function: search_bien,
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 4,
+                  control_form: control_bien,
+                  control_name: 'nombre',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Debe seleccionar un bien',
                     },
-                    label: 'Nombre',
-                    type: 'text',
-                    disabled: true,
-                    helper_text: '',
                   },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: 'nro_lote',
-                    default_value: '',
-                    rules: {
-                      required_rule: {
-                        rule: true,
-                        message: 'Debe seleccionar un bien',
-                      },
+                  label: 'Nombre',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 2,
+                  control_form: control_bien,
+                  control_name: 'nro_lote',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Debe seleccionar un bien',
                     },
-                    label: 'Numero de lote',
-                    type: 'text',
-                    disabled: true,
-                    helper_text: '',
                   },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: 'agno_lote',
-                    default_value: '',
-                    rules: {
-                      required_rule: {
-                        rule: false,
-                        message: 'Debe seleccionar un bien',
-                      },
+                  label: 'Numero de lote',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 2,
+                  control_form: control_bien,
+                  control_name: 'agno_lote',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: false,
+                      message: 'Debe seleccionar un bien',
                     },
-                    label: 'Año lote',
-                    type: 'text',
-                    disabled: true,
-                    helper_text: '',
                   },
-                  {
-                    datum_type: 'select_controller',
-                    xs: 12,
-                    md: 2,
-                    control_form: control_bien,
-                    control_name: 'cod_etapa_lote',
-                    default_value: '',
-                    rules: {
-                      required_rule: { rule: false, message: 'requerido' },
-                    },
-                    label: 'Etapa de lote',
-                    helper_text: '',
-                    disabled: true,
-                    select_options: [
-                      { label: 'Germinación', value: 'G' },
-                      { label: 'Producción', value: 'P' },
-                      { label: 'Distribucción', value: 'D' },
-                    ],
-                    option_label: 'label',
-                    option_key: 'value',
+                  label: 'Año lote',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'select_controller',
+                  xs: 12,
+                  md: 2,
+                  control_form: control_bien,
+                  control_name: 'cod_etapa_lote',
+                  default_value: '',
+                  rules: {
+                    required_rule: { rule: false, message: 'requerido' },
                   },
-                ]
+                  label: 'Etapa de lote',
+                  helper_text: '',
+                  disabled: true,
+                  select_options: [
+                    { label: 'Germinación', value: 'G' },
+                    { label: 'Producción', value: 'P' },
+                    { label: 'Distribucción', value: 'D' },
+                  ],
+                  option_label: 'label',
+                  option_key: 'value',
+                },
+              ]
               : [
-                  {
-                    datum_type: 'title',
-                    title_label: 'Seleccione bien',
-                  },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 5,
-                    control_form: control_bien,
-                    control_name: 'codigo_bien',
-                    default_value: '',
-                    rules: {
-                      required_rule: {
-                        rule: true,
-                        message: 'Codigo bien requerido',
-                      },
+                {
+                  datum_type: 'title',
+                  title_label: 'Seleccione bien',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 5,
+                  control_form: control_bien,
+                  control_name: 'codigo_bien',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Codigo bien requerido',
                     },
-                    label: 'Codigo bien',
-                    type: 'number',
-                    disabled: current_despacho.id_despacho_viveros !== null,
-                    helper_text: '',
-                    on_blur_function: search_bien,
                   },
-                  {
-                    datum_type: 'input_controller',
-                    xs: 12,
-                    md: 7,
-                    control_form: control_bien,
-                    control_name: 'nombre',
-                    default_value: '',
-                    rules: {
-                      required_rule: {
-                        rule: true,
-                        message: 'Debe seleccionar un bien',
-                      },
+                  label: 'Codigo bien',
+                  type: 'number',
+                  disabled: current_despacho.id_despacho_viveros !== null,
+                  helper_text: '',
+                  on_blur_function: search_bien,
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 7,
+                  control_form: control_bien,
+                  control_name: 'nombre',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Debe seleccionar un bien',
                     },
-                    label: 'Nombre',
-                    type: 'text',
-                    disabled: true,
-                    helper_text: '',
                   },
-                ]
+                  label: 'Nombre',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+              ]
           }
           form_inputs_list={[
             {

@@ -75,8 +75,8 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
   const columns_despacho: GridColDef[] = [
     { field: 'id_despacho_consumo', headerName: 'ID', width: 20 },
     {
-      field: 'consec_incidencia',
-      headerName: 'Consecutivo',
+      field: 'fecha_solicitud',
+      headerName: 'Fecha de solicitud',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -85,8 +85,8 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
       ),
     },
     {
-      field: 'fecha_incidencia',
-      headerName: 'Fecha de incidencia',
+      field: 'fecha_despacho',
+      headerName: 'Fecha del despacho',
       width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -95,8 +95,8 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
       ),
     },
     {
-      field: 'nombre_incidencia',
-      headerName: 'Nombre/Asunto',
+      field: 'motivo',
+      headerName: 'Motivo',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -135,13 +135,14 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
   }, [current_despacho]);
 
   const get_despachos: any = async () => {
+    console.log("buscar...");
     const nro = get_values('numero_solicitud_por_tipo') ?? '';
     const id_unidad = get_values('id_unidad_para_la_que_solicita') ?? '';
     const fecha_despacho = get_values('fecha_despacho') ?? '';
     const es_conservacion = get_values('es_despacho_conservacion') ?? '';
-    void dispatch(
-      get_despachos_service(nro, id_unidad, fecha_despacho, es_conservacion)
+    void dispatch(get_despachos_service(nro, id_unidad, fecha_despacho, es_conservacion)
     );
+
   };
 
   return (
@@ -158,7 +159,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
           form_inputs={[
             {
               datum_type: 'title',
-              title_label: 'Informacion del despacho',
+              title_label: 'Información del despacho',
             },
             {
               datum_type: 'input_controller',
@@ -168,7 +169,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
               control_name: 'numero_despacho_consumo',
               default_value: '',
               rules: {},
-              label: 'Numero despacho',
+              label: 'Número despacho',
               type: 'number',
               disabled: true,
               helper_text: '',
@@ -199,7 +200,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
               rules: {
                 required_rule: { rule: true, message: 'Observación requerida' },
               },
-              label: 'observaciones',
+              label: 'Observaciones',
               type: 'text',
               multiline_text: true,
               rows_text: 4,
@@ -246,14 +247,27 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
           modal_select_model_title="Buscar despacho"
           modal_form_filters={[
             {
+              datum_type: 'date_picker_controller',
+              xs: 12,
+              md: 2,
+              control_form: control_despacho,
+              control_name: 'fecha_despacho',
+              default_value: new Date().toString(),
+              rules: { required_rule: { rule: true, message: 'requerido' } },
+              label: 'Fecha del despacho',
+              type: 'text',
+              disabled: false,
+              helper_text: '',
+            },
+            {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 2,
               control_form: control_despacho,
               control_name: 'numero_solicitud_por_tipo',
               default_value: '',
               rules: {},
-              label: 'Numero despacho',
+              label: 'Número despacho',
               type: 'number',
               disabled: false,
               helper_text: '',

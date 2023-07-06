@@ -276,12 +276,12 @@ const DespachoBienesConsumoScreen = () => {
     };
     console.log(data_closed);
     if (
-      current_solicitud.id_solicitud_consumo !== null &&
-      current_solicitud.id_solicitud_consumo !== undefined
+      current_solicitud.id_solicitud_consumibles !== null &&
+      current_solicitud.id_solicitud_consumibles !== undefined
     ) {
       void dispatch(
         closed_solicitud_service(
-          current_solicitud.id_solicitud_consumo,
+          current_solicitud.id_solicitud_consumibles,
           data_closed
         )
       );
