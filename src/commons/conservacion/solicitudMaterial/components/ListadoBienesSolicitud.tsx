@@ -37,6 +37,7 @@ const ListadoBienesSolicitud = () => {
         let despachada: number = 0;
 
         bienes_solicitud.forEach((option) => {
+          despachada = 0;
           if (option.cod_tipo_elemento_vivero === 'IN') {
             bien = bienes_despacho.find((p) => p.id_bien === option.id_bien);
             aux_items.push({
@@ -110,7 +111,7 @@ const ListadoBienesSolicitud = () => {
   const columns_bienes_solicitud: GridColDef[] = [
     {
       field: 'codigo_bien',
-      headerName: 'Codigo',
+      headerName: 'Código',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -140,7 +141,7 @@ const ListadoBienesSolicitud = () => {
     },
     {
       field: 'cantidad',
-      headerName: 'Cantidad solictada',
+      headerName: 'Cantidad solicitada',
       width: 140,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>

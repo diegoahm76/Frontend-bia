@@ -1,111 +1,84 @@
-import {
-    //  Box,
-      Grid } from "@mui/material";
-// import { InputText } from "primereact/inputtext";
-// import { useForm } from "react-hook-form";
-// import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+
+
+import { Box, Grid, Typography } from "@mui/material";
+import { ModalEditarCargo } from "./ModalEditable/MotadlEditable";
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MostrarEditables: React.FC = () => {
-    // const { control, handleSubmit, reset } = useForm();
 
-    // const onSubmit1 = (data: any) => {
-    //     console.log("Formulario 1:", data);
-    //     reset();
-    // };
-
-    // const onSubmit2 = (data: any) => {
-    //     console.log("Formulario 2:", data);
-    //     reset();
-    // };
-
-    // const onSubmit3 = (data: any) => {
-    //     console.log("Formulario 3:", data);
-    //     reset();
-    // };
-
-    // const onSubmit4 = (data: any) => {
-    //     console.log("Formulario 4:", data);
-    //     reset();
-    // };
-
-    // const onSubmit5 = (data: any) => {
-    //     console.log("Formulario 5:", data);
-    //     reset();
-    // };
+// eslint-disable-next-line @typescript-eslint/naming-convention
+    const director = "stiven";
+    const fecha = "hoy";
+ 
 
     return (
-      
-            <Grid spacing={2} justifyContent="left" border={1}
-                direction="row"
-                borderColor="lightgray"
-                padding={2}
-                borderRadius={2}>
-                {/* <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit1)}>
-                        <label htmlFor="form1-value">Formulario 1: Tipo Documento ID</label>
-                        <InputText
-                            id="form1-value"
-                            aria-describedby="form1-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid>
+        <Grid container sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
 
-                <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit2)}>
-                        <label htmlFor="form2-value">Formulario 2: Num Documento ID</label>
-                        <InputText
-                            id="form2-value"
-                            aria-describedby="form2-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid>
+        }}
+        >
+            <Box component="form" sx={{ mt: '5px', padding: 3 }} noValidate autoComplete="off">
+                <Grid item container spacing={7}>
 
-                <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit3)}>
-                        <label htmlFor="form3-value">Formulario 3: Num Documento ID</label>
-                        <InputText
-                            id="form3-value"
-                            aria-describedby="form3-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid>
+                    <Grid item xs={12} sm={6} >
+                     
+                        <Typography  variant="subtitle1" fontWeight="bold">Director</Typography>
+                      <InputText aria-describedby="username-help" disabled placeholder="Nombre completo" />
+                        <ModalEditarCargo name={director} fecha={fecha} titlee={"Director"}/>                   
+                      <label>Registrado desde</label>
+                        <InputText type="text" className="p-inputtext-sm" placeholder="19/08/2000" style={{ margin: 3, height: 10, width: "30%" }} />
+                    </Grid>
 
-                <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit4)}>
-                        <label htmlFor="form4-value">Formulario 4: Tipo Documento ID</label>
-                        <InputText
-                            id="form4-value"
-                            aria-describedby="form4-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid>
+                    <Grid item xs={12} sm={6} >
+                        <Typography variant="subtitle1" fontWeight="bold">Coordinador de Almacen</Typography>
+                        <InputText   aria-describedby="username-help" disabled placeholder="Nombre completo" />
+                        <ModalEditarCargo name={director} fecha={fecha} titlee={"Coordinador de Almacen"} />
+                        <label>Registrado desde</label>
+                        <InputText type="text" className="p-inputtext-sm" placeholder="19/08/2000" style={{ margin: 3, height: 10, width: "30%" }} />
+                    </Grid>
 
-                <Grid item xs={12} sm={6} md={6}>
-                    <form onSubmit={handleSubmit(onSubmit5)}>
-                        <label htmlFor="form5-value">Formulario 5: Tipo Documento ID</label>
-                        <InputText
-                            id="form5-value"
-                            aria-describedby="form5-value-help"
-                            disabled
-                            placeholder="ID"
-                        />
-                        <Button label="Submit" type="submit" icon="pi pi-check" />
-                    </form>
-                </Grid> */}
-            </Grid>
-       
+
+                    <Grid item xs={12} sm={6} >
+                        <Typography variant="subtitle1" fontWeight="bold">Coordinador de Viveros</Typography>
+                        <InputText aria-describedby="username-help" disabled placeholder="Nombre completo" />
+                        <ModalEditarCargo name={director} fecha={fecha} titlee={"Coordinador de Viveros"} />
+                      
+                        <label>Registrado desde</label>
+                        <InputText type="text" className="p-inputtext-sm" placeholder="19/08/2000" style={{ margin: 3, height: 10, width: "30%" }} />
+                    </Grid>
+
+
+                    <Grid item xs={12} sm={6} >
+                        <Typography variant="subtitle1" fontWeight="bold">Coordinador de Transporte</Typography>
+                        <InputText aria-describedby="username-help" disabled placeholder="Nombre completo" />
+                        <ModalEditarCargo name={director} fecha={fecha} titlee={"Coordinador de Transporte"} /> 
+                       
+                        <label>Registrado desde</label>
+                        <InputText type="text" className="p-inputtext-sm" placeholder="19/08/2000" style={{ margin: 3, height: 10, width: "30%" }} />
+                    </Grid>
+
+
+                    <Grid item xs={12} sm={6} >
+                        <Typography variant="subtitle1" fontWeight="bold">Almacenista</Typography>
+                        <InputText aria-describedby="username-help" disabled placeholder="Nombre completo" />
+                        <ModalEditarCargo name={director} fecha={fecha} titlee={"Almacenista"} /> 
+                        
+                        <label>Registrado desde</label>
+                        <InputText type="text" className="p-inputtext-sm" placeholder="19/08/2000" style={{ margin: 3, height: 10, width: "30%" }} />
+                    </Grid>
+
+
+
+                </Grid>
+            </Box>
+
+        </Grid>
     );
 };

@@ -152,7 +152,7 @@ const DialogCrearOrganigrama = ({
               CERRAR
             </Button>
             <Button type="submit" variant="contained" startIcon={<SaveIcon />}>
-              GUARDAR
+              CREAR
             </Button>
           </Stack>
         </DialogActions>

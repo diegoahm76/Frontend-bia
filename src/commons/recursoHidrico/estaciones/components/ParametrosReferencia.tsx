@@ -6,6 +6,7 @@ import { consultar_parametros_referencia } from '../../requets/Request';
 import type { Parametros } from '../interfaces/interfaces';
 import { EditarParametosReferenciaDialog } from './EditarParametosReferenciaDialog';
 import { control_error } from '../../../../helpers/controlError';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ParametrosReferencia: React.FC = () => {
@@ -13,6 +14,9 @@ export const ParametrosReferencia: React.FC = () => {
   const [editar_parametros_is_active, set_editar_parametros_is_active] =
     useState<boolean>(false);
   const [parametro_editado, set_parametro_editado] = useState(null);
+
+  const handle_clickxls = (): void => { download_xls({ nurseries: parametro_referencia, columns }); };
+
 
   const columns: GridColDef[] = [
     {
@@ -157,7 +161,23 @@ export const ParametrosReferencia: React.FC = () => {
 
   return (
     <>
-      <Grid container>
+
+      <Grid item container sx={{justifyContent:"flex-end"}}  >
+            <IconButton
+                style={{
+                  color: 'white',
+                  backgroundColor: '#335B1E', 
+                  margin:5,
+                  width: '30px',
+                  height: '30px',
+                }}
+                onClick={handle_clickxls}
+              >
+                <i className="pi pi-file-excel"></i>
+              </IconButton>
+      </Grid>
+      <Grid container sx={{ marginTop: '10px' }}>
+
         <Grid item xs={12} container justifyContent="center">
           {parametro_referencia.length > 0 ? (
             <DataGrid

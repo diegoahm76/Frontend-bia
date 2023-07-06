@@ -44,7 +44,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { activate_deactivate_nursery_service, delete_nursery_service, get_nurseries_service } from '../store/thunks/gestorViveroThunks';
 import CrearViveroDialogForm from '../componentes/CrearViveroDialogForm';
 // // Slices
-import { current_nursery } from '../store/slice/viveroSlice';
+import { current_nursery, get_nurseries } from '../store/slice/viveroSlice';
 
 const initial_state_current_nursery = {
   id_vivero: null,
@@ -88,7 +88,7 @@ export function AdministrarViveroScreen(): JSX.Element {
   const [add_nursery_is_active, set_add_nursery_is_active] =
     useState<boolean>(false);
   const [searchtext, setsearchtext] = useState('');
-  const [filterednurseries, setfilterednurseries] = useState<any[]>(nurseries);
+  // const [filterednurseries, setfilterednurseries] = useState<any[]>(nurseries);
 
   const columns: GridColDef[] = [
     { field: 'id_vivero', headerName: 'ID', width: 20 },
@@ -118,7 +118,7 @@ export function AdministrarViveroScreen(): JSX.Element {
     },
     {
       field: 'direccion',
-      headerName: 'Direccion',
+      headerName: 'Dirección',
       width: 200,
     },
     {
@@ -156,13 +156,13 @@ export function AdministrarViveroScreen(): JSX.Element {
     },
     {
       field: 'area_mt2',
-      headerName: 'Area',
+      headerName: 'Área',
       width: 100,
       type: 'number'
     },
     {
       field: 'area_propagacion_mt2',
-      headerName: 'Area propagacion',
+      headerName: 'Área de propagación',
       width: 100,
       type: 'number'
     },
@@ -396,7 +396,8 @@ export function AdministrarViveroScreen(): JSX.Element {
   </Button>
 </Grid>
   <Divider style={{ width: '98%', marginTop: '8px', marginBottom: '8px',marginLeft: 'auto' }} />
-            <Grid item xs={10}>
+  <Grid container>
+  <Grid item xs={6}>
               <TextField
                 label="Buscar"
                 value={searchtext}
@@ -414,23 +415,26 @@ export function AdministrarViveroScreen(): JSX.Element {
                   const filterednurseries = nurseries.filter((nursery: { nombre: string; }) =>
                     nursery.nombre.toLowerCase().includes(searchtext.toLowerCase())
                   );
-                  setfilterednurseries(filterednurseries);
+                  dispatch(get_nurseries(filterednurseries));
+                  // setfilterednurseries(filterednurseries);
                 }}
               >
                 <SearchIcon />
               </Button>
             </Grid>
             {/* <Divider /> */}
-            <Grid item xs={2}>
-              <ButtonGroup style={{ margin: 7 }}>
-                <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={handle_clickxls}>
+            <Grid item  xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <ButtonGroup >
+                <IconButton style={{ ...button_style, backgroundColor: '#335B1E',  }} onClick={handle_clickxls}>
                   <i className="pi pi-file-excel"></i>
-                </Button>
-                <Button  style={{ ...button_style, backgroundColor: 'red' }} onClick={handle_clickpdf}>
+                </IconButton>  
+                 <IconButton  style={{ ...button_style, backgroundColor: 'red',  }} onClick={handle_clickpdf}>
                   <i className="pi pi-file-pdf"></i>
-                </Button>
-              </ButtonGroup>
-            </Grid>
+                </IconButton> 
+              </ButtonGroup> 
+                </Grid>
+                </Grid>
+          
           </Grid>
 
           <Divider />
@@ -440,7 +444,7 @@ export function AdministrarViveroScreen(): JSX.Element {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={filterednurseries}
+                rows={nurseries}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}

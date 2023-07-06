@@ -28,7 +28,7 @@ const SeleccionarBajasBienes = () => {
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -72,7 +72,7 @@ const SeleccionarBajasBienes = () => {
         { field: 'id_item_baja_viveros', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -112,7 +112,7 @@ const SeleccionarBajasBienes = () => {
         },
         {
             field: 'observaciones',
-            headerName: 'Observacion',
+            headerName: 'Observación',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -270,10 +270,10 @@ const SeleccionarBajasBienes = () => {
                         }
                     }
                 } else{
-                    control_error("La cantidad asignada debe ser maximo "+ String(current_insumo.saldo_disponible))
+                    control_error("La cantidad asignada debe ser máximo "+ String(current_insumo.saldo_disponible))
                     }
             } else{
-                control_error("Codigo de bien no coincide con el seleccionado")
+                control_error("Código de bien no coincide con el seleccionado")
             }
         } else{
             control_error("Debe seleccionar el bien")
@@ -340,8 +340,8 @@ return (
                         control_form: control_bien,
                         control_name: "codigo_bien",
                         default_value: "",
-                        rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                        label: "Codigo bien",
+                        rules: { required_rule: { rule: true, message: "Código del bien requerido" } },
+                        label: "Código bien",
                         type: "text",
                         disabled: false,
                         helper_text: "",
@@ -410,7 +410,7 @@ return (
                         control_name: "observaciones",
                         default_value: "",
                         rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                        label: "Observacion",
+                        label: "Observación",
                         type: "text",
                         multiline_text: true,
                         rows_text: 4,
@@ -437,7 +437,7 @@ return (
                         rules: { required_rule: { rule: true, message: "Seleccione tipo de bien" } },
                         label: "Tipo de bien",
                         disabled: false,
-                        helper_text: "debe seleccionar campo",
+                        helper_text: "Debe seleccionar campo",
                         select_options: [{ label: "Insumo", value: "IN" }, { label: "Herramienta", value: "HE" }, { label: "Semilla", value: "MV" }],
                         option_label: "label",
                         option_key: "value",
@@ -450,7 +450,7 @@ return (
                         control_name: "codigo_bien",
                         default_value: "",
                         rules: {},
-                        label: "Codigo bien",
+                        label: "Código bien",
                         type: "number",
                         disabled: false,
                         helper_text: "",

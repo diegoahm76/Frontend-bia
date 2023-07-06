@@ -14,6 +14,7 @@ import { control_error } from '../../../../helpers/controlError';
 import { CrearConfiAlertaDialog } from './CrearConfiAlertaDialog';
 import { EditarAlertaDialog } from './EditarAlertaDialog';
 import Swal from 'sweetalert2';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConfiguracionAlarma: React.FC = () => {
@@ -22,6 +23,7 @@ export const ConfiguracionAlarma: React.FC = () => {
   const [crear_alerta_is_active, set_crear_alerta_is_active] = useState<boolean>(false);
   const [editar_alerta_is_active, set_editar_alerta_is_active] = useState<boolean>(false);
   const [alerta_editado, set_alerta_editado] = useState(null);
+  const handle_clickxls = (): void => { download_xls({ nurseries: conf_alert_person, columns }); };
 
   const handle_open_crear_alerta = (): void => {
     set_crear_alerta_is_active(true);
@@ -115,7 +117,7 @@ export const ConfiguracionAlarma: React.FC = () => {
         cancelButton: "square-btn",
       },
       width: 350,
-      text: "¿Estas seguro?",
+      text: "¿Estás seguro?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#8BC34A",
@@ -176,19 +178,37 @@ export const ConfiguracionAlarma: React.FC = () => {
           }
         `}
       </style>
-      <Grid item xs={12}>
-        <Button
-          sx={{ mb: '20px' }}
-          variant="outlined"
-          startIcon={<AddIcon />}
-          onClick={() => {
-            console.log("Botón de crear alerta clickeado")
-            handle_open_crear_alerta()
-          }}
-        >
-          CREAR ALARMA
-        </Button>
-      </Grid>
+
+      <Grid container>
+  <Grid item xs={6}>
+    <Button
+      sx={{ mb: '20px' }} 
+      variant="outlined"
+      startIcon={<AddIcon />}
+      onClick={() => {
+        console.log("Botón de crear alerta clickeado")
+        handle_open_crear_alerta()
+      }}
+    >
+      CREAR ALARMA
+    </Button>
+  </Grid>
+  <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+    <IconButton
+      style={{
+        color: 'white',
+        backgroundColor: '#335B1E',
+        margin: 5,
+        width: '30px',
+        height: '30px',
+      }}
+      onClick={handle_clickxls}
+    >
+      <i className="pi pi-file-excel"></i>
+    </IconButton>
+  </Grid>
+</Grid>
+
       <Grid item xs={12} container justifyContent='center'>
         {conf_alert_person.length > 0 ? (
           <DataGrid

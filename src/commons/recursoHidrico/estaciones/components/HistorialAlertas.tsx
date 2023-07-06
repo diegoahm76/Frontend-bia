@@ -114,7 +114,18 @@ export const HistorialAlertas: React.FC = () => {
 
     return (
 
-        <Grid item xs={12}>
+        <Grid item xs={12}  sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px', mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+            marginTop: '20px',
+            marginLeft: '-5px', 
+        }}>
+            <Grid item xs={12} sx={{ marginTop: "10px",  }}     >
+                        <Title title="Historial de alertas" />
+                    </Grid>
             <Box component="form" onSubmit={handleSubmit(submit_historial_datos)}>
                 <Stack sx={{ m: '10px 0 20px 0' }} direction="row" spacing={2}>
                     <FormControl fullWidth>
@@ -178,7 +189,7 @@ export const HistorialAlertas: React.FC = () => {
             </Box>
             {dato.length > 0 ? (
                 <>
-                    <Title title="HISTORIAL DE ALERTAS EQUIPO ESTACIÓN "></Title>
+                    <Title title="Historial de alertas equipo estación"></Title>
                     <Box sx={{ mt: '20px' }}>
                         <DataGrid
                             autoHeight

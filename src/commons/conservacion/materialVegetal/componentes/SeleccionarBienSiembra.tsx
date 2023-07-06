@@ -44,7 +44,7 @@ const SeleccionarBienSiembra = () => {
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -94,7 +94,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'unidad_disponible',
-            headerName: 'unidad',
+            headerName: 'Unidad',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -109,7 +109,7 @@ const SeleccionarBienSiembra = () => {
         { field: 'id_bien_consumido', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -149,7 +149,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'observaciones',
-            headerName: 'Observacion',
+            headerName: 'Observación',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -308,10 +308,10 @@ const SeleccionarBienSiembra = () => {
                         }
                     }
                 } else{
-                    control_error("La cantidad asignada debe ser maximo "+ String(current_good.cantidad_disponible_bien))
+                    control_error("La cantidad asignada debe ser máximo "+ String(current_good.cantidad_disponible_bien))
                     }
             } else{
-                control_error("Codigo de bien no coincide con el seleccionado")
+                control_error("Código de bien no coincide con el seleccionado")
             }
         } else{
             control_error("Debe seleccionar el bien")
@@ -379,8 +379,8 @@ const SeleccionarBienSiembra = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                            label: "Codigo bien",
+                            rules: { required_rule: { rule: true, message: "Código del bien requerido" } },
+                            label: "Código bien",
                             type: "number",
                             disabled: false,
                             helper_text: "",
@@ -448,7 +448,7 @@ const SeleccionarBienSiembra = () => {
                             control_form: control_siembra,
                             control_name: "observaciones",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Observación requerido" } },
+                            rules: { required_rule: { rule: true, message: "Observación requerida" } },
                             label: "Observación",
                             type: "text",
                             multiline_text: true,
@@ -489,7 +489,7 @@ const SeleccionarBienSiembra = () => {
                             control_name: "codigo_bien",
                             default_value: "",
                             rules: {},
-                            label: "Codigo bien",
+                            label: "Código bien",
                             type: "number",
                             disabled: (get_values_bien("tipo_bien") === "MZ"),
                             helper_text: "",

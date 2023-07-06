@@ -5,7 +5,7 @@ import {
   Grid,
   TextField,
   Dialog,
-  DialogContent,
+  // DialogContent,
   DialogTitle,
   IconButton,
   Button,
@@ -31,6 +31,7 @@ import { get_persons } from '../store/thunks';
 import { set_data_person_search } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
+import { Title } from '../../../components';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -203,13 +204,13 @@ const DialogBusquedaAvanzada = ({
 
   const trigger_user_person_create_active = (data: any): void => {
     user_person_create_active();
-    set_is_modal_active(false);
+    set_is_modal_active(false );
     dispatch(set_data_person_search(data));
   };
 
   const trigger_user_edit_active = (data: any): void => {
     user_edit_active();
-    set_is_modal_active(false);
+    set_is_modal_active(false );
     dispatch(set_data_person_search(data));
   };
 
@@ -249,8 +250,26 @@ const DialogBusquedaAvanzada = ({
       open={is_modal_active}
       onClose={handle_close_busqueda_avanzada}
     >
+
+
       <DialogTitle>
-        Busqueda avanzada por Persona
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px', mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+            marginTop: '0px',
+            marginLeft: '-5px',
+            width: '99%',
+          }}
+        >
+          <Title title="Busqueda avanzada por Persona " />
+        </Grid>
+
         <IconButton
           aria-label="close"
           onClick={() => {
@@ -266,8 +285,28 @@ const DialogBusquedaAvanzada = ({
           <CloseIcon />
         </IconButton>
       </DialogTitle>
+
+
+
       <Divider />
-      <DialogContent sx={{ mb: '0px' }}>
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+          width: '97%',
+          marginLeft: '20px',
+          marginTop: '20px',
+        }}
+      >
+
+
+
+        {/* <DialogContent sx={{ mb: '0px' }}> */}
         <Box
           component="form"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -355,7 +394,10 @@ const DialogBusquedaAvanzada = ({
             getRowId={(row) => row.id_persona}
           />
         </Grid>
-      </DialogContent>
+        {/* </DialogContent> */}
+
+      </Grid>
+
     </Dialog>
   );
 };

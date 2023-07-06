@@ -35,6 +35,7 @@ import type { IFormValues, IProps } from './types/types';
 import { initial_state } from './utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
 const CrearSubSerieCcdDialog = ({
   is_modal_active,
   set_is_modal_active,
@@ -78,7 +79,6 @@ const CrearSubSerieCcdDialog = ({
     },
     { field: 'age', headerName: 'Edad', width: 150 },
   ]; */
-  
 
   //! useEffect to change the title of the button and set the values of the form
   /*  useEffect(() => {
@@ -106,7 +106,7 @@ const CrearSubSerieCcdDialog = ({
       codigo,
       nombre,
       id_subserie_doc,
-      id_serie_doc,
+      id_serie_doc
     });
 
     set_title_button(subseries_ccd_current ? 'Actualizar' : 'Guardar');
@@ -142,7 +142,7 @@ const CrearSubSerieCcdDialog = ({
   const manage_sub_series = (): void => {
     const updatedSeries = {
       ...data,
-      nombre: data.nombre,
+      nombre: data.nombre
     };
     const newSeries =
       title_button === 'Guardar'
@@ -172,7 +172,6 @@ const CrearSubSerieCcdDialog = ({
     console.log(params);
     dispatch(get_subseries_ccd_current(params.row));
   };
-
 
   const columns: GridColDef[] = [
     {
@@ -306,7 +305,7 @@ const CrearSubSerieCcdDialog = ({
                   type="submit"
                   color="primary"
                   variant="contained"
-                  startIcon={<AddIcon />}
+                  startIcon={<SaveIcon />}
                 >
                   {title_button}
                 </Button>

@@ -5,7 +5,6 @@ import {
   Grid,
   TextField,
   Dialog,
-  DialogContent,
   DialogTitle,
   IconButton,
   Button,
@@ -14,6 +13,7 @@ import {
   Avatar,
   Chip,
   Tooltip,
+  Toolbar,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
@@ -25,6 +25,7 @@ import {
   set_action_admin_users,
   set_data_user_search,
 } from '../store/seguridadSlice';
+import { Title } from '../../../components';
 
 interface IProps {
   is_modal_active: boolean;
@@ -140,7 +141,26 @@ const dialog_busqueda_avanzada_usuario = ({
       maxWidth={'lg'}
     >
       <DialogTitle>
-        Busqueda avanzada por Usuario
+        <Toolbar>
+
+    <Title title="Busqueda avanzada por Usuario  " />
+        </Toolbar>
+        {/* <Grid
+          container
+          spacing={2}
+          sx={{
+            position: 'relative',
+            // background: '#FAFAFA',
+            borderRadius: '15px',
+            // p: '20px', mb: '20px',
+            // boxShadow: '0px 3px 6px #042F4A26',
+            marginTop: '0px',
+            marginLeft: '-5px',
+            width: '99%',
+          }}
+        > */}
+        {/* </Grid> */}
+       
         <IconButton
           aria-label="close"
           onClick={() => {
@@ -157,12 +177,26 @@ const dialog_busqueda_avanzada_usuario = ({
         </IconButton>
       </DialogTitle>
       <Divider />
-      <DialogContent sx={{ mb: '0px' }}>
-        <Box
-          component="form"
-          // eslint-disable-next-line @typescript-eslint/no-misused-promises
-          onSubmit={handle_submit_search_user(on_submit_search_user)}
-          autoComplete="off"
+      <Box
+        component="form"
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+        onSubmit={handle_submit_search_user(on_submit_search_user)}
+        autoComplete="off"
+      >
+        {' '}
+        <Grid
+          container
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+            width: '97%',
+            marginLeft: '20px',
+            marginTop: '20px',
+          }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={3}>
@@ -171,13 +205,12 @@ const dialog_busqueda_avanzada_usuario = ({
                   required: true,
                 })}
                 required
-                label="Nombre de usuario"
+                label="Nombreee de usuario"
                 size="small"
                 helperText="Nombre de usuario"
                 fullWidth
               />
             </Grid>
-
             <Grid item xs={12} sm={3}>
               <Button
                 type="submit"
@@ -189,21 +222,21 @@ const dialog_busqueda_avanzada_usuario = ({
               </Button>
             </Grid>
           </Grid>
-        </Box>
-        <Grid item xs={12}>
           <Grid item xs={12}>
-            <DataGrid
-              density="compact"
-              autoHeight
-              rows={users ?? []}
-              columns={columns_users}
-              pageSize={10}
-              rowsPerPageOptions={[10]}
-              getRowId={(row) => row.id_usuario}
-            />
+            <Grid item xs={12}>
+              <DataGrid
+                density="compact"
+                autoHeight
+                rows={users ?? []}
+                columns={columns_users}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
+                getRowId={(row) => row.id_usuario}
+              />
+            </Grid>
           </Grid>
         </Grid>
-      </DialogContent>
+      </Box>
     </Dialog>
   );
 };

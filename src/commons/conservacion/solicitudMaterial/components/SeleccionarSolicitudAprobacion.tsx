@@ -1,3 +1,4 @@
+/* eslint-disable object-shorthand */
 import { Grid } from '@mui/material';
 import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
@@ -112,7 +113,7 @@ const SeleccionarSolicitudAprobada = ({
               control_name: 'nro_solicitud',
               default_value: '',
               rules: {},
-              label: 'Numero solicitud',
+              label: 'Número solicitud',
               type: 'number',
               disabled: true,
               helper_text: '',
@@ -128,7 +129,7 @@ const SeleccionarSolicitudAprobada = ({
               rules: {},
               label: 'Vivero Origen',
               disabled: true,
-              helper_text: 'debe seleccionar campo',
+              helper_text: 'Debe seleccionar campo',
               select_options: nurseries,
               option_label: 'nombre',
               option_key: 'id_vivero',
@@ -142,7 +143,7 @@ const SeleccionarSolicitudAprobada = ({
               control_name: 'nro_info_tecnico',
               default_value: '',
               rules: {},
-              label: 'Informe técnico Nro:',
+              label: 'Informe técnico Número:',
               type: 'text',
               multiline_text: true,
               disabled: true,
@@ -200,7 +201,7 @@ const SeleccionarSolicitudAprobada = ({
               control_name: 'observaciones',
               default_value: '',
               rules: {},
-              label: 'Observacion de solicitud',
+              label: 'Observación de solicitud',
               type: 'text',
               multiline_text: true,
               rows_text: 4,
@@ -232,7 +233,7 @@ const SeleccionarSolicitudAprobada = ({
               rules: {},
               label: 'Unidad organizacional',
               disabled: true,
-              helper_text: 'debe seleccionar campo',
+              helper_text: 'Debe seleccionar campo',
               select_options: unidad_organizacional,
               option_label: 'nombre',
               option_key: 'id_unidad_organizacional',
@@ -270,7 +271,7 @@ const SeleccionarSolicitudAprobada = ({
                     control_name: 'nro_solicitud',
                     default_value: '',
                     rules: {},
-                    label: 'Numero solicitud',
+                    label: 'Número solicitud',
                     type: 'number',
                     disabled: false,
                     helper_text: '',

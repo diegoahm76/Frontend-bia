@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-no-undef */
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-
 import { useEffect } from 'react';
 import LibraryAddCheckIcon from '@mui/icons-material/LibraryAddCheck';
 import "react-datepicker/dist/react-datepicker.css";
@@ -16,10 +15,6 @@ import DestinoAprobacion from '../../components/DestinoEleAprobacion';
 import PersonaResponsableAprobacion from '../../components/PersonaRespoAprobacion';
 import SeleccionBienAprobacion from '../../components/SeleccionBienAprobacion';
 import Aprobacion from '../../components/Aprobacion';
-
-
-
-
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
 const AprobacionSolicitudScreen = () => {
 
@@ -27,16 +22,11 @@ const AprobacionSolicitudScreen = () => {
   const { current_solicitud, nurseries, persona_solicita, current_funcionario, } = useAppSelector((state) => state.solicitud_vivero);
 
   const dispatch = useAppDispatch();
-
-
-
   useEffect(() => {
     void dispatch(get_uni_organizacional());
     void dispatch(get_nurcery())
     void dispatch(get_solicitud_aprobacion())
   }, [])
-
-
   useEffect(() => {
     console.log(watch("id_vivero_solicitud"))
     if (watch("id_vivero_solicitud") !== null) {
@@ -102,14 +92,7 @@ const AprobacionSolicitudScreen = () => {
 
     void dispatch(aprobacion_solicitud_funcionario(form_data, data.id_solicitud_vivero))
   }
-
-
-
-
-
   return (
-
-
     <Grid
       container
       spacing={2}
@@ -120,6 +103,7 @@ const AprobacionSolicitudScreen = () => {
         p: '20px',
         mb: '20px',
         boxShadow: '0px 3px 6px #042F4A26',
+        marginTop: '20px',
 
       }}
     >
@@ -139,16 +123,11 @@ const AprobacionSolicitudScreen = () => {
         title={"Destino de los elementos"}
         control_solicitud_aprobada={control_solicitud_aprobada}
         get_values={get_values} />
-
       <SeleccionBienAprobacion />
-
       <Aprobacion
         cordinador={false}
         control_solicitud_aprobada={control_solicitud_aprobada}
         get_values={get_values} />
-
-
-
       <Grid
         container
         direction="row"
@@ -163,18 +142,10 @@ const AprobacionSolicitudScreen = () => {
             label={"Aprobar solicitud"}
             type_button="button" />
         </Grid>
-
-
-
       </Grid>
     </Grid>
 
   )
-
-
-
 };
-
-
 // eslint-disable-next-line no-restricted-syntax
 export default AprobacionSolicitudScreen;

@@ -33,18 +33,40 @@ export const DatosAccesoScreen: React.FC = () => {
   const password2 = watch('password2');
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  const handle_file_select = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // const handle_file_select = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const selected_file = event.target.files != null ? event.target.files[0] : null;
+  //   if (selected_file != null) {
+  //     set_file_name(selected_file.name);
+
+  //     const reader = new FileReader();
+  //     reader.onload = (event) => {
+  //       set_image_url(event.target?.result as string);
+  //     };
+  //     reader.readAsDataURL(selected_file);
+  //   }
+  // };
+  const [errorfilesize, seterrorfilesize] = useState<string>('');
+
+  const handle_file_select = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file = event.target.files != null ? event.target.files[0] : null;
     if (selected_file != null) {
-      set_file_name(selected_file.name);
+      if (selected_file.size >  854000) {
+        set_file_name('');
+        set_image_url(null);
+        seterrorfilesize('El tamaño de la imagen excede el límite de  844 kb');
+      } else {
+        set_file_name(selected_file.name);
 
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        set_image_url(event.target?.result as string);
-      };
-      reader.readAsDataURL(selected_file);
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          set_image_url(event.target?.result as string);
+        };
+        reader.readAsDataURL(selected_file);
+        seterrorfilesize('');
+      }
     }
   };
+
   const reset_file_state = (): void => {
     set_file_name('');
   };
@@ -143,11 +165,13 @@ export const DatosAccesoScreen: React.FC = () => {
                     src={image_url != null ? image_url : 'https://d500.epimg.net/cincodias/imagenes/2016/07/04/lifestyle/1467646262_522853_1467646344_noticia_normal.jpg'}
                     alt="Imagen de perfil"
                   />
-                  <Button
+                  {/* <Button
                     variant="outlined"
                     component="label"
                     startIcon={<CloudUploadIcon />}
-                    style={{ marginTop: '1rem', justifyContent: 'center' }}
+                    style={{
+                      marginTop: '1rem', justifyContent: 'center', width: '100%', height: '13%',
+                    }}
                     size='small'
                   >
                     {file_name !== ''
@@ -158,13 +182,56 @@ export const DatosAccesoScreen: React.FC = () => {
                       id="foto-peril"
                       type="file"
                       autoFocus
-                      style={{ opacity: 0 }}
+                      style={{
+                        opacity: 0,
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        cursor: 'pointer',
+                      }}
+                      {...register('profile_img')}
+                      inputProps={{ accept: 'image/*',  }}
+                      error={Boolean(errors.profile_img)}
+                      onChange={handle_file_select}
+                    />
+                  </Button> */}
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    startIcon={<CloudUploadIcon />}
+                    style={{
+                      marginTop: '1rem', justifyContent: 'center', width: '100%', height: '13%',
+                    }}
+                    size='small'
+                  >
+                    {file_name !== ''
+                      ? file_name
+                      : 'Seleccione foto de perfil '}
+                    <Input
+                      hidden
+                      id="foto-peril"
+                      type="file"
+                      autoFocus
+                      style={{
+                        opacity: 0,
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        cursor: 'pointer',
+                      }}
                       {...register('profile_img')}
                       inputProps={{ accept: 'image/*' }}
                       error={Boolean(errors.profile_img)}
                       onChange={handle_file_select}
                     />
                   </Button>
+                  {errorfilesize !== '' && (
+                    <p style={{ color: 'red', marginTop: '0.5rem' }}>{errorfilesize}</p>
+                  )}
                 </div>
               </Grid>
               <Grid item xs={12} sm={12} md={6}>

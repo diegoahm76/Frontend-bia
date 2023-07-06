@@ -140,7 +140,7 @@ export const CargoScreen: React.FC = () => {
                 cancelButton: "square-btn",
             },
             width: 350,
-            text: "¿Estas seguro?",
+            text: "¿Estás seguro?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#0EC32C",

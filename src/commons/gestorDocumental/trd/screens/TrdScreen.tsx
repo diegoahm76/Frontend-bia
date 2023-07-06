@@ -1,15 +1,40 @@
-// Components Material UI
-import { Grid, Box, TextField, MenuItem, Stack, Button } from '@mui/material';
+/* eslint-disable @typescript-eslint/naming-convention */
+//! libraries or frameworks
+import { useContext, type FC } from 'react';
+import { Controller } from 'react-hook-form';
+//* Components Material UI
+import { Grid, Box, TextField, Stack, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import { Title } from '../../../../components/Title';
+import { LoadingButton } from '@mui/lab';
+// * react select
+import Select from 'react-select';
 
 import type {
-  GridColDef,
+  GridColDef
   // GridValueGetterParams
 } from '@mui/x-data-grid';
 import { DataGrid } from '@mui/x-data-grid';
-// Graficas
+import { ModalContextTRD } from '../context/ModalsContextTrd';
+import { ModalSearchTRD } from '../components/ModalBusqueda/ModalSearchTRD';
+import { useAppDispatch, useAppSelector } from '../../../../hooks';
+
+// Íconos
+import SyncIcon from '@mui/icons-material/Sync';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+
+//* personalized hook
+import { use_trd } from '../hooks/use_trd';
+
+//* thunks
+import {
+  create_trd_service,
+  update_trd_service
+} from '../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ModalCCDUsados } from '../components/ModalCCDSUsados/ModalCCDSUsados';
+import { control_error } from '../../../../helpers';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -17,49 +42,30 @@ const columns: GridColDef[] = [
     field: 'firstName',
     headerName: 'First name',
     width: 150,
-    editable: true,
+    editable: true
   },
   {
     field: 'lastName',
     headerName: 'Last name',
     width: 150,
-    editable: true,
+    editable: true
   },
   {
     field: 'age',
     headerName: 'Age',
     type: 'number',
     width: 110,
-    editable: true,
+    editable: true
   },
   {
     field: 'fullName',
     headerName: 'Full name',
     description: 'This column has a value getter and is not sortable.',
     sortable: false,
-    width: 160,
+    width: 160
     // valueGetter: (params: GridValueGetterParams) =>
     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  },
-];
-
-const tipos_unidades = [
-  {
-    value: '1',
-    label: 'Test',
-  },
-  {
-    value: 'EUR',
-    label: 'Test',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
+  }
 ];
 
 const rows = [
@@ -71,11 +77,51 @@ const rows = [
   { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
   { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
   { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
 ];
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const TrdScreen: React.FC = () => {
+export const TrdScreen: FC = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
+
+  //! use_trd hook
+  const {
+    // ? create_trd_modal - ccd, name and version
+    control_create_trd_modal,
+    // handle_submit_create_trd_modal,
+    data_create_trd_modal,
+
+    // ? list of finished ccd
+    list_finished_ccd,
+
+    // ? clean searched trd
+    // reset_create_trd_modal,
+
+    // ? reset all
+    reset_all_trd
+  } = use_trd();
+  // const dispatch = useDispatch();
+
+  // ? redux toolkit - values
+  const { trd_current } = useAppSelector((state: any) => state.trd_slice);
+
+  // ? modal context
+  const { openModalModalSearchTRD, openModalCCDUsados } =
+    useContext(ModalContextTRD);
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const onSubmit = () => {
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+    if (!data_create_trd_modal.nombre) {
+      control_error('datos requeridos');
+      return;
+    }
+
+    trd_current != null
+      ? dispatch(update_trd_service(data_create_trd_modal))
+      : dispatch(create_trd_service(data_create_trd_modal));
+  };
+
   return (
     <>
       <Grid
@@ -86,67 +132,206 @@ export const TrdScreen: React.FC = () => {
           borderRadius: '15px',
           p: '20px',
           mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
+          boxShadow: '0px 3px 6px #042F4A26'
         }}
       >
         <Grid item xs={12}>
-          <Title title="Tabla de retención documental" />
-          <Box
-            component="form"
-            sx={{ mt: '20px' }}
-            noValidate
-            autoComplete="off"
+          <Title title="TRD - ( Tabla de retención documental )" />
+          <form
+            onSubmit={(w) => {
+              w.preventDefault();
+              onSubmit();
+            }}
+            style={{
+              marginTop: '20px'
+            }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  name="tipoUnidad"
-                  select
-                  label="CCD"
-                  defaultValue="Seleccione"
-                  helperText="Seleccione CCD"
-                  size="small"
-                  fullWidth
-                >
-                  {tipos_unidades.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
+              <Grid item xs={12} sm={6}>
+                {/* <label className="text-terciary">
+                  Lista de ccds terminadoss
+                  <samp className="text-danger">*</samp>
+                </label> */}
+                {/* In this selection, I want to select the cdd id to make the post request to create a TRD */}
+                <Controller
+                  name="id_ccd"
+                  control={control_create_trd_modal}
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <div>
+                      <Select
+                        value={value}
+                        // name="id_ccd"
+                        onChange={(selectedOption) => {
+                          console.log('selectedOption', selectedOption);
+                          onChange(selectedOption);
+                        }}
+                        isDisabled={trd_current != null}
+                        options={
+                          trd_current != null
+                            ? list_finished_ccd
+                            : list_finished_ccd.filter(
+                                (ccd: any) => ccd.usado === false
+                              )
+                        }
+                        placeholder="Seleccionar"
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem'
+                          }}
+                        >
+                          {
+                            trd_current != null
+                              ? `CCD seleccionado`
+                              : `CDD's no usados en otro TRD`
+                          }
+                        </small>
+                      </label>
+                    </div>
+                  )}
+                />
+                {/* {errors.subserie_asignacion != null && (
+                  <div className="col-12">
+                    <small className="text-center text-danger">
+                      Este campo es obligatorio
+                    </small>
+                  </div>
+                )} */}
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  required
+              <Grid item xs={12} sm={3}>
+                <Controller
                   name="nombre"
-                  label="Nombre"
-                  helperText="Nombre del TRD"
-                  size="small"
-                  fullWidth
+                  control={control_create_trd_modal}
+                  defaultValue=""
+                  rules={{ required: true }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      // name="nombre"
+                      label="Nombre del TRD"
+                      helperText={
+                        trd_current != null
+                          ? 'Actualice el nombre'
+                          : 'Ingrese nombre'
+                      }
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                        console.log(e.target.value);
+                      }}
+                      // error={!!error}
+                      /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+                    />
+                  )}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
-                <TextField
-                  required
+              <Grid item xs={12} sm={3}>
+                <Controller
                   name="version"
-                  label="Versión"
-                  helperText="Ingrese versión"
-                  size="small"
-                  fullWidth
+                  control={control_create_trd_modal}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <TextField
+                      margin="dense"
+                      fullWidth
+                      // name="version"
+                      label="Versión del TRD"
+                      helperText={
+                        trd_current != null
+                          ? 'Actualice la versión'
+                          : 'Ingrese versión'
+                      }
+                      size="small"
+                      variant="outlined"
+                      value={value}
+                      InputLabelProps={{ shrink: true }}
+                      onChange={(e) => {
+                        onChange(e.target.value);
+                        console.log(e.target.value);
+                      }}
+                      // error={!!error}
+                      /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+                    />
+                  )}
                 />
               </Grid>
             </Grid>
-          </Box>
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ mb: '20px' }}
-          >
-            <Button color="primary" variant="outlined" startIcon={<SaveIcon />}>
-              EDITAR
-            </Button>
-          </Stack>
+
+            <Stack
+              direction="row"
+              justifyContent="flex-end"
+              spacing={2}
+              sx={{ mb: '20px', mt: '20px' }}
+            >
+              <Button
+                color="warning"
+                variant="contained"
+                startIcon={<VisibilityIcon />}
+                onClick={openModalCCDUsados}
+              >
+                {`VER CCD'S USADOS`}
+              </Button>
+              <Button
+                color="primary"
+                variant="outlined"
+                startIcon={<SearchIcon />}
+                onClick={openModalModalSearchTRD}
+              >
+                BUSCAR TRD
+              </Button>
+              <LoadingButton
+                // loading={loadingButton}
+                type="submit"
+                color="primary"
+                variant="contained"
+                startIcon={trd_current != null ? <SyncIcon /> : <SaveIcon />}
+              >
+                {trd_current != null ? 'ACTUALIZAR TRD' : 'CREAR TRD'}
+              </LoadingButton>
+
+              <Button
+                color="success"
+                variant="contained"
+                startIcon={<CleanIcon />}
+                onClick={() => {
+                  reset_all_trd();
+                  console.log('reset_create_trd_modal');
+
+                  // setTrdCurrent(null);
+                }}
+              >
+                LIMPIAR CAMPOS
+              </Button>
+            </Stack>
+          </form>
           <Grid item>
             <Box sx={{ width: '100%' }}>
               <DataGrid
@@ -166,31 +351,23 @@ export const TrdScreen: React.FC = () => {
             spacing={2}
             sx={{ m: '20px 0' }}
           >
-            {/* <Button
-              color="primary"
-              variant="outlined"
-              startIcon={<ArrowBackIcon />}
-              // onClick={handle_to_go_back}
-            >
-              VOLVER
-            </Button> */}
-            <Button
-              color="primary"
-              variant="contained"
-              startIcon={<SearchIcon />}
-            >
-              BUSCAR
-            </Button>
             <Button
               color="success"
               variant="contained"
               startIcon={<SaveIcon />}
             >
-              LIMPIAR
+              FINALIZAR
             </Button>
           </Stack>
         </Grid>
       </Grid>
+      {/* -- this modal allow us to do the TRD search  -- */}
+      <ModalSearchTRD />
+      {/* -- this modal allow us to do the TRD search -- */}
+
+      {/* -- this modal allow us to see the ccds used in other TRD -- */}
+      <ModalCCDUsados />
+      {/* -- this modal allow us to see the ccds used in other TRD -- */}
     </>
   );
 };
