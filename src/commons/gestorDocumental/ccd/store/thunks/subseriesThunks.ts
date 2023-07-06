@@ -34,10 +34,10 @@ export const get_subseries_service: any = (id_serie_doc?: string | number) => {
 
 // Crear, actualizar y/o eliminar subseries
 
-export const create_sub_series_service = (body: any, clean: () => void) => {
+export const create_sub_series_service = (body: any, clean: () => void): any => {
   return async (
     dispatch: Dispatch<any>,
-  ): Promise<AxiosResponse | AxiosError> => {
+  ): Promise<AxiosResponse | AxiosError | any> => {
     try {
       const { data } = await api.post(`gestor/ccd/subseries/create/`, body);
       dispatch(get_subseries_service(body.id_serie_doc));
@@ -53,14 +53,14 @@ export const create_sub_series_service = (body: any, clean: () => void) => {
 }
 
 //! update action for series
-export const update_sub_series_service = (
+export const update_sub_series_service: any = (
   updatedData: any,
   dataForm: any,
   clean: () => void
 ) => {
   return async (
     dispatch: Dispatch<any>,
-  ): Promise<AxiosResponse | AxiosError> => {
+  ): Promise<AxiosResponse | AxiosError | any> => {
     try {
       const { data } = await api.put(
         `gestor/ccd/subseries/update/${dataForm.id_subserie_doc}/`,
@@ -85,8 +85,7 @@ export const delete_sub_series_service: any = (
 ) => {
   return async (
     dispatch: Dispatch<any>,
-  ): Promise<any> => {
-    console.log(params_ccd_info)
+  ): Promise<AxiosResponse | AxiosError> => {
     try {
       const {data} = await api.delete(
         `gestor/ccd/subseries/delete/${params_ccd_info.row.id_subserie_doc}/`

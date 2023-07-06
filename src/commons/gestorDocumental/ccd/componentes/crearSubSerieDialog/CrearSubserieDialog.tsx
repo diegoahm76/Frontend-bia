@@ -36,6 +36,7 @@ import { initial_state } from './utils/constant';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import { getCatalogoSeriesYSubseries } from '../CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 const CrearSubSerieCcdDialog = ({
   is_modal_active,
   set_is_modal_active,
@@ -64,40 +65,6 @@ const CrearSubSerieCcdDialog = ({
   });
   const data = watch();
   console.log(data);
-
-  /* const columns = [
-    { field: 'id', headerName: 'ID', width: 100 },
-    { 
-      field: 'name', 
-      headerName: 'Nombre', 
-      width: 200, 
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
-    { field: 'age', headerName: 'Edad', width: 150 },
-  ]; */
-
-  //! useEffect to change the title of the button and set the values of the form
-  /*  useEffect(() => {
-    if (subseries_ccd_current !== null) {
-      reset({
-        codigo: subseries_ccd_current.codigo,
-        nombre: subseries_ccd_current.nombre,
-        id_subserie_doc: subseries_ccd_current.id_subserie_doc,
-        id_serie_doc: null
-      });
-      set_title_button('Actualizar');
-    } else {
-      reset(initial_state);
-      set_title_button('Guardar');
-    }
-    return () => {
-      dispatch(get_serie_ccd_current(null));
-    };
-  }, [subseries_ccd_current]); */
 
   useEffect(() => {
     const { codigo, nombre, id_subserie_doc, id_serie_doc } =
@@ -152,20 +119,35 @@ const CrearSubSerieCcdDialog = ({
             id_serie_doc: serie_ccd_current
           }
         : updatedSeries;
-    const action =
+    /* const action =
       title_button === 'Guardar'
         ? create_sub_series_service(newSeries, reset_form)
         : update_sub_series_service(updatedSeries, data, reset_form);
-    void dispatch(action);
+        void dispatch(action); */
+
+    if (title_button === 'Guardar') {
+      dispatch(create_sub_series_service(newSeries, reset_form)).then(() => {
+        dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
+      });
+    }
+    if (title_button === 'Actualizar') {
+      dispatch(update_sub_series_service(updatedSeries, data, reset_form)).then(
+        () => {
+          dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
+        }
+      );
+    }
   };
 
   // Función para eliminar subseries
-  const delete_subseries = (params: any): void => {
+  const delete_subseries = (params: any): any => {
     /* const new_subseries = subseries_ccd.filter(
       (subseries: any) => subseries.id_subserie_doc !== id_subserie_doc
     ); */
     console.log(params);
-    void dispatch(delete_sub_series_service(params, () => ({})));
+    dispatch(delete_sub_series_service(params, () => ({}))).then(() => {
+      dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
+    });
   };
 
   const handleOnClick_prepareEdit = (params: any) => {

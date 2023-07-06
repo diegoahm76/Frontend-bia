@@ -840,6 +840,7 @@ export const CcdScreen: React.FC = () => {
                   <DataGrid
                     density="compact"
                     autoHeight
+                    // ! se deben realizar cambios de filtro para la seleccion de los datos
                     rows={assignments_ccd}
                     sx={{
                       zIndex: 2

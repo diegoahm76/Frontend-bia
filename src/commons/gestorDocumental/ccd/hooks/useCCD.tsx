@@ -178,10 +178,12 @@ const use_ccd = () => {
     console.log(ccd_current, 'ccd_current');
     if (ccd_current !== null) {
       const result_name = organigram.filter((item) => {
-          return item.id_organigrama === ccd_current.id_organigrama;
+        return item.id_organigrama === ccd_current.id_organigrama;
       });
 
-      const result_unity = unity_organigram.filter((item) => item.id_organigrama === ccd_current.id_organigrama);
+      const result_unity = unity_organigram.filter(
+        (item) => item.id_organigrama === ccd_current.id_organigrama
+      );
 
       console.log('result_name', result_name);
       console.log('result_unity', result_unity);
@@ -194,7 +196,8 @@ const use_ccd = () => {
           value: ccd_current.id_organigrama
         },
         unidades_organigrama: {
-          label: ' -- ' /* result_unity && result_unity.length > 0 ? result_unity[0].nombre : '' */,
+          label:
+            ' -- ' /* result_unity && result_unity.length > 0 ? result_unity[0].nombre : '' */
           // value: result_unity && result_unity.length > 0 ? result_unity[0].id_unidad_organizacional : 0
         },
         version: ccd_current.version,
@@ -314,7 +317,7 @@ const use_ccd = () => {
         value: item.id_serie_doc
       }))
     );
-  }, [seriesAndSubseries, list_sries_asignacion, list_sries, list_subsries]);
+  }, [seriesAndSubseries]);
 
   // submit Crear CCD
   const on_submit_create_ccd = (e: any): void => {
@@ -389,7 +392,10 @@ const use_ccd = () => {
       String(updatedCCD.valor_aumento_subserie)
     );
     // formData.append('ruta_soporte', updatedCCD.ruta_soporte);
-    if (!updatedCCD.ruta_soporte || typeof updatedCCD.ruta_soporte !== 'string') {
+    if (
+      !updatedCCD.ruta_soporte ||
+      typeof updatedCCD.ruta_soporte !== 'string'
+    ) {
       formData.append('ruta_soporte', updatedCCD.ruta_soporte);
     }
 
@@ -413,7 +419,6 @@ const use_ccd = () => {
       )
     );
   };
-
 
   // ? Funciones para limpiar el formulario de Crear CCD
   const clean_ccd = (): void => {
@@ -485,21 +490,14 @@ const use_ccd = () => {
 
     console.log(itemSend, 'itemSend');
 
-    const itemSendDef = [
-      ...assignments_ccd,
-      ...itemSend
-    ]
+    const itemSendDef = [...assignments_ccd, ...itemSend];
 
     console.log(itemSendDef, 'itemSendDef');
 
     void dispatch(
       create_or_delete_assignments_service(itemSendDef, ccd_current)
     ).then(() => {
-      void dispatch(
-        get_assignments_service(
-          ccd_current,
-        )
-      );
+      void dispatch(get_assignments_service(ccd_current));
     });
   };
 
@@ -517,11 +515,7 @@ const use_ccd = () => {
     void dispatch(
       create_or_delete_assignments_service(new_items, ccd_current)
     ).then(() => {
-      void dispatch(
-        get_assignments_service(
-          ccd_current,
-        )
-      );
+      void dispatch(get_assignments_service(ccd_current));
     });
   };
 
