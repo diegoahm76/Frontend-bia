@@ -19,7 +19,7 @@ import {
   Divider,
   IconButton,
   Stack,
-  TextField,
+  TextField
   // Typography
 } from '@mui/material';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
@@ -32,17 +32,18 @@ import { use_trd } from '../../hooks/use_trd';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { ModalContextTRD } from '../../context/ModalsContextTrd';
-import { get_trd_current, get_trds } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
-import { get_searched_trd } from '../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import {
+  get_trd_current,
+  get_trds
+} from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { getServiceSeriesSubseriesXUnidadOrganizacional, get_searched_trd } from '../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 //! toolkit-redux values
 
 export const ModalSearchTRD: FC = (): JSX.Element => {
   //! dispatch hook from react-redux
   const dispatch: any = useAppDispatch();
 
-  const { trds } = useAppSelector(
-    (state: any) => state.trd_slice
-  );
+  const { trds } = useAppSelector((state: any) => state.trd_slice);
 
   // ? use_trd hook
   const {
@@ -51,11 +52,11 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
     control_searched_trd_modal,
     form_data_searched_trd_modal,
     // watch_searched_trd_modal,
-   // reset_searched_trd_modal,
+    // reset_searched_trd_modal,
     // errors_searched_trd_modal
 
     // ? reset functions
-    reset_busqueda_trd,
+    reset_busqueda_trd
   } = use_trd();
 
   // ? context destructuring useModalContextTRD
@@ -120,9 +121,16 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
         <>
           <IconButton
             onClick={() => {
-              dispatch(get_trd_current(params.row))
+              dispatch(get_trd_current(params.row));
               closeModalModalSearchTRD();
               dispatch(get_trds([]));
+              const ccd_current = {
+                id_ccd: params.row.id_ccd,
+                id_organigrama: params.row.id_organigrama
+              };
+              dispatch(
+                getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
+              );
               // reset_busqueda_trd();
               console.log(params.row);
             }}
@@ -269,17 +277,17 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                 </Button>
               </Grid>
             </Grid>
-                <DataGrid
-                  sx={{ mt: '15px' }}
-                  density="compact"
-                  autoHeight
-                  rows={trds}
-                  columns={columns_trd_busqueda}
-                  pageSize={5}
-                  rowsPerPageOptions={[7]}
-                  experimentalFeatures={{ newEditingApi: true }}
-                  getRowId={(row) => row.id_trd}
-                />
+            <DataGrid
+              sx={{ mt: '15px' }}
+              density="compact"
+              autoHeight
+              rows={trds}
+              columns={columns_trd_busqueda}
+              pageSize={5}
+              rowsPerPageOptions={[7]}
+              experimentalFeatures={{ newEditingApi: true }}
+              getRowId={(row) => row.id_trd}
+            />
           </DialogContent>
           <Divider />
           <DialogActions>
