@@ -35,19 +35,24 @@ const ListadoBienesSolicitud = () => {
         let despachada: number = 0;
 
         bienes_solicitud.forEach((option: IObjBienesSolicitud) => {
+          despachada = 0;
           bienes_despacho.forEach((option_despacho) => {
             if (option.id_bien === option_despacho.id_bien_solicitado) {
               despachada =
                 // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                 despachada + (option_despacho.cantidad_despachada ?? 0);
+              aux_items.push({
+                ...option,
+                cantidad_despachada: despachada,
+                cantidad_faltante: (option.cantidad ?? 0) - despachada,
+              });
+            } else {
+              aux_items.push({ ...option });
             }
-          });
-          aux_items.push({
-            ...option,
-            cantidad_despachada: despachada,
-            cantidad_faltante: (option.cantidad ?? 0) - despachada,
+            console.log(option, despachada, aux_items);
           });
         });
+        console.log(aux_items);
         dispatch(set_bienes_solicitud_aux(aux_items));
       } else {
         dispatch(set_bienes_solicitud_aux(bienes_solicitud));
@@ -67,6 +72,7 @@ const ListadoBienesSolicitud = () => {
         let despachada: number = 0;
 
         bienes_solicitud.forEach((option: IObjBienesSolicitud) => {
+          despachada = 0;
           bienes_despacho.forEach((option_despacho) => {
             if (option.id_bien === option_despacho.id_bien_solicitado) {
               despachada =

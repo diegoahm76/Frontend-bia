@@ -37,6 +37,7 @@ const ListadoBienesSolicitud = () => {
         let despachada: number = 0;
 
         bienes_solicitud.forEach((option) => {
+          despachada = 0;
           if (option.cod_tipo_elemento_vivero === 'IN') {
             bien = bienes_despacho.find((p) => p.id_bien === option.id_bien);
             aux_items.push({

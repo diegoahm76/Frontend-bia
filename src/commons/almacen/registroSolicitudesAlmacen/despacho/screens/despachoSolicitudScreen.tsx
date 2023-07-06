@@ -155,14 +155,21 @@ const DespachoBienesConsumoScreen = () => {
         ); // get persona despacho
     }
     if (
-      current_despacho.id_despacho_consumo !== null &&
-      current_despacho.id_despacho_consumo !== undefined
+      current_despacho.numero_despacho_consumo !== null &&
+      current_despacho.numero_despacho_consumo !== undefined
     ) {
-      set_action('editar');
-      void dispatch(get_bienes_despacho(current_despacho.id_despacho_consumo)); // get bienes despacho
-      void dispatch(
-        get_solicitud_by_id(current_despacho.id_solicitud_consumo ?? 0)
-      );
+      if (
+        current_despacho.id_despacho_consumo !== null &&
+        current_despacho.id_despacho_consumo !== undefined
+      ) {
+        set_action('editar');
+        void dispatch(
+          get_bienes_despacho(current_despacho.numero_despacho_consumo)
+        ); // get bienes despacho
+        void dispatch(
+          get_solicitud_by_id(current_despacho.id_solicitud_consumo ?? 0)
+        );
+      }
     }
   }, [current_despacho]);
 
@@ -276,12 +283,12 @@ const DespachoBienesConsumoScreen = () => {
     };
     console.log(data_closed);
     if (
-      current_solicitud.id_solicitud_consumo !== null &&
-      current_solicitud.id_solicitud_consumo !== undefined
+      current_solicitud.id_solicitud_consumibles !== null &&
+      current_solicitud.id_solicitud_consumibles !== undefined
     ) {
       void dispatch(
         closed_solicitud_service(
-          current_solicitud.id_solicitud_consumo,
+          current_solicitud.id_solicitud_consumibles,
           data_closed
         )
       );
