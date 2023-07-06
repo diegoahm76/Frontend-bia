@@ -5,6 +5,7 @@ import { initial_state_searched_trd } from './utils/constants';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { get_finished_ccd_service } from '../toolkit/CCDResources/thunks/getFinishedCcdThunks';
 import {
+  get_catalogo_series_subseries_unidad_organizacional,
   get_trd_current,
   get_trds
 } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
@@ -13,7 +14,7 @@ export const use_trd = (): any => {
   const dispatch: any = useAppDispatch();
 
   // eslint-disable-next-line no-empty-pattern
-  const { trd_current /* trds */ } = useAppSelector(
+  const { trd_current,  /* trds */ } = useAppSelector(
     (state: any) => state.trd_slice
   );
 
@@ -52,7 +53,7 @@ export const use_trd = (): any => {
     }
   });
   const data_create_trd_modal = watch_create_trd_modal();
-
+  //*
   //! useStates that I will use in different components
 
   // ? list of finished ccd
@@ -62,19 +63,19 @@ export const use_trd = (): any => {
       value: 0
     }
   ]);
+  //*
   //! useEffects that I will use in different components
 
   // ? get list of finished ccd
   useEffect(() => {
     void dispatch(get_finished_ccd_service()).then((res: any[]) => {
-      console.log(res);
       set_list_finished_ccd(
         res
           .filter((cdd) => cdd.usado === false)
           .map((item: any) => {
             return {
               item,
-              label: `V.${item.version} - ${item.nombre} `,
+              label: `V. ${item.version} - ${item.nombre} `,
               value: item.id_ccd
             };
           })
@@ -98,7 +99,8 @@ export const use_trd = (): any => {
         },
         nombre: trd_current.nombre,
         version: trd_current.version,
-        id_trd: trd_current.id_trd
+        id_trd: trd_current.id_trd,
+        // ser_sub_por_unidad_organizacional: trd_current.catalado_series_subseries_unidad_organizacional,
       };
       console.log(obj, 'obj');
       reset_create_trd_modal(obj);
@@ -109,6 +111,7 @@ export const use_trd = (): any => {
     //* reset trd list
     dispatch(get_trds([]));
     dispatch(get_trd_current(null));
+    dispatch(get_catalogo_series_subseries_unidad_organizacional([]));
     //* reset form
     reset_searched_trd_modal({
       nombre: '',

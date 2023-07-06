@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 //! libraries or frameworks
-import { useContext, type FC } from 'react';
+import { useContext, useState, useEffect, type FC } from 'react';
 import { Controller } from 'react-hook-form';
 //* Components Material UI
-import { Grid, Box, TextField, Stack, Button } from '@mui/material';
+import { Grid, TextField, Stack, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import { Title } from '../../../../components/Title';
@@ -11,11 +11,6 @@ import { LoadingButton } from '@mui/lab';
 // * react select
 import Select from 'react-select';
 
-import type {
-  GridColDef
-  // GridValueGetterParams
-} from '@mui/x-data-grid';
-import { DataGrid } from '@mui/x-data-grid';
 import { ModalContextTRD } from '../context/ModalsContextTrd';
 import { ModalSearchTRD } from '../components/ModalBusqueda/ModalSearchTRD';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
@@ -30,59 +25,19 @@ import { use_trd } from '../hooks/use_trd';
 //* thunks
 import {
   create_trd_service,
+  getServiceSeriesSubseriesXUnidadOrganizacional,
   update_trd_service
 } from '../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalCCDUsados } from '../components/ModalCCDSUsados/ModalCCDSUsados';
 import { control_error } from '../../../../helpers';
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 90 },
-  {
-    field: 'firstName',
-    headerName: 'First name',
-    width: 150,
-    editable: true
-  },
-  {
-    field: 'lastName',
-    headerName: 'Last name',
-    width: 150,
-    editable: true
-  },
-  {
-    field: 'age',
-    headerName: 'Age',
-    type: 'number',
-    width: 110,
-    editable: true
-  },
-  {
-    field: 'fullName',
-    headerName: 'Full name',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 160
-    // valueGetter: (params: GridValueGetterParams) =>
-    //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-  }
-];
-
-const rows = [
-  { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-  { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-  { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-  { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-  { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-  { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-  { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-  { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-  { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 }
-];
+import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/CCDSeleccionadoCatalogo';
 
 export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
+  // ? redux toolkit - values
+  const { trd_current } = useAppSelector((state: any) => state.trd_slice);
 
   //! use_trd hook
   const {
@@ -102,8 +57,24 @@ export const TrdScreen: FC = (): JSX.Element => {
   } = use_trd();
   // const dispatch = useDispatch();
 
-  // ? redux toolkit - values
-  const { trd_current } = useAppSelector((state: any) => state.trd_slice);
+  //* neccesary hook useState for the code
+
+  const [flag_finish_or_or_edit_trd, set_flag_finish_or_edit_trd] =
+    useState<boolean>(false);
+
+  //* neccesary hook useEffect for the code in this module or component
+
+  useEffect(() => {
+    set_flag_finish_or_edit_trd(
+      trd_current?.fecha_terminado !== null &&
+        trd_current?.fecha_terminado !== '' &&
+        trd_current?.fecha_terminado !== undefined
+    );
+    console.log(
+      '🚀 CcdScreen.tsx ~ 45 ~ useEffect ~ trd_current?.fecha_terminado',
+      trd_current?.fecha_terminado
+    );
+  }, [trd_current?.fecha_terminado]);
 
   // ? modal context
   const { openModalModalSearchTRD, openModalCCDUsados } =
@@ -116,7 +87,6 @@ export const TrdScreen: FC = (): JSX.Element => {
       control_error('datos requeridos');
       return;
     }
-
     trd_current != null
       ? dispatch(update_trd_service(data_create_trd_modal))
       : dispatch(create_trd_service(data_create_trd_modal));
@@ -147,7 +117,11 @@ export const TrdScreen: FC = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12} sm={6}
+                sx={{
+                  zIndex: 2
+                }}
+              >
                 {/* <label className="text-terciary">
                   Lista de ccds terminadoss
                   <samp className="text-danger">*</samp>
@@ -166,18 +140,15 @@ export const TrdScreen: FC = (): JSX.Element => {
                         value={value}
                         // name="id_ccd"
                         onChange={(selectedOption) => {
-                          console.log('selectedOption', selectedOption);
+                          dispatch(
+                            getServiceSeriesSubseriesXUnidadOrganizacional(
+                              selectedOption.item
+                            )
+                          );
                           onChange(selectedOption);
                         }}
                         isDisabled={trd_current != null}
-                        options={
-                          list_finished_ccd
-                          /* trd_current != null
-                            ? list_finished_ccd
-                            : list_finished_ccd.filter(
-                                (ccd: any) => ccd.usado === false
-                              ) */
-                        }
+                        options={list_finished_ccd}
                         placeholder="Seleccionar"
                       />
                       <label>
@@ -190,23 +161,14 @@ export const TrdScreen: FC = (): JSX.Element => {
                             marginLeft: '0.25rem'
                           }}
                         >
-                          {
-                            trd_current != null
-                              ? `CCD seleccionado`
-                              : `CDD's no usados en otro TRD`
-                          }
+                          {trd_current != null
+                            ? `CCD seleccionado`
+                            : `CDD's no usados en otro TRD`}
                         </small>
                       </label>
                     </div>
                   )}
                 />
-                {/* {errors.subserie_asignacion != null && (
-                  <div className="col-12">
-                    <small className="text-center text-danger">
-                      Este campo es obligatorio
-                    </small>
-                  </div>
-                )} */}
               </Grid>
               <Grid item xs={12} sm={3}>
                 <Controller
@@ -274,12 +236,6 @@ export const TrdScreen: FC = (): JSX.Element => {
                         onChange(e.target.value);
                         console.log(e.target.value);
                       }}
-                      // error={!!error}
-                      /* helperText={
-                        error
-                          ? 'Es obligatorio subir un archivo'
-                          : 'Seleccione un archivo'
-                      } */
                     />
                   )}
                 />
@@ -325,7 +281,6 @@ export const TrdScreen: FC = (): JSX.Element => {
                 onClick={() => {
                   reset_all_trd();
                   console.log('reset_create_trd_modal');
-
                   // setTrdCurrent(null);
                 }}
               >
@@ -333,19 +288,10 @@ export const TrdScreen: FC = (): JSX.Element => {
               </Button>
             </Stack>
           </form>
-          <Grid item>
-            <Box sx={{ width: '100%' }}>
-              <DataGrid
-                density="compact"
-                autoHeight
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5]}
-                experimentalFeatures={{ newEditingApi: true }}
-              />
-            </Box>
-          </Grid>
+
+          {/* data table with the "catalogo de series y subseries por unidad organizacional" */}
+          <CCDSeleccionadoCatalogo />
+          {/* finish data table with the "catalogo de series y subseries por unidad organizacional" */}
           <Stack
             direction="row"
             justifyContent="flex-end"
@@ -356,8 +302,20 @@ export const TrdScreen: FC = (): JSX.Element => {
               color="success"
               variant="contained"
               startIcon={<SaveIcon />}
+              onClick={() => {
+                if (flag_finish_or_or_edit_trd) {
+                  set_flag_finish_or_edit_trd(false);
+                  console.log('TRD reanudado');
+                } else {
+                  set_flag_finish_or_edit_trd(true);
+                  console.log('TRD finalizado');
+                }
+              }}
             >
-              FINALIZAR
+              {
+                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+                flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
+              }
             </Button>
           </Stack>
         </Grid>

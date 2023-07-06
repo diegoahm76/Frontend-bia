@@ -4,7 +4,11 @@ import { type Dispatch } from 'react';
 import { api } from '../../../../../../api/axios';
 import { control_error, control_success } from '../../../../../../helpers';
 import { type AxiosResponse, type AxiosError } from 'axios';
-import { get_trd_current, get_trds } from '../slice/TRDResourcesSlice';
+import {
+  get_trd_current,
+  get_trds,
+  get_catalogo_series_subseries_unidad_organizacional
+} from '../slice/TRDResourcesSlice';
 
 // ? Obtener TRD's
 export const get_searched_trd = (
@@ -91,6 +95,52 @@ export const update_trd_service = (bodyPost: any): any => {
     } catch (error: any) {
       console.log(error);
       control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? Obtener catalogo de series y subseries por unidad organizacional
+
+export const getServiceSeriesSubseriesXUnidadOrganizacional = (
+  ccd_current: any
+): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      const promise1 = api.get(
+        `transversal/organigrama/unidades/get-by-organigrama/${ccd_current.id_organigrama}/`
+      );
+
+      const promise2 = api.get(
+        `gestor/ccd/catalogo/unidad/get-by-id-ccd/${ccd_current.id_ccd}/`
+      );
+
+      const [response1, response2] = await Promise.all([promise1, promise2]);
+
+      const dataUnidadOrganigrama = response1.data;
+      const data = response2.data;
+
+      const new_data = data.data.map((item: any, index: number) => {
+        const unidad = dataUnidadOrganigrama.data.find(
+          (unidad: any) =>
+            unidad.id_unidad_organizacional === item.id_unidad_organizacional
+        );
+
+        return {
+          ...item,
+          id: index + 1,
+          nombreUnidad: unidad?.nombre
+        };
+      });
+      console.log(
+        '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
+        new_data
+      );
+      dispatch(get_catalogo_series_subseries_unidad_organizacional(new_data));
+      return data;
+    } catch (error: any) {
       return error as AxiosError;
     }
   };
