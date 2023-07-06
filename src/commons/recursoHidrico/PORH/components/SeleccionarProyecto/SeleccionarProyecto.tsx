@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import {
@@ -144,7 +143,6 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
       },
     },
   ];
-
   const columns_register: GridColDef[] = [
     {
       field: 'nombre',
@@ -161,7 +159,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
           <>
             <IconButton
               onClick={() => {
-                setEditRowActividades(params.row);
+                set_edit_row_actividades(params.row);
               }}
             >
               <Avatar
@@ -211,7 +209,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
   }, [data]);
 
   const descripcion = watch('descripcion');
-  const [edit_row_actividades, setEditRowActividades] = useState<any>(null);
+  const [edit_row_actividades, set_edit_row_actividades] = useState<any>(null);
 
   useEffect(() => {
     if (edit_row_actividades) {
@@ -221,10 +219,12 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
 
   useEffect(() => {
     if (data) {
-      set_start_date(dayjs(data.vigencia_inicial));
-      set_value('vigencia_final', data.vigencia_final);
-      set_value('vigencia_inicial', data.vigencia_inicial);
-      set_end_date(dayjs(data.vigencia_final));
+      set_start_date(dayjs(data?.vigencia_inicial));
+      set_value('nombre', data?.nombre);
+      set_value('inversion', data?.inversion);
+      set_value('vigencia_final', data?.vigencia_final);
+      set_value('vigencia_inicial', data?.vigencia_inicial);
+      set_end_date(dayjs(data?.vigencia_final));
     }
   }, [data]);
 
@@ -278,7 +278,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
     });
   };
   const handle_aceptar_actividad = (): void => {
-    setEditRowActividades(null);
+    set_edit_row_actividades(null);
     const descripcion = watch('descripcion');
     const new_actividad = {
       id_act: uuidv4(),
@@ -306,10 +306,10 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
     limpiar_act();
   };
   const handle_eliminar = (row: any): void => {
-    const updatedRows = rows_actividades_register.filter(
+    const updated_rows = rows_actividades_register.filter(
       (r) => r.id_act !== row.id_act
     );
-    set_rows_actividades_register(updatedRows);
+    set_rows_actividades_register(updated_rows);
   };
 
   // const limpiar_todo = (): void => {
@@ -480,6 +480,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
               required={!(rows_actividades_register.length > 0)}
               autoFocus
               multiline
+              rows={3}
               {...register('descripcion', {
                 required: !(rows_actividades_register.length > 0),
               })}
