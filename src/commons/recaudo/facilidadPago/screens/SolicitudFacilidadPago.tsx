@@ -16,7 +16,6 @@ import { type event, type check, type Deudor, type Bien } from '../interfaces/in
 import { post_registro_fac_pago, post_registro_bienes } from '../requests/requests';
 import { useSelector } from 'react-redux';
 
-
 interface RootState {
   deudores: {
     deudores: Deudor;
@@ -683,7 +682,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       }
                     }}
                   >
-                    <MenuItem value='1'>Mensual</MenuItem>
+                    <MenuItem value="1">Mensual</MenuItem>
                     <MenuItem value="3">Trimestral</MenuItem>
                     <MenuItem value="6">Semestral</MenuItem>
                     <MenuItem value="12">Anual</MenuItem>

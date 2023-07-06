@@ -84,7 +84,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'id_expediente',
+      field: 'nro_expediente',
       headerName: 'Expediente',
       width: 150,
       renderCell: (params) => (
@@ -94,7 +94,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
       ),
     },
     {
-      field: 'numero_resolucion',
+      field: 'nro_resolucion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (
@@ -199,16 +199,17 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id_expediente}
+                getRowId={(row) => row.nro_expediente}
               />
             </Box>
           </Grid>
           <Stack
             direction="row"
-            display='flex'
-            justifyContent='flex-end'
+            justifyContent="right"
+            spacing={2}
+            sx={{ mt: '30px' }}
           >
-            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
+            <Grid item xs={12} sm={2}>
               <TextField
                 label="Total Capital"
                 size="small"
@@ -216,7 +217,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 value={capital}
               />
             </Grid>
-            <Grid item xs={12} sm={2} mt='30px' mr='10px'>
+            <Grid item xs={12} sm={2}>
               <TextField
                 label="Total Intereses"
                 size="small"
@@ -224,7 +225,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 value={intereses}
               />
             </Grid>
-            <Grid item xs={12} sm={2} mt='30px'>
+            <Grid item xs={12} sm={2}>
               <TextField
                 label={<strong>Gran Total a Deber</strong>}
                 size="small"

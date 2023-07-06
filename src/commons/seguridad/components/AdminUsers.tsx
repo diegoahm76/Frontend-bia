@@ -57,7 +57,7 @@ export const AdminUsers: React.FC = () => {
   useEffect(() => {
     clean_user_info();
   }, []);
-  
+
   return (
     <>
       {data_disponible && (
@@ -273,7 +273,14 @@ export const AdminUsers: React.FC = () => {
                       name="tipo_usuario"
                       value={tipo_usuario}
                       options={tipo_usuario_opt}
-                      disabled={tipo_persona === 'J' && true}
+                      disabled={
+                        tipo_persona === 'J'
+                          ? true
+                          : tipo_persona === 'N' &&
+                            tipo_usuario === 'I' &&
+                            action_admin_users === 'EDIT' &&
+                            true
+                      }
                       errors={errors_admin_users}
                       register={register_admin_user}
                     />
@@ -407,9 +414,10 @@ export const AdminUsers: React.FC = () => {
                         !check_user_is_active &&
                         errors_admin_users.activo_justificacion_cambio?.message
                       }
-                      {...register_admin_user('activo_justificacion_cambio', 
-                      // { required: 'Este campo es obligatorio',}
-                        )}
+                      {...register_admin_user(
+                        'activo_justificacion_cambio'
+                        // { required: 'Este campo es obligatorio',}
+                      )}
                       onChange={handle_change}
                     />
                   </Grid>
@@ -459,7 +467,7 @@ export const AdminUsers: React.FC = () => {
                           ?.message
                       }
                       {...register_admin_user(
-                        'bloqueado_justificacion_cambio',
+                        'bloqueado_justificacion_cambio'
                         // { required: 'Este campo es obligatorio' }
                       )}
                       onChange={handle_change}

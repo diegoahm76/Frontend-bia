@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import {
@@ -43,6 +44,8 @@ export const SeleccionarPrograma: React.FC = () => {
     fetch_data_proyectos,
     setValue: set_value,
     data_programa,
+    set_fecha_inicial,
+    set_fecha_fin,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -186,6 +189,8 @@ export const SeleccionarPrograma: React.FC = () => {
       set_value('fecha_fin', data_programa.fecha_fin);
       set_value('fecha_inicio', data_programa.fecha_inicio);
       set_end_date(dayjs(data_programa.fecha_fin));
+      set_fecha_inicial(dayjs(data_programa.fecha_inicio));
+      set_fecha_fin(dayjs(data_programa.fecha_fin));
     }
   }, [data_programa !== undefined]);
 
@@ -212,7 +217,7 @@ export const SeleccionarPrograma: React.FC = () => {
           control_success('El proyecto se eliminó correctamente');
         } catch (error: any) {
           control_error(
-            Boolean(error.response.data.detail) ||
+            error.response.data.detail ||
               'hubo un error al eliminar, intenta de nuevo'
           );
         }
@@ -335,10 +340,7 @@ export const SeleccionarPrograma: React.FC = () => {
       <Grid container spacing={2} mt={0.1}>
         {is_agregar_proyecto && (
           <>
-            <AgregarProyectos
-              fecha_inicial_programa={start_date as any}
-              fecha_fin_programa={end_date as any}
-            />
+            <AgregarProyectos />
           </>
         )}
         {is_editar_proyecto && (

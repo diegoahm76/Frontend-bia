@@ -6,6 +6,8 @@ import { consultar_parametros_referencia } from '../../requets/Request';
 import type { Parametros } from '../interfaces/interfaces';
 import { EditarParametosReferenciaDialog } from './EditarParametosReferenciaDialog';
 import { control_error } from '../../../../helpers/controlError';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { Title } from '../../../../components';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ParametrosReferencia: React.FC = () => {
@@ -13,6 +15,9 @@ export const ParametrosReferencia: React.FC = () => {
   const [editar_parametros_is_active, set_editar_parametros_is_active] =
     useState<boolean>(false);
   const [parametro_editado, set_parametro_editado] = useState(null);
+
+  const handle_clickxls = (): void => { download_xls({ nurseries: parametro_referencia, columns }); };
+
 
   const columns: GridColDef[] = [
     {
@@ -157,28 +162,57 @@ export const ParametrosReferencia: React.FC = () => {
 
   return (
     <>
-      <Grid container>
-        <Grid item xs={12} container justifyContent="center">
-          {parametro_referencia.length > 0 ? (
-            <DataGrid
-              autoHeight
-              rows={parametro_referencia}
-              columns={columns}
-              getRowId={(row) => row.id_parametro_referencia}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
-            />
-          ) : (
-            <CircularProgress color="secondary" />
-          )}
+      <Grid
+        container
+        spacing={2}
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px', mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+          marginTop: '20px',
+          marginLeft: '-5px',
+        }}
+      >
+        <Title title="Parametros de referencia " />
+        <Grid item container sx={{ justifyContent: "flex-end" }}  >
+          <IconButton
+            style={{
+              color: 'white',
+              backgroundColor: '#335B1E',
+              margin: 5,
+              width: '30px',
+              height: '30px',
+            }}
+            onClick={handle_clickxls}
+          >
+            <i className="pi pi-file-excel"></i>
+          </IconButton>
         </Grid>
-        <EditarParametosReferenciaDialog
-          is_modal_active={editar_parametros_is_active}
-          set_is_modal_active={set_editar_parametros_is_active}
-          parametro_editado={parametro_editado}
-          set_parametro_editado={set_parametro_editado}
-          parametros={parametros}
-        />
+        <Grid container sx={{ marginTop: '10px' }}>
+          <Grid item xs={12} container justifyContent="center">
+            {parametro_referencia.length > 0 ? (
+              <DataGrid
+                autoHeight
+                rows={parametro_referencia}
+                columns={columns}
+                getRowId={(row) => row.id_parametro_referencia}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+              />
+            ) : (
+              <CircularProgress color="secondary" />
+            )}
+          </Grid>
+          <EditarParametosReferenciaDialog
+            is_modal_active={editar_parametros_is_active}
+            set_is_modal_active={set_editar_parametros_is_active}
+            parametro_editado={parametro_editado}
+            set_parametro_editado={set_parametro_editado}
+            parametros={parametros}
+          />
+        </Grid>
       </Grid>
     </>
   );

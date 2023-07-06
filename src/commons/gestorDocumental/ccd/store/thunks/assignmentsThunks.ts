@@ -74,50 +74,6 @@ export const get_assignments_service: any = (
   };
 };
 
-// Asignar series y subseries a unidades organizacionales
-//! this service allow to create a new relation or delete a relation
-/* export const create_or_delete_assignments_service: any = (
-  new_items: any,
-  ccd_current: any
-) => {
-  return async (
-    dispatch: Dispatch<any>
-    // getState: any
-  ): Promise<AxiosResponse | AxiosError> => {
-    try {
-      
-      const id_ccd: number = ccd_current.id_ccd;
-      const new_item = new_items[0];
-
-
-       console.log(new_item);
-      const { data } = await api.put(
-        `gestor/ccd/catalogo/unidad/update/${id_ccd}/`,
-        new_item
-      ); 
-
-      const requests = new_items.map(async (item: any) => {
-        const { data } = await api.put(
-          `gestor/ccd/catalogo/unidad/update/${id_ccd}/`,
-          item
-        );
-        return data;
-      });
-      const responses = await Promise.all(requests);
-
-      dispatch(get_assignments_service(ccd_current));
-      control_success(responses.detail);
-      return responses;
-    } catch (error: any) {
-      console.log(error)
-      control_error(error.response.data.detail);
-      dispatch(get_assignments_service(ccd_current));
-      return error as AxiosError;
-    }
-  };
-};
-*/
-
 export const create_or_delete_assignments_service: any = (
   new_items: any[],
   ccd_current: any

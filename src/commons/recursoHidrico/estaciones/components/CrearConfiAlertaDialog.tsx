@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, MenuItem, TextField } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, Divider, Grid, MenuItem, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { type FieldValues, type SubmitHandler, useForm } from "react-hook-form";
 import { control_error } from '../../../../helpers/controlError';
 import { consultar_conf_alerta_persona, crear_confi_alerta } from '../../requets/Request';
 import { type conf_alarma } from '../interfaces/interfaces';
+import { Title } from '../../../../components';
 
 interface IProps {
     is_modal_active: boolean;
     set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-    confi_alerta_persona:() => Promise<void>
+    confi_alerta_persona: () => Promise<void>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -121,89 +122,117 @@ export const CrearConfiAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_
             maxWidth="xs">
             <Box component="form"
                 onSubmit={handleSubmit(on_sumbit_alerta)}>
-                <DialogTitle>Crear Configuración Alerta Estación</DialogTitle>
+                <Grid
+                    container
+                    spacing={2}
+                    sx={{
+                        position: 'relative',
+                        background: '#FAFAFA',
+                        borderRadius: '15px',
+                        p: '20px', mb: '20px',
+                        boxShadow: '0px 3px 6px #042F4A26',
+                        marginTop: '7px',
+                        marginLeft: '-5px',
+                    }}
+                >
+                    <Title title=" Crear Configuración Alerta Estación " />
+
+                </Grid>
+                {/* <DialogTitle>Crear Configuración Alerta Estación</DialogTitle> */}
                 <Divider />
-                <DialogContent sx={{ mb: '0px' }}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Nombre Variable"
-                                select
-                                size="small"
-                                margin="dense"
-                                required
-                                autoFocus
-                                fullWidth
-                                {...register("nombre_variable_alarma", { required: true })}
-                                error={Boolean(errors.nombre_variable_alarma)}
-                                helperText={(errors.nombre_variable_alarma != null) ? "Este campo es obligatorio" : ""}
-                            >
-                                {tipo_estacion.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Mensaje Máximo"
-                                size="small"
-                                margin="dense"
-                                required
-                                autoFocus
-                                fullWidth
-                                {...register("mensaje_alarma_maximo", { required: true })}
-                                error={Boolean(errors.mensaje_alarma_maximo)}
-                                helperText={(errors.mensaje_alarma_maximo != null) ? "Este campo es obligatorio" : ""}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Mensaje Mínimo"
-                                size="small"
-                                margin="dense"
-                                required
-                                autoFocus
-                                fullWidth
-                                {...register("mensaje_alarma_minimo", { required: true })}
-                                error={Boolean(errors.mensaje_alarma_minimo)}
-                                helperText={(errors.mensaje_alarma_minimo != null) ? "Este campo es obligatorio" : ""}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Mensaje estable"
-                                size="small"
-                                margin="dense"
-                                required
-                                autoFocus
-                                fullWidth
-                                {...register("mensaje_no_alarma", { required: true })}
-                                error={Boolean(errors.mensaje_no_alarma)}
-                                helperText={(errors.mensaje_no_alarma != null) ? "Este campo es obligatorio" : ""}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Frecuencia de alerta"
-                                type="number"
-                                size="small"
-                                margin="dense"
-                                required
-                                autoFocus
-                                fullWidth
-                                {...register("frecuencia_alarma", { required: true })}
-                                error={Boolean(errors.frecuencia_alarma)}
-                                helperText={(errors.frecuencia_alarma != null) ? "Este campo es obligatorio" : ""}
-                            />
-                        </Grid>
+                {/* <DialogContent sx={{ mb: '0px' }}> */}
+                <Grid container spacing={2} sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '7px',
+                    marginLeft: '5px',
+                    width: '97%',
+                }}>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Nombre Variable"
+                            select
+                            size="small"
+                            margin="dense"
+                            required
+                            autoFocus
+                            fullWidth
+                            {...register("nombre_variable_alarma", { required: true })}
+                            error={Boolean(errors.nombre_variable_alarma)}
+                            helperText={(errors.nombre_variable_alarma != null) ? "Este campo es obligatorio" : ""}
+                        >
+                            {tipo_estacion.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))}
+                        </TextField>
                     </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => { reset(); handle_close(); }}>Cancelar</Button>
-                    <Button variant="contained" color="primary" onClick={handleSubmit(on_sumbit_alerta)}>Guardar</Button>
-                </DialogActions>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Mensaje Máximo"
+                            size="small"
+                            margin="dense"
+                            required
+                            autoFocus
+                            fullWidth
+                            {...register("mensaje_alarma_maximo", { required: true })}
+                            error={Boolean(errors.mensaje_alarma_maximo)}
+                            helperText={(errors.mensaje_alarma_maximo != null) ? "Este campo es obligatorio" : ""}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Mensaje Mínimo"
+                            size="small"
+                            margin="dense"
+                            required
+                            autoFocus
+                            fullWidth
+                            {...register("mensaje_alarma_minimo", { required: true })}
+                            error={Boolean(errors.mensaje_alarma_minimo)}
+                            helperText={(errors.mensaje_alarma_minimo != null) ? "Este campo es obligatorio" : ""}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Mensaje estable"
+                            size="small"
+                            margin="dense"
+                            required
+                            autoFocus
+                            fullWidth
+                            {...register("mensaje_no_alarma", { required: true })}
+                            error={Boolean(errors.mensaje_no_alarma)}
+                            helperText={(errors.mensaje_no_alarma != null) ? "Este campo es obligatorio" : ""}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            label="Frecuencia de alerta"
+                            type="number"
+                            size="small"
+                            margin="dense"
+                            required
+                            autoFocus
+                            fullWidth
+                            {...register("frecuencia_alarma", { required: true })}
+                            error={Boolean(errors.frecuencia_alarma)}
+                            helperText={(errors.frecuencia_alarma != null) ? "Este campo es obligatorio" : ""}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <DialogActions>
+                            <Button onClick={() => { reset(); handle_close(); }}>Cancelar</Button>
+                            <Button variant="contained" color="primary" onClick={handleSubmit(on_sumbit_alerta)}>Guardar</Button>
+                        </DialogActions>
+                    </Grid>
+                </Grid>
+                {/* </DialogContent> */}
+
             </Box>
         </Dialog>
     );

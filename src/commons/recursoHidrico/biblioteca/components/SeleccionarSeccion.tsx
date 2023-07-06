@@ -130,7 +130,6 @@ export const SeleccionarSeccion: React.FC = () => {
               />
             </Avatar>
           </IconButton>
-
           <IconButton
             onClick={() => {
               set_id_subseccion(params.row.id_subseccion);
