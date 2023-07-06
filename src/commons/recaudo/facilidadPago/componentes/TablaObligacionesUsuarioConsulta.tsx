@@ -76,7 +76,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
       ),
     },
     {
-      field: 'nro_resolucion',
+      field: 'numero_resolucion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (
