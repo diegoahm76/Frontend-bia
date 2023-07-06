@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import React, { createContext } from 'react';
-import type { GetActividades, GetAvances, GetPrograma, GetProyectos, InfoAvance } from '../Interfaces/interfaces';
+import type { GetActividades, GetAvances, GetPrograma, GetProyectos, InfoAvance, InfoPorh } from '../Interfaces/interfaces';
 import { get_data_id } from '../request/request';
 import { control_error } from '../../../../helpers';
 
@@ -22,6 +22,7 @@ interface UserContext {
   is_select_avance: boolean;
   is_select_proyecto: boolean;
   mode: string;
+  info: InfoPorh | undefined;
   info_avance: InfoAvance | undefined;
   filter: any[];
   columns: string[];
@@ -40,6 +41,7 @@ interface UserContext {
   set_is_select_proyecto: (is_select_proyecto: boolean) => void;
   fetch_data_avances: () => Promise<void>;
   fetch_data_actividades: () => Promise<void>;
+  set_info: (info: InfoPorh) => void;
   set_info_avance: (info_avance: InfoAvance) => void;
   set_mode: (mode: string) => void;
 }
@@ -72,6 +74,19 @@ export const DataContext = createContext<UserContext>({
     id_persona_registra: 0,
     evidencias: [],
   },
+  info: {
+    id_proyecto: 0,
+    nombre_programa: '',
+    nombre_PORH: '',
+    fecha_inicio: '',
+    fecha_fin: '',
+    nombre: '',
+    vigencia_inicial: '',
+    vigencia_final: '',
+    inversion: 0,
+    fecha_registro: '',
+    id_programa: 0,
+  },
   filter: [],
   columns: [],
   actionIcons: [],
@@ -91,6 +106,7 @@ export const DataContext = createContext<UserContext>({
   set_is_editar_avance: () => { },
   set_is_select_avance: () => { },
   set_is_select_proyecto: () => { },
+  set_info: () => { },
   set_info_avance: () => { },
   set_mode: () => { },
 });
@@ -147,6 +163,8 @@ export const UserProvider = ({
     }
   }, [mode]);
 
+  const [info, set_info] = React.useState<InfoPorh>();
+
   const [info_avance, set_info_avance] = React.useState<InfoAvance>();
 
   const fetch_data_avances = async (): Promise<void> => {
@@ -178,6 +196,8 @@ export const UserProvider = ({
 
 
   const value = {
+    info,
+    set_info,
     mode,
     set_mode,
     is_select_proyecto,
@@ -217,16 +237,6 @@ export const UserProvider = ({
     setActionIcons,
     fetch_data_avances
   };
-  // if (is_select_avance) {
-  //   value.set_is_editar_avance(false);
-  //   value.set_is_register_avance(false);
-  // }else if(is_editar_avance){
-  //   value.set_is_select_avance(false);
-  //   value.set_is_register_avance(false);
-  // }else if(is_register_avance){
-  //   value.set_is_select_avance(false);
-  //   value.set_is_editar_avance(false);
-  // }
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
 };

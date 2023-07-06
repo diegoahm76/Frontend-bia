@@ -111,7 +111,7 @@ export const RegistroRecepcion: React.FC = () => {
             <Grid container spacing={2} mb='20px'>
               <Grid item xs={12} sm={3}>
                 <FormControl fullWidth>
-                  <LocalizationProvider dateAdapter={AdapterDayjs} locale={esLocale}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                     <DatePicker
                       label="Fecha de Radicación en Cormacarena"
                       inputFormat="YYYY/MM/DD"

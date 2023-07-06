@@ -18,13 +18,6 @@ import { ButtonSalir } from "../../../../../components/Salir/ButtonSalir";
 export const AvanceScreen: React.FC = () => {
 
     const columns: GridColDef[] = [
-
-        {
-            field: 'id_avance',
-            headerName: 'No AVANCE',
-            sortable: true,
-            width: 80,
-        },
         {
             field: 'accion',
             headerName: 'ACCIÓN',
