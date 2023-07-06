@@ -314,12 +314,11 @@ const use_ccd = () => {
         value: item.id_serie_doc
       }))
     );
-  }, [seriesAndSubseries]);
+  }, [seriesAndSubseries, list_sries_asignacion, list_sries, list_subsries]);
 
   // submit Crear CCD
   const on_submit_create_ccd = (e: any): void => {
     e.preventDefault();
-    console.log('hola a todos perros hps desde la vida');
     console.log(data_create_ccd, 'data_create_ccd');
     // console.log('epa la patria', ccd_current);
     if (ccd_current !== null) {
