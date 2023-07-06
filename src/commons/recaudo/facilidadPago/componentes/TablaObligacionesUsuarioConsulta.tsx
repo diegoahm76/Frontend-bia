@@ -66,7 +66,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
       ),
     },
     {
-      field: 'id_expediente',
+      field: 'nro_expediente',
       headerName: 'Expediente',
       width: 150,
       renderCell: (params) => (
@@ -76,7 +76,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
       ),
     },
     {
-      field: 'numero_resolucion',
+      field: 'nro_resolucion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (
@@ -198,7 +198,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.id_expediente}
+                getRowId={(row) => row.nro_expediente}
               />
             </Box>
           </Grid>
@@ -224,7 +224,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
                 value={intereses}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12}  sm={2}>
               <TextField
                 label={<strong>Gran Total a Deber</strong>}
                 size="small"

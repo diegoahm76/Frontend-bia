@@ -4,10 +4,12 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import { Add } from '@mui/icons-material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { TablaPlanPagosUsuarioExterno } from '../componentes/TablaPlanPagosUsuarioExterno';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DetalleFacilidadPago: React.FC = () => {
-  const [estado] = useState('Cancelada/Anulada');
+  const [estado] = useState('');
+  const [plan_pagos, set_plan_pagos] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -139,7 +141,7 @@ export const DetalleFacilidadPago: React.FC = () => {
                   label="Estado"
                   size="small"
                   fullWidth
-                  value={"Cancelada/Anulada"}
+                  value={"Aprobado"}
                   disabled
                 />
               </Grid>
@@ -170,7 +172,9 @@ export const DetalleFacilidadPago: React.FC = () => {
                       variant='outlined'
                       size='medium'
                       startIcon={<CloudDownloadIcon />}
-                      onClick={() => { }}
+                      onClick={() => {
+                        set_plan_pagos(true)
+                      }}
                     >
                       Ver
                     </Button>
@@ -259,6 +263,11 @@ export const DetalleFacilidadPago: React.FC = () => {
           )
         }
       </Grid>
+      {
+        plan_pagos ? (
+          <TablaPlanPagosUsuarioExterno />
+        ) : null
+      }
     </>
   )
 }
