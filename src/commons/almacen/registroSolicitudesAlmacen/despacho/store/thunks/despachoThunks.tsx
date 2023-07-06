@@ -162,13 +162,15 @@ export const get_person_id_despacho = (id: number): any => {
 
 // Obtener bienes por numero de despacho
 
-export const get_bienes_despacho = (id_despacho: number | null): any => {
+export const get_bienes_despacho = (nro_despacho: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/despachos/get-items-despacho/${id_despacho ?? ''}/`
+        `almacen/despachos/get-despacho-consumo-by-numero-despacho/?numero_despacho_consumo=${
+          nro_despacho ?? ''
+        }`
       );
-      dispatch(set_bienes_despacho(data.data));
+      dispatch(set_bienes_despacho(data.data.items_despacho_consumo));
       console.log(data);
       if (data.data.length > 0) {
         // control_success("Se encontrarón bienes")

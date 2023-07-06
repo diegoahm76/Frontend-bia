@@ -155,14 +155,21 @@ const DespachoBienesConsumoScreen = () => {
         ); // get persona despacho
     }
     if (
-      current_despacho.id_despacho_consumo !== null &&
-      current_despacho.id_despacho_consumo !== undefined
+      current_despacho.numero_despacho_consumo !== null &&
+      current_despacho.numero_despacho_consumo !== undefined
     ) {
-      set_action('editar');
-      void dispatch(get_bienes_despacho(current_despacho.id_despacho_consumo)); // get bienes despacho
-      void dispatch(
-        get_solicitud_by_id(current_despacho.id_solicitud_consumo ?? 0)
-      );
+      if (
+        current_despacho.id_despacho_consumo !== null &&
+        current_despacho.id_despacho_consumo !== undefined
+      ) {
+        set_action('editar');
+        void dispatch(
+          get_bienes_despacho(current_despacho.numero_despacho_consumo)
+        ); // get bienes despacho
+        void dispatch(
+          get_solicitud_by_id(current_despacho.id_solicitud_consumo ?? 0)
+        );
+      }
     }
   }, [current_despacho]);
 
