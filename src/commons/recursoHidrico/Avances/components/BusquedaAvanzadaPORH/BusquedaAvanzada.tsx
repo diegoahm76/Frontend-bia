@@ -34,12 +34,6 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
 
   const columns: GridColDef[] = [
     {
-      field: 'id_programa',
-      headerName: 'ID PROGRAMA',
-      sortable: true,
-      width: 170,
-    },
-    {
       field: 'nombre_PORH',
       headerName: 'NOMBRE PORH',
       sortable: true,
@@ -85,17 +79,19 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
     },
   ];
 
+  const { info, set_info } = useContext(DataContext);
+
   const {
     register,
     handleSubmit: handle_submit,
     formState: { errors },
     setValue: set_value,
+    watch,
   } = useForm();
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<InfoPorh[]>([]);
-  const [info, set_info] = useState<InfoPorh>();
   const [search_text, set_search_text] = useState('');
 
   const handle_click_open = (): void => {
@@ -149,7 +145,19 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
       set_mode('select_proyecto');
       onResult(matching_row);
     } else {
-      set_info(undefined);
+      set_info({
+        id_proyecto: 0,
+        nombre_programa: '',
+        nombre_PORH: '',
+        fecha_inicio: '',
+        fecha_fin: '',
+        nombre: '',
+        vigencia_inicial: '',
+        vigencia_final: '',
+        inversion: 0,
+        fecha_registro: '',
+        id_programa: 0,
+      });
       onResult(get_empty_info_porh());
     }
   };
@@ -189,6 +197,13 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
     };
   }, [search_text]);
 
+  const nombre = watch('nombre_busqueda');
+  useEffect(() => {
+    if (info?.nombre !== undefined) {
+      set_value('nombre_busqueda', info?.nombre);
+    }
+  }, [info]);
+
   return (
     <>
       <Grid
@@ -202,21 +217,24 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
           mb: '0px',
         }}
       >
-        {' '}
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" fontWeight="bold">
+            Nombre Proyecto
+          </Typography>
+        </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            label="Nombre"
-            disabled={false}
             fullWidth
             size="small"
             margin="dense"
-            value={info?.nombre}
+            disabled={true}
+            value={nombre}
             onInput={handle_input_change}
           />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Button
-            variant="outlined"
+            variant="contained"
             color="primary"
             onClick={handle_click_open}
           >
@@ -226,7 +244,23 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
+
+        <Grid
+                container
+                spacing={2}
+                sx={{
+                    position: 'relative',
+                    background: '#FAFAFA',
+                    borderRadius: '15px',
+                    p: '20px', mb: '20px',
+                    boxShadow: '0px 3px 6px #042F4A26',
+                    marginTop: '20px',
+                    marginLeft: '-5px',
+                }}
+            >
+
           <Title title="Búsqueda avanzada" />
+          
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -275,6 +309,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
                   Buscar
                 </LoadingButton>
               </Grid>
+              
               {rows.length > 0 && (
                 <>
                   <Grid item xs={12}>
@@ -297,6 +332,7 @@ export const BusquedaAvanzada: React.FC<PropsBuscador> = ({
               )}
             </Grid>
           </form>
+            </Grid>
         </DialogContent>
       </Dialog>
     </>

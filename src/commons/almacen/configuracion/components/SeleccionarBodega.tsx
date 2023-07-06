@@ -77,6 +77,7 @@ const SeleccionarBodega = ({ control_bodega, reset_bodega }: IProps) => {
         </div>
       ),
     },
+
     {
       field: 'es_principal',
       headerName: 'Bodega principal',

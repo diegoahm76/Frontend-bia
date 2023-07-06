@@ -1,8 +1,12 @@
 import { Grid, Box, TextField, Button } from "@mui/material";
 import { useState } from "react";
 import { TablaObligacionesSolicitud } from "./TablaObligacionesSolicitud";
-import { useSelector } from 'react-redux';
+import { TablaObligacionesUsuarioInterno } from "./TablaObligacionesUsuarioInterno";
+import { useSelector, useDispatch } from 'react-redux';
+import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type Deudor } from "../interfaces/interfaces";
+import { get_obligaciones_id } from '../slices/ObligacionesSlice';
+
 
 interface RootState {
   deudores: {
@@ -18,22 +22,11 @@ interface Fecha {
 export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
   const [obligaciones, set_obligaciones] = useState(false);
   const { deudores } = useSelector((state: RootState) => state.deudores);
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   return (
     <>
-      <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          mb: '20px',
-          mt: '20px',
-          p: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <h3>Datos Encabezado</h3>
+        <h3>Encabezado</h3>
         <Grid item xs={12}>
           <Box
             component="form"
@@ -100,6 +93,7 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
                   color='primary'
                   variant='contained'
                   onClick={() => {
+                    void dispatch(get_obligaciones_id(deudores.identificacion))
                     set_obligaciones(true)
                   }}
                 >
@@ -109,15 +103,18 @@ export const EncabezadoAdmin: React.FC<Fecha> = (props: Fecha) => {
             </Grid>
           </Box>
         </Grid>
+        <>
+          <p><strong>Obligaciones objeto de la solicitud</strong></p>
+          <TablaObligacionesSolicitud />
+        </>
         {
           obligaciones ? (
             <>
-              <p><strong>Obligaciones objeto de la solicitud</strong></p>
-              <TablaObligacionesSolicitud />
+              <p><strong>Obligaciones Pendiente por Pago</strong></p>
+              <TablaObligacionesUsuarioInterno />
             </>
           ) : null
         }
-      </Grid>
     </>
   )
 }

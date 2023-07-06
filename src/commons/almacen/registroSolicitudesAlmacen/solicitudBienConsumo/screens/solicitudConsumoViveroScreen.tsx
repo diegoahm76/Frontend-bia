@@ -17,19 +17,18 @@ import {
   get_person_id_service,
   get_funcionario_id_service,
   get_bienes_solicitud,
-  editar_solicitud
+  editar_solicitud,
 } from '../store/solicitudBienConsumoThunks';
 import CloseIcon from '@mui/icons-material/Close';
 
 import {
   set_current_solicitud_vivero,
-  set_persona_solicita
+  set_persona_solicita,
 } from '../store/slices/indexSolicitudBienesConsumo';
 import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitudVivero';
 import SeleccionarSolicitudVivero from '../components/componenteBusqueda/SeleccionarSolicitudVivero';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
-import { Title } from '../../../../../components/Title';
 // import SeleccionarBienConsumoVivero from '../components/componenteBusqueda/SeleccionarBienesVivero';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -39,14 +38,14 @@ const SolicitudConsumoViveroScreen = () => {
     control: control_solicitud_vivero,
     handleSubmit: handle_submit,
     reset: reset_solicitud,
-    getValues: get_values
+    getValues: get_values,
   } = useForm<IObjSolicitudVivero>();
   const {
     nro_solicitud_vivero,
     current_solicitud_vivero,
     persona_solicita,
     bienes_solicitud,
-    current_funcionario
+    current_funcionario,
   } = useAppSelector((state) => state.solic_consumo);
   const [action, set_action] = useState<string>('Crear solicitud Vivero');
   const [anular, set_anular] = useState<string>('Anular');
@@ -61,7 +60,7 @@ const SolicitudConsumoViveroScreen = () => {
       set_persona_solicita({
         nombre: userinfo.nombre,
         id_persona: userinfo.id_persona,
-        unidad_organizacional: userinfo.nombre_unidad_organizacional
+        unidad_organizacional: userinfo.nombre_unidad_organizacional,
       })
     );
   }, []);
@@ -73,7 +72,7 @@ const SolicitudConsumoViveroScreen = () => {
         nro_solicitud_por_tipo: nro_solicitud_vivero,
         id_persona_solicita: persona_solicita.id_persona,
         persona_solicita: persona_solicita.nombre,
-        nombre_unidad_organizacional: persona_solicita.unidad_organizacional
+        nombre_unidad_organizacional: persona_solicita.unidad_organizacional,
       })
     );
   }, [nro_solicitud_vivero]);
@@ -121,7 +120,7 @@ const SolicitudConsumoViveroScreen = () => {
         ...current_solicitud_vivero,
         id_persona_solicita: persona_solicita.id_persona,
         persona_solicita: persona_solicita.nombre,
-        nombre_unidad_organizacional: persona_solicita.unidad_organizacional
+        nombre_unidad_organizacional: persona_solicita.unidad_organizacional,
       })
     );
   }, [persona_solicita]);
@@ -142,7 +141,7 @@ const SolicitudConsumoViveroScreen = () => {
           id_funcionario_responsable_unidad: current_funcionario.id_persona,
           observacion,
           motivo,
-          id_unidad_para_la_que_solicita
+          id_unidad_para_la_que_solicita,
         })
       );
     }
@@ -160,8 +159,8 @@ const SolicitudConsumoViveroScreen = () => {
         info_solicitud: { ...data, fecha_anulacion_solicitante: null },
         items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
           ...item,
-          nro_posicion: index
-        }))
+          nro_posicion: index,
+        })),
       };
 
       void dispatch(editar_solicitud(data_aux));
@@ -171,8 +170,8 @@ const SolicitudConsumoViveroScreen = () => {
         info_solicitud: { ...data, fecha_anulacion_solicitante: null },
         items_solicitud: bienes_solicitud.map((item: any, index: any) => ({
           ...item,
-          nro_posicion: index
-        }))
+          nro_posicion: index,
+        })),
       };
       void dispatch(crear_solicitud_bien_consumo_vivero(data_aux));
     }
@@ -181,7 +180,7 @@ const SolicitudConsumoViveroScreen = () => {
     const form_data = {
       solicitud_anulada_solicitante: true,
       justificacion_anulacion_solicitante:
-        data.justificacion_anulacion_solicitante
+        data.justificacion_anulacion_solicitante,
     };
 
     void dispatch(
@@ -200,10 +199,9 @@ const SolicitudConsumoViveroScreen = () => {
         p: '20px',
         mb: '20px',
         top: '30px',
-        boxShadow: '0px 3px 6px #042F4A26'
+        boxShadow: '0px 3px 6px #042F4A26',
       }}
     >
-      <Title title="Solicitud de consumo para vivero"></Title>
       <Grid item xs={12} marginY={2}>
         <SeleccionarSolicitudVivero
           control_solicitud_vivero={control_solicitud_vivero}

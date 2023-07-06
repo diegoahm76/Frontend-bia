@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import { useForm } from 'react-hook-form';
 import { SeccionSubseccionMain } from '../components/SeccionSubseccionMain';
+import '../css/styles.css';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BibliotecaScreen: React.FC = () => {
@@ -17,7 +18,7 @@ export const BibliotecaScreen: React.FC = () => {
     set_id_seccion,
     set_info_seccion,
     set_is_editar_seccion,
-    set_is_seleccionar_seccion,
+    set_mode,
   } = useContext(DataContext);
 
   const {
@@ -29,29 +30,25 @@ export const BibliotecaScreen: React.FC = () => {
   } = useForm();
 
   const columns: GridColDef[] = [
-    { field: 'id_seccion', headerName: 'No SECCIÓN', width: 120 },
-    { field: 'nombre', headerName: 'NOMBRE', width: 200 },
+    {
+      field: 'nombre',
+      headerName: 'NOMBRE',
+      width: 300,
+      renderCell: (params) => <div className="container">{params.value}</div>,
+    },
     {
       field: 'descripcion',
       headerName: 'DESCRIPCIÓN',
       width: 400,
-      renderCell: (params) => (
-        <div
-          style={{
-            whiteSpace: 'pre-wrap',
-            wordWrap: 'break-word',
-            height: 'auto',
-            overflowWrap: 'break-word',
-            wordBreak: 'break-word',
-            maxHeight: '100px',
-          }}
-        >
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => <div className="container">{params.value}</div>,
     },
     { field: 'fecha_creacion', headerName: 'FECHA CREACIÓN', width: 200 },
-    { field: 'nombre_completo', headerName: 'PERSONA CREADORA', width: 300 },
+    {
+      field: 'nombre_completo',
+      headerName: 'PERSONA CREADORA',
+      width: 300,
+      renderCell: (params) => <div className="container">{params.value}</div>,
+    },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
@@ -61,7 +58,8 @@ export const BibliotecaScreen: React.FC = () => {
           <IconButton
             onClick={() => {
               set_info_seccion(params.row);
-              set_is_editar_seccion(true);
+              set_id_seccion(params.row.id_seccion);
+              set_mode('editar_seccion');
             }}
           >
             <Avatar
@@ -87,7 +85,7 @@ export const BibliotecaScreen: React.FC = () => {
             onClick={() => {
               set_id_seccion(params.row.id_seccion);
               set_info_seccion(params.row);
-              set_is_seleccionar_seccion(true);
+              set_mode('select_seccion');
             }}
           >
             <Avatar
@@ -151,14 +149,11 @@ export const BibliotecaScreen: React.FC = () => {
               <DataGrid
                 autoHeight
                 rows={rows_seccion}
-                columns={columns.map((column) => ({
-                  ...column,
-                  wrapText: true,
-                }))}
+                columns={columns}
                 getRowId={(row) => row.id_seccion}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
-                rowHeight={100} // Aumenta la altura de las filas
+                rowHeight={100}
               />
             </Grid>
           </>

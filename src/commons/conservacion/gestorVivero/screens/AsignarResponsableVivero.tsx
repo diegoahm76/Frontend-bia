@@ -152,9 +152,9 @@ export function AsignarResponsableViveroScreen(): JSX.Element {
                   control_name= "accion_realizar"
                   default_value= "reemplazar"
                   rules= {{ required_rule: { rule: true, message: "Seleccione vivero" } }}
-                  label= "Accion a realizar"
+                  label= "Acción a realizar"
                   disabled= {current_nursery.id_vivero === null}
-                  helper_text= "debe seleccionar campo"
+                  helper_text= "Debe seleccionar campo"
                   select_options= {[{label: "Remover viverista", value: "remover"}, {label: "Reemplazar viverista", value: "reemplazar"}]}
                   option_label= "label"
                   option_key= "value"

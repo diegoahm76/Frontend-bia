@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Grid, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, Divider, Grid, TextField } from '@mui/material';
 import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import { useForm } from 'react-hook-form';
 import { control_error } from '../../../../helpers/controlError';
 import { control_success, editar_conf_alarma } from '../../requets/Request';
 import { type CrearAlerta } from '../interfaces/interfaces';
+import { Title } from '../../../../components';
 
 interface IProps {
   is_modal_active: boolean;
@@ -62,9 +63,42 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
       onClose={handle_close}
       maxWidth="xs">
       <form onSubmit={handleSubmit(on_submit)} noValidate autoComplete="off">
-        <DialogTitle>Editar Configuracion Alerta Estación</DialogTitle>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px', mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+            marginTop: '20px',
+            marginLeft: '-5px',
+          }}
+        >
+
+          <Title title="Editar Configuracion Alerta Estación " />
+        </Grid>
+
+        {/* <DialogTitle>Editar Configuracion Alerta Estación</DialogTitle> */}
         <Divider />
-        <DialogContent sx={{ mb: '0px' }}>
+        {/* <DialogContent sx={{ mb: '0px' }}> */}
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px', mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+            marginTop: '7px',
+            marginLeft: '5px',
+            width: '97%',
+          }}
+        >
+
+
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
@@ -108,14 +142,18 @@ export const EditarAlertaDialog: React.FC<IProps> = ({ is_modal_active, set_is_m
               />
             </Grid>
           </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => {
-            handle_close();
-            reset();
-          }}>Cancelar</Button>
-          <Button variant="contained" color="primary" type='submit'>Actualizar</Button>
-        </DialogActions>
+          <Grid item container sx={{ justifyContent: "flex-end" }}>
+            <DialogActions>
+              <Button onClick={() => {
+                handle_close();
+                reset();
+              }}>Cancelar</Button>
+              <Button variant="contained" color="primary" type='submit'>Actualizar</Button>
+            </DialogActions>
+          </Grid>
+        </Grid>
+        {/* </DialogContent> */}
+
       </form>
     </Dialog>
   );

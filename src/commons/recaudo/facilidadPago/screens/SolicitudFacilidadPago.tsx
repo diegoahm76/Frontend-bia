@@ -16,7 +16,6 @@ import { type event, type check, type Deudor, type Bien } from '../interfaces/in
 import { post_registro_fac_pago, post_registro_bienes } from '../requests/requests';
 import { useSelector } from 'react-redux';
 
-
 interface RootState {
   deudores: {
     deudores: Deudor;
@@ -179,7 +178,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       />
                   </Button>
                 </Grid>
-                <Grid item xs={12} sm={5}>
+                <Grid item xs={11} sm={5}>
                   <FormControl size='small' fullWidth>
                     <InputLabel>Calidad en que actúa la persona</InputLabel>
                     <Select
@@ -196,6 +195,18 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       <MenuItem value='4'>Deudor Solidario Juridico</MenuItem>
                     </Select>
                   </FormControl>
+                </Grid>
+                <Grid item xs={11} sm={5}>
+                  <TextField
+                    required
+                    label="Valor Abonado"
+                    helperText='Escribe el Valor Abonado'
+                    size="small"
+                    fullWidth
+                    onChange={on_input_change}
+                    name='valor_abonado'
+                    type='number'
+                  />
                 </Grid>
             </Grid>
           </Box>
@@ -671,7 +682,7 @@ export const SolicitudFacilidadPago: React.FC = () => {
                       }
                     }}
                   >
-                    <MenuItem value='1'>Mensual</MenuItem>
+                    <MenuItem value="1">Mensual</MenuItem>
                     <MenuItem value="3">Trimestral</MenuItem>
                     <MenuItem value="6">Semestral</MenuItem>
                     <MenuItem value="12">Anual</MenuItem>

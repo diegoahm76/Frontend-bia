@@ -68,7 +68,7 @@ const PersonaResponsable = ({
 
         {
             field: 'id_unidad_para_la_que_solicita',
-            headerName: 'unidad',
+            headerName: 'Unidad',
             width: 250,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -163,10 +163,10 @@ const PersonaResponsable = ({
                             control_form: control_persona_aprobacion,
                             control_name: "tipo_documento",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "Requerido" } },
                             label: "Tipo documento",
                             disabled: false,
-                            helper_text: "debe seleccionar campo",
+                            helper_text: "Debe seleccionar campo",
                             select_options: document_type,
                             option_label: "label",
                             option_key: "value",
@@ -178,7 +178,7 @@ const PersonaResponsable = ({
                             control_form: control_persona_aprobacion,
                             control_name: "numero_documento",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "Requerido" } },
                             label: "Número de documento",
                             type: "number",
                             disabled: get_values("tipo_documento") === null || get_values("tipo_documento") === undefined,
@@ -192,7 +192,7 @@ const PersonaResponsable = ({
                             control_form: control_persona_aprobacion,
                             control_name: "nombre_completo",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "Requerido" } },
                             label: "Nombre",
                             type: "text",
                             disabled: true,
@@ -205,7 +205,7 @@ const PersonaResponsable = ({
                             control_form: control_persona_aprobacion,
                             control_name: "nombre_unidad_organizacional_actual",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "Requerido" } },
                             label: "Nombre unidad organizacional",
                             type: "text",
                             disabled: true,
@@ -250,7 +250,7 @@ const PersonaResponsable = ({
                             control_name: "primer_nombre",
                             default_value: "",
                             rules: {},
-                            label: "Primer nombre",
+                            label: "Primer Nombre",
                             type: "text",
                             disabled: false,
                             helper_text: ""

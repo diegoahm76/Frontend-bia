@@ -158,7 +158,7 @@ const EditarBienDialogForm = ({
                     margin="dense"
                     fullWidth
                     size="small"
-                    label="Nombre cientifico"
+                    label="Nombre científico"
                     variant="outlined"
                     disabled={action === 'detail'}
                     value={value}
@@ -166,8 +166,8 @@ const EditarBienDialogForm = ({
                     error={!(error == null)}
                     helperText={
                       error != null
-                        ? 'Es obligatorio ingresar un nombre cientifico'
-                        : 'Ingrese nombre cientifico'
+                        ? 'Es obligatorio ingresar un nombre científico'
+                        : 'Ingrese nombre científico'
                     }
                   />
                 )}
@@ -207,7 +207,7 @@ const EditarBienDialogForm = ({
                     fullWidth
                     select
                     size="small"
-                    label="¿Es semilla?"
+                    label="¿Es una semilla?"
                     variant="outlined"
                     disabled={
                       tipo_elemento_selected !== 'MV' || action === 'detail'
@@ -218,7 +218,7 @@ const EditarBienDialogForm = ({
                     helperText={
                       error != null
                         ? 'Es obligatorio seleccionar una opción'
-                        : 'Seleccionar opción'
+                        : 'Seleccione la opción'
                     }
                   >
                     <MenuItem value="true">SI</MenuItem>

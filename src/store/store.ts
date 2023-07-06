@@ -23,6 +23,7 @@ import {
   medida_slice
 } from '../commons/almacen/configuracion/store/slice/MarcaMedidaPorcentajeSlice';
 import { bodegas_slice } from '../commons/almacen/configuracion/store/slice/BodegaSlice';
+import { despacho_slice } from '../commons/almacen/registroSolicitudesAlmacen/despacho/store/slices/indexDespacho';
 import { cv_others_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaOtrosActivos/store/slices/indexCvOtrosActivos';
 import { cve_vehicle_slice } from '../commons/almacen/gestionDeInventario/gestionHojaDeVida/hojaDeVidaVehiculo/store/slices/indexCvVehiculo';
 import { solicitud_consumo_slice } from '../commons/almacen/registroSolicitudesAlmacen/solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
@@ -64,6 +65,7 @@ const app_reducers = combineReducers({
   material_vegetal: material_vegetal_slice.reducer,
   distribucion: distribucion_slice.reducer,
   bodegas: bodegas_slice.reducer,
+  despacho: despacho_slice.reducer,
   cvo: cv_others_slice.reducer,
   cve: cve_vehicle_slice.reducer,
   solic_consumo: solicitud_consumo_slice.reducer,

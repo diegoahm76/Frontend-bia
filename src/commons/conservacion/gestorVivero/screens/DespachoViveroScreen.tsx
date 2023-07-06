@@ -81,17 +81,17 @@ const on_submit_confirm = (data: IDespacho) => {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Distribucion de despachos entrantes"></Title>
+          <Title title="Distribución de despachos entrantes"></Title>
         
         </Grid>
         {current_despacho.id_despacho_entrante !== null &&
         <Grid item xs={12} marginY={2}>
           
             {current_despacho.distribucion_confirmada?
-              <Chip label={"Items distribuidos el dia " + (String(current_despacho.fecha_confirmacion_distribucion)).slice(0, 10)
+              <Chip label={"Ítems distribuidos el día " + (String(current_despacho.fecha_confirmacion_distribucion)).slice(0, 10)
             } color="success" variant="outlined" />
               :
-              <Chip label="Los items de este despacho no han sido distribuidos" color="warning" variant="outlined" />
+              <Chip label="Los ítems de este despacho no han sido distribuidos" color="warning" variant="outlined" />
           }
          
         </Grid>
@@ -122,7 +122,7 @@ const on_submit_confirm = (data: IDespacho) => {
                             variant_button="contained"
                             on_click_function={handle_submit(on_submit_confirm)}
                             icon_class={<CheckIcon />}
-                            label={"Confirmar distribucion"}
+                            label={"Confirmar distribución"}
                             type_button="button"
                         />
                     </Grid>

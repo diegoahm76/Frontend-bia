@@ -88,7 +88,7 @@ const SeleccionBienAprobacion = () => {
         { field: 'id_bien_consumido', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -128,7 +128,7 @@ const SeleccionBienAprobacion = () => {
         },
         {
             field: 'observaciones',
-            headerName: 'Observacion',
+            headerName: 'Observación',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>

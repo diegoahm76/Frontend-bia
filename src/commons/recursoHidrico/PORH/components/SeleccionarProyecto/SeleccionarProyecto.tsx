@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import {
@@ -27,6 +28,7 @@ import { control_success } from '../../../requets/Request';
 import { eliminar_id } from '../../Request/request';
 import { control_error } from '../../../../../helpers';
 import dayjs, { type Dayjs } from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IProps {
   data: any;
@@ -35,26 +37,22 @@ interface IProps {
 export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
   const {
     rows_actividades,
+    rows_actividades_register,
     is_agregar_actividad,
     is_editar_actividad,
     is_seleccionar_actividad,
-    set_id_actividad,
-    fetch_data_actividades,
-    set_mode,
     register,
     watch,
     setValue: set_value,
     data_actividad,
     set_data_actividad,
+    set_id_actividad,
+    fetch_data_actividades,
+    set_mode,
+    set_rows_actividades_register,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
-    {
-      field: 'id_actividades',
-      headerName: 'No ACTIVIDAD',
-      sortable: true,
-      width: 170,
-    },
     {
       field: 'nombre',
       headerName: 'DESCRIPCIÓN',
@@ -145,19 +143,88 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
       },
     },
   ];
+  const columns_register: GridColDef[] = [
+    {
+      field: 'nombre',
+      headerName: 'DESCRIPCIÓN',
+      sortable: true,
+      width: 300,
+    },
+    {
+      field: 'ACCIONES',
+      headerName: 'ACCIONES',
+      width: 200,
+      renderCell: (params) => {
+        return (
+          <>
+            <IconButton
+              onClick={() => {
+                set_edit_row_actividades(params.row);
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <EditIcon
+                  titleAccess="Editar Actividad"
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                handle_eliminar(params.row);
+              }}
+            >
+              {' '}
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <DeleteIcon
+                  titleAccess="Eliminar Actividad"
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </>
+        );
+      },
+    },
+  ];
 
   useEffect(() => {
     void fetch_data_actividades();
   }, [data]);
 
   const descripcion = watch('descripcion');
+  const [edit_row_actividades, set_edit_row_actividades] = useState<any>(null);
+
+  useEffect(() => {
+    if (edit_row_actividades) {
+      set_value('descripcion', edit_row_actividades.nombre);
+    }
+  }, [edit_row_actividades]);
 
   useEffect(() => {
     if (data) {
-      set_start_date(dayjs(data.vigencia_inicial));
-      set_value('vigencia_final', data.vigencia_final);
-      set_value('vigencia_inicial', data.vigencia_inicial);
-      set_end_date(dayjs(data.vigencia_final));
+      set_start_date(dayjs(data?.vigencia_inicial));
+      set_value('nombre', data?.nombre);
+      set_value('inversion', data?.inversion);
+      set_value('vigencia_final', data?.vigencia_final);
+      set_value('vigencia_inicial', data?.vigencia_inicial);
+      set_end_date(dayjs(data?.vigencia_final));
     }
   }, [data]);
 
@@ -210,6 +277,51 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
       }
     });
   };
+  const handle_aceptar_actividad = (): void => {
+    set_edit_row_actividades(null);
+    const descripcion = watch('descripcion');
+    const new_actividad = {
+      id_act: uuidv4(),
+      nombre: descripcion,
+    };
+    if (edit_row_actividades) {
+      const new_actividades = rows_actividades_register.map(
+        (acticvidades: any) => {
+          if (acticvidades.id_act === edit_row_actividades.id_act) {
+            return {
+              ...acticvidades,
+              nombre: descripcion,
+            };
+          }
+          return acticvidades;
+        }
+      );
+      set_rows_actividades_register(new_actividades);
+    } else {
+      set_rows_actividades_register([
+        ...rows_actividades_register,
+        new_actividad,
+      ]);
+    }
+    limpiar_act();
+  };
+  const handle_eliminar = (row: any): void => {
+    const updated_rows = rows_actividades_register.filter(
+      (r) => r.id_act !== row.id_act
+    );
+    set_rows_actividades_register(updated_rows);
+  };
+
+  // const limpiar_todo = (): void => {
+  //   set_value('descripcion', '');
+  //   set_value('vigencia_inicial', '');
+  //   set_value('vigencia_final', '');
+  //   set_start_date(null);
+  //   set_end_date(null);
+  // }
+  const limpiar_act = (): void => {
+    set_value('descripcion', '');
+  };
 
   return (
     <>
@@ -222,7 +334,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
           fullWidth
           size="small"
           margin="dense"
-          defaultValue={data.nombre}
+          value={data.nombre}
           autoFocus
           disabled
           {...register('nombre')}
@@ -279,7 +391,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
           size="small"
           margin="dense"
           autoFocus
-          defaultValue={data.inversion}
+          value={data.inversion}
           type="text"
           disabled
           {...register('inversion')}
@@ -315,6 +427,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
                 variant="outlined"
                 onClick={() => {
                   set_mode('register_actividad');
+                  // limpiar_act();
                 }}
               >
                 Agregar Nueva Actividad
@@ -327,6 +440,29 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
       is_seleccionar_actividad ||
       is_editar_actividad ? (
         <>
+          {rows_actividades_register.length > 0 && (
+            <>
+              <Grid item xs={12}>
+                <Typography variant="subtitle1" fontWeight="bold">
+                  Actividades
+                </Typography>
+                <Divider />
+              </Grid>
+              <Grid item xs={12}>
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={rows_actividades_register}
+                  columns={columns_register}
+                  getRowId={(row) => row.id_act}
+                  pageSize={5}
+                  rowsPerPageOptions={[5]}
+                  disableSelectionOnClick
+                />
+              </Grid>
+            </>
+          )}
+
           <Grid item xs={12}>
             <Typography variant="subtitle1" fontWeight="bold">
               Descripción de la actividad
@@ -341,11 +477,28 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
               margin="dense"
               disabled={is_seleccionar_actividad}
               value={descripcion}
-              required
+              required={!(rows_actividades_register.length > 0)}
               autoFocus
               multiline
-              {...register('descripcion', { required: true })}
+              rows={3}
+              {...register('descripcion', {
+                required: !(rows_actividades_register.length > 0),
+              })}
             />
+          </Grid>
+          <Grid item spacing={2} justifyContent="end" container>
+            <Grid item>
+              <LoadingButton
+                variant="outlined"
+                color="primary"
+                onClick={() => {
+                  handle_aceptar_actividad();
+                }}
+                disabled={is_seleccionar_actividad || is_editar_actividad}
+              >
+                Aceptar
+              </LoadingButton>
+            </Grid>
           </Grid>
         </>
       ) : null}

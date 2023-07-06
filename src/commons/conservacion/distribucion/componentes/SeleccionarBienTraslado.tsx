@@ -63,7 +63,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'nro_lote',
-            headerName: '# lote',
+            headerName: 'Número del lote',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -73,7 +73,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'cod_etapa_lote',
-            headerName: 'Etapa lote',
+            headerName: 'Etapa del lote',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -98,7 +98,7 @@ const SeleccionarBienSiembra = () => {
     const columns_bienes_siembra: GridColDef[] = [
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -128,7 +128,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'nro_lote_origen',
-            headerName: '# lote origen',
+            headerName: 'Número del lote de origen',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -138,7 +138,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'cod_etapa_lote_origen',
-            headerName: 'Etapa origen',
+            headerName: 'Etapa de origen',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -149,7 +149,7 @@ const SeleccionarBienSiembra = () => {
         
         {
             field: 'cantidad_a_trasladar',
-            headerName: 'Cantidad  a trasladar',
+            headerName: 'Cantidad a trasladar',
             width: 140,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -179,7 +179,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'nro_lote_destino_MV',
-            headerName: '# lote destino',
+            headerName: 'Número lote destino',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -189,7 +189,7 @@ const SeleccionarBienSiembra = () => {
         },
         {
             field: 'cod_etapa_lote_destino_MV',
-            headerName: 'Etapa destino',
+            headerName: 'Etapa de destino',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -372,10 +372,10 @@ const SeleccionarBienSiembra = () => {
                         }
                     }
                 } else{
-                    control_error("La cantidad asignada debe ser maximo "+ String(current_good.saldo_disponible))
+                    control_error("La cantidad asignada debe ser máximo "+ String(current_good.saldo_disponible))
                     }
             } else{
-                control_error("Codigo de bien no coincide con el seleccionado")
+                control_error("El código de bien no coincide con el seleccionado")
             }
         } else{
             control_error("Debe seleccionar el bien")
@@ -440,8 +440,8 @@ const SeleccionarBienSiembra = () => {
                             control_form: control_bien,
                             control_name: "codigo_bien",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Codigo bien requerido" } },
-                            label: "Codigo bien",
+                            rules: { required_rule: { rule: true, message: "Código bien requerido" } },
+                            label: "Código bien",
                             type: "number",
                             disabled: false,
                             helper_text: "",
@@ -494,11 +494,11 @@ const SeleccionarBienSiembra = () => {
                             control_form: control_bien,
                             control_name: "cod_etapa_lote",
                             default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            rules: { required_rule: { rule: false, message: "Requerido" } },
                             label: "Etapa de lote",
                             helper_text: "",
                             disabled: true,
-                            select_options: [{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
+                            select_options: [{ label: "Producción", value: "P" }, { label: "Distribución", value: "D" }],
                             option_label: "label",
                             option_key: "value",
                             hidden_text: get_values_bien("es_semilla_vivero") !== false
@@ -512,10 +512,10 @@ const SeleccionarBienSiembra = () => {
                             control_form: control_traslado,
                             control_name: "cod_etapa_lote_destino_MV",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
+                            rules: { required_rule: { rule: true, message: "Requerido" } },
                             label: "Etapa de lote destino",
                             helper_text: "debe seleccionar campo",
-                            select_options: [{ label: "Producción", value: "P" }, { label: "Distribucción", value: "D" }],
+                            select_options: [{ label: "Producción", value: "P" }, { label: "Distribución", value: "D" }],
                             option_label: "label",
                             option_key: "value",
                             hidden_text: get_values_bien("es_semilla_vivero") !== false,
@@ -594,7 +594,7 @@ const SeleccionarBienSiembra = () => {
                             control_name: "codigo_bien",
                             default_value: "",
                             rules: {},
-                            label: "Codigo bien",
+                            label: "Código del bien",
                             type: "number",
                             disabled: false,
                             helper_text: "",
@@ -626,7 +626,7 @@ const SeleccionarBienSiembra = () => {
                     models={goods}
                     columns_model={columns_bienes}
                     row_id={"id_inventario_vivero"}
-                    title_table_modal={"Resultados de la busqueda"}
+                    title_table_modal={"Resultados de la búsqueda"}
                 />
                 
             </Grid>

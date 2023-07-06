@@ -67,7 +67,7 @@ const SeleccionarBienConsumo = () => {
         },
         {
             field: 'nombre_cientifico',
-            headerName: 'Nombre cientifico',
+            headerName: 'Nombre científico',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -143,7 +143,7 @@ const SeleccionarBienConsumo = () => {
         { field: 'id_bien_consumido', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Codigo',
+            headerName: 'Código',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -173,7 +173,7 @@ const SeleccionarBienConsumo = () => {
         },
         {
             field: 'observaciones',
-            headerName: 'Observacion',
+            headerName: 'Observación',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -275,7 +275,7 @@ const SeleccionarBienConsumo = () => {
                     }
                 }
             } else {
-                control_error("Codigo de bien no coincide con el seleccionado")
+                control_error("Código de bien no coincide con el seleccionado")
             }
         } else {
             control_error("Debe seleccionar el bien")
@@ -422,7 +422,7 @@ const SeleccionarBienConsumo = () => {
                             control_form: control_bien_solicitud,
                             control_name: "observaciones",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Observación requerido" } },
+                            rules: { required_rule: { rule: true, message: "Observación requerida" } },
                             label: "Observación",
                             type: "text",
                             multiline_text: true,
