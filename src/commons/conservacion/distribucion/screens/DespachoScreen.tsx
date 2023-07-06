@@ -406,8 +406,10 @@ const DespachoScreen = () => {
                 control_name: 'nro_solicitud',
                 default_value: '',
                 rules: {},
-                label: "Número de solicitud",
-                type: "number",
+                label: 'Número de solicitud',
+                type: 'number',
+
+
                 disabled: true,
                 helper_text: '',
               },
@@ -417,11 +419,18 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 4,
                 control_form: control_solicitud_aprobada,
-                control_name: "persona_cierra",
-                default_value: "",
-                rules: { required_rule: { rule: true, message: "Debe seleccionar la personas que la creó" } },
-                label: "Cierre realizado por",
-                type: "text",
+                control_name: 'persona_cierra',
+                default_value: '',
+                rules: {
+                  required_rule: {
+                    rule: true,
+                    message: 'Debe seleccionar la personas que la creó',
+                  },
+                },
+                label: 'Cierre realizado por',
+                type: 'text',
+
+
                 disabled: true,
                 helper_text: '',
               },
@@ -430,11 +439,16 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 4,
                 control_form: control_solicitud_aprobada,
-                control_name: current_solicitud.solicitud_anulada_solicitante === true ? "fecha_cierre_no_dispo" : "fecha",
-                default_value: (new Date().toString()),
-                rules: { required_rule: { rule: true, message: "Requerido" } },
-                label: "Fecha actual",
-                type: "text",
+                control_name:
+                  current_solicitud.solicitud_anulada_solicitante === true
+                    ? 'fecha_cierre_no_dispo'
+                    : 'fecha',
+                default_value: new Date().toString(),
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Fecha actual',
+                type: 'text',
+
+
                 disabled: true,
                 helper_text: '',
               },
@@ -488,8 +502,10 @@ const DespachoScreen = () => {
                 control_name: 'nro_despachos_viveros',
                 default_value: '',
                 rules: {},
-                label: "Numero de despacho",
-                type: "number",
+                label: 'Número de despacho',
+                type: 'number',
+
+
                 disabled: true,
                 helper_text: '',
               },
@@ -517,11 +533,16 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 4,
                 control_form: control_despacho,
-                control_name: current_solicitud.solicitud_anulada_solicitante === true ? "fecha_anulacion" : "fecha",
-                default_value: (new Date().toString()),
-                rules: { required_rule: { rule: true, message: "Requerido" } },
-                label: "Fecha actual",
-                type: "text",
+                control_name:
+                  current_solicitud.solicitud_anulada_solicitante === true
+                    ? 'fecha_anulacion'
+                    : 'fecha',
+                default_value: new Date().toString(),
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Fecha actual',
+                type: 'text',
+
+
                 disabled: true,
                 helper_text: '',
               },
@@ -530,11 +551,18 @@ const DespachoScreen = () => {
                 xs: 12,
                 md: 12,
                 control_form: control_despacho,
-                control_name: "justificacion_anulacion",
-                default_value: "",
-                rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                label: "Justificación",
-                type: "text",
+                control_name: 'justificacion_anulacion',
+                default_value: '',
+                rules: {
+                  required_rule: {
+                    rule: true,
+                    message: 'Observación requerida',
+                  },
+                },
+                label: 'Justificación',
+                type: 'text',
+
+
                 multiline_text: true,
                 rows_text: 4,
                 disabled: false,

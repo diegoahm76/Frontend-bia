@@ -16,7 +16,6 @@ export const RegistroReposicionExterno: React.FC = () => {
   const handle_open = () => { set_modal(true) };
   const handle_close = () => { set_modal(false) };
 
-
   console.log('texto', form_state);
   console.log('archivo', form_file);
   console.log('multiples archivos', form_multiple_files);

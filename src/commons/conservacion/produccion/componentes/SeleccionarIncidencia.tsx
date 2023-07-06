@@ -222,7 +222,7 @@ const SeleccionarIncidencia = ({ control_incidencia, get_values }: IProps) => {
               control_name: 'descripcion',
               default_value: '',
               rules: {
-                required_rule: { rule: true, message: 'Motivo requerido' },
+                required_rule: { rule: true, message: 'Observación requerida' },
               },
               label: 'Motivo',
               type: 'text',
