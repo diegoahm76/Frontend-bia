@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 // import { NavigateFunction } from 'react-router-dom';
 import { api } from '../../../../../api/axios';
@@ -39,40 +41,45 @@ const control_success = (message: ToastContent) =>
     theme: 'light'
   });
 
-// Obtiene ccd tabla intermedia
-export const get_assignments_service: any = (
+//! Obtiene ccd tabla intermedia de asignaciones usar en TRD tambien
+export const get_assignments_service = (
   ccd_current: any,
-  nombreUnidadActual?: any
-) => {
-  return async (
-    dispatch: Dispatch<any>
-    // getState: any
-  ): Promise<AxiosResponse | AxiosError> => {
+): any => {
+  return async (dispatch: Dispatch<any>): Promise<AxiosResponse | AxiosError> => {
     try {
-      const id_ccd: number = ccd_current.id_ccd;
-      const { data } = await api.get(
-        `gestor/ccd/catalogo/unidad/get-by-id-ccd/${id_ccd}/`
+      const promise1 = api.get(
+        `transversal/organigrama/unidades/get-by-organigrama/${ccd_current.id_organigrama}/`
       );
+
+      const promise2 = api.get(
+        `gestor/ccd/catalogo/unidad/get-by-id-ccd/${ccd_current.id_ccd}/`
+      );
+
+      const [response1, response2] = await Promise.all([promise1, promise2]);
+
+      const dataUnidadOrganigrama = response1.data;
+      const data = response2.data;
+
       const new_data = data.data.map((item: any, index: number) => {
+        const unidad = dataUnidadOrganigrama.data.find(
+          (unidad: any) => unidad.id_unidad_organizacional === item.id_unidad_organizacional
+        );
+
         return {
           ...item,
           id: index + 1,
-          nombreUnidad: nombreUnidadActual.label ? nombreUnidadActual.label : ''
+          nombreUnidad: unidad?.nombre,
         };
       });
-      console.log(
-        '🚀 ~ file: assignmentsThunks.ts ~ line 59 ~ return ~ new_data',
-        new_data
-      );
+
       dispatch(get_assignments_ccd(new_data));
-      // control_success(data.detail);
       return data;
     } catch (error: any) {
-      // control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
 };
+
 
 export const create_or_delete_assignments_service: any = (
   new_items: any[],
@@ -91,7 +98,7 @@ export const create_or_delete_assignments_service: any = (
 
       // const responses = await Promise.all(requests);
 
-      dispatch(await get_assignments_service(ccd_current));
+      dispatch(get_assignments_service(ccd_current));
       control_success(data.detail);
 
       return data;

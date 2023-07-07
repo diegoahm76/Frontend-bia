@@ -178,12 +178,15 @@ const use_ccd = () => {
     console.log(ccd_current, 'ccd_current');
     if (ccd_current !== null) {
       const result_name = organigram.filter((item) => {
-        // console.log(ccd_current, 'ccd_current')
-        // console.log(organigram, 'organigrama')
-
         return item.id_organigrama === ccd_current.id_organigrama;
       });
+
+      const result_unity = unity_organigram.filter(
+        (item) => item.id_organigrama === ccd_current.id_organigrama
+      );
+
       console.log('result_name', result_name);
+      console.log('result_unity', result_unity);
       const obj: ICCDForm = {
         id_ccd: ccd_current.id_ccd ? ccd_current.id_ccd : 0,
         nombre_ccd: ccd_current.nombre ? ccd_current.nombre : '',
@@ -193,8 +196,9 @@ const use_ccd = () => {
           value: ccd_current.id_organigrama
         },
         unidades_organigrama: {
-          label: ccd_current.nombre_unidad_organizacional,
-          value: ccd_current.nombre_unidad_organizacional
+          label:
+            ' -- ' /* result_unity && result_unity.length > 0 ? result_unity[0].nombre : '' */
+          // value: result_unity && result_unity.length > 0 ? result_unity[0].id_unidad_organizacional : 0
         },
         version: ccd_current.version,
         fecha_terminado: ccd_current.fecha_terminado,
@@ -202,11 +206,6 @@ const use_ccd = () => {
         valor_aumento_subserie: ccd_current.valor_aumento_subserie,
         ruta_soporte: ccd_current.ruta_soporte
       };
-      /* console.log(
-        obj,
-        'obj'
-      )
-      */
       reset_create_ccd(obj);
       set_save_ccd(true);
     }
@@ -256,7 +255,7 @@ const use_ccd = () => {
   }, [ccd_current]);
   //  UseEffect para obtener asignaciones
   useEffect(() => {
-    dispatch(get_assignments_service(ccd_current, control._formValues.unidades_asignacion));
+    dispatch(get_assignments_service(ccd_current));
   }, [ccd_current]);
 
   //  UseEffect para obtener asignaciones
@@ -323,7 +322,6 @@ const use_ccd = () => {
   // submit Crear CCD
   const on_submit_create_ccd = (e: any): void => {
     e.preventDefault();
-    console.log('hola a todos perros hps desde la vida');
     console.log(data_create_ccd, 'data_create_ccd');
     // console.log('epa la patria', ccd_current);
     if (ccd_current !== null) {
@@ -394,7 +392,10 @@ const use_ccd = () => {
       String(updatedCCD.valor_aumento_subserie)
     );
     // formData.append('ruta_soporte', updatedCCD.ruta_soporte);
-    if (updatedCCD.ruta_soporte) {
+    if (
+      !updatedCCD.ruta_soporte ||
+      typeof updatedCCD.ruta_soporte !== 'string'
+    ) {
       formData.append('ruta_soporte', updatedCCD.ruta_soporte);
     }
 
@@ -418,7 +419,6 @@ const use_ccd = () => {
       )
     );
   };
-
 
   // ? Funciones para limpiar el formulario de Crear CCD
   const clean_ccd = (): void => {
@@ -490,22 +490,14 @@ const use_ccd = () => {
 
     console.log(itemSend, 'itemSend');
 
-    const itemSendDef = [
-      ...assignments_ccd,
-      ...itemSend
-    ]
+    const itemSendDef = [...assignments_ccd, ...itemSend];
 
     console.log(itemSendDef, 'itemSendDef');
 
     void dispatch(
       create_or_delete_assignments_service(itemSendDef, ccd_current)
     ).then(() => {
-      void dispatch(
-        get_assignments_service(
-          ccd_current,
-          control._formValues.unidades_asignacion
-        )
-      );
+      void dispatch(get_assignments_service(ccd_current));
     });
   };
 
@@ -523,12 +515,7 @@ const use_ccd = () => {
     void dispatch(
       create_or_delete_assignments_service(new_items, ccd_current)
     ).then(() => {
-      void dispatch(
-        get_assignments_service(
-          ccd_current,
-          control._formValues.unidades_asignacion
-        )
-      );
+      void dispatch(get_assignments_service(ccd_current));
     });
   };
 

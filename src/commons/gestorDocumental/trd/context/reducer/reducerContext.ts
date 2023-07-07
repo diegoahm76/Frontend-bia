@@ -23,6 +23,17 @@ export const reducer = (state: any, { payload, type }: any): any => {
         ...state,
         modalCCDUsados: payload || false
       };
+
+    case Modal.OPEN_MODAL_CREACION_FORMATO_TIPO:
+      return {
+        ...state,
+        modalCreacionFormatoTipo: payload || true
+      };
+    case Modal.CLOSE_MODAL_CREACION_FORMATO_TIPO:
+      return {
+        ...state,
+        modalCreacionFormatoTipo: payload || false
+      };
     default:
       return state;
   }

@@ -83,11 +83,11 @@ export const get_classification_ccds_service = (
       // console.log(name, version, 'name, version');
 
       // console.log('helllooo');
-      if (name === '' || version === '') {
+      /* if (name === '' || version === '') {
         await notification_error(
           'Debe ingresar el nombre y la versión del CCD'
         );
-      } else if (data.data.length === 0) {
+      } */ if (data.data.length === 0) {
         await notification_error(`No se encontró el CCD ${name} - ${version}`);
       } else {
         dispatch(get_ccds(data.data));
@@ -192,7 +192,7 @@ export const create_ccds_service: any = (
       return data;
     } catch (error: any) {
       console.log(error.response.data, 'error');
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail ?? 'ha ocurrido un error');
       return error as AxiosError;
     } finally {
       desactivateLoadingButton();
@@ -224,7 +224,7 @@ export const update_ccds_service: any = (
       // closeModalBusquedaCreacionCCD();
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail ?? 'Ha ocurrido un error');
       return error as AxiosError;
     } finally {
       deactivateLoadingButton();

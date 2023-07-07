@@ -40,6 +40,7 @@ import { notification_error } from '../crearSeriesCcdDialog/utils/success_errors
 import { get_subseries_ccd_current } from '../../store/slices/subseriesSlice';
 import { get_subseries_service } from '../../store/thunks/subseriesThunks';
 import use_ccd from '../../hooks/useCCD';
+import { getCatalogoSeriesYSubseries } from '../CatalogoSeriesYSubseries/services/CatalogoSeriesYSubseries.service';
 
 const CrearSeriesCcdDialog = ({
   is_modal_active,
@@ -143,7 +144,11 @@ const CrearSeriesCcdDialog = ({
 
   const handleAddIndependentSeries = (params: any) => {
     // ? console.log(params.row);
-    void dispatch(create_indepent_series_service(params.row.id_serie_doc));
+    void dispatch(create_indepent_series_service(params.row.id_serie_doc)).then(() => {
+      dispatch(
+        getCatalogoSeriesYSubseries(ccd_current.id_ccd)
+      );
+    })
   };
 
   const columns: GridColDef[] = [
