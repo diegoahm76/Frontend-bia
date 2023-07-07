@@ -132,6 +132,15 @@ export const VistaSolicitud: React.FC = () => {
             disabled
           />
         </Grid>
+        <Grid item xs={12} sm={5}>
+          <TextField
+            label="Valor Abonado"
+            size="small"
+            fullWidth
+            value={`${'Aún no esta'}`}
+            disabled
+          />
+        </Grid>
         <Grid item xs={12} sm={15}>
           {
             solicitud_facilidad.tipo_actuacion === 'tipo 1' ? (

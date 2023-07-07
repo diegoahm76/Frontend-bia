@@ -40,6 +40,7 @@ export interface FacilidadPago {
   identificacion: string;
   numero_radicacion: string;
   fecha_generacion: string;
+  nombre_funcionario: string;
 }
 
 export interface Funcionario {
