@@ -21,17 +21,17 @@ import {
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { type Dispatch, useEffect, useRef, useState, type SetStateAction } from 'react';
 import { javascriptGenerator } from 'blockly/javascript';
-import { VisualBlockEditor } from "../../components/visual-block-editor";
-import { TransitionAlerts } from "../../components/alert";
-import { Liquidator } from "../../components/liquidador/liquidator";
-import { PruebasLiquidacionModal } from "../../components/constructorLiquidador/modal/PruebasLiquidacionModal";
+import { VisualBlockEditor } from "../visual-block-editor";
+import { TransitionAlerts } from "../alert";
+import { Liquidator } from "../liquidador/liquidator";
+import { PruebasLiquidacionModal } from "./modal/PruebasLiquidacionModal";
 import type { OpcionLiquidacion } from "../../interfaces/liquidacion";
 import { api } from "../../../../api/axios";
 import { Add, Build, Save } from "@mui/icons-material";
 import RemoveCircleOutlinedIcon from '@mui/icons-material/RemoveCircleOutlined';
-import { NotificationModal } from "../../components/NotificationModal";
+import { NotificationModal } from "../NotificationModal";
 import Blockly from 'blockly';
-import './EditarOpcionLiquidacion.css';
+import './AgregarEditarOpciones.css';
 
 interface Rows {
   id: number;
@@ -46,7 +46,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const EditarOpcionLiquidacion = ({ opciones_liquidaciones, id_opcion_liquidacion, set_id_opcion_liquidacion, set_refresh_page }: IProps): JSX.Element => {
+export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquidacion, set_id_opcion_liquidacion, set_refresh_page }: IProps): JSX.Element => {
   const [row, set_row] = useState<Rows[]>([]);
   const [variables, set_variables] = useState<string[]>([]);
   const [formData, setFormData] = useState({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
@@ -148,13 +148,13 @@ export const EditarOpcionLiquidacion = ({ opciones_liquidaciones, id_opcion_liqu
     }));
 
     set_variables([
-      ...Array.from(new Set([...variables, formData.variable.replace(/\s/g, '_').toLowerCase()]))
+      ...Array.from(new Set([...variables, formData.variable.replace(/\s/g, '_')]))
     ]);
 
     const newRow = {
       id: row.length + 1,
       parametros: formData.nombre_opcion_liquidacion,
-      nombre: formData.variable.replace(/\s/g, '_').toLowerCase(),
+      nombre: formData.variable.replace(/\s/g, '_'),
       tipo: 'Tipo nuevo',
       opciones: '',
     };
