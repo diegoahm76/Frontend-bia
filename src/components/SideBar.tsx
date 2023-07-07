@@ -15,7 +15,7 @@ import {
   Icon,
   Grid,
   CircularProgress,
-  Typography,
+  Typography
 } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -25,6 +25,7 @@ import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
 import { open_drawer_desktop, open_drawer_mobile } from '../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ListIcon from '@mui/icons-material/List';
 import type { AuthSlice, Menu, MenuElement } from '../commons/auth/interfaces';
 import { logout } from '../commons/auth/store';
 import { SuperUserScreen } from '../commons/seguridad/screens/SuperUserScreen';
@@ -88,6 +89,10 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
     navigate('/app/usuario/autorizacion_notificacion');
   };
 
+  const handle_indices_electronicos = (): void => {
+    navigate('/app/usuario/indices_electronicos');
+  };
+
   const open_collapse = (obj: Menu, key: number): void => {
     const temp_permisos = [...permisos];
     temp_permisos[key] = { ...obj, expanded: !obj.expanded };
@@ -126,14 +131,14 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         borderRadius: '15px 0 0 15px',
         height: 'calc(98vh - 10px)',
         overflowY: 'scroll',
-        boxShadow: '0px 2px 10px #041926',
+        boxShadow: '0px 2px 10px #041926'
       }}
     >
       <Toolbar
         sx={{
           display: 'grid',
           height: '100px',
-          background: '#041926 !important',
+          background: '#041926 !important'
         }}
       >
         <img
@@ -158,50 +163,72 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           sx={{
             bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
             mt: '5px',
-            borderRadius: '10px',
+            borderRadius: '10px'
           }}
         >
           <List component="div" disablePadding>
             {/* Datos de acceso del usuario */}
-            <ListItemButton sx={{ pl: 4 }} >
-              <ListItemIcon >
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
                 <PersonIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
                     height: '20px'
-
                   }}
-                />                
+                />
               </ListItemIcon>
-              <ListItemText primary="Datos Acceso" onClick={handle_datos_acceso}/>
+              <ListItemText
+                primary="Datos Acceso"
+                onClick={handle_datos_acceso}
+              />
             </ListItemButton>
 
             {/* Datos de Personales del usuario */}
-            <ListItemButton sx={{ pl: 4 }} >
-              <ListItemIcon >
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
                 <ContactEmergencyIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
                     height: '20px'
-
                   }}
-                />                
+                />
               </ListItemIcon>
-              <ListItemText primary="Datos Personales" onClick={handle_datos_personales}/>
+              <ListItemText
+                primary="Datos Personales"
+                onClick={handle_datos_personales}
+              />
             </ListItemButton>
 
             {/* Autorización de Notificacion  */}
-            <ListItemButton sx={{ pl: 4 }} >
-              <ListItemIcon >
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
                 <CircleNotificationsIcon
                   sx={{
                     color: mod_dark ? '#fafafa' : '#141415',
                     height: '20px'
-
                   }}
-                />                
+                />
               </ListItemIcon>
-              <ListItemText primary="Autoriza Notificaciones" onClick={handle_autorizacion_notificacion}/>
+              <ListItemText
+                primary="Autoriza Notificaciones"
+                onClick={handle_autorizacion_notificacion}
+              />
+            </ListItemButton>
+
+            {/* índices electrónicos  */}
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <ListIcon
+                  sx={{
+                    color: mod_dark ? '#fafafa' : '#141415',
+                    height: '20px'
+                  }}
+                />
+              </ListItemIcon>
+              <ListItemText
+                primary="Índices electrónicos"
+                onClick={handle_indices_electronicos}
+              />
             </ListItemButton>
 
             {/* Validamos si es superusuario */}
@@ -214,8 +241,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                   <SupervisedUserCircleIcon
                     sx={{
                       color: mod_dark ? '#fafafa' : '#141415',
-                      height: '20px',
-
+                      height: '20px'
                     }}
                   />
                 </ListItemIcon>
@@ -246,7 +272,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             <List
               sx={{
                 margin: '0 20px',
-                color: mod_dark ? '#fafafa' : '#141415',
+                color: mod_dark ? '#fafafa' : '#141415'
               }}
               key={k}
             >
@@ -265,7 +291,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 in={e.expanded}
                 sx={{
                   bgcolor: mod_dark ? '#2B3C46' : '#F0F0F0',
-                  borderRadius: '10px',
+                  borderRadius: '10px'
                 }}
               >
                 {e.menus.map((m, km) => {
@@ -275,7 +301,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                       disablePadding
                       key={km}
                       sx={{
-                        pl: '10px',
+                        pl: '10px'
                       }}
                     >
                       <ListItemButton
@@ -319,7 +345,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             alignContent="center"
             justifyContent="center"
             sx={{
-              height: 'calc(100% - 170px)',
+              height: 'calc(100% - 170px)'
             }}
           >
             <Grid item xs={12} container justifyContent="center" padding={5}>
@@ -350,15 +376,15 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           open={mobile_open}
           onClose={handle_drawer_toggle}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true // Better open performance on mobile.
           }}
           sx={{
             display: { xs: 'block' },
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
               width: drawer_width,
-              bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
-            },
+              bgcolor: mod_dark ? '#042F4A' : '#FAFAFA'
+            }
           }}
         >
           {conten_drawer}
@@ -373,19 +399,19 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
               boxSizing: 'border-box',
               width: drawer_width,
               bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
-              borderRight: 'none',
-            },
+              borderRight: 'none'
+            }
           }}
         >
           {conten_drawer}
         </Drawer>
       </Box>
-      <Box sx={{
-      
+      <Box
+        sx={{
           width: '100vw',
           height: '100%',
           ml: { sm: desktop_open ? `${drawer_width}px` : '0px' },
-          bgcolor: mod_dark ? '#042F4A' : '#FAFAFA',
+          bgcolor: mod_dark ? '#042F4A' : '#FAFAFA'
         }}
       >
         {userinfo.tipo_usuario === 'E' && <HeaderGov />}
@@ -394,12 +420,11 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             padding: '0px 20px 20px 20px',
             mt: '64px',
             minHeight: '100vh',
-            height: '-webkit-fill-available',
-           
+            height: '-webkit-fill-available'
           }}
         >
           <Outlet />
-        </Box> 
+        </Box>
         {userinfo.tipo_usuario === 'E' && <FooterGov />}
       </Box>
     </>
