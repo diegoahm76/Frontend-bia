@@ -25,54 +25,51 @@
  * @author samelh@google.com (Sam El-Husseini)
  */
 
-import './BlocklyComponent.css';
 import React, { useEffect, useRef } from 'react';
-
 import Blockly from 'blockly/core';
 import locale from 'blockly/msg/es';
 import 'blockly/blocks';
+import './BlocklyComponent.css';
 
 Blockly.setLocale(locale);
 
 const BlocklyComponent = (props) => {
 
-    const blocklyDiv = useRef();
-    const toolbox = useRef();
+  const blocklyDiv = useRef();
+  const toolbox = useRef();
+  const primaryWorkspace = props.primaryWorkspace;
 
-    const primaryWorkspace = props.primaryWorkspace
+  // add useEffect only when update array props.variables
+  useEffect(() => {
+    if (!primaryWorkspace.current) {
 
+      const { initialXml, children, ...rest } = props;
+      primaryWorkspace.current = Blockly.inject(
+        blocklyDiv.current,
+        {
+          toolbox: toolbox.current,
+          ...rest
+        },
+      );
+      
+      // Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), primaryWorkspace.current);
+      Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(initialXml), primaryWorkspace.current);
+    };
+    window.r = primaryWorkspace.current
+    props.variables?.forEach(variable => {
+      primaryWorkspace.current.createVariable(variable);
+    })
 
-    // add useEffect only when update array props.variables
-    useEffect(() => {
+  }, [props, props.variables, primaryWorkspace, toolbox, blocklyDiv])
 
-
-        if (!primaryWorkspace.current) {
-
-            const { initialXml, children, ...rest } = props;
-            primaryWorkspace.current = Blockly.inject(
-                blocklyDiv.current,
-                {
-                    toolbox: toolbox.current,
-                    ...rest
-                },
-
-            );
-            Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), primaryWorkspace.current);
-        };
-        window.r = primaryWorkspace.current
-        props.variables?.forEach(variable => {
-            primaryWorkspace.current.createVariable(variable);
-        })
-
-    }, [props, props.variables, primaryWorkspace, toolbox, blocklyDiv])
-
-    return (
-        <React.Fragment>
-            <div ref={blocklyDiv} id="blocklyDiv" />
-            <div style={{ display: 'none' }} ref={toolbox}>
-                {props.children}
-            </div>
-        </React.Fragment>);
+  return (
+    <React.Fragment>
+      <div ref={blocklyDiv} id="blocklyDiv" />
+      <div style={{ display: 'none' }} ref={toolbox}>
+        {props.children}
+      </div>
+    </React.Fragment>
+  );
 }
 
 export default BlocklyComponent;

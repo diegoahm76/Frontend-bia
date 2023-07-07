@@ -26,7 +26,8 @@ export class BlocklyUtils {
 
   static loadXml = (xmlText, workspace) => {
     if (xmlText) {
-      const xmlDom = Blockly.Xml.textToDom(xmlText);
+      // const xmlDom = Blockly.Xml.textToDom(xmlText);
+      const xmlDom = Blockly.utils.xml.textToDom(xmlText);
       Blockly.Xml.domToWorkspace(xmlDom, workspace);
     }
   }
@@ -34,6 +35,6 @@ export class BlocklyUtils {
   static getXml = (workspace) => {
     const xmlDom = Blockly.Xml.workspaceToDom(workspace);
     const xmlText = Blockly.Xml.domToText(xmlDom);
-    return xmlText
+    return xmlText;
   }
 }

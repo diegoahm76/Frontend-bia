@@ -28,7 +28,6 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import * as Blockly from 'blockly/core';
 
 
@@ -69,7 +68,7 @@ class FieldRenderComponent extends React.Component {
   render() {
     return <div style={{ color: '#fff' }}>
       Hello from React!
-        </div>;
+    </div>;
   }
 }
 

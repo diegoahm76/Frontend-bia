@@ -6,6 +6,7 @@ import { LiquidatorService } from './liquidator.api';
 import { modifyVariableInitValue } from '../visual-block-editor/utils';
 import { Button, MenuItem, Select, Stack, TextField } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import CalculateIcon from '@mui/icons-material/Calculate';
 import './liquidator.css';
 
 function Liquidator(props) {
@@ -141,7 +142,7 @@ function Liquidator(props) {
           }
           <Stack
             direction='row'
-            justifyContent='center'
+            justifyContent='flex-end'
             spacing={2}
             sx={{ mr: '15px', mb: '10px', mt: '10px' }}
           >
@@ -153,7 +154,12 @@ function Liquidator(props) {
             >
               Cerrar
             </Button>
-            <Button variant="contained" color="primary" type="submit">
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              startIcon={<CalculateIcon />}
+            >
               Calcular
             </Button>
           </Stack>
