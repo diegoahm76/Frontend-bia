@@ -6,8 +6,10 @@ interface TRD {
   trd_current: any;
 
   //! catalogo de series y subseries por Unidad organizacional
-
   catalado_series_subseries_unidad_organizacional: any[];
+
+  //! data formatos tipos medios creados
+  data_format_documental_type: any[];
 }
 
 const initial_state: TRD = {
@@ -15,7 +17,9 @@ const initial_state: TRD = {
   trds: [],
   trd_current: null,
   //! catalogo de series y subseries por Unidad organizacional
-  catalado_series_subseries_unidad_organizacional: []
+  catalado_series_subseries_unidad_organizacional: [],
+  //! data formatos tipos medios creados
+  data_format_documental_type: []
 };
 
 export const trd_slice = createSlice({
@@ -36,6 +40,12 @@ export const trd_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.catalado_series_subseries_unidad_organizacional = action.payload;
+    },
+    get_data_format_documental_type: (
+      state: any,
+      action: PayloadAction<any>
+    ) => {
+      state.data_format_documental_type = action.payload;
     }
   }
 });

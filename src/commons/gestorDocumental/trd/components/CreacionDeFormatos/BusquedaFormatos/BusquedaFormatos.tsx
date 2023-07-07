@@ -6,9 +6,9 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
   Dialog,
   DialogActions,
@@ -28,23 +28,32 @@ import CleanIcon from '@mui/icons-material/CleaningServices';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { AvatarStyles } from '../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
+import { ModalContextTRD } from '../../../context/ModalsContextTrd';
 
-const CrearSeriesCcdDialog = ({
-  is_modal_active,
-  set_is_modal_active,
-  title
-}: any) => {
-  /* const { series_ccd, serie_ccd_current } = useAppSelector(
-    (state) => state.series
-  ); */
+// * react select
+import Select from 'react-select';
+import { use_trd } from '../../../hooks/use_trd';
+
+export const AdmnistrarFormatos = (): JSX.Element => {
+  //! I create a new variable called dispatch of type any
+  const dispatch: any = useAppDispatch();
+
+  const { data_format_documental_type } = useAppSelector(
+    (state: any) => state.trd_slice
+  );
+
+  const { control_format_documental_type } = use_trd();
+
+  //! context for the modal interacion
+  const { modalCreacionFormatoTipo, closeModalCreacionFormatoTipo } =
+    useContext(ModalContextTRD);
 
   // const { ccd_current } = useAppSelector((state: any) => state.ccd);
   const [title_button, set_title_button] = useState('Guardar');
 
-  //! I create a new variable called dispatch of type any
-  const dispatch: any = useAppDispatch();
   /* const {
     register,
     reset,
@@ -138,15 +147,15 @@ const CrearSeriesCcdDialog = ({
     {
       headerName: 'Tipo de medio documental',
       field: 'tipo_medio_doc',
-      minWidth: 180,
+      minWidth: 200,
       maxWidth: 225,
       flex: 1
     },
     {
       headerName: 'Nombre del formato',
       field: 'nombre',
-      minWidth: 180,
-      maxWidth: 225,
+      minWidth: 280,
+      maxWidth: 295,
       flex: 1
     },
     {
@@ -155,34 +164,35 @@ const CrearSeriesCcdDialog = ({
       minWidth: 200,
       maxWidth: 235,
       flex: 1,
-      renderCell: (params: any) => (
-        <>
-          <IconButton
-            onClick={() => {
-              console.log('params edit formato', params);
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <EditIcon
-                titleAccess="Editar formato tipo de medio"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-          <IconButton
-            onClick={() => {
-              console.log('params delete formato', params);
-            }}
-          >
-            <Avatar sx={AvatarStyles} variant="rounded">
-              <DeleteIcon
-                titleAccess="Eliminar formato tipo de medio"
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </>
-      )
+      renderCell: (params: any) =>
+        params.row.registro_precargado ? null : (
+          <>
+            <IconButton
+              onClick={() => {
+                console.log('params edit formato', params);
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <EditIcon
+                  titleAccess="Editar formato tipo de medio"
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+            <IconButton
+              onClick={() => {
+                console.log('params delete formato', params);
+              }}
+            >
+              <Avatar sx={AvatarStyles} variant="rounded">
+                <DeleteIcon
+                  titleAccess="Eliminar formato tipo de medio"
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </>
+        )
     }
   ];
 
@@ -190,18 +200,14 @@ const CrearSeriesCcdDialog = ({
     <Dialog
       id="dialog_series_ccd"
       maxWidth="md"
-      open={is_modal_active}
-      onClose={() => {
-        set_is_modal_active(false);
-      }}
+      open={modalCreacionFormatoTipo}
+      onClose={closeModalCreacionFormatoTipo}
     >
       <DialogTitle>
         Módulo creación de Formatos para cada tipo de medio documental
         <IconButton
           aria-label="close"
-          onClick={() => {
-            set_is_modal_active(false);
-          }}
+          onClick={closeModalCreacionFormatoTipo}
           sx={{
             position: 'absolute',
             right: 8,
@@ -222,40 +228,127 @@ const CrearSeriesCcdDialog = ({
         >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
-              <TextField
+              <Controller
+                name="cod-tipo-medio"
+                control={control_format_documental_type}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <div>
+                    <Select
+                      value={value}
+                      // name="id_ccd"
+                      onChange={(selectedOption) => {
+                        console.log(
+                          'selectedOption en tipo de formato por medio',
+                          selectedOption
+                        );
+                        /* dispatch(
+                            getServiceSeriesSubseriesXUnidadOrganizacional(
+                              selectedOption.item
+                            )
+                          ); */
+                        onChange(selectedOption);
+                      }}
+                      isDisabled={/* trd_current != null */ false}
+                      options={[
+                        {
+                          label: 'Seleccionar',
+                          value: null
+                        },
+                        {
+                          label: 'Físico',
+                          value: 1
+                        },
+                        {
+                          label: 'Electronico',
+                          value: 2
+                        }
+                        // ...ccd_list
+                      ]}
+                      placeholder="Seleccionar"
+                    />
+                    <label>
+                      <small
+                        style={{
+                          color: 'rgba(0, 0, 0, 0.6)',
+                          fontWeight: 'thin',
+                          fontSize: '0.75rem',
+                          marginTop: '0.25rem',
+                          marginLeft: '0.25rem'
+                        }}
+                      >
+                        Formato de tipo de medio documental
+                        {/* {trd_current != null
+                            ? `CCD seleccionado`
+                            : `CDD's no usados en otro TRD`} */}
+                      </small>
+                    </label>
+                  </div>
+                )}
+              />
+
+              {/* <TextField
                 margin="dense"
                 fullWidth
-                /* {...register('nombre', { required: true })} */
+                {...register('nombre', { required: true })}
                 size="small"
                 label="Nombre"
                 variant="outlined"
                 value={''}
-              />
-             {/* {errors.nombre !== null && <p>{errors.nombre?.message}</p>} */}
+              /> */}
+              {/* {errors.nombre !== null && <p>{errors.nombre?.message}</p>} */}
             </Grid>
             <Grid item xs={12} sm={6}>
-              <TextField
-                margin="dense"
-                fullWidth
-                /* {...register('codigo', { required: true })} */
-                size="small"
-                label="Código"
-                disabled={title_button === 'Actualizar'}
-                style={{
-                  visibility:
-                    title_button === 'Actualizar' ? 'hidden' : 'visible'
-                }}
-                variant="outlined"
-                value={''}
+              <Controller
+                name="nombre"
+                control={control_format_documental_type}
+                defaultValue=""
+                // rules={{ required: false }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error }
+                }) => (
+                  <TextField
+                    margin="dense"
+                    fullWidth
+                    // name="version"
+                    label="Nombre tipo de formato"
+                    helperText={
+                      'Ingrese nombre'
+                      /*  trd_current != null
+                          ? 'Actualice la versión'
+                          : 'Ingrese versión' */
+                    }
+                    size="small"
+                    variant="outlined"
+                    value={value}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => {
+                      onChange(e.target.value);
+                      console.log(e.target.value);
+                    }}
+                  />
+                )}
               />
-              {/* {errors.codigo !== null && <p>{errors.codigo?.message}</p>}
-               */}
               <Stack
                 direction="row"
                 justifyContent="flex-end"
                 spacing={2}
                 sx={{ mt: '0' }}
               >
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  startIcon={<SearchIcon />}
+                  onClick={() => {
+                    console.log('buscando datos de los formatos relacionados');
+                  }}
+                >
+                  BUSCAR
+                </Button>
                 <Button
                   type="submit"
                   color="primary"
@@ -281,7 +374,53 @@ const CrearSeriesCcdDialog = ({
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={[]}
+                rows={[
+                  {
+                      "id_formato_tipo_medio": 54,
+                      "tipo_medio_doc": "Físico",
+                      "nombre": "PAPEL",
+                      "registro_precargado": true,
+                      "activo": true,
+                      "item_ya_usado": false,
+                      "cod_tipo_medio_doc": "F"
+                  },
+                  {
+                      "id_formato_tipo_medio": 55,
+                      "tipo_medio_doc": "Físico",
+                      "nombre": "CINTA",
+                      "registro_precargado": true,
+                      "activo": true,
+                      "item_ya_usado": false,
+                      "cod_tipo_medio_doc": "F"
+                  },
+                  {
+                      "id_formato_tipo_medio": 56,
+                      "tipo_medio_doc": "Físico",
+                      "nombre": "ACETATO",
+                      "registro_precargado": true,
+                      "activo": true,
+                      "item_ya_usado": false,
+                      "cod_tipo_medio_doc": "F"
+                  },
+                  {
+                      "id_formato_tipo_medio": 57,
+                      "tipo_medio_doc": "Físico",
+                      "nombre": "CD",
+                      "registro_precargado": true,
+                      "activo": true,
+                      "item_ya_usado": false,
+                      "cod_tipo_medio_doc": "F"
+                  },
+                  {
+                      "id_formato_tipo_medio": 58,
+                      "tipo_medio_doc": "Físico",
+                      "nombre": "Papel",
+                      "registro_precargado": false,
+                      "activo": true,
+                      "item_ya_usado": false,
+                      "cod_tipo_medio_doc": "F"
+                  }
+              ]}
                 columns={columns_creacion_formatos}
                 pageSize={5}
                 rowsPerPageOptions={[10]}
@@ -301,9 +440,7 @@ const CrearSeriesCcdDialog = ({
         >
           <Button
             variant="outlined"
-            onClick={() => {
-              set_is_modal_active(false);
-            }}
+            onClick={closeModalCreacionFormatoTipo}
             startIcon={<CloseIcon />}
           >
             CERRAR
@@ -313,6 +450,3 @@ const CrearSeriesCcdDialog = ({
     </Dialog>
   );
 };
-
-// eslint-disable-next-line no-restricted-syntax
-export default CrearSeriesCcdDialog;

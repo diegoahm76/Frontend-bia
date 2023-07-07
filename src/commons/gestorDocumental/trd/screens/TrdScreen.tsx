@@ -6,6 +6,7 @@ import { Controller } from 'react-hook-form';
 import { Grid, TextField, Stack, Button } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { Title } from '../../../../components/Title';
 import { LoadingButton } from '@mui/lab';
 // * react select
@@ -32,6 +33,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ModalCCDUsados } from '../components/ModalCCDSUsados/ModalCCDSUsados';
 import { control_error } from '../../../../helpers';
 import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/CCDSeleccionadoCatalogo';
+import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 
 export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -77,7 +79,7 @@ export const TrdScreen: FC = (): JSX.Element => {
   }, [trd_current?.fecha_terminado]);
 
   // ? modal context
-  const { openModalModalSearchTRD, openModalCCDUsados } =
+  const { openModalModalSearchTRD, openModalCCDUsados, openModalCreacionFormatoTipo } =
     useContext(ModalContextTRD);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -317,6 +319,23 @@ export const TrdScreen: FC = (): JSX.Element => {
                 flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
               }
             </Button>
+
+
+              {/* these buttons that I'll create going to change asap in the frontend view, especially in position  */}
+
+
+              <Button
+              // color="info"
+              color="primary"
+              variant="contained"
+              startIcon={<AddCircleIcon />}
+              onClick={openModalCreacionFormatoTipo}
+            >
+              MÓDULO DE CREACION DE FORMATOS
+            </Button>
+
+            {/* buttons end */}
+
           </Stack>
         </Grid>
       </Grid>
@@ -327,6 +346,10 @@ export const TrdScreen: FC = (): JSX.Element => {
       {/* -- this modal allow us to see the ccds used in other TRD -- */}
       <ModalCCDUsados />
       {/* -- this modal allow us to see the ccds used in other TRD -- */}
+
+      {/* -- this modal allow us to (create, edit, delete or deactivate) a new format type -- */}
+      <AdmnistrarFormatos />
+      {/* -- this modal allow us to (create, edit, delete or deactivate) a new format type -- */}
     </>
   );
 };

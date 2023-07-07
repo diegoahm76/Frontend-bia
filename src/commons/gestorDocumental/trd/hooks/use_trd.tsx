@@ -14,12 +14,12 @@ export const use_trd = (): any => {
   const dispatch: any = useAppDispatch();
 
   // eslint-disable-next-line no-empty-pattern
-  const { trd_current,  /* trds */ } = useAppSelector(
+  const { trd_current /* trds */ } = useAppSelector(
     (state: any) => state.trd_slice
   );
 
   // eslint-disable-next-line no-empty-pattern
-  const { ccd_finished /* trds */ } = useAppSelector(
+  const { ccd_finished } = useAppSelector(
     (state: any) => state.finished_ccd_slice
   );
 
@@ -53,6 +53,18 @@ export const use_trd = (): any => {
     }
   });
   const data_create_trd_modal = watch_create_trd_modal();
+
+  // ? form (create, edit, delete or deactivate) format documental type
+  const {
+    // handleSubmit: handle_submit_searched_trd_modal,
+    //! control series y subseries para catalogo de unidad organizacional
+    control: control_format_documental_type,
+    watch: watch_format_documental_type,
+    reset: reset_format_documental_type,
+    formState: { errors: errors_format_documental_type }
+  } = useForm({ defaultValues: initial_state_searched_trd });
+  const data_format_documental_type = watch_searched_trd_modal();
+
   //*
   //! useStates that I will use in different components
 
@@ -99,7 +111,7 @@ export const use_trd = (): any => {
         },
         nombre: trd_current.nombre,
         version: trd_current.version,
-        id_trd: trd_current.id_trd,
+        id_trd: trd_current.id_trd
         // ser_sub_por_unidad_organizacional: trd_current.catalado_series_subseries_unidad_organizacional,
       };
       console.log(obj, 'obj');
@@ -137,6 +149,13 @@ export const use_trd = (): any => {
     control_create_trd_modal,
     // handle_submit_create_trd_modal,
     data_create_trd_modal,
+
+    // ? format_documental_type - name and version
+    control_format_documental_type,
+    watch_format_documental_type,
+    reset_format_documental_type,
+    errors_format_documental_type,
+    data_format_documental_type,
 
     // ? reset functions
     reset_all_trd,
