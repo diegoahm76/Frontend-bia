@@ -309,7 +309,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="Valor aumento series CCD"
                       disabled={
-                        series_ccd.length > 0 /* && ccd_current == null */
+                        series_ccd.length > 0 || ccd_current?.fecha_terminado
                       }
                       variant="outlined"
                       value={value}
@@ -341,7 +341,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subseries CCD"
                       variant="outlined"
-                      disabled={subseries_ccd.length > 0}
+                      disabled={subseries_ccd.length > 0 || ccd_current?.fecha_terminado}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}

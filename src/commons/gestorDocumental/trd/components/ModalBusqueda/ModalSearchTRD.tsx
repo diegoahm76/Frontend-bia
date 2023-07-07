@@ -20,7 +20,6 @@ import {
   IconButton,
   Stack,
   TextField
-  // Typography
 } from '@mui/material';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
 //! helpers
@@ -56,7 +55,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
     // errors_searched_trd_modal
 
     // ? reset functions
-    reset_busqueda_trd
+    reset_searched_trd_modal,
   } = use_trd();
 
   // ? context destructuring useModalContextTRD
@@ -125,13 +124,13 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               closeModalModalSearchTRD();
               dispatch(get_trds([]));
               const ccd_current = {
-                id_ccd: params.row.id_ccd,
-                id_organigrama: params.row.id_organigrama
+                id_ccd: params?.row?.id_ccd,
+                id_organigrama: params?.row?.id_organigrama
               };
               dispatch(
                 getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
               );
-              // reset_busqueda_trd();
+              // reset_searched_trd_modal();
               console.log(params.row);
             }}
           >
@@ -301,7 +300,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
                 color="success"
                 onClick={() => {
                   console.log('cerrando');
-                  reset_busqueda_trd();
+                  reset_searched_trd_modal();
                 }}
                 startIcon={<CleanIcon />}
               >

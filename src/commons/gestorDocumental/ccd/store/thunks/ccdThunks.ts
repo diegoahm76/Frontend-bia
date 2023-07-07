@@ -83,11 +83,11 @@ export const get_classification_ccds_service = (
       // console.log(name, version, 'name, version');
 
       // console.log('helllooo');
-      if (name === '' || version === '') {
+      /* if (name === '' || version === '') {
         await notification_error(
           'Debe ingresar el nombre y la versión del CCD'
         );
-      } else if (data.data.length === 0) {
+      } */ if (data.data.length === 0) {
         await notification_error(`No se encontró el CCD ${name} - ${version}`);
       } else {
         dispatch(get_ccds(data.data));
