@@ -19,8 +19,8 @@ export interface Filtro {
 export interface Obligacion {
   nombre: string;
   fecha_inicio: string;
-  id_expediente: number;
-  numero_resolucion: string;
+  nro_expediente: number;
+  nro_resolucion: string;
   monto_inicial: string;
   valor_intereses: string;
   dias_mora: number;

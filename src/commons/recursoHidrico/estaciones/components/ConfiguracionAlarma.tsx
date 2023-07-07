@@ -15,6 +15,7 @@ import { CrearConfiAlertaDialog } from './CrearConfiAlertaDialog';
 import { EditarAlertaDialog } from './EditarAlertaDialog';
 import Swal from 'sweetalert2';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { Title } from '../../../../components';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConfiguracionAlarma: React.FC = () => {
@@ -166,7 +167,18 @@ export const ConfiguracionAlarma: React.FC = () => {
   // }
 
   return (
-    <Grid container>
+    <Grid container sx={{
+      position: 'relative',
+      background: '#FAFAFA',
+      borderRadius: '15px',
+      p: '20px', mb: '20px',
+      boxShadow: '0px 3px 6px #042F4A26',
+      marginTop: '20px',
+      marginLeft: '-5px',
+    }}>
+      <Grid item xs={12} sx={{ marginTop: "-20px" }}     >
+        <Title title="Configuracion alarma " />
+      </Grid>
       <style>
         {`
           .square-btn {
@@ -179,35 +191,36 @@ export const ConfiguracionAlarma: React.FC = () => {
         `}
       </style>
 
-      <Grid container>
-  <Grid item xs={6}>
-    <Button
-      sx={{ mb: '20px' }} 
-      variant="outlined"
-      startIcon={<AddIcon />}
-      onClick={() => {
-        console.log("Botón de crear alerta clickeado")
-        handle_open_crear_alerta()
-      }}
-    >
-      CREAR ALARMA
-    </Button>
-  </Grid>
-  <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-    <IconButton
-      style={{
-        color: 'white',
-        backgroundColor: '#335B1E',
-        margin: 5,
-        width: '30px',
-        height: '30px',
-      }}
-      onClick={handle_clickxls}
-    >
-      <i className="pi pi-file-excel"></i>
-    </IconButton>
-  </Grid>
-</Grid>
+      <Grid container sx={{ marginTop: "20px" }}>
+
+        <Grid item xs={6}>
+          <Button
+            sx={{ mb: '20px' }}
+            variant="outlined"
+            startIcon={<AddIcon />}
+            onClick={() => {
+              console.log("Botón de crear alerta clickeado")
+              handle_open_crear_alerta()
+            }}
+          >
+            CREAR ALARMA
+          </Button>
+        </Grid>
+        <Grid item xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <IconButton
+            style={{
+              color: 'white',
+              backgroundColor: '#335B1E',
+              margin: 5,
+              width: '30px',
+              height: '30px',
+            }}
+            onClick={handle_clickxls}
+          >
+            <i className="pi pi-file-excel"></i>
+          </IconButton>
+        </Grid>
+      </Grid>
 
       <Grid item xs={12} container justifyContent='center'>
         {conf_alert_person.length > 0 ? (

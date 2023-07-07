@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { type ObligacionesUsuario } from '../interfaces/interfaces';
 import { Title } from '../../../../components/Title';
 
-
 interface RootState {
   obligaciones: {
     obligaciones: ObligacionesUsuario;
