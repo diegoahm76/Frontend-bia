@@ -1,52 +1,23 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Grid, Box, Checkbox, TextField, Stack, Button } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Grid, Box, Checkbox, TextField, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { obligaciones_seleccionadas } from '../slices/ObligacionesSlice';
-import { get_datos_deudor } from '../slices/DeudoresSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
+import { useSelector } from 'react-redux';
+import { type Obligacion } from '../interfaces/interfaces';
 
 interface RootState {
   obligaciones: {
-    obligaciones: ObligacionesUsuario;
+    obligaciones: Obligacion[];
   }
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuario: React.FC = () => {
+export const TablaObligacionesUsuarioInterno: React.FC = () => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
-  const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    set_lista_obligaciones(obligaciones.obligaciones)
-  }, [obligaciones.obligaciones])
-
-  const handle_submit = async () => {
-    const arr_registro = []
-    for(let i=0; i<lista_obligaciones.length; i++){
-      for(let j=0; j<selected.length; j++){
-        if(lista_obligaciones[i].nombre === selected[j]){
-          arr_registro.push(lista_obligaciones[i])
-        }
-      }
-    }
-    try {
-      dispatch(obligaciones_seleccionadas(arr_registro));
-      void dispatch(get_datos_deudor(obligaciones.id_deudor));
-    } catch (error: any) {
-      throw new Error(error);
-    }
-  };
 
   const columns: GridColDef[] = [
     {
@@ -158,11 +129,11 @@ export const TablaObligacionesUsuario: React.FC = () => {
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    for(let i=0; i< lista_obligaciones.length; i++){
+    for(let i=0; i< obligaciones.length; i++){
       for(let j=0; j< selected.length; j++){
-        if(lista_obligaciones[i].nombre === selected[j]){
-          sub_capital = sub_capital + parseFloat(lista_obligaciones[i].monto_inicial)
-          sub_intereses = sub_intereses + parseFloat(lista_obligaciones[i].valor_intereses)
+        if(obligaciones[i].nombre === selected[j]){
+          sub_capital = sub_capital + parseFloat(obligaciones[i].monto_inicial)
+          sub_intereses = sub_intereses + parseFloat(obligaciones[i].valor_intereses)
           set_capital(sub_capital)
           set_intereses(sub_intereses)
         }
@@ -194,7 +165,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={lista_obligaciones}
+                rows={obligaciones}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
@@ -225,7 +196,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 value={intereses}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12}  sm={2}>
               <TextField
                 label={<strong>Gran Total a Deber</strong>}
                 size="small"
@@ -233,26 +204,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 value={total}
               />
             </Grid>
-        </Stack>
-        <Stack
-          direction="row"
-          justifyContent="right"
-          spacing={2}
-          sx={{ mb: '20px' }}
-        >
-          <Button
-            color='primary'
-            variant='contained'
-            startIcon={<Add />}
-            sx={{ marginTop: '30px' }}
-            onClick={() => {
-              navigate('../registro')
-              void handle_submit()
-            }}
-          >
-            Crear Facilidad de Pago
-          </Button>
-        </Stack>
+          </Stack>
         </Grid>
       </Grid>
     </>

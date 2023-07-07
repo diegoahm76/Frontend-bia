@@ -118,7 +118,7 @@ const SeleccionarLoteSiembra = () => {
     { field: 'id_bien', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
-      headerName: 'Código',
+      headerName: 'Codigo',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -138,7 +138,7 @@ const SeleccionarLoteSiembra = () => {
     },
     {
       field: 'nro_lote',
-      headerName: 'Número de lote',
+      headerName: 'Nro lote',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -178,7 +178,7 @@ const SeleccionarLoteSiembra = () => {
     },
     {
       field: 'observaciones',
-      headerName: 'Observación',
+      headerName: 'Observacion',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -389,12 +389,12 @@ const SeleccionarLoteSiembra = () => {
           }
         } else {
           control_error(
-            'La cantidad asignada debe ser máximo ' +
+            'La cantidad asignada debe ser maximo ' +
               String(current_siembra_material_vegetal.saldo_disponible_registro)
           );
         }
       } else {
-        control_error('Código de bien no coincide con el seleccionado');
+        control_error('Codigo de bien no coincide con el seleccionado');
       }
     } else {
       control_error('Debe seleccionar el bien');
@@ -628,7 +628,7 @@ const SeleccionarLoteSiembra = () => {
               rules: {
                 required_rule: { rule: true, message: 'Observación requerida' },
               },
-              label: 'Observación',
+              label: 'Observacion',
               type: 'text',
               multiline_text: true,
               rows_text: 4,
@@ -652,9 +652,9 @@ const SeleccionarLoteSiembra = () => {
               control_name: 'codigo_bien',
               default_value: '',
               rules: {
-                required_rule: { rule: true, message: 'Código bien requerido' },
+                required_rule: { rule: true, message: 'Codigo bien requerido' },
               },
-              label: 'Código bien',
+              label: 'Codigo bien',
               type: 'number',
               disabled: false,
               helper_text: '',
@@ -706,7 +706,7 @@ const SeleccionarLoteSiembra = () => {
           models={siembras_material_vegetal}
           columns_model={columns_bienes}
           row_id={'id_inventario_vivero'}
-          title_table_modal={'Resultados de la búsqueda'}
+          title_table_modal={'Resultados de la busqueda'}
         />
       </Grid>
     </>

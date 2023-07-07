@@ -1038,7 +1038,7 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
   isValid: is_valid,
   watch,
   getValues,
-}: PropsRegister) => {
+ }: PropsRegister) => {
   const { is_modal_active, on_submit, set_value_direction, open_modal } =
     use_register_persona_n({ watch, setValue: set_value, getValues });
 
@@ -1175,4 +1175,4 @@ export const RegisterPersonaNatural: React.FC<PropsRegister> = ({
       />
     </>
   );
-};
+};  

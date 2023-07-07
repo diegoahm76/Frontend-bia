@@ -28,7 +28,7 @@ const SeleccionarBienPreparacion = () => {
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Código',
+            headerName: 'Codigo',
             width: 200,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -37,7 +37,7 @@ const SeleccionarBienPreparacion = () => {
             ),
         },
         {
-            field: 'nombre_bien',
+            field: 'nombre',
             headerName: 'Nombre',
             width: 200,
             renderCell: (params) => (
@@ -47,7 +47,7 @@ const SeleccionarBienPreparacion = () => {
             ),
         },
         {
-            field: 'cantidad_disponible_bien',
+            field: 'saldo_disponible',
             headerName: 'Saldo disponible',
             width: 200,
             renderCell: (params) => (
@@ -62,7 +62,7 @@ const SeleccionarBienPreparacion = () => {
         { field: 'id_bien', headerName: 'ID', width: 20 },
         {
             field: 'codigo_bien',
-            headerName: 'Código',
+            headerName: 'Codigo',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -93,7 +93,7 @@ const SeleccionarBienPreparacion = () => {
         },
         {
             field: 'observaciones',
-            headerName: 'Observación',
+            headerName: 'Observacion',
             width: 150,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -202,7 +202,7 @@ const SeleccionarBienPreparacion = () => {
                     }
                 })
 
-                if ((data.cantidad_a_consumir ?? 0) <= (current_bien.cantidad_disponible_bien ?? 0)) {
+                if ((data.cantidad_a_consumir ?? 0) <= (current_bien.saldo_disponible ?? 0)) {
                     const new_bien: IObjPreparacionBienes = {
                         id_bien: current_bien.id_bien,
                         id_mezcla: null,
@@ -212,13 +212,13 @@ const SeleccionarBienPreparacion = () => {
                         unidad_medida: current_bien.unidad_disponible,
                         tipo_bien: current_bien.tipo_bien,
                         cantidad_a_consumir: Number(data.cantidad_a_consumir),
-                        saldo_disponible: current_bien.cantidad_disponible_bien,
+                        saldo_disponible: current_bien.saldo_disponible,
                         observaciones: data.observaciones,
                     }
                     if (bien === undefined) {
                         set_aux_insumos([...aux_insumos, new_bien])
-                        const restante = (current_bien.cantidad_disponible_bien ?? 0) - (new_bien.cantidad_a_consumir ?? 0)
-                        dispatch(set_current_bien({ ...current_bien, cantidad_disponible_bien: restante }))
+                        const restante = (current_bien.saldo_disponible ?? 0) - (new_bien.cantidad_a_consumir ?? 0)
+                        dispatch(set_current_bien({ ...current_bien, saldo_disponible: restante }))
                         reset_preparacion({ id_bien: current_bien?.id_bien, cantidad_a_consumir: null, observaciones: null });
 
                     } else {
@@ -232,8 +232,8 @@ const SeleccionarBienPreparacion = () => {
                                 }
                             })
                             set_aux_insumos(aux_items)
-                            const restante = (current_bien.cantidad_disponible_bien ?? 0) - (new_bien.cantidad_a_consumir ?? 0)
-                            dispatch(set_current_bien({ ...current_bien, cantidad_disponible_bien: restante }))
+                            const restante = (current_bien.saldo_disponible ?? 0) - (new_bien.cantidad_a_consumir ?? 0)
+                            dispatch(set_current_bien({ ...current_bien, saldo_disponible: restante }))
                             reset_preparacion({ id_bien: current_bien?.id_bien, cantidad_a_consumir: null, observaciones: null });
                             set_action("agregar")
                         } else {
@@ -241,10 +241,10 @@ const SeleccionarBienPreparacion = () => {
                         }
                     }
                 } else {
-                    control_error("La cantidad asignada debe ser máximo " + String(current_bien.cantidad_disponible_bien))
+                    control_error("La cantidad asignada debe ser maximo " + String(current_bien.saldo_disponible))
                 }
             } else {
-                control_error("Código de bien no coincide con el seleccionado")
+                control_error("Codigo de bien no coincide con el seleccionado")
             }
         } else {
             control_error("Debe seleccionar el bien")
@@ -322,7 +322,7 @@ const SeleccionarBienPreparacion = () => {
                             xs: 12,
                             md: 6,
                             control_form: control_bien,
-                            control_name: "nombre_bien",
+                            control_name: "nombre",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
                             label: "Nombre",
@@ -340,7 +340,7 @@ const SeleccionarBienPreparacion = () => {
                             control_form: control_preparacion,
                             control_name: "cantidad_a_consumir",
                             default_value: "",
-                            rules: { required_rule: { rule: true, message: "Debe ingresar cantidad" }, min_rule: { rule: 0.01, message: "La cantidad debe ser mayor a 0" }, max_rule: { rule: current_bien.cantidad_disponible_bien, message: 'La cqantidad no debe ser mayor que ' + String(current_bien.cantidad_disponible_bien) } },
+                            rules: { required_rule: { rule: true, message: "Debe ingresar cantidad" }, min_rule: { rule: 0.01, message: "La cantidad debe ser mayor a 0" }, max_rule: { rule: current_bien.saldo_disponible, message: 'La cqantidad no debe ser mayor que ' + String(current_bien.saldo_disponible) } },
                             label: "Cantidad Usada",
                             type: "text",
                             disabled: false,
@@ -351,7 +351,7 @@ const SeleccionarBienPreparacion = () => {
                             xs: 12,
                             md: 2,
                             control_form: control_bien,
-                            control_name: "cantidad_disponible_bien",
+                            control_name: "saldo_disponible",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
                             label: "Cantidad disponible",
@@ -380,7 +380,7 @@ const SeleccionarBienPreparacion = () => {
                             control_name: "observaciones",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "Observación requerida" } },
-                            label: "Observación",
+                            label: "Observacion",
                             type: "text",
                             multiline_text: true,
                             rows_text: 4,
@@ -405,7 +405,7 @@ const SeleccionarBienPreparacion = () => {
                             control_name: "codigo_bien",
                             default_value: "",
                             rules: {},
-                            label: "Código bien",
+                            label: "Codigo bien",
                             type: "number",
                             disabled: false,
                             helper_text: "",

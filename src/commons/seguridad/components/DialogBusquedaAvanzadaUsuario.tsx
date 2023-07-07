@@ -13,6 +13,7 @@ import {
   Avatar,
   Chip,
   Tooltip,
+  Toolbar,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
@@ -140,22 +141,26 @@ const dialog_busqueda_avanzada_usuario = ({
       maxWidth={'lg'}
     >
       <DialogTitle>
-        <Grid
+        <Toolbar>
+
+    <Title title="Busqueda avanzada por Usuario  " />
+        </Toolbar>
+        {/* <Grid
           container
           spacing={2}
           sx={{
             position: 'relative',
-            background: '#FAFAFA',
+            // background: '#FAFAFA',
             borderRadius: '15px',
-            p: '20px', mb: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
+            // p: '20px', mb: '20px',
+            // boxShadow: '0px 3px 6px #042F4A26',
             marginTop: '0px',
             marginLeft: '-5px',
             width: '99%',
           }}
-        >
-          <Title title="Busqueda avanzada por Usuario  " />
-        </Grid>
+        > */}
+        {/* </Grid> */}
+       
         <IconButton
           aria-label="close"
           onClick={() => {
@@ -177,20 +182,22 @@ const dialog_busqueda_avanzada_usuario = ({
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handle_submit_search_user(on_submit_search_user)}
         autoComplete="off"
-      >  <Grid
-        container
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-          width: '97%',
-          marginLeft: '20px',
-          marginTop: '20px',
-        }}
       >
+        {' '}
+        <Grid
+          container
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+            width: '97%',
+            marginLeft: '20px',
+            marginTop: '20px',
+          }}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} sm={3}>
               <TextField

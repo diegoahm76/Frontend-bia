@@ -314,7 +314,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                     : ''
                 }
                 onChange={handle_change}
-                label="Nombre o número de la vía"
+                label="Nombre o número de la vía *"
                 size="small"
                 fullWidth
               />
@@ -397,7 +397,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                     : ''
                 }
                 onChange={handle_change}
-                label="Nombre o número de la vía"
+                label="Nombre o número de la vía *"
                 size="small"
                 fullWidth
               />
@@ -447,7 +447,7 @@ export const DialogGeneradorDeDirecciones: React.FC<Props> = ({
                     : ''
                 }
                 value={direccion_estandarizada}
-                label="Dirección generada"
+                label="Dirección generada *"
                 fullWidth
                 multiline
                 maxRows={4}

@@ -542,7 +542,7 @@ const SeleccionarBienDespacho = () => {
           add_item_list={handle_submit_despacho(on_submit_despacho)}
           add_list_button_label={action}
           columns_list={columns_bienes_despacho}
-          row_list_id={'id_inventario'}
+          row_list_id={'id_item_despacho_consumo'}
           modal_select_model_title="Buscar bien"
           modal_form_filters={[
             {
