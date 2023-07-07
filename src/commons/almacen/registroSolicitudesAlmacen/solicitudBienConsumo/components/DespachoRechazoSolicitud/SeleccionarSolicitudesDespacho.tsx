@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Chip, Grid } from '@mui/material';
 import BuscarModelo from '../../../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
@@ -28,11 +28,11 @@ const SeleccionarSolicitudDespacho = ({
   const dispatch = useAppDispatch();
 
   const columns_solicitudes_despacho: GridColDef[] = [
-    { field: 'id_solicitud_consumibles', headerName: 'ID', width: 100 },
+    { field: 'nro_solicitud_por_tipo', headerName: 'Número de solicitud', width: 180 },
     {
       field: 'fecha_solicitud',
       headerName: 'Fecha de solicitud',
-      width: 300,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -42,7 +42,7 @@ const SeleccionarSolicitudDespacho = ({
     {
       field: 'fecha_aprobacion_responsable',
       headerName: 'Fecha de aprobación',
-      width: 300,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -52,7 +52,7 @@ const SeleccionarSolicitudDespacho = ({
     {
       field: 'persona_solicita',
       headerName: 'Solicitud elaborada por:',
-      width: 400,
+      width: 300,
     },
     {
       field: 'observacion',
@@ -63,6 +63,18 @@ const SeleccionarSolicitudDespacho = ({
           {params.value}
         </div>
       ),
+    },
+    {
+      field: 'es_solicitud_de_conservacion',
+      headerName: 'Solicitud de conservación',
+      width: 400,
+      renderCell: (params) => {
+        return params.row.es_solicitud_de_conservacion === true ? (
+          <Chip size="small" label="SI" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="NO" color="error" variant="outlined" />
+        );
+      },
     },
   ];
 
@@ -178,7 +190,7 @@ const SeleccionarSolicitudDespacho = ({
               xs: 12,
               md: 2,
               control_form: control_solicitud_despacho,
-              control_name: 'id_solicitud_consumibles',
+              control_name: 'nro_solicitud_por_tipo',
               default_value: '',
               rules: { required_rule: { rule: false, message: 'requerido' } },
               label: 'Número de solicitud',
