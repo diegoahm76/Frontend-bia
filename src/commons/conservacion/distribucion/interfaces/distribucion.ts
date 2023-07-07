@@ -145,6 +145,8 @@ export interface IObjTransfer {
   persona_anula?: string | null;
   fecha_desde?: string | null;
   fecha_hasta?: string | null;
+  fecha_test?: string | null | Array<Date>;
+
 }
 
 

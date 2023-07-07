@@ -8,8 +8,7 @@ import {
 } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 interface IRuleMessage {
   rule: any;
   message: string | null;
@@ -38,7 +37,7 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const FormDatePickerController = ({
+const FormDateTimePickerController = ({
   xs,
   md,
   control_form,
@@ -72,12 +71,13 @@ const FormDatePickerController = ({
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
+                  <DateTimePicker
+                    ampm={false}
                     disabled={disabled}
                     label={label}
                     value={value}
                     onChange={onChange}
-                    inputFormat={format ?? 'YYYY/MM/DD'}
+                    inputFormat={format ?? 'YYYY/MM/DD HH:ii:ss'}
                     minDate={(min_date ?? '') === '' ? null : min}
                     maxDate={(max_date ?? '') === '' ? null : max}
                     renderInput={(
@@ -107,4 +107,4 @@ const FormDatePickerController = ({
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default FormDatePickerController;
+export default FormDateTimePickerController;
