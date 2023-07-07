@@ -14,7 +14,7 @@ export const use_trd = (): any => {
   const dispatch: any = useAppDispatch();
 
   // eslint-disable-next-line no-empty-pattern
-  const { trd_current /* trds */ } = useAppSelector(
+  const { trd_current, data_format_documental_type_current /* trds */ } = useAppSelector(
     (state: any) => state.trd_slice
   );
 
@@ -125,6 +125,32 @@ export const use_trd = (): any => {
       reset_create_trd_modal(obj);
     }
   }, [trd_current]);
+
+
+   // ? try to edit format type x --------------------->
+   useEffect(() => {
+    console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
+    console.log(data_format_documental_type_current, 'data_format_documental_type_current');
+    if (data_format_documental_type_current !== null) {
+      const result_name = ccd_finished.filter((item: any) => {
+        return item.id_ccd === trd_current.id_ccd;
+      });
+      console.log('result_name', result_name);
+      const obj: any = {
+        /* id_ccd: {
+          label: result_name[0].nombre,
+          value: result_name[0].id_ccd
+        }, */
+        nombre: data_format_documental_type_current.nombre,
+        // version: trd_current.version,
+        // id_trd: trd_current.id_trd
+      };
+      console.log(obj, 'obj');
+      reset_format_documental_type(obj);
+    }
+  }, [data_format_documental_type_current]);
+
+
 
   // ? reset all trd data --------------------->
   const reset_all_trd = (): void => {
