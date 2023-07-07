@@ -200,6 +200,7 @@ export const AgregarProyectos: React.FC = () => {
     rows_proyectos_register,
     rows_actividades_register,
     id_proyecto,
+    rows_proyectos,
     set_rows_proyectos_register,
     set_rows_actividades_register,
     fecha_inicial,
@@ -230,7 +231,8 @@ export const AgregarProyectos: React.FC = () => {
   const is_nombre_repetido =
     !edit_row_proyectos &&
     rows_proyectos_register.some(
-      (proyecto) => proyecto.nombre === watch('nombre')
+      (proyecto) => proyecto.nombre === watch('nombre') &&
+    rows_proyectos.some( (proyecto) => proyecto.nombre === watch('nombre') )
     );
 
   const is_descripcion_repetido =
@@ -400,7 +402,6 @@ export const AgregarProyectos: React.FC = () => {
     }
   };
 
-  // ...
   const limpiar_proyecto = (): void => {
     set_value('nombre', '');
     set_value('vigencia_inicial', '');
@@ -429,10 +430,6 @@ export const AgregarProyectos: React.FC = () => {
       set_value('descripcion', edit_row_actividades.nombre);
     }
   }, [edit_row_actividades]);
-
-  useEffect(() => {
-    console.log(proyecto_seleccionado, 'proyecto_seleccionado');
-  }, [proyecto_seleccionado]);
 
   return (
     <>
@@ -585,9 +582,9 @@ export const AgregarProyectos: React.FC = () => {
               fullWidth
               size="small"
               margin="dense"
-              required={rows_actividades_register.length === 0}
+              required={proyecto_seleccionado.actividades.length === 0}
               {...register('descripcion', {
-                required: rows_actividades_register.length === 0,
+                required: proyecto_seleccionado.actividades.length === 0,
               })}
               error={!is_descripcion_valid || is_descripcion_repetido}
               helperText={
