@@ -2,7 +2,7 @@
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { AgregarPrograma } from '../../components/AgregarNuevoPrograma/AgregarPrograma';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { Avatar, Divider, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -61,6 +61,7 @@ export const PorhMainScreen: React.FC = () => {
     set_data_programa,
     set_rows_proyectos_register,
     set_rows_actividades_register,
+    set_is_saving,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -176,8 +177,6 @@ export const PorhMainScreen: React.FC = () => {
     },
   ];
 
-  const [is_saving, set_is_saving] = useState(false);
-
   useEffect(() => {
     void fetch_data_programas();
   }, []);
@@ -267,6 +266,7 @@ export const PorhMainScreen: React.FC = () => {
   });
   const on_submit_editar_actividad = handle_submit(async (form: any) => {
     try {
+      set_is_saving(true);
       await editar_activdad(id_actividad as number, form);
       control_success('Se editó la actividad correctamente');
       set_is_saving(false);
@@ -420,7 +420,7 @@ export const PorhMainScreen: React.FC = () => {
             <Grid item>
               <ButtonSalir />
             </Grid>
-            {is_general && (
+            {/* {is_agre && (
               <Grid item>
                 <LoadingButton
                   variant="contained"
@@ -432,7 +432,7 @@ export const PorhMainScreen: React.FC = () => {
                   Finalizar
                 </LoadingButton>
               </Grid>
-            )}
+            )} */}
           </Grid>
         </Grid>
       </form>

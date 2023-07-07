@@ -201,10 +201,11 @@ export const AgregarProyectos: React.FC = () => {
     rows_actividades_register,
     id_proyecto,
     rows_proyectos,
-    set_rows_proyectos_register,
-    set_rows_actividades_register,
     fecha_inicial,
     fecha_fin,
+    is_saving,
+    set_rows_proyectos_register,
+    set_rows_actividades_register,
   } = useContext(DataContext);
 
   const [is_agregar, set_is_agregar] = useState(false);
@@ -231,9 +232,12 @@ export const AgregarProyectos: React.FC = () => {
   const is_nombre_repetido =
     !edit_row_proyectos &&
     rows_proyectos_register.some(
-      (proyecto) => proyecto.nombre === watch('nombre') &&
-    rows_proyectos.some( (proyecto) => proyecto.nombre === watch('nombre') )
+      (proyecto) => proyecto.nombre === watch('nombre')
     );
+
+  const is_nombre_repetido_table = rows_proyectos.some(
+    (proyecto) => proyecto.nombre === watch('nombre')
+  );
 
   const is_descripcion_repetido =
     !edit_row_actividades &&
@@ -254,6 +258,7 @@ export const AgregarProyectos: React.FC = () => {
     is_nombre_valid &&
     is_vigencia_final_valid &&
     !is_nombre_repetido &&
+    !is_nombre_repetido_table &&
     inversion_value;
 
   const handle_descripcion_change = (
@@ -462,12 +467,16 @@ export const AgregarProyectos: React.FC = () => {
           {...register('nombre', {
             required: rows_proyectos_register.length === 0,
           })}
-          error={!is_nombre_valid || is_nombre_repetido}
+          error={
+            !is_nombre_valid || is_nombre_repetido || is_nombre_repetido_table
+          }
           helperText={
             !is_nombre_valid
               ? 'Este campo es obligatorio'
               : is_nombre_repetido
-              ? 'El nombre del proyecto no debe ya existe'
+              ? 'El nombre del proyecto ya existe'
+              : is_nombre_repetido_table
+              ? 'El nombre del proyecto ya existe'
               : ''
           }
         />
@@ -568,6 +577,19 @@ export const AgregarProyectos: React.FC = () => {
             Aceptar Proyecto
           </LoadingButton>
         </Grid>
+        {!is_agregar && (
+          <Grid item>
+            <LoadingButton
+              variant="contained"
+              color="success"
+              type="submit"
+              disabled={is_saving || rows_proyectos_register.length === 0}
+              loading={is_saving}
+            >
+              Guardar
+            </LoadingButton>
+          </Grid>
+        )}
       </Grid>
       {is_agregar && (
         <>
@@ -606,12 +628,14 @@ export const AgregarProyectos: React.FC = () => {
                   Actividades del proyecto
                 </Typography>
                 <DataGrid
+                  density="compact"
                   autoHeight
                   rows={proyecto_seleccionado.actividades}
                   columns={columns_actividades}
                   getRowId={(row) => (row.id_act ? row.id_act : uuidv4())}
                   pageSize={5}
                   rowsPerPageOptions={[5]}
+                  experimentalFeatures={{ newEditingApi: true }}
                 />
               </Grid>
             )}
@@ -627,6 +651,17 @@ export const AgregarProyectos: React.FC = () => {
                 }}
               >
                 Aceptar Actividad
+              </LoadingButton>
+            </Grid>
+            <Grid item>
+              <LoadingButton
+                variant="contained"
+                color="success"
+                type="submit"
+                disabled={is_saving || proyecto_seleccionado.actividades.length === 0}
+                loading={is_saving}
+              >
+                Guardar
               </LoadingButton>
             </Grid>
           </Grid>
