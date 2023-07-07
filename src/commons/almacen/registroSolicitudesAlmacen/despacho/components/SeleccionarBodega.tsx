@@ -56,7 +56,7 @@ const SeleccionarBodega = () => {
     void get_selects_options();
   }, []);
 
-  useEffect(() => {}, [bodega_seleccionada]);
+  useEffect(() => { }, [bodega_seleccionada]);
 
   const columns_solicitudes: GridColDef[] = [
     { field: 'id_bodega', headerName: 'ID', width: 20 },
