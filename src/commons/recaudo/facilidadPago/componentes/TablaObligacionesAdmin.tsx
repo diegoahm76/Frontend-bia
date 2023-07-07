@@ -33,6 +33,8 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const [sub_modal, set_sub_modal] = useState(false);
   const [modal_option, set_modal_option] = useState('no');
+  const [funcionario_selected, set_funcionario_selected] = useState(0);
+  const [facilidad_selected, set_facilidad_selected] = useState(0);
   const { facilidades } = useSelector((state: RootStateFacilidades) => state.facilidades);
   const { funcionarios } = useSelector((state: RootStateFuncionarios) => state.funcionarios);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -130,16 +132,21 @@ export const TablaObligacionesAdmin: React.FC = () => {
               <Select
                 size='small'
                 label="Seleccionar"
-                defaultValue={''}
+                defaultValue={params.row.nombre_funcionario}
                 onChange={(event: event) => {
                   const { value } = event.target
-                  void put_asignacion_funcionario(params.row.id_facilidad, {id_funcionario: parseInt(value)});
-                  handle_open()
+                  for(let i=0; i<funcionarios.length; i++){
+                    if(funcionarios[i].nombre_funcionario === value){
+                      set_funcionario_selected(funcionarios[i].id_persona);
+                      set_facilidad_selected(params.row.id_facilidad);
+                      handle_open();
+                    }
+                  }
                 }}
               >
                 {
                   funcionarios.map((funcionario) => (
-                    <MenuItem key={funcionario.id_persona} value={funcionario.id_persona}>{funcionario.nombre_funcionario}</MenuItem>
+                    <MenuItem key={funcionario.id_persona} value={funcionario.nombre_funcionario}>{funcionario.nombre_funcionario}</MenuItem>
                   ))
                 }
               </Select>
@@ -258,9 +265,9 @@ export const TablaObligacionesAdmin: React.FC = () => {
               color="primary"
               startIcon={<Close />}
               onClick={() => {
-                handle_open_sub()
-                set_modal_option('no')
-                handle_close()
+                handle_open_sub();
+                set_modal_option('no');
+                handle_close();
             }}
             >
               Cancelar
@@ -270,9 +277,14 @@ export const TablaObligacionesAdmin: React.FC = () => {
               color="primary"
               startIcon={<SaveIcon />}
               onClick={()=>{
-                handle_open_sub()
-                set_modal_option('si')
-                handle_close()
+                try {
+                  void put_asignacion_funcionario(facilidad_selected, {id_funcionario: funcionario_selected});
+                  handle_open_sub();
+                  set_modal_option('si');
+                  handle_close();
+                } catch (error: any) {
+                  throw new Error(error);
+                }
             }}
             >
               Guardar
