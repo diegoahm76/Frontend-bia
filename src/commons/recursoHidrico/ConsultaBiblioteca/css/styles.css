@@ -1,0 +1,15 @@
+
+
+
+/* {
+    whiteSpace: 'pre-wrap',
+    wordWrap: 'break-word',
+    height: 'auto',
+    overflowWrap: 'break-word',
+    wordBreak: 'break-word',
+    maxHeight: '100px',
+  } */
+
+   .container {
+    white-space: pre-wrap;
+    }
