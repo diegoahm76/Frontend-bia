@@ -20,7 +20,8 @@ import {
   Grid,
   IconButton,
   TextField,
-  Avatar
+  Avatar,
+  Chip
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
@@ -36,6 +37,7 @@ import { ModalContextTRD } from '../../../context/ModalsContextTrd';
 // * react select
 import Select from 'react-select';
 import { use_trd } from '../../../hooks/use_trd';
+import { get_formatos_by_tipo_medio_by_format_and_name } from '../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 
 export const AdmnistrarFormatos = (): JSX.Element => {
   //! I create a new variable called dispatch of type any
@@ -45,7 +47,10 @@ export const AdmnistrarFormatos = (): JSX.Element => {
     (state: any) => state.trd_slice
   );
 
-  const { control_format_documental_type } = use_trd();
+  const {
+    control_format_documental_type,
+    data_format_documental_type_watch_form
+  } = use_trd();
 
   //! context for the modal interacion
   const { modalCreacionFormatoTipo, closeModalCreacionFormatoTipo } =
@@ -154,22 +159,49 @@ export const AdmnistrarFormatos = (): JSX.Element => {
     {
       headerName: 'Nombre del formato',
       field: 'nombre',
-      minWidth: 280,
-      maxWidth: 295,
+      minWidth: 170,
+      maxWidth: 200,
       flex: 1
+    },
+    {
+      headerName: 'Usado',
+      field: 'item_ya_usado',
+      minWidth: 100,
+      maxWidth: 115,
+      flex: 1,
+      renderCell: (params: any) =>
+        params.row.item_ya_usado === true ? (
+          <Chip label="Si" color="error" variant="outlined" />
+        ) : (
+          <Chip label="No" color="info" variant="outlined" />
+        )
+    },
+    {
+      headerName: 'Registro precargado',
+      field: 'registro_precargado',
+      minWidth: 130,
+      maxWidth: 135,
+      flex: 1,
+      renderCell: (params: any) =>
+        params.row.registro_precargado === true ? (
+          <Chip label="Si" color="error" variant="outlined" />
+        ) : (
+          <Chip label="No" color="info" variant="outlined" />
+        )
     },
     {
       headerName: 'Acciones',
       field: 'accion',
-      minWidth: 200,
-      maxWidth: 235,
+      minWidth: 150,
+      maxWidth: 170,
       flex: 1,
       renderCell: (params: any) =>
-        params.row.registro_precargado ? null : (
+        params.row.registro_precargado ||
+        params.row.item_ya_usado !== false ? null : (
           <>
             <IconButton
               onClick={() => {
-                console.log('params edit formato', params);
+                console.log('params edit formato', params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -181,7 +213,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
             </IconButton>
             <IconButton
               onClick={() => {
-                console.log('params delete formato', params);
+                console.log('params delete formato', params.row);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -239,7 +271,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   <div>
                     <Select
                       value={value}
-                      // name="id_ccd"
                       onChange={(selectedOption) => {
                         console.log(
                           'selectedOption en tipo de formato por medio',
@@ -252,19 +283,22 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                           ); */
                         onChange(selectedOption);
                       }}
-                      isDisabled={/* trd_current != null */ false}
+                      // isDisabled={!control_format_documental_type._formValues.item.value}
                       options={[
                         {
                           label: 'Seleccionar',
-                          value: null
+                          value: null,
+                          'cod-tipo-medio': null
                         },
                         {
                           label: 'Físico',
-                          value: 1
+                          value: 1,
+                          'cod-tipo-medio': 'F'
                         },
                         {
                           label: 'Electronico',
-                          value: 2
+                          value: 2,
+                          'cod-tipo-medio': 'E'
                         }
                         // ...ccd_list
                       ]}
@@ -289,17 +323,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   </div>
                 )}
               />
-
-              {/* <TextField
-                margin="dense"
-                fullWidth
-                {...register('nombre', { required: true })}
-                size="small"
-                label="Nombre"
-                variant="outlined"
-                value={''}
-              /> */}
-              {/* {errors.nombre !== null && <p>{errors.nombre?.message}</p>} */}
             </Grid>
             <Grid item xs={12} sm={6}>
               <Controller
@@ -343,8 +366,21 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   color="primary"
                   variant="outlined"
                   startIcon={<SearchIcon />}
+                  disabled={
+                    control_format_documental_type._formValues['cod-tipo-medio']
+                      .value === null
+                  }
+                  title={'Buscar datos de los formatos relacionados'}
                   onClick={() => {
                     console.log('buscando datos de los formatos relacionados');
+                    void dispatch(
+                      get_formatos_by_tipo_medio_by_format_and_name(
+                        data_format_documental_type_watch_form.nombre,
+                        data_format_documental_type_watch_form[
+                          'cod-tipo-medio'
+                        ]['cod-tipo-medio']
+                      )
+                    );
                   }}
                 >
                   BUSCAR
@@ -374,53 +410,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
               <DataGrid
                 density="compact"
                 autoHeight
-                rows={[
-                  {
-                      "id_formato_tipo_medio": 54,
-                      "tipo_medio_doc": "Físico",
-                      "nombre": "PAPEL",
-                      "registro_precargado": true,
-                      "activo": true,
-                      "item_ya_usado": false,
-                      "cod_tipo_medio_doc": "F"
-                  },
-                  {
-                      "id_formato_tipo_medio": 55,
-                      "tipo_medio_doc": "Físico",
-                      "nombre": "CINTA",
-                      "registro_precargado": true,
-                      "activo": true,
-                      "item_ya_usado": false,
-                      "cod_tipo_medio_doc": "F"
-                  },
-                  {
-                      "id_formato_tipo_medio": 56,
-                      "tipo_medio_doc": "Físico",
-                      "nombre": "ACETATO",
-                      "registro_precargado": true,
-                      "activo": true,
-                      "item_ya_usado": false,
-                      "cod_tipo_medio_doc": "F"
-                  },
-                  {
-                      "id_formato_tipo_medio": 57,
-                      "tipo_medio_doc": "Físico",
-                      "nombre": "CD",
-                      "registro_precargado": true,
-                      "activo": true,
-                      "item_ya_usado": false,
-                      "cod_tipo_medio_doc": "F"
-                  },
-                  {
-                      "id_formato_tipo_medio": 58,
-                      "tipo_medio_doc": "Físico",
-                      "nombre": "Papel",
-                      "registro_precargado": false,
-                      "activo": true,
-                      "item_ya_usado": false,
-                      "cod_tipo_medio_doc": "F"
-                  }
-              ]}
+                rows={data_format_documental_type}
                 columns={columns_creacion_formatos}
                 pageSize={5}
                 rowsPerPageOptions={[10]}

@@ -7,10 +7,12 @@ import { type AxiosResponse, type AxiosError } from 'axios';
 import {
   get_trd_current,
   get_trds,
-  get_catalogo_series_subseries_unidad_organizacional
+  get_catalogo_series_subseries_unidad_organizacional,
+  get_data_format_documental_type,
+  // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
 
-// ? Obtener TRD's
+// ? Obtener TRD's ------------------------------>
 export const get_searched_trd = (
   nombre: string,
   version: string
@@ -21,10 +23,10 @@ export const get_searched_trd = (
     try {
       const url = `gestor/trd/buscar/trd/nombre-version/?nombre=${nombre}&version=${version}`;
       const { data } = await api.get(url);
-      console.log(
+      /* console.log(
         '🚀 ~ file: modalBusquedaTRDThunks.ts ~ line 41 ~ return ~ data',
         data
-      );
+      ); */
       dispatch(get_trds(data.data));
       control_success(data.detail);
       return data.data;
@@ -38,7 +40,7 @@ export const get_searched_trd = (
   };
 };
 
-// ? crear TRD
+// ? crear TRD ------------------------------>
 export const create_trd_service: any = (
   /* ccd: any,
   set_save_ccd: (arg0: boolean) => void,
@@ -50,7 +52,7 @@ export const create_trd_service: any = (
   return async (dispatch: Dispatch<any>) => {
     // activateLoadingButton();
     try {
-      console.log(bodyPost, 'bodyPost');
+      // console.log(bodyPost, 'bodyPost');
       const { data } = await api.post('gestor/trd/create/', {
         id_ccd: bodyPost.id_ccd.item.id_ccd,
         nombre: bodyPost.nombre,
@@ -71,6 +73,7 @@ export const create_trd_service: any = (
   };
 };
 
+// ? Actualizar TRD ------------------------------>
 export const update_trd_service = (bodyPost: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -100,8 +103,7 @@ export const update_trd_service = (bodyPost: any): any => {
   };
 };
 
-// ? Obtener catalogo de series y subseries por unidad organizacional
-
+// ? Obtener catalogo de series y subseries por unidad organizacional -------------------------------------->
 export const getServiceSeriesSubseriesXUnidadOrganizacional = (
   ccd_current: any
 ): any => {
@@ -134,12 +136,37 @@ export const getServiceSeriesSubseriesXUnidadOrganizacional = (
           nombreUnidad: unidad?.nombre
         };
       });
-      console.log(
+      /* console.log(
         '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
         new_data
-      );
+      ); */
       dispatch(get_catalogo_series_subseries_unidad_organizacional(new_data));
       return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+// ? get formatos por tipo de medio - busqueda por nombre y codigo tipo de medio ------------------------------>
+export const get_formatos_by_tipo_medio_by_format_and_name = (
+  name?: string,
+  cod_tipo_medio?: string
+): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      const url = `gestor/trd/formatos/get-by-params/?nombre=${name ?? ''}&cod-tipo-medio=${
+        cod_tipo_medio ?? ''
+      }`;
+      const { data } = await api.get(url);
+      console.log(
+        '🚀 ~ file: TRDResourcesThunks.ts ~ line 159 ~ return ~ data',
+        data
+      );
+      dispatch(get_data_format_documental_type(data.data));
+      return data.data;
     } catch (error: any) {
       return error as AxiosError;
     }

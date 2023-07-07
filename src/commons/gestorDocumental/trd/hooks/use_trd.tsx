@@ -25,7 +25,7 @@ export const use_trd = (): any => {
 
   //! useForm that I will use in different components
 
-  // ? form for search trd
+  // ? form for search trd  --------------------->
   const {
     handleSubmit: handle_submit_searched_trd_modal,
     //! control series y subseries para catalogo de unidad organizacional
@@ -36,7 +36,7 @@ export const use_trd = (): any => {
   } = useForm({ defaultValues: initial_state_searched_trd });
   const form_data_searched_trd_modal = watch_searched_trd_modal();
 
-  // ? form for create trd
+  // ? form for create trd --------------------->
 
   const {
     // handleSubmit: handle_submit_create_trd_modal,
@@ -54,7 +54,7 @@ export const use_trd = (): any => {
   });
   const data_create_trd_modal = watch_create_trd_modal();
 
-  // ? form (create, edit, delete or deactivate) format documental type
+  // ? form (create, edit, delete or deactivate) format documental type --------------------->
   const {
     // handleSubmit: handle_submit_searched_trd_modal,
     //! control series y subseries para catalogo de unidad organizacional
@@ -62,23 +62,31 @@ export const use_trd = (): any => {
     watch: watch_format_documental_type,
     reset: reset_format_documental_type,
     formState: { errors: errors_format_documental_type }
-  } = useForm({ defaultValues: initial_state_searched_trd });
-  const data_format_documental_type = watch_searched_trd_modal();
+  } = useForm({ defaultValues: {
+    "cod-tipo-medio": {
+      label: '',
+      value: 0,
+      "cod-tipo-medio": '',
+    },
+    nombre: '',
+  } });
+  const data_format_documental_type_watch_form = watch_format_documental_type();
+  // console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
 
-  //*
-  //! useStates that I will use in different components
+  //* -------------------------------------------------------------------------->
+  //! useStates that I will use in different components --------------------->
 
-  // ? list of finished ccd
+  // ? list of finished ccd --------------------->
   const [list_finished_ccd, set_list_finished_ccd] = useState<any[]>([
     {
       label: '',
       value: 0
     }
   ]);
-  //*
-  //! useEffects that I will use in different components
+  //* -------------------------------------------------------------------------->
+  //! useEffects that I will use in different components --------------------->
 
-  // ? get list of finished ccd
+  // ? get list of finished ccd to list--------------------->
   useEffect(() => {
     void dispatch(get_finished_ccd_service()).then((res: any[]) => {
       set_list_finished_ccd(
@@ -95,7 +103,7 @@ export const use_trd = (): any => {
     });
   }, [trd_current]);
 
-  // ? try to edit trd
+  // ? try to edit trd --------------------->
   useEffect(() => {
     console.log(data_create_trd_modal, 'data_create_trd');
     console.log(trd_current, 'trd_current');
@@ -112,13 +120,13 @@ export const use_trd = (): any => {
         nombre: trd_current.nombre,
         version: trd_current.version,
         id_trd: trd_current.id_trd
-        // ser_sub_por_unidad_organizacional: trd_current.catalado_series_subseries_unidad_organizacional,
       };
       console.log(obj, 'obj');
       reset_create_trd_modal(obj);
     }
   }, [trd_current]);
 
+  // ? reset all trd data --------------------->
   const reset_all_trd = (): void => {
     //* reset trd list
     dispatch(get_trds([]));
@@ -137,7 +145,7 @@ export const use_trd = (): any => {
   };
 
   return {
-    // ? searched_trd_modal - name and version
+    // ? searched_trd_modal - name and version of trd --------------------------------------------->
     handle_submit_searched_trd_modal,
     control_searched_trd_modal,
     watch_searched_trd_modal,
@@ -145,22 +153,23 @@ export const use_trd = (): any => {
     errors_searched_trd_modal,
     form_data_searched_trd_modal,
 
-    // ? create_trd_modal - ccd, name and version
+    // ? create_trd_modal - ccd, name and version of trd --------------------------------------------->
     control_create_trd_modal,
     // handle_submit_create_trd_modal,
     data_create_trd_modal,
 
-    // ? format_documental_type - name and version
+    // ? format_documental_type of trd --------------------------------------------->
     control_format_documental_type,
     watch_format_documental_type,
     reset_format_documental_type,
     errors_format_documental_type,
-    data_format_documental_type,
+    data_format_documental_type_watch_form,
 
-    // ? reset functions
+    // ? reset functions data trd --------------------------------------------->
     reset_all_trd,
     reset_create_trd_modal,
-    // ? list of finished ccd
+
+    // ? list of finished ccd --------------------------------------------->
     list_finished_ccd
   };
 };
