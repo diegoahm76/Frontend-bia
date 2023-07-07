@@ -192,7 +192,7 @@ export const create_ccds_service: any = (
       return data;
     } catch (error: any) {
       console.log(error.response.data, 'error');
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail ?? 'ha ocurrido un error');
       return error as AxiosError;
     } finally {
       desactivateLoadingButton();
@@ -224,7 +224,7 @@ export const update_ccds_service: any = (
       // closeModalBusquedaCreacionCCD();
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error.response.data.detail ?? 'Ha ocurrido un error');
       return error as AxiosError;
     } finally {
       deactivateLoadingButton();
