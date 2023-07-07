@@ -24,9 +24,9 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="flujo_proceso/*" element={<FlujoProcesosScreen />} />
       <Route path="gestion_cartera/*" element={<GestionCarteraScreen />} />
       <Route path="liquidacion/*" element={<LiquidacionScreen />} />
-      <Route path="/*" element={<Page404 />} />
       <Route path="facilidades_pago/*" element={<FacilidadPagoRoutes />} />
       <Route path="reportes/*" element={<ReportesRoutes />} />
+      <Route path="/*" element={<Page404 />} />
     </Routes>
   );
 };
