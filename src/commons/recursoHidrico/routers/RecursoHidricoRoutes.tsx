@@ -7,6 +7,7 @@ import { AvancesRoutes } from '../Avances/router/AvancesRoutes';
 import { BibliotecaRouter } from '../biblioteca/router/BibliotecaRouter';
 import { AlertasRoutes } from '../alertas/router/AlertasRoutes';
 import { ConsultaBibliotecaRoutes } from '../ConsultaBiblioteca/router/ConsultaBibliotecaRoutes';
+import { InstrumentosRoutes } from '../Instrumentos/router/instrumentosRoutes';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RecursoHidricoRoutes: React.FC = () => {
@@ -20,6 +21,7 @@ export const RecursoHidricoRoutes: React.FC = () => {
       <Route path="biblioteca/*" element={<BibliotecaRouter />} />
       <Route path="alertas/*" element={<AlertasRoutes />} />
       <Route path="consulta/*" element={<ConsultaBibliotecaRoutes />} />
+      <Route path="instrumentos/*" element={<InstrumentosRoutes />} />
       <Route path="/*" element={<Page404 />} />
     </Routes>
   );
