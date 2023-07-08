@@ -17,17 +17,21 @@ interface UserContext {
   is_saving: boolean;
   rows_subseccion: SubSeccionPorSeccion[];
   rows_seccion: Seccion[];
+  info_instrumentos: any | undefined;
   info_seccion: Seccion | undefined;
   info_subseccion: SubSeccionPorSeccion | undefined;
   id_seccion: number | null;
   id_subseccion: number | null;
+  id_instrumento: number | null;
   set_is_saving: (value: boolean) => void;
   set_rows_seccion: (rows: Seccion[]) => void;
   set_rows_subseccion: (rows: SubSeccionPorSeccion[]) => void;
+  set_info_instrumento: (info_instrumentos: any) => void;
   set_info_seccion: (info_seccion: Seccion) => void;
   set_info_subseccion: (info_subseccion: SubSeccionPorSeccion) => void;
   set_id_seccion: (value: number | null) => void;
   set_id_subseccion: (value: number | null) => void;
+  set_id_instrumento: (value: number | null) => void;
   fetch_data_seccion: () => Promise<void>;
   fetch_data_subseccion_por_seccion: () => Promise<void>;
 }
@@ -36,6 +40,7 @@ export const DataContext = createContext<UserContext>({
   is_saving: false,
   rows_subseccion: [],
   rows_seccion: [],
+  info_instrumentos: {},
   info_seccion: {
     id_seccion: 0,
     nombre: '',
@@ -56,13 +61,16 @@ export const DataContext = createContext<UserContext>({
     nombre_comercial: '',
     nombre_completo: '',
   },
+  id_instrumento: null,
   id_seccion: null,
   id_subseccion: null,
   set_is_saving: () => {},
   set_rows_seccion: () => {},
+  set_info_instrumento: () => {},
   set_rows_subseccion: () => {},
   set_info_seccion: () => {},
   set_info_subseccion: () => {},
+  set_id_instrumento: () => {},
   set_id_seccion: () => {},
   set_id_subseccion: () => {},
   fetch_data_seccion: async () => {},
@@ -85,12 +93,14 @@ export const UserProvider = ({
   const [info_seccion, set_info_seccion] = React.useState<Seccion>();
   const [info_subseccion, set_info_subseccion] =
     React.useState<SubSeccionPorSeccion>();
+  const [info_instrumentos, set_info_instrumento] = React.useState<any>();
 
   // id
   const [id_seccion, set_id_seccion] = React.useState<number | null>(null);
   const [id_subseccion, set_id_subseccion] = React.useState<number | null>(
     null
   );
+  const [id_instrumento, set_id_instrumento] = React.useState<number | null>(null);
   // funciones
   const fetch_data_seccion = async (): Promise<void> => {
     set_rows_seccion([]);
@@ -124,15 +134,19 @@ export const UserProvider = ({
     is_saving,
     rows_subseccion,
     rows_seccion,
+    info_instrumentos,
     info_seccion,
     info_subseccion,
+    id_instrumento,
     id_seccion,
     id_subseccion,
     set_is_saving,
     set_rows_seccion,
     set_rows_subseccion,
+    set_info_instrumento,
     set_info_seccion,
     set_info_subseccion,
+    set_id_instrumento,
     set_id_seccion,
     set_id_subseccion,
     fetch_data_seccion,

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {
   Avatar,
+  Box,
   Divider,
   Grid,
   IconButton,
@@ -16,7 +17,8 @@ import { v4 as uuidv4 } from 'uuid';
 import '../css/styles.css';
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
-import { LoadingButton } from '@mui/lab';
+import { BusquedaInstrumentos } from '../components/BusquedaInstrumentos';
+import { BusquedaInstrumentosBasica } from '../components/BusquedaInstrumentosBasica';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
@@ -130,7 +132,6 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
       renderCell: (params) => <div className="container">{params.value}</div>,
     },
   ];
-
   const columns_anexos: GridColDef[] = [
     {
       field: 'nombre',
@@ -177,11 +178,11 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
     nombre: 'PORH RIO GUATAQUIA',
     cuencas: [
       {
-        ubicacion: 'CUNDINAMARCA',
+        ubicacion: 'META',
         nombre: 'CUENCA RIO GUATAQUIA',
       },
       {
-        ubicacion: 'CUNDINAMARCA',
+        ubicacion: 'META',
         nombre: 'CUENCA RIO GUATAQUIA 2',
       },
     ],
@@ -300,6 +301,9 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 id="disabled-field"
               />
             </Grid>
+            <Box sx={{ flexGrow: 1 }}>
+              <BusquedaInstrumentosBasica />
+            </Box>
             <Grid item xs={12}>
               <Typography variant="subtitle1" fontWeight="bold">
                 Detalle de instrumento seleccionado:
@@ -369,12 +373,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
         )}
       </Grid>
       <Grid container justifyContent="flex-end" spacing={2}>
-        <Grid item>
-          <LoadingButton variant="contained" color="primary">
-          Buscar
-          </LoadingButton>
-        </Grid>
-
+        <BusquedaInstrumentos />
         <Grid item>
           <ButtonSalir />
         </Grid>
