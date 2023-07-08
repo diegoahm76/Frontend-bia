@@ -5,6 +5,7 @@ import { initial_state_searched_trd } from './utils/constants';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { get_finished_ccd_service } from '../toolkit/CCDResources/thunks/getFinishedCcdThunks';
 import {
+  get_catalogo_series_subseries_unidad_organizacional,
   get_trd_current,
   get_trds
 } from '../toolkit/TRDResources/slice/TRDResourcesSlice';
@@ -13,18 +14,18 @@ export const use_trd = (): any => {
   const dispatch: any = useAppDispatch();
 
   // eslint-disable-next-line no-empty-pattern
-  const { trd_current /* trds */ } = useAppSelector(
+  const { trd_current, data_format_documental_type_current /* trds */ } = useAppSelector(
     (state: any) => state.trd_slice
   );
 
   // eslint-disable-next-line no-empty-pattern
-  const { ccd_finished/* trds */ } = useAppSelector(
+  const { ccd_finished } = useAppSelector(
     (state: any) => state.finished_ccd_slice
   );
 
   //! useForm that I will use in different components
 
-  // ? form for search trd
+  // ? form for search trd  --------------------->
   const {
     handleSubmit: handle_submit_searched_trd_modal,
     //! control series y subseries para catalogo de unidad organizacional
@@ -35,7 +36,7 @@ export const use_trd = (): any => {
   } = useForm({ defaultValues: initial_state_searched_trd });
   const form_data_searched_trd_modal = watch_searched_trd_modal();
 
-  // ? form for create trd
+  // ? form for create trd --------------------->
 
   const {
     // handleSubmit: handle_submit_create_trd_modal,
@@ -53,35 +54,57 @@ export const use_trd = (): any => {
   });
   const data_create_trd_modal = watch_create_trd_modal();
 
-  //! useStates that I will use in different components
+  // ? form (create, edit, delete or deactivate) format documental type --------------------->
+  const {
+    // handleSubmit: handle_submit_searched_trd_modal,
+    //! control series y subseries para catalogo de unidad organizacional
+    control: control_format_documental_type,
+    watch: watch_format_documental_type,
+    reset: reset_format_documental_type,
+    formState: { errors: errors_format_documental_type }
+  } = useForm({ defaultValues: {
+    "cod-tipo-medio": {
+      label: '',
+      value: 0,
+      "cod-tipo-medio": '',
+    },
+    nombre: '',
+  } });
+  const data_format_documental_type_watch_form = watch_format_documental_type();
+  // console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
 
-  // ? list of finished ccd
+  //* -------------------------------------------------------------------------->
+  //! useStates that I will use in different components --------------------->
+
+  // ? list of finished ccd --------------------->
   const [list_finished_ccd, set_list_finished_ccd] = useState<any[]>([
     {
       label: '',
       value: 0
     }
   ]);
-  //! useEffects that I will use in different components
+  //* -------------------------------------------------------------------------->
+  //! useEffects that I will use in different components --------------------->
 
-  // ? get list of finished ccd
+  // ? get list of finished ccd to list--------------------->
   useEffect(() => {
     void dispatch(get_finished_ccd_service()).then((res: any[]) => {
-      // console.log(res);
       set_list_finished_ccd(
-        res.map((item: any) => {
-          return {
-            item,
-            label: `V.${item.version} - ${item.nombre} `,
-            value: item.id_ccd
-          };
-        })
+        res
+          .filter((cdd) => cdd.usado === false)
+          .map((item: any) => {
+            return {
+              item,
+              label: `V. ${item.version} - ${item.nombre} `,
+              value: item.id_ccd
+            };
+          })
       );
     });
-  }, []);
+  }, [trd_current]);
 
-  // ? try to edit trd
-useEffect(() => {
+  // ? try to edit trd --------------------->
+  useEffect(() => {
     console.log(data_create_trd_modal, 'data_create_trd');
     console.log(trd_current, 'trd_current');
     if (trd_current !== null) {
@@ -96,19 +119,45 @@ useEffect(() => {
         },
         nombre: trd_current.nombre,
         version: trd_current.version,
-        id_trd: trd_current.id_trd,
+        id_trd: trd_current.id_trd
       };
       console.log(obj, 'obj');
       reset_create_trd_modal(obj);
     }
-  }, [
-    trd_current,
-  ]);
+  }, [trd_current]);
 
+
+   // ? try to edit format type x --------------------->
+   useEffect(() => {
+    console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
+    console.log(data_format_documental_type_current, 'data_format_documental_type_current');
+    if (data_format_documental_type_current !== null) {
+      const result_name = ccd_finished.filter((item: any) => {
+        return item.id_ccd === trd_current.id_ccd;
+      });
+      console.log('result_name', result_name);
+      const obj: any = {
+        /* id_ccd: {
+          label: result_name[0].nombre,
+          value: result_name[0].id_ccd
+        }, */
+        nombre: data_format_documental_type_current.nombre,
+        // version: trd_current.version,
+        // id_trd: trd_current.id_trd
+      };
+      console.log(obj, 'obj');
+      reset_format_documental_type(obj);
+    }
+  }, [data_format_documental_type_current]);
+
+
+
+  // ? reset all trd data --------------------->
   const reset_all_trd = (): void => {
     //* reset trd list
     dispatch(get_trds([]));
     dispatch(get_trd_current(null));
+    dispatch(get_catalogo_series_subseries_unidad_organizacional([]));
     //* reset form
     reset_searched_trd_modal({
       nombre: '',
@@ -122,7 +171,7 @@ useEffect(() => {
   };
 
   return {
-    // ? searched_trd_modal - name and version
+    // ? searched_trd_modal - name and version of trd --------------------------------------------->
     handle_submit_searched_trd_modal,
     control_searched_trd_modal,
     watch_searched_trd_modal,
@@ -130,15 +179,23 @@ useEffect(() => {
     errors_searched_trd_modal,
     form_data_searched_trd_modal,
 
-    // ? create_trd_modal - ccd, name and version
+    // ? create_trd_modal - ccd, name and version of trd --------------------------------------------->
     control_create_trd_modal,
     // handle_submit_create_trd_modal,
     data_create_trd_modal,
 
-    // ? reset functions
+    // ? format_documental_type of trd --------------------------------------------->
+    control_format_documental_type,
+    watch_format_documental_type,
+    reset_format_documental_type,
+    errors_format_documental_type,
+    data_format_documental_type_watch_form,
+
+    // ? reset functions data trd --------------------------------------------->
     reset_all_trd,
     reset_create_trd_modal,
-    // ? list of finished ccd
+
+    // ? list of finished ccd --------------------------------------------->
     list_finished_ccd
   };
 };

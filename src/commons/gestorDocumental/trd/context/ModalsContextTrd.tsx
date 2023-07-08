@@ -8,17 +8,24 @@ import { initialState } from './state/initialState';
 import { reducer } from './reducer/reducerContext';
 
 const ModalContextTRD = createContext<ModalContextState>({
+  //*
   modalSearchTRD: false,
   openModalModalSearchTRD: () => {},
   closeModalModalSearchTRD: () => {},
+  //*
   modalCCDUsados: false,
   openModalCCDUsados: () => {},
-  closeModalCCDUsados: () => {}
+  closeModalCCDUsados: () => {},
+  //*
+  modalCreacionFormatoTipo: false,
+  openModalCreacionFormatoTipo: () => {},
+  closeModalCreacionFormatoTipo: () => {}
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  //*
   const openModalModalSearchTRD = useCallback(() => {
     dispatch({ type: 'OPEN_MODAL_SEARCH_TRD' });
   }, []);
@@ -27,6 +34,7 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_SEARCH_TRD' });
   }, []);
 
+  //*
   const openModalCCDUsados = useCallback(() => {
     dispatch({ type: 'OPEN_MODAL_CCD_USADOS' });
   }, []);
@@ -35,15 +43,30 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
     dispatch({ type: 'CLOSE_MODAL_CCD_USADOS' });
   }, []);
 
+  //*
+  const openModalCreacionFormatoTipo = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_CREACION_FORMATO_TIPO' });
+  }, []);
+
+  const closeModalCreacionFormatoTipo = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_CREACION_FORMATO_TIPO' });
+  }, []);
+
   return (
     <ModalContextTRD.Provider
       value={{
+        //*
         modalSearchTRD: state.modalSearchTRD,
         openModalModalSearchTRD,
         closeModalModalSearchTRD,
+        //*
         modalCCDUsados: state.modalCCDUsados,
         openModalCCDUsados,
         closeModalCCDUsados,
+        //*
+        modalCreacionFormatoTipo: state.modalCreacionFormatoTipo,
+        openModalCreacionFormatoTipo,
+        closeModalCreacionFormatoTipo
       }}
     >
       {children}

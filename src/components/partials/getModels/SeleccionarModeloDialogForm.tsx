@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import {
     Dialog,
@@ -9,6 +10,7 @@ import {
     Grid,
     Box,
 } from '@mui/material';
+import AltRouteIcon from '@mui/icons-material/AltRoute';
 import SearchIcon from '@mui/icons-material/Search';
 import { Title } from '../../Title';
 import CloseIcon from '@mui/icons-material/Close';
@@ -39,7 +41,9 @@ interface IProps {
     row_id: string | number;
     set_current_model: any;
     title_table_modal?: string | null;
-    button_add_selection_hidden?: boolean | null;
+    button_add_selection_hidden?: boolean | null | string;
+    button_origin_show?: boolean | null;
+    search_model_function?: any;
 
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -55,7 +59,9 @@ const SeleccionarModeloDialogForm = ({
     row_id,
     set_current_model,
     title_table_modal,
-    button_add_selection_hidden
+    button_add_selection_hidden,
+    button_origin_show,
+    search_model_function
 }: IProps) => {
     const dispatch = useAppDispatch();
     const [selected_row, set_selected_row] = useState([]);
@@ -171,6 +177,9 @@ const SeleccionarModeloDialogForm = ({
             set_models([])
             handle_close_select_model();
         }
+    };
+    const search_models = (): void => {
+        search_model_function()
     };
     const button_style = {
         color: 'white',
@@ -305,11 +314,27 @@ const SeleccionarModeloDialogForm = ({
                             >
                                 Agregar seleccion
                             </Button>
+
                         }
+
+
+                        {(button_origin_show ?? false) &&
+                            <Button
+                                variant="contained"
+                                onClick={search_models}
+                                startIcon={<AltRouteIcon />}
+                            >
+                                Otros orígenes
+                            </Button>
+
+                        }
+
+
+
                     </Stack>
                 </DialogActions>
             </Box>
-        </Dialog>
+        </Dialog >
     );
 };
 

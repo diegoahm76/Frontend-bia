@@ -42,6 +42,7 @@ interface IProps {
     button_add_selection_hidden?: boolean | null;
     md_button?: number | null;
     button_icon_class?: any;
+    button_origin_show?: boolean | null,
     show_search_button?: boolean | null,
     show_button_table?: boolean | null,
     modal_active_init?: boolean | null,
@@ -74,6 +75,7 @@ const BuscarModelo = ({
     md_button,
     button_icon_class,
     show_search_button,
+    button_origin_show,
     show_button_table,
     modal_active_init
 }: IProps) => {
@@ -163,7 +165,7 @@ const BuscarModelo = ({
                 max_date={form_input.max_date ?? ""}
                 format={form_input.max_date ?? null}
             />;
-        } else if(form_input.datum_type === "image_uploader"){
+        } else if (form_input.datum_type === "image_uploader") {
             return <ImageUploader
                 xs={form_input.xs}
                 md={form_input.md}
@@ -175,10 +177,10 @@ const BuscarModelo = ({
         }
     }
     useEffect(() => {
-        if(modal_active_init !== null && modal_active_init !== undefined){
+        if (modal_active_init !== null && modal_active_init !== undefined) {
             set_select_model_is_active(modal_active_init);
         }
-      }, [])
+    }, [])
 
     const handle_open_select_model = (): void => {
         set_select_model_is_active(true);
@@ -280,6 +282,7 @@ const BuscarModelo = ({
                 modal_title={modal_select_model_title}
                 form_filters={modal_form_filters}
                 set_models={set_models}
+                button_origin_show={button_origin_show}
                 get_filters_models={get_filters_models}
                 models={models}
                 columns_model={columns_model}

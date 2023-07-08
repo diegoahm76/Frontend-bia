@@ -60,7 +60,7 @@ export interface IObjBienDespacho {
   cantidad_despachada: number | null;
   observacion: string | null;
   numero_posicion_despacho?: number | null;
-  nombre_bien?: string | null;
+  nombre_bien_despacho?: string | null;
   codigo_bien?: string | null;
   unidad_medida?: string | null;
   bodega?: string | null;
