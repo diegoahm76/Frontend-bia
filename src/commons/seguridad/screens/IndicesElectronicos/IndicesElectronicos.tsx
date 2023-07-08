@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type FC, useEffect, useState } from 'react';
+import XMLViewer from 'react-xml-viewer';
 import { api } from '../../../../api/axios';
 import { v4 as uuidv4 } from 'uuid';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -233,7 +235,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
               color="primary"
               // startIcon={<GetAppIcon />}
               // eslint-disable-next-line eqeqeq, @typescript-eslint/strict-boolean-expressions
-              disabled={Object.keys(xmlToJsonisTrue).length == 0}
+              disabled={Object.keys(xmlToJsonisTrue ?? {}).length == 0}
               onClick={() => {
                 const blob = new Blob([current_data], {
                   type: 'text/xml;charset=utf-8'
@@ -245,7 +247,49 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
               Descargar XML
             </Button>
           </Stack>
+
+          {/*        {xmlToJsonisTrue && (
+  <>
+    <Typography variant="h6" sx={{ mt: 2 }}>
+      Archivo a descargar: archivo.xml
+    </Typography>
+    <Button
+      variant="outlined"
+      color="primary"
+      startIcon={<GetAppIcon />}
+      onClick={() => {
+        xmlFromJson(xmlToJsonisTrue).then((res) => {
+          console.log('res', res);
+          const blob = new Blob([res], { type: 'text/xml;charset=utf-8' });
+          saveAs(blob, 'archivo.xml');
+        });
+      }}
+    >
+      Descargar XML
+    </Button>
+  </>
+)} */}
         </Grid>
+
+        <XMLViewer xml={current_data} />
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+            </tr>
+          </thead>
+          <tbody>
+            {current_data.children ? (
+              current_data.children.length > 0 &&
+              current_data.children.map((child: any, index: number) => {
+                console.log('child', child);
+                return <></>;
+              })
+            ) : (
+              <></>
+            )}
+          </tbody>
+        </table>
       </Grid>
     </>
   );

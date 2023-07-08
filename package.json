@@ -68,6 +68,7 @@
     "react-select": "^5.7.0",
     "react-swipeable-views": "^0.14.0",
     "react-toastify": "^9.1.1",
+    "react-xml-viewer": "^2.0.0",
     "reactflow": "^11.7.0",
     "recharts": "^2.4.1",
     "redux-persist": "^6.0.0",
