@@ -20,13 +20,16 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../../../components';
 import { xmlFromJson } from './utils/xmlFromJson';
+
+import { saveAs } from 'file-saver';
+
 export const IndicesElectronicos: FC = (): JSX.Element => {
   const [data, setData] = useState<any>([]);
   const [current_data, setCurrentData] = useState<any>({
     id_ccd: ''
   });
 
-  const [xmlToJsonisTrue, setXmlToJsonisTrue] = useState({})
+  const [xmlToJsonisTrue, setXmlToJsonisTrue] = useState<any>();
 
   const {
     control: control_electronic_index,
@@ -91,6 +94,10 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
     void api.get(url).then((response) => {
       const newData = response.data.map((item: any) => ({
         ...item,
+        fecha_puesta_produccion: 'sin fecha',
+        fecha_retiro_produccion: 'sin fecha',
+        justificacion: 'sin justificacion',
+        ruta_soporte: 'hola soy la ruta de soporte',
         searchIndex: uuidv4().slice(0, 8)
       }));
       console.log(newData);
@@ -118,7 +125,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         <div
           style={{
             width: '100%',
-            marginBottom: '20px',
+            marginBottom: '20px'
           }}
         >
           <Title title="Generación de índices electrónicos" />
@@ -168,10 +175,10 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
                 color="primary"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  xmlFromJson(xmlToJsonisTrue).then((res) => {
-                    console.log('res', res);
-                  });
-                  console.log('Buscando expediente');
+                  console.log(xmlToJsonisTrue);
+                  const xml = xmlFromJson(xmlToJsonisTrue, 'root');
+                  console.log(xml);
+                  setCurrentData(xml);
                 }}
               >
                 Buscar
@@ -195,10 +202,10 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
 
         <Grid
           item
-          xs={8}
-          sm={8}
-          md={8}
-          lg={8}
+          xs={12}
+          sm={12}
+          md={12}
+          lg={12}
           sx={{
             margin: '0 auto',
             width: '100%'
@@ -213,6 +220,31 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
             pageSize={5}
             rowsPerPageOptions={[10]}
           />
+        </Grid>
+        <Grid>
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={2}
+            sx={{ mt: '20px' }}
+          >
+            <Button
+              variant="outlined"
+              color="primary"
+              // startIcon={<GetAppIcon />}
+              // eslint-disable-next-line eqeqeq, @typescript-eslint/strict-boolean-expressions
+              disabled={Object.keys(xmlToJsonisTrue).length == 0}
+              onClick={() => {
+                const blob = new Blob([current_data], {
+                  type: 'text/xml;charset=utf-8'
+                });
+                console.log('blob', blob);
+                saveAs(blob, 'archivo.xml');
+              }}
+            >
+              Descargar XML
+            </Button>
+          </Stack>
         </Grid>
       </Grid>
     </>
