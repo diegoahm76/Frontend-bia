@@ -113,6 +113,7 @@ export const SideBar: FC<SideBarProps> = ({
     }, 2000);
   }, [permisos_store]);
 
+  // ? ------- static side bar content, except super user delegation screen ------
   const conten_drawer = (
     <Box
       className="drawer"
@@ -126,6 +127,7 @@ export const SideBar: FC<SideBarProps> = ({
         boxShadow: '0px 2px 10px #041926'
       }}
     >
+      {/* -------------- Header of the drawer ------------------- */}
       <Toolbar
         sx={{
           display: 'grid',
@@ -139,8 +141,11 @@ export const SideBar: FC<SideBarProps> = ({
           style={{ height: 55, justifySelf: 'center' }}
         />
       </Toolbar>
+      {}
+      {/* -------------- Divider of the drawer ------------------- */}
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
 
+      {/* -------------- List main elements, logout, Access Data, Personal Data, etc  ------------------- */}
       <List sx={{ margin: '0 20px', color: mod_dark ? '#fafafa' : '#141415' }}>
         <ListItemButton onClick={handle_click} sx={{ borderRadius: '10px' }}>
           <ListItemIcon>
@@ -279,6 +284,7 @@ export const SideBar: FC<SideBarProps> = ({
           </List>
         </Collapse>
       </List>
+      {/* -------------- Close List main elements ------------------- */}
 
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
       {!is_loading ? (
@@ -360,7 +366,8 @@ export const SideBar: FC<SideBarProps> = ({
             alignContent="center"
             justifyContent="center"
             sx={{
-              height: 'calc(100% - 170px)'
+              height: 'calc(100% - 170px)',
+              // color: mod_dark ? '#fafafa' : '#141415'
             }}
           >
             <Grid item xs={12} container justifyContent="center" padding={5}>
@@ -368,7 +375,7 @@ export const SideBar: FC<SideBarProps> = ({
             </Grid>
             <Grid item xs={12} padding={5}>
               <Typography textAlign="center">
-                Cargando permisos, por favor espere...
+                
               </Typography>
             </Grid>
           </Grid>

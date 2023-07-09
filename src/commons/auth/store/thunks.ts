@@ -84,21 +84,25 @@ export const get_persmisions_user: (
       return;
     }
 
-    dispatch(
-      set_permissions(
-        resp.data?.map((e) => {
-          e.expanded = false;
-          e.menus.map((i) => {
-            i.expanded = false;
-            i.modulos.map((o) => {
-              o.expanded = false;
-              return o;
-            });
-            return i;
-          });
-          return e;
+    const permissions = resp.data?.map((e) => {
+      return {
+        ...e,
+        expanded: false,
+        menus: e.menus?.map((i) => {
+          return {
+            ...i,
+            expanded: false,
+            modulos: i.modulos?.map((o) => {
+              return {
+                ...o,
+                expanded: false
+              };
+            })
+          };
         })
-      )
-    );
+      };
+    });
+
+    dispatch(set_permissions(permissions));
   };
 };
