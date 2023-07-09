@@ -31,9 +31,12 @@ import { control_error, control_success } from '../../../../helpers';
 import { columns } from './utils/colums';
 
 export const IndicesElectronicos: FC = (): JSX.Element => {
+  // ! use this state to show the xml in the DataGrid
   const [data, setData] = useState<any[]>([]);
+  // ! use this state to set the json to xml
   const [xmlToJsonisTrue, setXmlToJsonisTrue] = useState<any>();
 
+  // ? this is the form to search the expedient
   const {
     control: control_electronic_index,
     reset: reset_electronic_index,
@@ -44,8 +47,10 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
     }
   });
 
+  // ? this is the watch to search the expedient
   const data_electronic_index_watch = watch_electronic_index();
 
+  // ? this is the form to search the expedient
   const onSubmit_electronic_index = async (): Promise<void> => {
     try {
       const url = `gestor/ccd/get-terminados/`;
@@ -90,6 +95,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
     }
   };
 
+  // ? colums for the DataGrid
   const columns_indices_electronicos: GridColDef[] = [
     ...columns,
     {
@@ -126,6 +132,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
     }
   ];
 
+  // ? this is the return of the component
   return (
     <>
       <Grid
