@@ -83,10 +83,10 @@ export const get_persmisions_user: (
       dispatch(logout({ error_message: resp.error_message }));
       return;
     }
-
+    //* fixed rendered menu
     const permissions = resp.data?.map((e) => {
       return {
-        ...e,
+        ...e, 
         expanded: false,
         menus: e.menus?.map((i) => {
           return {
@@ -104,5 +104,33 @@ export const get_persmisions_user: (
     });
 
     dispatch(set_permissions(permissions));
+
+    /* dispatch(
+      set_permissions(
+        resp.data?.map((e) => {
+          e.expanded = false;
+          e.menus.map((i) => {
+            
+            i.expanded = false;
+            i.modulos.map((o) => {
+              o.expanded = false;
+              return o;
+            });
+            return i;
+          });
+          return e;
+        })
+      )
+    ); */
+
   };
 };
+
+
+/* Ambos fragmentos de código tienen el mismo propósito, que es establecer la propiedad expanded en false para cada objeto en una estructura de datos anidada. Sin embargo, hay una diferencia importante en cómo se realiza esto.
+
+En el primer fragmento de código, se utiliza la sintaxis de objeto extendido (...) para crear una copia de cada objeto en la estructura de datos anidada y establecer la propiedad expanded en false. Esto se hace de manera recursiva utilizando la función map() para recorrer cada nivel de la estructura de datos anidada. El resultado final es una nueva estructura de datos anidada con las mismas propiedades que la original, pero con la propiedad expanded establecida en false.
+
+En el segundo fragmento de código, se modifica directamente la estructura de datos anidada original utilizando la sintaxis de asignación (=) para establecer la propiedad expanded en false. Esto también se hace de manera recursiva utilizando la función map(). Sin embargo, en lugar de crear una nueva estructura de datos anidada, se modifica la estructura de datos original.
+
+La principal diferencia entre estos dos enfoques es que el primer enfoque crea una nueva estructura de datos anidada, mientras que el segundo enfoque modifica la estructura de datos original. En general, es una buena práctica evitar modificar la estructura de datos original, ya que esto puede tener efectos secundarios no deseados en otras partes del código que dependen de la estructura de datos original. Por lo tanto, el primer enfoque es generalmente preferible al segundo enfoque */

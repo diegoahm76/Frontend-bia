@@ -300,6 +300,7 @@ export const SideBar: FC<SideBarProps> = ({
               key={k}
             >
               <ListItemButton
+                sx={{ borderRadius: '10px' }}
                 onClick={() => {
                   open_collapse(e, k);
                 }}
