@@ -28,20 +28,14 @@ import { xmlFromJson } from './utils/xmlFromJson';
 
 import { saveAs } from 'file-saver';
 import { control_error, control_success } from '../../../../helpers';
-import { Link } from 'react-router-dom';
+import { columns } from './utils/colums';
 
 export const IndicesElectronicos: FC = (): JSX.Element => {
-  const [data, setData] = useState<any>([]);
-  /* const [current_data, setCurrentData] = useState<any>({
-    id_ccd: ''
-  }); */
-
+  const [data, setData] = useState<any[]>([]);
   const [xmlToJsonisTrue, setXmlToJsonisTrue] = useState<any>();
 
   const {
     control: control_electronic_index,
-    handleSubmit: handleSubmit_electronic_index,
-    formState: formState_electronic_index,
     reset: reset_electronic_index,
     watch: watch_electronic_index
   } = useForm({
@@ -97,27 +91,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
   };
 
   const columns_indices_electronicos: GridColDef[] = [
-    {
-      headerName: 'NOMBRE',
-      field: 'nombre',
-      minWidth: 210,
-      maxWidth: 235,
-      flex: 1
-    },
-    {
-      headerName: 'IDENTIFICADOR',
-      field: 'id_ccd',
-      minWidth: 230,
-      maxWidth: 300,
-      flex: 1
-    },
-    {
-      headerName: 'HASH',
-      field: 'searchIndex',
-      minWidth: 240,
-      maxWidth: 300,
-      flex: 1
-    },
+    ...columns,
     {
       headerName: 'Acciones',
       field: 'accion',
@@ -129,7 +103,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
           <>
             <IconButton
               onClick={() => {
-                console.log('params electronic index', params.row);
+                // console.log('params electronic index', params.row);
                 reset_electronic_index({
                   id_ccd: params.row.id_ccd
                 });
@@ -203,11 +177,8 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
                     size="small"
                     label="Ingrese número de expediente"
                     variant="outlined"
-                    value={value /* ?? current_data.id_ccd */}
-                    onChange={(e: any) => {
-                      onChange(e.target.value);
-                      console.log('e.target.value', e.target.value);
-                    }}
+                    value={value}
+                    onChange={onChange}
                     error={!(error == null)}
                     helperText={
                       error != null
@@ -266,7 +237,6 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
         >
           <Title title="Table índices electrónicos" />
           <Divider sx={{ mt: '20px' }} />
-
           <DataGrid
             density="compact"
             autoHeight
@@ -328,26 +298,6 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
             </Button>
           </Stack>
         </Grid>
-
-        {/* <XMLViewer xml={current_data} />
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-            </tr>
-          </thead>
-          <tbody>
-            {current_data.children ? (
-              current_data.children.length > 0 &&
-              current_data.children.map((child: any, index: number) => {
-                console.log('child', child);
-                return <></>;
-              })
-            ) : (
-              <></>
-            )}
-          </tbody>
-        </table> */}
       </Grid>
     </>
   );
