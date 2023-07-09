@@ -254,22 +254,29 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
             )}
             <ListItemButton
               sx={{ pl: 4 }}
-                onClick={() => {
-                  void Swal.fire({
-                    
-                    title: '¿Está seguro de cerrar sesión?',
-                    showDenyButton: true,
-                    confirmButtonText: `Si`,
-                    denyButtonText: `No`,
-                  }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
-                    if (result.isConfirmed) {
-                      dispatch(logout(''));
-                    } else if (result.isDenied) {
-                      void Swal.fire('No se ha cerrado sesión', '', 'info')
-                    }
-                  })
-                }}
+              onClick={() => {
+                void Swal.fire({
+                  title: '¿Está seguro de cerrar sesión?',
+                  showDenyButton: true,
+                  confirmButtonText: `Si`,
+                  denyButtonText: `No`,
+                  confirmButtonColor: '#042F4A',
+                  cancelButtonColor: '#DE1616',
+                  icon: 'question'
+                }).then((result) => {
+                  /* Read more about isConfirmed, isDenied below */
+                  if (result.isConfirmed) {
+                    dispatch(logout(''));
+                  } else if (result.isDenied) {
+                    void Swal.fire({
+                      title: 'No se ha cerrado sesión',
+                      icon: 'info',
+                      confirmButtonText: 'Ok',
+                      confirmButtonColor: '#042F4A'
+                    });
+                  }
+                });
+              }}
             >
               <ListItemIcon>
                 <LogoutIcon sx={{ color: mod_dark ? '#fafafa' : '#141415' }} />

@@ -22,7 +22,7 @@ export const use_theme = (): {
         {
           palette: {
             primary: {
-              main: '#042F4A',
+              main: '#042F4A90',
             },
             secondary: {
               main: '#fafafa',
