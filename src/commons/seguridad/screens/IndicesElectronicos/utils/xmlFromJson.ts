@@ -33,7 +33,7 @@ export type AnyObject = Record<string, any>;
 
 
 
-export function xmlFromJson(json: any, rootElementName: string = 'root'): string {
+export function xmlFromJson(json: any, rootElementName: string = 'root'): any {
   const root = builder.create(rootElementName);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
