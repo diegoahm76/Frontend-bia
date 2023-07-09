@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useEffect, useState, type FC } from 'react';
@@ -68,8 +69,8 @@ export const SideBar: FC<SideBarProps> = ({
   const { userinfo, permisos: permisos_store } = useSelector(
     (state: AuthSlice) => state.auth
   );
-  console.log(userinfo)
-  console.log(permisos_store)
+  console.log(userinfo);
+  console.log(permisos_store);
   const [permisos, set_permisos] = useState<Menu[]>([]);
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
@@ -83,7 +84,8 @@ export const SideBar: FC<SideBarProps> = ({
   );
 
   const handle_drawer_toggle = () => dispatch(open_drawer_mobile(!mobile_open));
-  const handle_drawer_toggle_desktop = () => dispatch(open_drawer_desktop(!desktop_open));
+  const handle_drawer_toggle_desktop = () =>
+    dispatch(open_drawer_desktop(!desktop_open));
   const handle_close_dialog_user = (): void => set_dialog_open(false);
   const handle_click = (): void => set_open(!open);
 
@@ -101,6 +103,39 @@ export const SideBar: FC<SideBarProps> = ({
     const temp_permisos = [...permisos];
     const menus = [...temp_permisos[key_modulo].menus];
     menus[key] = { ...obj, expanded: !obj.expanded };
+    temp_permisos[key_modulo].menus = [...menus];
+    set_permisos(temp_permisos);
+  };
+
+  const open_collapse_sbm2 = (
+    obj: MenuElement,
+    key: number,
+    key_modulo: number,
+    key_submenu: number
+  ): void => {
+    const temp_permisos = [...permisos];
+    const menus = [...temp_permisos[key_modulo].menus];
+    const submenus = [...menus[key_submenu].submenus];
+    submenus[key] = { ...obj, expanded: !obj.expanded };
+    menus[key_submenu].submenus = [...submenus];
+    temp_permisos[key_modulo].menus = [...menus];
+    set_permisos(temp_permisos);
+  };
+
+  const open_collapse_sbm3 = (
+    obj: MenuElement,
+    key: number,
+    key_modulo: number,
+    key_submenu: number,
+    key_submenu2: number
+  ): void => {
+    const temp_permisos = [...permisos];
+    const menus = [...temp_permisos[key_modulo].menus];
+    const submenus = [...menus[key_submenu].submenus];
+    const submenus2 = [...submenus[key_submenu2].submenus];
+    submenus2[key] = { ...obj, expanded: !obj.expanded };
+    submenus[key_submenu2].submenus = [...submenus2];
+    menus[key_submenu].submenus = [...submenus];
     temp_permisos[key_modulo].menus = [...menus];
     set_permisos(temp_permisos);
   };
@@ -319,6 +354,7 @@ export const SideBar: FC<SideBarProps> = ({
                 }}
               >
                 {e.menus.map((m, km) => {
+                  console.log(m);
                   return (
                     <List
                       component="div"
@@ -338,8 +374,138 @@ export const SideBar: FC<SideBarProps> = ({
                       </ListItemButton>
 
                       <Collapse timeout="auto" unmountOnExit in={m.expanded}>
-                        <List component="div" disablePadding>
-                          {m.modulos.map((mo, km2) => {
+                        {m.submenus.map((sm, ksm) => {
+                          return (
+                            <List
+                              component="div"
+                              disablePadding
+                              key={ksm}
+                              sx={{
+                                pl: '20px'
+                              }}
+                            >
+                              <ListItemButton
+                                onClick={() => {
+                                  open_collapse_sbm2(sm, ksm, km, k);
+                                }}
+                              >
+                                <ListItemText primary={sm.nombre} />
+                                {sm.expanded ? <ExpandLess /> : <ExpandMore />}
+                              </ListItemButton>
+
+                              <Collapse
+                                timeout="auto"
+                                unmountOnExit
+                                in={sm.expanded}
+                              >
+                                <List component="div" disablePadding>
+                                  {sm.submenus &&
+                                    sm.submenus.length > 0 &&
+                                    sm.submenus.map((ssm, kssm) => {
+                                      return (
+                                        <List
+                                          component="div"
+                                          disablePadding
+                                          key={kssm}
+                                          sx={{
+                                            pl: '30px'
+                                          }}
+                                        >
+                                          <ListItemButton
+                                            onClick={() => {
+                                              open_collapse_sbm3(
+                                                ssm,
+                                                kssm,
+                                                ksm,
+                                                km,
+                                                k
+                                              );
+                                            }}
+                                          >
+                                            <ListItemText
+                                              primary={ssm.nombre}
+                                            />
+                                            {ssm.expanded ? (
+                                              <ExpandLess />
+                                            ) : (
+                                              <ExpandMore />
+                                            )}
+                                          </ListItemButton>
+
+                                          <Collapse
+                                            timeout="auto"
+                                            unmountOnExit
+                                            in={ssm.expanded}
+                                          >
+                                            <List
+                                              component="div"
+                                              disablePadding
+                                            >
+                                              {ssm.modulos &&
+                                                ssm.modulos.length > 0 &&
+                                                ssm.modulos.map((mo, km2) => {
+                                                  return (
+                                                    <ListItemButton
+                                                      sx={{ pl: 4 }}
+                                                      key={km2}
+                                                      href={mo.ruta_formulario}
+                                                    >
+                                                      <ListItemIcon
+                                                        sx={{
+                                                          minWidth: '25px'
+                                                        }}
+                                                      >
+                                                        <Icon
+                                                          sx={{
+                                                            fontSize: '10px'
+                                                          }}
+                                                        >
+                                                          circle
+                                                        </Icon>
+                                                      </ListItemIcon>
+                                                      <ListItemText
+                                                        primary={
+                                                          mo.nombre_modulo
+                                                        }
+                                                      />
+                                                    </ListItemButton>
+                                                  );
+                                                })}
+                                            </List>
+                                          </Collapse>
+                                        </List>
+                                      );
+                                    })}
+                                  {sm.modulos &&
+                                    sm.modulos.length > 0 &&
+                                    sm.modulos.map((mo, km2) => {
+                                      return (
+                                        <ListItemButton
+                                          sx={{ pl: 4 }}
+                                          key={km2}
+                                          href={mo.ruta_formulario}
+                                        >
+                                          <ListItemIcon
+                                            sx={{ minWidth: '25px' }}
+                                          >
+                                            <Icon sx={{ fontSize: '10px' }}>
+                                              circle
+                                            </Icon>
+                                          </ListItemIcon>
+                                          <ListItemText
+                                            primary={mo.nombre_modulo}
+                                          />
+                                        </ListItemButton>
+                                      );
+                                    })}
+                                </List>
+                              </Collapse>
+                            </List>
+                          );
+                        })}
+                        {m.modulos &&
+                          m.modulos.length > 0 &&
+                          m.modulos.map((mo, km2) => {
                             return (
                               <ListItemButton
                                 sx={{ pl: 4 }}
@@ -353,7 +519,6 @@ export const SideBar: FC<SideBarProps> = ({
                               </ListItemButton>
                             );
                           })}
-                        </List>
                       </Collapse>
                     </List>
                   );

@@ -86,11 +86,20 @@ export const get_persmisions_user: (
     //* fixed rendered menu
     const permissions = resp.data?.map((e) => {
       return {
-        ...e, 
+        ...e,
         expanded: false,
         menus: e.menus?.map((i) => {
           return {
             ...i,
+            submenus: i.submenus?.map((o) => {
+              //* poner submenus interno de ser necesario
+              //* poner modulos interno de ser necesario
+
+              return {
+                ...o,
+                expande: false
+              };
+            }),
             expanded: false,
             modulos: i.modulos?.map((o) => {
               return {
@@ -122,10 +131,8 @@ export const get_persmisions_user: (
         })
       )
     ); */
-
   };
 };
-
 
 /* Ambos fragmentos de código tienen el mismo propósito, que es establecer la propiedad expanded en false para cada objeto en una estructura de datos anidada. Sin embargo, hay una diferencia importante en cómo se realiza esto.
 
