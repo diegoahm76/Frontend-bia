@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
@@ -53,6 +54,38 @@ export const SideBar: FC<SideBarProps> = ({
   window,
   drawer_width
 }: SideBarProps) => {
+/*
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startWidth, setStartWidth] = useState(drawer_width);
+
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
+    setIsDragging(true);
+    setStartX(event.clientX);
+    setStartWidth(event.currentTarget.offsetWidth);
+  };
+
+  const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging) {
+      return;
+    }
+
+    const distance = event.clientX - startX;
+    const newWidth = startWidth + distance;
+
+    if (newWidth < 200 || newWidth > 400) {
+      return;
+    }
+
+    event.currentTarget.style.width = `${newWidth}px`;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+*/
+
   //! useRoutes to navigate, use the hook to declare another routes
   const {
     handle_click_delegar_super,
@@ -154,6 +187,7 @@ export const SideBar: FC<SideBarProps> = ({
   const conten_drawer = (
     <Box
       className="drawer"
+      
       sx={{
         bgcolor: 'customColor.main',
         margin: '10px 0 10px 10px',
@@ -457,7 +491,7 @@ export const SideBar: FC<SideBarProps> = ({
                                                       >
                                                         <Icon
                                                           sx={{
-                                                            fontSize: '10px'
+                                                            fontSize: '9.7px'
                                                           }}
                                                         >
                                                           circle
@@ -555,12 +589,16 @@ export const SideBar: FC<SideBarProps> = ({
 
   return (
     <>
-      <Box
+
+
+       <Box
+     /*  onMouseDown={handleMouseDown}
+       onMouseMove={handleMouseMove}
+       onMouseUp={handleMouseUp} */
         component="nav"
         sx={{ flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"
