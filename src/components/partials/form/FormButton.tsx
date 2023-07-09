@@ -8,6 +8,7 @@ interface IProps {
     variant_button: any;
     type_button: any;
     disabled?: boolean | null;
+    style_button?: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -17,7 +18,8 @@ const FormButton = ({
     label,
     variant_button,
     type_button,
-    disabled
+    disabled,
+    style_button
 }: IProps) => {
 
     return (
@@ -28,8 +30,9 @@ const FormButton = ({
             onClick={on_click_function}
             startIcon={icon_class}
             type={type_button}
-            disabled={disabled??false}
-            
+            style={style_button}
+            disabled={disabled ?? false}
+
         >
             {label}
         </Button>

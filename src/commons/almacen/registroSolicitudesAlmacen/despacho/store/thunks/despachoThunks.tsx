@@ -57,26 +57,24 @@ export const get_despachos_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `almacen/despachos/filter-despacho-consumo/?fecha_despacho=${
-          fecha_despacho ?? ''
-        }&id_unidad_para_la_que_solicita=${
-          id_unidad_para_la_que_solicita ?? ''
-        }&numero_solicitud_por_tipo=${
-          numero_solicitud_por_tipo ?? ''
+        `almacen/despachos/filter-despacho-consumo/?fecha_despacho=${fecha_despacho ?? ''
+        }&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? ''
+        }&numero_solicitud_por_tipo=${numero_solicitud_por_tipo ?? ''
         }&es_despacho_conservacion=${es_despacho_conservacion ?? ''}`
       );
-      // const { data } = await api.get(`conservacion/despachos/get-despachos/?fecha_desde=${fecha_desde}&fecha_hasta=${fecha_hasta}&id_vivero=${id_vivero}&nro_despachos_viveros=${nro}`);
-      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-      console.log(data);
+
+
+
       if (data.success === true) {
         dispatch(set_despachos(data.data));
+        console.log(data);
         control_success(data.detail);
       } else {
         control_error(data.detail);
       }
       return data;
     } catch (error: any) {
-      console.log('get_despachos_service');
+
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -105,13 +103,11 @@ export const get_solicitud_by_id = (
   return async (dispatch: Dispatch<any>) => {
     try {
       console.log(
-        `almacen/solicitudes/get-solicitud-by-id/${
-          id_solicitud_consumibles ?? ''
+        `almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ''
         }`
       );
       const { data } = await api.get(
-        `almacen/solicitudes/get-solicitud-by-id/${
-          id_solicitud_consumibles ?? ''
+        `almacen/solicitudes/get-solicitud-by-id/${id_solicitud_consumibles ?? ''
         }/`
       );
       dispatch(set_current_solicitud(data.detail.info_solicitud));
@@ -162,13 +158,14 @@ export const get_person_id_despacho = (id: number): any => {
 
 // Obtener bienes por numero de despacho
 
-export const get_bienes_despacho = (id_despacho: number | null): any => {
+export const get_bienes_despacho = (nro_despacho: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/despachos/get-items-despacho/${id_despacho ?? ''}/`
+        `almacen/despachos/get-despacho-consumo-by-numero-despacho/?numero_despacho_consumo=${nro_despacho ?? ''
+        }`
       );
-      dispatch(set_bienes_despacho(data.data));
+      dispatch(set_bienes_despacho(data.data.items_despacho_consumo));
       console.log(data);
       if (data.data.length > 0) {
         // control_success("Se encontrarón bienes")
@@ -184,7 +181,7 @@ export const get_bienes_despacho = (id_despacho: number | null): any => {
   };
 };
 
-// obtener numero de solicitud
+// obtener numero de despacho
 export const get_num_despacho = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -203,7 +200,7 @@ export const get_num_despacho = (): any => {
     }
   };
 };
-// obtener lotes pór codigo de material vegetal
+// obtener bienes
 export const get_bien_code_service = (
   code: string,
   fecha: string,
@@ -240,6 +237,40 @@ export const get_bien_code_service = (
   };
 };
 
+
+// obtener bienes otros origenes
+export const get_bien_code_service_origin = (
+  id: string | number,
+  fecha: string | number,
+
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`almacen/despachos/get-items-otros-origenes/${id}/?fecha_despacho=${fecha}`);
+      console.log(data);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+
+      if (data.data.length > 0) {
+        if (data.data.length === 1) {
+          dispatch(set_current_bien(data.data[0]));
+          control_success('Se selecciono el bien');
+        } else {
+          dispatch(set_bienes(data.data));
+          control_success('Se encontraron bienes');
+        }
+      } else {
+        control_error('No se encontró el bien');
+      }
+
+      return data;
+    } catch (error: any) {
+      console.log('get_bien_code_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // obtener lotes filtro
 export const get_bienes_service = (
   id_vivero: string | number,
@@ -251,8 +282,7 @@ export const get_bienes_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `conservacion/despachos/get-planta/?id_vivero=${id_vivero}&codigo_bien=${
-          code ?? ''
+        `conservacion/despachos/get-planta/?id_vivero=${id_vivero}&codigo_bien=${code ?? ''
         }&nombre=${name ?? ''}&agno_lote=${agno ?? ''}&nro_lote=${nro ?? ''}`
       );
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions

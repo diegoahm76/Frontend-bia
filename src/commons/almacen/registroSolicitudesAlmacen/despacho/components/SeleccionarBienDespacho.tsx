@@ -18,6 +18,8 @@ import { useEffect, useState } from 'react';
 import {
   control_error,
   get_bien_code_service,
+  get_bien_code_service_origin,
+
 } from '../store/thunks/despachoThunks';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -40,6 +42,7 @@ const SeleccionarBienDespacho = () => {
     (state: { solic_consumo: any }) => state.solic_consumo
   );
   const [bienes_aux, set_bienes_aux] = useState<any>([]);
+
   const [select_model_is_active, set_select_model_is_active] =
     useState<boolean>(false);
   const [action, set_action] = useState<string>('agregar');
@@ -54,6 +57,7 @@ const SeleccionarBienDespacho = () => {
   } = useAppSelector((state) => state.despacho);
   const dispatch = useAppDispatch();
 
+  // tabla de bienes solicitud de consumo
   const columns_bienes: GridColDef[] = [
     { field: 'id_bien', headerName: 'ID', width: 20 },
     {
@@ -98,6 +102,66 @@ const SeleccionarBienDespacho = () => {
       ),
     },
   ];
+  const columns_bienes_origen: GridColDef[] = [
+    { field: 'codigo_bien', headerName: 'Código', width: 200 },
+    {
+      field: 'nombre',
+      headerName: 'Nombre',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'tipo_documento',
+      headerName: 'Tipo Documento',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'numero_documento',
+      headerName: 'Número de documento',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+
+    {
+      field: 'cantidad_por_distribuir',
+      headerName: 'Cantidad por distribuir',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+
+    {
+      field: 'cantidad_total_entrada',
+      headerName: 'Cantidad entrada',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+  ];
+  const [table_origin, set_table_origin] = useState<string>('A');
+
+
+  // tabla de bienes solicitud de consumo vivero
+
 
   const columns_bienes_despacho: GridColDef[] = [
     { field: 'id_bien', headerName: 'ID', width: 20 },
@@ -112,7 +176,7 @@ const SeleccionarBienDespacho = () => {
       ),
     },
     {
-      field: 'nombre_bien',
+      field: 'nombre_bien_despacho',
       headerName: 'Nombre',
       width: 150,
       renderCell: (params) => (
@@ -185,18 +249,13 @@ const SeleccionarBienDespacho = () => {
     },
   ];
 
-  //   const get_bienes: any = async () => {
-  //     const codigo_bien = get_values_bien('codigo_bien') ?? '';
-  //     const nombre = get_values_bien('nombre') ?? '';
-  //     const agno = get_values_bien('agno_lote') ?? '';
-  //     const nro = get_values_bien('nro_lote') ?? '';
-  //     void dispatch(
-  //       get_bienes_service(id_vivero, codigo_bien, nombre, agno, nro)
-  //     );
-  //   };
+
+
+
 
   const search_bien: any = async () => {
     try {
+      set_table_origin('A')
       const fecha = new Date(
         current_despacho.fecha_despacho ?? ''
       ).toISOString();
@@ -213,6 +272,29 @@ const SeleccionarBienDespacho = () => {
       console.error(error);
     }
   };
+
+  const search_bienes_otros: any = async () => {
+    try {
+      set_table_origin('B')
+
+      const fecha = new Date(
+        current_despacho.fecha_despacho ?? ''
+      ).toISOString();
+      const data = await dispatch(
+        get_bien_code_service_origin(
+          bien_selected.id_bien ?? '',
+          fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
+
+
+        ));
+      console.log(data);
+      set_bienes_aux(data);
+    } catch (error) {
+      console.error(error);
+    }
+
+  };
+
 
   useEffect(() => {
     if ('success' in bienes_aux) {
@@ -285,7 +367,7 @@ const SeleccionarBienDespacho = () => {
               id_bodega: current_bien.id_bodega ?? null,
               cantidad_despachada: Number(data.cantidad_despachada),
               cantidad_solicitada: Number(bien_selected.cantidad),
-              nombre_bien: current_bien.nombre,
+              nombre_bien_despacho: current_bien.nombre,
               codigo_bien: current_bien.codigo_bien,
               observacion: data.observacion,
               unidad_medida: current_bien.unidad_medida ?? null,
@@ -344,13 +426,13 @@ const SeleccionarBienDespacho = () => {
           } else {
             control_error(
               'La cantidad asignada debe ser maximo ' +
-                String(bien_selected.cantidad)
+              String(bien_selected.cantidad)
             );
           }
         } else {
           control_error(
             'La cantidad asignada debe ser maximo ' +
-              String(current_bien.cantidad_disponible)
+            String(current_bien.cantidad_disponible)
           );
         }
       } else {
@@ -408,9 +490,8 @@ const SeleccionarBienDespacho = () => {
           models={bienes}
           get_filters_models={null}
           set_models={set_bienes}
-          button_submit_label="Buscar bien"
-          button_submit_disabled={false}
           show_search_button={false}
+          button_submit_label="Buscar bien"
           form_inputs={[
             {
               datum_type: 'title',
@@ -426,10 +507,10 @@ const SeleccionarBienDespacho = () => {
               rules: {
                 required_rule: {
                   rule: true,
-                  message: 'Codigo bien requerido',
+                  message: 'Código bien requerido',
                 },
               },
-              label: 'Codigo bien',
+              label: 'Código bien',
               type: 'number',
               disabled: current_despacho.id_despacho_consumo !== null,
               helper_text: '',
@@ -474,7 +555,7 @@ const SeleccionarBienDespacho = () => {
                 max_rule: {
                   rule: current_bien.cantidad_disponible,
                   message:
-                    'La cqantidad no debe ser mayor que ' +
+                    'La cantidad no debe ser mayor que ' +
                     String(current_bien.cantidad_disponible),
                 },
               },
@@ -531,8 +612,6 @@ const SeleccionarBienDespacho = () => {
               },
               label: 'Observacion',
               type: 'text',
-              multiline_text: true,
-              rows_text: 4,
               disabled: false,
               helper_text: '',
             },
@@ -542,7 +621,7 @@ const SeleccionarBienDespacho = () => {
           add_item_list={handle_submit_despacho(on_submit_despacho)}
           add_list_button_label={action}
           columns_list={columns_bienes_despacho}
-          row_list_id={'id_inventario'}
+          row_list_id={'id_item_despacho_consumo'}
           modal_select_model_title="Buscar bien"
           modal_form_filters={[
             {
@@ -596,19 +675,25 @@ const SeleccionarBienDespacho = () => {
           ]}
         />
 
+
         <SeleccionarModeloDialogForm
           set_current_model={set_current_bien}
           is_modal_active={select_model_is_active}
           set_is_modal_active={set_select_model_is_active}
+          button_origin_show={(current_solicitud.es_solicitud_de_conservacion ?? false)}
           modal_title={'Seleccionar bodega para despachar'}
           form_filters={[]}
           set_models={set_bienes}
           get_filters_models={null}
           models={bienes}
-          columns_model={columns_bienes}
-          row_id={'id_inventario'}
+          button_add_selection_hidden={table_origin === 'B'}
+          columns_model={table_origin === 'A' ? columns_bienes : columns_bienes_origen}
+          row_id={table_origin === 'A' ? 'id_inventario' : 'id_entrada_almacen'}
           title_table_modal={'Resultados de la busqueda'}
+          search_model_function={search_bienes_otros}
+
         />
+
       </Grid>
     </>
   );

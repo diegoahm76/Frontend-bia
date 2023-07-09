@@ -17,12 +17,6 @@ export const ConsultaPorh: React.FC = () => {
 
   const columns_proyectos: GridColDef[] = [
     {
-      field: 'id_proyecto',
-      headerName: 'No Proyecto',
-      sortable: true,
-      width: 120,
-    },
-    {
       field: 'nombre',
       headerName: 'NOMBRE',
       sortable: true,
@@ -48,12 +42,6 @@ export const ConsultaPorh: React.FC = () => {
     },
   ];
   const columns_actividades: GridColDef[] = [
-    {
-      field: 'id_actividades',
-      headerName: 'No ACTIVIDAD',
-      sortable: true,
-      width: 170,
-    },
     {
       field: 'nombre',
       headerName: 'DESCRIPCIÓN',

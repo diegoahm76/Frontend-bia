@@ -69,6 +69,11 @@ export const RegistroAvance: React.FC = () => {
 
   const on_submit: SubmitHandler<FieldValues> = async (data) => {
     try {
+      const nombre_archivos_set = new Set(nombres_archivos);
+      if (nombre_archivos_set.size !== nombres_archivos.length) {
+        control_error('No se permiten nombres de archivo duplicados');
+        return;
+      }
       set_is_saving(true);
       const fecha_reporte = dayjs(data.fecha_reporte).format('YYYY-MM-DD');
       const datos_avance = new FormData();
