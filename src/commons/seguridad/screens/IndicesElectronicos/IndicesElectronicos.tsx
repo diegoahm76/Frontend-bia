@@ -13,7 +13,8 @@ import {
   /* Box */ Grid,
   IconButton,
   Stack,
-  TextField
+  TextField,
+  Typography
 } from '@mui/material';
 import { AvatarStyles } from '../../../gestorDocumental/ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
@@ -27,6 +28,7 @@ import { xmlFromJson } from './utils/xmlFromJson';
 
 import { saveAs } from 'file-saver';
 import { control_error, control_success } from '../../../../helpers';
+import { Link } from 'react-router-dom';
 
 export const IndicesElectronicos: FC = (): JSX.Element => {
   const [data, setData] = useState<any>([]);
@@ -98,32 +100,32 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
     {
       headerName: 'NOMBRE',
       field: 'nombre',
-      minWidth: 230,
+      minWidth: 210,
       maxWidth: 235,
       flex: 1
     },
     {
       headerName: 'IDENTIFICADOR',
       field: 'id_ccd',
-      minWidth: 280,
+      minWidth: 230,
       maxWidth: 300,
       flex: 1
     },
     {
       headerName: 'HASH',
       field: 'searchIndex',
-      minWidth: 280,
+      minWidth: 240,
       maxWidth: 300,
       flex: 1
     },
     {
       headerName: 'Acciones',
       field: 'accion',
-      minWidth: 200,
-      maxWidth: 250,
+      minWidth: 180,
+      maxWidth: 200,
       flex: 1,
       renderCell: (params: any) =>
-        params.row.length > 0 && (
+        params.row.searchIndex && (
           <>
             <IconButton
               onClick={() => {
@@ -137,7 +139,11 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
               <Avatar sx={AvatarStyles} variant="rounded">
                 <NoteAddIcon
                   titleAccess="Crear XML de índice electrónico"
-                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px'
+                  }}
                 />
               </Avatar>
             </IconButton>
@@ -183,7 +189,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
               }}
             >
               <Controller
-                name="id_ccd" // se reemplazará por el índice electronico que debe ser
+                name="id_ccd" // ! se reemplazará por el índice electronico que debe ser
                 control={control_electronic_index}
                 defaultValue=""
                 rules={{ required: true }}
@@ -211,7 +217,6 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
                   />
                 )}
               />
-
               <Stack
                 direction="row"
                 justifyContent="flex-end"
@@ -224,12 +229,6 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
                   startIcon={<SearchIcon />}
                   type="submit"
                   disabled={data_electronic_index_watch.id_ccd === ''}
-                  /* onClick={() => {
-                  console.log(xmlToJsonisTrue);
-                  const xml = xmlFromJson(xmlToJsonisTrue, 'root');
-                  console.log(xml);
-                  setCurrentData(xml);
-                }} */
                 >
                   BUSCAR EXPEDIENTE
                 </Button>
@@ -265,6 +264,9 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
             width: '100%'
           }}
         >
+          <Title title="Table índices electrónicos" />
+          <Divider sx={{ mt: '20px' }} />
+
           <DataGrid
             density="compact"
             autoHeight
@@ -282,6 +284,29 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
             spacing={2}
             sx={{ mt: '20px' }}
           >
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'text.secondary',
+                mt: '10px'
+              }}
+            >
+              {Object.keys(xmlToJsonisTrue ?? {}).length > 0 ? (
+                <>
+                  Descarga XML{/* de índice electrónico */} y visualizalo en{' '}
+                  <a
+                    href="https://xmlgrid.net/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    xmlgrid.net
+                  </a>
+                </>
+              ) : (
+                'No hay datos para descargar'
+              )}
+            </Typography>
+            <br />
             <Button
               variant="outlined"
               color="primary"
@@ -296,7 +321,7 @@ export const IndicesElectronicos: FC = (): JSX.Element => {
                   type: 'text/xml;charset=utf-8'
                 });
                 // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                saveAs(blob, `archivo_${xmlToJsonisTrue.id_ccd}.xml`);
+                saveAs(blob, `archivo_${uuidv4().slice(0, 8)}.xml`);
               }}
             >
               Descargar XML
