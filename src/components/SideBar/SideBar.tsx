@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+import { useEffect, useState, type FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import {
   Box,
   Divider,
@@ -23,25 +25,43 @@ import PersonIcon from '@mui/icons-material/Person';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
-import { open_drawer_desktop, open_drawer_mobile } from '../store/layoutSlice';
+import {
+  open_drawer_desktop,
+  open_drawer_mobile
+} from '../../store/layoutSlice';
 import LogoutIcon from '@mui/icons-material/Logout';
 import ListIcon from '@mui/icons-material/List';
-import type { AuthSlice, Menu, MenuElement } from '../commons/auth/interfaces';
-import { logout } from '../commons/auth/store';
-import { SuperUserScreen } from '../commons/seguridad/screens/SuperUserScreen';
-import { FooterGov } from '../components/goviernoEnLinea/FooterGov';
-import { HeaderGov } from '../components/goviernoEnLinea/HeaderGov';
+import type {
+  AuthSlice,
+  Menu,
+  MenuElement
+} from '../../commons/auth/interfaces';
+import { logout } from '../../commons/auth/store';
+import { SuperUserScreen } from '../../commons/seguridad/screens/SuperUserScreen';
+import { FooterGov } from '../goviernoEnLinea/FooterGov';
+import { HeaderGov } from '../goviernoEnLinea/HeaderGov';
 import Swal from 'sweetalert2';
+//* component types
+import { type SideBarProps } from './types/types';
+import { useRoutes } from './hook/useRoutes';
 
-interface Props {
-  window?: () => Window;
-  drawer_width: number;
-}
+//! routes functions
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
+export const SideBar: FC<SideBarProps> = ({
+  window,
+  drawer_width
+}: SideBarProps) => {
+  //! useRoutes to navigate, use the hook to declare another routes
+  const {
+    handle_click_delegar_super,
+    handle_datos_acceso,
+    handle_datos_personales,
+    handle_autorizacion_notificacion,
+    handle_indices_electronicos
+  } = useRoutes();
+
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [open, set_open] = useState(false);
   const [dialog_open, set_dialog_open] = useState(false);
   const [is_loading, set_is_loading] = useState(true);
@@ -60,39 +80,10 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
     }) => state.layout
   );
 
-  const handle_drawer_toggle = (): void => {
-    dispatch(open_drawer_mobile(!mobile_open));
-  };
-
-  const handle_drawer_toggle_desktop = (): void => {
-    dispatch(open_drawer_desktop(!desktop_open));
-  };
-
-  const handle_click = (): void => {
-    set_open(!open);
-  };
-  const handle_click_delegar_super = (): void => {
-    navigate('/app/seguridad/delegacion_superusuario');
-  };
-  const handle_close_dialog_user = (): void => {
-    set_dialog_open(false);
-  };
-
-  const handle_datos_acceso = (): void => {
-    navigate('/app/usuario/datos_acceso');
-  };
-
-  const handle_datos_personales = (): void => {
-    navigate('/app/usuario/datos_personales');
-  };
-
-  const handle_autorizacion_notificacion = (): void => {
-    navigate('/app/usuario/autorizacion_notificacion');
-  };
-
-  const handle_indices_electronicos = (): void => {
-    navigate('/app/usuario/indices_electronicos');
-  };
+  const handle_drawer_toggle = () => dispatch(open_drawer_mobile(!mobile_open));
+  const handle_drawer_toggle_desktop = () => dispatch(open_drawer_desktop(!desktop_open));
+  const handle_close_dialog_user = (): void => set_dialog_open(false);
+  const handle_click = (): void => set_open(!open);
 
   const open_collapse = (obj: Menu, key: number): void => {
     const temp_permisos = [...permisos];
@@ -149,6 +140,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
         />
       </Toolbar>
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
+
       <List sx={{ margin: '0 20px', color: mod_dark ? '#fafafa' : '#141415' }}>
         <ListItemButton onClick={handle_click} sx={{ borderRadius: '10px' }}>
           <ListItemIcon>
@@ -168,7 +160,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           }}
         >
           <List component="div" disablePadding>
-            {/* Datos de acceso del usuario */}
+            {/* -------------- Datos de acceso del usuario ------------------- */}
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <PersonIcon
@@ -184,7 +176,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
               />
             </ListItemButton>
 
-            {/* Datos de Personales del usuario */}
+            {/* --------------  Datos de Personales del usuario ------------------- */}
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ContactEmergencyIcon
@@ -216,7 +208,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
               />
             </ListItemButton>
 
-            {/* índices electrónicos  */}
+            {/* ------------ índices electrónicos ------------  */}
             <ListItemButton sx={{ pl: 4 }}>
               <ListItemIcon>
                 <ListIcon
@@ -232,7 +224,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
               />
             </ListItemButton>
 
-            {/* Validamos si es superusuario */}
+            {/* --------- Validamos si es superusuario para delegacion de superUsuario ------------- */}
             {userinfo.is_superuser && (
               <ListItemButton
                 sx={{ pl: 4 }}
@@ -249,6 +241,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
                 <ListItemText primary="Delegacion de Super Usuario" />
               </ListItemButton>
             )}
+            {/* --------- Dialog delegación de Super usuario ------------- */}
             {dialog_open && (
               <SuperUserScreen onClose={handle_close_dialog_user} />
             )}
@@ -286,6 +279,7 @@ export const SideBar: React.FC<Props> = ({ window, drawer_width }: Props) => {
           </List>
         </Collapse>
       </List>
+
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
       {!is_loading ? (
         permisos.map((e, k) => {
