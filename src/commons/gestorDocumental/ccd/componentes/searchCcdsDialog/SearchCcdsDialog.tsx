@@ -24,6 +24,7 @@ import { get_ccd_current } from '../../store/slices/ccdSlice';
 import type { IProps } from './types/types';
 import { get_classification_ccds_service } from '../../store/thunks/ccdThunks';
 import { ModalContext } from '../../context/ModalContext';
+import { columns } from './utils/columns';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SearchCcdModal = ({
@@ -73,18 +74,7 @@ const SearchCcdModal = ({
   }, []); */
 
   const columns_ccds: GridColDef[] = [
-    {
-      headerName: 'Nombre',
-      field: 'nombre',
-      minWidth: 170,
-      maxWidth: 200,
-    },
-    {
-      headerName: 'Versión',
-      field: 'version',
-      minWidth: 170,
-      maxWidth: 200,
-    },
+    ...columns,
     {
       headerName: 'Estado',
       field: 'estado',
