@@ -68,6 +68,8 @@ export const SideBar: FC<SideBarProps> = ({
   const { userinfo, permisos: permisos_store } = useSelector(
     (state: AuthSlice) => state.auth
   );
+  console.log(userinfo)
+  console.log(permisos_store)
   const [permisos, set_permisos] = useState<Menu[]>([]);
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
@@ -109,7 +111,6 @@ export const SideBar: FC<SideBarProps> = ({
   useEffect(() => {
     setTimeout(() => {
       set_permisos(permisos_store);
-      console.log(userinfo)
       set_is_loading(false);
     }, 2000);
   }, [permisos_store]);
@@ -299,6 +300,7 @@ export const SideBar: FC<SideBarProps> = ({
               key={k}
             >
               <ListItemButton
+                sx={{ borderRadius: '10px' }}
                 onClick={() => {
                   open_collapse(e, k);
                 }}
@@ -369,6 +371,7 @@ export const SideBar: FC<SideBarProps> = ({
             sx={{
               height: 'calc(100% - 170px)',
               // color: mod_dark ? '#fafafa' : '#141415'
+              color: mod_dark ? '#fafafa' : '#141415'
             }}
           >
             <Grid item xs={12} container justifyContent="center" padding={5}>
@@ -376,7 +379,7 @@ export const SideBar: FC<SideBarProps> = ({
             </Grid>
             <Grid item xs={12} padding={5}>
               <Typography textAlign="center">
-                
+                Cargando Menú, porfavor espere...
               </Typography>
             </Grid>
           </Grid>
@@ -429,6 +432,8 @@ export const SideBar: FC<SideBarProps> = ({
           {conten_drawer}
         </Drawer>
       </Box>
+
+      {/* ------------ Box header and footer gov external user ------------- */}
       <Box
         sx={{
           width: '100vw',
