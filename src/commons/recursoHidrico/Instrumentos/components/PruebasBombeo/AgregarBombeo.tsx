@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import {
   Box,
   Button,
@@ -8,19 +10,23 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
+import {
+  LocalizationProvider,
+  DatePicker,
+  TimePicker,
+} from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { Title } from '../../../../../components/Title';
-import { tipo_aforo } from './utils/choices/Choices';
-import { register_aforo_hook } from './hook/registerAforoHook';
 import { type GridColDef, DataGrid } from '@mui/x-data-grid';
-import { colums_aforos } from './utils/colums/colums';
+import { register_bombeo_hook } from './hook/RegisterBombeoHook';
+import { tipo_sesion } from './utils/choices/choices';
+import { colums_bombeo } from './utils/colums/colums';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarCartera: React.FC = () => {
-  const columns_aforo: GridColDef[] = [
-    ...colums_aforos,
+export const AgregarBombeo: React.FC = () => {
+  const columns_prueba: GridColDef[] = [
+    ...colums_bombeo,
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
@@ -28,51 +34,54 @@ export const AgregarCartera: React.FC = () => {
       renderCell: (params) => (
         <>
           {/* <IconButton
-            onClick={() => {
-              set_id_seccion(params.row.id_seccion);
-              set_info_seccion(params.row);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+              onClick={() => {
+                set_id_seccion(params.row.id_seccion);
+                set_info_seccion(params.row);
               }}
-              variant="rounded"
             >
-              <ChecklistIcon
-                titleAccess="Seleccionar Sección"
+              <Avatar
                 sx={{
-                  color: 'primary.main',
-                  width: '18px',
-                  height: '18px',
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
                 }}
-              />
-            </Avatar>
-          </IconButton> */}
+                variant="rounded"
+              >
+                <ChecklistIcon
+                  titleAccess="Seleccionar Sección"
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              </Avatar>
+            </IconButton> */}
         </>
       ),
     },
   ];
 
   const {
-    fecha_aforo,
-    tipo_aforo_value,
-    distancia_orilla,
-    profundidad,
-    velocidad_superficial,
-    velocidad_profunda,
-    row_aforo,
-    set_distancia_orilla,
-    set_profundidad,
-    set_velocidad_superficial,
-    set_velocidad_profunda,
-    handle_date_change,
-    handle_tipo_aforo_change,
+    pruebaBombeo,
+    caudal,
+    fecha_prubea_bombeo,
+    fechaPruebaBombeo,
+    row_prueba,
+    tiempoTranscurrido,
+    nivelAgua,
+    abatimientoRecuperacion,
+    caudalAgua,
+    setTiempoTranscurrido,
+    setNivelAgua,
+    setAbatimientoRecuperacion,
+    setCaudalAgua,
     handle_agregar,
-  } = register_aforo_hook();
+    handlePruebaBombeoChange,
+    handleCaudalChange,
+    handle_date_change,
+  } = register_bombeo_hook();
 
   return (
     <>
@@ -92,7 +101,7 @@ export const AgregarCartera: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title=" REGISTRO DE CARTERA DE AFOROS " />
+          <Title title=" REGISTRO DE PRUEBAS DE BOMBEO " />
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1" fontWeight="bold">
@@ -131,11 +140,11 @@ export const AgregarCartera: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateTimePicker
-              label="Fecha de Aforo"
-              value={fecha_aforo}
+            <DatePicker
+              label="Fecha de prueba de bombeo"
+              value={fecha_prubea_bombeo}
               onChange={(value) => {
-                handle_date_change('fecha_aforo', value);
+                handle_date_change('fecha_prueba', value);
               }}
               renderInput={(params: any) => (
                 <TextField fullWidth size="small" {...params} />
@@ -145,54 +154,9 @@ export const AgregarCartera: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Lugar de Aforo"
+            label="Lugar de prueba de bombeo"
             fullWidth
             size="small"
-            margin="dense"
-            disabled={false}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Tipo de Aforo"
-            select
-            size="small"
-            margin="dense"
-            required
-            value={tipo_aforo_value}
-            fullWidth
-            onChange={handle_tipo_aforo_change}
-          >
-            {tipo_aforo.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="Molinete"
-            size="small"
-            fullWidth
-            margin="dense"
-            disabled={false}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="No. de serie"
-            size="small"
-            fullWidth
-            margin="dense"
-            disabled={false}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="No. de hélices"
-            size="small"
-            fullWidth
             margin="dense"
             disabled={false}
           />
@@ -236,12 +200,12 @@ export const AgregarCartera: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={1}>
           <Typography variant="subtitle1" fontWeight="bold">
-            Cuenca:
+            Pozo:
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            label="Cuenca"
+            label="Pozo"
             size="small"
             margin="dense"
             disabled={true}
@@ -271,6 +235,79 @@ export const AgregarCartera: React.FC = () => {
       >
         <Grid item xs={12}>
           <Typography variant="subtitle1" fontWeight="bold">
+            Registro de Sección de prueba de bombeo
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            label="Prueba de bombeo de: "
+            select
+            size="small"
+            margin="dense"
+            required
+            value={pruebaBombeo}
+            fullWidth
+            onChange={handlePruebaBombeoChange}
+          >
+            {tipo_sesion.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            label="Caudal: "
+            select
+            size="small"
+            margin="dense"
+            required
+            value={caudal}
+            fullWidth
+            onChange={handleCaudalChange}
+          >
+            {tipo_sesion.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Fecha de prueba de bombeo"
+              value={fechaPruebaBombeo}
+              onChange={(value) => {
+                handle_date_change('fecha_prueba_bombeo', value);
+              }}
+              renderInput={(params) => (
+                <TextField fullWidth size="small" {...params} />
+              )}
+            />
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <TimePicker
+              label="Hora de prueba de bombeo"
+              value={fechaPruebaBombeo}
+              onChange={(value) => {
+                handle_date_change('hora_prueba_bombeo', value);
+              }}
+              renderInput={(params) => (
+                <TextField fullWidth size="small" {...params} />
+              )}
+              ampm
+            />
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" fontWeight="bold">
             Registro de medición
           </Typography>
         </Grid>
@@ -279,57 +316,59 @@ export const AgregarCartera: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Distancia de la orilla (m)"
+            label="Tiempo transcurrido (min)"
+            fullWidth
+            type="number"
+            size="small"
+            margin="dense"
+            disabled={false}
+            value={tiempoTranscurrido}
+            onChange={(e) => {
+              setTiempoTranscurrido(parseInt(e.target.value));
+            }}
+            inputProps={{ min: 0 }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Nivel (m)"
             fullWidth
             size="small"
             margin="dense"
             disabled={false}
-            value={distancia_orilla}
+            value={nivelAgua}
             onChange={(e) => {
-              set_distancia_orilla(e.target.value);
+              setNivelAgua(e.target.value);
             }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Profundidad (m)"
+            label="Abatimiento / Recuperación (m)"
             fullWidth
             size="small"
             margin="dense"
             disabled={false}
-            value={profundidad}
+            value={abatimientoRecuperacion}
             onChange={(e) => {
-              set_profundidad(e.target.value);
+              setAbatimientoRecuperacion(e.target.value);
             }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Velocidad superficial (m/s)"
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={false}
-            value={velocidad_superficial}
-            onChange={(e) => {
-              set_velocidad_superficial(e.target.value);
-            }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Velocidad Profunda (m/s)"
+            label="Caudal (l/s)"
             size="small"
             margin="dense"
             required
             disabled={false}
             fullWidth
-            value={velocidad_profunda}
+            value={caudalAgua}
             onChange={(e) => {
-              set_velocidad_profunda(e.target.value);
+              setCaudalAgua(e.target.value);
             }}
           />
-        </Grid>
+        </Grid>{' '}
         <Box sx={{ flexGrow: 1 }}>
           <Stack
             direction="row"
@@ -342,17 +381,17 @@ export const AgregarCartera: React.FC = () => {
             </Button>
           </Stack>
         </Box>
-        {row_aforo.length > 0 && (
+        {row_prueba.length > 0 && (
           <>
             <Grid item xs={12}>
               <Typography variant="subtitle1" fontWeight="bold">
-                Datos Aforo:
+                Datos de Prueba de bombeo:
               </Typography>
               <Divider />
               <DataGrid
                 autoHeight
-                rows={row_aforo}
-                columns={columns_aforo}
+                rows={row_prueba}
+                columns={columns_prueba}
                 getRowId={(row) => uuidv4()}
                 pageSize={5}
                 rowsPerPageOptions={[5]}

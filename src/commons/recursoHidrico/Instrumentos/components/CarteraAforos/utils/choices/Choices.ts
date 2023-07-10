@@ -1,6 +1,21 @@
 
 export const tipo_aforo = [
     {
+        value: 'VD',
+        label: 'Vadeo'
+    },
+    {
+        value: 'SP',
+        label: 'Suspension'
+    },
+    {
+        value: 'AG',
+        label: 'Angular'
+    },
+]
+
+export const tipo_agua = [
+    {
         value: 'SUP',
         label: 'Agua Superficial'
     },
