@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { AgregarBombeo } from '../components/PruebasBombeo/AgregarBombeo';
+import { AgregarLaboratorio } from '../components/ResultadoLaboratorio/AgregarLaboratorio';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegistroLaboratorio: React.FC = () => {
@@ -25,7 +25,7 @@ export const RegistroLaboratorio: React.FC = () => {
           <Title title="RESULTADO DE LABORATORIO - CALIDAD DE AGUA " />
         </Grid>
       </Grid>
-      <AgregarBombeo />
+      <AgregarLaboratorio />
     </>
   );
 };

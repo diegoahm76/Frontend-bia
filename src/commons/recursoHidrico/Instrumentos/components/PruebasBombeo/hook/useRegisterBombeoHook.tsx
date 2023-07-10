@@ -7,7 +7,7 @@ import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 // import localizedFormat from 'dayjs/plugin/localizedFormat';
 
-export const register_bombeo_hook = () => {
+export const use_register_bombeo_hook = () => {
   // Datos generales
 
   const [fecha_prubea_bombeo, set_fecha_prubea_bombeo] = useState<Dayjs | null>(

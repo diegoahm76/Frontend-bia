@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import {
   Box,
   Button,
@@ -10,23 +8,19 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {
-  LocalizationProvider,
-  DatePicker,
-  TimePicker,
-} from '@mui/x-date-pickers';
+import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { v4 as uuidv4 } from 'uuid';
 import { Title } from '../../../../../components/Title';
-import { type GridColDef, DataGrid } from '@mui/x-data-grid';
-import { use_register_bombeo_hook } from './hook/useRegisterBombeoHook';
-import { tipo_sesion } from './utils/choices/choices';
-import { colums_bombeo } from './utils/colums/colums';
+import { use_register_laboratorio_hook } from './hook/useRegisterLaboratorioHook';
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import { columns_result_lab } from './utils/colums/comlums';
+import { clase_muestra_choices } from './utils/choices/choices';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarBombeo: React.FC = () => {
-  const columns_prueba: GridColDef[] = [
-    ...colums_bombeo,
+export const AgregarLaboratorio: React.FC = () => {
+  const colums_resultado: GridColDef[] = [
+    ...columns_result_lab,
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
@@ -34,54 +28,43 @@ export const AgregarBombeo: React.FC = () => {
       renderCell: (params) => (
         <>
           {/* <IconButton
-              onClick={() => {
-                set_id_seccion(params.row.id_seccion);
-                set_info_seccion(params.row);
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 24,
-                  height: 24,
-                  background: '#fff',
-                  border: '2px solid',
-                }}
-                variant="rounded"
-              >
-                <ChecklistIcon
-                  titleAccess="Seleccionar Sección"
-                  sx={{
-                    color: 'primary.main',
-                    width: '18px',
-                    height: '18px',
+                  onClick={() => {
+                    set_id_seccion(params.row.id_seccion);
+                    set_info_seccion(params.row);
                   }}
-                />
-              </Avatar>
-            </IconButton> */}
+                >
+                  <Avatar
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      background: '#fff',
+                      border: '2px solid',
+                    }}
+                    variant="rounded"
+                  >
+                    <ChecklistIcon
+                      titleAccess="Seleccionar Sección"
+                      sx={{
+                        color: 'primary.main',
+                        width: '18px',
+                        height: '18px',
+                      }}
+                    />
+                  </Avatar>
+                </IconButton> */}
         </>
       ),
     },
   ];
 
   const {
-    pruebaBombeo,
-    caudal,
-    fecha_prubea_bombeo,
-    fechaPruebaBombeo,
-    row_prueba,
-    tiempoTranscurrido,
-    nivelAgua,
-    abatimientoRecuperacion,
-    caudalAgua,
-    setTiempoTranscurrido,
-    setNivelAgua,
-    setAbatimientoRecuperacion,
-    setCaudalAgua,
-    handle_agregar,
-    handlePruebaBombeoChange,
-    handleCaudalChange,
+    rows_laboratorio,
+    fecha_toma_muestra,
+    fecha_envio,
+    fecha_resultado,
     handle_date_change,
-  } = use_register_bombeo_hook();
+    handle_clase_muestra_change,
+  } = use_register_laboratorio_hook();
 
   return (
     <>
@@ -101,7 +84,7 @@ export const AgregarBombeo: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title=" REGISTRO DE PRUEBAS DE BOMBEO " />
+          <Title title=" REGISTRO DE LABORATORIO " />
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1" fontWeight="bold">
@@ -141,10 +124,10 @@ export const AgregarBombeo: React.FC = () => {
         <Grid item xs={12} sm={6}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              label="Fecha de prueba de bombeo"
-              value={fecha_prubea_bombeo}
+              label="Fecha de toma de muestra"
+              value={fecha_toma_muestra}
               onChange={(value) => {
-                handle_date_change('fecha_prueba', value);
+                handle_date_change('fecha_toma_muestra', value);
               }}
               renderInput={(params: any) => (
                 <TextField fullWidth size="small" {...params} />
@@ -154,12 +137,57 @@ export const AgregarBombeo: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Lugar de prueba de bombeo"
+            label="Lugar de la muestra"
             fullWidth
             size="small"
             margin="dense"
             disabled={false}
           />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Analisis realizado en aguas "
+            select
+            fullWidth
+            size="small"
+            margin="dense"
+            disabled={false}
+            onChange={handle_clase_muestra_change}
+          >
+            {clase_muestra_choices.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="enviado a laboratorio el día"
+              value={fecha_envio}
+              onChange={(value) => {
+                handle_date_change('fecha_envio', value);
+              }}
+              renderInput={(params: any) => (
+                <TextField fullWidth size="small" {...params} />
+              )}
+            />
+          </LocalizationProvider>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="resultados de laboratorio"
+              value={fecha_resultado}
+              onChange={(value) => {
+                handle_date_change('fecha_resultado', value);
+              }}
+              renderInput={(params: any) => (
+                <TextField fullWidth size="small" {...params} />
+              )}
+            />
+          </LocalizationProvider>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1" fontWeight="bold">
@@ -200,12 +228,12 @@ export const AgregarBombeo: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={1}>
           <Typography variant="subtitle1" fontWeight="bold">
-            Pozo:
+            Cuenca / Pozo:
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            label="Pozo"
+            label="Cuenca / Pozo"
             size="small"
             margin="dense"
             disabled={true}
@@ -235,79 +263,6 @@ export const AgregarBombeo: React.FC = () => {
       >
         <Grid item xs={12}>
           <Typography variant="subtitle1" fontWeight="bold">
-            Registro de Sección de prueba de bombeo
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="Prueba de bombeo de: "
-            select
-            size="small"
-            margin="dense"
-            required
-            value={pruebaBombeo}
-            fullWidth
-            onChange={handlePruebaBombeoChange}
-          >
-            {tipo_sesion.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid item xs={12} sm={6} md={4}>
-          <TextField
-            label="Caudal: "
-            select
-            size="small"
-            margin="dense"
-            required
-            value={caudal}
-            fullWidth
-            onChange={handleCaudalChange}
-          >
-            {tipo_sesion.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Fecha de prueba de bombeo"
-              value={fechaPruebaBombeo}
-              onChange={(value) => {
-                handle_date_change('fecha_prueba_bombeo', value);
-              }}
-              renderInput={(params) => (
-                <TextField fullWidth size="small" {...params} />
-              )}
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <TimePicker
-              label="Hora de prueba de bombeo"
-              value={fechaPruebaBombeo}
-              onChange={(value) => {
-                handle_date_change('hora_prueba_bombeo', value);
-              }}
-              renderInput={(params) => (
-                <TextField fullWidth size="small" {...params} />
-              )}
-              ampm
-            />
-          </LocalizationProvider>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" fontWeight="bold">
             Registro de medición
           </Typography>
         </Grid>
@@ -316,59 +271,41 @@ export const AgregarBombeo: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Tiempo transcurrido (min)"
-            fullWidth
-            type="number"
-            size="small"
-            margin="dense"
-            disabled={false}
-            value={tiempoTranscurrido}
-            onChange={(e) => {
-              setTiempoTranscurrido(parseInt(e.target.value));
-            }}
-            inputProps={{ min: 0 }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Nivel (m)"
+            label="Distancia de la orilla (m)"
             fullWidth
             size="small"
             margin="dense"
             disabled={false}
-            value={nivelAgua}
-            onChange={(e) => {
-              setNivelAgua(e.target.value);
-            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Abatimiento / Recuperación (m)"
+            label="Profundidad (m)"
             fullWidth
             size="small"
             margin="dense"
             disabled={false}
-            value={abatimientoRecuperacion}
-            onChange={(e) => {
-              setAbatimientoRecuperacion(e.target.value);
-            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Caudal (l/s)"
+            label="Velocidad superficial (m/s)"
+            fullWidth
+            size="small"
+            margin="dense"
+            disabled={false}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Velocidad Profunda (m/s)"
             size="small"
             margin="dense"
             required
             disabled={false}
             fullWidth
-            value={caudalAgua}
-            onChange={(e) => {
-              setCaudalAgua(e.target.value);
-            }}
           />
-        </Grid>{' '}
+        </Grid>
         <Box sx={{ flexGrow: 1 }}>
           <Stack
             direction="row"
@@ -376,22 +313,22 @@ export const AgregarBombeo: React.FC = () => {
             justifyContent="flex-end"
             sx={{ mt: '10px' }}
           >
-            <Button variant="outlined" color="primary" onClick={handle_agregar}>
+            <Button variant="outlined" color="primary">
               Agregar
             </Button>
           </Stack>
         </Box>
-        {row_prueba.length > 0 && (
+        {rows_laboratorio.length > 0 && (
           <>
             <Grid item xs={12}>
               <Typography variant="subtitle1" fontWeight="bold">
-                Datos de Prueba de bombeo:
+                Datos Aforo:
               </Typography>
               <Divider />
               <DataGrid
                 autoHeight
-                rows={row_prueba}
-                columns={columns_prueba}
+                rows={rows_laboratorio}
+                columns={colums_resultado}
                 getRowId={(row) => uuidv4()}
                 pageSize={5}
                 rowsPerPageOptions={[5]}
