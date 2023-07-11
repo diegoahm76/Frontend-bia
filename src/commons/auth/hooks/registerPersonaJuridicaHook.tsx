@@ -170,6 +170,7 @@ export const use_register_persona_j = ({
         if (data.id_persona !== 0) {
           set_value('representante_legal', data.id_persona);
           set_value('nombre_representante_legal', data.nombre_completo);
+          control_success('se ha encontrado la persona')
           return;
         }
       }
