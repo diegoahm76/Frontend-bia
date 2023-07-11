@@ -101,6 +101,7 @@ const PrimaryForm = ({
           set_value={form_input.set_value ?? null}
           hidden_text={form_input.hidden_text ?? null}
           file_name={form_input.file_name ?? null}
+          value_file={form_input.value_file ?? null}
         />
       );
     } else if (form_input.datum_type === 'date_picker_controller') {
@@ -116,9 +117,9 @@ const PrimaryForm = ({
           disabled={form_input.disabled}
           helper_text={form_input.helper_text}
           hidden_text={form_input.hidden_text ?? null}
-          min_date={form_input.min_date ?? ''}
-          max_date={form_input.max_date ?? ''}
-          format={form_input.max_date ?? null}
+          min_date={form_input.min_date ?? null}
+          max_date={form_input.max_date ?? null}
+          format={form_input.format ?? null}
         />
       );
     } else if (form_input.datum_type === 'date_picker_time_controller') {
@@ -134,9 +135,9 @@ const PrimaryForm = ({
           disabled={form_input.disabled}
           helper_text={form_input.helper_text}
           hidden_text={form_input.hidden_text ?? null}
-          min_date={form_input.min_date ?? ''}
-          max_date={form_input.max_date ?? ''}
-          format={form_input.max_date ?? null}
+          min_date={form_input.min_date ?? null}
+          max_date={form_input.max_date ?? null}
+          format={form_input.format ?? null}
         />
       );
     } else if (form_input.datum_type === 'date_picker_range_controller') {
@@ -153,9 +154,9 @@ const PrimaryForm = ({
           disabled={form_input.disabled}
           helper_text={form_input.helper_text}
           hidden_text={form_input.hidden_text ?? null}
-          min_date={form_input.min_date ?? ''}
-          max_date={form_input.max_date ?? ''}
-          format={form_input.max_date ?? null}
+          min_date={form_input.min_date ?? null}
+          max_date={form_input.max_date ?? null}
+          format={form_input.format ?? null}
         />
       );
     } else if (form_input.datum_type === 'image_uploader') {

@@ -54,8 +54,6 @@ const FormDatePickerController = ({
   format,
   margin,
 }: IProps) => {
-  const min = new Date(min_date ?? '');
-  const max = new Date(max_date ?? '');
   return (
     <>
       {!(hidden_text ?? false) && (
@@ -78,8 +76,8 @@ const FormDatePickerController = ({
                     value={value}
                     onChange={onChange}
                     inputFormat={format ?? 'YYYY/MM/DD'}
-                    minDate={(min_date ?? '') === '' ? null : min}
-                    maxDate={(max_date ?? '') === '' ? null : max}
+                    minDate={min_date ?? null}
+                    maxDate={max_date ?? null}
                     renderInput={(
                       params: JSX.IntrinsicAttributes & TextFieldProps
                     ) => (
@@ -95,7 +93,13 @@ const FormDatePickerController = ({
                   />
                 </LocalizationProvider>
                 <FormHelperText error={!(error == null)}>
-                  {error != null ? rules.required_rule?.message : helper_text}
+                  {error != null
+                    ? error.type === 'required'
+                      ? rules.required_rule?.message
+                      : error.type === 'min'
+                      ? rules.min_rule?.message
+                      : rules.max_rule?.message
+                    : helper_text}
                 </FormHelperText>
               </FormControl>
             )}
