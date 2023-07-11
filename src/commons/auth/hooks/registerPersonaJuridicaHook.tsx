@@ -8,7 +8,6 @@ import {
   get_tipo_documento,
 } from '../../../request';
 import {
-  control_error,
   control_success,
   validate_password,
 } from '../../../helpers';
@@ -24,6 +23,7 @@ import type { DataRegisterPersonaJ, keys_object } from '../interfaces';
 import type { AxiosError } from 'axios';
 import type { SelectChangeEvent } from '@mui/material';
 import { auth_url } from '../api/auth';
+import { control_error } from '../../gestorDocumental/ccd/store/utils/success_errors';
 
 interface RegisterPersonHook {
   error_email: boolean;
@@ -142,7 +142,8 @@ export const use_register_persona_j = ({
       );
       set_tipo_documento_opt_all(res_tipo_documento ?? []);
     } catch (err) {
-      control_error(err);
+      control_error('Error al obtener los datos para el registro');
+      // control_error(err?.detail);
     } finally {
       set_loading(false);
     }
@@ -172,11 +173,15 @@ export const use_register_persona_j = ({
           return;
         }
       }
-      set_message_no_person(
+      control_error(
         'No existe ninguna persona registrada con esta cédula'
       );
     } catch (error) {
-      control_error(error);
+      /* control_error(error?.detail) ; */
+
+      control_error(
+        'No existe ninguna persona que coincida'
+      );
     } finally {
       set_is_search(false);
     }
@@ -199,7 +204,8 @@ export const use_register_persona_j = ({
           break;
       }
     } catch (error) {
-      control_error(error);
+      control_error('Error al obtener los departamentos')
+      // control_error(error);
     } finally {
       set_loading(false);
     }
@@ -221,7 +227,8 @@ export const use_register_persona_j = ({
           break;
       }
     } catch (error) {
-      control_error(error);
+      control_error('Error al obtener las ciudades')
+      // control_error(error);
     } finally {
       set_loading(false);
     }
