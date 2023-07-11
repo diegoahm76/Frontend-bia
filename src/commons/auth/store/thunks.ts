@@ -85,34 +85,49 @@ export const get_persmisions_user: (
     }
     //* fixed rendered menu
     const permissions = resp.data?.map((e) => {
+  return {
+    ...e,
+    expanded: false,
+    menus: e.menus?.map((i) => {
       return {
-        ...e,
+        ...i,
         expanded: false,
-        menus: e.menus?.map((i) => {
+        submenus: i.submenus?.map((o) => {
           return {
-            ...i,
-            submenus: i.submenus?.map((o) => {
-              //* poner submenus interno de ser necesario
-              //* poner modulos interno de ser necesario
-
+            ...o,
+            expanded: false,
+            submenus: o.submenus?.map((s) => {
               return {
-                ...o,
-                expande: false
+                ...s,
+                expanded: false,
+                modulos: s.modulos?.map((m) => {
+                  return {
+                    ...m,
+                    expanded: false
+                  };
+                }),
+                submenus: s.submenus?.map((m) => {
+                  return {
+                    ...m,
+                    expanded: false
+                  };
+                })
               };
             }),
-            expanded: false,
-            modulos: i.modulos?.map((o) => {
+            modulos: o.modulos?.map((m) => {
               return {
-                ...o,
+                ...m,
                 expanded: false
               };
             })
           };
         })
       };
-    });
+    })
+  };
+});
 
-    dispatch(set_permissions(permissions));
+dispatch(set_permissions(permissions));
 
     /* dispatch(
       set_permissions(

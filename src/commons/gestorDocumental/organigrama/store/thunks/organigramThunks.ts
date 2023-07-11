@@ -131,6 +131,9 @@ export const edit_organigrams_service: any = (
         organigrama
       );
       dispatch(get_organigrams_service());
+
+
+      //! el campo debe limpiarse luego de la actualización
       control_success('El organigrama se editó correctamente');
       return data;
     } catch (error: any) {
