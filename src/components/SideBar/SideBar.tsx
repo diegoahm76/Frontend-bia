@@ -16,7 +16,7 @@ import {
   Toolbar,
   Collapse,
   Avatar,
-  Icon,
+  // Icon,
   Grid,
   CircularProgress,
   Typography
@@ -506,7 +506,6 @@ const open_collapse_sbm3 = (
                             >
                               <ListItemButton
                                 onClick={() => {
-                                 /* open_collapse_sbm2(elementSubmenuMenu, indexMenu, indexStore, indexSubmenuMenu ); */
                                  open_collapse_sbm2(elementSubmenuMenu, indexSubmenuMenu, indexStore, indexMenu);
                                 }}
                               >
@@ -567,23 +566,11 @@ const open_collapse_sbm3 = (
                                                 element.modulos.map((mo: any, km2: any) => {
                                                   return (
                                                     <ListItemButton
-                                                      sx={{ pl: 4 }}
+                                                      
                                                       key={km2}
                                                       href={mo.ruta_formulario}
                                                     >
-                                                      <ListItemIcon
-                                                        sx={{
-                                                          minWidth: '25px'
-                                                        }}
-                                                      >
-                                                        <Icon
-                                                          sx={{
-                                                            fontSize: '9.7px'
-                                                          }}
-                                                        >
-                                                          circle
-                                                        </Icon>
-                                                      </ListItemIcon>
+                                                      
                                                       <ListItemText
                                                         primary={
                                                           mo.nombre_modulo
@@ -602,17 +589,11 @@ const open_collapse_sbm3 = (
                                     elementSubmenuMenu.modulos.map((mo: any, km2: any) => {
                                       return (
                                         <ListItemButton
-                                          sx={{ pl: 4 }}
+                                       
                                           key={km2}
                                           href={mo.ruta_formulario}
                                         >
-                                          <ListItemIcon
-                                            sx={{ minWidth: '25px' }}
-                                          >
-                                            <Icon sx={{ fontSize: '10px' }}>
-                                              circle
-                                            </Icon>
-                                          </ListItemIcon>
+                                        
                                           <ListItemText
                                             primary={mo.nombre_modulo}
                                           />
@@ -629,13 +610,11 @@ const open_collapse_sbm3 = (
                           elementMenu.modulos.map((mo: any, km2: any) => {
                             return (
                               <ListItemButton
-                                sx={{ pl: 4 }}
+                                
                                 key={km2}
                                 href={mo.ruta_formulario}
                               >
-                                <ListItemIcon sx={{ minWidth: '25px' }}>
-                                  <Icon sx={{ fontSize: '10px' }}>circle</Icon>
-                                </ListItemIcon>
+                           
                                 <ListItemText primary={mo.nombre_modulo} />
                               </ListItemButton>
                             );
