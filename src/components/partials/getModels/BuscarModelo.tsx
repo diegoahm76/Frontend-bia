@@ -45,6 +45,8 @@ interface IProps {
   show_search_button?: boolean | null;
   show_button_table?: boolean | null;
   modal_active_init?: boolean | null;
+  open_search_modal?: boolean | null;
+  set_open_search_modal?: any | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -76,6 +78,8 @@ const BuscarModelo = ({
   show_search_button,
   show_button_table,
   modal_active_init,
+  open_search_modal,
+  set_open_search_modal,
 }: IProps) => {
   const [select_model_is_active, set_select_model_is_active] =
     useState<boolean>(false);
@@ -153,6 +157,7 @@ const BuscarModelo = ({
           set_value={form_input.set_value ?? null}
           hidden_text={form_input.hidden_text ?? null}
           file_name={form_input.file_name ?? null}
+          value_file={form_input.value_file ?? null}
         />
       );
     } else if (form_input.datum_type === 'date_picker_controller') {
@@ -168,9 +173,9 @@ const BuscarModelo = ({
           disabled={form_input.disabled}
           helper_text={form_input.helper_text}
           hidden_text={form_input.hidden_text ?? null}
-          min_date={form_input.min_date ?? ''}
-          max_date={form_input.max_date ?? ''}
-          format={form_input.max_date ?? null}
+          min_date={form_input.min_date ?? null}
+          max_date={form_input.max_date ?? null}
+          format={form_input.format ?? null}
         />
       );
     } else if (form_input.datum_type === 'date_picker_time_controller') {
@@ -186,9 +191,9 @@ const BuscarModelo = ({
           disabled={form_input.disabled}
           helper_text={form_input.helper_text}
           hidden_text={form_input.hidden_text ?? null}
-          min_date={form_input.min_date ?? ''}
-          max_date={form_input.max_date ?? ''}
-          format={form_input.max_date ?? null}
+          min_date={form_input.min_date ?? null}
+          max_date={form_input.max_date ?? null}
+          format={form_input.format ?? null}
         />
       );
     } else if (form_input.datum_type === 'date_picker_range_controller') {
@@ -205,9 +210,9 @@ const BuscarModelo = ({
           disabled={form_input.disabled}
           helper_text={form_input.helper_text}
           hidden_text={form_input.hidden_text ?? null}
-          min_date={form_input.min_date ?? ''}
-          max_date={form_input.max_date ?? ''}
-          format={form_input.max_date ?? null}
+          min_date={form_input.min_date ?? null}
+          max_date={form_input.max_date ?? null}
+          format={form_input.format ?? null}
         />
       );
     } else if (form_input.datum_type === 'image_uploader') {
@@ -228,6 +233,18 @@ const BuscarModelo = ({
       set_select_model_is_active(modal_active_init);
     }
   }, []);
+
+  useEffect(() => {
+    if (set_open_search_modal !== null && set_open_search_modal !== undefined) {
+      set_open_search_modal(select_model_is_active);
+    }
+  }, [select_model_is_active]);
+
+  useEffect(() => {
+    if (open_search_modal === true) {
+      handle_open_select_model();
+    }
+  }, [open_search_modal]);
 
   const handle_open_select_model = (): void => {
     set_select_model_is_active(true);
