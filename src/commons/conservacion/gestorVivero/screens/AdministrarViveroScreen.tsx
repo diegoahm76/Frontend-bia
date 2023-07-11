@@ -5,9 +5,6 @@ import { useEffect, useState } from 'react';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import ButtonGroup from '@mui/material/ButtonGroup';
-// import 'jspdf-autotable';
-// import JsPDF from 'jspdf';
-// import * as XLSX from 'xlsx';
 
 import {
   Grid,
@@ -341,27 +338,6 @@ export function AdministrarViveroScreen(): JSX.Element {
     void dispatch(get_nurseries_service());
   }, []);
 
-
-
-
-  // eslint-disable-next-line object-shorthand
-  const handle_clickxls = (): void => { download_xls({ nurseries: nurseries, columns: columns }); };
-  // eslint-disable-next-line object-shorthand
-  const handle_clickpdf = (): void => { download_pdf({ nurseries: nurseries, columns: columns }); };
-
-  const button_style = {
-    color: 'white',
-    backgroundColor: '#335B1E',
-    // border: '3px solid black',
-    borderRadius: '50%',
-    width: '40px',
-    height: '40px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: '10px'
-  };
-
   return (
     <>
       <Grid
@@ -425,12 +401,8 @@ export function AdministrarViveroScreen(): JSX.Element {
             {/* <Divider /> */}
             <Grid item  xs={6} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <ButtonGroup >
-                <IconButton style={{ ...button_style, backgroundColor: '#335B1E',  }} onClick={handle_clickxls}>
-                  <i className="pi pi-file-excel"></i>
-                </IconButton>  
-                 <IconButton  style={{ ...button_style, backgroundColor: 'red',  }} onClick={handle_clickpdf}>
-                  <i className="pi pi-file-pdf"></i>
-                </IconButton> 
+                  {download_xls({ nurseries, columns })}
+                  {download_pdf({ nurseries, columns })}
               </ButtonGroup> 
                 </Grid>
                 </Grid>

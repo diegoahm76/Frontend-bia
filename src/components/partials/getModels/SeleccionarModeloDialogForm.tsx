@@ -181,19 +181,8 @@ const SeleccionarModeloDialogForm = ({
     const search_models = (): void => {
         search_model_function()
     };
-    const button_style = {
-        color: 'white',
-        borderRadius: '50%',
-        width: '40px',
-        height: '40px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: '10px'
-    };
+    
 
-    const handle_clickxls = (): void => { download_xls({ nurseries: models, columns: columns_model }); };
-    const handle_clickpdf = (): void => { download_pdf({ nurseries: models, columns: columns_model }); };
 
     return (
         <Dialog
@@ -265,13 +254,11 @@ const SeleccionarModeloDialogForm = ({
                                 <Title title={title_table_modal ?? 'Resultados de la busqueda'} ></Title>
                                 <Grid container justifyContent="flex-end" sx={{ marginTop: "6px" }}>
                                     <ButtonGroup style={{ margin: 7 }}  >
-                                        <Button style={{ ...button_style, backgroundColor: '#335B1E' }} onClick={handle_clickxls}>
-                                            <i className="pi pi-file-excel"></i>
-                                        </Button>
+                                     
+                                        {download_xls({ nurseries: models, columns: columns_model })}
+                                        {download_pdf({ nurseries: models, columns: columns_model })}
 
-                                        <Button style={{ ...button_style, backgroundColor: 'red' }} onClick={handle_clickpdf}>
-                                            <i className="pi pi-file-pdf"></i>
-                                        </Button>
+
 
                                     </ButtonGroup>
                                 </Grid>
