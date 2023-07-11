@@ -32,7 +32,6 @@ import {
   to_finalize_organigram_service,
   to_resume_organigram_service
 } from '../../store/thunks/organigramThunks';
-
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
@@ -346,7 +345,7 @@ export const EditarOrganigrama = ({
                         label="Código"
                         variant="outlined"
                         // eslint-disable-next-line eqeqeq
-                        disabled={organigram_current.fecha_terminado !== null}
+                        disabled={organigram_current.fecha_terminado !== null || title_unidades !== 'Agregar'}
                         value={value}
                         onChange={onChange}
                         error={!(error == null)}

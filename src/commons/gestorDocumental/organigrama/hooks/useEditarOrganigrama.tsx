@@ -283,14 +283,14 @@ const use_editar_organigrama = () => {
             onClick={() => {
               console.log(params.row)
               reset_unidades({
+                codigo: params.row.codigo,
+                nombre: params.row.nombre,
                 unidad_raiz: {
                   label: option_raiz.filter(
                     (item) => item.value === params.row.unidad_raiz
                   )[0].label,
                   value: params.row.unidad_raiz,
                 },
-                codigo: params.row.codigo,
-                nombre: params.row.nombre,
                 tipo_unidad: {
                   label: options_tipo_unidad.filter(
                     (tipo) => tipo.value === params.row.cod_tipo_unidad
