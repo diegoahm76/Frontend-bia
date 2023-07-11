@@ -11,7 +11,7 @@ import type { DownloadButtonProps } from './types/types';
 export const DownloadButton = ({
   fileUrl,
   fileName,
-  condition,
+  condition
 }: DownloadButtonProps) => {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
@@ -36,12 +36,7 @@ export const DownloadButton = ({
         style={{ display: 'none' }}
         download={fileName}
       />
-      <Button
-        fullWidth
-        variant="contained"
-        disabled={condition}
-        onClick={handleDownload}
-      >
+      <Button variant="contained" disabled={condition} onClick={handleDownload}>
         <FileDownloadIcon />
       </Button>
     </>
