@@ -38,7 +38,7 @@ import type {
   Menu,
   MenuElement
 } from '../../commons/auth/interfaces';
-import { logout } from '../../commons/auth/store';
+import { logout, /* set_permissions */ } from '../../commons/auth/store';
 import { SuperUserScreen } from '../../commons/seguridad/screens/SuperUserScreen';
 import { FooterGov } from '../goviernoEnLinea/FooterGov';
 import { HeaderGov } from '../goviernoEnLinea/HeaderGov';
@@ -102,9 +102,9 @@ export const SideBar: FC<SideBarProps> = ({
   const { userinfo, permisos: permisos_store } = useSelector(
     (state: AuthSlice) => state.auth
   );
-  console.log(userinfo);
-  console.log(permisos_store);
-  const [permisos, set_permisos] = useState<Menu[]>([]);
+  // console.log(userinfo);
+  // console.log(permisos_store);
+  const [permisos, set_permisos] = useState<any[]>([]);
 
   const { mobile_open, desktop_open, mod_dark } = useSelector(
     (state: {
@@ -122,66 +122,152 @@ export const SideBar: FC<SideBarProps> = ({
   const handle_close_dialog_user = (): void => set_dialog_open(false);
   const handle_click = (): void => set_open(!open);
 
-  const open_collapse = (obj: Menu, key: number): void => {
-    const temp_permisos = [...permisos];
-    temp_permisos[key] = { ...obj, expanded: !obj.expanded };
-    set_permisos(temp_permisos);
-  };
+ const open_collapse = (obj: Menu, key: number): void => {
+  console.log('open_collapse000', /* obj, */ key);
+  set_permisos((prevPermisos) =>
+    prevPermisos.map((menu, index) => {
+      console.log('menu', /* menu, */ 'index', index);
+      return index === key ? { ...menu, expanded: !menu.expanded } : menu;
+    })
+  );
+};
 
-  const open_collapse_sbm = (
-    obj: MenuElement,
-    key: number,
-    key_modulo: number
-  ): void => {
-    const temp_permisos = [...permisos];
-    const menus = [...temp_permisos[key_modulo].menus];
-    menus[key] = { ...obj, expanded: !obj.expanded };
-    temp_permisos[key_modulo].menus = [...menus];
-    set_permisos(temp_permisos);
-  };
+const open_collapse_sbm = (
+  obj: MenuElement,
+  key: number,
+  key_modulo: number
+): void => {
+  console.log('open_collapse_sbm1111', /* obj, */ key, key_modulo);
+  set_permisos((prevPermisos) =>
+    prevPermisos.map((modulo, index) => {
+      console.log('modulo', /* modulo, */ 'index', index);
+      return index === key_modulo
+        ? {
+            ...modulo,
+            menus: modulo.menus.map((menu: any, menuIndex: any) => {
+              console.log('menu', /* menu, */ 'menuIndex', menuIndex);
+              return menuIndex === key
+                ? { ...menu, expanded: !menu.expanded }
+                : menu;
+            }),
+          }
+        : modulo;
+    })
+  );
+};
 
-  const open_collapse_sbm2 = (
-    obj: MenuElement,
-    key: number,
-    key_modulo: number,
-    key_submenu: number
-  ): void => {
-    const temp_permisos = [...permisos];
-    const menus = [...temp_permisos[key_modulo].menus];
-    const submenus = [...menus[key_submenu].submenus];
-    submenus[key] = { ...obj, expanded: !obj.expanded };
-    menus[key_submenu].submenus = [...submenus];
-    temp_permisos[key_modulo].menus = [...menus];
-    set_permisos(temp_permisos);
-  };
+const open_collapse_sbm2 = (
+  obj: MenuElement,
+  key: number,
+  key_modulo: number,
+  key_submenu: number
+): void => {
+  console.log('open_collapse_sbm22222', /* obj, */ key, key_modulo, key_submenu);
+  set_permisos((prevPermisos) =>
+    prevPermisos.map((modulo, moduloIndex) => {
+      console.log('modulo', /* modulo, */ 'moduloIndex', moduloIndex);
+      return moduloIndex === key_modulo
+        ? {
+            ...modulo,
+            menus: modulo.menus.map((menu: any, menuIndex: any) => {
+              console.log('menu', /* menu, */ 'menuIndex', menuIndex);
+              return menuIndex === key_submenu
+                ? {
+                    ...menu,
+                    submenus: menu.submenus.map((submenu: any, submenuIndex: any) => {
+                      console.log(
+                        'submenu',
+                        // submenu,
+                        'submenuIndex',
+                        submenuIndex
+                      );
+                      return submenuIndex === key
+                        ? { ...submenu, expanded: !submenu.expanded }
+                        : submenu;
+                    }),
+                  }
+                : menu;
+            }),
+          }
+        : modulo;
+    })
+  );
+};
 
-  const open_collapse_sbm3 = (
-    obj: MenuElement,
-    key: number,
-    key_modulo: number,
-    key_submenu: number,
-    key_submenu2: number
-  ): void => {
-    const temp_permisos = [...permisos];
-    const menus = [...temp_permisos[key_modulo].menus];
-    const submenus = [...menus[key_submenu].submenus];
-    const submenus2 = [...submenus[key_submenu2].submenus];
-    submenus2[key] = { ...obj, expanded: !obj.expanded };
-    submenus[key_submenu2].submenus = [...submenus2];
-    menus[key_submenu].submenus = [...submenus];
-    temp_permisos[key_modulo].menus = [...menus];
-    set_permisos(temp_permisos);
-  };
+const open_collapse_sbm3 = (
+  obj: MenuElement,
+  key: number,
+  key_modulo: number,
+  key_submenu: number,
+  key_submenu2: number
+): void => {
+  console.log(
+    'open_collapse_sbm3333',
+    // obj,
+    key,
+    key_modulo,
+    key_submenu,
+    key_submenu2
+  );
+  set_permisos((prevPermisos) =>
+    prevPermisos.map((modulo, moduloIndex) => {
+      console.log('modulo', /* modulo */ 'moduloIndex', moduloIndex);
+      return moduloIndex === key_modulo
+        ? {
+            ...modulo,
+            menus: modulo.menus.map((menu: any, menuIndex: any) => {
+              console.log('menu', /* menu, */ 'menuIndex', menuIndex);
+              return menuIndex === key_submenu
+                ? {
+                    ...menu,
+                    submenus: menu.submenus.map((submenu: any, submenuIndex: any) => {
+                      console.log(
+                        /* 'submenu',
+                        submenu, */
+                        'submenuIndex',
+                        submenuIndex
+                      );
+                      return submenuIndex === key_submenu2
+                        ? {
+                            ...submenu,
+                            submenus: submenu.submenus.map(
+                              (submenu2: any, submenu2Index: any) => {
+                                console.log(
+                                  'submenu2',
+                                  /* submenu2, */
+                                  'submenu2Index',
+                                  submenu2Index
+                                );
+                                return submenu2Index === key
+                                  ? {
+                                      ...submenu2,
+                                      expanded: !submenu2.expanded,
+                                    }
+                                  : submenu2;
+                              }
+                            ),
+                          }
+                        : submenu;
+                    }),
+                  }
+                : menu;
+            }),
+          }
+        : modulo;
+    })
+  );
+};
 
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
-  useEffect(() => {
+   useEffect(() => {
     setTimeout(() => {
       set_permisos(permisos_store);
+      console.log('permisos', permisos);
       set_is_loading(false);
     }, 2000);
-  }, [permisos_store]);
+  }, [permisos_store]); 
 
   // ? ------- static side bar content, except super user delegation screen ------
   const conten_drawer = (
@@ -359,88 +445,89 @@ export const SideBar: FC<SideBarProps> = ({
 
       <Divider className={mod_dark ? 'divider' : 'divider2'} />
       {!is_loading ? (
-        permisos.map((e, k) => {
+        permisos.map((elementStore, indexStore) => {
           return (
             <List
               sx={{
                 margin: '0 20px',
                 color: mod_dark ? '#fafafa' : '#141415'
               }}
-              key={k}
+              key={indexStore}
             >
               <ListItemButton
                 sx={{ borderRadius: '10px' }}
                 onClick={() => {
-                  open_collapse(e, k);
+                  open_collapse(elementStore, indexStore);
                 }}
               >
-                <ListItemText primary={e.desc_subsistema} />
-                {e.expanded ? <ExpandLess /> : <ExpandMore />}
+                <ListItemText primary={elementStore.desc_subsistema} />
+                {elementStore.expanded ? <ExpandLess /> : <ExpandMore />}
               </ListItemButton>
 
               <Collapse
                 timeout="auto"
                 unmountOnExit
-                in={e.expanded}
+                in={elementStore.expanded}
                 sx={{
                   bgcolor: mod_dark ? '#2B3C46' : '#F0F0F0',
                   borderRadius: '10px'
                 }}
               >
-                {e.menus.map((m, km) => {
-                  console.log(m);
+                {elementStore.menus.map((elementMenu: any, indexMenu: any) => {
+                  // console.log(m);
                   return (
                     <List
                       component="div"
                       disablePadding
-                      key={km}
+                      key={indexMenu}
                       sx={{
                         pl: '10px'
                       }}
                     >
                       <ListItemButton
                         onClick={() => {
-                          open_collapse_sbm(m, km, k);
+                          open_collapse_sbm(elementMenu, indexMenu, indexStore );
                         }}
                       >
-                        <ListItemText primary={m.nombre} />
-                        {m.expanded ? <ExpandLess /> : <ExpandMore />}
+                        <ListItemText primary={elementMenu.nombre} />
+                        {elementMenu.expanded ? <ExpandLess /> : <ExpandMore />}
                       </ListItemButton>
 
-                      <Collapse timeout="auto" unmountOnExit in={m.expanded}>
-                        {m.submenus.map((sm, ksm) => {
+                      <Collapse timeout="auto" unmountOnExit in={elementMenu.expanded}>
+                        {elementMenu.submenus.map((elementSubmenuMenu: any, indexSubmenuMenu: any) => {
                           return (
                             <List
                               component="div"
                               disablePadding
-                              key={ksm}
+                              key={indexSubmenuMenu}
                               sx={{
                                 pl: '20px'
                               }}
                             >
                               <ListItemButton
                                 onClick={() => {
-                                  open_collapse_sbm2(sm, ksm, km, k);
+                                 /* open_collapse_sbm2(elementSubmenuMenu, indexMenu, indexStore, indexSubmenuMenu ); */
+                                 open_collapse_sbm2(elementSubmenuMenu, indexSubmenuMenu, indexStore, indexMenu);
                                 }}
                               >
-                                <ListItemText primary={sm.nombre} />
-                                {sm.expanded ? <ExpandLess /> : <ExpandMore />}
+                                <ListItemText primary={elementSubmenuMenu.nombre} />
+                                {elementSubmenuMenu.expanded ? <ExpandLess /> : <ExpandMore />}
                               </ListItemButton>
 
                               <Collapse
                                 timeout="auto"
                                 unmountOnExit
-                                in={sm.expanded}
+                                in={elementSubmenuMenu.expanded}
                               >
                                 <List component="div" disablePadding>
-                                  {sm.submenus &&
-                                    sm.submenus.length > 0 &&
-                                    sm.submenus.map((ssm, kssm) => {
+                                  {elementSubmenuMenu.submenus &&
+                                    elementSubmenuMenu.submenus.length > 0 &&
+                                    elementSubmenuMenu.submenus.map((element:any, indexElement: any) => {
                                       return (
                                         <List
                                           component="div"
                                           disablePadding
-                                          key={kssm}
+                                          key={indexElement}
                                           sx={{
                                             pl: '30px'
                                           }}
@@ -448,18 +535,18 @@ export const SideBar: FC<SideBarProps> = ({
                                           <ListItemButton
                                             onClick={() => {
                                               open_collapse_sbm3(
-                                                ssm,
-                                                kssm,
-                                                ksm,
-                                                km,
-                                                k
+                                                element,
+                                                indexStore,
+                                                indexMenu,
+                                                indexSubmenuMenu,
+                                                indexElement,
                                               );
                                             }}
                                           >
                                             <ListItemText
-                                              primary={ssm.nombre}
+                                              primary={element.nombre}
                                             />
-                                            {ssm.expanded ? (
+                                            {element.expanded ? (
                                               <ExpandLess />
                                             ) : (
                                               <ExpandMore />
@@ -469,15 +556,15 @@ export const SideBar: FC<SideBarProps> = ({
                                           <Collapse
                                             timeout="auto"
                                             unmountOnExit
-                                            in={ssm.expanded}
+                                            in={element.expanded}
                                           >
                                             <List
                                               component="div"
                                               disablePadding
                                             >
-                                              {ssm.modulos &&
-                                                ssm.modulos.length > 0 &&
-                                                ssm.modulos.map((mo, km2) => {
+                                              {element.modulos &&
+                                                element.modulos.length > 0 &&
+                                                element.modulos.map((mo: any, km2: any) => {
                                                   return (
                                                     <ListItemButton
                                                       sx={{ pl: 4 }}
@@ -510,9 +597,9 @@ export const SideBar: FC<SideBarProps> = ({
                                         </List>
                                       );
                                     })}
-                                  {sm.modulos &&
-                                    sm.modulos.length > 0 &&
-                                    sm.modulos.map((mo, km2) => {
+                                  {elementSubmenuMenu.modulos &&
+                                    elementSubmenuMenu.modulos.length > 0 &&
+                                    elementSubmenuMenu.modulos.map((mo: any, km2: any) => {
                                       return (
                                         <ListItemButton
                                           sx={{ pl: 4 }}
@@ -537,9 +624,9 @@ export const SideBar: FC<SideBarProps> = ({
                             </List>
                           );
                         })}
-                        {m.modulos &&
-                          m.modulos.length > 0 &&
-                          m.modulos.map((mo, km2) => {
+                        {elementMenu.modulos &&
+                          elementMenu.modulos.length > 0 &&
+                          elementMenu.modulos.map((mo: any, km2: any) => {
                             return (
                               <ListItemButton
                                 sx={{ pl: 4 }}

@@ -83,10 +83,16 @@ export const get_persmisions_user: (
       dispatch(logout({ error_message: resp.error_message }));
       return;
     }
+
+    console.log(
+      '🚀 ~ file: thunks.ts ~ line 86 ~ return ~ resp.data',
+      resp.data
+    );
     //* fixed rendered menu
     const permissions = resp.data?.map((e) => {
   return {
     ...e,
+    hola : 'hola',
     expanded: false,
     menus: e.menus?.map((i) => {
       return {
@@ -109,7 +115,13 @@ export const get_persmisions_user: (
                 submenus: s.submenus?.map((m) => {
                   return {
                     ...m,
-                    expanded: false
+                    expanded: false,
+                    modulos: m.modulos?.map((m) => {
+                      return {
+                        ...m,
+                        expanded: false
+                      };
+                    })
                   };
                 })
               };
@@ -117,7 +129,7 @@ export const get_persmisions_user: (
             modulos: o.modulos?.map((m) => {
               return {
                 ...m,
-                expanded: false
+                expanded: false,
               };
             })
           };
