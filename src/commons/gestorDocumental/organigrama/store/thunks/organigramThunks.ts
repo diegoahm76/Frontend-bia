@@ -132,7 +132,6 @@ export const edit_organigrams_service: any = (
       );
       dispatch(get_organigrams_service());
 
-
       //! el campo debe limpiarse luego de la actualización
       control_success('El organigrama se editó correctamente');
       return data;
@@ -171,7 +170,6 @@ export const to_finalize_organigram_service: any = (
       return error as AxiosError;
     }
   };
-
 };
 
 // Reanudar organigrama
@@ -245,6 +243,9 @@ export const get_unitys_service: any = (id: string | number) => {
       const { data } = await api.get(
         `transversal/organigrama/unidades/get-by-organigrama/${id}/`
       );
+
+      console.log(data.data);
+
       dispatch(get_unitys(data.data));
       return data;
     } catch (error: any) {
