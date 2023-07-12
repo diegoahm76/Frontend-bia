@@ -63,9 +63,13 @@ export const TablaConsultaAdmin: React.FC = () => {
             <Tooltip title="Ver">
                 <IconButton
                   onClick={() => {
-                    void dispatch(get_obligaciones_id(params.row.identificacion))
-                    set_obligaciones_module(true)
-                    set_deudor(params.row.id_deudor)
+                    try {
+                      void dispatch(get_obligaciones_id(params.row.identificacion));
+                      set_obligaciones_module(true);
+                      set_deudor(params.row.id_deudor);
+                    } catch (error: any) {
+                      throw new Error(error);
+                    }
                   }}
                 >
                   <Avatar
