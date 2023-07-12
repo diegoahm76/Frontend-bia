@@ -36,6 +36,7 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
   const {
+    is_saving,
     rows_actividades,
     rows_actividades_register,
     is_agregar_actividad,
@@ -499,6 +500,40 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
                 Aceptar
               </LoadingButton>
             </Grid>
+            {is_editar_actividad && (
+              <>
+                <Grid item>
+                  <LoadingButton
+                    variant="contained"
+                    color="success"
+                    type="submit"
+                    disabled={
+                      is_saving
+                    }
+                    loading={is_saving}
+                  >
+                    Actualizar
+                  </LoadingButton>
+                </Grid>
+              </>
+            )}
+            {is_agregar_actividad && (
+              <>
+                <Grid item>
+                  <LoadingButton
+                    variant="contained"
+                    color="success"
+                    type="submit"
+                    disabled={
+                      is_saving || rows_actividades_register.length === 0
+                    }
+                    loading={is_saving}
+                  >
+                    Guardar
+                  </LoadingButton>
+                </Grid>
+              </>
+            )}
           </Grid>
         </>
       ) : null}

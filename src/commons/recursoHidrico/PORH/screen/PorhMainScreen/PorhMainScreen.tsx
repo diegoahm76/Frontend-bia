@@ -2,9 +2,9 @@
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import { AgregarPrograma } from '../../components/AgregarNuevoPrograma/AgregarPrograma';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { Avatar, Divider, IconButton,   } from '@mui/material';
+import { Avatar, Divider, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ChecklistIcon from '@mui/icons-material/Checklist';
@@ -35,7 +35,7 @@ export const PorhMainScreen: React.FC = () => {
     handleSubmit: handle_submit,
     errors,
     rows_programas,
-    rows_proyectos,
+    // rows_proyectos,
     rows_actividades_register,
     rows_proyectos_register,
     is_agregar_programa,
@@ -59,7 +59,9 @@ export const PorhMainScreen: React.FC = () => {
     set_mode,
     reset_form_agregar_programa,
     set_data_programa,
+    set_rows_proyectos_register,
     set_rows_actividades_register,
+    set_is_saving,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -175,8 +177,6 @@ export const PorhMainScreen: React.FC = () => {
     },
   ];
 
-  const [is_saving, set_is_saving] = useState(false);
-
   useEffect(() => {
     void fetch_data_programas();
   }, []);
@@ -195,11 +195,21 @@ export const PorhMainScreen: React.FC = () => {
       await fetch_data_programas();
       await fetch_data_proyectos();
       await fetch_data_actividades();
+      set_rows_proyectos_register([]);
     } catch (error: any) {
       set_is_saving(false);
-      control_error(
-        error.response.data.detail || 'hubo un error al crear, intenta de nuevo'
-      );
+      if (
+        error.response.data.detail ===
+        'Error: Los campos id_instrumento, nombre deben formar un conjunto único.'
+      ) {
+        // Manejo del error específico
+        control_error('El nombre del programa ya existe');
+        // Otras acciones que desees realizar en caso de este error
+      } else {
+        // Manejo de otros errores
+        control_error(error.response.data.detail);
+      }
+      set_is_saving(false);
     }
   });
   const on_submit_actividades = handle_submit(async (form: any) => {
@@ -208,7 +218,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(true);
       form.id_programa = id_programa;
       form.id_proyecto = id_proyecto;
-      await post_actividades(form, rows_proyectos, rows_actividades_register);
+      await post_actividades(form, rows_actividades_register);
       set_rows_actividades_register([]);
       control_success('Se creó correctamente');
       set_is_saving(false);
@@ -218,7 +228,7 @@ export const PorhMainScreen: React.FC = () => {
     } catch (error: any) {
       set_is_saving(false);
       control_error(
-        error.response.data.detail || 'hubo un error al crear, intenta de nuevo'
+        error.response.data.detail
       );
     }
   });
@@ -235,7 +245,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(false);
       control_error(
         error.response.data.detail ||
-        'hubo un error al editar, intenta de nuevo'
+          'hubo un error al editar, intenta de nuevo'
       );
     }
   });
@@ -250,12 +260,13 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(false);
       control_error(
         error.response.data.detail ||
-        'hubo un error al editar, intenta de nuevo'
+          'hubo un error al editar, intenta de nuevo'
       );
     }
   });
   const on_submit_editar_actividad = handle_submit(async (form: any) => {
     try {
+      set_is_saving(true);
       await editar_activdad(id_actividad as number, form);
       control_success('Se editó la actividad correctamente');
       set_is_saving(false);
@@ -264,7 +275,7 @@ export const PorhMainScreen: React.FC = () => {
       set_is_saving(false);
       control_error(
         error.response.data.detail ||
-        'hubo un error al editar, intenta de nuevo'
+          'hubo un error al editar, intenta de nuevo'
       );
     }
   });
@@ -293,7 +304,7 @@ export const PorhMainScreen: React.FC = () => {
         } catch (error: any) {
           control_error(
             error.response.data.detail ||
-            'hubo un error al eliminar, intenta de nuevo'
+              'hubo un error al eliminar, intenta de nuevo'
           );
         }
       }
@@ -339,7 +350,7 @@ export const PorhMainScreen: React.FC = () => {
           }}
         >
           <Grid item xs={12}>
-            <Title title="Contenido programático pla  de ordenamiento de recursos hídrico" />
+            <Title title="Contenido programático plan de ordenamiento de recursos hídrico" />
           </Grid>
           <BusquedaPorh />
           {is_general && (
@@ -409,7 +420,7 @@ export const PorhMainScreen: React.FC = () => {
             <Grid item>
               <ButtonSalir />
             </Grid>
-            {is_general && (
+            {/* {is_agre && (
               <Grid item>
                 <LoadingButton
                   variant="contained"
@@ -421,7 +432,7 @@ export const PorhMainScreen: React.FC = () => {
                   Finalizar
                 </LoadingButton>
               </Grid>
-            )}
+            )} */}
           </Grid>
         </Grid>
       </form>

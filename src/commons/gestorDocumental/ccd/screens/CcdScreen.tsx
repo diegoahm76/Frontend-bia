@@ -181,7 +181,11 @@ export const CcdScreen: React.FC = () => {
                             fontSize: '0.75rem'
                           }}
                         >
-                          Seleccionar Organigrama
+                          {ccd_current
+                            ? `
+                              Organigrama Seleccionado
+                            `
+                            : `Seleccionar Organigrama`}
                         </small>
                       </label>
                     </div>
@@ -223,7 +227,9 @@ export const CcdScreen: React.FC = () => {
                             fontSize: '0.75rem'
                           }}
                         >
-                          Seleccionar Unidad
+                          {ccd_current
+                            ? `Unidad Seleccionada`
+                            : `Seleccionar Unidad`}
                         </small>
                       </label>
                     </div>
@@ -244,7 +250,7 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
-                      label="Nombre"
+                      label="Nombre CCD"
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -272,7 +278,7 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
-                      label="Versión"
+                      label="Versión CCD"
                       variant="outlined"
                       value={value}
                       onChange={onChange}
@@ -301,9 +307,15 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
-                      label="Valor aumento serie"
+                      label="Valor aumento series CCD"
+                      /* sx={{
+                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
+                      }} */
+                      style={{
+                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
+                      }}
                       disabled={
-                        series_ccd.length > 0 /* && ccd_current == null */
+                        series_ccd.length > 0 || ccd_current?.fecha_terminado
                       }
                       variant="outlined"
                       value={value}
@@ -312,7 +324,7 @@ export const CcdScreen: React.FC = () => {
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar un valor de aumento de serie'
-                          : 'Ingrese valor aumento serie'
+                          : 'Ingrese valor aumento series'
                       }
                     />
                   )}
@@ -333,16 +345,16 @@ export const CcdScreen: React.FC = () => {
                       margin="dense"
                       fullWidth
                       size="small"
-                      label="valor aumento subserie"
+                      label="valor aumento subseries CCD"
                       variant="outlined"
-                      disabled={subseries_ccd.length > 0}
+                      disabled={subseries_ccd.length > 0 || ccd_current?.fecha_terminado}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
                       helperText={
                         error != null
                           ? 'Es obligatorio ingresar un valor de aumento de subserie'
-                          : 'Ingrese un valor de aumento subserie'
+                          : 'Ingrese valor aumento subseries'
                       }
                     />
                   )}
@@ -362,7 +374,11 @@ export const CcdScreen: React.FC = () => {
                   }) => (
                     <>
                       <Button
-                        variant={value === '' ? 'outlined' : 'contained'}
+                        variant={
+                          value === '' || value === null
+                            ? 'outlined'
+                            : 'contained'
+                        }
                         component="label"
                         style={{
                           marginTop: '.15rem',
@@ -370,7 +386,9 @@ export const CcdScreen: React.FC = () => {
                         }}
                         startIcon={<CloudUploadIcon />}
                       >
-                        {value === '' ? 'Subir archivo' : 'Archivo subido'}
+                        {value === '' || value === null
+                          ? 'Subir archivo'
+                          : 'Archivo subido'}
                         <input
                           style={{ display: 'none' }}
                           type="file"
@@ -392,11 +410,14 @@ export const CcdScreen: React.FC = () => {
                             fontSize: '0.75rem'
                           }}
                         >
-                          {control_create_ccd._formValues.ruta_soporte?.name ||
-                            control_create_ccd._formValues.ruta_soporte.replace(
-                              /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
-                              ''
-                            )}
+                          {control_create_ccd._formValues.ruta_soporte
+                            ? control_create_ccd._formValues.ruta_soporte
+                                .name ??
+                              control_create_ccd._formValues.ruta_soporte.replace(
+                                /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                                ''
+                              )
+                            : 'Seleccione archivo'}
                         </small>
                       </label>
                     </>
@@ -404,7 +425,7 @@ export const CcdScreen: React.FC = () => {
                 />
               </Grid>
 
-              <Grid item xs={12} sm={2} sx={{marginTop: ".15rem"}}>
+              <Grid item xs={12} sm={2} sx={{ marginTop: '.15rem' }}>
                 <DownloadButton
                   fileName="ruta_soporte"
                   condition={
@@ -429,24 +450,7 @@ export const CcdScreen: React.FC = () => {
                 variant="outlined"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  void dispatch(
-                    get_classification_ccds_service(
-                      control_create_ccd._formValues.nombre_ccd,
-                      control_create_ccd._formValues.version
-                    )
-                  ).then((data: any) => {
-                    console.log(data);
-                    if (
-                      data.data.length > 0 &&
-                      control_create_ccd._formValues.nombre_ccd !== '' &&
-                      control_create_ccd._formValues.version !== ''
-                    ) {
-                      dispatch(get_ccd_current(data.data[0]));
-                      set_consulta_ccd_is_active(true);
-                      set_title('Consultar CCD');
-                      openModalBusquedaCreacionCCD();
-                    }
-                  });
+                  set_consulta_ccd_is_active(true)
                 }}
               >
                 BUSCAR CCD
@@ -809,12 +813,7 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       onClick={() => {
                         void dispatch(create_or_delete_relation_unidad);
-                        void dispatch(
-                          get_assignments_service(
-                            ccd_current,
-                            control._formValues.unidades_asignacion
-                          )
-                        );
+                        void dispatch(get_assignments_service(ccd_current));
                       }}
                       color="primary"
                       variant="contained"
@@ -830,6 +829,7 @@ export const CcdScreen: React.FC = () => {
                   <DataGrid
                     density="compact"
                     autoHeight
+                    // ! se deben realizar cambios de filtro para la seleccion de los datos
                     rows={assignments_ccd}
                     sx={{
                       zIndex: 2
