@@ -37,7 +37,7 @@ export const editar_cuenca = async (
 // pozos
 export const get_pozo = async (): Promise<Pozo[]> => {
     const { data } = await api.get<Pozo[]>(
-        `personas/estado-civil/get-list/`
+        `hidrico/bibliotecas/pozos/get/`
     );
     return data;
 };
@@ -45,20 +45,20 @@ export const crear_pozo = async (
     datos: Pozo
 ): Promise<Pozo> => {
     const response = await api.post(
-        `personas/estado-civil/create/`,
+        `hidrico/bibliotecas/pozos/create/`,
         datos
     );
     return response.data;
 };
 export const eliminar_pozo = async (id_pozo: number): Promise<any> => {
-    return await api.delete(`personas/estado-civil/delete/${id_pozo}`);
+    return await api.delete(`hidrico/bibliotecas/pozos/delete/${id_pozo}`);
 };
 export const editar_pozo = async (
     id_pozo: number,
     datos: EditarPozo
 ): Promise<EditarPozo> => {
     const response = await api.put(
-        `personas/estado-civil/update/${id_pozo}/`,
+        `hidrico/bibliotecas/pozos/update/${id_pozo}/`,
         datos
     );
     return response.data;
@@ -68,7 +68,7 @@ export const editar_pozo = async (
 
 export const get_parametros = async (): Promise<Parametros[]> => {
     const { data } = await api.get<Parametros[]>(
-        `personas/tipos-documento/get-list/`
+        `hidrico/bibliotecas/parametros_laboratorio/get/`
     );
     return data;
 };
@@ -76,20 +76,20 @@ export const crear_parametros = async (
     datos: Parametros
 ): Promise<Parametros> => {
     const response = await api.post(
-        `personas/tipos-documento/create/`,
+        `hidrico/bibliotecas/parametros_laboratorio/create/`,
         datos
     );
     return response.data;
 };
 export const eliminar_parametros = async (id_parametros: number): Promise<any> => {
-    return await api.delete(`personas/tipos-documento/delete/${id_parametros}`);
+    return await api.delete(`hidrico/bibliotecas/parametros_laboratorio/delete/${id_parametros}`);
 };
 export const editar_parametros = async (
     id_parametro: number,
     datos: EditarParametros
 ): Promise<EditarParametros> => {
     const response = await api.put(
-        `personas/tipos-documento/update/${id_parametro}/`,
+        `hidrico/bibliotecas/parametros_laboratorio/update/${id_parametro}/`,
         datos
     );
     return response.data;

@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
   Button,
@@ -10,19 +12,20 @@ import {
   FormControl,
   FormControlLabel,
   Grid,
+  MenuItem,
   TextField,
 } from '@mui/material';
-import type React from 'react';
 import { useEffect, type Dispatch, type SetStateAction, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { EditarParametros } from '../interfaces/interfaces';
+import type { EditarParametros, Parametros } from '../interfaces/interfaces';
 import { editar_parametros } from '../Request/request';
 import { control_error, control_success } from '../../../../helpers';
+import { tipo_parametro_choices } from '../../Instrumentos/components/ResultadoLaboratorio/utils/choices/choices';
 
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
-  data: any;
+  data: Parametros;
   get_data: () => Promise<void>;
 }
 
@@ -46,6 +49,7 @@ export const ActualizarParametro: React.FC<IProps> = ({
   const [is_loading, set_is_loading] = useState(false);
 
   const activo = watch('activo') ?? false;
+  const tipo_patametro_value = watch('cod_tipo_parametro');
 
   const handle_change_checkbox = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -58,7 +62,7 @@ export const ActualizarParametro: React.FC<IProps> = ({
     set_value('nombre', data?.nombre);
     set_value('activo', data?.activo);
     set_value('cod_tipo_parametro', data?.cod_tipo_parametro);
-    set_value('unidad_medida', data?.unidad_medida);
+    set_value('unidad_de_medida', data?.unidad_de_medida);
   }, []);
 
   useEffect(() => {
@@ -75,7 +79,7 @@ export const ActualizarParametro: React.FC<IProps> = ({
   const on_submit = async (datos: EditarParametros): Promise<any> => {
     try {
       set_is_loading(true);
-      await editar_parametros(data.cod_tipo_documento, datos);
+      await editar_parametros(data.id_parametro, datos);
       set_is_modal_active(false);
       control_success('Parametro actualizado correctamente');
       void get_data();
@@ -96,13 +100,36 @@ export const ActualizarParametro: React.FC<IProps> = ({
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                label="Nombre Parametro *"
+                label="Tipo parámetro"
+                select
+                fullWidth
+                size="small"
+                value={tipo_patametro_value}
+                margin="dense"
+                disabled={false}
+                {...register('cod_tipo_parametro', { required: true })}
+                error={!!errors?.cod_tipo_parametro}
+                helperText={
+                  errors?.cod_tipo_parametro?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+              >
+                {tipo_parametro_choices.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Nombre"
                 fullWidth
                 size="small"
                 margin="dense"
                 required
                 autoFocus
-                defaultValue={data?.nombre}
                 {...register('nombre', {
                   required: true,
                 })}
@@ -114,6 +141,26 @@ export const ActualizarParametro: React.FC<IProps> = ({
                 }
               />
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Unidad de medida"
+                fullWidth
+                size="small"
+                margin="dense"
+                required
+                autoFocus
+                {...register('unidad_de_medida', {
+                  required: true,
+                })}
+                error={!!errors.unidad_de_medida}
+                helperText={
+                  errors.unidad_de_medida?.type === 'required'
+                    ? 'Este campo es obligatorio'
+                    : ''
+                }
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <FormControl component="fieldset" variant="standard">
                 <FormControlLabel

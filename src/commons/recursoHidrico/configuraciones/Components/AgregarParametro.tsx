@@ -74,7 +74,7 @@ export const AgregarParametro: React.FC<IProps> = ({
         <Divider />
         <DialogContent>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
                 label="Tipo parámetro"
                 select
@@ -125,12 +125,12 @@ export const AgregarParametro: React.FC<IProps> = ({
                 margin="dense"
                 required
                 autoFocus
-                {...register('unidad_medida', {
+                {...register('unidad_de_medida', {
                   required: true,
                 })}
-                error={!!errors.unidad_medida}
+                error={!!errors.unidad_de_medida}
                 helperText={
-                  errors.unidad_medida?.type === 'required'
+                  errors.unidad_de_medida?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : ''
                 }

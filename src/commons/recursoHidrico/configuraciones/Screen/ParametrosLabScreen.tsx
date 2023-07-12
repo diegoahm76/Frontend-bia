@@ -29,7 +29,7 @@ export const ParametrosLabScreen: React.FC = () => {
       width: 200,
     },
     {
-      field: 'unidad_medida',
+      field: 'unidad_de_medida',
       headerName: 'UNIDAD DE MEDIDA',
       sortable: true,
       width: 200,
@@ -179,7 +179,7 @@ export const ParametrosLabScreen: React.FC = () => {
       const datos_parametros = response.map((datos: Parametros) => ({
         id_parametro: datos.id_parametro,
         cod_tipo_parametro: datos.cod_tipo_parametro,
-        unidad_medida: datos.unidad_medida,
+        unidad_de_medida: datos.unidad_de_medida,
         nombre: datos.nombre,
         precargado: datos.precargado,
         activo: datos.activo,
@@ -280,7 +280,16 @@ export const ParametrosLabScreen: React.FC = () => {
         is_modal_active={is_editar}
         set_is_modal_active={set_is_editar}
         get_data={get_traer_parametros}
-        data={parametros}
+        data={parametros ?? {
+          id_parametro: 0,
+          cod_tipo_parametro: '',
+          nombre: '',
+          unidad_de_medida: '',
+          precargado: false,
+          activo: false,
+          item_ya_usado: false,
+        }
+        }
       />
     </>
   );

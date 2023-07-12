@@ -34,7 +34,7 @@ export interface Parametros {
   id_parametro: number;
   cod_tipo_parametro: string;
   nombre: string;
-  unidad_medida: string;
+  unidad_de_medida: string;
   precargado: boolean;
   activo: boolean;
   item_ya_usado: boolean;
@@ -43,6 +43,6 @@ export interface EditarParametros {
   id_parametro: number;
   cod_tipo_parametro: string;
   nombre: string;
-  unidad_medida: string;
+  unidad_de_medida: string;
   activo: boolean;
 }
