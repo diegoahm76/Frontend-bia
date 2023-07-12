@@ -99,6 +99,7 @@ export const get_classification_ccds_service = (
           )
         );
         get_series_service(id_ccd)(dispatch);
+        control_success('Se ha encontrado la siguiente información de CCD');
       }
       return data;
     } catch (error: any) {
