@@ -32,7 +32,7 @@ import { current_bien } from '../store/slice/configuracionSlice';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
-import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -215,7 +215,6 @@ export function TipificacionBienesScreen(): JSX.Element {
               <ButtonGroup style={{ margin: 7 }}>
               
                 {download_xls({ nurseries: filterednurseries, columns })}
-                {download_pdf({ nurseries: filterednurseries, columns })}
 
               </ButtonGroup>
             </Grid>
