@@ -1,6 +1,7 @@
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { BusquedaSeccionSubseccion } from '../components/BusquedaSeccionSubseccion';
+import { RegistroInstrumentos } from '../components/RegistroInstrumentos/RegistroInstrumento';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const InstrumentosScreen: React.FC = () => {
@@ -26,6 +27,7 @@ export const InstrumentosScreen: React.FC = () => {
         </Grid>
       </Grid>
       <BusquedaSeccionSubseccion />
+      <RegistroInstrumentos />
     </>
   );
 };

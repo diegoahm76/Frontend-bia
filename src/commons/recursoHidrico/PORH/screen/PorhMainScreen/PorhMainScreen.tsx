@@ -10,7 +10,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { DataContext } from '../../context/contextData';
-import { BusquedaPorh } from '../../components/Buscador/Buscador';
 import {
   editar_activdad,
   editar_programa,
@@ -27,6 +26,7 @@ import Swal from 'sweetalert2';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import { BusquedaAvanzada } from '../../components/BusquedaAvanzadaPORH/BusquedaAvanzada';
 import { ConsultaPorh } from '../../components/ConsultaPorh/ConsultaPorh';
+import { BusquedaPorh } from '../../components/BusquedaPorh/BusquedaPorh';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PorhMainScreen: React.FC = () => {
@@ -52,6 +52,8 @@ export const PorhMainScreen: React.FC = () => {
     is_general,
     is_consulta,
     id_programa,
+    id_instrumento,
+    info_instrumento,
     set_id_programa,
     fetch_data_actividades,
     fetch_data_proyectos,
@@ -178,12 +180,15 @@ export const PorhMainScreen: React.FC = () => {
   ];
 
   useEffect(() => {
-    void fetch_data_programas();
-  }, []);
+    if (id_instrumento) {
+      void fetch_data_programas();
+    }
+  }, [id_instrumento]);
 
   const on_submit = handle_submit(async (form: any) => {
     try {
       set_is_saving(true);
+      form.id_instrumento = id_instrumento;
       form.id_programa = id_programa;
       form.id_proyecto = id_proyecto;
       await post_programa(form, rows_proyectos_register);
@@ -216,6 +221,7 @@ export const PorhMainScreen: React.FC = () => {
     console.log('hi, from onSubmit actividades');
     try {
       set_is_saving(true);
+      form.id_instrumento = id_instrumento;
       form.id_programa = id_programa;
       form.id_proyecto = id_proyecto;
       await post_actividades(form, rows_actividades_register);
@@ -227,9 +233,7 @@ export const PorhMainScreen: React.FC = () => {
       await fetch_data_actividades();
     } catch (error: any) {
       set_is_saving(false);
-      control_error(
-        error.response.data.detail
-      );
+      control_error(error.response.data.detail);
     }
   });
 
@@ -237,6 +241,8 @@ export const PorhMainScreen: React.FC = () => {
     console.log('hi, from onSubmit edit');
     try {
       set_is_saving(true);
+      form.id_instrumento = id_instrumento; 
+      console.log(id_instrumento, 'id_instrumento');
       await editar_programa(id_programa as number, form);
       control_success('Se editó correctamente');
       set_is_saving(false);
@@ -355,7 +361,7 @@ export const PorhMainScreen: React.FC = () => {
           <BusquedaPorh />
           {is_general && (
             <>
-              {rows_programas.length > 0 && (
+              {info_instrumento && rows_programas.length > 0 && (
                 <>
                   <Grid item xs={12}>
                     <Title title=" Programas" />
@@ -376,19 +382,21 @@ export const PorhMainScreen: React.FC = () => {
                   </Grid>
                 </>
               )}
-              <Grid item spacing={2} justifyContent="end" container>
-                <Grid item>
-                  <LoadingButton
-                    variant="outlined"
-                    onClick={() => {
-                      set_id_programa(null);
-                      set_mode('register_programa');
-                    }}
-                  >
-                    Agregar programa
-                  </LoadingButton>
+              {id_instrumento && (
+                <Grid item spacing={2} justifyContent="end" container>
+                  <Grid item>
+                    <LoadingButton
+                      variant="outlined"
+                      onClick={() => {
+                        set_id_programa(null);
+                        set_mode('register_programa');
+                      }}
+                    >
+                      Agregar programa
+                    </LoadingButton>
+                  </Grid>
                 </Grid>
-              </Grid>
+              )}
               {is_agregar_programa && (
                 <>
                   <AgregarPrograma />

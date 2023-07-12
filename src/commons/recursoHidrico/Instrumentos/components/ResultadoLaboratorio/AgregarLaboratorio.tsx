@@ -15,7 +15,15 @@ import { Title } from '../../../../../components/Title';
 import { use_register_laboratorio_hook } from './hook/useRegisterLaboratorioHook';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { columns_result_lab } from './utils/colums/comlums';
-import { clase_muestra_choices } from './utils/choices/choices';
+import {
+  clase_muestra_choices,
+  parametro,
+  tipo_parametro_choices,
+  unidad_medida_choices,
+} from './utils/choices/choices';
+import { AgregarArchivo } from '../../../../../utils/AgregarArchivo/AgregarArchivo';
+import { LoadingButton } from '@mui/lab';
+import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarLaboratorio: React.FC = () => {
@@ -58,12 +66,22 @@ export const AgregarLaboratorio: React.FC = () => {
   ];
 
   const {
+    clase_muestra_value,
+    tipo_parametro_value,
+    unidad_medida_value,
+    parametro_value,
     rows_laboratorio,
     fecha_toma_muestra,
+    fecha_analisis,
     fecha_envio,
     fecha_resultado,
+    metodo,
+    resultado,
+    set_metodo,
+    set_resultado,
     handle_date_change,
-    handle_clase_muestra_change,
+    handle_change_inputs,
+    handle_agregar,
   } = use_register_laboratorio_hook();
 
   return (
@@ -152,7 +170,9 @@ export const AgregarLaboratorio: React.FC = () => {
             size="small"
             margin="dense"
             disabled={false}
-            onChange={handle_clase_muestra_change}
+            value={clase_muestra_value}
+            name="clase_muestra"
+            onChange={handle_change_inputs}
           >
             {clase_muestra_choices.map((option) => (
               <MenuItem key={option.value} value={option.value}>
@@ -164,7 +184,7 @@ export const AgregarLaboratorio: React.FC = () => {
         <Grid item xs={12} sm={6}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              label="enviado a laboratorio el día"
+              label="Enviado a laboratorio el día"
               value={fecha_envio}
               onChange={(value) => {
                 handle_date_change('fecha_envio', value);
@@ -269,41 +289,101 @@ export const AgregarLaboratorio: React.FC = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={6} md={4}>
           <TextField
-            label="Distancia de la orilla (m)"
+            label="Tipo parámetro "
+            select
+            fullWidth
+            size="small"
+            value={tipo_parametro_value}
+            margin="dense"
+            disabled={false}
+            name="tipo_parametro"
+            onChange={handle_change_inputs}
+          >
+            {tipo_parametro_choices.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            label="Parámetro "
+            select
+            fullWidth
+            size="small"
+            value={parametro_value}
+            margin="dense"
+            disabled={false}
+            name="parametro"
+            onChange={handle_change_inputs}
+          >
+            {parametro.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        <Grid item xs={12} sm={6} md={4}>
+          <TextField
+            label="unidad de medida"
+            select
             fullWidth
             size="small"
             margin="dense"
+            value={unidad_medida_value}
             disabled={false}
-          />
+            name="unidad_medida"
+            onChange={handle_change_inputs}
+          >
+            {unidad_medida_choices.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Profundidad (m)"
+            label="Método de análisis"
             fullWidth
             size="small"
             margin="dense"
             disabled={false}
+            value={metodo}
+            onChange={(e) => {
+              set_metodo(e.target.value);
+            }}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <TextField
-            label="Velocidad superficial (m/s)"
-            fullWidth
-            size="small"
-            margin="dense"
-            disabled={false}
-          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Fecha de análisis"
+              value={fecha_analisis}
+              onChange={(value) => {
+                handle_date_change('fecha_analisis', value);
+              }}
+              renderInput={(params: any) => (
+                <TextField fullWidth size="small" {...params} />
+              )}
+            />
+          </LocalizationProvider>
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
-            label="Velocidad Profunda (m/s)"
+            label="Resultado"
+            fullWidth
             size="small"
             margin="dense"
-            required
             disabled={false}
-            fullWidth
+            value={resultado}
+            onChange={(e) => {
+              set_resultado(e.target.value);
+            }}
           />
         </Grid>
         <Box sx={{ flexGrow: 1 }}>
@@ -313,7 +393,7 @@ export const AgregarLaboratorio: React.FC = () => {
             justifyContent="flex-end"
             sx={{ mt: '10px' }}
           >
-            <Button variant="outlined" color="primary">
+            <Button variant="outlined" color="primary" onClick={handle_agregar}>
               Agregar
             </Button>
           </Stack>
@@ -336,6 +416,17 @@ export const AgregarLaboratorio: React.FC = () => {
             </Grid>
           </>
         )}
+        <AgregarArchivo multiple={false} />
+        <Grid item spacing={2} justifyContent="end" container>
+          <Grid item>
+            <ButtonSalir />
+          </Grid>
+          <Grid item>
+            <LoadingButton variant="contained" color="success" type="submit">
+              Guardar
+            </LoadingButton>
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );
