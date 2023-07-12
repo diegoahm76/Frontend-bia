@@ -66,9 +66,9 @@ export const RegisterForm: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h6" textAlign="center" pb={2}>
+      {/* <Typography variant="h6" textAlign="center" pb={2}>
         Formulario registro
-      </Typography>
+      </Typography> */}
       <form
         onSubmit={(e) => {
           void on_submit(e);

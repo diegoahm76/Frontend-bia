@@ -416,7 +416,7 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
         <Grid item xs={12} sm={6} md={4}>
           <TextField
             size="small"
-            label="Nombre de documento"
+            label="Número de documento"
             disabled={tipo_documento_representante === ''}
             fullWidth
             error={errors.documento_representante?.type === 'required'}
@@ -437,6 +437,7 @@ const DatosRepresentante: (props: PropsElement) => JSX.Element = ({
             loading={is_search}
             disabled={is_search || documento_representante === ''}
             onClick={() => {
+              console.log('click');
               search_representante();
             }}
           >
