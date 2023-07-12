@@ -26,7 +26,7 @@ interface IProps {
   margin?: number;
   control_form: any;
   control_name: string;
-  default_value: string | number | null;
+  default_value: string | number | null | Date;
   rules: IRules;
   label: string;
   disabled: boolean;

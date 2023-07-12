@@ -27,7 +27,7 @@ export const initial_state_transfer: IObjTransfer = {
   observaciones: '',
   ruta_archivo_soporte: null,
 };
-const initial_state_current_nursery: IObjNursery = {
+export const initial_state_current_nursery: IObjNursery = {
   id_vivero: null,
   nombre: '',
   cod_municipio: '',

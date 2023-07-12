@@ -17,11 +17,15 @@ import { Chip, Grid } from '@mui/material';
 interface IProps {
   control_genera_bajas: any;
   get_values: any;
+  open_modal: boolean;
+  set_open_modal: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarBajasHerramientas = ({
   control_genera_bajas,
   get_values,
+  open_modal,
+  set_open_modal,
 }: IProps) => {
   // const [action, set_action] = useState<string>("agregar");
 
@@ -146,6 +150,9 @@ const SeleccionarBajasHerramientas = ({
           get_filters_models={get_bajas}
           set_models={set_genera_bajas}
           button_submit_label="Buscar bajas"
+          show_search_button={false}
+          open_search_modal={open_modal}
+          set_open_search_modal={set_open_modal}
           form_inputs={[
             {
               datum_type: 'select_controller',

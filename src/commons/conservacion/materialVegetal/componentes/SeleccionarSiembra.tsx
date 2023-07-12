@@ -169,7 +169,6 @@ const SeleccionarSiembra = ({
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
-          show_search_button={false}
           set_current_model={set_current_planting}
           row_id={'id_siembra'}
           columns_model={columns_siembras}
@@ -177,6 +176,7 @@ const SeleccionarSiembra = ({
           get_filters_models={get_siembras}
           set_models={set_plantings}
           button_submit_label="Buscar siembra"
+          show_search_button={false}
           open_search_modal={open_modal}
           set_open_search_modal={set_open_modal}
           form_inputs={[

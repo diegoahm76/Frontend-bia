@@ -82,6 +82,7 @@ const PrimaryForm = ({
           option_key={form_input.option_key}
           multiple={form_input.multiple ?? false}
           hidden_text={form_input.hidden_text ?? null}
+          auto_focus={form_input.auto_focus ?? null}
         />
       );
     } else if (form_input.datum_type === 'title') {

@@ -22,6 +22,8 @@ interface IProps {
   get_values: any;
   origin_nursery_list: IObjNursery[];
   destination_nursery_list: IObjNursery[];
+  open_modal: boolean;
+  set_open_modal: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarTraslado = ({
@@ -29,6 +31,8 @@ const SeleccionarTraslado = ({
   get_values,
   origin_nursery_list,
   destination_nursery_list,
+  open_modal,
+  set_open_modal,
 }: IProps) => {
   const dispatch = useAppDispatch();
   const { current_transfer, transfers_nurseries, nurseries } = useAppSelector(
@@ -178,6 +182,9 @@ const SeleccionarTraslado = ({
           get_filters_models={get_traslados}
           set_models={set_transfers_nurseries}
           button_submit_label="Buscar traslado"
+          show_search_button={false}
+          open_search_modal={open_modal}
+          set_open_search_modal={set_open_modal}
           form_inputs={[
             {
               datum_type: 'select_controller',

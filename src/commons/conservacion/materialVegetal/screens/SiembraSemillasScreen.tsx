@@ -56,8 +56,9 @@ export function SiembraSemillasScreen(): JSX.Element {
   } = useForm<IObjPlanting>();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const [action, set_action] = useState<string>('Crear');
-  const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+
+  const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
   const handle_open_select_model = (): void => {
     set_open_search_modal(true);
   };

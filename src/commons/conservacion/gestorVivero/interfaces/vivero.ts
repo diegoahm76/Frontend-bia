@@ -102,6 +102,7 @@ export interface IObjNursery {
   id_viverista_actual: number | null;
   id_persona_crea: number | null;
   id_persona_abre: number | null;
+  persona?: string | null;
   id_persona_cierra: number | null;
   id_persona_cuarentena: number | null;
 }

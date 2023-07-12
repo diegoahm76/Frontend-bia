@@ -16,6 +16,8 @@ interface IProps {
   get_values: any;
   function_search?: any;
   despacho?: boolean | null;
+  open_modal?: boolean;
+  set_open_modal?: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudAprobada = ({
@@ -24,6 +26,8 @@ const SeleccionarSolicitudAprobada = ({
   get_values,
   function_search,
   despacho,
+  open_modal,
+  set_open_modal,
 }: IProps) => {
   // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
@@ -100,6 +104,9 @@ const SeleccionarSolicitudAprobada = ({
           button_submit_label={
             despacho ?? false ? 'Buscar solicitud' : 'Seleccionar solicitud'
           }
+          show_search_button={despacho ?? false}
+          open_search_modal={despacho ?? false ? open_modal : null}
+          set_open_search_modal={despacho ?? false ? set_open_modal : null}
           form_inputs={[
             {
               datum_type: 'title',

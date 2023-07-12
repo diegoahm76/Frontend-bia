@@ -30,6 +30,8 @@ import Limpiar from '../../componentes/Limpiar';
 import Block from '@mui/icons-material/Block';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
+import SearchIcon from '@mui/icons-material/Search';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function TrasladoScreen(): JSX.Element {
   const { current_transfer, transfer_person, nurseries, transfer_goods } =
@@ -51,6 +53,11 @@ export function TrasladoScreen(): JSX.Element {
     IObjNursery[]
   >([]);
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+
+  const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+  const handle_open_select_model = (): void => {
+    set_open_search_modal(true);
+  };
   const initial_values = (): void => {
     void dispatch(get_nurseries_service());
     void dispatch(get_person_id_service(userinfo.id_persona));
@@ -194,6 +201,8 @@ export function TrasladoScreen(): JSX.Element {
           get_values={get_values}
           origin_nursery_list={aux_nurseries_origin}
           destination_nursery_list={aux_nurseries_destination}
+          open_modal={open_search_modal}
+          set_open_modal={set_open_search_modal}
         />
         <SeleccionarBienTraslado />
 
@@ -209,6 +218,16 @@ export function TrasladoScreen(): JSX.Element {
               />
             </Grid>
           )}
+          <Grid item xs={12} md={3}>
+            <FormButton
+              variant_button="contained"
+              on_click_function={handle_open_select_model}
+              icon_class={<SearchIcon />}
+              label={'Buscar traslado'}
+              type_button="button"
+              disabled={false}
+            />
+          </Grid>
           <Grid item xs={12} md={3}>
             <Limpiar
               dispatch={dispatch}

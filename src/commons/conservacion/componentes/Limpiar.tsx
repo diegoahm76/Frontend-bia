@@ -10,6 +10,7 @@ interface IProps {
   button_disabled?: boolean | null;
   button_icon_class?: any;
   variant_button?: any;
+  button_clean_show?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -21,6 +22,7 @@ const Clean = ({
   button_label,
   button_icon_class,
   variant_button,
+  button_clean_show,
 }: IProps) => {
   const handle_reset = (): void => {
     dispatch(reset_state());
@@ -35,15 +37,17 @@ const Clean = ({
 
   return (
     <>
-      <FormButton
-        variant_button={variant_button ?? 'outlined'}
-        on_click_function={handle_reset}
-        icon_class={button_icon_class ?? <CleanIcon />}
-        label={button_label ?? 'Limpiar'}
-        type_button="button"
-        disabled={button_disabled ?? false}
-        color_button="success"
-      />
+      {(button_clean_show ?? true) && (
+        <FormButton
+          variant_button={variant_button ?? 'outlined'}
+          on_click_function={handle_reset}
+          icon_class={button_icon_class ?? <CleanIcon />}
+          label={button_label ?? 'Limpiar'}
+          type_button="button"
+          disabled={button_disabled ?? false}
+          color_button="success"
+        />
+      )}
     </>
   );
 };

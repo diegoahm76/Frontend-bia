@@ -27,12 +27,13 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { get_bienes_service } from '../store/thunks/configuracionThunks';
 import EditarBienDialogForm from '../componentes/EditarBienDialogForm';
 // // Slices
-import { current_bien } from '../store/slice/configuracionSlice';
+import { current_bien, reset_state } from '../store/slice/configuracionSlice';
 
 import ButtonGroup from '@mui/material/ButtonGroup';
 
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
+import Limpiar from '../../componentes/Limpiar';
 
 const button_style = {
   color: 'white',
@@ -267,6 +268,15 @@ export function TipificacionBienesScreen(): JSX.Element {
             is_modal_active={edit_bien_is_active}
             set_is_modal_active={set_edit_bien_is_active}
             action={action}
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <Limpiar
+            dispatch={dispatch}
+            reset_state={reset_state}
+            set_initial_values={null}
+            variant_button={'outlined'}
+            button_clean_show={false}
           />
         </Grid>
       </Grid>
