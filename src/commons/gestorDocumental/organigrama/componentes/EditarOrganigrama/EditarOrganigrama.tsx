@@ -1,3 +1,5 @@
+/* eslint-disable no-void */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { useState, useEffect, type SetStateAction, type Dispatch } from 'react';
 import Select, { type SingleValue } from 'react-select';
 import { Controller } from 'react-hook-form';
@@ -8,7 +10,7 @@ import {
   Button,
   TextField,
   Typography,
-  Chip,
+  Chip
   // MenuItem,
   // InputLabel,
   // FormControl,
@@ -25,18 +27,18 @@ import { OrganigramVisualizerDialog } from '../OrganigramVisualizerDialog/Organi
 import { type ILevelUnity } from '../../interfaces/organigrama';
 import useEditarOrganigrama from '../../hooks/useEditarOrganigrama';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import {
   to_finalize_organigram_service,
-  to_resume_organigram_service,
+  to_resume_organigram_service
 } from '../../store/thunks/organigramThunks';
-
 interface IProps {
   set_position_tab_organigrama: Dispatch<SetStateAction<string>>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EditarOrganigrama = ({
-  set_position_tab_organigrama,
+  set_position_tab_organigrama
 }: IProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const [view_organigram, set_view_organigram] = useState(false);
@@ -44,7 +46,7 @@ export const EditarOrganigrama = ({
     organigram_current,
     levels_organigram,
     unity_organigram,
-    mold_organigram,
+    mold_organigram
   } = useAppSelector((state) => state.organigram);
 
   const {
@@ -57,7 +59,6 @@ export const EditarOrganigrama = ({
     control_nivel,
     handle_submit_nivel,
     submit_nivel,
-    title_unidades,
     columns_unidades,
     option_nivel,
     control_unidades,
@@ -65,9 +66,13 @@ export const EditarOrganigrama = ({
     options_agrupacion_d,
     options_tipo_unidad,
     option_unidad_padre,
-    submit_unidades,
     handle_submit_unidades,
     set_value_unidades,
+    clean_unitys,
+    create_unidad,
+    edit_unidad,
+    // submit_unidades,
+    title_unidades,
   } = useEditarOrganigrama();
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -77,11 +82,11 @@ export const EditarOrganigrama = ({
       option?.orden === 1
         ? {
             label: 'Si',
-            value: true,
+            value: true
           }
         : {
             label: 'No',
-            value: false,
+            value: false
           }
     );
     set_value_unidades('nivel_unidad', option);
@@ -135,7 +140,7 @@ export const EditarOrganigrama = ({
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
+                  fieldState: { error }
                 }) => (
                   <TextField
                     margin="dense"
@@ -164,7 +169,7 @@ export const EditarOrganigrama = ({
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
+                  fieldState: { error }
                 }) => (
                   <TextField
                     margin="dense"
@@ -193,7 +198,7 @@ export const EditarOrganigrama = ({
                 rules={{ required: true }}
                 render={({
                   field: { onChange, value },
-                  fieldState: { error },
+                  fieldState: { error }
                 }) => (
                   <TextField
                     margin="dense"
@@ -248,7 +253,7 @@ export const EditarOrganigrama = ({
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error },
+                      fieldState: { error }
                     }) => (
                       <TextField
                         margin="dense"
@@ -315,7 +320,12 @@ export const EditarOrganigrama = ({
             <Box
               component="form"
               // eslint-disable-next-line @typescript-eslint/no-misused-promises
-              onSubmit={handle_submit_unidades(submit_unidades)}
+              onSubmit={(e) => {
+                e.preventDefault();
+                title_unidades === 'Agregar'
+                  ? void handle_submit_unidades(create_unidad)(e)
+                  : void handle_submit_unidades(edit_unidad)(e);
+              }}
             >
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={3}>
@@ -326,7 +336,7 @@ export const EditarOrganigrama = ({
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error },
+                      fieldState: { error }
                     }) => (
                       <TextField
                         margin="dense"
@@ -334,7 +344,8 @@ export const EditarOrganigrama = ({
                         size="small"
                         label="Código"
                         variant="outlined"
-                        disabled={organigram_current.fecha_terminado !== null}
+                        // eslint-disable-next-line eqeqeq
+                        disabled={organigram_current.fecha_terminado !== null || title_unidades !== 'Agregar'}
                         value={value}
                         onChange={onChange}
                         error={!(error == null)}
@@ -355,7 +366,7 @@ export const EditarOrganigrama = ({
                     rules={{ required: true }}
                     render={({
                       field: { onChange, value },
-                      fieldState: { error },
+                      fieldState: { error }
                     }) => (
                       <TextField
                         margin="dense"
@@ -483,8 +494,18 @@ export const EditarOrganigrama = ({
                 direction="row"
                 justifyContent="flex-end"
                 spacing={2}
-                sx={{ mb: '20px' }}
+                sx={{ mb: '20px', mt: '20px' }}
               >
+                <Button
+                  // type="submit"
+                  color="success"
+                  variant="contained"
+                  // disabled={organigram_current.fecha_terminado !== null}
+                  onClick={clean_unitys}
+                  startIcon={<CleanIcon />}
+                >
+                  LIMPIAR CAMPOS
+                </Button>
                 <Button
                   type="submit"
                   color="primary"

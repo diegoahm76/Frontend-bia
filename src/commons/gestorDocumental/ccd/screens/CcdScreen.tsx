@@ -308,6 +308,12 @@ export const CcdScreen: React.FC = () => {
                       fullWidth
                       size="small"
                       label="Valor aumento series CCD"
+                      /* sx={{
+                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
+                      }} */
+                      style={{
+                        color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
+                      }}
                       disabled={
                         series_ccd.length > 0 || ccd_current?.fecha_terminado
                       }
@@ -444,24 +450,7 @@ export const CcdScreen: React.FC = () => {
                 variant="outlined"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  void dispatch(
-                    get_classification_ccds_service(
-                      control_create_ccd._formValues.nombre_ccd,
-                      control_create_ccd._formValues.version
-                    )
-                  ).then((data: any) => {
-                    console.log(data);
-                    if (
-                      data.data.length > 0 &&
-                      control_create_ccd._formValues.nombre_ccd !== '' &&
-                      control_create_ccd._formValues.version !== ''
-                    ) {
-                      dispatch(get_ccd_current(data.data[0]));
-                      set_consulta_ccd_is_active(true);
-                      set_title('Consultar CCD');
-                      openModalBusquedaCreacionCCD();
-                    }
-                  });
+                  set_consulta_ccd_is_active(true)
                 }}
               >
                 BUSCAR CCD
