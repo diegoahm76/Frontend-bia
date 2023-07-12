@@ -121,25 +121,20 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
   ];
   const columns_cuencas: GridColDef[] = [
     {
-      field: 'ubicacion',
-      headerName: 'UBICACIÓN',
-      width: 300,
-    },
-    {
       field: 'nombre',
-      headerName: 'NOMBRE',
+      headerName: 'NOMBRE CUENCA',
       width: 300,
       renderCell: (params) => <div className="container">{params.value}</div>,
     },
   ];
   const columns_anexos: GridColDef[] = [
     {
-      field: 'nombre',
-      headerName: 'NOMBRE',
+      field: 'nombre_archivo',
+      headerName: 'NOMBRE ANEXO',
       width: 300,
     },
     {
-      field: 'archivo',
+      field: 'ruta_archivo',
       headerName: 'ARCHIVO',
       width: 200,
       renderCell: (params) => (
@@ -156,14 +151,21 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
     id_seccion,
     rows_seccion,
     rows_subseccion,
+    rows_anexos,
     info_seccion,
     info_subseccion,
+    id_instrumento,
+    rows_cuencas_instrumentos,
+    info_instrumentos,
     set_id_seccion,
     set_info_seccion,
     set_id_subseccion,
     set_info_subseccion,
     fetch_data_seccion,
     fetch_data_subseccion_por_seccion,
+    fetch_data_cuencas_instrumentos,
+    fetch_data_instrumento,
+    fetch_data_anexos,
   } = useContext(DataContext);
 
   useEffect(() => {
@@ -171,36 +173,18 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    void fetch_data_subseccion_por_seccion();
+    if (id_seccion) {
+      void fetch_data_subseccion_por_seccion();
+    }
   }, [id_seccion]);
 
-  const info_instrumento = {
-    nombre: 'PORH RIO GUATAQUIA',
-    cuencas: [
-      {
-        ubicacion: 'META',
-        nombre: 'CUENCA RIO GUATAQUIA',
-      },
-      {
-        ubicacion: 'META',
-        nombre: 'CUENCA RIO GUATAQUIA 2',
-      },
-    ],
-    fecha_vigencia: '01/10/2022',
-    resolucion: 'P.J-7.20-03-2008',
-    anexos: [
-      {
-        nombre: 'ANEXO 1',
-        archivo:
-          'https://image.slidesharecdn.com/laresolucin-140622160742-phpapp02/85/la-resolucin-3-320.jpg?cb=1665748181',
-      },
-      {
-        nombre: 'ANEXO 2',
-        archivo:
-          'https://static.docsity.com/documents_first_pages/2019/09/20/df0c20aa9b53e9265f863197def9b536.png',
-      },
-    ],
-  };
+  useEffect(() => {
+    if (id_instrumento) {
+      void fetch_data_cuencas_instrumentos();
+      void fetch_data_instrumento();
+      void fetch_data_anexos();
+    }
+  }, [id_instrumento]);
 
   return (
     <>
@@ -316,7 +300,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 size="small"
                 disabled
                 fullWidth
-                value={info_instrumento?.nombre}
+                value={info_instrumentos?.nombre}
                 id="disabled-field"
               />
             </Grid>
@@ -326,7 +310,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 size="small"
                 disabled
                 fullWidth
-                value={info_instrumento?.fecha_vigencia}
+                value={info_instrumentos?.fecha_fin_vigencia}
                 id="disabled-field"
               />
             </Grid>
@@ -336,7 +320,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 size="small"
                 disabled
                 fullWidth
-                value={info_instrumento?.resolucion}
+                value=""
                 id="disabled-field"
               />
             </Grid>
@@ -348,7 +332,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
               <Divider />
               <DataGrid
                 autoHeight
-                rows={info_instrumento.cuencas}
+                rows={rows_cuencas_instrumentos}
                 columns={columns_cuencas}
                 getRowId={(row) => uuidv4()}
                 pageSize={5}
@@ -362,7 +346,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
               <Divider />
               <DataGrid
                 autoHeight
-                rows={info_instrumento.anexos}
+                rows={rows_anexos}
                 columns={columns_anexos}
                 getRowId={(row) => uuidv4()}
                 pageSize={5}

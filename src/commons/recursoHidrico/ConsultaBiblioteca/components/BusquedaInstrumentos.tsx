@@ -26,7 +26,8 @@ import { search_instrumento } from '../request/request';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
   const {
-    set_info_instrumento,
+    set_id_subseccion,
+    set_id_seccion,
     set_id_instrumento,
     info_subseccion,
     info_seccion,
@@ -37,31 +38,25 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
       field: 'nombre_seccion',
       headerName: 'NOMBRE SECCIÓN',
       sortable: true,
-      width: 170,
+      width: 280,
     },
     {
       field: 'nombre_subseccion',
       headerName: 'NOMBRE SUBSECCIÓN',
       sortable: true,
-      width: 170,
+      width: 280,
     },
     {
       field: 'nombre_instrumento',
       headerName: 'NOMBRE INSTRUMENTO',
       sortable: true,
-      width: 170,
+      width: 200,
     },
     {
       field: 'nombre_archivo',
       headerName: 'NOMBRE ARCHIVO',
       sortable: true,
-      width: 170,
-    },
-    {
-      field: 'accion',
-      headerName: 'NOMBRE AVANCE',
-      sortable: true,
-      width: 170,
+      width: 200,
     },
     {
       field: 'ACCIONES',
@@ -78,7 +73,8 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
               onClick={() => {
                 if (params.row !== undefined) {
                   set_id_instrumento(params.row.id_instumento);
-                  set_info_instrumento(params.row);
+                  set_id_subseccion(params.row.id_subseccion);
+                  set_id_seccion(params.row.id_seccion);
                   handle_close();
                 }
               }}
