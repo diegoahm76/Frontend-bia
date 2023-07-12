@@ -9,6 +9,7 @@ import { get_datos_deudor } from '../slices/DeudoresSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { type Obligacion } from '../interfaces/interfaces';
+import { faker } from '@faker-js/faker';
 
 interface RootState {
   obligaciones: {
@@ -26,6 +27,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
+  const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
@@ -89,21 +91,33 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
       field: 'monto_inicial',
       headerName: 'Valor Capital',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
     {
       field: 'valor_intereses',
       headerName: 'Valor Intereses',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
     {
       field: 'dias_mora',
@@ -154,6 +168,25 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
     set_selected(new_selected);
   };
 
+  const total_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
+
+  const intereses_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(intereses)
+
+  const capital_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(capital)
+
+  useEffect(() => {
+    set_lista_obligaciones(obligaciones)
+  }, [obligaciones])
+
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
@@ -193,12 +226,12 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
               <DataGrid
                 autoHeight
                 disableSelectionOnClick
-                rows={obligaciones}
+                rows={lista_obligaciones}
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.nro_expediente}
+                getRowId={(row) => faker.database.mongodbObjectId()}
               />
             </Box>
           </Grid>
@@ -208,28 +241,28 @@ export const TablaObligacionesUsuarioConsulta: React.FC<Deudor> = (props: Deudor
             spacing={2}
             sx={{ mt: '30px' }}
           >
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Capital"
                 size="small"
                 fullWidth
-                value={capital}
+                value={capital_cop}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Intereses"
                 size="small"
                 fullWidth
-                value={intereses}
+                value={intereses_cop}
               />
             </Grid>
-            <Grid item xs={12}  sm={2}>
+            <Grid item xs={12}  sm={2.5}>
               <TextField
                 label={<strong>Gran Total a Deber</strong>}
                 size="small"
                 fullWidth
-                value={total}
+                value={total_cop}
               />
             </Grid>
         </Stack>

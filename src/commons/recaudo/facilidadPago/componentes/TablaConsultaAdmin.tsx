@@ -46,7 +46,7 @@ export const TablaConsultaAdmin: React.FC = () => {
     {
       field: 'nombre_contribuyente',
       headerName: 'Nombre Contribuyente',
-      width: 250,
+      width: 400,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}

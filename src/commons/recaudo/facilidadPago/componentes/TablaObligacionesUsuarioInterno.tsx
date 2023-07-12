@@ -4,6 +4,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { type Obligacion } from '../interfaces/interfaces';
+import { faker } from '@faker-js/faker';
 
 interface RootState {
   obligaciones: {
@@ -78,21 +79,33 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
       field: 'monto_inicial',
       headerName: 'Valor Capital',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
     {
       field: 'valor_intereses',
       headerName: 'Valor Intereses',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
     {
       field: 'dias_mora',
@@ -122,9 +135,23 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
         selected.slice(selected_index + 1),
       );
     }
-
     set_selected(new_selected);
   };
+
+  const total_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
+
+  const capital_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(capital)
+
+  const intereses_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(intereses)
 
   useEffect(() => {
     let sub_capital = 0
@@ -170,7 +197,7 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
                 pageSize={10}
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
-                getRowId={(row) => row.nro_expediente}
+                getRowId={(row) => faker.database.mongodbObjectId()}
               />
             </Box>
           </Grid>
@@ -180,28 +207,28 @@ export const TablaObligacionesUsuarioInterno: React.FC = () => {
             spacing={2}
             sx={{ mt: '30px' }}
           >
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Capital"
                 size="small"
                 fullWidth
-                value={capital}
+                value={capital_cop}
               />
             </Grid>
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={2.5}>
               <TextField
                 label="Total Intereses"
                 size="small"
                 fullWidth
-                value={intereses}
+                value={intereses_cop}
               />
             </Grid>
-            <Grid item xs={12}  sm={2}>
+            <Grid item xs={12}  sm={2.5}>
               <TextField
                 label={<strong>Gran Total a Deber</strong>}
                 size="small"
                 fullWidth
-                value={total}
+                value={total_cop}
               />
             </Grid>
           </Stack>
