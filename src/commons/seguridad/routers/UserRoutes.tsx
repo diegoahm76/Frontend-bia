@@ -5,12 +5,13 @@ import { Page404 } from '../../../screens/404';
 import { DatosPersonalesScreen } from '../screens/DatosPersonalesScreen';
 import { DatosAccesoScreen } from '../screens/DatosAccesoScreen';
 import { NotificacionPage } from '../screens/NotificacionPage';
-
+import { IndicesElectronicos } from '../screens/IndicesElectronicos/IndicesElectronicos';
 
 const routes = [
   { path: '/autorizacion_notificacion', element: <NotificacionPage /> },
   { path: '/datos_personales', element: <DatosPersonalesScreen /> },
   { path: '/datos_acceso', element: <DatosAccesoScreen /> },
+  { path: '/indices_electronicos', element: <IndicesElectronicos /> }
 ];
 export const UserRoutes: React.FC = () => {
   return (
