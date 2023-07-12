@@ -195,7 +195,7 @@ const open_collapse_sbm2 = (
 };
 
 const open_collapse_sbm3 = (
-  obj: MenuElement,
+  // obj: MenuElement,
   key: number,
   key_modulo: number,
   key_submenu: number,
@@ -533,13 +533,14 @@ const open_collapse_sbm3 = (
                                         >
                                           <ListItemButton
                                             onClick={() => {
-                                              open_collapse_sbm3(
-                                                element,
+                                            /*  open_collapse_sbm3(
+                                                
                                                 indexStore,
                                                 indexMenu,
                                                 indexSubmenuMenu,
                                                 indexElement,
-                                              );
+                                              ); */
+                                              open_collapse_sbm3(indexSubmenuMenu, indexStore, indexMenu, indexElement)
                                             }}
                                           >
                                             <ListItemText
