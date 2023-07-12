@@ -17,6 +17,7 @@ export interface INursery {
   genera_bajas: IObjGenerarBaja[];
   current_genera_baja: IObjGenerarBaja;
   insumos: IObjBien[];
+  insumos_aux: IObjBien[];
   current_insumo: IObjBien;
   bienes_bajas: IObjBienBaja[];
   current_bien_baja: IObjBienBaja;
@@ -129,6 +130,7 @@ export interface IObjHistoricoViveristas {
   observaciones: string | null;
   id_persona: number | null;
   id_persona_cambia: number | null;
+  id_vivero: number | null;
 }
 export interface IObjBuscarNuevoViverista {
   id_persona?: number | null;
@@ -178,6 +180,7 @@ export interface IObjBienBaja {
   cod_etapa_lote?: string | null;
   consec_cuaren_por_lote_etapa?: number | null;
   nombre_bien?: string | null;
+  nombre?: string | null;
   codigo_bien?: string | null;
   cod_tipo_elemento_vivero?: string | null;
   tipo_bien?: string | null;

@@ -35,20 +35,18 @@ const SeleccionarTraslado = ({
   set_open_modal,
 }: IProps) => {
   const dispatch = useAppDispatch();
-  const { current_transfer, transfers_nurseries, nurseries } = useAppSelector(
-    (state) => state.distribucion
-  );
+  const { current_transfer, transfers_nurseries, nurseries, origin_nursery } =
+    useAppSelector((state) => state.distribucion);
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
   const [file, set_file] = useState<any>(null);
   const [file_name, set_file_name] = useState<any>('');
 
   const columns_traslado: GridColDef[] = [
-    { field: 'id_traslado', headerName: 'ID', width: 20 },
     {
       field: 'nro_traslado',
       headerName: 'Número de traslado',
-      width: 200,
+      width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -58,7 +56,7 @@ const SeleccionarTraslado = ({
     {
       field: 'id_vivero_origen',
       headerName: 'Vivero de origen',
-      width: 350,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {nurseries.find((p) => p.id_vivero === params.value)?.nombre ?? ''}
@@ -68,7 +66,7 @@ const SeleccionarTraslado = ({
     {
       field: 'id_vivero_destino',
       headerName: 'Vivero de destino',
-      width: 350,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {nurseries.find((p) => p.id_vivero === params.value)?.nombre ?? ''}
@@ -78,7 +76,7 @@ const SeleccionarTraslado = ({
     {
       field: 'fecha_traslado',
       headerName: 'Fecha de traslado',
-      width: 200,
+      width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {new Date(params.value).toDateString()}
@@ -89,7 +87,7 @@ const SeleccionarTraslado = ({
     {
       field: 'traslado_anulado',
       headerName: 'Estado de traslado',
-      width: 200,
+      width: 150,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.traslado_anulado ? (
@@ -107,7 +105,7 @@ const SeleccionarTraslado = ({
     {
       field: 'observaciones',
       headerName: 'Observación',
-      width: 350,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -140,7 +138,7 @@ const SeleccionarTraslado = ({
   }, [file]);
 
   useEffect(() => {
-    if (current_transfer.id_traslado !== null) {
+    if (current_transfer.ruta_archivo_soporte !== null) {
       if (typeof current_transfer.ruta_archivo_soporte === 'string') {
         const name =
           current_transfer.ruta_archivo_soporte?.split('/').pop() ?? '';
@@ -189,27 +187,28 @@ const SeleccionarTraslado = ({
             {
               datum_type: 'select_controller',
               xs: 12,
-              md: 6,
+              md: 5,
               control_form: control_traslado,
               control_name: 'id_vivero_origen',
               default_value: '',
               rules: {
                 required_rule: {
                   rule: true,
-                  message: 'Vivero origen requerido',
+                  message: 'Debe seleccionar vivero origen',
                 },
               },
               label: 'Vivero de origen',
-              disabled: current_transfer.id_traslado !== null,
+              disabled: origin_nursery.id_vivero !== null,
               helper_text: 'Seleccione vivero de origen',
               select_options: origin_nursery_list,
               option_label: 'nombre',
               option_key: 'id_vivero',
+              auto_focus: true,
             },
             {
               datum_type: 'select_controller',
               xs: 12,
-              md: 6,
+              md: 4,
               control_form: control_traslado,
               control_name: 'id_vivero_destino',
               default_value: '',
@@ -246,7 +245,7 @@ const SeleccionarTraslado = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 5,
               control_form: control_traslado,
               control_name: 'persona_traslada',
               default_value: '',
@@ -257,14 +256,31 @@ const SeleccionarTraslado = ({
               helper_text: '',
             },
             {
+              datum_type: 'date_picker_controller',
+              xs: 12,
+              md: 2,
+              control_form: control_traslado,
+              control_name: 'fecha_traslado',
+              default_value: '',
+              rules: {
+                required_rule: { rule: true, message: 'Fecha requerida' },
+              },
+              label: 'Fecha de traslado',
+              disabled: true,
+              helper_text: '',
+              min_date: null,
+              max_date: null,
+              format: 'YYYY/MM/DD',
+            },
+            {
               datum_type: 'input_file_controller',
               xs: 12,
-              md: 3,
+              md: 5,
               control_form: control_traslado,
               control_name: 'ruta_archivo_soporte',
               default_value: '',
               rules: {
-                required_rule: { rule: false, message: 'Archivo requerido' },
+                required_rule: { rule: true, message: 'Archivo requerido' },
               },
               label: 'Archivo de soporte',
               disabled: false,
@@ -276,19 +292,7 @@ const SeleccionarTraslado = ({
                   ? current_transfer.ruta_archivo_soporte ?? null
                   : null,
             },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 3,
-              control_form: control_traslado,
-              control_name: 'fecha_traslado',
-              default_value: '',
-              rules: { required_rule: { rule: false, message: 'Requerido' } },
-              label: 'Fecha de traslado',
-              type: 'text',
-              disabled: true,
-              helper_text: '',
-            },
+
             {
               datum_type: 'input_controller',
               xs: 12,
@@ -323,8 +327,8 @@ const SeleccionarTraslado = ({
                 },
               },
               label: 'Vivero de origen',
-              disabled: current_transfer.id_traslado !== null,
-              helper_text: 'Seleccione vivero origen',
+              disabled: true,
+              helper_text: '',
               select_options: origin_nursery_list,
               option_label: 'nombre',
               option_key: 'id_vivero',

@@ -264,7 +264,6 @@ const DespachoScreen = () => {
       const fecha_despacho = new Date(data.fecha_despacho ?? '');
       const diferencia_ms = fecha_actual.getTime() - fecha_despacho.getTime();
       const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
-      console.log(diferencia_dias);
       if (diferencia_dias <= 9) {
         set_action('editar');
 
@@ -440,105 +439,106 @@ const DespachoScreen = () => {
             variant_button={'contained'}
           />
         </Grid>
-        {current_solicitud.id_solicitud_vivero !== null && (
-          <Grid item xs={12} md={4}>
-            <AnularEliminar
-              action={
-                current_solicitud.solicitud_abierta === true
-                  ? 'Cerrar por no disponibilidad'
-                  : 'Detalle del cierre'
-              }
-              button_icon_class={<Block />}
-              button_disabled={false}
-              modal_title={
-                current_solicitud.solicitud_abierta === true
-                  ? 'Cerrar solicitud'
-                  : 'Detalle del cierre de solicitud por no disponibilidad'
-              }
-              button_submit_label={'Cierre de solicitud'}
-              button_submit_disabled={
-                !(current_solicitud.solicitud_abierta === true)
-              }
-              button_submit_icon_class={<Block />}
-              button_submit_action={handle_submit_solicitud(on_submit_closed)}
-              modal_inputs={[
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_solicitud_aprobada,
-                  control_name: 'nro_solicitud',
-                  default_value: '',
-                  rules: {},
-                  label: 'Número de solicitud',
-                  type: 'number',
+        {current_solicitud.id_solicitud_vivero !== null &&
+          current_despacho.id_despacho_viveros === null && (
+            <Grid item xs={12} md={4}>
+              <AnularEliminar
+                action={
+                  current_solicitud.solicitud_abierta === true
+                    ? 'Cerrar por no disponibilidad'
+                    : 'Detalle del cierre'
+                }
+                button_icon_class={<Block />}
+                button_disabled={false}
+                modal_title={
+                  current_solicitud.solicitud_abierta === true
+                    ? 'Cerrar solicitud'
+                    : 'Detalle del cierre de solicitud por no disponibilidad'
+                }
+                button_submit_label={'Cierre de solicitud'}
+                button_submit_disabled={
+                  !(current_solicitud.solicitud_abierta === true)
+                }
+                button_submit_icon_class={<Block />}
+                button_submit_action={handle_submit_solicitud(on_submit_closed)}
+                modal_inputs={[
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 4,
+                    control_form: control_solicitud_aprobada,
+                    control_name: 'nro_solicitud',
+                    default_value: '',
+                    rules: {},
+                    label: 'Número de solicitud',
+                    type: 'number',
 
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'input_controller',
-                  person: true,
-                  xs: 12,
-                  md: 4,
-                  control_form: control_solicitud_aprobada,
-                  control_name: 'persona_cierra',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Debe seleccionar la personas que la creó',
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    person: true,
+                    xs: 12,
+                    md: 4,
+                    control_form: control_solicitud_aprobada,
+                    control_name: 'persona_cierra',
+                    default_value: '',
+                    rules: {
+                      required_rule: {
+                        rule: true,
+                        message: 'Debe seleccionar la personas que la creó',
+                      },
                     },
-                  },
-                  label: 'Cierre realizado por',
-                  type: 'text',
+                    label: 'Cierre realizado por',
+                    type: 'text',
 
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'date_picker_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_solicitud_aprobada,
-                  control_name:
-                    current_solicitud.solicitud_anulada_solicitante === true
-                      ? 'fecha_cierre_no_dispo'
-                      : 'fecha',
-                  default_value: new Date().toString(),
-                  rules: {
-                    required_rule: { rule: true, message: 'Requerido' },
+                    disabled: true,
+                    helper_text: '',
                   },
-                  label: 'Fecha actual',
-                  type: 'text',
-
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 12,
-                  control_form: control_solicitud_aprobada,
-                  control_name: 'observacion_cierre_no_dispo_viveros',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Observación requerida',
+                  {
+                    datum_type: 'date_picker_controller',
+                    xs: 12,
+                    md: 4,
+                    control_form: control_solicitud_aprobada,
+                    control_name:
+                      current_solicitud.solicitud_anulada_solicitante === true
+                        ? 'fecha_cierre_no_dispo'
+                        : 'fecha',
+                    default_value: new Date().toString(),
+                    rules: {
+                      required_rule: { rule: true, message: 'Requerido' },
                     },
+                    label: 'Fecha actual',
+                    type: 'text',
+
+                    disabled: true,
+                    helper_text: '',
                   },
-                  label: 'Observación',
-                  type: 'text',
-                  multiline_text: true,
-                  rows_text: 4,
-                  disabled: false,
-                  helper_text: '',
-                },
-              ]}
-            />
-          </Grid>
-        )}
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 12,
+                    control_form: control_solicitud_aprobada,
+                    control_name: 'observacion_cierre_no_dispo_viveros',
+                    default_value: '',
+                    rules: {
+                      required_rule: {
+                        rule: true,
+                        message: 'Observación requerida',
+                      },
+                    },
+                    label: 'Observación',
+                    type: 'text',
+                    multiline_text: true,
+                    rows_text: 4,
+                    disabled: false,
+                    helper_text: '',
+                  },
+                ]}
+              />
+            </Grid>
+          )}
         {current_despacho.id_despacho_viveros !== null && (
           <Grid item xs={12} md={3}>
             <AnularEliminar

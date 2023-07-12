@@ -42,9 +42,11 @@ const SeleccionarBajasBienes = () => {
   } = useAppSelector((state) => state.nursery);
 
   const dispatch = useAppDispatch();
-
+  const fecha_actual = new Date();
+  const fecha_baja = new Date(current_genera_baja.fecha_baja ?? '');
+  const diferencia_ms = fecha_actual.getTime() - fecha_baja.getTime();
+  const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
   const columns_bienes: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
       headerName: 'Código',
@@ -92,7 +94,6 @@ const SeleccionarBajasBienes = () => {
   ];
 
   const columns_bienes_baja: GridColDef[] = [
-    { field: 'id_item_baja_viveros', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
       headerName: 'Código',
@@ -104,7 +105,7 @@ const SeleccionarBajasBienes = () => {
       ),
     },
     {
-      field: 'nombre_bien',
+      field: 'nombre',
       headerName: 'Nombre',
       width: 150,
       renderCell: (params) => (
@@ -153,7 +154,7 @@ const SeleccionarBajasBienes = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          <Tooltip title="Editar">
+          {/* <Tooltip title="Editar">
             <IconButton
               onClick={() => {
                 edit_bien_baja(params.row);
@@ -173,7 +174,7 @@ const SeleccionarBajasBienes = () => {
                 />
               </Avatar>
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
 
           <Tooltip title="Borrar">
             <IconButton
@@ -248,12 +249,6 @@ const SeleccionarBajasBienes = () => {
         const bien: IObjBienBaja | undefined = aux_insumos.find(
           (p) => p.id_bien === current_insumo.id_bien
         );
-        let asignada = 0;
-        aux_insumos.forEach((option) => {
-          if (option.id_bien !== bien?.id_bien) {
-            asignada = asignada + (option.cantidad_baja ?? 0);
-          }
-        });
 
         if (
           (data.cantidad_baja ?? 0) <= (current_insumo.saldo_disponible ?? 0)
@@ -263,7 +258,7 @@ const SeleccionarBajasBienes = () => {
             id_baja: current_genera_baja.id_baja ?? null,
             id_bien: current_insumo.id_bien,
             cantidad_baja: Number(data.cantidad_baja),
-            nombre_bien: current_insumo.nombre,
+            nombre: current_insumo.nombre,
             codigo_bien: current_insumo.codigo_bien,
             observaciones: data.observaciones,
             tipo_bien: current_insumo.tipo_bien,
@@ -329,33 +324,46 @@ const SeleccionarBajasBienes = () => {
     }
   };
 
-  const edit_bien_baja = (item: IObjBienBaja): void => {
-    set_action('editar');
-    const bien: IObjBien | undefined = insumos.find(
-      (p: IObjBien) => p.id_bien === item.id_bien
-    );
-    const item_bien = aux_insumos.find((p) => p.id_bien === item.id_bien);
-    reset_baja(item_bien);
-    const aux_items: IObjBienBaja[] = [];
-    aux_insumos.forEach((option) => {
-      if (option.id_bien !== item.id_bien) {
-        aux_items.push(option);
-      }
-    });
-    if (bien !== undefined) {
-      dispatch(set_current_insumo(bien));
-    }
-    set_aux_insumos(aux_items);
-  };
+  // const edit_bien_baja = (item: IObjBienBaja): void => {
+  //   set_action('editar');
+  //   const bien: IObjBien | undefined = insumos.find(
+  //     (p: IObjBien) => p.id_bien === item.id_bien
+  //   );
+  //   reset_baja(item);
+  //   const aux_items: IObjBienBaja[] = [];
+  //   aux_insumos.forEach((option) => {
+  //     if (option.id_bien !== item.id_bien) {
+  //       aux_items.push(option);
+  //     }
+  //   });
+  //   if (bien !== undefined) {
+  //     const restante =
+  //       (bien.saldo_disponible ?? 0) + (item?.cantidad_baja ?? 0);
+  //     if (item.id_item_baja_viveros !== null) {
+  //       dispatch(set_current_insumo({ ...bien, saldo_disponible: restante }));
+  //     } else {
+  //       dispatch(set_current_insumo(bien));
+  //     }
+  //   }
+  //   set_aux_insumos(aux_items);
+  // };
 
   const delete_bien_baja = (item: IObjBienBaja): void => {
     const bien: IObjBien | undefined = insumos.find(
       (p: IObjBien) => p.id_bien === item.id_bien
     );
     if (bien !== undefined) {
-      dispatch(set_current_insumo(bien));
+      const restante =
+        (bien.saldo_disponible ?? 0) + (item?.cantidad_baja ?? 0);
+      if (item.id_item_baja_viveros !== null) {
+        dispatch(set_current_insumo({ ...bien, saldo_disponible: restante }));
+      } else {
+        dispatch(set_current_insumo(bien));
+      }
     }
     reset_baja({
+      ...item,
+      id_item_baja_viveros: null,
       id_bien: bien?.id_bien,
       cantidad_baja: null,
       observaciones: null,
@@ -379,11 +387,12 @@ const SeleccionarBajasBienes = () => {
           models={insumos}
           get_filters_models={get_bienes}
           set_models={set_insumos}
+          button_submit_disabled={current_nursery.id_vivero === null}
           button_submit_label="Buscar insumo"
           form_inputs={[
             {
               datum_type: 'title',
-              title_label: 'Seleccionar bien',
+              title_label: 'Seleccionar insumo',
             },
             {
               datum_type: 'input_controller',
@@ -449,7 +458,7 @@ const SeleccionarBajasBienes = () => {
               },
               label: 'Cantidad a bajar',
               type: 'text',
-              disabled: false,
+              disabled: diferencia_dias > 2,
               helper_text: '',
             },
             {
@@ -556,7 +565,7 @@ const SeleccionarBajasBienes = () => {
               xs: 12,
               md: 3,
               control_form: control_bien,
-              control_name: 'nombre_bien',
+              control_name: 'nombre',
               default_value: '',
               rules: {},
               label: 'Nombre',

@@ -24,7 +24,9 @@ import {
   set_current_nursery,
   set_current_viverista,
   set_genera_bajas,
+  set_historicos_viveristas,
   set_insumos,
+  set_insumos_aux,
   set_nuevos_viveristas,
   set_persona,
   // current_nursery
@@ -169,6 +171,28 @@ export const get_nursery_service: any = (id: string | number) => {
       }
     } catch (error: any) {
       console.log('get_nursery_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener vivero por id
+export const get_historico_viverista_service: any = (id: string | number) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      if (id !== undefined) {
+        const { data } = await api.get(
+          `conservacion/viveros/historial-viverista-by-vivero/${id}/`
+        );
+        if ('data' in data) {
+          dispatch(set_historicos_viveristas(data.data));
+        } else {
+          dispatch(set_historicos_viveristas([]));
+        }
+        return data;
+      }
+    } catch (error: any) {
+      console.log('get_historico_viverista_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -421,9 +445,10 @@ export const get_viverista_document_service = (
       const { data } = await api.get(
         `conservacion/viveros/get-persona-viverista-nuevo-by-numero-documento/?tipo_documento=${type}&numero_documento=${document}`
       );
+      console.log(data);
       if ('data' in data) {
         if (data.data.length > 0) {
-          dispatch(set_current_nuevo_viverista(data.data));
+          dispatch(set_current_nuevo_viverista(data.data[0]));
           control_success('Se selecciono el viverista');
         } else {
           control_error('No se encontro el viverista');
@@ -691,6 +716,29 @@ export const get_bienes_service = (
       return data;
     } catch (error: any) {
       console.log('get_bienes_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+// Obtener bienes baja
+export const get_bienes_aux_service = (id_vivero: string | number): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      // const { data } = await api.get(`conservacion/camas-siembras/siembra/get-bienes-por-consumir-lupa/${id_vivero}/?codigo_bien=${codigo_bien ?? ""}&nombre=${nombre??""}&cod_tipo_elemento_vivero=`);
+
+      const { data } = await api.get(
+        `conservacion/bajas/busqueda-avanzada-bienes-bajas/${id_vivero}/`
+      );
+      dispatch(set_insumos_aux(data.data));
+      if (data.data.length > 0) {
+        control_success('Se encontrarón bienes');
+      } else {
+        control_error('No se encontrarón bienes');
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_bienes_aux_service');
       control_error(error.response.data.detail);
       return error as AxiosError;
     }

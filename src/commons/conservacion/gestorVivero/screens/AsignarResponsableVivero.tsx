@@ -12,6 +12,7 @@ import FormButton from '../../../../components/partials/form/FormButton';
 import SaveIcon from '@mui/icons-material/Save';
 import {
   asignar_viverista_service,
+  get_historico_viverista_service,
   get_nursery_service,
   get_viverista_id_service,
   get_viveros_viverista_service,
@@ -25,6 +26,9 @@ import {
 } from '../store/slice/viveroSlice';
 import { useParams } from 'react-router-dom';
 import Limpiar from '../../componentes/Limpiar';
+import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { type GridColDef } from '@mui/x-data-grid';
 
 interface Iasignar {
   accion_realizar: string | null;
@@ -53,11 +57,84 @@ export function AsignarResponsableViveroScreen(): JSX.Element {
     current_nursery,
     current_viverista,
     current_nuevo_viverista,
+    historicos_viveristas,
   } = useAppSelector((state) => state.nursery);
 
   const [nursery, set_nursery] = useState<IObjNursery>(current_nursery);
   const [action, set_action] = useState<string>('Reemplazar viverista');
 
+  const columns_historico: GridColDef[] = [
+    {
+      field: 'nombre_viverista',
+      headerName: 'Nombre viverista',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'tipo_documento',
+      headerName: 'tipo de documento',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'numero_documento',
+      headerName: 'Número de documento',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'fecha_inicio_periodo',
+      headerName: 'Fecha de inicio',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {new Date(params.value).toDateString()}
+        </div>
+      ),
+    },
+    {
+      field: 'fecha_fin_periodo',
+      headerName: 'Fecha de fin',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {new Date(params.value).toDateString()}
+        </div>
+      ),
+    },
+    {
+      field: 'nombre_persona_cambia',
+      headerName: 'Persona que cambia',
+      width: 250,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'observaciones',
+      headerName: 'Observación',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+  ];
   useEffect(() => {
     reset_asignar(initial_state_asignar);
     void dispatch(get_viveros_viverista_service());
@@ -87,6 +164,7 @@ export function AsignarResponsableViveroScreen(): JSX.Element {
 
   useEffect(() => {
     if (current_nursery.id_vivero !== null) {
+      void dispatch(get_historico_viverista_service(current_nursery.id_vivero));
       void dispatch(
         get_viverista_id_service(Number(current_nursery.id_vivero ?? 0))
       );
@@ -211,6 +289,7 @@ export function AsignarResponsableViveroScreen(): JSX.Element {
           rows_text={4}
           helper_text=""
         />
+
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
             <FormButton
@@ -227,6 +306,26 @@ export function AsignarResponsableViveroScreen(): JSX.Element {
               }
             />
           </Grid>
+          {historicos_viveristas.length > 0 && (
+            <Grid item xs={12} md={3}>
+              <BuscarModelo
+                set_current_model={null}
+                row_id={'id_histo_responsable_vivero'}
+                columns_model={columns_historico}
+                models={historicos_viveristas}
+                get_filters_models={null}
+                set_models={null}
+                button_submit_label="Ver historial"
+                form_inputs={[]}
+                modal_select_model_title="Historial de viveristas"
+                modal_form_filters={[]}
+                button_add_selection_hidden={true}
+                md_button={12}
+                button_icon_class={<PlaylistAddCheckIcon />}
+                border_show={false}
+              />
+            </Grid>
+          )}
           <Grid item xs={12} md={3}>
             <Limpiar
               dispatch={dispatch}

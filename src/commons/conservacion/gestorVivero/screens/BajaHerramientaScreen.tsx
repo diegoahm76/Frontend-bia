@@ -25,6 +25,7 @@ import { type AuthSlice } from '../../../auth/interfaces';
 import {
   add_baja_service,
   annul_baja_service,
+  control_error,
   edit_baja_service,
   get_bien_baja_id_service,
   get_nurseries_baja_service,
@@ -115,21 +116,31 @@ export function BajaHerramientaScreen(): JSX.Element {
       current_genera_baja.id_baja !== null &&
       current_genera_baja.id_baja !== undefined
     ) {
-      set_action('editar');
+      const fecha_actual = new Date();
+      const fecha_baja = new Date(data.fecha_baja ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_baja.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        set_action('editar');
 
-      const aux_items: IObjBienBaja[] = [];
-      bienes_bajas.forEach((element: IObjBienBaja, index: number) => {
-        aux_items.push({ ...element, nro_posicion: index });
-      });
-      const aux = {
-        info_baja: { ...data },
-        items_baja: aux_items,
-      };
-      console.log(aux);
-      form_data.append('info_baja', JSON.stringify({ ...data }));
-      form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
-      form_data.append('items_baja', JSON.stringify(aux_items));
-      void dispatch(edit_baja_service(form_data));
+        const aux_items: IObjBienBaja[] = [];
+        bienes_bajas.forEach((element: IObjBienBaja, index: number) => {
+          aux_items.push({ ...element, nro_posicion: index });
+        });
+        const aux = {
+          info_baja: { ...data },
+          items_baja: aux_items,
+        };
+        console.log(aux);
+        form_data.append('info_baja', JSON.stringify({ ...data }));
+        form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
+        form_data.append('items_baja', JSON.stringify(aux_items));
+        void dispatch(edit_baja_service(form_data));
+      } else {
+        control_error(
+          'Solo se pueden editar bajas hasta 30 dias despues de la fecha de baja'
+        );
+      }
     } else {
       set_action('crear');
       const fecha = new Date(data.fecha_baja ?? '').toISOString();
@@ -153,7 +164,17 @@ export function BajaHerramientaScreen(): JSX.Element {
       current_genera_baja.id_baja !== null &&
       current_genera_baja.id_baja !== undefined
     ) {
-      void dispatch(annul_baja_service(current_genera_baja.id_baja, data));
+      const fecha_actual = new Date();
+      const fecha_baja = new Date(data.fecha_baja ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_baja.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        void dispatch(annul_baja_service(current_genera_baja.id_baja, data));
+      } else {
+        control_error(
+          'Solo se pueden anular bajas hasta 2 dias despues de la fecha de baja'
+        );
+      }
     }
   };
 

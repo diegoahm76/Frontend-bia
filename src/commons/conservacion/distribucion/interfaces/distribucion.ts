@@ -8,6 +8,7 @@ export interface IDistribucion {
   transfers_nurseries: IObjTransfer[];
   current_transfer: IObjTransfer;
   goods: IObjGoods[];
+  goods_aux: IObjGoods[];
   current_good: IObjGoods;
   transfer_goods: IObjTransferGoods[];
   persons: Persona[];

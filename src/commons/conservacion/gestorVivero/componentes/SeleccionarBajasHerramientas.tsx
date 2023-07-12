@@ -20,6 +20,9 @@ interface IProps {
   open_modal: boolean;
   set_open_modal: any;
 }
+const max_date = new Date();
+const min_date = new Date();
+min_date.setDate(min_date.getDate() - 1);
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarBajasHerramientas = ({
   control_genera_bajas,
@@ -29,14 +32,18 @@ const SeleccionarBajasHerramientas = ({
 }: IProps) => {
   // const [action, set_action] = useState<string>("agregar");
 
-  const { genera_bajas, nurseries, current_genera_baja, persona } =
-    useAppSelector((state) => state.nursery);
+  const {
+    genera_bajas,
+    nurseries,
+    current_genera_baja,
+    persona,
+    current_nursery,
+  } = useAppSelector((state) => state.nursery);
   const dispatch = useAppDispatch();
   const [file, set_file] = useState<any>(null);
   const [file_name, set_file_name] = useState<any>('');
 
   const columns_baja: GridColDef[] = [
-    { field: 'id_baja', headerName: 'ID', width: 20 },
     {
       field: 'nro_baja_por_tipo',
       headerName: 'Número de baja',
@@ -122,10 +129,17 @@ const SeleccionarBajasHerramientas = ({
   }, [file]);
 
   useEffect(() => {
-    if (current_genera_baja.id_baja !== null) {
-      if (current_genera_baja.ruta_archivo_soporte !== null) {
-        set_file_name(current_genera_baja.ruta_archivo_soporte);
+    if (
+      current_genera_baja.ruta_archivo_soporte !== null &&
+      current_genera_baja.ruta_archivo_soporte !== undefined
+    ) {
+      if (typeof current_genera_baja.ruta_archivo_soporte === 'string') {
+        const name =
+          current_genera_baja.ruta_archivo_soporte?.split('/').pop() ?? '';
+        set_file_name(name);
       }
+    } else {
+      set_file_name('');
     }
   }, [current_genera_baja]);
 
@@ -162,14 +176,18 @@ const SeleccionarBajasHerramientas = ({
               control_name: 'id_vivero',
               default_value: '',
               rules: {
-                required_rule: { rule: true, message: 'Vivero requerido' },
+                required_rule: {
+                  rule: true,
+                  message: 'Debe seleccionar un vivero',
+                },
               },
               label: 'Vivero',
-              disabled: false,
+              disabled: current_nursery.id_vivero !== null,
               helper_text: 'Seleccione Vivero',
               select_options: nurseries,
               option_label: 'nombre',
               option_key: 'id_vivero',
+              auto_focus: true,
             },
             {
               datum_type: 'input_controller',
@@ -199,14 +217,63 @@ const SeleccionarBajasHerramientas = ({
               control_name: 'ruta_archivo_soporte',
               default_value: '',
               rules: {
-                required_rule: { rule: false, message: 'Archivo requerido' },
+                required_rule: { rule: true, message: 'Archivo requerido' },
               },
               label: 'Archivo de soporte',
               disabled: false,
               helper_text: '',
               set_value: set_file,
               file_name,
-              value: file,
+              value_file:
+                current_genera_baja.id_baja !== null
+                  ? current_genera_baja.ruta_archivo_soporte ?? null
+                  : null,
+            },
+            {
+              datum_type: 'input_controller',
+              xs: 12,
+              md: 8,
+              control_form: control_genera_bajas,
+              control_name: 'nombre_persona_baja',
+              default_value: '',
+              rules: {
+                required_rule: {
+                  rule: true,
+                  message: 'Debe seleccionar la personas que la creó',
+                },
+              },
+              label: 'Baja realizada por',
+              type: 'text',
+              disabled: true,
+              helper_text: '',
+            },
+            {
+              datum_type: 'date_picker_controller',
+              xs: 12,
+              md: 4,
+              control_form: control_genera_bajas,
+              control_name: 'fecha_baja',
+              default_value: '',
+              rules: {
+                required_rule: { rule: true, message: 'Fecha requerida' },
+                min_rule: {
+                  rule: new Date().setDate(new Date().getDate() - 30),
+                  message: `La fecha minima posible es 
+                  ${min_date.toString().slice(0, 16)}`,
+                },
+                max_rule: {
+                  rule: new Date(),
+                  message: `La fecha maxima posible es ${max_date
+                    .toString()
+                    .slice(0, 16)}`,
+                },
+              },
+              label: 'Fecha de baja',
+              disabled: current_genera_baja.id_baja !== null,
+              helper_text: '',
+              min_date,
+              max_date,
+              format: 'YYYY-MM-DD',
             },
             {
               datum_type: 'input_controller',
@@ -223,42 +290,6 @@ const SeleccionarBajasHerramientas = ({
               multiline_text: true,
               rows_text: 4,
               disabled: false,
-              helper_text: '',
-            },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 5,
-              control_form: control_genera_bajas,
-              control_name: 'nombre_persona_baja',
-              default_value: '',
-              rules: {
-                required_rule: {
-                  rule: true,
-                  message: 'Debe seleccionar la personas que la creó',
-                },
-              },
-              label: 'Baja realizada por',
-              type: 'text',
-              disabled: true,
-              helper_text: '',
-            },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 4,
-              control_form: control_genera_bajas,
-              control_name: 'fecha_baja',
-              default_value: '',
-              rules: {
-                required_rule: {
-                  rule: true,
-                  message: 'Debe seleccionar fecha',
-                },
-              },
-              label: 'Fecha de baja',
-              type: 'text',
-              disabled: true,
               helper_text: '',
             },
           ]}

@@ -142,6 +142,7 @@ const initial_state: IDistribucion = {
   transfers_nurseries: [],
   current_transfer: initial_state_transfer,
   goods: [],
+  goods_aux: [],
   current_good: initial_state_current_good,
   transfer_goods: [],
   persons: [],
@@ -196,6 +197,12 @@ export const distribucion_slice = createSlice({
 
     set_goods: (state: IDistribucion, action: PayloadAction<IObjGoods[]>) => {
       state.goods = action.payload;
+    },
+    set_goods_aux: (
+      state: IDistribucion,
+      action: PayloadAction<IObjGoods[]>
+    ) => {
+      state.goods_aux = action.payload;
     },
 
     set_current_good: (
@@ -295,4 +302,5 @@ export const {
   set_bien_selected,
   set_bienes_solicitud_aux,
   reset_state,
+  set_goods_aux,
 } = distribucion_slice.actions;

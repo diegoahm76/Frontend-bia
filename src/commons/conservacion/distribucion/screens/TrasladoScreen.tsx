@@ -17,10 +17,13 @@ import {
   edit_traslado_service,
   annul_transfer_service,
   get_nurseries_service,
+  control_error,
+  get_goods_aux_service,
 } from '../store/thunks/distribucionThunks';
 import SeleccionarTraslado from '../componentes/SeleccionarTraslado';
 import SeleccionarBienTraslado from '../componentes/SeleccionarBienTraslado';
 import {
+  initial_state_current_nursery,
   reset_state,
   set_destination_nursery,
   set_origin_nursery,
@@ -34,8 +37,13 @@ import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function TrasladoScreen(): JSX.Element {
-  const { current_transfer, transfer_person, nurseries, transfer_goods } =
-    useAppSelector((state) => state.distribucion);
+  const {
+    current_transfer,
+    transfer_person,
+    nurseries,
+    transfer_goods,
+    origin_nursery,
+  } = useAppSelector((state) => state.distribucion);
   const {
     control: control_traslado,
     handleSubmit: handle_submit,
@@ -98,6 +106,8 @@ export function TrasladoScreen(): JSX.Element {
       );
       if (vivero !== undefined) {
         dispatch(set_origin_nursery(vivero));
+        dispatch(set_destination_nursery(vivero));
+        void dispatch(get_goods_aux_service(String(vivero.id_vivero)));
         if (vivero.id_vivero === get_values('id_vivero_destino')) {
           set_values('id_vivero_destino', null);
         }
@@ -109,7 +119,11 @@ export function TrasladoScreen(): JSX.Element {
           aux_items.splice(indice, 1);
           set_aux_nurseries_destination(aux_items);
         }
+      } else {
+        dispatch(set_origin_nursery(initial_state_current_nursery));
       }
+    } else {
+      dispatch(set_origin_nursery(initial_state_current_nursery));
     }
   }, [watch('id_vivero_origen')]);
 
@@ -119,7 +133,6 @@ export function TrasladoScreen(): JSX.Element {
         (p: IObjNursery) => p.id_vivero === watch('id_vivero_destino')
       );
       if (vivero !== undefined) {
-        dispatch(set_destination_nursery(vivero));
         if (vivero.id_vivero === get_values('id_vivero_origen')) {
           set_values('id_vivero_origen', null);
         }
@@ -141,15 +154,25 @@ export function TrasladoScreen(): JSX.Element {
       current_transfer.id_traslado !== null &&
       current_transfer.id_traslado !== undefined
     ) {
-      set_action('editar');
-      const aux_items: IObjTransferGoods[] = [];
-      transfer_goods.forEach((element, index) => {
-        aux_items.push({ ...element, nro_posicion: index });
-      });
-      form_data.append('info_traslado', JSON.stringify({ ...data }));
-      form_data.append('items_traslado', JSON.stringify(aux_items));
-      form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
-      void dispatch(edit_traslado_service(form_data));
+      const fecha_actual = new Date();
+      const fecha_traslado = new Date(data.fecha_traslado ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_traslado.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        set_action('editar');
+        const aux_items: IObjTransferGoods[] = [];
+        transfer_goods.forEach((element, index) => {
+          aux_items.push({ ...element, nro_posicion: index });
+        });
+        form_data.append('info_traslado', JSON.stringify({ ...data }));
+        form_data.append('items_traslado', JSON.stringify(aux_items));
+        form_data.append('ruta_archivo_soporte', data.ruta_archivo_soporte);
+        void dispatch(edit_traslado_service(form_data));
+      } else {
+        control_error(
+          'Solo se pueden editar traslados hasta 30 dias despues de la fecha de traslado'
+        );
+      }
     } else {
       console.log('crear');
       set_action('crear');
@@ -225,7 +248,7 @@ export function TrasladoScreen(): JSX.Element {
               icon_class={<SearchIcon />}
               label={'Buscar traslado'}
               type_button="button"
-              disabled={false}
+              disabled={origin_nursery.id_vivero === null}
             />
           </Grid>
           <Grid item xs={12} md={3}>

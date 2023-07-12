@@ -35,14 +35,24 @@ const SeleccionarSolicitudAprobada = ({
     useAppSelector(
       (state: { solicitud_vivero: any }) => state.solicitud_vivero
     );
+  const { origin_nursery } = useAppSelector((state) => state.distribucion);
 
   const [file_name, set_file_name] = useState<string>('');
   const columns_solicitudes: GridColDef[] = [
-    { field: 'id_solicitud_consumibles', headerName: 'ID', width: 20 },
+    {
+      field: 'nro_solicitud',
+      headerName: 'Número de solicitud',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
     {
       field: 'fecha_solicitud',
       headerName: 'Fecha de solicitud',
-      width: 200,
+      width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {new Date(params.value).toDateString()}
@@ -81,13 +91,14 @@ const SeleccionarSolicitudAprobada = ({
     },
   ];
   useEffect(() => {
-    if (
-      current_solicitud.id_solicitud_vivero !== null &&
-      current_solicitud.id_solicitud_vivero !== undefined
-    ) {
-      if (current_solicitud.ruta_archivo_info_tecnico !== null) {
-        set_file_name(String(current_solicitud.ruta_archivo_info_tecnico));
+    if (current_solicitud.ruta_archivo_info_tecnico !== null) {
+      if (typeof current_solicitud.ruta_archivo_info_tecnico === 'string') {
+        const name =
+          current_solicitud.ruta_archivo_info_tecnico?.split('/').pop() ?? '';
+        set_file_name(name);
       }
+    } else {
+      set_file_name('');
     }
   }, [current_solicitud]);
 
@@ -101,6 +112,9 @@ const SeleccionarSolicitudAprobada = ({
           models={solicitudes}
           get_filters_models={function_search}
           set_models={set_solicitudes}
+          button_submit_disabled={
+            despacho ?? false ? origin_nursery.id_vivero === null : false
+          }
           button_submit_label={
             despacho ?? false ? 'Buscar solicitud' : 'Seleccionar solicitud'
           }
@@ -136,7 +150,7 @@ const SeleccionarSolicitudAprobada = ({
               rules: {},
               label: 'Vivero Origen',
               disabled: true,
-              helper_text: 'Debe seleccionar campo',
+              helper_text: '',
               select_options: nurseries,
               option_label: 'nombre',
               option_key: 'id_vivero',
@@ -156,18 +170,23 @@ const SeleccionarSolicitudAprobada = ({
               disabled: true,
               helper_text: '',
             },
+
             {
-              datum_type: 'input_controller',
+              datum_type: 'date_picker_controller',
               xs: 12,
               md: 4,
               control_form: control_solicitud_aprobada,
               control_name: 'fecha_solicitud',
               default_value: '',
-              rules: {},
-              label: 'Fecha de ingreso',
-              type: 'text',
+              rules: {
+                required_rule: { rule: true, message: 'Fecha requerida' },
+              },
+              label: 'Fecha de solicitud',
               disabled: true,
               helper_text: '',
+              min_date: null,
+              max_date: null,
+              format: 'YYYY/MM/DD',
             },
             {
               datum_type: 'date_picker_controller',
@@ -176,12 +195,15 @@ const SeleccionarSolicitudAprobada = ({
               control_form: control_solicitud_aprobada,
               control_name: 'fecha_retiro_material',
               default_value: '',
-              rules: {},
+              rules: {
+                required_rule: { rule: true, message: 'Fecha requerida' },
+              },
               label: 'Fecha de retiro material',
               disabled: true,
-              min_date: new Date().toString(),
-              format: 'YYYY-MM-DD',
               helper_text: '',
+              min_date: null,
+              max_date: null,
+              format: 'YYYY/MM/DD',
             },
             {
               datum_type: 'input_file_controller',
@@ -197,9 +219,12 @@ const SeleccionarSolicitudAprobada = ({
               disabled: true,
               helper_text: '',
               set_value: null,
-              file_name: file_name,
+              file_name,
+              value_file:
+                current_solicitud.id_solicitud_vivero !== null
+                  ? current_solicitud.ruta_archivo_info_tecnico ?? null
+                  : null,
             },
-
             {
               datum_type: 'input_controller',
               xs: 12,
@@ -240,7 +265,7 @@ const SeleccionarSolicitudAprobada = ({
               rules: {},
               label: 'Unidad organizacional',
               disabled: true,
-              helper_text: 'Debe seleccionar campo',
+              helper_text: '',
               select_options: unidad_organizacional,
               option_label: 'nombre',
               option_key: 'id_unidad_organizacional',

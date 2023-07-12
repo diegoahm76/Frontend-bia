@@ -101,6 +101,7 @@ const initial_state_current_historico_viverista: IObjHistoricoViveristas = {
   observaciones: '',
   id_persona: null,
   id_persona_cambia: null,
+  id_vivero: null,
 };
 
 export const initial_state_current_viverista_actual: IObjViveristaActual = {
@@ -172,6 +173,7 @@ const initial_state: INursery = {
   bienes_bajas: [],
   current_bien_baja: initial_state_current_bien_baja,
   insumos: [],
+  insumos_aux: [],
   current_insumo: initial_state_current_insumo,
   persona: initial_state_person,
 };
@@ -284,6 +286,9 @@ export const nursery_slice = createSlice({
     set_insumos: (state: INursery, action: PayloadAction<IObjBien[]>) => {
       state.insumos = action.payload;
     },
+    set_insumos_aux: (state: INursery, action: PayloadAction<IObjBien[]>) => {
+      state.insumos_aux = action.payload;
+    },
     set_current_insumo: (state: INursery, action: PayloadAction<IObjBien>) => {
       state.current_insumo = action.payload;
     },
@@ -322,4 +327,5 @@ export const {
   set_current_nursery,
   set_persona,
   reset_state,
+  set_insumos_aux,
 } = nursery_slice.actions;

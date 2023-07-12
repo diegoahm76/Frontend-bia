@@ -47,6 +47,7 @@ interface IProps {
   modal_active_init?: boolean | null;
   open_search_modal?: boolean | null;
   set_open_search_modal?: any | null;
+  border_show?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -80,6 +81,7 @@ const BuscarModelo = ({
   modal_active_init,
   open_search_modal,
   set_open_search_modal,
+  border_show,
 }: IProps) => {
   const [select_model_is_active, set_select_model_is_active] =
     useState<boolean>(false);
@@ -254,12 +256,12 @@ const BuscarModelo = ({
   return (
     <Grid
       container
-      spacing={2}
       direction="row"
-      border={1}
+      spacing={border_show ?? true ? 2 : 0}
+      border={border_show ?? true ? 1 : 0}
       borderColor="lightgray"
-      padding={2}
-      borderRadius={2}
+      padding={border_show ?? true ? 2 : 0}
+      borderRadius={border_show ?? true ? 2 : 0}
     >
       {(show_inputs ?? true) && (
         <>

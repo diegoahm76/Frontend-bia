@@ -645,22 +645,26 @@ const CrearViveroDialogForm = ({
                 ) : (
                   <Chip
                     label={
-                      <>
-                        El vivero se encuentra cerrado desde el dia{' '}
-                        {String(
-                          current_nursery.fecha_cierre_actual ??
-                            current_nursery.fecha_creacion
-                        ).slice(0, 10)}{' '}
-                        <a
-                          href={`#/app/conservacion/gestor_vivero/apertura_cierre_detalle/${
-                            current_nursery.id_vivero ?? ''
-                          }/`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          más información
-                        </a>
-                      </>
+                      current_nursery.fecha_cierre_actual === null ? (
+                        'El vivero nunca ha sido abierto'
+                      ) : (
+                        <>
+                          El vivero se encuentra cerrado desde el dia{' '}
+                          {String(current_nursery.fecha_cierre_actual).slice(
+                            0,
+                            10
+                          )}{' '}
+                          <a
+                            href={`#/app/conservacion/gestor_vivero/apertura_cierre_detalle/${
+                              current_nursery.id_vivero ?? ''
+                            }/`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            más información
+                          </a>
+                        </>
+                      )
                     }
                     color="error"
                     variant="outlined"

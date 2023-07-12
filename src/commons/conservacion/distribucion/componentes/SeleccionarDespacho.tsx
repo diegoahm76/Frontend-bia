@@ -78,11 +78,10 @@ const SeleccionarDespacho = ({
   // }, []);
 
   const columns_despacho: GridColDef[] = [
-    { field: 'id_despacho_viveros', headerName: 'ID', width: 20 },
     {
       field: 'nro_despachos_viveros',
       headerName: 'Numero de despacho',
-      width: 200,
+      width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -92,7 +91,7 @@ const SeleccionarDespacho = ({
     {
       field: 'nro_solicitud_a_viveros',
       headerName: 'Numero de solicitud',
-      width: 200,
+      width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -102,7 +101,7 @@ const SeleccionarDespacho = ({
     {
       field: 'fecha_despacho',
       headerName: 'Fecha de despacho',
-      width: 200,
+      width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {new Date(params.value).toDateString()}
@@ -112,7 +111,7 @@ const SeleccionarDespacho = ({
     {
       field: 'despacho_anulado',
       headerName: 'Estado de despacho',
-      width: 200,
+      width: 150,
       renderCell: (params) => {
         // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
         return params.row.despacho_anulado ? (
@@ -126,6 +125,16 @@ const SeleccionarDespacho = ({
           />
         );
       },
+    },
+    {
+      field: 'motivo',
+      headerName: 'Observación',
+      width: 200,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
     },
   ];
 
@@ -239,7 +248,7 @@ const SeleccionarDespacho = ({
               control_name: 'ruta_archivo_con_recibido',
               default_value: '',
               rules: {
-                required_rule: { rule: false, message: 'Archivo requerido' },
+                required_rule: { rule: true, message: 'Archivo requerido' },
               },
               label: 'Archivo de entrega',
               disabled: false,
@@ -295,7 +304,7 @@ const SeleccionarDespacho = ({
               helper_text: '',
               min_date,
               max_date,
-              format: 'YYYY/MM/DD',
+              format: 'YYYY-MM-DD',
             },
 
             {
@@ -308,7 +317,7 @@ const SeleccionarDespacho = ({
               rules: {
                 required_rule: { rule: true, message: 'Observación requerida' },
               },
-              label: 'observaciones',
+              label: 'Observaciones',
               type: 'text',
               multiline_text: true,
               rows_text: 4,

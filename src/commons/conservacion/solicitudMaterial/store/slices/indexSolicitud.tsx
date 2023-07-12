@@ -14,7 +14,7 @@ import {
 
 const fecha = new Date();
 fecha.setDate(fecha.getDate() + 10);
-const initial_state_current_solicitud: IObjSolicitudVivero = {
+export const initial_state_current_solicitud: IObjSolicitudVivero = {
   id_solicitud_vivero: null,
   nro_solicitud: null,
   fecha_solicitud: new Date().toString(),
@@ -70,7 +70,7 @@ const initial_state_current_bien: IObjBienConsumo = {
   codigo_bien: '',
 };
 
-const initial_state_current_funcionario: IObjFuncionario = {
+export const initial_state_current_funcionario: IObjFuncionario = {
   id_persona: null,
   tipo_documento: '',
   numero_documento: null,

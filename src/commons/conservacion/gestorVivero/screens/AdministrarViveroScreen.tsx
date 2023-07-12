@@ -93,7 +93,6 @@ export function AdministrarViveroScreen(): JSX.Element {
   // const [filterednurseries, setfilterednurseries] = useState<any[]>(nurseries);
 
   const columns: GridColDef[] = [
-    { field: 'id_vivero', headerName: 'ID', width: 20 },
     {
       field: 'nombre',
       headerName: 'Nombre',
