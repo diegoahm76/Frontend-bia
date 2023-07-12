@@ -18,7 +18,8 @@ export const initial_state_format_documental_type = {
     value: 0,
     'cod-tipo-medio': ''
   },
-  nombre: ''
+  nombre: '',
+  activo: true,
 };
 
 /* export const data_searched_trd_trd: SearchedTRD = {

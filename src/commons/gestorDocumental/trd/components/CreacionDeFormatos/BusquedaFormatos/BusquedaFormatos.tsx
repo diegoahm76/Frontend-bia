@@ -21,7 +21,12 @@ import {
   IconButton,
   TextField,
   Avatar,
-  Chip
+  Chip,
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+  Typography,
+  Tooltip
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
@@ -44,6 +49,7 @@ import {
 } from '../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columsTRD } from './utils/colums';
 import { options_search_trd } from './utils/options';
+import InfoIcon from '@mui/icons-material/Info';
 
 export const AdmnistrarFormatos = (): JSX.Element => {
   //! I create a new variable called dispatch of type any
@@ -103,22 +109,20 @@ export const AdmnistrarFormatos = (): JSX.Element => {
   };
 
   // ?  function that allow us to delete a format documental type
-  const deleteFormat = ({
+  const deleteFormat = async ({
     row: { id_formato_tipo_medio, cod_tipo_medio_doc }
   }: any) => {
-    dispatch(delete_formato_by_tipo_medio_service(id_formato_tipo_medio)).then(
-      () => {
-        dispatch(
-          get_formatos_by_tipo_medio_by_format_and_name(
-            '', //* format, it is empty because i want all the formats that match the cod_tipo_medio_doc to avoid confusions
-            cod_tipo_medio_doc
-          )
-        );
-      }
-    );
-
-    console.log(id_formato_tipo_medio);
-    console.log(`deleting format`);
+    try {
+      await dispatch(
+        delete_formato_by_tipo_medio_service(id_formato_tipo_medio)
+      );
+      await dispatch(
+        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+      );
+      console.log(`format deleted: ${id_formato_tipo_medio}`);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   //! this code allow us to create the colums in the grid that will be displayed in the modal
@@ -144,7 +148,20 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       maxWidth: 135,
       flex: 1,
       renderCell: (params: any) =>
-        params.row.registro_precargado === true ? (
+        params.row.registro_precargado ? (
+          <Chip label="Si" color="error" variant="outlined" />
+        ) : (
+          <Chip label="No" color="info" variant="outlined" />
+        )
+    },
+    {
+      headerName: 'Activo',
+      field: 'activo',
+      minWidth: 130,
+      maxWidth: 135,
+      flex: 1,
+      renderCell: (params: any) =>
+        params.row.activo ? (
           <Chip label="Si" color="error" variant="outlined" />
         ) : (
           <Chip label="No" color="info" variant="outlined" />
@@ -162,6 +179,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
           <>
             <IconButton
               onClick={() => {
+                set_title_button('Actualizar');
                 console.log('params edit formato', params.row);
               }}
             >
@@ -174,7 +192,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
             </IconButton>
             <IconButton
               onClick={() => {
-                deleteFormat(params);
+                void deleteFormat(params);
               }}
             >
               <Avatar sx={AvatarStyles} variant="rounded">
@@ -294,6 +312,77 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   />
                 )}
               />
+              {title_button === 'Actualizar' ? (
+                <Controller
+                  name="activo"
+                  control={control_format_documental_type}
+                  defaultValue=""
+                  // rules={{ required: false }}
+                  render={({
+                    field: { onChange, value },
+                    fieldState: { error }
+                  }) => (
+                    <FormControl
+                      sx={{
+                        width: '100%',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                      fullWidth
+                    >
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={value}
+                            onChange={(e) => {
+                              onChange(e.target.checked);
+                            }}
+                            // name="checkedB"
+                            color="primary"
+                          />
+                        }
+                        label={
+                          value ? (
+                            <Typography variant="body2">
+                              Activo
+                              <Tooltip
+                                title="Formato tipo de medio activo"
+                                placement="right"
+                              >
+                                <InfoIcon
+                                  sx={{
+                                    width: '1.2rem',
+                                    height: '1.2rem',
+                                    ml: '0.5rem',
+                                    color: 'green'
+                                  }}
+                                />
+                              </Tooltip>
+                            </Typography>
+                          ) : (
+                            <Typography variant="body2">
+                              Inactivo
+                              <Tooltip
+                                title="Formato tipo de medio inactivo"
+                                placement="right"
+                              >
+                                <InfoIcon
+                                  sx={{
+                                    width: '1.2rem',
+                                    height: '1.2rem',
+                                    ml: '0.5rem',
+                                    color: 'orange'
+                                  }}
+                                />
+                              </Tooltip>
+                            </Typography>
+                          )
+                        }
+                      />
+                    </FormControl>
+                  )}
+                />
+              ) : null}
               <Stack
                 direction="row"
                 justifyContent="flex-end"

@@ -170,8 +170,10 @@ export const use_trd = (): any => {
         value: 0,
         'cod-tipo-medio': ''
       },
-      nombre: ''
+      nombre: '',
+      activo: true,
     });
+
     set_title_button('Guardar');
   };
 
