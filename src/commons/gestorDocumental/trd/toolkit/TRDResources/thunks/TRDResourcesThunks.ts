@@ -172,3 +172,21 @@ export const get_formatos_by_tipo_medio_by_format_and_name = (
     }
   };
 };
+
+
+export const create_formato_by_tipo_medio_service = (bodyPost: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.post(
+        'gestor/trd/formatos/create/',
+        bodyPost
+      );
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+}

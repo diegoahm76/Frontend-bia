@@ -63,6 +63,7 @@ export const permissions_request = async (
       ok: true,
       data
     };
+
   } catch (error: any) {
     const { response } = error as AxiosError<AxiosResponse>;
 
