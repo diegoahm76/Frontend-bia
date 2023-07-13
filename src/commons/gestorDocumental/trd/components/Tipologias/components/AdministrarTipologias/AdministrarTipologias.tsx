@@ -53,9 +53,11 @@ export const AdministrarTipologias = (): JSX.Element => {
               // color="info"
               color="primary"
               variant="outlined"
+              disabled={true}
               startIcon={<GradingIcon />}
               onClick={() => console.log('ESTABLECER TIPOLOGÍAS')}
             >
+              {/* this button must be part of the TRD administration */}
               ESTABLECER TIPOLOGÍAS
             </Button>
             <Button

@@ -71,7 +71,13 @@ export const trd_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.tipologias = action.payload;
-    }
+    },
+
+    //! catalogo TRD --- I need this information to show the data in the table and administre the data (catalogo)
+    get_catalogo_trd_action: (state: any, action: PayloadAction<any>) => {
+      state.catalogo_trd = action.payload;
+    },
+
   }
 });
 
@@ -86,4 +92,6 @@ export const {
   get_data_format_documental_type,
   //* -------------------------------->
   get_data_tipologias_documentales,
+  //* -------------------------------->
+  get_catalogo_trd_action,
 } = trd_slice.actions;

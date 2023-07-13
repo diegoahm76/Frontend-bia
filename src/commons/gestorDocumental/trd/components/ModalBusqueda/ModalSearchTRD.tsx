@@ -123,6 +123,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               dispatch(
                 getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
               );
+              dispatch(get_catalogo_trd(params.row.id_trd));
               // reset_searched_trd_modal();
               console.log(params.row);
             }}

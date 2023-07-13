@@ -10,7 +10,8 @@ import {
   get_trds,
   get_catalogo_series_subseries_unidad_organizacional,
   get_data_format_documental_type,
-  get_data_tipologias_documentales
+  get_data_tipologias_documentales,
+  get_catalogo_trd_action
   // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
 
@@ -276,6 +277,28 @@ export const get_tipologias_documentales_by_name = (name?: string): any => {
         `${error.response.data.detail} que coincida` ||
           'Ha ocurrido un error, no se han encontrado data'
       );
+      return error as AxiosError;
+    }
+  };
+};
+
+//! ---------- At this point I start the develop of: catalogo TRD (administrate TRD) ----------->
+
+export const get_catalogo_trd = (id_trd: number): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      const { data } = await api.get(
+        `gestor/trd/catalogo-trd/get-list/${id_trd}/`
+      );
+      console.log(
+        '🚀 ~ file: TRDResourcesThunks.ts ~ line 139 ~ return ~ new_data',
+        data
+      );
+      dispatch(get_catalogo_trd_action(data.data));
+      return data;
+    } catch (error: any) {
       return error as AxiosError;
     }
   };

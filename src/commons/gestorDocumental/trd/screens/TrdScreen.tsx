@@ -35,6 +35,7 @@ import { control_error } from '../../../../helpers';
 import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/CCDSeleccionadoCatalogo';
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
 import { AdministrarTipologias } from '../components/Tipologias/components/AdministrarTipologias/AdministrarTipologias';
+import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
 
 export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -317,6 +318,11 @@ export const TrdScreen: FC = (): JSX.Element => {
         <Grid item xs={12}>
           <CCDSeleccionadoCatalogo />
         </Grid>
+
+        <Grid item xs={12}>
+          <CatalogoTRD/>
+        </Grid>
+
       </Grid>
       {/* finish data table with the "catalogo de series y subseries por unidad organizacional" */}
 
