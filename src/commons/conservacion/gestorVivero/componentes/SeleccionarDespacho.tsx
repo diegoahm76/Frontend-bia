@@ -31,7 +31,6 @@ const SeleccionarDespacho = ({
   const [despachos, set_despachos] = useState<IDespacho[]>([]);
 
   const columns_despachos: GridColDef[] = [
-    { field: 'id_despacho_entrante', headerName: 'ID', width: 20 },
     {
       field: 'numero_despacho_consumo',
       headerName: '# despacho',
@@ -177,7 +176,7 @@ const SeleccionarDespacho = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 6,
+              md: 3,
               control_form: control_despacho,
               control_name: 'numero_despacho_consumo',
               default_value: '',
@@ -194,14 +193,31 @@ const SeleccionarDespacho = ({
               on_blur_function: search_despacho,
             },
             {
+              datum_type: 'date_picker_controller',
+              xs: 12,
+              md: 3,
+              control_form: control_despacho,
+              control_name: 'fecha_ingreso',
+              default_value: '',
+              rules: {
+                required_rule: { rule: true, message: 'Fecha requerida' },
+              },
+              label: 'Fecha ingreso de despacho',
+              disabled: true,
+              helper_text: '',
+              min_date: null,
+              max_date: null,
+              format: 'YYYY-MM-DD',
+            },
+            {
               datum_type: 'input_controller',
               xs: 12,
               md: 6,
               control_form: control_despacho,
-              control_name: 'fecha_ingreso',
+              control_name: 'persona_distribuye',
               default_value: '',
               rules: {},
-              label: 'Fecha de ingreso',
+              label: 'Distribución realizada por:',
               type: 'text',
               disabled: true,
               helper_text: '',
@@ -221,19 +237,6 @@ const SeleccionarDespacho = ({
               multiline_text: true,
               rows_text: 4,
               disabled: false,
-              helper_text: '',
-            },
-            {
-              datum_type: 'input_controller',
-              xs: 12,
-              md: 6,
-              control_form: control_despacho,
-              control_name: 'persona_distribuye',
-              default_value: '',
-              rules: {},
-              label: 'Distribución realizada por:',
-              type: 'text',
-              disabled: true,
               helper_text: '',
             },
           ]}

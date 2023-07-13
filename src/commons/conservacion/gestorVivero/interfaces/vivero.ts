@@ -4,7 +4,9 @@ export interface INursery {
   nurseries: IObjNursery[];
   current_nursery: IObjNursery;
   items_despacho: IObjItem[];
+  items_despacho_aux: IObjItem[];
   current_bien: IObjItem;
+  bien_selected: IObjItem;
   current_despacho: IDespacho;
   items_distribuidos: IObjDistribucion[];
   viveristas: IObjViveristaActual[];

@@ -159,7 +159,9 @@ const initial_state: INursery = {
   nurseries: [],
   current_nursery: initial_state_current_nursery,
   items_despacho: [],
+  items_despacho_aux: [],
   current_bien: initial_state_current_bien,
+  bien_selected: initial_state_current_bien,
   current_despacho: initial_state_despacho,
   items_distribuidos: [],
   viveristas: [],
@@ -213,8 +215,17 @@ export const nursery_slice = createSlice({
     ) => {
       state.items_despacho = action.payload;
     },
+    set_items_despacho_aux: (
+      state: INursery,
+      action: PayloadAction<IObjItem[]>
+    ) => {
+      state.items_despacho_aux = action.payload;
+    },
     set_current_bien: (state: INursery, action: PayloadAction<IObjItem>) => {
       state.current_bien = action.payload;
+    },
+    set_bien_selected: (state: INursery, action: PayloadAction<IObjItem>) => {
+      state.bien_selected = action.payload;
     },
 
     get_items_distribuidos: (
@@ -315,11 +326,13 @@ export const {
   set_nuevos_viveristas,
   set_current_nuevo_viverista,
   set_current_bien,
+  set_bien_selected,
   get_nurseries,
   current_nursery,
   get_nurseries_closing,
   get_nurseries_quarantine,
   get_items_despacho,
+  set_items_despacho_aux,
   get_items_distribuidos,
   set_current_despacho,
   set_insumos,

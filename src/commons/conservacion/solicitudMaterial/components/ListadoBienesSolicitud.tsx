@@ -29,7 +29,6 @@ const ListadoBienesSolicitud = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log(bienes_solicitud, bienes_despacho.length);
     if (bienes_solicitud.length > 0) {
       if (bienes_despacho.length > 0) {
         const aux_items: IObjBienesSolicitud[] = [];
@@ -66,10 +65,6 @@ const ListadoBienesSolicitud = () => {
       }
     }
   }, [bienes_solicitud]);
-
-  useEffect(() => {
-    console.log(bienes_solicitud_aux);
-  }, [bienes_solicitud_aux]);
 
   useEffect(() => {
     if (bienes_solicitud.length > 0) {

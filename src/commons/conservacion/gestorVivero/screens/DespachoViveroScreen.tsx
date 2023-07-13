@@ -20,6 +20,7 @@ import {
 } from '../store/thunks/gestorViveroThunks';
 import SearchIcon from '@mui/icons-material/Search';
 import Limpiar from '../../componentes/Limpiar';
+import ListadoBienesDespacho from '../componentes/ListadoBienesDespacho';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function DespachoViveroScreen(): JSX.Element {
@@ -166,7 +167,10 @@ export function DespachoViveroScreen(): JSX.Element {
           set_open_modal={set_open_search_modal}
         />
         {current_despacho.id_despacho_entrante !== null && (
-          <SeleccionarBienDistribuir />
+          <>
+            <ListadoBienesDespacho />
+            <SeleccionarBienDistribuir />
+          </>
         )}
         <Grid container direction="row" padding={2} spacing={2}>
           {current_despacho.id_despacho_entrante !== null && (

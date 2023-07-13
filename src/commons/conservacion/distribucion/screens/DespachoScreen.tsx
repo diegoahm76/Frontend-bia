@@ -121,8 +121,6 @@ const DespachoScreen = () => {
     set_action('Crear');
   };
 
-  useEffect(() => {}, [origin_nursery]);
-
   useEffect(() => {
     console.log(watch_despacho('id_vivero'));
 
