@@ -29,6 +29,12 @@ export const PozosScreen: React.FC = () => {
       width: 200,
     },
     {
+      field: 'descripcion',
+      headerName: 'DESCRIPCION',
+      sortable: true,
+      width: 300,
+    },
+    {
       field: 'activo',
       headerName: 'ESTADO',
       sortable: true,
@@ -128,7 +134,7 @@ export const PozosScreen: React.FC = () => {
             <>
               <IconButton
                 onClick={() => {
-                  confirmar_eliminar_pozo(params.row.cod_pozo as number);
+                  confirmar_eliminar_pozo(params.row.id_pozo as number);
                 }}
               >
                 <Avatar
@@ -181,6 +187,7 @@ export const PozosScreen: React.FC = () => {
         item_ya_usado: datos.item_ya_usado,
       }));
       set_rows(datos_pozo);
+      console.log(datos_pozo, 'datos_pozo');
     } catch (error: any) {
       control_error(error.response.data.detail);
     }

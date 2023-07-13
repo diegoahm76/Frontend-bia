@@ -51,6 +51,7 @@ export const AgregarPozo: React.FC<IProps> = ({
       control_success('Pozo creado correctamente');
       await get_datos();
       reset();
+      limpiar_formulario();
       set_is_loading(false);
     } catch (error: any) {
       set_is_loading(false);

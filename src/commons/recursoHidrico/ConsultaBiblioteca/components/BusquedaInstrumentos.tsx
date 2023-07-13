@@ -12,7 +12,7 @@ import {
   //   Typography,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import type { AxiosError } from 'axios';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
@@ -29,8 +29,10 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
     set_id_subseccion,
     set_id_seccion,
     set_id_instrumento,
-    info_subseccion,
-    info_seccion,
+    set_nombre_seccion,
+    set_nombre_subseccion,
+    nombre_seccion,
+    nombre_subseccion,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
@@ -72,9 +74,17 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
                 if (params.row !== undefined) {
-                  set_id_instrumento(params.row.id_instumento);
+                  reset({
+                    nombre_seccion: params.row.nombre_seccion,
+                    nombre_subseccion: params.row.nombre_subseccion,
+                    nombre_instrumento: params.row.nombre_instrumento,
+                    nombre_archivo: params.row.nombre_archivo,
+                  });
+                  set_id_instrumento(params.row.id_instrumento);
                   set_id_subseccion(params.row.id_subseccion);
                   set_id_seccion(params.row.id_seccion);
+                  set_nombre_seccion(params.row.nombre_seccion);
+                  set_nombre_subseccion(params.row.nombre_subseccion);
                   handle_close();
                 }
               }}
@@ -86,11 +96,22 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
   ];
 
   const {
-    register,
+    // register,
+    control,
+    watch,
     handleSubmit: handle_submit,
-    setValue: set_value,
+    // setValue: set_value,
     formState: { errors },
-  } = useForm();
+    reset,
+  } = useForm({
+    defaultValues: {
+      nombre_seccion: nombre_seccion ?? '',
+      nombre_subseccion: nombre_subseccion ?? '',
+      nombre_instrumento: '',
+      nombre_archivo: '',
+    },
+  });
+  const data_watch = watch();
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
@@ -103,6 +124,13 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
   const handle_close = (): void => {
     set_open_dialog(false);
   };
+
+  useEffect(() => {
+    reset({
+      nombre_seccion: nombre_seccion ?? '',
+      nombre_subseccion: nombre_subseccion ?? '',
+    });
+  }, [nombre_seccion, nombre_subseccion]);
 
   const on_submit_advance = handle_submit(
     async ({
@@ -138,20 +166,6 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
   useEffect(() => {
     set_is_search(false);
   }, []);
-
-  useEffect(() => {
-    if (info_subseccion) {
-      console.log(info_subseccion, 'info_subseccion');
-      set_value('nombre_subseccion', info_subseccion.nombre);
-    }
-  }, [info_subseccion]);
-
-  useEffect(() => {
-    if (info_seccion) {
-      console.log(info_seccion, 'info_seccion');
-      set_value('nombre_seccion', info_seccion.nombre);
-    }
-  }, [info_seccion]);
 
   return (
     <>
@@ -190,43 +204,127 @@ export const BusquedaInstrumentos: React.FC = (): JSX.Element => {
             >
               <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
                 <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    label="Nombre sección"
-                    disabled={false}
-                    fullWidth
-                    size="small"
-                    margin="dense"
-                    {...register('nombre_seccion')}
+                  <Controller
+                    name="nombre_seccion"
+                    control={control}
+                    defaultValue=""
+                    // rules={{ required: false }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        label="Nombre sección"
+                        size="small"
+                        variant="outlined"
+                        value={value}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                          onChange(e.target.value);
+                        }}
+                        error={!!error}
+                        /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+                      />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    label="Nombre subsección"
-                    disabled={false}
-                    fullWidth
-                    size="small"
-                    margin="dense"
-                    {...register('nombre_subseccion')}
+                  <Controller
+                    name="nombre_subseccion"
+                    control={control}
+                    defaultValue=""
+                    // rules={{ required: false }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        label="Nombre subsección"
+                        size="small"
+                        variant="outlined"
+                        value={value}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                          onChange(e.target.value);
+                        }}
+                        error={!!error}
+                        /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+                      />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    label="Nombre instrumento"
-                    disabled={false}
-                    fullWidth
-                    size="small"
-                    margin="dense"
-                    {...register('nombre_instrumento')}
+                  <Controller
+                    name="nombre_instrumento"
+                    control={control}
+                    defaultValue=""
+                    // rules={{ required: false }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        label="Nombre instrumento"
+                        size="small"
+                        variant="outlined"
+                        value={value}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                          onChange(e.target.value);
+                        }}
+                        error={!!error}
+                        /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+                      />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    label="Nombre archivo"
-                    disabled={false}
-                    fullWidth
-                    size="small"
-                    margin="dense"
-                    {...register('nombre_archivo')}
+                  <Controller
+                    name="nombre_archivo"
+                    control={control}
+                    defaultValue=""
+                    // rules={{ required: false }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error },
+                    }) => (
+                      <TextField
+                        margin="dense"
+                        fullWidth
+                        label="Nombre archivo"
+                        size="small"
+                        variant="outlined"
+                        value={value}
+                        InputLabelProps={{ shrink: true }}
+                        onChange={(e) => {
+                          onChange(e.target.value);
+                        }}
+                        error={!!error}
+                        /* helperText={
+                        error
+                          ? 'Es obligatorio subir un archivo'
+                          : 'Seleccione un archivo'
+                      } */
+                      />
+                    )}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6} md={4} container justifyContent="end">

@@ -26,8 +26,8 @@ interface UserContext {
   rows_cuencas_instrumentos: CuencasInstrumentos[];
   rows_anexos: Archivos[];
   info_instrumentos: any | undefined;
-  info_seccion: Seccion | undefined;
-  info_subseccion: SubSeccionPorSeccion | undefined;
+  nombre_seccion: string
+  nombre_subseccion: string;
   id_seccion: number | null;
   id_subseccion: number | null;
   id_instrumento: number | null;
@@ -37,8 +37,8 @@ interface UserContext {
   set_rows_cuencas_instrumentos: (rows: CuencasInstrumentos[]) => void;
   set_rows_anexos: (rows: Archivos[]) => void;
   set_info_instrumento: (info_instrumentos: any) => void;
-  set_info_seccion: (info_seccion: Seccion) => void;
-  set_info_subseccion: (info_subseccion: SubSeccionPorSeccion) => void;
+  set_nombre_seccion: (value : string) => void;
+  set_nombre_subseccion: (value : string) => void;
   set_id_seccion: (value: number | null) => void;
   set_id_subseccion: (value: number | null) => void;
   set_id_instrumento: (value: number | null) => void;
@@ -56,26 +56,8 @@ export const DataContext = createContext<UserContext>({
   rows_cuencas_instrumentos: [],
   rows_anexos: [],
   info_instrumentos: {},
-  info_seccion: {
-    id_seccion: 0,
-    nombre: '',
-    descripcion: '',
-    fecha_creacion: '',
-    id_persona_creada: 0,
-    id_persona: 0,
-    nombre_completo: '',
-    nombre_comercial: '',
-  },
-  info_subseccion: {
-    id_subseccion: 0,
-    id_seccion: 0,
-    nombre: '',
-    descripcion: '',
-    fechaCreacion: '',
-    id_persona: 0,
-    nombre_comercial: '',
-    nombre_completo: '',
-  },
+  nombre_seccion: '',
+  nombre_subseccion: '',
   id_instrumento: null,
   id_seccion: null,
   id_subseccion: null,
@@ -84,9 +66,9 @@ export const DataContext = createContext<UserContext>({
   set_info_instrumento: () => {},
   set_rows_subseccion: () => {},
   set_rows_anexos: () => {},
-  set_info_seccion: () => {},
+  set_nombre_seccion: () => {},
+  set_nombre_subseccion: () => {},
   set_rows_cuencas_instrumentos: () => {},
-  set_info_subseccion: () => {},
   set_id_instrumento: () => {},
   set_id_seccion: () => {},
   set_id_subseccion: () => {},
@@ -113,9 +95,11 @@ export const UserProvider = ({
     React.useState<CuencasInstrumentos[]>([]);
   const [rows_anexos, set_rows_anexos] = React.useState<Archivos[]>([]);
   // info
-  const [info_seccion, set_info_seccion] = React.useState<Seccion>();
-  const [info_subseccion, set_info_subseccion] =
-    React.useState<SubSeccionPorSeccion>();
+  const [nombre_seccion, set_nombre_seccion] = React.useState('');
+  const [nombre_subseccion, set_nombre_subseccion] =
+    React.useState('');
+
+    
   const [info_instrumentos, set_info_instrumento] = React.useState<any>();
 
   // id
@@ -160,6 +144,7 @@ export const UserProvider = ({
       set_rows_cuencas_instrumentos([]);
       if (id_instrumento) {
         const response = await get_data_cuenca_instrumentos(id_instrumento);
+        console.log(response);
         set_rows_cuencas_instrumentos(response);
       }
     } catch (err: any) {
@@ -175,7 +160,7 @@ export const UserProvider = ({
       set_info_instrumento({});
       if (id_instrumento) {
         const response = await get_instrumento_id(id_instrumento);
-        set_info_instrumento(response);
+        set_info_instrumento(response.data);
       }
     } catch (err: any) {
       const temp = err as AxiosError;
@@ -207,8 +192,8 @@ export const UserProvider = ({
     rows_cuencas_instrumentos,
     rows_anexos,
     info_instrumentos,
-    info_seccion,
-    info_subseccion,
+    nombre_seccion,
+    nombre_subseccion,
     id_instrumento,
     id_seccion,
     id_subseccion,
@@ -218,8 +203,8 @@ export const UserProvider = ({
     set_rows_cuencas_instrumentos,
     set_rows_anexos,
     set_info_instrumento,
-    set_info_seccion,
-    set_info_subseccion,
+    set_nombre_seccion,
+    set_nombre_subseccion,
     set_id_instrumento,
     set_id_seccion,
     set_id_subseccion,

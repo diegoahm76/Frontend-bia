@@ -44,7 +44,9 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
           <IconButton
             onClick={() => {
               set_id_seccion(params.row.id_seccion);
-              set_info_seccion(params.row);
+              set_nombre_seccion(params.row.nombre);
+              set_nombre_subseccion('');
+              set_info_instrumento(undefined);
             }}
           >
             <Avatar
@@ -83,7 +85,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
       width: 600,
       renderCell: (params) => <div className="container">{params.value}</div>,
     },
-    { field: 'instrumentos', headerName: 'No. INSTRUMENTOS', width: 200 },
+    { field: 'instrumentos_count', headerName: 'No. INSTRUMENTOS', width: 100 },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
@@ -93,7 +95,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
           <IconButton
             onClick={() => {
               set_id_subseccion(params.row.id_subseccion);
-              set_info_subseccion(params.row);
+              set_nombre_subseccion(params.row.nombre);
             }}
           >
             <Avatar
@@ -121,7 +123,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
   ];
   const columns_cuencas: GridColDef[] = [
     {
-      field: 'nombre',
+      field: 'cuenca',
       headerName: 'NOMBRE CUENCA',
       width: 300,
       renderCell: (params) => <div className="container">{params.value}</div>,
@@ -152,15 +154,16 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
     rows_seccion,
     rows_subseccion,
     rows_anexos,
-    info_seccion,
-    info_subseccion,
+    nombre_seccion,
+    nombre_subseccion,
     id_instrumento,
     rows_cuencas_instrumentos,
     info_instrumentos,
+    set_info_instrumento,
     set_id_seccion,
-    set_info_seccion,
+    set_nombre_seccion,
     set_id_subseccion,
-    set_info_subseccion,
+    set_nombre_subseccion,
     fetch_data_seccion,
     fetch_data_subseccion_por_seccion,
     fetch_data_cuencas_instrumentos,
@@ -206,7 +209,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
         <Grid item xs={12}>
           <Title title="VISUALIZACIÓN BIBLIOTECA" />
         </Grid>
-        {rows_seccion.length > 0 && (
+        {rows_seccion.length > 0 ? (
           <>
             <Grid item xs={12}>
               <Typography variant="subtitle1" fontWeight="bold">
@@ -226,8 +229,8 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
               />
             </Grid>
           </>
-        )}
-        {rows_subseccion.length > 0 && (
+        ) : null}
+        {rows_subseccion.length > 0 ? (
           <>
             <Grid item xs={12}>
               <Title title="SUBSECCIONES" />
@@ -242,7 +245,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 size="small"
                 disabled
                 fullWidth
-                value={info_seccion?.nombre}
+                value={nombre_seccion}
                 id="disabled-field"
               />
             </Grid>
@@ -264,8 +267,8 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
               />
             </Grid>
           </>
-        )}
-        {info_subseccion && (
+        ) : null}
+        {nombre_subseccion ? (
           <>
             <Grid item xs={12}>
               <Title title="INSTRUMENTOS" />
@@ -281,22 +284,37 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 size="small"
                 disabled
                 fullWidth
-                value={info_subseccion?.nombre}
+                value={nombre_subseccion}
                 id="disabled-field"
               />
             </Grid>
             <Box sx={{ flexGrow: 1 }}>
               <BusquedaInstrumentosBasica />
             </Box>
+          </>
+        ) : null}
+        {info_instrumentos ? (
+          <>
             <Grid item xs={12}>
               <Typography variant="subtitle1" fontWeight="bold">
                 Detalle de instrumento seleccionado:
               </Typography>
+            </Grid>
+            <Grid item xs={12}>
               <Divider />
             </Grid>
             <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                Nombre del instrumento
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                Fecha de vigencia
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
               <TextField
-                label="Nombre del instrumento"
                 size="small"
                 disabled
                 fullWidth
@@ -306,7 +324,6 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Fecha de vigencia"
                 size="small"
                 disabled
                 fullWidth
@@ -320,7 +337,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
                 size="small"
                 disabled
                 fullWidth
-                value=""
+                value="RESOLUCION CORMACARENA"
                 id="disabled-field"
               />
             </Grid>
@@ -354,7 +371,7 @@ export const ConsultaBibliotecaSreen: React.FC = (): JSX.Element => {
               />
             </Grid>
           </>
-        )}
+        ) : null}
       </Grid>
       <Grid container justifyContent="flex-end" spacing={2}>
         <BusquedaInstrumentos />

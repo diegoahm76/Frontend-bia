@@ -10,42 +10,41 @@ import {
   Stack,
   TextField,
   Tooltip,
-  //   Typography,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import type { AxiosError } from 'axios';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-import { type ResponseServer } from '../../../../interfaces/globalModels';
 import { control_error } from '../../../../helpers';
 import { Title } from '../../../../components/Title';
 import { v4 as uuidv4 } from 'uuid';
 import { DataContext } from '../context/contextData';
-import { search_instrumento } from '../request/request';
 import SearchIcon from '@mui/icons-material/Search';
+import type { BusquedaBasica } from '../interfaces/interfaces';
+import { get_busqueda_basica } from '../request/request';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
   const {
-    set_info_instrumento,
     set_id_instrumento,
-    info_subseccion,
-    info_seccion,
+    nombre_subseccion,
+    nombre_seccion,
+    id_seccion,
+    id_subseccion,
   } = useContext(DataContext);
 
   const columns: GridColDef[] = [
     {
-      field: 'nombre_instrumento',
+      field: 'instrumento',
       headerName: 'NOMBRE INSTRUMENTO',
       sortable: true,
-      width: 170,
+      width: 300,
     },
     {
-      field: 'cuencas',
+      field: 'cuenca',
       headerName: 'CUENCAS ASOCIADAS',
       sortable: true,
-      width: 170,
+      width: 300,
     },
     {
       field: 'ACCIONES',
@@ -60,11 +59,8 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
               size="small"
               startIcon={<ChecklistOutlinedIcon />}
               onClick={() => {
-                if (params.row !== undefined) {
-                  set_id_instrumento(params.row.id_instumento);
-                  set_info_instrumento(params.row);
-                  handle_close();
-                }
+                set_id_instrumento(params.row.id_instumento);
+                handle_close();
               }}
             />
           </Tooltip>
@@ -75,14 +71,12 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
 
   const {
     register,
-    handleSubmit: handle_submit,
     setValue: set_value,
     formState: { errors },
   } = useForm();
 
-  const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<any[]>([]);
+  const [rows, set_rows] = useState<BusquedaBasica[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -91,54 +85,39 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
   const handle_close = (): void => {
     set_open_dialog(false);
   };
-
-  const on_submit_advance = handle_submit(
-    async ({ nombre_seccion, nombre_subseccion }) => {
-      set_is_search(true);
-      try {
-        set_rows([]);
-        const {
-          data: { data },
-        } = await search_instrumento({
-          nombre_seccion,
-          nombre_subseccion,
-        });
-
-        if (data?.length > 0) {
-          set_rows(data);
-        }
-      } catch (error) {
-        const temp_error = error as AxiosError;
-        const resp = temp_error.response?.data as ResponseServer<any>;
-        control_error(resp.detail);
-      } finally {
-        set_is_search(false);
+  const fetch_busqueda_basica = async (): Promise<void> => {
+    try {
+      if (id_seccion && id_subseccion) {
+        const response = await get_busqueda_basica(id_seccion, id_subseccion);
+        console.log(response, 'response');
+        set_rows(response);
       }
+    } catch (err: any) {
+      // const temp = err as AxiosError;
+      // if (temp.response?.status !== 404 && temp.response?.status !== 400) {
+      //   control_error(err.response.data.detail);
+      // }
+      control_error(err.response.data.detail);
     }
-  );
+  };
+
   useEffect(() => {
     if (open_dialog) {
-      void on_submit_advance();
+      void fetch_busqueda_basica();
     }
   }, [open_dialog]);
 
   useEffect(() => {
-    set_is_search(false);
-  }, []);
+    if (nombre_subseccion) {
+      set_value('nombre_subseccion', nombre_subseccion);
+    }
+  }, [nombre_subseccion]);
 
   useEffect(() => {
-    if (info_subseccion) {
-      console.log(info_subseccion, 'info_subseccion');
-      set_value('nombre_subseccion', info_subseccion.nombre);
+    if (nombre_seccion) {
+      set_value('nombre_seccion', nombre_seccion);
     }
-  }, [info_subseccion]);
-
-  useEffect(() => {
-    if (info_seccion) {
-      console.log(info_seccion, 'info_seccion');
-      set_value('nombre_seccion', info_seccion.nombre);
-    }
-  }, [info_seccion]);
+  }, [nombre_seccion]);
 
   return (
     <>
@@ -176,55 +155,50 @@ export const BusquedaInstrumentosBasica: React.FC = (): JSX.Element => {
             }}
           >
             <Title title="Instrumentos biblioteca" />
-            <form
-              onSubmit={(e) => {
-                void on_submit_advance(e);
-              }}
-            >
-              <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-                <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    label="Nombre sección"
-                    fullWidth
-                    disabled={true}
-                    size="small"
-                    margin="dense"
-                    {...register('nombre_seccion')}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} md={4}>
-                  <TextField
-                    label="Nombre subsección"
-                    disabled={true}
-                    fullWidth
-                    size="small"
-                    margin="dense"
-                    {...register('nombre_subseccion')}
-                  />
-                </Grid>
-                {rows.length > 0 && (
-                  <>
-                    <Grid item xs={12}>
-                      <Title title="Resultados de la búsqueda" />
-                      {/* <Typography>Resultados de la búsqueda</Typography> */}
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Box sx={{ height: 400, width: '100%' }}>
-                        <>
-                          <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) => uuidv4()}
-                          />
-                        </>
-                      </Box>
-                    </Grid>
-                  </>
-                )}
+
+            <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  label="Nombre sección"
+                  fullWidth
+                  disabled={true}
+                  size="small"
+                  margin="dense"
+                  {...register('nombre_seccion')}
+                />
               </Grid>
-            </form>
+              <Grid item xs={12} sm={6} md={4}>
+                <TextField
+                  label="Nombre subsección"
+                  disabled={true}
+                  fullWidth
+                  size="small"
+                  margin="dense"
+                  {...register('nombre_subseccion')}
+                />
+              </Grid>
+              {rows.length > 0 && (
+                <>
+                  <Grid item xs={12}>
+                    <Title title="Resultados de la búsqueda" />
+                    {/* <Typography>Resultados de la búsqueda</Typography> */}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Box sx={{ height: 400, width: '100%' }}>
+                      <>
+                        <DataGrid
+                          rows={rows}
+                          columns={columns}
+                          pageSize={5}
+                          rowsPerPageOptions={[5]}
+                          getRowId={(row) => uuidv4()}
+                        />
+                      </>
+                    </Box>
+                  </Grid>
+                </>
+              )}
+            </Grid>
           </Grid>
         </DialogContent>
       </Dialog>

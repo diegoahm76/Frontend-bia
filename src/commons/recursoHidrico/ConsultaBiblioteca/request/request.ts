@@ -1,7 +1,7 @@
 import { type AxiosResponse } from "axios";
 import { api } from "../../../../api/axios";
 import { type ResponseServer } from "../../../../interfaces/globalModels";
-import type { Archivos, BusquedaArchivo, CuencasInstrumentos } from "../interfaces/interfaces";
+import type { Archivos, BusquedaArchivo, BusquedaBasica, CuencasInstrumentos } from "../interfaces/interfaces";
 
 
 
@@ -28,7 +28,7 @@ export const get_archivos = async (
     id_instrumento: number
 ): Promise<Archivos[]> => {
     const response: AxiosResponse<ResponseServer<Archivos[]>> = await api.get<ResponseServer<Archivos[]>>(
-        `hidrico/bibliotecas/cuencas/get-cuencas-instrumento/${id_instrumento}/`
+        `hidrico/bibliotecas/ArchivosInstrumento/get-ArchivosInstrumento-instrumento/${id_instrumento}/`
     );
     return response.data.data;
 };
@@ -36,8 +36,17 @@ export const get_archivos = async (
 
 export const get_instrumento_id = async (
     id_instrumento: number): Promise<AxiosResponse<ResponseServer<Archivos[]>>> => {
-    const url = `hidrico/bibliotecas/ArchivosInstrumento/get-ArchivosInstrumento-instrumento/${id_instrumento}/`;
+    const url = `hidrico/bibliotecas/instrumentos/get-instrumento-id/${id_instrumento}/`;
     return await api.get<ResponseServer<Archivos[]>>(url);
 };
 
+export const get_busqueda_basica = async (
+    id_seccion: number,
+    id_subseccion: number,
+): Promise<BusquedaBasica[]> => {
+    const response: AxiosResponse<ResponseServer<BusquedaBasica[]>> = await api.get<ResponseServer<BusquedaBasica[]>>(
+        `hidrico/bibliotecas/instrumentos/get-instrumento-cuencas/${id_seccion}/${id_subseccion}/`
+    );
+    return response.data.data;
+}
 

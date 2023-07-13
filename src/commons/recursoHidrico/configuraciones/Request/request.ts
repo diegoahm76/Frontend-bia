@@ -36,10 +36,9 @@ export const editar_cuenca = async (
 
 // pozos
 export const get_pozo = async (): Promise<Pozo[]> => {
-    const { data } = await api.get<Pozo[]>(
-        `hidrico/bibliotecas/pozos/get/`
-    );
-    return data;
+    const response = await api.get(`/hidrico/bibliotecas/pozos/get/`);
+    const data = response.data.data;
+    return data ?? [];
 };
 export const crear_pozo = async (
     datos: Pozo
@@ -67,10 +66,9 @@ export const editar_pozo = async (
 // parametros
 
 export const get_parametros = async (): Promise<Parametros[]> => {
-    const { data } = await api.get<Parametros[]>(
-        `hidrico/bibliotecas/parametros_laboratorio/get/`
-    );
-    return data;
+    const response = await api.get(`/hidrico/bibliotecas/parametros_laboratorio/get/`);
+    const data = response.data.data;
+    return data ?? [];
 };
 export const crear_parametros = async (
     datos: Parametros

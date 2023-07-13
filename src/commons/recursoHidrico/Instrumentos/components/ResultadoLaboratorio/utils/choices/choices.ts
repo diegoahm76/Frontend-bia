@@ -6,8 +6,8 @@ export const clase_muestra_choices = [
 ]
 
 export const tipo_parametro_choices = [
-    { value: 'FIS', label: 'Fisicoquímico' },
-    { value: 'MIC', label: 'Microbiológico' },
+    { value: 'FQ', label: 'Fisicoquímico' },
+    { value: 'MB', label: 'Microbiológico' },
 ]
 export const unidad_medida_choices = [
     { value: 'mg/L', label: 'mg/L' },

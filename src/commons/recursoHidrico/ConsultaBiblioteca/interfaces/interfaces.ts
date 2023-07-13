@@ -34,3 +34,9 @@ export interface Archivos {
     fecha_cargado:          Date;
     id_instrumento:         number;
 }
+export interface BusquedaBasica {
+    id_instrumento: number;
+    instrumento:    string;
+    id_cuenca:      number;
+    cuenca:         string;
+}

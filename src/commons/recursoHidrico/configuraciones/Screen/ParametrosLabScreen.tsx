@@ -21,6 +21,16 @@ export const ParametrosLabScreen: React.FC = () => {
       headerName: 'TIPO PARAMETRO',
       sortable: true,
       width: 150,
+      renderCell: (params) => {
+        const cod_tipo_parametro = params.value;
+        return cod_tipo_parametro === 'FQ' ? (
+          <span>Fisicoquímico</span>
+        ) : cod_tipo_parametro === 'MB' ? (
+          <span>Microbiológico</span>
+        ) : (
+          <span>{cod_tipo_parametro}</span>
+        );
+      },
     },
     {
       field: 'nombre',
@@ -133,7 +143,7 @@ export const ParametrosLabScreen: React.FC = () => {
               <IconButton
                 onClick={() => {
                   confirmar_eliminar_parametro(
-                    params.row.cod_tipo_documento as number
+                    params.row.id_parametro as number
                   );
                 }}
               >
@@ -280,15 +290,16 @@ export const ParametrosLabScreen: React.FC = () => {
         is_modal_active={is_editar}
         set_is_modal_active={set_is_editar}
         get_data={get_traer_parametros}
-        data={parametros ?? {
-          id_parametro: 0,
-          cod_tipo_parametro: '',
-          nombre: '',
-          unidad_de_medida: '',
-          precargado: false,
-          activo: false,
-          item_ya_usado: false,
-        }
+        data={
+          parametros ?? {
+            id_parametro: 0,
+            cod_tipo_parametro: '',
+            nombre: '',
+            unidad_de_medida: '',
+            precargado: false,
+            activo: false,
+            item_ya_usado: false,
+          }
         }
       />
     </>
