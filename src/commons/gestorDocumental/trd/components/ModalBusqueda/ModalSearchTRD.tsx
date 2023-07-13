@@ -37,6 +37,7 @@ import {
 } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import {
   getServiceSeriesSubseriesXUnidadOrganizacional,
+  get_catalogo_trd,
   get_searched_trd
 } from '../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columnsModalBusquedaTRD } from './utils/colums';

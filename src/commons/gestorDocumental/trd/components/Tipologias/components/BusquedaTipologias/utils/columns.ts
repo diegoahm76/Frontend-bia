@@ -8,6 +8,6 @@ export const columns = [
   {
     headerName: 'Código tipo medio doc',
     field: 'cod_tipo_medio_doc',
-    width: 150,
+    width: 170,
   }
 ];

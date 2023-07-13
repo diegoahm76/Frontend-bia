@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -64,6 +65,23 @@ export const use_trd = (): any => {
   } = useForm({ defaultValues: initial_state_format_documental_type });
   const data_format_documental_type_watch_form = watch_format_documental_type();
   // console.log(data_format_documental_type_watch_form, 'data_format_documental_type_watch_form');
+
+  // ? tipologias documentales ---------------------> (search), (administrar)
+  const {
+    control: controlBusquedaTipologiasDocumentales,
+    // handleSubmit: handleSubmitBusquedaTipologiasDocumentales,
+    // formState: { errors },
+    reset: resetBusquedaTipologiasDocumentales,
+    watch: watchBusquedaTipologiasDocumentales
+  } = useForm({
+    defaultValues: {
+      nombre: ''
+    },
+    mode: 'onBlur',
+    reValidateMode: 'onChange'
+  });
+  const form_data_searched_tipologia_documental =
+    watchBusquedaTipologiasDocumentales();
 
   //* -------------------------------------------------------------------------->
   //! useStates that I will use in different components --------------------->
@@ -171,7 +189,7 @@ export const use_trd = (): any => {
         'cod-tipo-medio': ''
       },
       nombre: '',
-      activo: true,
+      activo: true
     });
 
     set_title_button('Guardar');
@@ -200,6 +218,11 @@ export const use_trd = (): any => {
     data_format_documental_type_watch_form,
     set_title_button, //* (save or edit state)
     title_button, //* (save or edit state)
+
+    // ? administrar o buscar tipologias documentales --------------------------------------------->
+    controlBusquedaTipologiasDocumentales,
+    form_data_searched_tipologia_documental,
+    resetBusquedaTipologiasDocumentales,
 
     // ? reset functions data trd --------------------------------------------->
     reset_all_trd,

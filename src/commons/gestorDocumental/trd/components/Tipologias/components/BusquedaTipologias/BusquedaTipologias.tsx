@@ -3,6 +3,7 @@
 
 import { useContext } from 'react';
 import {
+  Avatar,
   Box,
   Button,
   Chip,
@@ -23,39 +24,17 @@ import { ModalContextTRD } from '../../../../context/ModalsContextTrd';
 
 //* Icons
 import CloseIcon from '@mui/icons-material/Close';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAppDispatch, useAppSelector } from '../../../../../../../hooks';
 import { get_tipologias_documentales_by_name } from '../../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columns } from './utils/columns';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { get_data_tipologias_documentales } from '../../../../toolkit/TRDResources/slice/TRDResourcesSlice';
+import { use_trd } from '../../../../hooks/use_trd';
+import  VisibilityIcon  from '@mui/icons-material/Visibility';
 
-const columns_tipologias_documentales_trd = [
-  ...columns,
-  {
-    headerName: 'Activo',
-    field: 'activo',
-    width: 100,
-    renderCell: (params: any) =>
-      params.row.activo ? (
-        <Chip label="Si" color="error" variant="outlined" />
-      ) : (
-        <Chip label="No" color="info" variant="outlined" />
-      )
-  },
-  {
-    headerName: 'Usado',
-    field: 'item_ya_usado',
-    width: 100,
-    renderCell: (params: any) =>
-      params.row.item_ya_usado ? (
-        <Chip label="Si" color="error" variant="outlined" />
-      ) : (
-        <Chip label="No" color="info" variant="outlined" />
-      )
-  }
-];
+
 
 export const BusquedaTipologias = (): JSX.Element => {
   const dispatch = useAppDispatch();
@@ -68,28 +47,86 @@ export const BusquedaTipologias = (): JSX.Element => {
   } = useContext(ModalContextTRD);
 
   const {
-    control: controlBusquedaTipologiasDocumentales,
-    // handleSubmit: handleSubmitBusquedaTipologiasDocumentales,
-    // formState: { errors },
-    reset: resetBusquedaTipologiasDocumentales,
-    watch: watchBusquedaTipologiasDocumentales
-  } = useForm({
-    defaultValues: {
-      nombre: ''
-    },
-    mode: 'onBlur',
-    reValidateMode: 'onChange'
-  });
-  const form_data_searched_tipologia_documental =
-    watchBusquedaTipologiasDocumentales();
+    controlBusquedaTipologiasDocumentales,
+    form_data_searched_tipologia_documental,
+    resetBusquedaTipologiasDocumentales
+  } = use_trd();
 
-  const resetOnCloseModal = () : any => {
+  const resetOnCloseModal = (): any => {
     closeModalBusquedaTipologiasDocumentales();
     resetBusquedaTipologiasDocumentales({
       nombre: ''
     });
     dispatch(get_data_tipologias_documentales([]));
   };
+
+
+  const columns_tipologias_documentales_trd = [
+    ...columns,
+    {
+      headerName: 'Activo',
+      field: 'activo',
+      width: 70,
+      renderCell: (params: any) =>
+        params.row.activo ? (
+          <Chip label="Si" color="error" variant="outlined" />
+        ) : (
+          <Chip label="No" color="info" variant="outlined" />
+        )
+    },
+    {
+      headerName: 'Usado',
+      field: 'item_ya_usado',
+      width: 70,
+      renderCell: (params: any) =>
+        params.row.item_ya_usado ? (
+          <Chip label="Si" color="error" variant="outlined" />
+        ) : (
+          <Chip label="No" color="info" variant="outlined" />
+        )
+    },
+    {
+      headerName: 'Acción',
+      field: 'accion',
+      width: 70,
+      renderCell: (params: any) => (
+        <>
+          <IconButton
+            onClick={() => {
+             /* dispatch(get_trd_current(params.row));
+              closeModalModalSearchTRD();
+              dispatch(get_trds([]));
+              const ccd_current = {
+                id_ccd: params?.row?.id_ccd,
+                id_organigrama: params?.row?.id_organigrama
+              };
+              dispatch(
+                getServiceSeriesSubseriesXUnidadOrganizacional(ccd_current)
+              );
+              dispatch(get_catalogo_trd(params.row.id_trd)); */
+              // reset_searched_trd_modal();
+              console.log(params.row);
+            }}
+          >
+            <Avatar
+              sx={{
+                width: 24,
+                height: 24,
+                background: '#fff',
+                border: '2px solid'
+              }}
+              variant="square"
+            >
+              <VisibilityIcon
+                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+              />
+            </Avatar>
+          </IconButton>
+        </>
+      )
+    }
+  ];
+
 
   return (
     <>

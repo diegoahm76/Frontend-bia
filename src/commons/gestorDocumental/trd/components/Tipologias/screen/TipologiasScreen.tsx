@@ -3,15 +3,15 @@
 
 import { useContext } from 'react';
 import { Box, Button, /* Divider, */ Grid, Stack } from '@mui/material';
-import { Title } from '../../../../../../../components';
+import { Title } from '../../../../../../components';
 
 //* Icons
 import GradingIcon from '@mui/icons-material/Grading';
 import SearchIcon from '@mui/icons-material/Search';
-import { ModalContextTRD } from '../../../../context/ModalsContextTrd';
-import { BusquedaTipologias } from '../BusquedaTipologias/BusquedaTipologias';
+import { ModalContextTRD } from '../../../context/ModalsContextTrd';
+import { BusquedaTipologias } from '../components/BusquedaTipologias/BusquedaTipologias';
 
-export const AdministrarTipologias = (): JSX.Element => {
+export const TipologiasScreen = (): JSX.Element => {
   const { openModalBusquedaTipologiasDocumentales } =
     useContext(ModalContextTRD);
 
@@ -25,9 +25,7 @@ export const AdministrarTipologias = (): JSX.Element => {
         }}
       >
         <Box sx={{ width: '100%' }}>
-          <Title title="Administrar tipologías" />
-          <h3>I will use this space to create the mockup number 1.1</h3>
-
+          <Title title="Tipologías documentales" />
           {/* <DataGrid
             sx={{
               marginTop: '.5rem',
@@ -44,21 +42,21 @@ export const AdministrarTipologias = (): JSX.Element => {
 
           <Stack
             direction="row"
-            justifyContent="flex-end"
+            justifyContent="center"
             spacing={2}
-            sx={{ m: '20px 0' }}
+            sx={{ m: '40px 0' }}
           >
             {/* buttons start */}
             <Button
               // color="info"
               color="primary"
-              variant="outlined"
-              disabled={true}
+              variant="contained"
+              // disabled={true}
               startIcon={<GradingIcon />}
               onClick={() => console.log('ESTABLECER TIPOLOGÍAS')}
             >
               {/* this button must be part of the TRD administration */}
-              ESTABLECER TIPOLOGÍAS
+              ADMINISTRAR TIPOLOGÍAS DOCUMENTALES
             </Button>
             <Button
               // color="info"

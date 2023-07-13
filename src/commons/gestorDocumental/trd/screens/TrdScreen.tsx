@@ -34,7 +34,7 @@ import { ModalCCDUsados } from '../components/ModalCCDSUsados/ModalCCDSUsados';
 import { control_error } from '../../../../helpers';
 import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/CCDSeleccionadoCatalogo';
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
-import { AdministrarTipologias } from '../components/Tipologias/components/AdministrarTipologias/AdministrarTipologias';
+import { TipologiasScreen } from '../components/Tipologias/screen/TipologiasScreen';
 import { CatalogoTRD } from '../components/AdministrarTRD/components/CatalogoTRD/CatalogoTRD';
 
 export const TrdScreen: FC = (): JSX.Element => {
@@ -319,14 +319,15 @@ export const TrdScreen: FC = (): JSX.Element => {
           <CCDSeleccionadoCatalogo />
         </Grid>
 
+        {/* CATALOGO TRD */}
         <Grid item xs={12}>
-          <CatalogoTRD/>
+          <CatalogoTRD />
         </Grid>
-
+        {/* CATALOGO TRD */}
       </Grid>
       {/* finish data table with the "catalogo de series y subseries por unidad organizacional" */}
 
-      {/* TRD module number 3 - starts with the title Administrar tipologias */}
+      {/* TRD module number 3 - starts with the title Tipologias */}
 
       {/* data table with the "tipologias" */}
       <Grid
@@ -341,7 +342,7 @@ export const TrdScreen: FC = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <AdministrarTipologias />
+          <TipologiasScreen />
         </Grid>
       </Grid>
       {/* finish data table with the "tipologias" */}
