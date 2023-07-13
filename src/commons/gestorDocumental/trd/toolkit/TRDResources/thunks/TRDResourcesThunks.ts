@@ -30,7 +30,10 @@ export const get_searched_trd = (
         data
       ); */
       dispatch(get_trds(data.data));
-      control_success(data.detail);
+
+      data.data.length === 0
+        ? control_error('No se encontró data relacionada')
+        : control_success(data.detail);
       return data.data;
     } catch (error: AxiosError | any) {
       console.log(error);
@@ -246,7 +249,6 @@ export const delete_formato_by_tipo_medio_service = (id_format: any): any => {
   };
 };
 
-
 // ! ------------------------------->  SERVICIOS TIPOLOGIAS DOCUMENTALES <--------------------------------------
 
 // ? get documentary typologies by name -------------------------------------->
@@ -260,10 +262,13 @@ export const get_tipologias_documentales_by_name = (name?: string): any => {
         name ?? ''
       }`;
       const { data } = await api.get(url);
-      console.log(data);
-      control_success(
-        data.detail || 'proceso exitoso, se encontró la siguiente data'
-      );
+
+      data.data.length > 0
+        ? control_success(
+            data.detail || 'proceso exitoso, se encontró la siguiente data'
+          )
+        : control_error('No se encontró data relacionada');
+
       dispatch(get_data_tipologias_documentales(data.data));
       return data.data;
     } catch (error: any) {
@@ -274,4 +279,4 @@ export const get_tipologias_documentales_by_name = (name?: string): any => {
       return error as AxiosError;
     }
   };
-}
+};

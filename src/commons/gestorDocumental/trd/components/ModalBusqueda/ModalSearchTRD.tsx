@@ -35,7 +35,10 @@ import {
   get_trd_current,
   get_trds
 } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
-import { getServiceSeriesSubseriesXUnidadOrganizacional, get_searched_trd } from '../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import {
+  getServiceSeriesSubseriesXUnidadOrganizacional,
+  get_searched_trd
+} from '../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columnsModalBusquedaTRD } from './utils/colums';
 //! toolkit-redux values
 
@@ -56,7 +59,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
     // errors_searched_trd_modal
 
     // ? reset functions
-    reset_searched_trd_modal,
+    reset_searched_trd_modal
   } = use_trd();
 
   // ? context destructuring useModalContextTRD
@@ -143,13 +146,22 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
     }
   ];
 
+  const closeModal = (): any => {
+    closeModalModalSearchTRD();
+    reset_searched_trd_modal({
+      nombre: '',
+      version: ''
+    });
+    dispatch(get_trds([]));
+  };
+
   return (
     <>
       <Dialog
         fullWidth
         maxWidth="sm"
         open={modalSearchTRD}
-        onClose={closeModalModalSearchTRD}
+        onClose={closeModal}
       >
         <Box
           component="form"
@@ -168,10 +180,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
             Consultar los TRD que coincidan con el criterio de búsqueda
             <IconButton
               aria-label="close"
-              onClick={() => {
-                console.log('cerrando');
-                closeModalModalSearchTRD();
-              }}
+              onClick={closeModal}
               sx={{
                 position: 'absolute',
                 right: 8,
@@ -298,10 +307,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
               </Button>
               <Button
                 variant="outlined"
-                onClick={() => {
-                  console.log('cerrando');
-                  closeModalModalSearchTRD();
-                }}
+                onClick={closeModal}
                 startIcon={<CloseIcon />}
               >
                 CERRAR
