@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Button, Grid, Stack } from '@mui/material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import './Estilos.css';
@@ -6,6 +7,7 @@ import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ReciboPagoModulo: React.FC = () => {
+
   return (
     <Stack
       direction="column"
