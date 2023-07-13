@@ -8,18 +8,15 @@ import {
   type IObjBien,
   type IObjDespacho,
   type IObjBienDespacho,
-  type IObjBienesSolicitud
+  type IObjBienesSolicitud,
 } from '../../interfaces/distribucion';
-import { type Persona } from "../../../../../interfaces/globalModels";
-import {type IObjBienesSolicitud as IObjBienSolicitudAux} from '../../../solicitudMaterial/interfaces/solicitudVivero';
-
-
-
+import { type Persona } from '../../../../../interfaces/globalModels';
+import { type IObjBienesSolicitud as IObjBienSolicitudAux } from '../../../solicitudMaterial/interfaces/solicitudVivero';
 
 export const initial_state_transfer: IObjTransfer = {
   id_traslado: null,
   nro_traslado: null,
-  fecha_traslado: (new Date().toString()),
+  fecha_traslado: new Date().toString(),
   traslado_anulado: false,
   id_vivero_destino: null,
   id_vivero_origen: null,
@@ -27,10 +24,10 @@ export const initial_state_transfer: IObjTransfer = {
   fecha_anulado: null,
   id_persona_traslada: null,
   id_persona_anula: null,
-  observaciones: "",
-  ruta_archivo_soporte: "",
-}
-const initial_state_current_nursery: IObjNursery = {
+  observaciones: '',
+  ruta_archivo_soporte: null,
+};
+export const initial_state_current_nursery: IObjNursery = {
   id_vivero: null,
   nombre: '',
   cod_municipio: '',
@@ -63,18 +60,18 @@ const initial_state_current_nursery: IObjNursery = {
 };
 const initial_state_person: Persona = {
   id_persona: null,
-  tipo_persona: "",
-  tipo_documento: "",
-  numero_documento: "",
-  primer_nombre: "",
-  segundo_nombre: "",
-  primer_apellido: "",
-  segundo_apellido: "",
-  nombre_completo: "",
-  razon_social: "",
-  nombre_comercial: "",
+  tipo_persona: '',
+  tipo_documento: '',
+  numero_documento: '',
+  primer_nombre: '',
+  segundo_nombre: '',
+  primer_apellido: '',
+  segundo_apellido: '',
+  nombre_completo: '',
+  razon_social: '',
+  nombre_comercial: '',
   tiene_usuario: true,
-}
+};
 
 export const initial_state_current_good: IObjGoods = {
   id_inventario_vivero: null,
@@ -89,29 +86,29 @@ export const initial_state_current_good: IObjGoods = {
   cantidad_salidas: null,
   cantidad_lote_cuarentena: null,
   utlima_altura_lote: null,
-  codigo_bien: "",
-  nombre: "",
+  codigo_bien: '',
+  nombre: '',
   es_semilla_vivero: null,
   cod_tipo_elemento_vivero: null,
   saldo_disponible: null,
-}
+};
 export const initial_state_current_bien: IObjBien = {
   id_inventario_vivero: null,
   id_bien: null,
   cod_etapa_lote: null,
-  codigo_bien: "",
-  nombre: "",
+  codigo_bien: '',
+  nombre: '',
   cantidad_disponible: null,
   agno_lote: null,
   nro_lote: null,
-}
+};
 export const initial_state_current_despacho: IObjDespacho = {
   id_despacho_viveros: null,
   nro_despachos_viveros: null,
   fecha_solicitud_a_viveros: null,
   nro_solicitud_a_viveros: null,
   fecha_solicitud_retiro_material: null,
-  fecha_despacho:(new Date().toString()),
+  fecha_despacho: new Date().toString(),
   fecha_registro: null,
   motivo: null,
   despacho_anulado: false,
@@ -125,7 +122,7 @@ export const initial_state_current_despacho: IObjDespacho = {
   id_unidad_para_la_que_solicita: null,
   id_funcionario_responsable_unidad: null,
   id_persona_anula: null,
-}
+};
 export const initial_state_bien_selected: IObjBienesSolicitud = {
   id_item_solicitud_viveros: null,
   id_solicitud_viveros: null,
@@ -136,7 +133,7 @@ export const initial_state_bien_selected: IObjBienesSolicitud = {
   nombre_bien: null,
   cantidad: null,
   observaciones: null,
-}
+};
 
 const initial_state: IDistribucion = {
   nurseries: [],
@@ -145,11 +142,12 @@ const initial_state: IDistribucion = {
   transfers_nurseries: [],
   current_transfer: initial_state_transfer,
   goods: [],
+  goods_aux: [],
   current_good: initial_state_current_good,
   transfer_goods: [],
   persons: [],
   transfer_person: initial_state_person,
-  despachos:[],
+  despachos: [],
   current_despacho: initial_state_current_despacho,
   bienes: [],
   current_bien: initial_state_current_bien,
@@ -157,40 +155,67 @@ const initial_state: IDistribucion = {
   nro_despacho: null,
   bien_selected: initial_state_bien_selected,
   bienes_solicitud_aux: [],
-}
-
+};
 
 export const distribucion_slice = createSlice({
   name: 'distribucion',
   initialState: initial_state,
   reducers: {
-    set_nurseries: (state: IDistribucion, action: PayloadAction<IObjNursery[]>) => {
+    reset_state: () => initial_state,
+    set_nurseries: (
+      state: IDistribucion,
+      action: PayloadAction<IObjNursery[]>
+    ) => {
       state.nurseries = action.payload;
     },
-    set_origin_nursery: (state: IDistribucion, action: PayloadAction<IObjNursery>) => {
+    set_origin_nursery: (
+      state: IDistribucion,
+      action: PayloadAction<IObjNursery>
+    ) => {
       state.origin_nursery = action.payload;
     },
-    set_destination_nursery: (state: IDistribucion, action: PayloadAction<IObjNursery>) => {
+    set_destination_nursery: (
+      state: IDistribucion,
+      action: PayloadAction<IObjNursery>
+    ) => {
       state.destination_nursery = action.payload;
     },
 
-    set_transfer_goods: (state: IDistribucion, action: PayloadAction<IObjTransferGoods[]>) => {
+    set_transfer_goods: (
+      state: IDistribucion,
+      action: PayloadAction<IObjTransferGoods[]>
+    ) => {
       state.transfer_goods = action.payload;
     },
 
-    set_current_transfer: (state: IDistribucion, action: PayloadAction<IObjTransfer>) => {
+    set_current_transfer: (
+      state: IDistribucion,
+      action: PayloadAction<IObjTransfer>
+    ) => {
       state.current_transfer = action.payload;
     },
 
     set_goods: (state: IDistribucion, action: PayloadAction<IObjGoods[]>) => {
       state.goods = action.payload;
     },
+    set_goods_aux: (
+      state: IDistribucion,
+      action: PayloadAction<IObjGoods[]>
+    ) => {
+      state.goods_aux = action.payload;
+    },
 
-    set_current_good: (state: IDistribucion, action: PayloadAction<IObjGoods>) => {
+    set_current_good: (
+      state: IDistribucion,
+      action: PayloadAction<IObjGoods>
+    ) => {
       state.current_good = action.payload;
     },
 
-    set_transfers_nurseries: (state: IDistribucion, action: PayloadAction<IObjTransfer[]>) => {
+    set_transfers_nurseries: (
+      state: IDistribucion,
+      action: PayloadAction<IObjTransfer[]>
+    ) => {
       state.transfers_nurseries = action.payload;
     },
 
@@ -198,7 +223,10 @@ export const distribucion_slice = createSlice({
       state.persons = action.payload;
     },
 
-    set_transfer_person: (state: IDistribucion, action: PayloadAction<Persona>) => {
+    set_transfer_person: (
+      state: IDistribucion,
+      action: PayloadAction<Persona>
+    ) => {
       state.transfer_person = action.payload;
     },
 
@@ -206,50 +234,73 @@ export const distribucion_slice = createSlice({
       state.bienes = action.payload;
     },
 
-    set_current_bien: (state: IDistribucion, action: PayloadAction<IObjBien>) => {
+    set_current_bien: (
+      state: IDistribucion,
+      action: PayloadAction<IObjBien>
+    ) => {
       state.current_bien = action.payload;
     },
 
-    set_bienes_despacho: (state: IDistribucion, action: PayloadAction<IObjBienDespacho[]>) => {
+    set_bienes_despacho: (
+      state: IDistribucion,
+      action: PayloadAction<IObjBienDespacho[]>
+    ) => {
       state.bienes_despacho = action.payload;
     },
-    set_despachos: (state: IDistribucion, action: PayloadAction<IObjDespacho[]>) => {
+    set_despachos: (
+      state: IDistribucion,
+      action: PayloadAction<IObjDespacho[]>
+    ) => {
       state.despachos = action.payload;
     },
 
-    set_current_despacho: (state: IDistribucion, action: PayloadAction<IObjDespacho>) => {
+    set_current_despacho: (
+      state: IDistribucion,
+      action: PayloadAction<IObjDespacho>
+    ) => {
       state.current_despacho = action.payload;
     },
-    set_nro_despacho: (state: IDistribucion, action: PayloadAction<number | null>) => {
+    set_nro_despacho: (
+      state: IDistribucion,
+      action: PayloadAction<number | null>
+    ) => {
       state.nro_despacho = action.payload;
     },
-    
-    set_bien_selected: (state: IDistribucion, action: PayloadAction<IObjBienesSolicitud>) => {
+
+    set_bien_selected: (
+      state: IDistribucion,
+      action: PayloadAction<IObjBienesSolicitud>
+    ) => {
       state.bien_selected = action.payload;
     },
-    
-    set_bienes_solicitud_aux: (state: IDistribucion, action: PayloadAction<IObjBienSolicitudAux[]>) => {
+
+    set_bienes_solicitud_aux: (
+      state: IDistribucion,
+      action: PayloadAction<IObjBienSolicitudAux[]>
+    ) => {
       state.bienes_solicitud_aux = action.payload;
     },
   },
 });
-export const { 
-  set_persons, 
-  set_current_good, 
-  set_goods, 
-  set_transfer_person, 
-  set_origin_nursery, 
-  set_destination_nursery, 
+export const {
+  set_persons,
+  set_current_good,
+  set_goods,
+  set_transfer_person,
+  set_origin_nursery,
+  set_destination_nursery,
   set_nurseries,
-  set_transfer_goods, 
+  set_transfer_goods,
   set_transfers_nurseries,
   set_bienes,
-  set_current_bien ,
+  set_current_bien,
   set_current_transfer,
   set_bienes_despacho,
-  set_despachos, 
-  set_current_despacho, 
+  set_despachos,
+  set_current_despacho,
   set_nro_despacho,
   set_bien_selected,
-  set_bienes_solicitud_aux
+  set_bienes_solicitud_aux,
+  reset_state,
+  set_goods_aux,
 } = distribucion_slice.actions;

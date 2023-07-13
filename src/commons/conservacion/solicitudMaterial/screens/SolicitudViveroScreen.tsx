@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import PersonaResponsable from '../components/PersonaResponsable';
 import {
+  reset_state,
   set_current_nursery,
   set_current_solicitud,
   set_persona_solicita,
@@ -35,6 +36,8 @@ import DestinoSolicitud from '../components/DestinoElementos';
 import SeleccionarBienConsumo from '../components/SeleccionarBien';
 import AnularEliminar from '../../componentes/AnularEliminar';
 import Block from '@mui/icons-material/Block';
+import Limpiar from '../../componentes/Limpiar';
+import SearchIcon from '@mui/icons-material/Search';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SolicitudViveroScreen = () => {
@@ -56,6 +59,24 @@ const SolicitudViveroScreen = () => {
   } = useAppSelector((state) => state.solicitud_vivero);
 
   const dispatch = useAppDispatch();
+  const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+  const handle_open_select_model = (): void => {
+    set_open_search_modal(true);
+  };
+  const initial_values = (): void => {
+    void dispatch(get_uni_organizacional());
+    void dispatch(get_num_solicitud());
+    void dispatch(get_nurcery());
+    void dispatch(get_person_id_service(userinfo.id_persona));
+    dispatch(
+      set_persona_solicita({
+        nombre: userinfo.nombre,
+        id_persona: userinfo.id_persona,
+        unidad_organizacional: userinfo.nombre_unidad_organizacional,
+      })
+    );
+    set_action('crear');
+  };
   const [action, set_action] = useState<string>('Crear');
 
   useEffect(() => {
@@ -264,6 +285,8 @@ const SolicitudViveroScreen = () => {
         title={'Solicitudes a viveros'}
         control_solicitud={control_solicitud}
         get_values={get_values}
+        open_modal={open_search_modal}
+        set_open_modal={set_open_search_modal}
       />
 
       <PersonaResponsable
@@ -292,97 +315,119 @@ const SolicitudViveroScreen = () => {
           </Grid>
         )}
         <Grid item xs={12} md={3}>
-          <AnularEliminar
-            action={
-              current_solicitud.solicitud_anulada_solicitante === true
-                ? 'Detalle anulación'
-                : 'Anular'
-            }
-            button_icon_class={<Block />}
-            button_disabled={false}
-            modal_title={
-              current_solicitud.solicitud_anulada_solicitante === true
-                ? 'Detalle anulación'
-                : 'Anular solicitud'
-            }
-            button_submit_label={'Anular'}
-            button_submit_disabled={
-              current_solicitud.solicitud_anulada_solicitante
-            }
-            button_submit_icon_class={<Block />}
-            button_submit_action={handle_submit(on_submit_annul)}
-            modal_inputs={[
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_solicitud,
-                control_name: 'nro_solicitud',
-                default_value: '',
-                rules: {},
-                label: 'Número de solicitud',
-                type: 'number',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                person: true,
-                xs: 12,
-                md: 4,
-                control_form: control_solicitud,
-                control_name: 'persona_anula',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Debe seleccionar la personas que la creó',
-                  },
-                },
-                label: 'Preparación realizada por',
-                type: 'text',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'date_picker_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_solicitud,
-                control_name:
-                  current_solicitud.solicitud_anulada_solicitante === true
-                    ? 'fecha_anulacion_solicitante'
-                    : 'fecha',
-                default_value: new Date().toString(),
-                rules: { required_rule: { rule: true, message: 'requerido' } },
-                label: 'Fecha actual',
-                type: 'text',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 12,
-                control_form: control_solicitud,
-                control_name: 'justificacion_anulacion_solicitante',
-                default_value: '',
-                rules: {
-                  required_rule: {
-                    rule: true,
-                    message: 'Justificación requerida',
-                  },
-                },
-                label: 'Justificación',
-                type: 'text',
-                multiline_text: true,
-                rows_text: 4,
-                disabled: false,
-                helper_text: '',
-              },
-            ]}
+          <FormButton
+            variant_button="contained"
+            on_click_function={handle_open_select_model}
+            icon_class={<SearchIcon />}
+            label={'Buscar solicitud'}
+            type_button="button"
+            disabled={false}
           />
         </Grid>
+        <Grid item xs={12} md={3}>
+          <Limpiar
+            dispatch={dispatch}
+            reset_state={reset_state}
+            set_initial_values={initial_values}
+            variant_button={'outlined'}
+          />
+        </Grid>
+        {current_solicitud.id_solicitud_vivero !== null && (
+          <Grid item xs={12} md={3}>
+            <AnularEliminar
+              action={
+                current_solicitud.solicitud_anulada_solicitante === true
+                  ? 'Detalle anulación'
+                  : 'Anular'
+              }
+              button_icon_class={<Block />}
+              button_disabled={false}
+              modal_title={
+                current_solicitud.solicitud_anulada_solicitante === true
+                  ? 'Detalle anulación'
+                  : 'Anular solicitud'
+              }
+              button_submit_label={'Anular'}
+              button_submit_disabled={
+                current_solicitud.solicitud_anulada_solicitante
+              }
+              button_submit_icon_class={<Block />}
+              button_submit_action={handle_submit(on_submit_annul)}
+              modal_inputs={[
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 4,
+                  control_form: control_solicitud,
+                  control_name: 'nro_solicitud',
+                  default_value: '',
+                  rules: {},
+                  label: 'Número de solicitud',
+                  type: 'number',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  person: true,
+                  xs: 12,
+                  md: 4,
+                  control_form: control_solicitud,
+                  control_name: 'persona_anula',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Debe seleccionar la personas que la creó',
+                    },
+                  },
+                  label: 'Preparación realizada por',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'date_picker_controller',
+                  xs: 12,
+                  md: 4,
+                  control_form: control_solicitud,
+                  control_name:
+                    current_solicitud.solicitud_anulada_solicitante === true
+                      ? 'fecha_anulacion_solicitante'
+                      : 'fecha',
+                  default_value: new Date().toString(),
+                  rules: {
+                    required_rule: { rule: true, message: 'requerido' },
+                  },
+                  label: 'Fecha actual',
+                  type: 'text',
+                  disabled: true,
+                  helper_text: '',
+                },
+                {
+                  datum_type: 'input_controller',
+                  xs: 12,
+                  md: 12,
+                  control_form: control_solicitud,
+                  control_name: 'justificacion_anulacion_solicitante',
+                  default_value: '',
+                  rules: {
+                    required_rule: {
+                      rule: true,
+                      message: 'Justificación requerida',
+                    },
+                  },
+                  label: 'Justificación',
+                  type: 'text',
+                  multiline_text: true,
+                  rows_text: 4,
+                  disabled: false,
+                  helper_text: '',
+                },
+              ]}
+            />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );

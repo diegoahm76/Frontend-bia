@@ -16,6 +16,7 @@ import {
 } from '../interfaces/produccion';
 import {
   initial_state_current_bien,
+  reset_state,
   set_current_bien,
   set_current_nursery,
   set_preparacion_bienes,
@@ -27,11 +28,16 @@ import {
   annul_preparacion_service,
   edit_preparacion_service,
   get_bien_preparacion_id_service,
+  get_mezclas_service,
+  get_nurseries_service,
   get_person_id_service,
 } from '../store/thunks/produccionThunks';
 import { useForm } from 'react-hook-form';
 import AnularEliminar from '../../componentes/AnularEliminar';
 import Block from '@mui/icons-material/Block';
+import Limpiar from '../../componentes/Limpiar';
+import SearchIcon from '@mui/icons-material/Search';
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function PreparacionMezclaScreen(): JSX.Element {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -55,6 +61,16 @@ export function PreparacionMezclaScreen(): JSX.Element {
 
   const [action, set_action] = useState<string>('Crear');
   const dispatch = useAppDispatch();
+  const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
+  const handle_open_select_model = (): void => {
+    set_open_search_modal(true);
+  };
+  const initial_values = (): void => {
+    void dispatch(get_nurseries_service());
+    void dispatch(get_mezclas_service(''));
+    void dispatch(get_person_id_service(userinfo.id_persona));
+    set_action('crear');
+  };
 
   useEffect(() => {
     if (current_preparacion.id_mezcla !== null) {
@@ -222,6 +238,8 @@ export function PreparacionMezclaScreen(): JSX.Element {
         <SeleccionarMezcla
           control_preparacion={control_preparacion}
           get_values={get_values}
+          open_modal={open_search_modal}
+          set_open_modal={set_open_search_modal}
         />
         {current_nursery.id_vivero !== null && <SeleccionarBienPreparacion />}
         <Grid container direction="row" padding={2} spacing={2}>
@@ -236,89 +254,108 @@ export function PreparacionMezclaScreen(): JSX.Element {
               />
             </Grid>
           )}
-
           <Grid item xs={12} md={3}>
-            <AnularEliminar
-              action={
-                current_preparacion.preparacion_anulada === true
-                  ? 'Detalle anulación'
-                  : 'Anular'
-              }
-              button_icon_class={<Block />}
-              button_disabled={false}
-              modal_title={
-                current_preparacion.preparacion_anulada === true
-                  ? 'Detalle anulación'
-                  : 'Anular preparación'
-              }
-              button_submit_label={'Anular'}
-              button_submit_disabled={current_preparacion.preparacion_anulada}
-              button_submit_icon_class={<Block />}
-              button_submit_action={handle_submit(on_submit_annul)}
-              modal_inputs={[
-                {
-                  datum_type: 'input_controller',
-                  person: true,
-                  xs: 12,
-                  md: 4,
-                  control_form: control_preparacion,
-                  control_name:
-                    current_preparacion.preparacion_anulada === true
-                      ? 'nombre_persona_anula'
-                      : 'persona',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Debe seleccionar la personas que la creó',
-                    },
-                  },
-                  label: 'Anulación realizada por',
-                  type: 'text',
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'date_picker_controller',
-                  xs: 12,
-                  md: 4,
-                  control_form: control_preparacion,
-                  control_name:
-                    current_preparacion.preparacion_anulada === true
-                      ? 'fecha_anulacion'
-                      : 'fecha',
-                  default_value: new Date().toString(),
-                  rules: {
-                    required_rule: { rule: true, message: 'Requerido' },
-                  },
-                  label: 'Fecha actual',
-                  type: 'text',
-                  disabled: true,
-                  helper_text: '',
-                },
-                {
-                  datum_type: 'input_controller',
-                  xs: 12,
-                  md: 12,
-                  control_form: control_preparacion,
-                  control_name: 'justificacion_anulacion',
-                  default_value: '',
-                  rules: {
-                    required_rule: {
-                      rule: true,
-                      message: 'Justificación requerida',
-                    },
-                  },
-                  label: 'Justificación',
-                  type: 'text',
-                  multiline_text: true,
-                  rows_text: 4,
-                  disabled: false,
-                  helper_text: '',
-                },
-              ]}
+            <FormButton
+              variant_button="contained"
+              on_click_function={handle_open_select_model}
+              icon_class={<SearchIcon />}
+              label={'Buscar preparación'}
+              type_button="button"
+              disabled={false}
             />
           </Grid>
+          <Grid item xs={12} md={3}>
+            <Limpiar
+              dispatch={dispatch}
+              reset_state={reset_state}
+              set_initial_values={initial_values}
+              variant_button={'outlined'}
+            />
+          </Grid>
+          {current_preparacion.id_item_preparacion_mezcla !== null && (
+            <Grid item xs={12} md={3}>
+              <AnularEliminar
+                action={
+                  current_preparacion.preparacion_anulada === true
+                    ? 'Detalle anulación'
+                    : 'Anular'
+                }
+                button_icon_class={<Block />}
+                button_disabled={false}
+                modal_title={
+                  current_preparacion.preparacion_anulada === true
+                    ? 'Detalle anulación'
+                    : 'Anular preparación'
+                }
+                button_submit_label={'Anular'}
+                button_submit_disabled={current_preparacion.preparacion_anulada}
+                button_submit_icon_class={<Block />}
+                button_submit_action={handle_submit(on_submit_annul)}
+                modal_inputs={[
+                  {
+                    datum_type: 'input_controller',
+                    person: true,
+                    xs: 12,
+                    md: 4,
+                    control_form: control_preparacion,
+                    control_name:
+                      current_preparacion.preparacion_anulada === true
+                        ? 'nombre_persona_anula'
+                        : 'persona',
+                    default_value: '',
+                    rules: {
+                      required_rule: {
+                        rule: true,
+                        message: 'Debe seleccionar la personas que la creó',
+                      },
+                    },
+                    label: 'Anulación realizada por',
+                    type: 'text',
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'date_picker_controller',
+                    xs: 12,
+                    md: 4,
+                    control_form: control_preparacion,
+                    control_name:
+                      current_preparacion.preparacion_anulada === true
+                        ? 'fecha_anulacion'
+                        : 'fecha',
+                    default_value: new Date().toString(),
+                    rules: {
+                      required_rule: { rule: true, message: 'Requerido' },
+                    },
+                    label: 'Fecha actual',
+                    type: 'text',
+                    disabled: true,
+                    helper_text: '',
+                  },
+                  {
+                    datum_type: 'input_controller',
+                    xs: 12,
+                    md: 12,
+                    control_form: control_preparacion,
+                    control_name: 'justificacion_anulacion',
+                    default_value: '',
+                    rules: {
+                      required_rule: {
+                        rule: true,
+                        message: 'Justificación requerida',
+                      },
+                    },
+                    label: 'Justificación',
+                    type: 'text',
+                    multiline_text: true,
+                    rows_text: 4,
+                    disabled: false,
+                    helper_text: '',
+                  },
+                ]}
+              />
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </>
