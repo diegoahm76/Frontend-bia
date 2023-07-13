@@ -9,7 +9,8 @@ import {
   get_trd_current,
   get_trds,
   get_catalogo_series_subseries_unidad_organizacional,
-  get_data_format_documental_type
+  get_data_format_documental_type,
+  get_data_tipologias_documentales
   // get_data_format_documental_type_current,
 } from '../slice/TRDResourcesSlice';
 
@@ -196,23 +197,80 @@ export const create_formato_by_tipo_medio_service = (bodyPost: any): any => {
   };
 };
 
-
 // ? edit a format (type and name, active or inactive) (fisic or electronic)------------------------------>
 
-
-
+export const edit_formato_by_tipo_medio_service = ({
+  nombre,
+  id_formato_tipo_medio,
+  cod_tipo_medio_doc,
+  activo
+}: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(id_formato_tipo_medio, 'id_formato_tipo_medio');
+      console.log(nombre, 'nombre');
+      const url = `gestor/trd/formatos/update/${id_formato_tipo_medio}/`;
+      const { data } = await api.put(url, {
+        nombre,
+        cod_tipo_medio_doc,
+        activo
+      });
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      console.log(error.response.data, 'error');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // ? delete a format (id_format)------------------------------>
 
 export const delete_formato_by_tipo_medio_service = (id_format: any): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.delete(`gestor/trd/formatos/delete/${id_format}/`);
+      const { data } = await api.delete(
+        `gestor/trd/formatos/delete/${id_format}/`
+      );
       control_success(data.detail || 'Formato eliminado correctamente');
       return data;
     } catch (error: any) {
       console.log(error.response.data, 'error');
-      control_error(error.response.data.detail || 'Error, no se ha podido eliminar el formato');
+      control_error(
+        error.response.data.detail ||
+          'Error, no se ha podido eliminar el formato'
+      );
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// ! ------------------------------->  SERVICIOS TIPOLOGIAS DOCUMENTALES <--------------------------------------
+
+// ? get documentary typologies by name -------------------------------------->
+
+export const get_tipologias_documentales_by_name = (name?: string): any => {
+  return async (
+    dispatch: Dispatch<any>
+  ): Promise<AxiosResponse | AxiosError> => {
+    try {
+      const url = `gestor/trd/buscar/tipologia/documental/?nombre=${
+        name ?? ''
+      }`;
+      const { data } = await api.get(url);
+      console.log(data);
+      control_success(
+        data.detail || 'proceso exitoso, se encontró la siguiente data'
+      );
+      dispatch(get_data_tipologias_documentales(data.data));
+      return data.data;
+    } catch (error: any) {
+      control_error(
+        `${error.response.data.detail} que coincida` ||
+          'Ha ocurrido un error, no se han encontrado data'
+      );
       return error as AxiosError;
     }
   };

@@ -45,6 +45,7 @@ import { use_trd } from '../../../hooks/use_trd';
 import {
   create_formato_by_tipo_medio_service,
   delete_formato_by_tipo_medio_service,
+  edit_formato_by_tipo_medio_service,
   get_formatos_by_tipo_medio_by_format_and_name
 } from '../../../toolkit/TRDResources/thunks/TRDResourcesThunks';
 import { columsTRD } from './utils/colums';
@@ -63,6 +64,7 @@ export const AdmnistrarFormatos = (): JSX.Element => {
     //* necesary to use the form
     control_format_documental_type,
     data_format_documental_type_watch_form,
+    reset_format_documental_type, //* basic reset form to manage edit data
     reset_all_format_documental_type_modal,
 
     // ? state button to manage create or update documental type format
@@ -80,20 +82,20 @@ export const AdmnistrarFormatos = (): JSX.Element => {
       'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
       nombre
     } = data_format_documental_type_watch_form;
-    const dataToSendCreateFormate = { cod_tipo_medio_doc, nombre };
 
     try {
-      const res = await dispatch(
-        create_formato_by_tipo_medio_service(dataToSendCreateFormate)
+      await dispatch(
+        create_formato_by_tipo_medio_service({
+          cod_tipo_medio_doc,
+          nombre
+        })
       );
-      console.log(res);
-      dispatch(
-        get_formatos_by_tipo_medio_by_format_and_name(
-          '', //* format, it is empty because i want all the formats that match the cod_tipo_medio_doc to avoid confusions
-          cod_tipo_medio_doc
-        )
+
+      await dispatch(
+        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
       );
-      set_title_button('Actualizar');
+      reset_all_format_documental_type_modal();
+      // set_title_button('Actualizar');
     } catch (err) {
       console.log(err);
     }
@@ -103,11 +105,29 @@ export const AdmnistrarFormatos = (): JSX.Element => {
   const onSubmitUpdateFormate = async () => {
     const {
       'cod-tipo-medio': { 'cod-tipo-medio': cod_tipo_medio_doc },
-      nombre
+      nombre,
+      activo,
+      id_formato_tipo_medio
     } = data_format_documental_type_watch_form;
-    const dataToSendUpdateFormate = { cod_tipo_medio_doc, nombre };
-  };
 
+    try {
+      await dispatch(
+        edit_formato_by_tipo_medio_service({
+          cod_tipo_medio_doc,
+          nombre,
+          activo,
+          id_formato_tipo_medio
+        })
+      );
+
+      await dispatch(
+        get_formatos_by_tipo_medio_by_format_and_name('', cod_tipo_medio_doc)
+      );
+      reset_all_format_documental_type_modal();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   // ?  function that allow us to delete a format documental type
   const deleteFormat = async ({
     row: { id_formato_tipo_medio, cod_tipo_medio_doc }
@@ -179,6 +199,16 @@ export const AdmnistrarFormatos = (): JSX.Element => {
           <>
             <IconButton
               onClick={() => {
+                reset_format_documental_type({
+                  nombre: params.row.nombre,
+                  'cod-tipo-medio': {
+                    label: params.row.tipo_medio_doc,
+                    value: 0,
+                    'cod-tipo-medio': params.row.cod_tipo_medio_doc
+                  },
+                  activo: params.row.activo,
+                  id_formato_tipo_medio: params.row.id_formato_tipo_medio
+                });
                 set_title_button('Actualizar');
                 console.log('params edit formato', params.row);
               }}
@@ -209,7 +239,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
 
   return (
     <Dialog
-      id="dialog_series_ccd"
       maxWidth="md"
       open={modalCreacionFormatoTipo}
       onClose={closeModalCreacionFormatoTipo}
@@ -234,7 +263,9 @@ export const AdmnistrarFormatos = (): JSX.Element => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            void onSubmitCreateFormate();
+            title_button === 'Actualizar'
+              ? void onSubmitUpdateFormate()
+              : void onSubmitCreateFormate();
           }}
           autoComplete="off"
         >
@@ -312,77 +343,86 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                   />
                 )}
               />
-              {title_button === 'Actualizar' ? (
-                <Controller
-                  name="activo"
-                  control={control_format_documental_type}
-                  defaultValue=""
-                  // rules={{ required: false }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error }
-                  }) => (
-                    <FormControl
-                      sx={{
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center'
-                      }}
-                      fullWidth
-                    >
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={value}
-                            onChange={(e) => {
-                              onChange(e.target.checked);
-                            }}
-                            // name="checkedB"
-                            color="primary"
-                          />
-                        }
-                        label={
-                          value ? (
-                            <Typography variant="body2">
-                              Activo
-                              <Tooltip
-                                title="Formato tipo de medio activo"
-                                placement="right"
-                              >
-                                <InfoIcon
-                                  sx={{
-                                    width: '1.2rem',
-                                    height: '1.2rem',
-                                    ml: '0.5rem',
-                                    color: 'green'
-                                  }}
-                                />
-                              </Tooltip>
-                            </Typography>
-                          ) : (
-                            <Typography variant="body2">
-                              Inactivo
-                              <Tooltip
-                                title="Formato tipo de medio inactivo"
-                                placement="right"
-                              >
-                                <InfoIcon
-                                  sx={{
-                                    width: '1.2rem',
-                                    height: '1.2rem',
-                                    ml: '0.5rem',
-                                    color: 'orange'
-                                  }}
-                                />
-                              </Tooltip>
-                            </Typography>
-                          )
-                        }
-                      />
-                    </FormControl>
-                  )}
-                />
-              ) : null}
+              <Grid
+                item
+                xs={4}
+                sm={4}
+                sx={{
+                  ml: '-25rem'
+                }}
+              >
+                {title_button === 'Actualizar' ? (
+                  <Controller
+                    name="activo"
+                    control={control_format_documental_type}
+                    defaultValue=""
+                    // rules={{ required: false }}
+                    render={({
+                      field: { onChange, value },
+                      fieldState: { error }
+                    }) => (
+                      <FormControl
+                        /* sx={{
+                          width: '100%',
+                          display: 'flex',
+                          alignItems: 'center'
+                        }} */
+                        fullWidth
+                      >
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={value}
+                              onChange={(e) => {
+                                onChange(e.target.checked);
+                              }}
+                              // name="checkedB"
+                              color="primary"
+                            />
+                          }
+                          label={
+                            value ? (
+                              <Typography variant="body2">
+                                Activo
+                                <Tooltip
+                                  title="Formato tipo de medio activo"
+                                  placement="right"
+                                >
+                                  <InfoIcon
+                                    sx={{
+                                      width: '1.2rem',
+                                      height: '1.2rem',
+                                      ml: '0.5rem',
+                                      color: 'green'
+                                    }}
+                                  />
+                                </Tooltip>
+                              </Typography>
+                            ) : (
+                              <Typography variant="body2">
+                                Inactivo
+                                <Tooltip
+                                  title="Formato tipo de medio inactivo"
+                                  placement="right"
+                                >
+                                  <InfoIcon
+                                    sx={{
+                                      width: '1.2rem',
+                                      height: '1.2rem',
+                                      ml: '0.5rem',
+                                      color: 'orange'
+                                    }}
+                                  />
+                                </Tooltip>
+                              </Typography>
+                            )
+                          }
+                        />
+                      </FormControl>
+                    )}
+                  />
+                ) : null}
+              </Grid>
               <Stack
                 direction="row"
                 justifyContent="flex-end"

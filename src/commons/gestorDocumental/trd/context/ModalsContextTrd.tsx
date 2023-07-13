@@ -19,7 +19,14 @@ const ModalContextTRD = createContext<ModalContextState>({
   //*
   modalCreacionFormatoTipo: false,
   openModalCreacionFormatoTipo: () => {},
-  closeModalCreacionFormatoTipo: () => {}
+  closeModalCreacionFormatoTipo: () => {},
+  //*
+  modalBusquedaTipologiasDocumentales: false,
+  openModalBusquedaTipologiasDocumentales: () => {},
+  closeModalBusquedaTipologiasDocumentales: () => {},
+  //*
+  createTRDLoadingButton: false,
+  setCreateTRDLoadingButton: () => {}
 });
 
 const ModalProviderTRD: FC<any> = ({ children }: any) => {
@@ -51,6 +58,20 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
   const closeModalCreacionFormatoTipo = useCallback(() => {
     dispatch({ type: 'CLOSE_MODAL_CREACION_FORMATO_TIPO' });
   }, []);
+  //*
+  const openModalBusquedaTipologiasDocumentales = useCallback(() => {
+    dispatch({ type: 'OPEN_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES' });
+  }, []);
+
+  const closeModalBusquedaTipologiasDocumentales = useCallback(() => {
+    dispatch({ type: 'CLOSE_MODAL_BUSQUEDA_TIPOLOGIAS_DOCUMENTALES' });
+  }, []);
+
+  //*
+
+  const setCreateTRDLoadingButton = useCallback((value: boolean) => {
+    dispatch({ type: 'SET_CREATE_TRD_LOADING_BUTTON', payload: value });
+  }, []);
 
   return (
     <ModalContextTRD.Provider
@@ -66,7 +87,15 @@ const ModalProviderTRD: FC<any> = ({ children }: any) => {
         //*
         modalCreacionFormatoTipo: state.modalCreacionFormatoTipo,
         openModalCreacionFormatoTipo,
-        closeModalCreacionFormatoTipo
+        closeModalCreacionFormatoTipo,
+        //*
+        modalBusquedaTipologiasDocumentales:
+          state.modalBusquedaTipologiasDocumentales,
+        openModalBusquedaTipologiasDocumentales,
+        closeModalBusquedaTipologiasDocumentales,
+        //*
+        createTRDLoadingButton: state.createTRDLoadingButton,
+        setCreateTRDLoadingButton
       }}
     >
       {children}

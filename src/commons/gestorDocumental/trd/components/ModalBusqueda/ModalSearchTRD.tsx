@@ -36,6 +36,7 @@ import {
   get_trds
 } from '../../toolkit/TRDResources/slice/TRDResourcesSlice';
 import { getServiceSeriesSubseriesXUnidadOrganizacional, get_searched_trd } from '../../toolkit/TRDResources/thunks/TRDResourcesThunks';
+import { columnsModalBusquedaTRD } from './utils/colums';
 //! toolkit-redux values
 
 export const ModalSearchTRD: FC = (): JSX.Element => {
@@ -63,18 +64,7 @@ export const ModalSearchTRD: FC = (): JSX.Element => {
     useContext(ModalContextTRD);
 
   const columns_trd_busqueda: GridColDef[] = [
-    {
-      headerName: 'Nombre',
-      field: 'nombre',
-      minWidth: 170,
-      maxWidth: 200
-    },
-    {
-      headerName: 'Versión',
-      field: 'version',
-      minWidth: 170,
-      maxWidth: 200
-    },
+    ...columnsModalBusquedaTRD,
     {
       headerName: 'Estado',
       field: 'estado',

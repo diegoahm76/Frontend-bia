@@ -11,6 +11,9 @@ interface TRD {
   //! data formatos tipos medios creados
   data_format_documental_type_current: any;
   data_format_documental_type: any[];
+
+  //! data tipologias documentales
+  tipologias: any[];
 }
 
 const initial_state: TRD = {
@@ -21,7 +24,9 @@ const initial_state: TRD = {
   catalado_series_subseries_unidad_organizacional: [],
   //! data formatos tipos medios creados
   data_format_documental_type_current: null,
-  data_format_documental_type: []
+  data_format_documental_type: [],
+  //! data tipologias documentales
+  tipologias: []
 };
 
 export const trd_slice = createSlice({
@@ -58,6 +63,14 @@ export const trd_slice = createSlice({
       action: PayloadAction<any>
     ) => {
       state.data_format_documental_type = action.payload;
+    },
+
+    //! data tipologias documentales
+    get_data_tipologias_documentales: (
+      state: any,
+      action: PayloadAction<any>
+    ) => {
+      state.tipologias = action.payload;
     }
   }
 });
@@ -70,5 +83,7 @@ export const {
   get_catalogo_series_subseries_unidad_organizacional,
   //* -------------------------------->
   get_data_format_documental_type_current,
-  get_data_format_documental_type
+  get_data_format_documental_type,
+  //* -------------------------------->
+  get_data_tipologias_documentales,
 } = trd_slice.actions;

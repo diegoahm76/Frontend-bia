@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { get_finished_ccd_service } from '../toolkit/CCDResources/thunks/getFinishedCcdThunks';
 import {
   get_catalogo_series_subseries_unidad_organizacional,
-  get_data_format_documental_type,
+  // get_data_format_documental_type,
   get_data_format_documental_type_current,
   get_trd_current,
   get_trds
@@ -163,7 +163,7 @@ export const use_trd = (): any => {
   const reset_all_format_documental_type_modal = (): void => {
     //* reset form
     dispatch(get_data_format_documental_type_current(null));
-    dispatch(get_data_format_documental_type([]));
+    // dispatch(get_data_format_documental_type([]));
     reset_format_documental_type({
       'cod-tipo-medio': {
         label: '',
@@ -194,6 +194,7 @@ export const use_trd = (): any => {
     // ? format_documental_type of trd --------------------------------------------->
     control_format_documental_type,
     watch_format_documental_type,
+    reset_format_documental_type, //* basic reset to manage edit data
     reset_all_format_documental_type_modal, //* reset functions data format documental type
     errors_format_documental_type,
     data_format_documental_type_watch_form,

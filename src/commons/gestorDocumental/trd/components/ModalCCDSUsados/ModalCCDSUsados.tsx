@@ -28,6 +28,7 @@ import { type GridColDef, DataGrid } from '@mui/x-data-grid';
 // import { useAppDispatch } from '../../../../../hooks';
 import { ModalContextTRD } from '../../context/ModalsContextTrd';
 import { useAppSelector } from '../../../../../hooks';
+import { columnsModalCCDUsados } from './utils/columns';
 
 //! toolkit-redux values
 
@@ -48,18 +49,7 @@ export const ModalCCDUsados: FC = (): JSX.Element => {
   const { modalCCDUsados, closeModalCCDUsados } = useContext(ModalContextTRD);
 
   const columns_trd_busqueda: GridColDef[] = [
-    {
-      headerName: 'Nombre',
-      field: 'nombre',
-      minWidth: 200,
-      maxWidth: 220
-    },
-    {
-      headerName: 'Versión',
-      field: 'version',
-      minWidth: 100,
-      maxWidth: 120
-    },
+    ...columnsModalCCDUsados,
     {
       headerName: 'Estado',
       field: 'estado',

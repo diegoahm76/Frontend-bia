@@ -11,4 +11,13 @@ export interface ModalContextState {
   modalCreacionFormatoTipo: boolean;
   openModalCreacionFormatoTipo: () => void;
   closeModalCreacionFormatoTipo: () => void;
+  //*
+  modalBusquedaTipologiasDocumentales: boolean;
+  openModalBusquedaTipologiasDocumentales: () => void;
+  closeModalBusquedaTipologiasDocumentales: () => void;
+
+
+  // ? booleans to admins buttons, loading, etc
+  createTRDLoadingButton: boolean;
+  setCreateTRDLoadingButton: (value: boolean) => void;
 }

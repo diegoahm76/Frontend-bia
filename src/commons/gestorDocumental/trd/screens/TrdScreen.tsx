@@ -34,6 +34,7 @@ import { ModalCCDUsados } from '../components/ModalCCDSUsados/ModalCCDSUsados';
 import { control_error } from '../../../../helpers';
 import { CCDSeleccionadoCatalogo } from '../components/CCDSeleccionadoCatalogo/CCDSeleccionadoCatalogo';
 import { AdmnistrarFormatos } from '../components/CreacionDeFormatos/BusquedaFormatos/BusquedaFormatos';
+import { AdministrarTipologias } from '../components/Tipologias/components/AdministrarTipologias/AdministrarTipologias';
 
 export const TrdScreen: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -79,8 +80,11 @@ export const TrdScreen: FC = (): JSX.Element => {
   }, [trd_current?.fecha_terminado]);
 
   // ? modal context
-  const { openModalModalSearchTRD, openModalCCDUsados, openModalCreacionFormatoTipo } =
-    useContext(ModalContextTRD);
+  const {
+    openModalModalSearchTRD,
+    openModalCCDUsados,
+    openModalCreacionFormatoTipo
+  } = useContext(ModalContextTRD);
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const onSubmit = () => {
@@ -119,7 +123,10 @@ export const TrdScreen: FC = (): JSX.Element => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}
+              <Grid
+                item
+                xs={12}
+                sm={6}
                 sx={{
                   zIndex: 2
                 }}
@@ -290,55 +297,90 @@ export const TrdScreen: FC = (): JSX.Element => {
               </Button>
             </Stack>
           </form>
-
-          {/* data table with the "catalogo de series y subseries por unidad organizacional" */}
-          <CCDSeleccionadoCatalogo />
-          {/* finish data table with the "catalogo de series y subseries por unidad organizacional" */}
-          <Stack
-            direction="row"
-            justifyContent="flex-end"
-            spacing={2}
-            sx={{ m: '20px 0' }}
-          >
-            <Button
-              color="success"
-              variant="contained"
-              startIcon={<SaveIcon />}
-              onClick={() => {
-                if (flag_finish_or_or_edit_trd) {
-                  set_flag_finish_or_edit_trd(false);
-                  console.log('TRD reanudado');
-                } else {
-                  set_flag_finish_or_edit_trd(true);
-                  console.log('TRD finalizado');
-                }
-              }}
-            >
-              {
-                // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
-                flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
-              }
-            </Button>
-
-
-              {/* these buttons that I'll create going to change asap in the frontend view, especially in position  */}
-
-
-              <Button
-              // color="info"
-              color="primary"
-              variant="contained"
-              startIcon={<AddCircleIcon />}
-              onClick={openModalCreacionFormatoTipo}
-            >
-              MÓDULO DE CREACION DE FORMATOS
-            </Button>
-
-            {/* buttons end */}
-
-          </Stack>
         </Grid>
       </Grid>
+
+      {/* TRD module number 2 - starts with the title Cuadro de clasificación documental Seleccionado */}
+
+      {/* data table with the "catalogo de series y subseries por unidad organizacional" */}
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26'
+        }}
+      >
+        <Grid item xs={12}>
+          <CCDSeleccionadoCatalogo />
+        </Grid>
+      </Grid>
+      {/* finish data table with the "catalogo de series y subseries por unidad organizacional" */}
+
+      {/* TRD module number 3 - starts with the title Administrar tipologias */}
+
+      {/* data table with the "tipologias" */}
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          p: '20px',
+          mb: '20px',
+          boxShadow: '0px 3px 6px #042F4A26'
+        }}
+      >
+        <Grid item xs={12}>
+          <AdministrarTipologias />
+        </Grid>
+      </Grid>
+      {/* finish data table with the "tipologias" */}
+
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        spacing={2}
+        sx={{ m: '20px 0' }}
+      >
+        <Button
+          color="success"
+          variant="contained"
+          startIcon={<SaveIcon />}
+          onClick={() => {
+            if (flag_finish_or_or_edit_trd) {
+              set_flag_finish_or_edit_trd(false);
+              console.log('TRD reanudado');
+            } else {
+              set_flag_finish_or_edit_trd(true);
+              console.log('TRD finalizado');
+            }
+          }}
+        >
+          {
+            // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+            flag_finish_or_or_edit_trd ? 'REANUDAR TRD' : 'FINALIZAR TRD'
+          }
+        </Button>
+
+        {/* these buttons that I'll create going to change asap in the frontend view, especially in position  */}
+
+        <Button
+          // color="info"
+          color="primary"
+          variant="contained"
+          startIcon={<AddCircleIcon />}
+          onClick={openModalCreacionFormatoTipo}
+        >
+          MÓDULO DE CREACION DE FORMATOS
+        </Button>
+
+        {/* buttons end */}
+      </Stack>
+
       {/* -- this modal allow us to do the TRD search  -- */}
       <ModalSearchTRD />
       {/* -- this modal allow us to do the TRD search -- */}
