@@ -362,11 +362,6 @@ export const AdmnistrarFormatos = (): JSX.Element => {
                       fieldState: { error }
                     }) => (
                       <FormControl
-                        /* sx={{
-                          width: '100%',
-                          display: 'flex',
-                          alignItems: 'center'
-                        }} */
                         fullWidth
                       >
                         <FormControlLabel

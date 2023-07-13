@@ -168,7 +168,7 @@ export const CcdScreen: React.FC = () => {
                     <div>
                       <Select
                         {...field}
-                        isDisabled={ccd_current != null}
+                        isDisabled={ccd_current != null || ccd_current?.actual}
                         value={field.value}
                         options={list_organigrams}
                         placeholder="Seleccionar"
@@ -214,7 +214,7 @@ export const CcdScreen: React.FC = () => {
                     <div>
                       <Select
                         {...field}
-                        isDisabled={ccd_current != null}
+                        isDisabled={ccd_current != null || ccd_current?.actual}
                         value={field.value}
                         options={list_unitys}
                         placeholder="Seleccionar"
@@ -249,6 +249,7 @@ export const CcdScreen: React.FC = () => {
                     <TextField
                       margin="dense"
                       fullWidth
+                      disabled={ccd_current?.actual}
                       size="small"
                       label="Nombre CCD"
                       variant="outlined"
@@ -277,6 +278,7 @@ export const CcdScreen: React.FC = () => {
                     <TextField
                       margin="dense"
                       fullWidth
+                      disabled={ccd_current?.actual}
                       size="small"
                       label="Versión CCD"
                       variant="outlined"
@@ -315,7 +317,7 @@ export const CcdScreen: React.FC = () => {
                         color: series_ccd.length > 0 || ccd_current?.fecha_terminado ? 'red' : 'blue'
                       }}
                       disabled={
-                        series_ccd.length > 0 || ccd_current?.fecha_terminado
+                        series_ccd.length > 0 || ccd_current?.fecha_terminado || ccd_current?.actual
                       }
                       variant="outlined"
                       value={value}
@@ -347,7 +349,7 @@ export const CcdScreen: React.FC = () => {
                       size="small"
                       label="valor aumento subseries CCD"
                       variant="outlined"
-                      disabled={subseries_ccd.length > 0 || ccd_current?.fecha_terminado}
+                      disabled={subseries_ccd.length > 0 || ccd_current?.fecha_terminado || ccd_current?.actual}
                       value={value}
                       onChange={onChange}
                       error={!(error == null)}
@@ -392,6 +394,7 @@ export const CcdScreen: React.FC = () => {
                         <input
                           style={{ display: 'none' }}
                           type="file"
+                          disabled={ccd_current?.actual}
                           onChange={(e) => {
                             console.log('valueeee', value);
                             const files = (e.target as HTMLInputElement).files;
@@ -461,6 +464,7 @@ export const CcdScreen: React.FC = () => {
                 type="submit"
                 color="primary"
                 variant="contained"
+                disabled={ccd_current?.actual}
                 startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
               >
                 {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
@@ -648,7 +652,7 @@ export const CcdScreen: React.FC = () => {
                           set_create_sub_serie_active(true);
                           set_title('Administrar subseries');
                         }}
-                        disabled={serie_ccd_current === null}
+                        disabled={serie_ccd_current === null || ccd_current?.actual}
                       >
                         ADMINISTRAR SUBSERIES
                       </Button>
