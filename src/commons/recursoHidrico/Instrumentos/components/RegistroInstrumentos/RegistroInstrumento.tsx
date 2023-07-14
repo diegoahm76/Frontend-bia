@@ -24,7 +24,8 @@ import { Controller } from 'react-hook-form';
 import { control_error, control_success } from '../../../../../helpers';
 import { agregar_instrumento } from '../../request/request';
 import dayjs from 'dayjs';
-
+import { ValueCuenca } from '../../interfaces/interface';
+import { useState } from 'react';
 
 export const RegistroInstrumentos: React.FC = (): JSX.Element => {
   const columns_aforo: GridColDef[] = [
@@ -160,6 +161,9 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
     formErrors,
   } = useRegisterInstrumentoHook();
 
+  const [clase_tercero, set_clase_tercero] = useState<ValueCuenca[]>([]);
+
+
   const onSubmit = handleSubmit(async (data) => {
     console.log(data);
     // Perform submit logic here
@@ -204,6 +208,18 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
       console.log(error);
     }
   });
+
+  const handle_change_autocomplete = (
+    event: React.SyntheticEvent<Element, Event>,
+    value: ValueCuenca[],
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<ValueCuenca>
+  ): void => {
+    set_value(
+      'datos_clasificacion_persona',
+      value.map((e) => e.value)
+    );
+  };
 
   return (
     <>
@@ -450,6 +466,32 @@ export const RegistroInstrumentos: React.FC = (): JSX.Element => {
                     getRowId={(row) => uuidv4()}
                     pageSize={5}
                     rowsPerPageOptions={[5]}
+                  />
+                </Grid>
+              </>
+            )}
+            {clase_tercero.length > 0 && (
+              <>
+                <Grid item xs={12}>
+                  <Autocomplete
+                    multiple
+                    fullWidth
+                    size="medium"
+                    options={clase_tercero}
+                    getOptionLabel={(option: any) => option.label}
+                    isOptionEqualToValue={(option: any, value) =>
+                      option?.value === value?.value
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        key={params.id}
+                        {...params}
+                        label="Datos clasificación Cormacarena"
+                        placeholder="Clasificacion Cormacarena"
+                      />
+                    )}
+                    {...register('datos_clasificacion_persona')}
+                    onChange={handle_change_autocomplete}
                   />
                 </Grid>
               </>
