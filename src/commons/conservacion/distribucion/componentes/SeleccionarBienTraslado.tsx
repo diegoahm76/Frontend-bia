@@ -23,7 +23,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarBienSiembra = () => {
+const SeleccionarBienTraslado = () => {
   const {
     control: control_bien,
     reset: reset_bien,
@@ -813,7 +813,7 @@ const SeleccionarBienSiembra = () => {
 };
 
 // eslint-disable-next-line no-restricted-syntax
-export default SeleccionarBienSiembra;
+export default SeleccionarBienTraslado;
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function deepEqual(obj1: any, obj2: any) {

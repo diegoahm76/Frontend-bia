@@ -169,19 +169,20 @@ const SeleccionarLoteSiembra = () => {
           models={plant_seed_lots}
           get_filters_models={get_bienes}
           set_models={set_plant_seed_lots}
-          button_submit_label="Buscar bien"
+          button_submit_label="Buscar lote"
           button_submit_disabled={
-            current_plant_quarantine.id_cuarentena_mat_vegetal !== null
+            current_plant_quarantine.id_cuarentena_mat_vegetal !== null ||
+            current_nursery.id_vivero === null
           }
           form_inputs={[
             {
               datum_type: 'title',
-              title_label: 'Seleccione bien',
+              title_label: 'Seleccione lote de material vegetal',
             },
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 2,
               control_form: control_bien,
               control_name: 'codigo_bien',
               default_value: '',
@@ -198,7 +199,7 @@ const SeleccionarLoteSiembra = () => {
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 4,
               control_form: control_bien,
               control_name: 'nombre_bien',
               default_value: '',
@@ -216,7 +217,7 @@ const SeleccionarLoteSiembra = () => {
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 2,
               control_form: control_bien,
               control_name: 'nro_lote',
               default_value: '',
@@ -234,7 +235,7 @@ const SeleccionarLoteSiembra = () => {
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 3,
+              md: 2,
               control_form: control_bien,
               control_name: 'agno_lote',
               default_value: '',

@@ -228,10 +228,11 @@ const SeleccionarIngresoCuarentena = ({
           open_search_modal={open_modal}
           set_open_search_modal={set_open_modal}
           form_inputs={[
+            { datum_type: 'title', title_label: 'Informacion de cuarentena' },
             {
               datum_type: 'select_controller',
               xs: 12,
-              md: 4,
+              md: 3,
               control_form: control_cuarentena,
               control_name: 'id_vivero',
               default_value: '',
@@ -300,8 +301,8 @@ const SeleccionarIngresoCuarentena = ({
               xs: 12,
               md:
                 current_plant_quarantine.id_cuarentena_mat_vegetal !== null
-                  ? 3
-                  : 5,
+                  ? 4
+                  : 6,
               control_form: control_cuarentena,
               control_name: 'ruta_archivo_soporte',
               default_value: '',
@@ -443,7 +444,7 @@ const SeleccionarIngresoCuarentena = ({
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 9,
+              md: 12,
               control_form: control_cuarentena,
               control_name: 'persona_cuarentena',
               default_value: '',

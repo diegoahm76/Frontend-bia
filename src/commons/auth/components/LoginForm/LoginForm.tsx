@@ -131,17 +131,12 @@ export const LoginForm: React.FC = () => {
                   set_is_error(false);
                 }}
               >
-                {is_blocked ? (
-                  <>
-                    <Typography textAlign="center">
-                      Contraseña erronea. Este usuario ha sido bloqueado por
-                      seguridad &nbsp;
-                      <Link to="/auth/desbloqueo_usuario">Desbloquear</Link>
-                    </Typography>
-                  </>
-                ) : (
-                  error_message
-                )}
+                <Typography textAlign="center">
+                  {error_message} &nbsp;
+                  {is_blocked && (
+                    <Link to="/auth/desbloqueo_usuario">Desbloquear</Link>
+                  )}
+                </Typography>
               </Alert>
             </Grid>
           )}

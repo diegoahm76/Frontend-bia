@@ -7,14 +7,17 @@ import {
   set_current_planting,
   set_current_nursery,
   reset_state,
+  initial_state_current_nursery,
 } from '../store/slice/materialvegetalSlice';
 import { useEffect, useState } from 'react';
 import {
   add_siembra_service,
+  control_error,
   delete_siembra_service,
   edit_siembra_service,
   get_germination_beds_id_service,
   get_germination_beds_service,
+  get_goods_aux_service,
   get_nurseries_service,
   get_person_id_service,
   get_planting_goods_service,
@@ -94,6 +97,7 @@ export function SiembraSemillasScreen(): JSX.Element {
         (p: IObjNursery) => p.id_vivero === current_planting.id_vivero
       );
       if (vivero !== undefined) {
+        void dispatch(get_goods_aux_service(vivero.id_vivero ?? 0));
         dispatch(set_current_nursery(vivero));
         void dispatch(get_germination_beds_service(Number(vivero.id_vivero)));
         if (current_planting.cama_germinacion !== null) {
@@ -102,7 +106,6 @@ export function SiembraSemillasScreen(): JSX.Element {
           );
         }
       }
-
       void dispatch(get_planting_goods_service(current_planting.id_siembra));
       set_action('editar');
     }
@@ -143,6 +146,7 @@ export function SiembraSemillasScreen(): JSX.Element {
         (p: IObjNursery) => p.id_vivero === watch('id_vivero')
       );
       if (vivero !== undefined) {
+        void dispatch(get_goods_aux_service(vivero.id_vivero ?? 0));
         dispatch(set_current_nursery(vivero));
         void dispatch(get_germination_beds_service(Number(vivero.id_vivero)));
         if (current_planting.cama_germinacion !== null) {
@@ -150,7 +154,11 @@ export function SiembraSemillasScreen(): JSX.Element {
             get_germination_beds_id_service(current_planting.cama_germinacion)
           );
         }
+      } else {
+        dispatch(set_current_nursery(initial_state_current_nursery));
       }
+    } else {
+      dispatch(set_current_nursery(initial_state_current_nursery));
     }
   }, [watch('id_vivero')]);
 
@@ -160,18 +168,28 @@ export function SiembraSemillasScreen(): JSX.Element {
       current_planting.id_siembra !== null &&
       current_planting.id_siembra !== undefined
     ) {
-      set_action('editar');
-      const data_edit = {
-        ...data,
-        distancia_entre_semillas: Number(data.distancia_entre_semillas),
-      };
-      const data_update = {
-        data_siembra: data_edit,
-        data_bienes_consumidos: planting_goods,
-      };
-      void dispatch(
-        edit_siembra_service(data_update, current_planting.id_siembra)
-      );
+      const fecha_actual = new Date();
+      const fecha_siembra = new Date(data.fecha_siembra ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_siembra.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        set_action('editar');
+        const data_edit = {
+          ...data,
+          distancia_entre_semillas: Number(data.distancia_entre_semillas),
+        };
+        const data_update = {
+          data_siembra: data_edit,
+          data_bienes_consumidos: planting_goods,
+        };
+        void dispatch(
+          edit_siembra_service(data_update, current_planting.id_siembra)
+        );
+      } else {
+        control_error(
+          'Solo se pueden editar siembras hasta 30 dias despues de la fecha de siembra'
+        );
+      }
     } else {
       set_action('crear');
       const fecha = new Date(data.fecha_siembra ?? '').toISOString();
@@ -197,9 +215,19 @@ export function SiembraSemillasScreen(): JSX.Element {
       current_planting.id_siembra !== null &&
       current_planting.id_siembra !== undefined
     ) {
-      void dispatch(delete_siembra_service(current_planting.id_siembra));
-      dispatch(reset_state());
-      initial_values();
+      const fecha_actual = new Date();
+      const fecha_siembra = new Date(current_planting.fecha_siembra ?? '');
+      const diferencia_ms = fecha_actual.getTime() - fecha_siembra.getTime();
+      const diferencia_dias = Math.ceil(diferencia_ms / (1000 * 60 * 60 * 24));
+      if (diferencia_dias <= 30) {
+        void dispatch(delete_siembra_service(current_planting.id_siembra));
+        dispatch(reset_state());
+        initial_values();
+      } else {
+        control_error(
+          'Solo se pueden eliminar siembras hasta 30 dias despues de la fecha de siembra'
+        );
+      }
     }
   };
 
