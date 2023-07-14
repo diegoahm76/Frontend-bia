@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import type { FlujoProceso } from '../interfaces/flujoProceso';
 import { control_error, control_success } from '../../../helpers';
 import { api } from '../../../api/axios';
-// import { TablaGeneral } from '../../../components/TablaGeneral';
+import { RequisitosModal } from '../components/GestionCartera/modal/RequisitosModal';
 
 interface RowProceso {
   id: number;
@@ -43,11 +43,13 @@ export const GestionCarteraScreen: React.FC = () => {
   const [id_proceso, set_id_proceso] = useState('');
   const [id_etapa, set_id_etapa] = useState<number | null>(null);
   const [flujos_proceso, set_flujos_proceso] = useState<FlujoProceso[]>([]);
-  const [etapas_destino, set_etapas_destino] = useState<EtapaProceso[]>([]);
-  const [etapa_destino, set_etapa_destino] = useState('');
+  const [flujos_destino, set_flujos_destino] = useState<FlujoProceso[]>([]);
+  const [id_flujo, set_id_flujo] = useState('');
+  const [requisitos, set_requisitos] = useState('');
   const [atributos_etapa, set_atributos_etapa] = useState<AtributoEtapa[]>([]);
   const [input_values, set_input_values] = useState<Record<string, string>>({});
   const [input_files, set_input_files] = useState<Record<string, File>>({});
+  const [open_requisitos_modal, set_open_requisitos_modal] = useState(false);
 
   const columns_procesos: GridColDef[] = [
     {
@@ -195,10 +197,7 @@ export const GestionCarteraScreen: React.FC = () => {
 
   useEffect(() => {
     const new_flujos_proceso = flujos_proceso.filter(flujo => flujo.id_etapa_origen.id === id_etapa);
-    const new_etapas_destino = new_flujos_proceso.map(flujo => ({
-      ...flujo.id_etapa_destino
-    }));
-    set_etapas_destino(new_etapas_destino);
+    set_flujos_destino(new_flujos_proceso);
   }, [id_etapa]);
 
   const handle_tablist_change = (event: SyntheticEvent, newValue: string): void => {
@@ -206,7 +205,9 @@ export const GestionCarteraScreen: React.FC = () => {
   };
 
   const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
-    set_etapa_destino(event.target.value);
+    const requisitos_actual = flujos_proceso.filter(flujo => flujo.id === Number(event.target.value))[0].requisitos;
+    set_id_flujo(event.target.value);
+    set_requisitos(requisitos_actual);
   };
 
   const handle_input_change = (event: React.ChangeEvent<HTMLInputElement>, name: string): void => {
@@ -218,8 +219,9 @@ export const GestionCarteraScreen: React.FC = () => {
   };
 
   const mover_estado_actual = (): void => {
-    if (etapa_destino) {
-      api.get(`recaudo/procesos/atributos/${etapa_destino}`)
+    if (id_flujo) {
+      const etapa_destino_actual = flujos_proceso.filter(flujo => flujo.id === Number(id_flujo))[0]?.id_etapa_destino.id;
+      api.get(`recaudo/procesos/atributos/${etapa_destino_actual}`)
         .then((response) => {
           set_atributos_etapa(response.data.data);
           set_input_values({});
@@ -316,14 +318,6 @@ export const GestionCarteraScreen: React.FC = () => {
               </Box>
 
               <TabPanel value="1" sx={{ p: '20px 0' }}>
-                {/* <TablaGeneral
-                  showButtonExport
-                  columns={columns}
-                  rowsData={rows}
-                  tittle='Liquidaciones'
-                  staticscroll
-                  stylescroll='780px'
-                /> */}
                 <DataGrid
                   density='compact'
                   autoHeight
@@ -339,11 +333,11 @@ export const GestionCarteraScreen: React.FC = () => {
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <EditarCartera
-                  etapas_destino={etapas_destino}
-                  etapa_destino={etapa_destino}
+                  id_flujo={id_flujo}
                   handle_select_change={handle_select_change}
-                  mover_estado_actual={mover_estado_actual}
                   selected_proceso={selected_proceso}
+                  flujos_destino={flujos_destino}
+                  set_open_requisitos_modal={set_open_requisitos_modal}
                 />
               </TabPanel>
             </TabContext>
@@ -361,6 +355,13 @@ export const GestionCarteraScreen: React.FC = () => {
           />
         </TabPanel>
       </TabContext>
+
+      <RequisitosModal
+        open_requisitos_modal={open_requisitos_modal}
+        set_open_requisitos_modal={set_open_requisitos_modal}
+        requisitos={requisitos}
+        mover_estado_actual={mover_estado_actual}
+      />
     </>
   )
 }
