@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { type Dispatch, type SetStateAction, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import {
   Grid,
   TextField,
@@ -32,6 +33,7 @@ import { set_data_person_search } from '../store/seguridadSlice';
 import { CustomSelect } from '../../../components/CustomSelect';
 import { use_busqueda_avanzada } from '../hooks/BusquedaAvanzadaHooks';
 import { Title } from '../../../components';
+import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -383,6 +385,10 @@ const DialogBusquedaAvanzada = ({
             </Grid>
           </Grid>
         </Box>
+        <ButtonGroup >
+          {download_xls({ nurseries: persons, columns: columns_persons })}
+         
+        </ButtonGroup> 
         <Grid item xs={12} sx={{ mt: '15px' }}>
           <DataGrid
             density="compact"

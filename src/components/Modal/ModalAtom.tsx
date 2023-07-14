@@ -6,6 +6,7 @@ import type { ModalProps } from './types';
 import './Modal.css';
 import { ModalContent } from './Content/ModalContent';
 import { Button } from 'primereact/button';
+import { Title } from '../Title';
 
 export const ModalAtom: React.FC<ModalProps> = ({
   data: { show, id },
@@ -37,9 +38,10 @@ export const ModalAtom: React.FC<ModalProps> = ({
   );
 
   return (
-    <div className={`modal ${selectedModal != null ? 'show' : ''}`}>
+    <div className={`modal ${selectedModal != null ? 'show' : ''}`} style={{ width: '60%', height: '54%' }}>
       {selectedModal != null && (
-        <div className="modal-content">
+        <div className="modal-content" style={{ width: '100%', height: '100%' }}>
+          <Title title="Información de Translado" />
           {values !== false && keys !== false && (
             <ModalContent keys={keys} values={values} />
           )}
@@ -49,14 +51,20 @@ export const ModalAtom: React.FC<ModalProps> = ({
               <ModalContent keys={keys2} values={values2} />
             </details>
           )}
-          <div className="modal-footer">
-            <Button
-              type="button"
-              icon="pi pi-times"
-              onClick={() => {
-                set_modal({ show: false, id: 0 });
-              }}
-            />
+          <div style={{ marginTop: 'auto' }}>
+            <div style={{ position: 'fixed', bottom: '20px', right: '20px', display: 'flex', justifyContent: 'flex-end' }}
+            >
+              <Button
+                icon="pi pi-times"
+                type="button"
+
+                onClick={() => {
+                  set_modal({ show: false, id: 0 });
+                }}
+              />
+
+            </div>
+           
           </div>
         </div>
       )}

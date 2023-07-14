@@ -2,6 +2,8 @@ import { Box, Button, Grid } from "@mui/material";
 import { Title } from "../../../../../../components/Title";
 import { DataGrid} from '@mui/x-data-grid';
 
+
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaSucursales: React.FC = () => {
     const roles= [
@@ -15,10 +17,18 @@ export const TablaSucursales: React.FC = () => {
     const rows = [
         { id: 1, apple: "Apple 1", banana: "Banana 1", orange: "Orange 1", red: "Banana 1", green: "Orange 1" },
         { id: 2, apple: "Apple 2", banana: "Banana 2", orange: "Orange 2", red: "Banana 1", green: "Orange 1" },
-        { id: 3, apple: "Apple 3", banana: "Banana 3", orange: "Orange 3", red: "Banana 1", green: "Orange 1" }, { id: 1, apple: "Apple 1", banana: "Banana 1", orange: "Orange 1", red: "Banana 1", green: "Orange 1" },
+        { id: 3, apple: "Apple 3", banana: "Banana 3", orange: "Orange 3", red: "Banana 1", green: "Orange 1" }, 
         { id: 4, apple: "Apple 2", banana: "Banana 2", orange: "Orange 2", red: "Banana 1", green: "Orange 1" },
         { id: 5, apple: "Apple 3", banana: "Banana 3", orange: "Orange 3", red: "Banana 1", green: "Orange 1" },
     ];
+
+
+
+
+    
+   
+ 
+
 
     return (
         <Grid container sx={{

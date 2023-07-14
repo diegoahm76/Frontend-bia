@@ -16,6 +16,7 @@ import {
   Toolbar,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -26,6 +27,7 @@ import {
   set_data_user_search,
 } from '../store/seguridadSlice';
 import { Title } from '../../../components';
+import { download_xls } from '../../../documentos-descargar/XLS_descargar';
 
 interface IProps {
   is_modal_active: boolean;
@@ -205,9 +207,9 @@ const dialog_busqueda_avanzada_usuario = ({
                   required: true,
                 })}
                 required
-                label="Nombreee de usuario"
+                label="Nombre de usuario"
                 size="small"
-                helperText="Nombre de usuario"
+        
                 fullWidth
               />
             </Grid>
@@ -220,9 +222,14 @@ const dialog_busqueda_avanzada_usuario = ({
               >
                 BUSCAR
               </Button>
+
+            
             </Grid>
           </Grid>
           <Grid item xs={12}>
+            <ButtonGroup style={{ display: 'flex', justifyContent: 'flex-end',margin:4 }}>
+              {download_xls({ nurseries: users, columns: columns_users })}
+            </ButtonGroup>
             <Grid item xs={12}>
               <DataGrid
                 density="compact"

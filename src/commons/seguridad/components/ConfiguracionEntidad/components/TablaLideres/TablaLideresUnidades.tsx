@@ -15,7 +15,6 @@ export const TablaLineresUnidadesOrganizacionales: React.FC = () => {
         { id: 1, nrosucursal: "1", descripcionsucursal: "Sucursal del departamento 1", principal: "Principal 1"}, 
         { id: 2, nrosucursal: "2", descripcionsucursal: "Sucursal del departamento 2", principal: "Principal 2"}, 
         { id: 3, nrosucursal: "3", descripcionsucursal: "Sucursal del departamento 3", principal: "Principal 3"}, 
-        { id: 1, nrosucursal: "4", descripcionsucursal: "Sucursal del departamento 4", principal: "Principal 1"}, 
         { id: 4, nrosucursal: "5", descripcionsucursal: "Sucursal del departamento 5", principal: "Principal 2"}, 
         { id: 5, nrosucursal: "3", descripcionsucursal: "Sucursal del departamento 3", principal: "Orange 3"}, 
     ];
