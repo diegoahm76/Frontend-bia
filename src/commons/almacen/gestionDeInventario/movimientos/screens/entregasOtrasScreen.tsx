@@ -9,11 +9,12 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { set_current_entrega, set_persona_entrega, } from '../store/slice/indexEntrega';
-import { get_num_entrega, get_person_id_entrega, get_tipo_entrada } from '../store/thunks/entregaThunks';
+import { get_bienes_entrada, get_num_entrega, get_person_id_entrega, get_tipo_entrada } from '../store/thunks/entregaThunks';
 import { get_uni_organizacional } from '../../../registroSolicitudesAlmacen/solicitudBienConsumo/store/solicitudBienConsumoThunks';
 import { type IObjEntrega } from '../interfaces/entregas';
 import SeleccionarEntrega from '../components/SeleccionarEntrega';
 import SeleccionarBodega from '../components/SeleccionarBodega';
+import ListadoBienesEntrega from '../components/ListadoBienesEntrega';
 // import Seccion from '../components/SeccionPrimera';
 
 
@@ -22,6 +23,7 @@ import SeleccionarBodega from '../components/SeleccionarBodega';
 const EntregaScreen = () => {
     const { userinfo } = useSelector((state: AuthSlice) => state.auth); const { control: control_entrega, reset: reset_despacho, getValues: get_values } = useForm<IObjEntrega>();
     const { nro_entrega, current_entrega, persona_entrega } = useAppSelector((state) => state.entrega_otros);
+
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -41,7 +43,16 @@ const EntregaScreen = () => {
         }
 
 
+
     }, [current_entrega]);
+
+    useEffect(() => {
+        if (current_entrega.id_entrada_almacen !== null && current_entrega.id_entrada_almacen !== undefined) {
+            void dispatch(get_bienes_entrada(current_entrega.id_entrada_almacen));
+        }
+    }, [current_entrega.id_entrada_almacen]);
+
+
 
     useEffect(() => {
         void dispatch(get_uni_organizacional());
@@ -102,9 +113,11 @@ const EntregaScreen = () => {
             </Grid>
             <Grid item xs={12} marginY={2}>
                 <SeleccionarBodega
-
-
                 />
+            </Grid>
+            <Grid item xs={12} marginY={2}>
+
+                <ListadoBienesEntrega />
             </Grid>
             <Grid
                 container

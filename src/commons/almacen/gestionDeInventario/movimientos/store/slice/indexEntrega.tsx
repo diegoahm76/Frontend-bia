@@ -1,6 +1,6 @@
 
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { IObjEntrega, IEntrega, IObjBienEntrega, TipoEntrada } from '../../interfaces/entregas';
+import type { IObjEntrega, IEntrega, IObjBienEntrega, TipoEntrada, IObjBienesEntrada } from '../../interfaces/entregas';
 import { type Persona } from '../../../../../../interfaces/globalModels';
 
 const initial_state_person: Persona = {
@@ -23,12 +23,7 @@ export const initial_state_current_entrega: IObjEntrega = {
     id_entrada_almacen_cv: null,
     motivo: "",
     id_bodega_general: null,
-    numero_solicitud_por_tipo: null,
-    es_despacho_conservacion: true,
-    despacho_anulado: null,
-    justificacion_anulacion: null,
-    fecha_anulacion: null,
-    ruta_archivo_doc_con_recibido: null
+
 }
 
 export const initial_state_bien_entrega: IObjBienEntrega = {
@@ -48,7 +43,9 @@ export const initial_state: IEntrega = {
     current_bien_entrega: initial_state_bien_entrega,
     entregas: [],
     bienes_entrega: [],
-    tipo_entrada: []
+    tipo_entrada: [],
+    bienes_entrada: [],
+    entradas: [],
 
 
 }
@@ -81,11 +78,17 @@ export const entrega_slice = createSlice({
         ) => {
             state.current_entrega = action.payload;
         },
-        set_bien_entrega: (
+        set_bienes_entrega: (
             state: IEntrega,
             action: PayloadAction<IObjBienEntrega[]>
         ) => {
             state.bienes_entrega = action.payload;
+        },
+        set_bienes_entrada: (
+            state: IEntrega,
+            action: PayloadAction<IObjBienesEntrada[]>
+        ) => {
+            state.bienes_entrada = action.payload;
         },
         set_current_bien_entrega: (
             state: IEntrega,
@@ -103,8 +106,9 @@ export const entrega_slice = createSlice({
 
 
 
+
     }
 })
 
 export const {
-    set_persona_entrega, set_nro_entrega, set_entregas, set_current_entrega, set_bien_entrega, set_current_bien_entrega, set_tipo_entrada } = entrega_slice.actions;
+    set_persona_entrega, set_nro_entrega, set_entregas, set_current_entrega, set_bienes_entrega, set_current_bien_entrega, set_tipo_entrada, set_bienes_entrada } = entrega_slice.actions;

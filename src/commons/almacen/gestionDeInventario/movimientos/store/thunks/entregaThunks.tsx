@@ -8,7 +8,7 @@ import { api } from '../../../../../../api/axios';
 
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
-import { set_entregas, set_nro_entrega, set_persona_entrega, } from '../slice/indexEntrega';
+import { set_bienes_entrada, set_entregas, set_nro_entrega, set_persona_entrega, } from '../slice/indexEntrega';
 // import { log } from 'console';
 
 
@@ -142,9 +142,6 @@ export const get_tipo_entrada = (): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/bienes/entradas/tipos-entradas/`);
-
-
-
             if (data.success === true) {
                 // dispatch(set_entregas(data.data));
                 console.log(data);
@@ -160,3 +157,31 @@ export const get_tipo_entrada = (): any => {
         }
     };
 };
+
+
+// Obtener bienes por numero de solicitud
+
+export const get_bienes_entrada = (
+    id_entrada_almacen: number | null,
+): any => {
+    return async (dispatch: Dispatch<any>) => {
+        try {
+            console.log(`almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ""}`)
+            const { data } = await api.get(`almacen/entregas/get-items-entradas-entregas/${id_entrada_almacen ?? ""}/`);
+            if (data.success === true) {
+                dispatch(set_bienes_entrada(data.data));
+                console.log(data)
+                control_success(data.detail)
+            } else {
+                control_error(data.detail)
+            }
+
+            return data;
+        } catch (error: any) {
+            // console.log('get_planting_goods_service');
+            control_error(error.response.data.detail);
+            return error as AxiosError;
+        }
+    };
+};
+
