@@ -17,6 +17,7 @@ export interface SubSeccionPorSeccion {
   id_persona: number;
   nombre_comercial: null | string;
   nombre_completo: string;
+  instrumentos_count: number;
 }
 export interface SubseccionId {
   id_seccion: number;
