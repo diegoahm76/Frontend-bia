@@ -32,7 +32,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 // import SearchIcon from '@mui/icons-material/Search';
 import { use_trd } from '../../../../hooks/use_trd';
-import InfoIcon  from '@mui/icons-material/Info';
+// import InfoIcon  from '@mui/icons-material/Info';
 
 export const AdministrarTipologiasDocumentales = (): JSX.Element => {
 
