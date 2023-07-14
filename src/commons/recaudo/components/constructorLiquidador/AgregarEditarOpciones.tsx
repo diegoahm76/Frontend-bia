@@ -41,15 +41,21 @@ interface Rows {
 interface IProps {
   opciones_liquidaciones: OpcionLiquidacion[];
   id_opcion_liquidacion: string;
+  form_data: { variable: string, nombre_opcion_liquidacion: string, estado: string };
   set_id_opcion_liquidacion: Dispatch<SetStateAction<string>>;
   set_refresh_page: Dispatch<SetStateAction<boolean>>;
+  set_form_data: Dispatch<SetStateAction<{ variable: string, nombre_opcion_liquidacion: string, estado: string }>>
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquidacion, set_id_opcion_liquidacion, set_refresh_page }: IProps): JSX.Element => {
+export const AgregarEditarOpciones = ({
+  opciones_liquidaciones,
+  id_opcion_liquidacion, form_data,
+  set_id_opcion_liquidacion,
+  set_refresh_page, set_form_data
+}: IProps): JSX.Element => {
   const [row, set_row] = useState<Rows[]>([]);
   const [variables, set_variables] = useState<string[]>([]);
-  const [formData, setFormData] = useState({ variable: '', nombre_opcion_liquidacion: '', estado: '' });
   const [configNotify, setConfigNotify] = useState({ open: false, message: '' });
   const [open, setOpen] = useState(false);
   const [enableTest, setEnableTest] = useState(false);
@@ -76,7 +82,7 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
   };
 
   const handle_estado_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
-    setFormData({ ...formData, estado: event.target.value });
+    set_form_data({ ...form_data, estado: event.target.value });
   };
 
   const setNotifications = (notification: any) => {
@@ -86,9 +92,9 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
     }
   }
 
-  const handleInputChange = (event: any) => {
+  const handle_input_change = (event: any) => {
     const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    set_form_data({ ...form_data, [name]: value });
   };
 
   const generateCode = () => {
@@ -125,16 +131,16 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
   }
 
   const handleSubmit = (event: any) => {
-    if (variables.includes(formData.variable)) {
-      set_notification_info({ type: 'warning', message: `Ya existe la variable ${formData.variable}` });
+    if (variables.includes(form_data.variable)) {
+      set_notification_info({ type: 'warning', message: `Ya existe la variable ${form_data.variable}` });
       set_open_notification_modal(true);
       return;
     }
 
-    if (formData.variable.includes('variable')) {
+    if (form_data.variable.includes('variable')) {
       set_notification_info({
         type: 'warning',
-        message: `El nombre de la variable a agregar (${formData.variable}) no debe incluir la palabra reservada variable.
+        message: `El nombre de la variable a agregar (${form_data.variable}) no debe incluir la palabra reservada variable.
         \nPor favor ingrese otro nombre diferente.`,
       });
       set_open_notification_modal(true);
@@ -142,19 +148,19 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
     }
 
     event.preventDefault();
-    setFormData(prevState => ({
+    set_form_data(prevState => ({
       ...prevState,
       variable: ''
     }));
 
     set_variables([
-      ...Array.from(new Set([...variables, formData.variable.replace(/\s/g, '_')]))
+      ...Array.from(new Set([...variables, form_data.variable.replace(/\s/g, '_')]))
     ]);
 
     const newRow = {
       id: row.length + 1,
-      parametros: formData.nombre_opcion_liquidacion,
-      nombre: formData.variable.replace(/\s/g, '_'),
+      parametros: form_data.nombre_opcion_liquidacion,
+      nombre: form_data.variable.replace(/\s/g, '_'),
       tipo: 'Tipo nuevo',
       opciones: '',
     };
@@ -165,14 +171,14 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
   const handle_test_click = (event: any) => {
     event.preventDefault();
     if (variables.length === 0) {
-      set_notification_info({ type: 'warning', message: 'No hay variables para procesar.'});
+      set_notification_info({ type: 'warning', message: 'No hay variables para procesar.' });
       set_open_notification_modal(true);
       setEnableTest(false);
       return;
     }
 
     if (primaryWorkspace?.current?.getAllBlocks()?.length === 0) {
-      set_notification_info({ type: 'warning', message: 'No hay un diseño para procesar.'});
+      set_notification_info({ type: 'warning', message: 'No hay un diseño para procesar.' });
       set_open_notification_modal(true);
       setEnableTest(false);
       return;
@@ -185,8 +191,8 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
   // POST Crear opción liquidación
   const handle_post_opcion_liquidacion = () => {
     if (variables.length === 0) {
-      set_notification_info({ 
-        type: 'warning', 
+      set_notification_info({
+        type: 'warning',
         message: `No hay variables.
         Asegúrese de agregar por lo menos una variable.`
       });
@@ -195,8 +201,8 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
     }
 
     if (primaryWorkspace?.current?.getAllBlocks()?.length === 0) {
-      set_notification_info({ 
-        type: 'error', 
+      set_notification_info({
+        type: 'error',
         message: `No hay un diseño.
         Asegúrese de agregar una combinación de bloques.`
       });
@@ -204,11 +210,11 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
       return;
     }
 
-    if (!formData.nombre_opcion_liquidacion || !formData.estado) {
-      set_notification_info({ 
-        type: 'warning', 
+    if (!form_data.nombre_opcion_liquidacion || !form_data.estado) {
+      set_notification_info({
+        type: 'warning',
         message: `Estos campos no pueden estar vacíos.
-        Asegúrese de escribir un nombre y de seleccionar un estado`,
+        Asegúrese de escribir un nombre y de seleccionar un estado.`,
       });
       set_open_notification_modal(true);
       return;
@@ -216,9 +222,9 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
 
     const json = Blockly.serialization.workspaces.save(primaryWorkspace.current);
     api.post('recaudo/liquidaciones/opciones-liquidacion-base/', {
-      nombre: formData.nombre_opcion_liquidacion,
+      nombre: form_data.nombre_opcion_liquidacion,
       funcion: generateCode(),
-      estado: formData.estado,
+      estado: form_data.estado,
       variables: variables.reduce((acumulador, valor) => {
         return { ...acumulador, [valor]: '' };
       }, {}),
@@ -226,7 +232,7 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
     })
       .then((response) => {
         console.log(response);
-        set_notification_info({ type: 'success', message: `Se creó correctamente la opción de liquidación "${formData.nombre_opcion_liquidacion}".` });
+        set_notification_info({ type: 'success', message: `Se creó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".` });
         set_open_notification_modal(true);
         set_refresh_page(true);
       })
@@ -287,6 +293,11 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
               <Select
                 label='Selecciona opción liquidación'
                 value={id_opcion_liquidacion}
+                MenuProps={{
+                  style: {
+                    maxHeight: 224,
+                  }
+                }}
                 onChange={handle_id_opcion_change}
               >
                 {opciones_liquidaciones.map((opc_liquidacion) => (
@@ -306,8 +317,8 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
               name="variable"
               required
               autoComplete="off"
-              value={formData.variable}
-              onChange={handleInputChange}
+              value={form_data.variable}
+              onChange={handle_input_change}
               variant="outlined"
               size="small"
               fullWidth
@@ -315,7 +326,7 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
           </Grid>
           <Grid item xs={12} sm={3}>
             <Button
-              disabled={!formData.variable}
+              disabled={!form_data.variable}
               variant="contained" color="primary" onClick={handleSubmit}
               startIcon={<Add />}
               fullWidth
@@ -385,9 +396,10 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
             <TextField
               label="Ingrese nombre opción liquidacion"
               name="nombre_opcion_liquidacion"
+              value={form_data.nombre_opcion_liquidacion}
               required
               autoComplete="off"
-              onChange={handleInputChange}
+              onChange={handle_input_change}
               variant="outlined"
               size="small"
               fullWidth
@@ -398,7 +410,7 @@ export const AgregarEditarOpciones = ({ opciones_liquidaciones, id_opcion_liquid
               <InputLabel>Selecciona un estado</InputLabel>
               <Select
                 label='Selecciona un estado'
-                value={formData.estado}
+                value={form_data.estado}
                 onChange={handle_estado_change}
               >
                 <MenuItem value={0}>En construcción</MenuItem>
