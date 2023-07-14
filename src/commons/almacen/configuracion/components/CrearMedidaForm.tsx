@@ -39,15 +39,15 @@ export const CrearMedidaForm: React.FC = () => {
   useState<boolean>(false);
 
 const columns: GridColDef[] = [
-  { field: 'id_unidad_medida', headerName: 'ID', width: 200 },
-  { field: 'nombre', headerName: 'Nombre', width: 200, 
+  // { field: 'id_unidad_medida', headerName: 'ID', width: 200 },
+  { field: 'nombre', headerName: 'Nombre', width: 200,  flex:1,
   renderCell: (params) => (
     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
       {params.value}
     </div>
   ), },
 
-  {field: 'activo', headerName: '¿Activo?', width: 100,
+  {field: 'activo', headerName: '¿Activo?', width: 100,flex:1,
     renderCell: (params) => {
       return params.row.activo === true ? (
       <Chip size="small" label="Activo" color="success" variant="outlined" />
@@ -56,7 +56,7 @@ const columns: GridColDef[] = [
       );
     },
   },
-  {field: 'item_ya_usado', headerName: '¿Usado?',  width: 100,
+  {field: 'item_ya_usado', headerName: '¿Usado?',  width: 100,flex:1,
     renderCell: (params) => {
       return params.row.item_ya_usado === true ? (
         <Chip size="small" label="Sí" color="success" variant="outlined" />
@@ -65,9 +65,9 @@ const columns: GridColDef[] = [
       );
     },
   },
-  {field: 'abreviatura', headerName: 'Abreviatura',  width: 100,},
+  {field: 'abreviatura', headerName: 'Abreviatura',  width: 100,flex:1,},
 
-  { field: 'acciones', headerName: 'Acciones', width: 300,
+  { field: 'acciones', headerName: 'Acciones', width: 300,flex:1,
   renderCell: (params) => (
     <>
     {params.row.item_ya_usado?null:

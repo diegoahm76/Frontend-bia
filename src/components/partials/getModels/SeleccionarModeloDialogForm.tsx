@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import {
   Dialog,
@@ -10,7 +9,6 @@ import {
   Grid,
   Box,
 } from '@mui/material';
-import AltRouteIcon from '@mui/icons-material/AltRoute';
 import SearchIcon from '@mui/icons-material/Search';
 import { Title } from '../../Title';
 import CloseIcon from '@mui/icons-material/Close';
@@ -43,7 +41,7 @@ interface IProps {
   row_id: string | number;
   set_current_model: any;
   title_table_modal?: string | null;
-  button_add_selection_hidden?: boolean | null | string;
+  button_add_selection_hidden?: boolean | null;
   button_origin_show?: boolean | null;
   search_model_function?: any;
 }

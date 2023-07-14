@@ -53,11 +53,11 @@ const BienRechazado = () => {
   }, [current_bien]);
 
   const columns_bienes: GridColDef[] = [
-    { field: 'id_bien', headerName: 'ID', width: 20 },
+    // { field: 'id_bien', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
       headerName: 'Código',
-      width: 200,
+      width: 200,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -67,7 +67,7 @@ const BienRechazado = () => {
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200,
+      width: 200,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -76,11 +76,11 @@ const BienRechazado = () => {
     },
   ];
   const columns_bienes_solicitud: GridColDef[] = [
-    { field: 'id_bien_consumido', headerName: 'ID', width: 20 },
+    // { field: 'id_bien_consumido', headerName: 'ID', width: 20 },
     {
       field: 'codigo_bien',
       headerName: 'Codigo',
-      width: 150,
+      width: 150,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -90,7 +90,7 @@ const BienRechazado = () => {
     {
       field: 'nombre_bien',
       headerName: 'Nombre',
-      width: 150,
+      width: 150,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -100,7 +100,7 @@ const BienRechazado = () => {
     {
       field: 'tipo_bien',
       headerName: 'Tipo',
-      width: 200,
+      width: 200,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -110,7 +110,7 @@ const BienRechazado = () => {
     {
       field: 'cantidad',
       headerName: 'Cantidad',
-      width: 140,
+      width: 140,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -120,7 +120,7 @@ const BienRechazado = () => {
     {
       field: 'observaciones',
       headerName: 'Observacion',
-      width: 150,
+      width: 150,flex:1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -130,7 +130,7 @@ const BienRechazado = () => {
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 90,
+      width: 90,flex:1,
       renderCell: (params) => (
         <>
           {/* <Tooltip title="Editar">
