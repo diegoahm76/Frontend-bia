@@ -171,7 +171,7 @@ const PersonaResponsableAprobacion = ({
               rules: {},
               label: 'Tipo documento',
               disabled: true,
-              helper_text: 'Debe seleccionar campo',
+              helper_text: '',
               select_options: document_type,
               option_label: 'label',
               option_key: 'value',
@@ -187,7 +187,7 @@ const PersonaResponsableAprobacion = ({
               label: 'Número de documento',
               type: 'number',
               disabled: true,
-              helper_text: 'Digite para buscar',
+              helper_text: '',
               on_blur_function: search_person,
             },
             {

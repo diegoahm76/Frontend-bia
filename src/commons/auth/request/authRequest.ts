@@ -39,11 +39,10 @@ export const login_post = async (
     const {
       response: { data }
     } = error;
-
     return {
       ok: false,
       error_message: data.detail,
-      is_blocked: response?.status === 403
+      is_blocked: data.detail.includes("bloqueado")
     };
   }
 };

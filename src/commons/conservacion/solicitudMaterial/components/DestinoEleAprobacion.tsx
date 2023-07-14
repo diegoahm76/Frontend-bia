@@ -112,7 +112,7 @@ const DestinoAprobacion = ({
               rules: {},
               label: 'Municipio',
               disabled: true,
-              helper_text: 'Debe seleccionar campo',
+              helper_text: '',
               select_options: municipalities,
               option_label: 'label',
               option_key: 'value',

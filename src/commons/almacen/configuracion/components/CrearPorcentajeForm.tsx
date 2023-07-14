@@ -16,7 +16,7 @@ import { Title } from '../../../../components';
 
 
 const initial_state_porcentaje_seleccionado = {
- 
+
   id_porcentaje_iva: null,
   porcentaje: 0,
   observacion: "",
@@ -25,137 +25,142 @@ const initial_state_porcentaje_seleccionado = {
   activo: false,
   item_ya_usado: false,
 };
-  //
+//
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const CrearPorcentajeForm: React.FC = () => {
   const dispatch = useAppDispatch();
 
-  const  [action, set_action ] = useState<string>("create");
-  const { porcentaje } = useAppSelector((state) => state.porcentaje); 
-   const [add_porcentaje_is_active, set_add_porcentaje_is_active] =
-  useState<boolean>(false);
- 
+  const [action, set_action] = useState<string>("create");
+  const { porcentaje } = useAppSelector((state) => state.porcentaje);
+  const [add_porcentaje_is_active, set_add_porcentaje_is_active] =
+    useState<boolean>(false);
 
-const columns: GridColDef[] = [
-  { field: 'id_porcentaje_iva', headerName: 'ID', width: 80 },
-  { field: 'porcentaje', headerName: 'Porcentaje', width: 80,
-  renderCell: (params) => (
-    <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-      {params.value}
-    </div>
-  ),},
-  { field: 'observacion', headerName: 'Observación', width: 400 },
 
-  {field: 'activo', headerName: '¿Activo?', width: 100,
-    renderCell: (params) => {
-      return params.row.activo === true ? (
-      <Chip size="small" label="Activo" color="success" variant="outlined" />
-      ) : (
-        <Chip size="small" label="Inactivo" color="error" variant="outlined" />
-      );
+  const columns: GridColDef[] = [
+    // { field: 'id_porcentaje_iva', headerName: 'ID', width: 80 },
+    {
+      field: 'porcentaje', headerName: 'Porcentaje', width: 80, flex: 1,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
     },
-  },
-  {field: 'item_ya_usado', headerName: '¿Usado?',  width: 100,
-  renderCell: (params) => {
-    return params.row.item_ya_usado === true ? (
-      <Chip size="small" label="Sí" color="success" variant="outlined" />
-    ) : (
-      <Chip size="small" label="No" color="error" variant="outlined" />
-    );
-  },
-},
-{ field: 'acciones', headerName: 'Acciones', width: 300,
-  renderCell: (params) => (
-    <>
-    {params.row.item_ya_usado?null:
-      <Tooltip title="Editar">
-        <IconButton
-          onClick={() => {
-            dispatch(porcentaje_seleccionado(params.row));
-            set_action("edit")
-            set_add_porcentaje_is_active(true)
-          }}
-        >
-          <Avatar
-            sx={{
-              width: 24,
-              height: 24,
-              background: '#fff',
-              border: '2px solid',
-            }}
-            variant="rounded"
-          >
-            
-            <EditIcon
-              sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-            />
+    { field: 'observacion', headerName: 'Observación', flex: 1, width: 400 },
 
-          </Avatar>
-        </IconButton>
-      </Tooltip>
-}
-      <Tooltip title={params.row.activo ? "Desactivar" : "Activar"}>
-        <IconButton
-          onClick={() => {
-            dispatch(activate_deactivate_porcentaje_service(params.row.id_porcentaje_iva, params.row));// true -> activar false -> desactivar
-        
-          }}
-        >
-          <Avatar
-            sx={{
-              width: 24,
-              height: 24,
-              background: '#fff',
-              border: '2px solid',
-            }}
-            variant="rounded"
-          >
-            {params.row.activo ?
-              <BlockIcon // icon desactivar
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              /> :
-              <DoneOutlineIcon // icon activar
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            }
+    {
+      field: 'activo', headerName: '¿Activo?', flex: 1, width: 100,
+      renderCell: (params) => {
+        return params.row.activo === true ? (
+          <Chip size="small" label="Activo" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="Inactivo" color="error" variant="outlined" />
+        );
+      },
+    },
+    {
+      field: 'item_ya_usado', headerName: '¿Usado?', flex: 1, width: 100,
+      renderCell: (params) => {
+        return params.row.item_ya_usado === true ? (
+          <Chip size="small" label="Sí" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="No" color="error" variant="outlined" />
+        );
+      },
+    },
+    {
+      field: 'acciones', headerName: 'Acciones', flex: 1, width: 300,
+      renderCell: (params) => (
+        <>
+          {params.row.item_ya_usado ? null :
+            <Tooltip title="Editar">
+              <IconButton
+                onClick={() => {
+                  dispatch(porcentaje_seleccionado(params.row));
+                  set_action("edit")
+                  set_add_porcentaje_is_active(true)
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
 
-          </Avatar>
-        </IconButton>
-      </Tooltip>
-      {params.row.item_ya_usado?null:
-        <Tooltip title="Eliminar">
-          <IconButton
-            onClick={() => {
-              dispatch(delete_porcentaje_service(params.row.id_porcentaje_iva));
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+                  <EditIcon
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          }
+          <Tooltip title={params.row.activo ? "Desactivar" : "Activar"}>
+            <IconButton
+              onClick={() => {
+                dispatch(activate_deactivate_porcentaje_service(params.row.id_porcentaje_iva, params.row));// true -> activar false -> desactivar
+
               }}
-              variant="rounded"
             >
-              <DeleteIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                {params.row.activo ?
+                  <BlockIcon // icon desactivar
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  /> :
+                  <DoneOutlineIcon // icon activar
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+                }
 
-            </Avatar>
-          </IconButton>
-        </Tooltip>
-}
-              
-    </>
-  ),
-},
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+          {params.row.item_ya_usado ? null :
+            <Tooltip title="Eliminar">
+              <IconButton
+                onClick={() => {
+                  dispatch(delete_porcentaje_service(params.row.id_porcentaje_iva));
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <DeleteIcon
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
 
-];
-  useEffect(() => { 
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+          }
+
+        </>
+      ),
+    },
+
+  ];
+  useEffect(() => {
     void dispatch(get_porcentaje_service());
   }, []);
- 
+
 
   return (
     <>
@@ -172,7 +177,7 @@ const columns: GridColDef[] = [
       >
         <Title title="Porcentaje de IVA "></Title>
         <Grid item xs={12}>
-        
+
           <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
             <Button
               variant="outlined"
@@ -200,11 +205,11 @@ const columns: GridColDef[] = [
               />
             </Box>
           </Grid>
-           <CrearPorcentajeModal
+          <CrearPorcentajeModal
             is_modal_active={add_porcentaje_is_active}
             set_is_modal_active={set_add_porcentaje_is_active}
-            action = {action}
-          /> 
+            action={action}
+          />
         </Grid>
       </Grid>
     </>

@@ -19,9 +19,16 @@ import {
 interface IProps {
   control_mortalidad: any;
   get_values: any;
+  open_modal: boolean;
+  set_open_modal: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarMortalidad = ({ control_mortalidad, get_values }: IProps) => {
+const SeleccionarMortalidad = ({
+  control_mortalidad,
+  get_values,
+  open_modal,
+  set_open_modal,
+}: IProps) => {
   // const [action, set_action] = useState<string>("agregar");
 
   const { mortalidades, nurseries, current_mortalidad, changing_person } =
@@ -116,6 +123,9 @@ const SeleccionarMortalidad = ({ control_mortalidad, get_values }: IProps) => {
           get_filters_models={get_mortalidades}
           set_models={set_mortalidades}
           button_submit_label="Buscar mortalidades"
+          show_search_button={false}
+          open_search_modal={open_modal}
+          set_open_search_modal={set_open_modal}
           form_inputs={[
             {
               datum_type: 'select_controller',
