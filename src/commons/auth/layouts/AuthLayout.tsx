@@ -49,6 +49,7 @@ export const AuthLayout: React.FC<Props> = ({ children }: Props) => {
         backgroundSize: 'cover',
       }}
     >
+      
       <Grid container justifyContent={'center'}>
         <Grid
           item

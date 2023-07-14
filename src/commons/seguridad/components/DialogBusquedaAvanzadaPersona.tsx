@@ -69,32 +69,36 @@ const DialogBusquedaAvanzada = ({
   const numero_documento = watch_search_person('numero_documento');
 
   const columns_persons: GridColDef[] = [
-    {
-      headerName: 'ID persona',
-      field: 'id_persona',
-    },
+    // {
+    //   headerName: 'ID persona',
+    //   field: 'id_persona',
+    // },
     {
       headerName: 'Tipo persona',
-      field: 'tipo_persona',
+      field: 'tipo_persona',flex: 1,
+      renderCell: (params) => {
+        return params.row.tipo_persona === 'N' ? 'NATURAL' : params.row.tipo_persona === 'J' ? 'JURÍDICO' : '';
+      },
     },
+    
     {
       headerName: 'Nombre completo',
       field: 'nombre_completo',
-      width: 250,
+      width: 250,flex: 1,
     },
     {
       headerName: 'Razón social',
       field: 'razon_social',
-      width: 150,
+      width: 150,flex: 1,
     },
     {
       headerName: 'Nombre comercial',
       field: 'nombre_comercial',
-      width: 150,
+      width: 150,flex: 1,
     },
     {
       headerName: 'Tiene usuario',
-      field: 'tiene_usuario',
+      field: 'tiene_usuario',flex: 1,
       renderCell: (params) => {
         return params.row.tiene_usuario === true ? (
           <Chip size="small" label="Si" color="success" variant="outlined" />
@@ -105,15 +109,15 @@ const DialogBusquedaAvanzada = ({
     },
     {
       headerName: 'Tipo documento',
-      field: 'tipo_documento',
+      field: 'tipo_documento',flex: 1,
     },
     {
       headerName: 'Numero documento',
-      field: 'numero_documento',
+      field: 'numero_documento',flex: 1,
     },
     {
       headerName: 'Acciones',
-      field: 'accion',
+      field: 'accion',flex: 1,
       renderCell: (params: any) => (
         <>
           {params.row.tiene_usuario === true ? (
