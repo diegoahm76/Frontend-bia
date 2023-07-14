@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useState, type FC, useEffect } from 'react';
 import { Grid, Select } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -14,11 +14,7 @@ import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGener
 import { control_error } from './utils/control_error_or_success';
 
 const columns = [
-    // { field: 'id', headerName: 'Nro Sucursal', width: 150 },
-    // { field: 'descripcion', headerName: 'Descripción de la Sucursal', width: 200 },
-    // { field: 'principal', headerName: 'Principal', width: 120 },
-    // { field: 'direccion', headerName: 'Dirección', width: 250 },
-    // { field: 'accion', headerName: 'Acción', width: 120 },
+
     { field: 'id', headerName: 'Nro Sucursal', width: 150, flex: 1 },
     { field: 'nombre', headerName: 'descripcin', width: 120, flex: 1 },
     { field: 'principal', headerName: 'Principal', width: 120, flex: 1 },
@@ -27,17 +23,43 @@ const columns = [
 
 const rows = [
     { id: 1, principal: 'Sí', nombre: 'miguel' },
-    // { id: 1, descripcion: 'Sucursal 1', principal: 'Sí', direccion: 'Calle 1, Ciudad', accion: 'Editar' },
-    // { id: 2, descripcion: 'Sucursal 2', principal: 'No', direccion: 'Calle 2, Ciudad', accion: 'Editar' },
-    // { id: 3, descripcion: 'Sucursal 3', principal: 'No', direccion: 'Calle 3, Ciudad', accion: 'Editar' },
-    // // Agrega más filas según sea necesario
+    // Agrega más filas según sea necesario
 ];
 
+interface Departamento {
+    label: string;
+    value: string;
+};
 
+interface DepartamentoResponse {
+    success: boolean;
+    detail: string;
+    data: Departamento[];
+};
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SucursalEntidad: FC = () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const [nuevaSucursal, setNuevaSucursal] = useState('');
+    const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
+
+    useEffect(() => {
+        const fetch_data = async (): Promise<any> => {
+            try {
+                const response = await fetch('https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO');
+                const data: DepartamentoResponse = await response.json();
+                if (data.success) {
+                    setDepartamentos(data.data);
+                } else {
+                    console.log(data.detail);
+                }
+            } catch (error) {
+                console.log('Error fetching departamentos:', error);
+            }
+        };
+
+        void fetch_data();
+    }, []);
+
+    const [nueva_sucursal, setnueva_sucursal] = useState('');
     const [nombrenuebo, setnombrenuebo] = useState('');
 
     const [data_rows, set_data_rows] = useState(rows);
@@ -46,13 +68,13 @@ export const SucursalEntidad: FC = () => {
     const agregar_sucursal = (): void => {
         const nueva_sucursal_obj = {
             id: data_rows.length + 1,
-            principal: nuevaSucursal,
+            principal: nueva_sucursal,
             nombre: nombrenuebo,
         };
 
         const nuevas_filas = [...data_rows, nueva_sucursal_obj];
         set_data_rows(nuevas_filas);
-        setNuevaSucursal('');
+        setnueva_sucursal('');
         setnombrenuebo('');
     };
 
@@ -221,16 +243,20 @@ export const SucursalEntidad: FC = () => {
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} sm={4}>
-                            <FormControl required size='small' fullWidth>
-                                <InputLabel>Dpto</InputLabel>
-                                <Select
-                                    label="Dpto"
-                                >
-                                    <MenuItem>
-                                    </MenuItem>
+                            <FormControl required size="small" fullWidth>
+                                <InputLabel>Departamento</InputLabel> 
+                                <Select label="Departamento">
+                                    {departamentos.map((departamento) => (
+                                        <MenuItem key={departamento.value} value={departamento.value}>
+                                            {departamento.label}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
                             </FormControl>
                         </Grid>
+
+
+
                         <Grid item xs={12} sm={4}>
                             <FormControl required size='small' fullWidth>
                                 <InputLabel>Municipio</InputLabel>
@@ -374,7 +400,7 @@ export const SucursalEntidad: FC = () => {
                     <Grid item xs={12} sm={2}>
                         <FormControl required size="small" fullWidth>
                             <InputLabel>Principal</InputLabel>
-                            <Select value={nuevaSucursal} onChange={(event) => { setNuevaSucursal(event.target.value) }}
+                            <Select value={nueva_sucursal} onChange={(event) => { setnueva_sucursal(event.target.value) }}
                                 label="Principal"
                             >
                                 <MenuItem value="si">Sí</MenuItem>

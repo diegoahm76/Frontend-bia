@@ -13,3 +13,12 @@
    .container {
     white-space: pre-wrap;
     }
+    #disabled-field {
+      opacity: 2;
+      pointer-events: none;
+      font-weight: bold;
+      color: #000
+    }
+    
+    
+    

@@ -32,6 +32,7 @@ export const Jaguar: React.FC = () => {
   zIndex: 1,
   left: '-10px',
   bottom: '-5px  ',
+  top:"-140px",
 }}
     />
     </motion.div>
