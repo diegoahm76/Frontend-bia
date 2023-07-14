@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { LoadingButton } from '@mui/lab';
 import { Button, Grid, TextField } from '@mui/material';
-import { Fragment, useState } from 'react';
+import { Fragment, useContext, useState } from 'react';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import type { Iprops } from './types/types';
+import { DataContext } from '../../commons/recursoHidrico/Instrumentos/context/contextData';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 export const AgregarArchivo = ({ multiple }: Iprops) => {
-  const [archivos, set_archivos] = useState<Array<File | null>>([null]);
-  const [nombres_archivos, set_nombres_archivos] = useState<string[]>(['']);
+  const { archivos, nombres_archivos, set_archivos, set_nombres_archivos } =
+    useContext(DataContext);
 
   const agregar_otro_archivo = (): void => {
     set_archivos([...archivos, null]);
@@ -90,7 +91,7 @@ export const AgregarArchivo = ({ multiple }: Iprops) => {
         </>
       )}
       {multiple &&
-        archivos.map((file, index) => (
+        archivos.map((file: any, index: any) => (
           <Fragment key={index}>
             <Grid item xs={12} sm={6}>
               <Button
