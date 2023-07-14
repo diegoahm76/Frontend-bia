@@ -28,7 +28,7 @@ import { download_pdf } from '../../../documentos-descargar/PDF_descargar';
 import ImageUploader from '../form/ImageUploader';
 import FormDateTimePickerController from '../form/FormDateTimePickerController';
 import FormDateRangePickerController from '../form/FormDateRangePickerController';
-
+import AltRouteIcon from '@mui/icons-material/AltRoute';
 interface IProps {
   set_models: any;
   form_filters: any[];
@@ -384,6 +384,15 @@ const SeleccionarModeloDialogForm = ({
                 startIcon={<PlaylistAddCheckIcon />}
               >
                 Agregar seleccion
+              </Button>
+            )}
+            {(button_origin_show ?? false) && (
+              <Button
+                variant="contained"
+                onClick={search_models}
+                startIcon={<AltRouteIcon />}
+              >
+                Otros orígenes
               </Button>
             )}
           </Stack>
