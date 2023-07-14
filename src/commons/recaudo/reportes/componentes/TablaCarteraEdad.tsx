@@ -23,7 +23,7 @@ export const TablaCarteraEdad: React.FC<Filtro> = (props: Filtro) => {
   const [total, set_total] = useState(0);
   const { reportes_recaudo } = useSelector((state: RootState) => state.reportes_recaudo);
 
-  const total_precio_cop = new Intl.NumberFormat("es-ES", {
+  const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
     currency: "COP",
   }).format(total)
@@ -93,11 +93,17 @@ export const TablaCarteraEdad: React.FC<Filtro> = (props: Filtro) => {
       field: 'valor_sancion',
       headerName: 'Total',
       width: 170,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
   ];
 
@@ -141,12 +147,12 @@ export const TablaCarteraEdad: React.FC<Filtro> = (props: Filtro) => {
                 display='flex'
                 justifyContent='flex-end'
               >
-                <Grid item xs={12} sm={2} mt='30px'>
+                <Grid item xs={12} sm={3} mt='30px'>
                   <TextField
                     label={<strong>Total General</strong>}
                     size="small"
                     fullWidth
-                    value={total_precio_cop}
+                    value={total_cop}
                   />
                 </Grid>
             </Stack>
@@ -247,11 +253,17 @@ export const TablaCarteraEdadProps: React.FC<RangoEdad> = (props: RangoEdad) => 
       field: 'valor_sancion',
       headerName: 'Total',
       width: 170,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
+        )
+      },
     },
   ];
 
@@ -296,7 +308,7 @@ export const TablaCarteraEdadProps: React.FC<RangoEdad> = (props: RangoEdad) => 
                 display='flex'
                 justifyContent='flex-end'
               >
-                <Grid item xs={12} sm={2} mt='30px'>
+                <Grid item xs={12} sm={2.5} mt='30px'>
                   <TextField
                     label={<strong>Total General</strong>}
                     size="small"

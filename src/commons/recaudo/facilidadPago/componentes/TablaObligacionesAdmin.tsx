@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, Dialog, DialogActions, DialogTitle } from '@mui/material';
-import { SearchOutlined, FilterAltOffOutlined, Close } from '@mui/icons-material';
+import { SearchOutlined, FilterAltOffOutlined, Close, ManageAccounts } from '@mui/icons-material';
 import SaveIcon from '@mui/icons-material/Save';
 import ArticleIcon from '@mui/icons-material/Article';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -33,6 +33,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
   const [modal, set_modal] = useState(false);
   const [sub_modal, set_sub_modal] = useState(false);
   const [modal_option, set_modal_option] = useState('no');
+  const [modal_asignacion, set_modal_asignacion] = useState(false);
   const [funcionario_selected, set_funcionario_selected] = useState(0);
   const [facilidad_selected, set_facilidad_selected] = useState(0);
   const { facilidades } = useSelector((state: RootStateFacilidades) => state.facilidades);
@@ -50,7 +51,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
     {
       field: 'nombre_de_usuario',
       headerName: 'Nombre Usuario',
-      width: 200,
+      width: 250,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -80,7 +81,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
     {
       field: 'fecha_generacion',
       headerName: 'Fecha Radicación',
-      width: 150,
+      width: 200,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -122,17 +123,17 @@ export const TablaObligacionesAdmin: React.FC = () => {
       },
     },
     {
-      field: 'asignacion',
+      field: 'nombre_funcionario',
       headerName: 'Asignación',
-      width: 150,
+      width: 300,
       renderCell: (params) => {
-        return (
+        return modal_asignacion ? (
           <FormControl sx={{ minWidth: 110 }}>
             <InputLabel>Seleccionar</InputLabel>
               <Select
                 size='small'
                 label="Seleccionar"
-                defaultValue={params.row.nombre_funcionario}
+                defaultValue={params.value}
                 onChange={(event: event) => {
                   const { value } = event.target
                   for(let i=0; i<funcionarios.length; i++){
@@ -151,12 +152,39 @@ export const TablaObligacionesAdmin: React.FC = () => {
                 }
               </Select>
           </FormControl>
+        ) : (
+          <>
+            <Tooltip title="Reasignar">
+              <IconButton
+                onClick={() => {
+                  set_modal_asignacion(true)
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <ManageAccounts
+                    sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+              {params.value}
+            </div>
+          </>
         )
       },
     },
   ];
 
-  useEffect(()=>{
+  useEffect(() => {
     set_visible_rows(facilidades)
   }, [facilidades])
 
@@ -265,9 +293,13 @@ export const TablaObligacionesAdmin: React.FC = () => {
               color="primary"
               startIcon={<Close />}
               onClick={() => {
-                handle_open_sub();
-                set_modal_option('no');
-                handle_close();
+                try {
+                  handle_open_sub();
+                  set_modal_option('no');
+                  handle_close();
+                } catch (error: any) {
+                  throw new Error(error);
+                }
             }}
             >
               Cancelar
@@ -276,7 +308,7 @@ export const TablaObligacionesAdmin: React.FC = () => {
               variant="contained"
               color="primary"
               startIcon={<SaveIcon />}
-              onClick={()=>{
+              onClick={() => {
                 try {
                   void put_asignacion_funcionario(facilidad_selected, {id_funcionario: funcionario_selected});
                   handle_open_sub();
@@ -304,7 +336,15 @@ export const TablaObligacionesAdmin: React.FC = () => {
               variant='outlined'
               color="primary"
               startIcon={<Close />}
-              onClick={handle_close_sub}
+              onClick={() => {
+                try {
+                  void dispatch(get_facilidades_ingresadas());
+                  set_modal_asignacion(false);
+                  handle_close_sub();
+                } catch (error: any) {
+                  throw new Error(error);
+                }
+              }}
             >
               Cerrar
             </Button>
