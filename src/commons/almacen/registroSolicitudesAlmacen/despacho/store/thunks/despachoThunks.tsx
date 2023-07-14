@@ -64,15 +64,17 @@ export const get_despachos_service = (
       );
 
 
+
       if (data.success === true) {
         dispatch(set_despachos(data.data));
+        console.log(data);
         control_success(data.detail);
       } else {
         control_error(data.detail);
       }
       return data;
     } catch (error: any) {
-      console.log('get_despachos_service');
+
       control_error(error.response.data.detail);
       return error as AxiosError;
     }
@@ -160,8 +162,7 @@ export const get_bienes_despacho = (nro_despacho: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.get(
-        `almacen/despachos/get-despacho-consumo-by-numero-despacho/?numero_despacho_consumo=${
-          nro_despacho ?? ''
+        `almacen/despachos/get-despacho-consumo-by-numero-despacho/?numero_despacho_consumo=${nro_despacho ?? ''
         }`
       );
       dispatch(set_bienes_despacho(data.data.items_despacho_consumo));
@@ -180,7 +181,7 @@ export const get_bienes_despacho = (nro_despacho: number | null): any => {
   };
 };
 
-// obtener numero de solicitud
+// obtener numero de despacho
 export const get_num_despacho = (): any => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -199,7 +200,7 @@ export const get_num_despacho = (): any => {
     }
   };
 };
-// obtener lotes pór codigo de material vegetal
+// obtener bienes
 export const get_bien_code_service = (
   code: string,
   fecha: string,
@@ -212,6 +213,40 @@ export const get_bien_code_service = (
           ? `almacen/despachos/agregar-bienes-consumo-conservacion-by-lupa/?codigo_bien_solicitado=${code}&fecha_despacho=${fecha}`
           : `almacen/despachos/search-bienes-inventario/?codigo_bien_solicitado=${code}&fecha_despacho=${fecha}`
       );
+      console.log(data);
+      // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+
+      if (data.data.length > 0) {
+        if (data.data.length === 1) {
+          dispatch(set_current_bien(data.data[0]));
+          control_success('Se selecciono el bien');
+        } else {
+          dispatch(set_bienes(data.data));
+          control_success('Se encontraron bienes');
+        }
+      } else {
+        control_error('No se encontró el bien');
+      }
+
+      return data;
+    } catch (error: any) {
+      console.log('get_bien_code_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+
+// obtener bienes otros origenes
+export const get_bien_code_service_origin = (
+  id: string | number,
+  fecha: string | number,
+
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`almacen/despachos/get-items-otros-origenes/${id}/?fecha_despacho=${fecha}`);
       console.log(data);
       // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 

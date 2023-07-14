@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
 import {
@@ -37,6 +36,7 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
   const {
+    is_saving,
     rows_actividades,
     rows_actividades_register,
     is_agregar_actividad,
@@ -144,7 +144,6 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
       },
     },
   ];
-
   const columns_register: GridColDef[] = [
     {
       field: 'nombre',
@@ -161,7 +160,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
           <>
             <IconButton
               onClick={() => {
-                setEditRowActividades(params.row);
+                set_edit_row_actividades(params.row);
               }}
             >
               <Avatar
@@ -211,7 +210,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
   }, [data]);
 
   const descripcion = watch('descripcion');
-  const [edit_row_actividades, setEditRowActividades] = useState<any>(null);
+  const [edit_row_actividades, set_edit_row_actividades] = useState<any>(null);
 
   useEffect(() => {
     if (edit_row_actividades) {
@@ -221,10 +220,12 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
 
   useEffect(() => {
     if (data) {
-      set_start_date(dayjs(data.vigencia_inicial));
-      set_value('vigencia_final', data.vigencia_final);
-      set_value('vigencia_inicial', data.vigencia_inicial);
-      set_end_date(dayjs(data.vigencia_final));
+      set_start_date(dayjs(data?.vigencia_inicial));
+      set_value('nombre', data?.nombre);
+      set_value('inversion', data?.inversion);
+      set_value('vigencia_final', data?.vigencia_final);
+      set_value('vigencia_inicial', data?.vigencia_inicial);
+      set_end_date(dayjs(data?.vigencia_final));
     }
   }, [data]);
 
@@ -278,7 +279,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
     });
   };
   const handle_aceptar_actividad = (): void => {
-    setEditRowActividades(null);
+    set_edit_row_actividades(null);
     const descripcion = watch('descripcion');
     const new_actividad = {
       id_act: uuidv4(),
@@ -306,10 +307,10 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
     limpiar_act();
   };
   const handle_eliminar = (row: any): void => {
-    const updatedRows = rows_actividades_register.filter(
+    const updated_rows = rows_actividades_register.filter(
       (r) => r.id_act !== row.id_act
     );
-    set_rows_actividades_register(updatedRows);
+    set_rows_actividades_register(updated_rows);
   };
 
   // const limpiar_todo = (): void => {
@@ -480,6 +481,7 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
               required={!(rows_actividades_register.length > 0)}
               autoFocus
               multiline
+              rows={3}
               {...register('descripcion', {
                 required: !(rows_actividades_register.length > 0),
               })}
@@ -498,6 +500,40 @@ export const SeleccionarProyecto: React.FC<IProps> = ({ data }: IProps) => {
                 Aceptar
               </LoadingButton>
             </Grid>
+            {is_editar_actividad && (
+              <>
+                <Grid item>
+                  <LoadingButton
+                    variant="contained"
+                    color="success"
+                    type="submit"
+                    disabled={
+                      is_saving
+                    }
+                    loading={is_saving}
+                  >
+                    Actualizar
+                  </LoadingButton>
+                </Grid>
+              </>
+            )}
+            {is_agregar_actividad && (
+              <>
+                <Grid item>
+                  <LoadingButton
+                    variant="contained"
+                    color="success"
+                    type="submit"
+                    disabled={
+                      is_saving || rows_actividades_register.length === 0
+                    }
+                    loading={is_saving}
+                  >
+                    Guardar
+                  </LoadingButton>
+                </Grid>
+              </>
+            )}
           </Grid>
         </>
       ) : null}

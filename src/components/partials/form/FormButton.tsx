@@ -8,6 +8,7 @@ interface IProps {
   variant_button: any;
   type_button: any;
   disabled?: boolean | null;
+  style_button?: any;
   color_button?: OverridableStringUnion<
     | 'inherit'
     | 'primary'
@@ -27,6 +28,7 @@ const FormButton = ({
   variant_button,
   type_button,
   disabled,
+  style_button,
   color_button,
 }: IProps) => {
   return (
@@ -38,6 +40,7 @@ const FormButton = ({
       onClick={on_click_function}
       startIcon={icon_class}
       type={type_button}
+      style={style_button}
       disabled={disabled ?? false}
     >
       {label}

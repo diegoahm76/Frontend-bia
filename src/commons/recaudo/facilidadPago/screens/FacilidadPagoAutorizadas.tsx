@@ -7,7 +7,6 @@ export const FacilidadPagoAutorizadas: React.FC = () => {
 
   return (
     <>
-
       <Grid
         container
         sx={{

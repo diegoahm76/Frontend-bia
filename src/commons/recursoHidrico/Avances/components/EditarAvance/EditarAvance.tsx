@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 import Grid from '@mui/material/Grid';
 import { Title } from '../../../../../components/Title';
-import { Box, Button, TextField, Tooltip, Typography } from '@mui/material';
+import { Box, Button, TextField, Tooltip } from '@mui/material';
 import { Fragment, useContext, useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -37,7 +36,7 @@ export const EditarAvance: React.FC = () => {
       field: 'nombre_archivo',
       headerName: 'NOMBRE ARCHIVO',
       sortable: true,
-      width: 250,
+      width: 400,
     },
   ];
   if (is_editar_avance) {
@@ -59,7 +58,7 @@ export const EditarAvance: React.FC = () => {
                 onClick={() => {
                   set_is_evidencia(true);
                   set_info_evidencia(params.row);
-                  setValue('nombre_archivo_nuevo', params.row.nombre_archivo);
+                  set_value('nombre_archivo_nuevo', params.row.nombre_archivo);
                 }}
               />
             </Tooltip>
@@ -71,9 +70,9 @@ export const EditarAvance: React.FC = () => {
 
   const {
     register,
-    reset,
-    handleSubmit,
-    setValue,
+    // reset,
+    handleSubmit: handle_submit,
+    setValue: set_value,
     formState: { errors },
   } = useForm();
 
@@ -87,21 +86,21 @@ export const EditarAvance: React.FC = () => {
 
   useEffect(() => {
     if (info_avance) {
-      setValue('accion', info_avance.accion);
+      set_value('accion', info_avance.accion);
       console.log(info_avance.descripcion, 'descripcion');
-      setValue('descripcion', info_avance.descripcion);
+      set_value('descripcion', info_avance.descripcion);
       set_rows_evidencia(info_avance.evidencias);
       set_fecha_reporte(info_avance.fecha_reporte as any);
-      setValue('fecha_reporte', info_avance.fecha_reporte);
+      set_value('fecha_reporte', info_avance.fecha_reporte);
     }
-  }, [info_avance, setValue]);
+  }, [info_avance, set_value]);
 
   const agregar_otroarchivo = (): void => {
     set_archivos([...archivos, null]);
     set_nombres_archivos([...nombres_archivos, '']);
   };
   const handle_fecha_reporte_change = (date: Date | null): void => {
-    setValue('fecha_reporte', date);
+    set_value('fecha_reporte', date);
     set_fecha_reporte(date);
   };
 
@@ -129,6 +128,19 @@ export const EditarAvance: React.FC = () => {
 
   const on_submit = async (data: any): Promise<void> => {
     try {
+      const nombres_totales = [
+        ...nombres_archivos,
+        ...rows_evidencia.map((evidencia) => evidencia.nombre_archivo),
+      ];
+      const nombres_set = new Set(nombres_totales);
+      if (nombres_set.size !== nombres_totales.length) {
+        control_error('El nombre de archivo ya existe');
+        return;
+      }
+      if (nombres_set.has(data.nombre_archivo_nuevo)) {
+        control_error('El nombre de archivo ya existe');
+        return;
+      }
       set_is_saving(true);
       const datos_avance = new FormData();
 
@@ -163,19 +175,19 @@ export const EditarAvance: React.FC = () => {
       control_success('Se editó avance correctamente');
 
       // Actualizar la información del avance después de la edición
-      const updatedInfoAvance: any = { ...info_avance }; // Copiar el objeto existente
+      const updated_info_vance: any = { ...info_avance }; // Copiar el objeto existente
 
-      if (updatedInfoAvance) {
-        updatedInfoAvance.accion = data.accion;
-        updatedInfoAvance.descripcion = data.descripcion;
+      if (updated_info_vance) {
+        updated_info_vance.accion = data.accion;
+        updated_info_vance.descripcion = data.descripcion;
 
         if (info_evidencia) {
-          updatedInfoAvance.evidencias = [
+          updated_info_vance.evidencias = [
             {
               id_evidencia_avance: info_evidencia.id_evidencia_avance,
               nombre_archivo: data.nombre_archivo_nuevo,
             },
-            ...updatedInfoAvance.evidencias.filter(
+            ...updated_info_vance.evidencias.filter(
               (evidencia: any) =>
                 evidencia.id_evidencia_avance !==
                 info_evidencia.id_evidencia_avance
@@ -183,7 +195,7 @@ export const EditarAvance: React.FC = () => {
           ];
         }
 
-        set_info_avance(updatedInfoAvance);
+        set_info_avance(updated_info_vance);
       }
     } catch (error) {
       set_is_saving(false);
@@ -198,7 +210,7 @@ export const EditarAvance: React.FC = () => {
       <Box
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onSubmit={handleSubmit(on_submit)}
+        onSubmit={handle_submit(on_submit)}
         style={{ width: '100%' }} // Añadido estilo para ocupar toda la pantalla
       >
         <Grid
@@ -327,7 +339,7 @@ export const EditarAvance: React.FC = () => {
           {rows_evidencia.length > 0 && (
             <>
               <Grid item xs={12}>
-                <Title title="            Evidencias  " />
+                <Title title="Evidencias  " />
 
                 {/* <Typography variant="subtitle1" fontWeight="bold">
                   Evidencias

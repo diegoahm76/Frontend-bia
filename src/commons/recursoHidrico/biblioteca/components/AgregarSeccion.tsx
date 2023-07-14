@@ -14,6 +14,7 @@ import { DataContext } from '../context/contextData';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import { AgregarSubseccion } from './AgregarSubseccion';
+import { row } from '../../../almacen/gestionDeInventario/gestionHojaDeVida/mantenimiento/interfaces/IProps';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarSeccion: React.FC = () => {
@@ -105,6 +106,7 @@ export const AgregarSeccion: React.FC = () => {
           fullWidth
           required
           autoFocus
+          rows={3}
           value={descripcion_seccion}
           size="small"
           {...register('descripcion_seccion', { required: true })}

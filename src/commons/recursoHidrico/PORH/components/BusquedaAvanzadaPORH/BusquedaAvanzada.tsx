@@ -142,13 +142,25 @@ export const BusquedaAvanzada: React.FC = () => {
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
-          <Title title="Búsqueda avanzada" />
+         
           <form
             onSubmit={(e) => {
               void on_submit_advance(e);
             }}
           >
-            <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
+            <Grid container spacing={2}
+             sx={{
+              position: 'relative',
+              background: '#FAFAFA',
+              borderRadius: '15px',
+              p: '20px', mb: '20px',
+              boxShadow: '0px 3px 6px #042F4A26',
+              marginTop: '20px',
+              marginLeft: '-5px',
+          }}
+            //  sx={{ mt: '10px', mb: '20px' }}
+             >
+               <Title title="Búsqueda avanzada" />
               <Grid item xs={12} sm={6} md={3}>
                 <TextField
                   label="Nombre PORH"

@@ -12,10 +12,10 @@ export const get_finished_ccd_service = (): ((
   ): Promise<AxiosResponse<any> | AxiosError> => {
     try {
       const { data } = await api.get('gestor/ccd/get-terminados/');
-      console.log(
+      /* console.log(
         '🚀 ~ file: getFinishedCcdThunks.ts ~ line 31 ~ return ~ data ccd terminados',
         data
-      );
+      ); */
       dispatch(get_finished_ccds(data));
       return data;
     } catch (error: AxiosError | any) {

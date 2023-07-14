@@ -38,7 +38,7 @@ export const SeccionSubseccionMain: React.FC = () => {
     set_rows_register_subseccion,
     set_rows_to_delete_subseecion,
     set_is_saving,
-    set_mode,
+    // set_mode,
   } = useContext(DataContext);
 
   const on_submit = handle_submit(async (form: any) => {
@@ -53,9 +53,7 @@ export const SeccionSubseccionMain: React.FC = () => {
       set_is_saving(false);
     } catch (error: any) {
       set_is_saving(false);
-      control_error(
-        error.response.data.detail || 'hubo un error al crear, intenta de nuevo'
-      );
+      control_error(error.response.data.detail);
     }
   });
   const on_submit_update = handle_submit(async (form: any) => {
@@ -76,13 +74,11 @@ export const SeccionSubseccionMain: React.FC = () => {
       await fetch_data_subseccion_por_seccion();
       set_is_saving(false);
     } catch (error: any) {
+      control_error(error.response.data.detail);
       set_is_saving(false);
-      control_error(
-        error.response.data.detail ||
-          'hubo un error al editar, intenta de nuevo'
-      );
     }
   });
+
   const on_submit_update_seccion = handle_submit(async (form: any) => {
     try {
       set_is_saving(true);
@@ -92,11 +88,18 @@ export const SeccionSubseccionMain: React.FC = () => {
       await fetch_data_seccion();
       set_is_saving(false);
     } catch (error: any) {
+      if (
+        error.response.data.detail ===
+        'Error: Los campos nombre deben formar un conjunto único.'
+      ) {
+        // Manejo del error específico
+        control_error('El nombre de la sección ya existe');
+        // Otras acciones que desees realizar en caso de este error
+      } else {
+        // Manejo de otros errores
+        control_error(error.response.data.detail);
+      }
       set_is_saving(false);
-      control_error(
-        error.response.data.detail ||
-          'hubo un error al editar, intenta de nuevo'
-      );
     }
   });
 

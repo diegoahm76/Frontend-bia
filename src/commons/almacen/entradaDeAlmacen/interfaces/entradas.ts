@@ -33,7 +33,6 @@ export interface IInfoItemEntrada {
   valor_total_item: number;
 }
 
-export interface anular_entrada { 
-  justificacion_anulacion: string 
+export interface anular_entrada {
+  justificacion_anulacion: string;
 }
-

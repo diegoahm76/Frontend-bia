@@ -31,6 +31,7 @@ interface UserContext {
   rows_proyectos_register: GetProyectos[];
   rows_actividades: GetActividades[];
   rows_actividades_register: GetActividades[];
+  is_saving: boolean;
   is_general: boolean;
   is_agregar_actividad: boolean;
   is_editar_actividad: boolean;
@@ -55,6 +56,7 @@ interface UserContext {
   set_rows_proyectos_register: (rows: GetProyectos[]) => void;
   set_rows_actividades: (rows: GetActividades[]) => void;
   set_rows_actividades_register: (rows: GetActividades[]) => void;
+  set_is_saving: (value: boolean) => void;
   set_is_general: (value: boolean) => void;
   set_is_agregar_actividad: (value: boolean) => void;
   set_is_editar_actividad: (value: boolean) => void;
@@ -120,6 +122,7 @@ export const DataContext = createContext<UserContext>({
   rows_proyectos_register: [],
   rows_actividades: [],
   rows_actividades_register: [],
+  is_saving: false,
   is_agregar_actividad: false,
   is_editar_actividad: false,
   is_seleccionar_actividad: false,
@@ -143,6 +146,7 @@ export const DataContext = createContext<UserContext>({
   set_rows_proyectos_register: () => {},
   set_rows_actividades: () => {},
   set_rows_actividades_register: () => {},
+  set_is_saving: () => {},
   set_is_agregar_actividad: () => {},
   set_is_editar_actividad: () => {},
   set_is_seleccionar_actividad: () => {},
@@ -190,6 +194,8 @@ export const UserProvider = ({
     formState: { errors },
     setError,
   } = useForm();
+
+    const [is_saving, set_is_saving] = React.useState(false);
 
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
   const [id_proyecto, set_id_proyecto] = React.useState<number | null>(null);
@@ -379,6 +385,8 @@ export const UserProvider = ({
   // validaciones 
 
   const value = {
+    set_is_saving,
+    is_saving,
     rows_proyectos_register,
     set_rows_proyectos_register,
     rows_actividades_register,

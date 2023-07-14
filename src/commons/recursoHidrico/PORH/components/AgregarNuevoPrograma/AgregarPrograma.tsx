@@ -16,6 +16,7 @@ import { control_error } from '../../../../../helpers';
 import { DataContext } from '../../context/contextData';
 import dayjs from 'dayjs';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import { LoadingButton } from '@mui/lab';
 
 dayjs.extend(isSameOrBefore);
 
@@ -32,6 +33,7 @@ export const AgregarPrograma: React.FC = () => {
     set_nombre_programa,
     set_fecha_inicial,
     set_fecha_fin,
+    is_saving,
   } = useContext(DataContext);
 
   const [is_agregar, set_is_agregar] = useState(false);
@@ -209,6 +211,19 @@ export const AgregarPrograma: React.FC = () => {
               Agregar Nuevo Proyecto
             </Button>
           </Grid>
+          {!is_agregar && (
+            <Grid item>
+              <LoadingButton
+                variant="contained"
+                color="success"
+                type="submit"
+                disabled={!is_campos_obligatorios_completos}
+                loading={is_saving}
+              >
+                Guardar
+              </LoadingButton>
+            </Grid>
+          )}
         </Grid>
       </Grid>
       <Grid container spacing={2} mt={0.1}>

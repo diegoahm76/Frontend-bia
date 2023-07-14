@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { Grid } from '@mui/material';
+import { Chip, Grid } from '@mui/material';
 import BuscarModelo from '../../../../../components/partials/getModels/BuscarModelo';
 import { type GridColDef } from '@mui/x-data-grid';
 import {
@@ -103,6 +103,18 @@ const SeleccionarDespacho = ({ control_despacho, get_values }: IProps) => {
           {params.value}
         </div>
       ),
+    },
+    {
+      field: 'es_despacho_conservacion',
+      headerName: 'Es despacho de conservación',
+      width: 350,
+      renderCell: (params) => {
+        return params.row.es_despacho_conservacion === true ? (
+          <Chip size="small" label="SI" color="success" variant="outlined" />
+        ) : (
+          <Chip size="small" label="NO" color="error" variant="outlined" />
+        );
+      },
     },
   ];
 

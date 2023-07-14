@@ -41,31 +41,30 @@ export const post_programa = async (
 
 export const post_actividades = async (
   form: any,
-  proyectos: any,
-  actividades: any[]
+  rows_actividades: any[]
 ): Promise<any> => {
-  const proyecto = {
-    id_proyecto: form.id_proyecto,
-    nombre: form.nombre,
-    vigencia_inicial: dayjs(form.vigencia_inicial).format('YYYY-MM-DD'),
-    vigencia_final: dayjs(form.vigencia_final).format('YYYY-MM-DD'),
-    inversion: form.inversion,
-    actividades: form.descripcion ? actividades : [],
-  };
+  const actividad = [
+    ...rows_actividades,
+    form.descripcion === '' ? null : {
+      nombre: form.descripcion,
+    }
+  ];
 
-  const nuevos_proyectos = [...proyectos, proyecto];
+  const filtered_array = actividad.filter((item: any) => item !== null);
+
+  const proyecto = form.nombre ? [{
+    id_proyecto: form.id_proyecto,
+    actividades: filtered_array,
+  }] : [];
 
   const response = await api.post(
     'hidrico/programas/programa/recurso/hidrico/create/',
     {
-      ...form,
       id_programa: form.id_programa,
-      nombre: form.nombre_programa,
-      fecha_inicio: dayjs(form.fecha_inicio).format('YYYY-MM-DD'),
-      fecha_fin: dayjs(form.fecha_fin).format('YYYY-MM-DD'),
-      proyectos: form.nombre ? nuevos_proyectos : [],
+      proyectos: proyecto,
     }
   );
+
   return response.data;
 }
 
