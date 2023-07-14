@@ -31,11 +31,17 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
       field: 'valor',
       headerName: '',
       width: 150,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {precio_cop}
         </div>
-      ),
+        )
+      },
     },
   ];
 
@@ -69,11 +75,17 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
       field: 'valor',
       headerName: '',
       width: 150,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {precio_cop}
         </div>
-      ),
+        )
+      },
     },
   ];
 
@@ -107,11 +119,17 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
       field: 'valor',
       headerName: '',
       width: 150,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {precio_cop}
         </div>
-      ),
+        )
+      },
     },
   ];
 
@@ -145,11 +163,17 @@ export const ResumenLiquidacionFacilidad: React.FC = () => {
       field: 'valor',
       headerName: '',
       width: 150,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {precio_cop}
         </div>
-      ),
+        )
+      },
     },
   ];
 

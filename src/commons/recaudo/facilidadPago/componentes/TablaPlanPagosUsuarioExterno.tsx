@@ -8,6 +8,11 @@ import { Link } from 'react-router-dom';
 export const TablaPlanPagosUsuarioExterno: React.FC = () => {
   const [total, set_total] = useState(0);
 
+  const total_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(total)
+
   const lista = [
     {
       cuota: 1,
@@ -54,11 +59,17 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
       field: 'valor_total',
       headerName: 'Cuota',
       width: 200,
-      renderCell: (params) => (
+      renderCell: (params) => {
+        const precio_cop = new Intl.NumberFormat("es-ES", {
+          style: "currency",
+          currency: "COP",
+        }).format(params.value)
+        return (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {precio_cop}
         </div>
-      ),
+        )
+      },
     },
     {
       field: 'recibo',
@@ -139,7 +150,7 @@ export const TablaPlanPagosUsuarioExterno: React.FC = () => {
                 label={<strong>Total Cuotas</strong>}
                 size="small"
                 fullWidth
-                value={total}
+                value={total_cop}
               />
             </Grid>
         </Stack>
