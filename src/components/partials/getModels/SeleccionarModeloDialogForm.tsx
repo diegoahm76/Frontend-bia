@@ -213,13 +213,6 @@ const SeleccionarModeloDialogForm = ({
                 {/* <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
         
             <Divider /> */}
-
-
-
-
-
-
-
                 <DialogContent sx={{ mb: '0px' }}>
                     {form_filters.length > 0 &&
                         <Grid container sx={{
