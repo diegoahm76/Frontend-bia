@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { Chip, Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import SeleccionarIngresoCuarentena from '../componentes/SeleccionarIngresoCuarentena';
