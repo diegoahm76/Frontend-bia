@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable react/prop-types */
 import { Handle, Position } from "reactflow";
+import { Link } from "react-router-dom";
 import './styles.css';
 
 export const FlowNode = ({ data, isConnectable }) => {
@@ -19,6 +20,9 @@ export const FlowNode = ({ data, isConnectable }) => {
       </div>
       <Handle type="source" position={Position.Bottom} id="bottom" isConnectable={isConnectable} />
       {/* <Handle type="source" position={Position.Right} id="right" isConnectable={isConnectable} /> */}
+      <div className="link-wrapper">
+        <Link to='../estados_proceso'>Editar etapa</Link>
+      </div>
     </div>
   );
 };
