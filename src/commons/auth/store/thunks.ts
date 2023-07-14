@@ -63,6 +63,7 @@ export const checking_authentication: (
       data?.userinfo.tipo_persona === 'N' &&
       data?.userinfo.tipo_usuario === 'E'
     ) {
+      dispatch(get_persmisions_user(data?.userinfo.id_usuario, 'C'));
       dispatch(open_dialog_representado());
     }
 
